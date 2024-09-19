@@ -335,6 +335,7 @@ android {
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
         enable += 'UnknownNullness'
+        sarifReport = System.getenv('CI') ? true : false
     }
 
     packagingOptions {
@@ -396,7 +397,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation 'androidx.webkit:webkit:1.11.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
@@ -443,18 +443,13 @@ dependencies {
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
-    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
-    implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
-    implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
     implementation "androidx.activity:activity:$androidxActivityVersion"
-    implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.activity:activity-compose:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
@@ -468,18 +463,14 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
-    implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
     implementation "androidx.webkit:webkit:$androidxWebkitVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.android.play:review:$googlePlayReviewVersion"
-    implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
     implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
@@ -492,7 +483,6 @@ dependencies {
 
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
-    implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
@@ -530,6 +520,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
     testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
@@ -537,9 +528,7 @@ dependencies {
 
     androidTestImplementation project(path:':libs:mocks')
 
-    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         version {
@@ -615,6 +604,17 @@ dependencies {
     implementation "me.saket.cascade:cascade-compose:2.3.0"
 
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+}
+
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
+            exclude("org.mockito:mockito-android")
+            // This dependency is used by the libs:analytics module, which wasn't converted to adhere to included builds
+            exclude("com.automattic:Automattic-Tracks-Android")
+        }
+    }
 }
 
 configurations.all {

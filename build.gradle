@@ -28,7 +28,7 @@ ext {
     automatticTracksVersion = '5.1.0'
     gutenbergMobileVersion = 'v1.121.0'
     wordPressAztecVersion = 'v2.1.4'
-    wordPressFluxCVersion = 'trunk-94d25d35fb4bf58a2e90741a6a5d56b8c6c3ce42'
+    wordPressFluxCVersion = 'trunk-a77c116b8bd00247c8c0551b4497629ff84ca023'
     wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressRsVersion = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
@@ -61,13 +61,13 @@ ext {
     androidxViewpager2Version = '1.1.0'
     androidxWorkManagerVersion = "2.9.1"
     androidxComposeMaterial3Version = '1.2.1'
-    androidxWebkitVersion =  '1.11.0'
+    androidxWebkitVersion =  '1.12.0'
     apacheCommonsTextVersion = '1.12.0'
     coilComposeVersion = '2.7.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
-    firebaseBomVersion = '33.2.0'
+    firebaseBomVersion = '33.3.0'
     firebaseIidVersion = '21.1.0'
     glideVersion = '4.16.0'
     googleAutoServiceVersion = '1.0.1'
@@ -107,7 +107,6 @@ ext {
     androidxTestExtJunitVersion = '1.2.1'
     androidxTestUiAutomatorVersion = '2.3.0'
     screengrabVersion = '2.1.1'
-    squareupMockWebServerVersion = '4.12.0'
     wiremockVersion = '2.26.3'
     wiremockHttpClientVersion = '4.3.5.1'
 
@@ -259,4 +258,3 @@ dependencies {
 }
 
 apply from: './config/gradle/code_coverage.gradle'
-apply from: './config/gradle/gradle_build_scan.gradle'

@@ -35,6 +35,7 @@ val campaign = BlazeCampaignModel(
     targetUrn = null,
     totalBudget = 0.0,
     spentBudget = 0.0,
+    isEndlessCampaign = false,
 )
 
 val onCreateCampaignClick = { }
