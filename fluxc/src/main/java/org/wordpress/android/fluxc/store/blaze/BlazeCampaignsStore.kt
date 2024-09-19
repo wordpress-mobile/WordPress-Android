@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -38,7 +40,8 @@ class BlazeCampaignsStore @Inject constructor(
     private val campaignsRestClient: BlazeCampaignsRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
-    private val coroutineEngine: CoroutineEngine
+    private val coroutineEngine: CoroutineEngine,
+    private val blazeObjectivesDao: BlazeObjectivesDao
 ) {
     suspend fun fetchBlazeCampaigns(
         site: SiteModel,
@@ -116,6 +119,37 @@ class BlazeCampaignsStore @Inject constructor(
     fun observeMostRecentBlazeCampaign(site: SiteModel) =
         campaignsDao.observeMostRecentCampaignForSite(site.siteId)
             .map { it?.toDomainModel() }
+
+    suspend fun fetchBlazeCampaignObjectives(
+        site: SiteModel,
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch blaze objectives"
+    ) {
+        creationRestClient.fetchCampaignObjectives(site, locale).let { payload ->
+            when {
+                payload.isError -> BlazeResult(BlazeError(payload.error))
+                else -> {
+                    blazeObjectivesDao.replaceObjectives(payload.data?.map {
+                        BlazeCampaignObjectiveEntity(
+                            id = it.id,
+                            title = it.title,
+                            description = it.description,
+                            suitableForDescription = it.suitableForDescription,
+                            locale = locale
+                        )
+                    }.orEmpty())
+                    BlazeResult(payload.data)
+                }
+            }
+        }
+    }
+
+    fun observeBlazeCampaignObjectives(
+        locale: String = Locale.getDefault().language
+    ) = blazeObjectivesDao.observeObjectives(locale).map { objectives -> objectives.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingLocations(
         site: SiteModel,
