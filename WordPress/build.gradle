@@ -335,6 +335,7 @@ android {
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
         enable += 'UnknownNullness'
+        sarifReport = System.getenv('CI') ? true : false
     }
 
     packagingOptions {
