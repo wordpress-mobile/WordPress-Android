@@ -32,7 +32,10 @@ class BlazeCreationRestClient @Inject constructor(
 ) {
     private val dateFormatter by lazy { SimpleDateFormat("yyyy-MM-dd", Locale.ROOT) }
 
-    suspend fun fetchCampaignObjectives(site: SiteModel, locale: String): BlazePayload<List<BlazeCampaignObjective>> {
+    suspend fun fetchCampaignObjectives(
+        site: SiteModel,
+        locale: String
+    ): BlazePayload<List<BlazeCampaignObjective>> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.campaigns.objectives.url
 
         val response = wpComNetwork.executeGetGsonRequest(
@@ -274,8 +277,13 @@ private class BlazeCampaignObjectiveListResponse(
     @SerializedName("objectives")
     val objectives: List<BlazeCampaignObjectiveNetworkModel>
 ) {
-    class BlazeCampaignObjectiveNetworkModel(val id: String, val title: String, val description: String) {
-        fun toDomainModel() = BlazeCampaignObjective(id, title, description)
+    class BlazeCampaignObjectiveNetworkModel(
+        val id: String,
+        val title: String,
+        val description: String,
+        @SerializedName("suitable_for_description") val suitableForDescription: String
+    ) {
+        fun toDomainModel() = BlazeCampaignObjective(id, title, description, suitableForDescription)
     }
 }
 
