@@ -2,9 +2,11 @@ package org.wordpress.android.editor.gutenberg;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.webkit.ValueCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -257,17 +260,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
+            mGutenbergView.setOnFileChooserRequested((intent, requestCode) -> {
+                startActivityForResult(intent, requestCode);
+                return null;
+            });
 
             Integer postId = (Integer) mSettings.get("postId");
             if (postId != null && postId == 0) {
-                postId = null;
+                postId = -1;
             }
-
             mGutenbergView.start(
                     (String) mSettings.get("siteApiRoot"),
                     (String) mSettings.get("siteApiNamespace"),
                     (String) mSettings.get("authHeader"),
-                    true,
+                    true, // Set as a FeatureFlag
                     postId,
                     (String) mSettings.get("postType"),
                     (String) mSettings.get("postTitle"),
@@ -711,6 +717,33 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (mIsNewGutenbergEnabled) {
+            if (requestCode == mGutenbergView.getPickImageRequestCode()) {
+                ValueCallback<Uri[]> filePathCallback = mGutenbergView.getFilePathCallback();
+
+                if (filePathCallback != null) {
+                    if (resultCode == Activity.RESULT_OK && data != null) {
+                        if (data.getClipData() != null) {
+                            ClipData clipData = data.getClipData();
+                            Uri[] uris = new Uri[clipData.getItemCount()];
+                            for (int i = 0; i < clipData.getItemCount(); i++) {
+                                uris[i] = clipData.getItemAt(i).getUri();
+                            }
+                            filePathCallback.onReceiveValue(uris);
+                        } else if (data.getData() != null) {
+                            Uri uri = data.getData();
+                            filePathCallback.onReceiveValue(new Uri[]{uri});
+                        } else {
+                            filePathCallback.onReceiveValue(null);
+                        }
+                    } else {
+                        filePathCallback.onReceiveValue(null);
+                    }
+                    mGutenbergView.resetFilePathCallback();
+                }
+            }
+        }
 
         if (requestCode == UNSUPPORTED_BLOCK_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
