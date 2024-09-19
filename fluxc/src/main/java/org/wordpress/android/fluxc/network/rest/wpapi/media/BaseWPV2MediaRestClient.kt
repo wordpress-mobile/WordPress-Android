@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.MimeType
@@ -88,6 +89,16 @@ abstract class BaseWPV2MediaRestClient constructor(
         coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
             val payload = syncFetchMediaList(site, number, offset, mimeType)
             dispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
+        }
+    }
+
+    fun fetchMedia(
+        site: SiteModel,
+        media: MediaModel
+    ) {
+        coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
+            val payload = syncFetchMedia(site, media.mediaId)
+            dispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload))
         }
     }
 
@@ -172,6 +183,44 @@ abstract class BaseWPV2MediaRestClient constructor(
         }
     }
 
+    private suspend fun syncFetchMedia(site: SiteModel, mediaId: Long): MediaPayload {
+        val url = WPAPI.media.id(mediaId)
+        val response = executeGetGsonRequest(
+            site,
+            url,
+            emptyMap(),
+            MediaWPRESTResponse::class.java
+        )
+
+        return when (response) {
+            is WPAPIResponse.Error -> {
+                val errorMessage = "Fail to fetch media. Response: $response"
+                AppLog.w(MEDIA, errorMessage)
+                val error = MediaError(MediaErrorType.fromBaseNetworkError(response.error))
+                error.logMessage = errorMessage
+                MediaPayload(site, null, error)
+            }
+
+            is WPAPIResponse.Success -> {
+                val fetchedMedia = response.data?.toMediaModel(site.id)
+                when {
+                    fetchedMedia != null -> {
+                        AppLog.v(MEDIA, "Fetched media successfully for mediaId: $mediaId")
+                        MediaPayload(site, fetchedMedia)
+                    }
+
+                    else -> {
+                        AppLog.w(
+                            MEDIA,
+                            "Request successful but fetched media is null for mediaId: $mediaId"
+                        )
+                        MediaPayload(site, null, MediaError(MediaErrorType.NULL_MEDIA_ARG))
+                    }
+                }
+            }
+        }
+    }
+
     private suspend fun syncFetchMediaList(
         site: SiteModel,
         perPage: Int,
@@ -202,6 +251,7 @@ abstract class BaseWPV2MediaRestClient constructor(
                 error.logMessage = errorMessage
                 FetchMediaListResponsePayload(site, error, mimeType)
             }
+
             is WPAPIResponse.Success -> {
                 val mediaList = response.data.orEmpty().map { it.toMediaModel(site.id) }
                 AppLog.v(MEDIA, "Fetched media list for site with size: " + mediaList.size)
