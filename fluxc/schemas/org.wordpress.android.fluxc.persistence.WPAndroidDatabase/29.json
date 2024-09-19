@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 29,
-    "identityHash": "c5be958ad41ef1939e7c17b6c8677ad3",
+    "identityHash": "da5d8c8bf3e1cdb92936f43ff8e6b907",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -848,7 +848,7 @@
       },
       {
         "tableName": "BlazeCampaignObjectives",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locale` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locale` TEXT NOT NULL, `suitableForDescription` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -871,6 +871,12 @@
           {
             "fieldPath": "locale",
             "columnName": "locale",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "suitableForDescription",
+            "columnName": "suitableForDescription",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -984,7 +990,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5be958ad41ef1939e7c17b6c8677ad3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'da5d8c8bf3e1cdb92936f43ff8e6b907')"
     ]
   }
 }

@@ -135,6 +135,7 @@ class BlazeCampaignsStore @Inject constructor(
                             id = it.id,
                             title = it.title,
                             description = it.description,
+                            suitableForDescription = it.suitableForDescription,
                             locale = locale
                         )
                     }.orEmpty())
