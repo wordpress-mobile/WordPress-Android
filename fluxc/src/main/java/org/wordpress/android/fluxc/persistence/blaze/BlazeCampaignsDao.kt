@@ -6,13 +6,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
 import java.util.Date
@@ -50,21 +48,6 @@ abstract class BlazeCampaignsDao {
 
     @Query("DELETE FROM BlazeCampaigns where siteId = :siteId")
     abstract fun clearBlazeCampaigns(siteId: Long)
-
-    @Query("SELECT * FROM BlazeCampaignObjectives WHERE locale = :locale")
-    abstract fun observeObjectives(locale: String): Flow<List<BlazeCampaignObjectiveEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertObjectives(topics: List<BlazeCampaignObjectiveEntity>)
-
-    @Query("DELETE FROM BlazeCampaignObjectives")
-    abstract suspend fun deleteObjectives()
-
-    @Transaction
-    open suspend fun replaceObjectives(objectives: List<BlazeCampaignObjectiveEntity>) {
-        deleteObjectives()
-        insertObjectives(objectives)
-    }
 
     @Entity(
         tableName = "BlazeCampaigns",
@@ -123,16 +106,5 @@ abstract class BlazeCampaignsDao {
                 isEndlessCampaign = campaign.isEndlessCampaign
             )
         }
-    }
-
-    @Entity(tableName = "BlazeCampaignObjectives")
-    data class BlazeCampaignObjectiveEntity(
-        @PrimaryKey val id: String,
-        val title: String,
-        val description: String,
-        val suitableForDescription: String,
-        val locale: String
-    ) {
-        fun toDomainModel() = BlazeCampaignObjective(id, title, description, suitableForDescription)
     }
 }
