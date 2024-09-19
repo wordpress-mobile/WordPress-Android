@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
@@ -38,6 +39,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignImage
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -121,6 +124,7 @@ class BlazeCampaignsStoreTest {
     private val creationRestClient: BlazeCreationRestClient = mock()
     private val blazeCampaignsDao: BlazeCampaignsDao = mock()
     private val blazeTargetingDao: BlazeTargetingDao = mock()
+    private val blazeObjectivesDao: BlazeObjectivesDao = mock()
     private val siteModel = SiteModel().apply { siteId = SITE_ID }
 
     private lateinit var store: BlazeCampaignsStore
@@ -135,7 +139,8 @@ class BlazeCampaignsStoreTest {
             creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,
-            coroutineEngine = initCoroutineEngine()
+            coroutineEngine = initCoroutineEngine(),
+            blazeObjectivesDao = blazeObjectivesDao
         )
     }
 
@@ -212,6 +217,48 @@ class BlazeCampaignsStoreTest {
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
         assertThat(result).isNull()
+    }
+
+    @Test
+    fun `when fetching campaign objectives, then persist data in DB`() = test {
+        whenever(creationRestClient.fetchCampaignObjectives(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
+                List(4) {
+                    BlazeCampaignObjective(
+                        id = it.toString(),
+                        title = "Title $it",
+                        description = "Description $it",
+                        suitableForDescription = "Suitable for description $it"
+                    )
+                }
+            )
+        )
+
+        store.fetchBlazeCampaignObjectives(siteModel)
+
+        verify(blazeObjectivesDao).replaceObjectives(any())
+    }
+
+    @Test
+    fun `when observing campaign objectives, then return data from DB`() = test {
+        whenever(blazeObjectivesDao.observeObjectives(any())).thenReturn(
+            flowOf(
+                List(4) {
+                    BlazeCampaignObjectiveEntity(
+                        id = it.toString(),
+                        title = "Title $it",
+                        description = "Description $it",
+                        suitableForDescription = "Suitable for description $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        val objectives = store.observeBlazeCampaignObjectives().first()
+
+        assertThat(objectives).isNotNull
+        assertThat(objectives.size).isEqualTo(4)
     }
 
     @Test
