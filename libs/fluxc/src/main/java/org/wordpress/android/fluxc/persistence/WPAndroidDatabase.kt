@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
@@ -100,6 +101,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun blazeTargetingDao(): BlazeTargetingDao
 
     abstract fun jetpackSocialDao(): JetpackSocialDao
+
+    abstract fun blazeObjectivesDao(): BlazeObjectivesDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
