@@ -293,7 +293,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     (String) mSettings.get("siteApiRoot"),
                     (String) mSettings.get("siteApiNamespace"),
                     (String) mSettings.get("authHeader"),
-                    true, // Set as a FeatureFlag
+                    false, // Set as a FeatureFlag
                     postId,
                     (String) mSettings.get("postType"),
                     (String) mSettings.get("postTitle"),
