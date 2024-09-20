@@ -1383,7 +1383,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFiles(Map<String, MediaFile> mediaList) {
-        if (getActivity() == null) {
+        // Disabling media sharing with the new editor until support is added.
+        if (getActivity() == null || mIsNewGutenbergEnabled) {
             // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
             // Activity may have already be gone.
             // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
