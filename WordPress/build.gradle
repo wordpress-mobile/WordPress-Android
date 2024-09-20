@@ -611,8 +611,6 @@ dependencyAnalysis {
         onUnusedDependencies {
             // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
             exclude("org.mockito:mockito-android")
-            // This dependency is used by the libs:analytics module, which wasn't converted to adhere to included builds
-            exclude("com.automattic:Automattic-Tracks-Android")
         }
     }
 }
