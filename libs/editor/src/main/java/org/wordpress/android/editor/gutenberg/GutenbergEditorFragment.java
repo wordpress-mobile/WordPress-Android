@@ -94,6 +94,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploa
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
+import org.wordpress.gutenberg.GutenbergWebViewPool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -275,7 +276,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (mIsNewGutenbergEnabled) {
-            mGutenbergView = new GutenbergView(requireContext());
+            mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
             mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -1488,6 +1489,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onDestroy() {
         if (mIsNewGutenbergEnabled && mGutenbergView != null) {
+            GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mGutenbergView.destroy();
         }
         hideSavingProgressDialog();

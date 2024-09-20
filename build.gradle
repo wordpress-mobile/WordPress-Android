@@ -35,7 +35,7 @@ ext {
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
     gravatarVersion = '1.0.0'
-    gutenbergKitVersion = '23-160254e86cf227decf31693c1dc608ca1ea70082'
+    gutenbergKitVersion = '23-60ef352a1ff433cc306158df1e926ce30f88861b'
 
     // main
     androidInstallReferrerVersion = '2.2'

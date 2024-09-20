@@ -437,6 +437,7 @@ dependencies {
             strictly automatticTracksVersion
         }
     }
+    implementation "org.wordpress.gutenbergkit:android:$gutenbergKitVersion"
 
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'

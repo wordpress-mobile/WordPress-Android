@@ -248,6 +248,7 @@ import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
+import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
@@ -780,6 +781,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun setupEditor() {
+        if (isNewGutenbergEditor) {
+            GutenbergWebViewPool.getPreloadedWebView(getContext())
+        }
         // Check whether to show the visual editor
 
         // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
