@@ -39,6 +39,10 @@
         <!-- EDITOR -->
         <ignore path="**/org.jsoup/**" /> <!-- jsoup -->
     </issue>
+    <issue id="MissingAutoVerifyAttribute" severity="warning" />
+    <issue id="SensitiveExternalPath" severity="warning" />
+    <issue id="WeakPrng" severity="warning" />
+    <issue id="TapjackingVulnerable" severity="warning" />
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->

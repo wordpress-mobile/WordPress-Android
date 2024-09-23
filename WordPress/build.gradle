@@ -604,6 +604,7 @@ dependencies {
     implementation "me.saket.cascade:cascade-compose:2.3.0"
 
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+    lintChecks 'com.android.security.lint:lint:1.0.1'
 }
 
 dependencyAnalysis {
