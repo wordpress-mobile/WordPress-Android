@@ -35,7 +35,7 @@ dependencies {
         implementation(libs.jetty.webapp) {
             because(wireMockSecurity)
         }
-        implementation('com.fasterxml.jackson.core:jackson-databind:2.12.7.1') {
+        implementation(libs.jackson.databind) {
             because(wireMockSecurity)
         }
         implementation('com.jayway.jsonpath:json-path:2.9.0') {
