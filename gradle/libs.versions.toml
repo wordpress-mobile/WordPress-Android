@@ -1,6 +1,7 @@
 [versions]
 apache-http-client-android = '4.3.5.1'
 assertj = '3.26.3'
+automattic-rest = '1.0.8'
 commons-fileupload = '1.5'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
@@ -13,6 +14,7 @@ wiremock = '2.26.3'
 [libraries]
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
