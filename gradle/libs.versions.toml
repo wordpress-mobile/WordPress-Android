@@ -1,7 +1,9 @@
 [versions]
 apache-http-client-android = '4.3.5.1'
+jetty-webapp = '9.4.51.v20230217'
 wiremock = '2.26.3'
 
 [libraries]
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
+jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
