@@ -43,6 +43,7 @@
     <issue id="SensitiveExternalPath" severity="warning" />
     <issue id="WeakPrng" severity="warning" />
     <issue id="TapjackingVulnerable" severity="warning" />
+    <issue id="InsecurePermissionProtectionLevel" severity="warning" />
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
