@@ -13,9 +13,8 @@ dependencies {
     implementation(libs.squareup.kotlin.poet.ksp)
     implementation "com.google.devtools.ksp:symbol-processing-api:$gradle.ext.kspVersion"
 
-    def kctVersion = "1.5.0"
-    testImplementation "com.github.tschuchortdev:kotlin-compile-testing:$kctVersion"
-    testImplementation "com.github.tschuchortdev:kotlin-compile-testing-ksp:$kctVersion"
+    testImplementation(libs.kotlin.compile.testing.main)
+    testImplementation(libs.kotlin.compile.testing.ksp)
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
