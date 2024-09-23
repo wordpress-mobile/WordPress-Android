@@ -1,4 +1,5 @@
 [versions]
+android-volley = '1.2.1'
 apache-http-client-android = '4.3.5.1'
 assertj = '3.26.3'
 automattic-rest = '1.0.8'
@@ -13,6 +14,7 @@ wiremock = '2.26.3'
 wordpress-utils = '3.14.0'
 
 [libraries]
+android-volley = { group = "com.android.volley", name = "volley", version.ref = "android-volley" }
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }
