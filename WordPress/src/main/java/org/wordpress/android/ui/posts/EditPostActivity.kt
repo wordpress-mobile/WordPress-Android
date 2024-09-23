@@ -1408,11 +1408,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
         if (undoItem != null) {
             undoItem.setEnabled(menuHasUndo)
-            undoItem.setVisible(!htmlModeMenuStateOn)
+            undoItem.setVisible(!htmlModeMenuStateOn && !isNewGutenbergEditor)
         }
         if (redoItem != null) {
             redoItem.setEnabled(menuHasRedo)
-            redoItem.setVisible(!htmlModeMenuStateOn)
+            redoItem.setVisible(!htmlModeMenuStateOn && !isNewGutenbergEditor)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
@@ -1422,7 +1422,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(
                 (((editorFragment is AztecEditorFragment)
-                        || (editorFragment is GutenbergEditorFragment))) && showMenuItems
+                        || (editorFragment is GutenbergEditorFragment))) && !isNewGutenbergEditor && showMenuItems
             )
             viewHtmlModeMenuItem.setTitle(
                 if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
@@ -1459,16 +1459,20 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         val contentInfo = menu.findItem(R.id.menu_content_info)
         (editorFragment as? GutenbergEditorFragment)?.let { gutenbergEditorFragment ->
-            contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
-                try {
-                    gutenbergEditorFragment.showContentInfo()
-                } catch (e: EditorFragmentNotAddedException) {
-                    ToastUtils.showToast(
-                        getContext(),
-                        R.string.toast_content_info_failed
-                    )
+            if (isNewGutenbergEditor) {
+                contentInfo.isVisible = false
+            } else {
+                contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
+                    try {
+                        gutenbergEditorFragment.showContentInfo()
+                    } catch (e: EditorFragmentNotAddedException) {
+                        ToastUtils.showToast(
+                            getContext(),
+                            R.string.toast_content_info_failed
+                        )
+                    }
+                    true
                 }
-                true
             }
         } ?: run {
             contentInfo.isVisible = false // only show the menu item for Gutenberg
@@ -1480,7 +1484,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             val showHelpAndSupport = jetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor()
             val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
             helpMenuItem.setTitle(helpMenuTitle)
-            if (editorFragment is GutenbergEditorFragment && showMenuItems) {
+            if (editorFragment is GutenbergEditorFragment && showMenuItems && !isNewGutenbergEditor) {
                 helpMenuItem.setVisible(true)
             } else {
                 helpMenuItem.setVisible(false)
