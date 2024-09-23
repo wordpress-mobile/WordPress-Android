@@ -1589,6 +1589,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void showNotice(String message) {
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
         getGutenbergContainerFragment().showNotice(message);
     }
 

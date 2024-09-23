@@ -3568,6 +3568,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun updateVoiceContentIfNeeded() {
+        if (isNewGutenbergEditor) {
+            return
+        }
         // Check if voice content exists and this is a new post for a Gutenberg editor fragment
         val content = intent.getStringExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
         if (isNewPost && content != null && !isVoiceContentSet) {
