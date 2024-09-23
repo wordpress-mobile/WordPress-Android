@@ -95,7 +95,6 @@ ext {
     facebookReactVersion = '0.73.3'
 
     // test
-    assertjVersion = '3.26.3'
     mockitoAndroidVersion = '5.13.0'
     mockitoKotlinVersion = '4.1.0'
 

@@ -68,7 +68,7 @@ dependencies {
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation(libs.junit)
-    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation(libs.assertj.core)
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'

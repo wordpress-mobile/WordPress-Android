@@ -16,6 +16,6 @@ dependencies {
     testImplementation(libs.kotlin.compile.testing.main)
     testImplementation(libs.kotlin.compile.testing.ksp)
     testImplementation(libs.junit)
-    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation(libs.assertj.core)
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
 }

@@ -519,7 +519,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
-    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation(libs.assertj.core)
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
 
     androidTestImplementation project(path:':libs:mocks')
