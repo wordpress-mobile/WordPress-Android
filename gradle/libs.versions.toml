@@ -1,5 +1,7 @@
 [versions]
+apache-http-client-android = '4.3.5.1'
 wiremock = '2.26.3'
 
 [libraries]
+apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }

@@ -23,7 +23,7 @@ dependencies {
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    runtimeOnly("org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion")
+    runtimeOnly(libs.apache.http.client.android)
 
     constraints {
         implementation(libs.wiremock) {
