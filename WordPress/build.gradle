@@ -420,9 +420,9 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    implementation ("$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion") {
+    implementation("$gradle.ext.wputilsBinaryPath:${libs.wordpress.utils.get().version}") {
         version {
-            strictly wordPressUtilsVersion
+            strictly libs.wordpress.utils.get().version
         }
     }
     implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
