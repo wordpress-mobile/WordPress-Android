@@ -94,6 +94,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploa
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
+import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
 
 import java.io.Serializable;
@@ -155,6 +156,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
+    private ContentChangeListener contentChangeListener = null;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -281,10 +283,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
-            mGutenbergView.setOnFileChooserRequested((intent, requestCode) -> {
+            mGutenbergView.setOnFileChooserRequestedListener((intent, requestCode) -> {
                 startActivityForResult(intent, requestCode);
                 return null;
             });
+            mGutenbergView.setContentChangeListener(contentChangeListener);
 
             Integer postId = (Integer) mSettings.get("postId");
             if (postId != null && postId == 0) {
@@ -1277,7 +1280,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     result[0] = new Pair<>(title, content);
                     latch.countDown();
                 }
-            });
+            }, true);
 
             try {
                 latch.await();
@@ -1370,6 +1373,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         });
+    }
+
+    public void onEditorContentChanged(@NonNull ContentChangeListener listener) {
+        contentChangeListener = listener;
     }
 
     @Override
@@ -1491,6 +1498,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (mIsNewGutenbergEnabled && mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mGutenbergView.destroy();
+            contentChangeListener = null;
         }
         hideSavingProgressDialog();
         super.onDestroy();

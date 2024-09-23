@@ -252,6 +252,7 @@ import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
+import org.wordpress.gutenberg.GutenbergView
 import java.io.File
 import java.util.Locale
 import java.util.regex.Matcher
@@ -2461,8 +2462,16 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
-                    editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
-                        storePostViewModel.savePostWithDelay()
+                    if (isNewGutenbergEditor) {
+                        editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
+                            override fun onContentChanged(title: String, content: String) {
+                                storePostViewModel.savePostWithDelay()
+                            }
+                        })
+                    } else {
+                        editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
+                            storePostViewModel.savePostWithDelay()
+                        }
                     }
                     if (editorFragment is EditorMediaUploadListener) {
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
