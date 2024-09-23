@@ -288,6 +288,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 return null;
             });
             mGutenbergView.setContentChangeListener(mContentChangeListener);
+            mGutenbergView.setEditorDidBecomeAvailable(view -> {
+                mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<Object>(), false);
+            });
 
             Integer postId = (Integer) mSettings.get("postId");
             if (postId != null && postId == 0) {
@@ -1187,6 +1190,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void setContent(CharSequence text) {
         if (text == null) {
             text = "";
+        }
+
+        if (mIsNewGutenbergEnabled) {
+            mGutenbergView.setContent((String) text);
+            return;
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
