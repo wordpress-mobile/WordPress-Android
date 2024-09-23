@@ -4,6 +4,7 @@ commons-fileupload = '1.5'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
+squareup-kotlin-poet = '1.18.1'
 wiremock = '2.26.3'
 
 [libraries]
@@ -12,4 +13,6 @@ commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload"
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
+squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
+squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
