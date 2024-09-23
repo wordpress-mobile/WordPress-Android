@@ -156,7 +156,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
-    private ContentChangeListener contentChangeListener = null;
+    private ContentChangeListener mContentChangeListener = null;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -287,7 +287,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 startActivityForResult(intent, requestCode);
                 return null;
             });
-            mGutenbergView.setContentChangeListener(contentChangeListener);
+            mGutenbergView.setContentChangeListener(mContentChangeListener);
 
             Integer postId = (Integer) mSettings.get("postId");
             if (postId != null && postId == 0) {
@@ -1376,7 +1376,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void onEditorContentChanged(@NonNull ContentChangeListener listener) {
-        contentChangeListener = listener;
+        mContentChangeListener = listener;
     }
 
     @Override
