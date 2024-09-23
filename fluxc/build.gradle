@@ -81,6 +81,7 @@ dependencies {
     kapt fluxcProcessorProjectDependency
 
     // External libs
+    api sharedLibs.eventbus.android
     api sharedLibs.eventbus.java
     api sharedLibs.squareup.okhttp3
     implementation sharedLibs.squareup.okhttp3.urlconnection
@@ -117,6 +118,15 @@ dependencies {
     testImplementation sharedLibs.mockito.inline
 
     lintChecks sharedLibs.wordpress.lint
+}
+
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            // This dependency is actually needed otherwise the app will crash with a runtime exception.
+            exclude(sharedLibs.eventbus.android.get().module.toString())
+        }
+    }
 }
 
 project.afterEvaluate {
