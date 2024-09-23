@@ -41,7 +41,7 @@ dependencies {
         implementation(libs.json.path) {
             because(wireMockSecurity)
         }
-        implementation('commons-fileupload:commons-fileupload:1.5') {
+        implementation(libs.commons.fileupload) {
             because(wireMockSecurity)
         }
     }
