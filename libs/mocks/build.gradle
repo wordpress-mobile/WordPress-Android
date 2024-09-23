@@ -17,7 +17,7 @@ android {
 }
 
 dependencies {
-    api("com.github.tomakehurst:wiremock") {
+    api(libs.wiremock.get().module.toString()) {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
@@ -26,7 +26,7 @@ dependencies {
     runtimeOnly("org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion")
 
     constraints {
-        implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+        implementation(libs.wiremock) {
             because("newer versions of WireMock use Java APIs not available on Android")
         }
 

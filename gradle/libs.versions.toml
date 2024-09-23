@@ -1,0 +1,5 @@
+[versions]
+wiremock = '2.26.3'
+
+[libraries]
+wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
