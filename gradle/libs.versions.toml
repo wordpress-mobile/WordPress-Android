@@ -2,10 +2,12 @@
 apache-http-client-android = '4.3.5.1'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
+json-path = '2.9.0'
 wiremock = '2.26.3'
 
 [libraries]
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
+json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }

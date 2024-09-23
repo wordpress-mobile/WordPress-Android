@@ -38,7 +38,7 @@ dependencies {
         implementation(libs.jackson.databind) {
             because(wireMockSecurity)
         }
-        implementation('com.jayway.jsonpath:json-path:2.9.0') {
+        implementation(libs.json.path) {
             because(wireMockSecurity)
         }
         implementation('commons-fileupload:commons-fileupload:1.5') {
