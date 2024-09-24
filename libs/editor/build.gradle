@@ -101,7 +101,7 @@ dependencies {
     implementation(libs.androidx.fragment.main)
     implementation(libs.androidx.appcompat.main)
     implementation(libs.androidx.preference)
-    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation(libs.google.material)
     implementation(libs.android.volley)
     implementation "com.google.code.gson:gson:$googleGsonVersion"
     implementation(libs.automattic.tracks.crashlogging)

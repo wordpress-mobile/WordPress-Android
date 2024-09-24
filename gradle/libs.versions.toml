@@ -15,6 +15,7 @@ assertj = '3.26.3'
 automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
 commons-fileupload = '1.5'
+google-material = '1.12.0'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
@@ -47,6 +48,7 @@ automattic-rest = { group = "com.automattic", name = "rest", version.ref = "auto
 automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automattic-tracks" }
 automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automattic-tracks" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
