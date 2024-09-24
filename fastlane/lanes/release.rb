@@ -5,10 +5,6 @@ platform :android do
   #
   # @param [Boolean] skip_confirm Whether to skip the confirmation prompt
   #
-  # @example
-  #   bundle exec fastlane code_freeze
-  #   bundle exec fastlane code_freeze skip_confirm:true
-  #
   lane :code_freeze do |skip_confirm: false|
     ensure_git_status_clean
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
@@ -150,9 +146,6 @@ platform :android do
   #
   # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
   #
-  # @example
-  #   bundle exec fastlane new_beta_release skip_confirm:true
-  #
   lane :new_beta_release do |skip_confirm: false|
     # Checkout default branch and update
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
@@ -258,9 +251,6 @@ platform :android do
   #
   # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
   #
-  # @example
-  #   bundle exec fastlane finalize_hotfix_release skip_confirm:true
-  #
   lane :finalize_hotfix_release do |skip_confirm: false|
     ensure_git_branch(branch: '^release/')
     ensure_git_status_clean unless is_ci
@@ -287,9 +277,6 @@ platform :android do
   # This lane finalizes a release by updating store metadata and running release checks.
   #
   # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
-  #
-  # @example
-  #   bundle exec fastlane finalize_release(skip_confirm: true)
   #
   lane :finalize_release do |skip_confirm: false|
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(version_properties_path: VERSION_PROPERTIES_PATH)
@@ -380,6 +367,7 @@ platform :android do
   #
   # @example
   #   bundle exec fastlane trigger_beta_build branch_to_build:"release/1.2.3"
+  #
   lane :trigger_beta_build do |branch_to_build: git_branch|
     trigger_buildkite_release_build(
       branch: branch_to_build,
@@ -393,6 +381,7 @@ platform :android do
   #
   # @example
   #   bundle exec fastlane trigger_release_build branch_to_build:"release/1.2.3"
+  #
   lane :trigger_release_build do |branch_to_build: git_branch|
     trigger_buildkite_release_build(
       branch: branch_to_build,
