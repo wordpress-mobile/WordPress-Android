@@ -484,7 +484,7 @@ dependencies {
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
-    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
+    implementation(libs.yalantis.ucrop) {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'

@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.main)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.livedata.core)
-    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
+    implementation(libs.yalantis.ucrop) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
