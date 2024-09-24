@@ -2,6 +2,7 @@
 android-volley = '1.2.1'
 androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
+androidx-appcompat = '1.7.0'
 androidx-core = '1.13.1'
 androidx-fragment = '1.8.3'
 androidx-preference = '1.2.1'
@@ -25,6 +26,8 @@ android-volley = { group = "com.android.volley", name = "volley", version.ref = 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-activity-main = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
+androidx-appcompat-main = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-core-main = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }

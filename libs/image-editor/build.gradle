@@ -46,7 +46,7 @@ dependencies {
     implementation(libs.androidx.core.main)
     implementation(libs.androidx.activity.main)
     implementation(libs.androidx.fragment.main)
-    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
+    implementation(libs.androidx.appcompat.main)
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
