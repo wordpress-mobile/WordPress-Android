@@ -459,7 +459,7 @@ dependencies {
     implementation(libs.androidx.preference)
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.webkit:webkit:$androidxWebkitVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
+    implementation(libs.androidx.constraintlayout.main)
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata:$androidxLifecycleVersion"
@@ -587,7 +587,7 @@ dependencies {
     implementation "androidx.compose.material:material"
     // - Jetpack Compose - AndroidX
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
-    implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
+    implementation(libs.androidx.constraintlayout.compose)
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation "io.coil-kt:coil-video:$coilComposeVersion"

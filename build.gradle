@@ -41,8 +41,6 @@ ext {
     androidxComposeCompilerVersion = '1.5.14'
     androidxComposeNavigationVersion = '2.7.7'
     androidxCardviewVersion = '1.0.0'
-    androidxConstraintlayoutVersion = '2.1.4'
-    androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.8.5'
     androidxPercentlayoutVersion = '1.0.0'
