@@ -45,7 +45,7 @@ repositories {
 dependencies {
     implementation(libs.androidx.core.main)
     implementation(libs.androidx.activity.main)
-    implementation "androidx.fragment:fragment:$androidxFragmentVersion"
+    implementation(libs.androidx.fragment.main)
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"

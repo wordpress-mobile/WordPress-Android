@@ -98,7 +98,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
     implementation(libs.androidx.core.main)
-    implementation "androidx.fragment:fragment:$androidxFragmentVersion"
+    implementation(libs.androidx.fragment.main)
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation(libs.androidx.preference)
     implementation "com.google.android.material:material:$googleMaterialVersion"
