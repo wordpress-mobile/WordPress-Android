@@ -516,15 +516,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
     testImplementation(libs.junit)
-    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation(libs.mockito.android)
+    testImplementation(libs.mockito.kotlin)
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation(libs.assertj.core)
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
 
     androidTestImplementation project(path:':libs:mocks')
 
-    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation(libs.mockito.kotlin)
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         version {
@@ -609,7 +609,7 @@ dependencyAnalysis {
             // This dependency is actually needed otherwise the app will crash with a runtime exception.
             exclude("org.greenrobot:eventbus")
             // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
-            exclude("org.mockito:mockito-android")
+            exclude(libs.mockito.android.get().module.toString())
         }
     }
 }

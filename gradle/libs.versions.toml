@@ -22,6 +22,8 @@ jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
 junit = '4.13.2'
 kotlin-compile-testing = "1.5.0"
+mockito-android = '5.13.0'
+mockito-kotlin = '4.1.0'
 squareup-kotlin-poet = '1.18.1'
 wiremock = '2.26.3'
 wordpress-lint = '2.1.0'
@@ -65,6 +67,8 @@ json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-compile-testing-main = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito-android" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
