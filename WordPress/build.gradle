@@ -335,6 +335,7 @@ android {
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
         enable += 'UnknownNullness'
+        sarifReport = System.getenv('CI') ? true : false
     }
 
     packagingOptions {
@@ -396,7 +397,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation 'androidx.webkit:webkit:1.11.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
@@ -429,12 +429,6 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
-
-    implementation("$gradle.ext.tracksBinaryPath:$automatticTracksVersion") {
-        version {
-            strictly automatticTracksVersion
-        }
-    }
 
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
@@ -604,6 +598,16 @@ dependencies {
     implementation "me.saket.cascade:cascade-compose:2.3.0"
 
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+    lintChecks 'com.android.security.lint:lint:1.0.1'
+}
+
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
+            exclude("org.mockito:mockito-android")
+        }
+    }
 }
 
 configurations.all {
