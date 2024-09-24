@@ -104,7 +104,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation(libs.android.volley)
     implementation "com.google.code.gson:gson:$googleGsonVersion"
-    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+    implementation(libs.automattic.tracks.crashlogging)
 
     lintChecks(libs.wordpress.lint)
 }

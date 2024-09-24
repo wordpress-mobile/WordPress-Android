@@ -4,6 +4,7 @@ androidx-annotation = '1.8.2'
 apache-http-client-android = '4.3.5.1'
 assertj = '3.26.3'
 automattic-rest = '1.0.8'
+automattic-tracks = '5.1.0'
 commons-fileupload = '1.5'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
@@ -21,6 +22,8 @@ androidx-annotation = { group = "androidx.annotation", name = "annotation", vers
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }
+automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automattic-tracks" }
+automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automattic-tracks" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
