@@ -430,12 +430,6 @@ dependencies {
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
 
-    implementation("$gradle.ext.tracksBinaryPath:$automatticTracksVersion") {
-        version {
-            strictly automatticTracksVersion
-        }
-    }
-
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
