@@ -12,6 +12,7 @@ junit = '4.13.2'
 kotlin-compile-testing = "1.5.0"
 squareup-kotlin-poet = '1.18.1'
 wiremock = '2.26.3'
+wordpress-lint = '2.1.0'
 wordpress-utils = '3.14.0'
 
 [libraries]
@@ -30,4 +31,5 @@ kotlin-compile-testing-main = { group = "com.github.tschuchortdev", name = "kotl
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
+wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }

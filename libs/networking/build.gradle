@@ -34,5 +34,5 @@ dependencies {
     implementation(libs.android.volley)
     implementation(libs.androidx.annotation)
 
-    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+    lintChecks(libs.wordpress.lint)
 }
