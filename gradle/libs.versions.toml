@@ -3,6 +3,7 @@ android-volley = '1.2.1'
 androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
 androidx-appcompat = '1.7.0'
+androidx-arch-core = '2.2.0'
 androidx-constraintlayout = '2.1.4'
 androidx-constraintlayout-compose = '1.0.1'
 androidx-core = '1.13.1'
@@ -37,6 +38,7 @@ androidx-activity-main = { group = "androidx.activity", name = "activity", versi
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
 androidx-appcompat-main = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidx-appcompat" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidx-arch-core" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout-compose" }
 androidx-constraintlayout-main = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
