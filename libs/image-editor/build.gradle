@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation(libs.androidx.core.main)
     implementation "androidx.activity:activity:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
