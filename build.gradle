@@ -25,7 +25,6 @@ ext {
     // libs
     automatticAboutVersion = '1.4.0'
     gutenbergMobileVersion = 'v1.121.0'
-    wordPressAztecVersion = 'v2.1.4'
     wordPressFluxCVersion = '2.97.0'
     wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
