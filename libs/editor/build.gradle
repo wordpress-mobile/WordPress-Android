@@ -103,7 +103,7 @@ dependencies {
     implementation(libs.androidx.preference)
     implementation(libs.google.material)
     implementation(libs.android.volley)
-    implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation(libs.google.gson)
     implementation(libs.automattic.tracks.crashlogging)
 
     lintChecks(libs.wordpress.lint)

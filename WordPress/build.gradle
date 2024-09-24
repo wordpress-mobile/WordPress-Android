@@ -439,7 +439,7 @@ dependencies {
 
     implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
 
-    implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation(libs.google.gson)
     implementation(libs.androidx.core.main)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.common)
