@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.automattic.tracks.android)
     implementation(libs.wordpress.utils)
 
-    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation(libs.androidx.preference)
 
     lintChecks(libs.wordpress.lint)
 }
