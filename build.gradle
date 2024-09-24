@@ -45,7 +45,6 @@ ext {
     androidxLifecycleVersion = '2.8.5'
     androidxPercentlayoutVersion = '1.0.0'
     androidxSwipeToRefreshVersion = '1.1.0'
-    androidxViewpager2Version = '1.1.0'
     androidxWorkManagerVersion = "2.9.1"
     androidxComposeMaterial3Version = '1.2.1'
     androidxWebkitVersion =  '1.12.0'
