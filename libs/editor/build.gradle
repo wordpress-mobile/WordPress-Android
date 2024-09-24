@@ -95,8 +95,8 @@ dependencies {
 
     implementation(libs.wordpress.utils)
 
-    implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
+    implementation(libs.androidx.lifecycle.common)
+    implementation(libs.androidx.lifecycle.livedata.core)
     implementation(libs.androidx.core.main)
     implementation(libs.androidx.fragment.main)
     implementation(libs.androidx.appcompat.main)
