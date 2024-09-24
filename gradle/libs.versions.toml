@@ -1,5 +1,6 @@
 [versions]
 android-volley = '1.2.1'
+androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
 androidx-core = '1.13.1'
 androidx-preference = '1.2.1'
@@ -20,6 +21,8 @@ wordpress-utils = '3.14.0'
 
 [libraries]
 android-volley = { group = "com.android.volley", name = "volley", version.ref = "android-volley" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-activity-main = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-core-main = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
