@@ -9,4 +9,7 @@ import javax.inject.Inject
  */
 @FeatureInDevelopment
 class SelfHostedUsersFeatureConfig
-@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.ENABLE_SELF_HOSTED_USERS)
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(
+    appConfig,
+    BuildConfig.ENABLE_SELF_HOSTED_USERS
+)
