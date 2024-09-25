@@ -63,6 +63,7 @@ wordpress-fluxc = '2.97.0'
 wordpress-lint = '2.1.0'
 wordpress-login = '1.16.0'
 wordpress-persistent-edittext = '1.0.2'
+wordpress-rs = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
 wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
 zendesk = '5.1.2'
@@ -151,6 +152,7 @@ squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", versi
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
+wordpress-rs-android = { group = "rs.wordpress.api", name = "android", version.ref = "wordpress-rs" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
 yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }

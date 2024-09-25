@@ -508,7 +508,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
-    implementation("rs.wordpress.api:android:$wordPressRsVersion")
+    implementation(libs.wordpress.rs.android)
 
     testImplementation(libs.androidx.arch.core.testing) {
         exclude group: 'com.android.support', module: 'support-compat'

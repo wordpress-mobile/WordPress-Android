@@ -22,9 +22,6 @@ ext {
 }
 
 ext {
-    // libs
-    wordPressRsVersion = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
-
     // main
     androidxComposeBomVersion = '2024.08.00'
     androidxComposeCompilerVersion = '1.5.14'
