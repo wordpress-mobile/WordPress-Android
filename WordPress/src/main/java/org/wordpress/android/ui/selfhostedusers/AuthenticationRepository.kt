@@ -3,13 +3,17 @@ package org.wordpress.android.ui.selfhostedusers
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.wpAuthenticationFromUsernameAndPassword
+import javax.inject.Inject
 
-class AuthenticationRepository(
-    localTestSiteUrl: String,
-    localTestSiteUsername: String,
-    localTestSitePassword: String
+class AuthenticationRepository
+@Inject constructor(
 ) {
     private val authenticatedSites = mutableMapOf<AuthenticatedSite, WpAuthentication>()
+
+    // TODO: Remove this test data and DO NOT COMMIT
+    private val localTestSiteUrl = "https://content-heavy.wpmt.co/"
+    private val localTestSiteUsername = "admin"
+    private val localTestSitePassword = "9SACBHoWIZMALNLDW8G"
 
     init {
         addAuthenticatedSite(localTestSiteUrl, localTestSiteUsername, localTestSitePassword)

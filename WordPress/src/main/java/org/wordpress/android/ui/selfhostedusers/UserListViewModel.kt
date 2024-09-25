@@ -1,16 +1,22 @@
 package org.wordpress.android.ui.selfhostedusers
 
-import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
+import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.UserListParams
 import uniffi.wp_api.UserWithEditContext
 import javax.inject.Inject
+import javax.inject.Named
 
+@HiltViewModel
 class UserListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val authRepository: AuthenticationRepository
-) : ViewModel() {
+) : ScopedViewModel(mainDispatcher) {
     private var apiClient: WpApiClient? = null
 
     fun setAuthenticatedSite(authenticatedSite: AuthenticatedSite) {

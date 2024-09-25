@@ -34,10 +34,8 @@ import uniffi.wp_api.UserWithEditContext
 @Composable
 fun UserListScreen(users: List<UserWithEditContext>) {
     val content: @Composable () -> Unit = @Composable {
-        LazyColumn {
-            items(users) {
-                UserCard(it)
-            }
+        for (user in users) {
+            UserCard(user)
         }
     }
     Screen(
@@ -71,7 +69,7 @@ private fun Screen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(id = R.string.feedback_form_title)) },
+                    title = { Text(stringResource(id = R.string.users)) },
                     navigationIcon = {
                         IconButton(onClick = onCloseClick) {
                             Icon(Icons.Filled.Close, stringResource(R.string.close))
