@@ -61,6 +61,7 @@ wordpress-login = '1.16.0'
 wordpress-persistent-edittext = '1.0.2'
 wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
+zendesk = '5.1.2'
 
 [libraries]
 airbnb-lottie-main = { group = "com.airbnb.android", name = "lottie", version.ref = "airbnb-lottie" }
@@ -142,3 +143,4 @@ wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpr
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
 yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
+zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }

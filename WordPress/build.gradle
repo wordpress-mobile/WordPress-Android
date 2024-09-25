@@ -494,7 +494,7 @@ dependencies {
     implementation(libs.bumptech.glide.volley.integration)
     implementation(libs.indexos.media.for.mobile.domain)
     implementation(libs.indexos.media.for.mobile.android)
-    implementation "com.zendesk:support:$zendeskVersion"
+    implementation(libs.zendesk.support)
     implementation files('../aars/tenor-android-core-jetified.aar') // Jetified Tenor Gif library
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
