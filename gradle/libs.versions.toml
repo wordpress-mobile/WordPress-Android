@@ -28,6 +28,7 @@ automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
 commons-fileupload = '1.5'
 facebook-react = '0.73.3'
+facebook-shimmer = '0.5.0'
 google-flexboxlayout = '3.0.0'
 google-gson = '2.11.0'
 google-material = '1.12.0'
@@ -105,6 +106,7 @@ automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "cras
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
 google-flexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "google-flexboxlayout" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }

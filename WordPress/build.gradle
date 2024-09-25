@@ -483,7 +483,7 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.apache.commons.text)
     implementation(libs.airbnb.lottie.main)
-    implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
+    implementation(libs.facebook.shimmer)
     implementation(libs.yalantis.ucrop) {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'

@@ -33,7 +33,6 @@ ext {
     androidxGridlayoutVersion = '1.0.0'
     androidxComposeMaterial3Version = '1.2.1'
     coilComposeVersion = '2.7.0'
-    facebookShimmerVersion = '0.5.0'
     firebaseBomVersion = '33.3.0'
     firebaseIidVersion = '21.1.0'
     glideVersion = '4.16.0'
