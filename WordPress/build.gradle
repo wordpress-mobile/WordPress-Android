@@ -467,9 +467,9 @@ dependencies {
     implementation(libs.android.volley)
     implementation(libs.google.play.review)
     implementation(libs.google.play.services.auth)
-    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
-    implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
-    implementation "com.google.mlkit:barcode-scanning:$googleMLKitBarcodeScanningVersion"
+    implementation(libs.google.mlkit.barcode.scanning.common)
+    implementation(libs.google.mlkit.text.recognition)
+    implementation(libs.google.mlkit.barcode.scanning.main)
 
     // CameraX
     implementation "androidx.camera:camera-camera2:$androidxCameraVersion"
