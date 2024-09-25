@@ -23,7 +23,6 @@ ext {
 
 ext {
     // libs
-    automatticAboutVersion = '1.4.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressRsVersion = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'

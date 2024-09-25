@@ -429,7 +429,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
+    implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 
     implementation(libs.automattic.rest) {
         exclude group: 'com.mcxiaoke.volley'
