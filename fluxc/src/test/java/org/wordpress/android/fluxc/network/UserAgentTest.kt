@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network
 
 import android.webkit.WebSettings
-import kotlinx.coroutines.Dispatchers
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mockStatic
@@ -23,8 +22,7 @@ class UserAgentTest {
     fun testUserAgent() = withMockedPackageUtils {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenReturn(USER_AGENT)
-            // Use the Unconfined dispatcher to allow the test to run synchronously
-            val result = UserAgent(context, APP_NAME, bgDispatcher = Dispatchers.Unconfined)
+            val result = UserAgent(context, APP_NAME)
             assertEquals("$USER_AGENT $APP_NAME/$APP_VERSION", result.toString())
         }
     }
@@ -33,8 +31,7 @@ class UserAgentTest {
     fun testDefaultUserAgentFailure() = withMockedPackageUtils {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenThrow(RuntimeException(""))
-            // Use the Unconfined dispatcher to allow the test to run synchronously
-            val result = UserAgent(context, APP_NAME, bgDispatcher = Dispatchers.Unconfined)
+            val result = UserAgent(context, APP_NAME)
             assertEquals("$APP_NAME/$APP_VERSION", result.toString())
         }
     }
