@@ -46,6 +46,7 @@ indexos-media-for-mobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
+jsoup = '1.18.1'
 junit = '4.13.2'
 kotlin-compile-testing = "1.5.0"
 kotlinx-coroutines = '1.8.1'
@@ -131,6 +132,7 @@ indexos-media-for-mobile-domain = { group = "com.github.indexos.media-for-mobile
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-compile-testing-main = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
