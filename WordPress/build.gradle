@@ -458,7 +458,7 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.preference)
     implementation(libs.androidx.work.runtime)
-    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
+    implementation(libs.androidx.webkit)
     implementation(libs.androidx.constraintlayout.main)
     implementation(libs.androidx.lifecycle.viewmodel.main)
     implementation(libs.androidx.lifecycle.livedata.core)
