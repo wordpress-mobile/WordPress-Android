@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
 import android.text.TextUtils
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -43,7 +43,8 @@ class SiteListItemBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
+    private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
+    private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -147,7 +148,7 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildSelfHostedUserListItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         // TODO: Should this excluded JetPack users?
-        return if (BuildConfig.ENABLE_SELF_HOSTED_USERS && site.selfHostedSiteId > 0) {
+        return if (selfHostedUsersFeatureConfig.isEnabled() && site.selfHostedSiteId > 0) {
             ListItem(
                 R.drawable.ic_user_white_24dp,
                 UiStringRes(R.string.users),
