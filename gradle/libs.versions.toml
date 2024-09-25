@@ -29,6 +29,7 @@ google-gson = '2.11.0'
 google-material = '1.12.0'
 google-play-app-update = '2.1.0'
 google-play-review = '2.0.1'
+google-play-services-auth = '20.4.1'
 gravatar = '1.0.0'
 gutenberg-mobile = 'v1.121.0'
 jackson-databind = '2.12.7.1'
@@ -92,6 +93,7 @@ google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "go
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 google-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "google-play-app-update" }
 google-play-review = { group = "com.google.android.play", name = "review", version.ref = "google-play-review" }
+google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google-play-services-auth" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
