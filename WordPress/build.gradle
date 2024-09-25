@@ -450,7 +450,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat.main)
     implementation(libs.androidx.appcompat.resources)
-    implementation "androidx.cardview:cardview:$androidxCardviewVersion"
+    implementation(libs.androidx.cardview)
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.material)
     implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"

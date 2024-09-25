@@ -4,6 +4,7 @@ androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
 androidx-appcompat = '1.7.0'
 androidx-arch-core = '2.2.0'
+androidx-cardview = '1.0.0'
 androidx-constraintlayout = '2.1.4'
 androidx-constraintlayout-compose = '1.0.1'
 androidx-core = '1.13.1'
@@ -52,6 +53,7 @@ androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidx-arch-core" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout-compose" }
 androidx-constraintlayout-main = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "androidx-cardview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-core-main = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }

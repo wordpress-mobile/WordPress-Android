@@ -32,7 +32,6 @@ ext {
     androidxComposeBomVersion = '2024.08.00'
     androidxComposeCompilerVersion = '1.5.14'
     androidxComposeNavigationVersion = '2.7.7'
-    androidxCardviewVersion = '1.0.0'
     androidxGridlayoutVersion = '1.0.0'
     androidxPercentlayoutVersion = '1.0.0'
     androidxSwipeToRefreshVersion = '1.1.0'
