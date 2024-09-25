@@ -25,7 +25,7 @@ ext {
     // libs
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
-    automatticTracksVersion = '5.1.0'
+    automatticTracksVersion = '6.0.2'
     gutenbergMobileVersion = 'v1.121.0'
     wordPressAztecVersion = 'v2.1.4'
     wordPressFluxCVersion = 'trunk-a77c116b8bd00247c8c0551b4497629ff84ca023'
