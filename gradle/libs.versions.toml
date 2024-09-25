@@ -42,6 +42,7 @@ google-play-services-auth = '20.4.1'
 gravatar = '1.0.0'
 greenrobot-eventbus = '3.3.1'
 gutenberg-mobile = 'v1.121.0'
+indexos-media-for-mobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jackson-databind = '2.12.7.1'
 jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
@@ -122,6 +123,8 @@ google-play-review = { group = "com.google.android.play", name = "review", versi
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google-play-services-auth" }
 greenrobot-eventbus-main = { group = "org.greenrobot", name = "eventbus", version.ref = "greenrobot-eventbus" }
 greenrobot-eventbus-java = { group = "org.greenrobot", name = "eventbus-java", version.ref = "greenrobot-eventbus" }
+indexos-media-for-mobile-android = { group = "com.github.indexos.media-for-mobile", name = "android", version.ref = "indexos-media-for-mobile" }
+indexos-media-for-mobile-domain = { group = "com.github.indexos.media-for-mobile", name = "domain", version.ref = "indexos-media-for-mobile" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson-databind" }
 jetty-webapp = { group = "org.eclipse.jetty", name = "jetty-webapp", version.ref = "jetty-webapp" }
 json-path = { group = "com.jayway.jsonpath", name = "json-path", version.ref = "json-path" }
