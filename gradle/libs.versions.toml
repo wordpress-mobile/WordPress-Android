@@ -47,6 +47,7 @@ mockito-android = '5.13.0'
 mockito-kotlin = '4.1.0'
 photoview = '2.3.0'
 squareup-kotlin-poet = '1.18.1'
+squareup-retrofit = '2.11.0'
 wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
 wordpress-fluxc = '2.97.0'
@@ -121,6 +122,7 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
+squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }

@@ -46,7 +46,6 @@ ext {
     kotlinxCoroutinesVersion = '1.8.1'
     lottieVersion = '6.5.2'
     philjayMpAndroidChartVersion = 'v3.1.0'
-    squareupRetrofitVersion = '2.11.0'
     zendeskVersion = '5.1.2'
 
     // android test

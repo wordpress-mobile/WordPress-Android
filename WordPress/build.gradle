@@ -480,7 +480,7 @@ dependencies {
     implementation(libs.photoview)
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
-    implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
+    implementation(libs.squareup.retrofit)
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
