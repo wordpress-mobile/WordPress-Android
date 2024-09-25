@@ -36,7 +36,6 @@ ext {
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
 
     // android test
-    androidxTestCoreVersion = '1.5.0'
     androidxTestExtJunitVersion = '1.2.1'
     screengrabVersion = '2.1.1'
 
