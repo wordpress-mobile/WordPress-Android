@@ -39,7 +39,6 @@ ext {
 
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.18.1'
-    kotlinxCoroutinesVersion = '1.8.1'
     philjayMpAndroidChartVersion = 'v3.1.0'
 
     // android test
