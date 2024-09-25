@@ -35,6 +35,7 @@ wordpress-aztec = 'v2.1.4'
 wordpress-fluxc = '2.97.0'
 wordpress-lint = '2.1.0'
 wordpress-login = '1.16.0'
+wordpress-persistent-edittext = '1.0.2'
 wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
 
@@ -85,5 +86,6 @@ squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", ve
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
+wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
 yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
