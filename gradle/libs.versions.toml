@@ -44,6 +44,7 @@ junit = '4.13.2'
 kotlin-compile-testing = "1.5.0"
 mockito-android = '5.13.0'
 mockito-kotlin = '4.1.0'
+photoview = '2.3.0'
 squareup-kotlin-poet = '1.18.1'
 wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
@@ -114,6 +115,7 @@ kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotli
 kotlin-compile-testing-main = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito-android" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
+photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }

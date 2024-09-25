@@ -34,7 +34,6 @@ ext {
     androidxComposeMaterial3Version = '1.2.1'
     apacheCommonsTextVersion = '1.12.0'
     coilComposeVersion = '2.7.0'
-    chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
     firebaseBomVersion = '33.3.0'

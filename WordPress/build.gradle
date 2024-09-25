@@ -477,7 +477,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.android.installreferrer)
-    implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
+    implementation(libs.photoview)
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
