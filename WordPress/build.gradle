@@ -526,23 +526,23 @@ dependencies {
 
     androidTestImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.test.uiautomator)
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
+    androidTestImplementation(libs.androidx.test.espresso.core) {
         version {
-            strictly androidxTestEspressoVersion
+            strictly libs.androidx.test.espresso.core.get().version
         }
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
+    androidTestImplementation(libs.androidx.test.espresso.contrib) {
         version {
-            strictly androidxTestEspressoVersion
+            strictly libs.androidx.test.espresso.contrib.get().version
         }
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation("androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion") {
+    androidTestImplementation(libs.androidx.test.espresso.accessibility) {
         version {
-            strictly androidxTestEspressoVersion
+            strictly libs.androidx.test.espresso.accessibility.get().version
         }
     }
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
