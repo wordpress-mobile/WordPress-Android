@@ -435,7 +435,7 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation(libs.wordpress.persistent.edittext)
-    implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
+    implementation("$gradle.ext.gravatarBinaryPath:${libs.versions.gravatar.get()}")
 
     implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
 
