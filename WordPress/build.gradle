@@ -454,7 +454,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.material)
     implementation(libs.google.flexboxlayout)
-    implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
+    implementation(libs.androidx.percentlayout)
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation(libs.androidx.preference)
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
