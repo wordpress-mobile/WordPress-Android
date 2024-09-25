@@ -525,7 +525,7 @@ dependencies {
     androidTestImplementation project(path:':libs:mocks')
 
     androidTestImplementation(libs.mockito.kotlin)
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
+    androidTestImplementation(libs.androidx.test.uiautomator)
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         version {
             strictly androidxTestEspressoVersion
