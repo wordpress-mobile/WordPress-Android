@@ -19,6 +19,7 @@ androidx-swiperefreshlayout = '1.1.0'
 androidx-viewpager2 = '1.1.0'
 androidx-webkit = '1.12.0'
 androidx-work = "2.9.1"
+apache-commons-text = '1.12.0'
 apache-http-client-android = '4.3.5.1'
 assertj = '3.26.3'
 automattic-about = '1.4.0'
@@ -92,6 +93,7 @@ androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", vers
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "androidx-webkit" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "androidx-work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "androidx-work" }
+apache-commons-text = { group = "org.apache.commons", name = "commons-text", version.ref = "apache-commons-text" }
 apache-http-client-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref = "apache-http-client-android" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }

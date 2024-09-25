@@ -481,7 +481,7 @@ dependencies {
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
-    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
+    implementation(libs.apache.commons.text)
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
     implementation(libs.yalantis.ucrop) {
