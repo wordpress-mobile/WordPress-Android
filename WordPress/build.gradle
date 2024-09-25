@@ -482,7 +482,7 @@ dependencies {
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
     implementation(libs.apache.commons.text)
-    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation(libs.airbnb.lottie.main)
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
     implementation(libs.yalantis.ucrop) {
         exclude group: 'androidx.core', module: 'core'
@@ -591,7 +591,7 @@ dependencies {
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation "io.coil-kt:coil-video:$coilComposeVersion"
-    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+    implementation(libs.airbnb.lottie.compose)
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
