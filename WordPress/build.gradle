@@ -412,9 +412,9 @@ dependencies {
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation("$gradle.ext.fluxCBinaryPath:$wordPressFluxCVersion") {
+    implementation("$gradle.ext.fluxCBinaryPath:${libs.versions.wordpress.fluxc.get()}") {
         version {
-            strictly wordPressFluxCVersion
+            strictly libs.versions.wordpress.fluxc.get()
         }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
