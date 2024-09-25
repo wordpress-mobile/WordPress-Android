@@ -478,8 +478,8 @@ dependencies {
 
     implementation(libs.android.installreferrer)
     implementation(libs.photoview)
-    implementation "org.greenrobot:eventbus:$eventBusVersion"
-    implementation "org.greenrobot:eventbus-java:$eventBusVersion"
+    implementation(libs.greenrobot.eventbus.main)
+    implementation(libs.greenrobot.eventbus.java)
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
