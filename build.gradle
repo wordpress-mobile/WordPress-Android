@@ -54,7 +54,6 @@ ext {
     googleMLKitBarcodeScanningVersion = '17.3.0'
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'
     googleMLKitTextRecognitionVersion = '16.0.1'
-    googlePlayReviewVersion = '2.0.1'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.18.1'
@@ -63,7 +62,6 @@ ext {
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupRetrofitVersion = '2.11.0'
     zendeskVersion = '5.1.2'
-    googlePlayInAppUpdateVersion = '2.1.0'
 
     // android test
     androidxTestCoreVersion = '1.5.0'

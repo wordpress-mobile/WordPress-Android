@@ -437,7 +437,7 @@ dependencies {
     implementation(libs.wordpress.persistent.edittext)
     implementation("$gradle.ext.gravatarBinaryPath:${libs.versions.gravatar.get()}")
 
-    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation(libs.google.play.app.update)
 
     implementation(libs.google.gson)
     implementation(libs.androidx.core.main)
@@ -465,7 +465,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.main)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.android.volley)
-    implementation "com.google.android.play:review:$googlePlayReviewVersion"
+    implementation(libs.google.play.review)
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
     implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
