@@ -8,7 +8,7 @@ import uniffi.wp_api.UserListParams
 import uniffi.wp_api.UserWithEditContext
 import javax.inject.Inject
 
-class SelfHostedUsersViewModel @Inject constructor(
+class UserListViewModel @Inject constructor(
     private val authRepository: AuthenticationRepository
 ) : ViewModel()
 {
