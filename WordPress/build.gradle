@@ -472,9 +472,9 @@ dependencies {
     implementation(libs.google.mlkit.barcode.scanning.main)
 
     // CameraX
-    implementation "androidx.camera:camera-camera2:$androidxCameraVersion"
-    implementation "androidx.camera:camera-lifecycle:$androidxCameraVersion"
-    implementation "androidx.camera:camera-view:$androidxCameraVersion"
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
