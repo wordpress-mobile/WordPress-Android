@@ -425,7 +425,7 @@ dependencies {
             strictly libs.wordpress.utils.get().version
         }
     }
-    implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
+    implementation("$gradle.ext.loginFlowBinaryPath:${libs.versions.wordpress.login.get()}") {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }

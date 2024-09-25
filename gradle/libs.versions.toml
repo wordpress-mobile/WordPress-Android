@@ -33,6 +33,7 @@ wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
 wordpress-fluxc = '2.97.0'
 wordpress-lint = '2.1.0'
+wordpress-login = '1.16.0'
 wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
 
