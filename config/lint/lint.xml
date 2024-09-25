@@ -39,7 +39,7 @@
         <!-- EDITOR -->
         <ignore path="**/org.jsoup/**" /> <!-- jsoup -->
     </issue>
-    <!--  After addressing them, remove the below set of security issues from this list  -->
+    <!--  TODO: After addressing them, remove the below set of security issues from this list  -->
     <issue id="MissingAutoVerifyAttribute" severity="warning" />
     <issue id="SensitiveExternalPath" severity="warning" />
     <issue id="WeakPrng" severity="warning" />
@@ -79,4 +79,6 @@
 
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/21065 -->
     <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
+    <!--  We rely on more granural checks from WordPress-Lint-Android  -->
+    <issue id="UnknownNullness" severity="ignore" />
 </lint>
