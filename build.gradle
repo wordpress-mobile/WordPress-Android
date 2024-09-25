@@ -112,7 +112,7 @@ ext {
 
     // other
     androidDesugarVersion = '2.1.2'
-    wordPressLintVersion = '2.1.0'
+    wordPressLintVersion = '20-b48dc8345c25641937b3c96b77079d05b0c24da3'
 }
 
 measureBuilds {
