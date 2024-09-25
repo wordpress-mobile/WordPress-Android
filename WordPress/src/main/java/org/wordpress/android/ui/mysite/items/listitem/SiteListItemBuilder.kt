@@ -140,7 +140,9 @@ class SiteListItemBuilder @Inject constructor(
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
             )
-        } else null
+        } else {
+            null
+        }
     }
 
     fun buildSelfHostedUserListItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
