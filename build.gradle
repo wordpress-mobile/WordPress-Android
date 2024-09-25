@@ -35,7 +35,6 @@ ext {
     firebaseBomVersion = '33.3.0'
     firebaseIidVersion = '21.1.0'
     googleAutoServiceVersion = '1.0.1'
-    googleExoPlayerVersion = '2.13.3'
 
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
 

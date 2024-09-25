@@ -30,6 +30,7 @@ bumptech-glide = '4.16.0'
 commons-fileupload = '1.5'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
+google-exoplayer = '2.13.3'
 google-flexboxlayout = '3.0.0'
 google-gson = '2.11.0'
 google-material = '1.12.0'
@@ -116,6 +117,7 @@ commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload"
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
+google-exoplayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref = "google-exoplayer" }
 google-flexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "google-flexboxlayout" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
