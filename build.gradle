@@ -35,9 +35,6 @@ ext {
 
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
 
-    // android test
-    screengrabVersion = '2.1.1'
-
     // other
     androidDesugarVersion = '2.1.2'
 }

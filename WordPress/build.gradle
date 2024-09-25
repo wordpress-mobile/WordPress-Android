@@ -548,7 +548,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.main.runner)
     androidTestImplementation(libs.androidx.test.main.rules)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
+    androidTestImplementation(libs.fastlane.screengrab) {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation files('../aars/cloudtestingscreenshotter_lib.aar') // Screenshots on Firebase Cloud Testing
