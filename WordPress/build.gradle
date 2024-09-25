@@ -489,9 +489,9 @@ dependencies {
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    ksp "com.github.bumptech.glide:ksp:$glideVersion"
-    implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
+    implementation(libs.bumptech.glide.main)
+    ksp(libs.bumptech.glide.ksp)
+    implementation(libs.bumptech.glide.volley.integration)
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
     implementation "com.zendesk:support:$zendeskVersion"

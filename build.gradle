@@ -35,7 +35,6 @@ ext {
     coilComposeVersion = '2.7.0'
     firebaseBomVersion = '33.3.0'
     firebaseIidVersion = '21.1.0'
-    glideVersion = '4.16.0'
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
 

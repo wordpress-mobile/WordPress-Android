@@ -26,6 +26,7 @@ assertj = '3.26.3'
 automattic-about = '1.4.0'
 automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
+bumptech-glide = '4.16.0'
 commons-fileupload = '1.5'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
@@ -103,6 +104,9 @@ assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "as
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }
 automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automattic-tracks" }
 automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automattic-tracks" }
+bumptech-glide-main = { group = "com.github.bumptech.glide", name = "glide", version.ref = "bumptech-glide" }
+bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "bumptech-glide" }
+bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref = "bumptech-glide" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
