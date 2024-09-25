@@ -48,7 +48,6 @@ ext {
     glideVersion = '4.16.0'
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
-    googleFlexboxlayoutVersion = '3.0.0'
 
     googleMLKitBarcodeScanningVersion = '17.3.0'
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'

@@ -20,6 +20,7 @@ automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
 commons-fileupload = '1.5'
 facebook-react = '0.73.3'
+google-flexboxlayout = '3.0.0'
 google-gson = '2.11.0'
 google-material = '1.12.0'
 google-play-app-update = '2.1.0'
@@ -77,6 +78,7 @@ automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "cras
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
+google-flexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "google-flexboxlayout" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 google-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "google-play-app-update" }

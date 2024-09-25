@@ -453,7 +453,7 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.material)
-    implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
+    implementation(libs.google.flexboxlayout)
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation(libs.androidx.preference)
