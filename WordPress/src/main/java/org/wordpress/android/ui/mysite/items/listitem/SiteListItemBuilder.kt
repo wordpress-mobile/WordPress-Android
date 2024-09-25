@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
 import android.text.TextUtils
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SELF_HOSTED_USERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
@@ -137,6 +139,18 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.people),
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
+            )
+        } else null
+    }
+
+    fun buildSelfHostedUserListItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        // TODO: Should this excluded JetPack users?
+        return if (BuildConfig.ENABLE_SELF_HOSTED_USERS && site.selfHostedSiteId > 0) {
+            ListItem(
+                R.drawable.ic_user_white_24dp,
+                UiStringRes(R.string.users),
+                onClick = ListItemInteraction.create(SELF_HOSTED_USERS, onClick),
+                listItemAction = SELF_HOSTED_USERS
             )
         } else null
     }

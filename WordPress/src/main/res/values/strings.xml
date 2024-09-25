@@ -2686,6 +2686,7 @@
 
     <!--People Management-->
     <string name="people">People</string>
+    <string name="users">Users</string>
     <string name="role">Role</string>
     <string name="follower_subscribed_since">Since %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>

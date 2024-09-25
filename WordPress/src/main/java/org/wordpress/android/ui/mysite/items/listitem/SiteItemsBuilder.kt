@@ -37,11 +37,11 @@ class SiteItemsBuilder @Inject constructor(
         val showPagesFocusPoint = params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES &&
                 params.enableFocusPoints
         val uploadMediaTask = quickStartRepository.quickStartType
-                .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
+            .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
         val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableFocusPoints
 
         return listOfNotNull(
-                CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
             ListItem(
                 R.drawable.ic_posts_white_24dp,
                 UiStringRes(R.string.my_site_btn_blog_posts),
@@ -68,7 +68,7 @@ class SiteItemsBuilder @Inject constructor(
     private fun getTrafficSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
-        if(jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
+        if (jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
             return emptyList()
 
         val checkStatsTask = quickStartRepository.quickStartType
@@ -115,7 +115,7 @@ class SiteItemsBuilder @Inject constructor(
     private fun getLookAndFeelSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
             listOfNotNull(
-                    siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
             ) else emptyList()
     }
 
@@ -134,8 +134,8 @@ class SiteItemsBuilder @Inject constructor(
         )
     }
 
-    private fun buildManageSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem>{
-        if(jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
+    private fun buildManageSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
+        if (jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
             return emptyList()
         return listOfNotNull(
             siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
@@ -150,14 +150,20 @@ class SiteItemsBuilder @Inject constructor(
 
         return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             listOfNotNull(
-                    siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
-                    siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
-                    siteListItemBuilder.buildShareItemIfAvailable(
-                            params.site,
-                            params.onClick,
-                            showEnablePostSharingFocusPoint
-                    )
+                siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildShareItemIfAvailable(
+                    params.site,
+                    params.onClick,
+                    showEnablePostSharingFocusPoint
+                )
             )
-        } else emptyList()
+        } else {
+            listOfNotNull(
+                siteListItemBuilder.buildSelfHostedUserListItemIfAvailable(
+                    params.site, params.onClick
+                )
+            )
+        }
     }
 }

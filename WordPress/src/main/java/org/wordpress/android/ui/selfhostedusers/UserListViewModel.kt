@@ -10,8 +10,7 @@ import javax.inject.Inject
 
 class UserListViewModel @Inject constructor(
     private val authRepository: AuthenticationRepository
-) : ViewModel()
-{
+) : ViewModel() {
     private var apiClient: WpApiClient? = null
 
     fun setAuthenticatedSite(authenticatedSite: AuthenticatedSite) {

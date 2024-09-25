@@ -105,6 +105,7 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.selfhostedusers.UserListActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -723,6 +724,15 @@ public class ActivityLauncher {
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
+
+    public static void viewSelfHostedUsers(Context context, SiteModel site) {
+        // TODO tracks
+        Intent intent = new Intent(context, UserListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+
 
     public static void viewPluginBrowser(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {

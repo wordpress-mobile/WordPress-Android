@@ -30,6 +30,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.PAGES -> SiteNavigationAction.OpenPages(selectedSite)
             ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
             ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
+            ListItemAction.SELF_HOSTED_USERS -> SiteNavigationAction.OpenSelfHostedUsers(selectedSite)
             ListItemAction.SHARING -> SiteNavigationAction.OpenSharing(selectedSite)
             ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
             ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
