@@ -702,6 +702,11 @@
             android:label="@string/people"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
+        <activity
+            android:name=".ui.selfhostedusers.UserListActivity"
+            android:label="@string/users"
+            android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Plugins-->
         <activity
