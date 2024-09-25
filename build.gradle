@@ -27,7 +27,6 @@ ext {
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // main
-    androidInstallReferrerVersion = '2.2'
     androidxComposeBomVersion = '2024.08.00'
     androidxComposeCompilerVersion = '1.5.14'
     androidxComposeNavigationVersion = '2.7.7'

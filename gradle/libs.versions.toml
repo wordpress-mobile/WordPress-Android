@@ -1,4 +1,5 @@
 [versions]
+android-installreferrer = '2.2'
 android-volley = '1.2.1'
 androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
@@ -54,6 +55,7 @@ wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
 
 [libraries]
+android-installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "android-installreferrer" }
 android-volley = { group = "com.android.volley", name = "volley", version.ref = "android-volley" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-activity-main = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
