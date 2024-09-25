@@ -1,5 +1,6 @@
 [versions]
 airbnb-lottie = '6.5.2'
+android-desugar = '2.1.2'
 android-installreferrer = '2.2'
 android-volley = '1.2.1'
 androidx-activity = '1.9.2'
@@ -76,6 +77,7 @@ zendesk = '5.1.2'
 [libraries]
 airbnb-lottie-main = { group = "com.airbnb.android", name = "lottie", version.ref = "airbnb-lottie" }
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
+android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }
 android-installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "android-installreferrer" }
 android-volley = { group = "com.android.volley", name = "volley", version.ref = "android-volley" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }

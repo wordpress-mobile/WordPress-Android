@@ -34,9 +34,6 @@ ext {
     googleAutoServiceVersion = '1.0.1'
 
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-
-    // other
-    androidDesugarVersion = '2.1.2'
 }
 
 measureBuilds {
