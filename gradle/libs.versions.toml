@@ -48,6 +48,7 @@ detekt = '1.23.7'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
+fladle = '0.17.5'
 google-dagger = "2.50"
 google-exoplayer = '2.13.3'
 google-flexboxlayout = '3.0.0'
@@ -236,6 +237,7 @@ automattic-measure-builds = { id = "com.automattic.android.measure-builds", vers
 checkstyle = { id = "checkstyle", version.ref = "checkstyle" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+fladle = { id = "com.osacky.fladle", version.ref = "fladle" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
