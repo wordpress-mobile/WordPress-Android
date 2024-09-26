@@ -1,9 +1,7 @@
 pluginManagement {
-    gradle.ext.dependencyAnalysisVersion = '1.28.0'
     gradle.ext.fladleVersion = '0.17.5'
 
     plugins {
-        id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
         id "com.osacky.fladle" version gradle.ext.fladleVersion
     }
     repositories {

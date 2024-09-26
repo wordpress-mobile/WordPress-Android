@@ -43,6 +43,7 @@ cascade = '2.3.0'
 checkstyle = '10.17.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
+dependency-analysis = '1.28.0'
 detekt = '1.23.7'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
@@ -233,6 +234,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 automattic-measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "automattic-measure-builds" }
 checkstyle = { id = "checkstyle", version.ref = "checkstyle" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
