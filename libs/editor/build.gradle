@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
-    id "org.jetbrains.kotlinx.kover"
+    alias(libs.plugins.kotlinx.kover)
 }
 
 repositories {

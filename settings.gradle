@@ -1,10 +1,8 @@
 pluginManagement {
-    gradle.ext.koverVersion = '0.7.6'
     gradle.ext.dependencyAnalysisVersion = '1.28.0'
     gradle.ext.fladleVersion = '0.17.5'
 
     plugins {
-        id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
         id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
         id "com.osacky.fladle" version gradle.ext.fladleVersion
     }

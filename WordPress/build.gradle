@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.violation.comments)
     alias(libs.plugins.google.services)
     alias(libs.plugins.google.dagger.hilt)
-    id "org.jetbrains.kotlinx.kover"
+    alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.ksp)
     id "com.osacky.fladle"
 }

@@ -73,6 +73,7 @@ junit = '4.13.2'
 kotlin-main = '1.9.24'
 kotlin-compile-testing = "1.5.0"
 kotlinx-coroutines = '1.8.1'
+kotlinx-kover = '0.7.6'
 ksp = '1.9.24-1.0.20'
 mockito-android = '5.13.0'
 mockito-kotlin = '4.1.0'
@@ -240,6 +241,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-ma
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-main" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
 violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violation-comments" }
