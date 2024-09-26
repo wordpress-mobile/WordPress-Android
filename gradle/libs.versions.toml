@@ -1,4 +1,5 @@
 [versions]
+agp = '8.5.1'
 airbnb-lottie = '6.5.2'
 android-desugar = '2.1.2'
 android-installreferrer = '2.2'
@@ -208,6 +209,8 @@ yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = 
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }

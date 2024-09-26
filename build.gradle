@@ -9,7 +9,8 @@ plugins {
     id "com.autonomousapps.dependency-analysis"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
     id "androidx.navigation.safeargs.kotlin" apply false
-    id "com.android.library" apply false
+    alias(libs.plugins.android.application).apply(false)
+    alias(libs.plugins.android.library).apply(false)
     id 'com.google.gms.google-services' apply false
     alias(libs.plugins.kotlin.allopen).apply(false)
     alias(libs.plugins.kotlin.android).apply(false)
