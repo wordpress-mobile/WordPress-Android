@@ -10,10 +10,9 @@ class AuthenticationRepository
 ) {
     private val authenticatedSites = mutableMapOf<AuthenticatedSite, WpAuthentication>()
 
-    // TODO: Remove this test data and DO NOT PUSH
-    private val localTestSiteUrl = "https://content-heavy.wpmt.co/"
-    private val localTestSiteUsername = "nbradbury"
-    private val localTestSitePassword = "DU8I z1Mc BiMc TI3m rh8k 0KuN"
+    private val localTestSiteUrl = "FIXME"
+    private val localTestSiteUsername = "FIXME"
+    private val localTestSitePassword = "FIXME"
 
     init {
         addAuthenticatedSite(
