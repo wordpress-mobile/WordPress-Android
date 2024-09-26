@@ -2,7 +2,6 @@ package org.wordpress.android.util.config
 
 /**
  * This class represents an abstract experiment configuration. An experiment has a list of variants.
- * To add an experiment don't forget to update the `remote_config_defaults.xml` file.
  * @param appConfig class that loads the feature configuration
  * @param remoteField is the key of the feature flag in the remote config file
  */

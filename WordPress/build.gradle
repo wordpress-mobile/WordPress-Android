@@ -201,6 +201,7 @@ android {
         buildConfigField "boolean", "READER_ANNOUNCEMENT_CARD", "false"
         buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
         buildConfigField "boolean", "READER_FLOATING_BUTTON", "false"
+        buildConfigField "boolean", "ENABLE_SELF_HOSTED_USERS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
