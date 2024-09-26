@@ -477,6 +477,7 @@ dependencies {
 
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
+    implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
@@ -604,6 +605,8 @@ dependencies {
 dependencyAnalysis {
     issues {
         onUnusedDependencies {
+            // This dependency is actually needed otherwise the app will crash with a runtime exception.
+            exclude("org.greenrobot:eventbus")
             // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
             exclude("org.mockito:mockito-android")
         }
