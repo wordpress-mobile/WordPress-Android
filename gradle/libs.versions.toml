@@ -44,6 +44,7 @@ commons-fileupload = '1.5'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
+google-dagger = "2.50"
 google-exoplayer = '2.13.3'
 google-flexboxlayout = '3.0.0'
 google-firebase-bom = '33.3.0'
@@ -169,6 +170,12 @@ facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-a
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
 fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "fastlane-screengrab" }
+google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "google-dagger" }
+google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "google-dagger" }
+google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "google-dagger" }
+google-dagger-hilt-android-main = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
+google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "google-dagger" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "google-dagger" }
 google-exoplayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref = "google-exoplayer" }
 google-flexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "google-flexboxlayout" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
@@ -218,6 +225,7 @@ zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zend
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }

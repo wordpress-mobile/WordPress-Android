@@ -1,5 +1,4 @@
 pluginManagement {
-    gradle.ext.daggerVersion = "2.50"
     gradle.ext.detektVersion = '1.23.7'
     gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '3.1.1'
@@ -12,7 +11,6 @@ pluginManagement {
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version gradle.ext.violationCommentsVersion
         id 'com.automattic.android.measure-builds' version gradle.ext.measureBuildsVersion
         id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
-        id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
         id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
         id "com.osacky.fladle" version gradle.ext.fladleVersion
     }
