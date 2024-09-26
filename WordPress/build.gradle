@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.allopen)
     id "io.sentry.android.gradle"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
-    id "com.google.gms.google-services"
+    alias(libs.plugins.google.services)
     id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
     alias(libs.plugins.ksp)

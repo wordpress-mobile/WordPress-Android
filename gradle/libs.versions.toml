@@ -55,6 +55,7 @@ google-mlkit-text-recognition = '16.0.1'
 google-play-app-update = '2.1.0'
 google-play-review = '2.0.1'
 google-play-services-auth = '20.4.1'
+google-services = '4.4.2'
 gravatar = '1.0.0'
 greenrobot-eventbus = '3.3.1'
 gutenberg-mobile = 'v1.121.0'
@@ -211,6 +212,7 @@ zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zend
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }

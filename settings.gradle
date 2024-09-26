@@ -1,5 +1,4 @@
 pluginManagement {
-    gradle.ext.googleServicesVersion = '4.4.2'
     gradle.ext.navigationVersion = '2.7.7'
     gradle.ext.sentryVersion = '4.11.0'
     gradle.ext.daggerVersion = "2.50"
@@ -11,7 +10,6 @@ pluginManagement {
     gradle.ext.fladleVersion = '0.17.5'
 
     plugins {
-        id 'com.google.gms.google-services' version gradle.ext.googleServicesVersion
         id "androidx.navigation.safeargs.kotlin" version gradle.ext.navigationVersion
         id "io.sentry.android.gradle" version gradle.ext.sentryVersion
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
