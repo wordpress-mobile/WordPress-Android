@@ -74,6 +74,7 @@ mockito-android = '5.13.0'
 mockito-kotlin = '4.1.0'
 mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
+sentry = '4.11.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-retrofit = '2.11.0'
 wiremock = '2.26.3'
@@ -224,3 +225,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-main" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }

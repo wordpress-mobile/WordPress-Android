@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.allopen)
-    id "io.sentry.android.gradle"
+    alias(libs.plugins.sentry)
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     alias(libs.plugins.google.services)
     id "com.google.dagger.hilt.android"
