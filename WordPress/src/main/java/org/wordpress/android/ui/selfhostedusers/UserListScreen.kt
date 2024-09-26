@@ -75,7 +75,7 @@ private fun UserList(users: List<UserWithEditContext>) {
 
 @Composable
 fun UserRow(user: UserWithEditContext) {
-    Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+    Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
         Column(
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
@@ -183,48 +183,8 @@ private fun Screen(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun UserListScreenPreview() {
-    val userList = listOf(
-        UserWithEditContext(
-            id = 1,
-            username = "userone",
-            avatarUrls = emptyMap(),
-            capabilities = emptyMap(),
-            description = "User One description",
-            email = "email@userone.com",
-            extraCapabilities = emptyMap(),
-            firstName = "User",
-            lastName = "One",
-            link = "link@userone.com",
-            locale = "en-US",
-            name = "User One",
-            nickname = "User One nickname",
-            registeredDate = "2023-01-01",
-            roles = emptyList(),
-            slug = "userone",
-            url = "url@userone.com",
-        ),
-        UserWithEditContext(
-            id = 2,
-            username = "usertwo",
-            avatarUrls = emptyMap(),
-            capabilities = emptyMap(),
-            description = "User Two description",
-            email = "email@usertwo.com",
-            extraCapabilities = emptyMap(),
-            firstName = "User",
-            lastName = "Two",
-            link = "link@usertwo.com",
-            locale = "en-US",
-            name = "User Two",
-            nickname = "User Two nickname",
-            registeredDate = "2023-01-01",
-            roles = emptyList(),
-            slug = "usertwo",
-            url = "url@usertwo.com",
-        )
-    )
     UserListScreen(
-        users = MutableStateFlow(userList).collectAsState(),
+        users = MutableStateFlow(sampleUserList).collectAsState(),
         progressDialogState = null,
     )
 }
@@ -267,3 +227,45 @@ fun ProgressPreview() {
         progressDialogState = MutableStateFlow(progressDialogState).collectAsState(),
     )
 }
+
+private val sampleUserOne = UserWithEditContext(
+    id = 1,
+    username = "sampleUserOne",
+    avatarUrls = emptyMap(),
+    capabilities = emptyMap(),
+    description = "User One description",
+    email = "email@userone.com",
+    extraCapabilities = emptyMap(),
+    firstName = "User",
+    lastName = "One",
+    link = "link@userone.com",
+    locale = "en-US",
+    name = "Sample User One",
+    nickname = "User One nickname",
+    registeredDate = "2023-01-01",
+    roles = emptyList(),
+    slug = "userone",
+    url = "url@userone.com",
+)
+private val sampleUserTwo = UserWithEditContext(
+    id = 2,
+    username = "sampleUserTwo",
+    avatarUrls = emptyMap(),
+    capabilities = emptyMap(),
+    description = "User Two description",
+    email = "email@usertwo.com",
+    extraCapabilities = emptyMap(),
+    firstName = "User",
+    lastName = "Two",
+    link = "link@usertwo.com",
+    locale = "en-US",
+    name = "Sample User Two",
+    nickname = "User Two nickname",
+    registeredDate = "2023-01-01",
+    roles = emptyList(),
+    slug = "usertwo",
+    url = "url@usertwo.com",
+)
+val sampleUserList = listOf(
+    sampleUserOne, sampleUserTwo
+)

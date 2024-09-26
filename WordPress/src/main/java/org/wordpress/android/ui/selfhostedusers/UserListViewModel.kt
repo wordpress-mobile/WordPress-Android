@@ -5,16 +5,13 @@ import android.content.Context
 import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.viewmodel.ScopedViewModel
-import rs.wordpress.api.kotlin.WpApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.UserListParams
 import uniffi.wp_api.UserWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,39 +19,20 @@ import javax.inject.Named
 @HiltViewModel
 class UserListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    private val authRepository: AuthenticationRepository
 ) : ScopedViewModel(mainDispatcher) {
-    private var apiClient: WpApiClient? = null
-
     private val _progressDialogState = MutableStateFlow<ProgressDialogState?>(null)
     val progressDialogState = _progressDialogState.asStateFlow()
 
     private val _users = MutableStateFlow<List<UserWithEditContext>>(emptyList())
     val users = _users.asStateFlow()
 
-    fun setAuthenticatedSite(authenticatedSite: AuthenticatedSite) {
-        apiClient = null
-        authRepository.authenticationForSite(authenticatedSite)?.let {
-            apiClient = WpApiClient(siteUrl = authenticatedSite.url, authentication = it)
-        }
-    }
-
+    // TODO this uses dummy data for now - no network request is involved yet
     fun fetchUsers() {
         showProgressDialog(R.string.loading)
-        try {
-            _users.value = listOf()
-            apiClient?.let { apiClient ->
-                val usersResult = runBlocking {
-                    apiClient.request { requestBuilder ->
-                        requestBuilder.users().listWithEditContext(params = UserListParams())
-                    }
-                }
-                _users.value = when (usersResult) {
-                    is WpRequestResult.WpRequestSuccess -> usersResult.data
-                    else -> listOf()
-                }
-            }
-        } finally {
+        _users.value = listOf()
+        launch {
+            delay(1000L)
+            _users.value = sampleUserList
             hideProgressDialog()
         }
     }

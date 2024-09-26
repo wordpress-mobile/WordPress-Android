@@ -14,7 +14,6 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
-import uniffi.wp_api.ParsedUrl
 
 @AndroidEntryPoint
 class UserListActivity : LocaleAwareActivity() {
@@ -35,11 +34,6 @@ class UserListActivity : LocaleAwareActivity() {
             return
         }
 
-        val authenticatedSite = AuthenticatedSite(
-            name = site!!.name,
-            url = ParsedUrl.parse(site!!.url)
-        )
-
         setContentView(
             ComposeView(this).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -58,7 +52,6 @@ class UserListActivity : LocaleAwareActivity() {
             }
         )
 
-        viewModel.setAuthenticatedSite(authenticatedSite)
         viewModel.fetchUsers()
     }
 
