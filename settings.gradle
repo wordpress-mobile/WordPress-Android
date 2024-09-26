@@ -1,5 +1,4 @@
 pluginManagement {
-    gradle.ext.kspVersion = '1.9.24-1.0.20'
     gradle.ext.agpVersion = '8.5.1'
     gradle.ext.googleServicesVersion = '4.4.2'
     gradle.ext.navigationVersion = '2.7.7'
@@ -23,7 +22,6 @@ pluginManagement {
         id 'com.automattic.android.measure-builds' version gradle.ext.measureBuildsVersion
         id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
         id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
-        id "com.google.devtools.ksp" version gradle.ext.kspVersion
         id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
         id "com.osacky.fladle" version gradle.ext.fladleVersion
     }

@@ -11,7 +11,7 @@ dependencies {
 
     implementation(libs.squareup.kotlin.poet.main)
     implementation(libs.squareup.kotlin.poet.ksp)
-    implementation "com.google.devtools.ksp:symbol-processing-api:$gradle.ext.kspVersion"
+    implementation(libs.ksp.api)
 
     testImplementation(libs.kotlin.compile.testing.main)
     testImplementation(libs.kotlin.compile.testing.ksp)
