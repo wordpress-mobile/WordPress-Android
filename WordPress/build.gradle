@@ -398,7 +398,7 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
+    implementation(libs.androidx.navigation.compose)
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
     implementation (project(path:':libs:networking')) {

@@ -8,7 +8,7 @@ plugins {
     id "org.jetbrains.kotlinx.kover"
     id "com.autonomousapps.dependency-analysis"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
-    id "androidx.navigation.safeargs.kotlin" apply false
+    alias(libs.plugins.androidx.navigation.safeargs).apply(false)
     alias(libs.plugins.android.application).apply(false)
     alias(libs.plugins.android.library).apply(false)
     alias(libs.plugins.google.services).apply(false)
@@ -24,11 +24,6 @@ ext {
     minSdkVersion = 26
     compileSdkVersion = 34
     targetSdkVersion = 34
-}
-
-ext {
-    // main
-    androidxComposeNavigationVersion = '2.7.7'
 }
 
 measureBuilds {

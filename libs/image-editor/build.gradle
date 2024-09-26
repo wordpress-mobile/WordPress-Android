@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
-    id "androidx.navigation.safeargs.kotlin"
+    alias(libs.plugins.androidx.navigation.safeargs)
     id "org.jetbrains.kotlinx.kover"
 }
 
@@ -51,8 +51,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.main)
     implementation(libs.androidx.viewpager2)
     implementation(libs.google.material)
-    implementation "androidx.navigation:navigation-fragment:$gradle.ext.navigationVersion"
-    implementation "androidx.navigation:navigation-ui:$gradle.ext.navigationVersion"
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.viewmodel.main)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
