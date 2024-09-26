@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,11 @@ private fun UserList(users: List<UserWithEditContext>) {
 
 @Composable
 fun UserRow(user: UserWithEditContext) {
-    Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .fillMaxWidth()
+    ) {
         Column(
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
@@ -109,22 +114,29 @@ fun UserRow(user: UserWithEditContext) {
             modifier = Modifier
                 .padding(start = 16.dp)
                 .align(Alignment.CenterVertically)
+                .weight(0.7F)
         ) {
             Text(
-                text = user.username,
+                text = user.name,
                 style = MaterialTheme.typography.bodyLarge,
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = user.name,
+                text = user.username,
                 style = MaterialTheme.typography.bodyMedium
             )
-            if (user.roles.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(2.dp))
+        }
+        if (user.roles.isNotEmpty()) {
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(0.3F)
+            ) {
                 Text(
                     text = user.roles.joinToString(", "),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.align(Alignment.End)
                 )
             }
         }
@@ -249,7 +261,7 @@ fun ProgressPreview() {
 
 private val sampleUser1 = UserWithEditContext(
     id = 1,
-    username = "sampleUser",
+    username = "@sampleUser",
     avatarUrls = emptyMap(),
     capabilities = emptyMap(),
     description = "User description",
@@ -270,7 +282,7 @@ private val sampleUser1 = UserWithEditContext(
 // TODO remove the avatar url
 private val sampleUser2 = UserWithEditContext(
     id = 2,
-    username = "sampleUser",
+    username = "@sampleUserWithALongUserName",
     avatarUrls = mapOf("sampleUserTwo" to "https://nickbradbury.com/wp-content/uploads/2022/03/1394-2.jpg"),
     capabilities = emptyMap(),
     description = "User description",
@@ -283,10 +295,11 @@ private val sampleUser2 = UserWithEditContext(
     name = "Sample User",
     nickname = "User nickname",
     registeredDate = "2023-01-01",
-    roles = listOf("admin"),
+    roles = listOf("contributor"),
     slug = "sample-user",
     url = "example.com",
 )
+
 val sampleUserList = listOf(
     sampleUser1,
     sampleUser2,
