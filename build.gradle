@@ -7,7 +7,7 @@ plugins {
     id 'com.automattic.android.measure-builds'
     id "org.jetbrains.kotlinx.kover"
     id "com.autonomousapps.dependency-analysis"
-    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
+    alias(libs.plugins.violation.comments).apply(false)
     alias(libs.plugins.androidx.navigation.safeargs).apply(false)
     alias(libs.plugins.android.application).apply(false)
     alias(libs.plugins.android.library).apply(false)

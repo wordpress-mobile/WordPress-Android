@@ -80,6 +80,7 @@ photoview = '2.3.0'
 sentry = '4.11.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-retrofit = '2.11.0'
+violation-comments = '1.70.0'
 wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
 wordpress-fluxc = '2.97.0'
@@ -239,3 +240,4 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
+violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violation-comments" }
