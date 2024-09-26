@@ -29,11 +29,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
@@ -79,17 +82,23 @@ fun UserRow(user: UserWithEditContext) {
         Column(
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
-            if (user.avatarUrls.isNullOrEmpty()) {
+            val avatarUrl = user.avatarUrls?.values?.firstOrNull()
+            if (avatarUrl.isNullOrEmpty()) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_primary_white_24),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.outline,
                     modifier = Modifier
                         .size(48.dp)
                 )
             } else {
-                coil.compose.AsyncImage(
-                    model = user.avatarUrls!!["0"],
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(avatarUrl)
+                        .error(R.drawable.ic_user_placeholder_primary_24)
+                        .crossfade(true)
+                        .build(),
+                    contentScale = ContentScale.Fit,
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
@@ -102,12 +111,22 @@ fun UserRow(user: UserWithEditContext) {
                 .align(Alignment.CenterVertically)
         ) {
             Text(
-                text = user.name,
+                text = user.username,
+                style = MaterialTheme.typography.bodyLarge,
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = user.email,
+                text = user.name,
+                style = MaterialTheme.typography.bodyMedium
             )
+            if (user.roles.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = user.roles.joinToString(", "),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
         }
     }
 }
@@ -228,44 +247,61 @@ fun ProgressPreview() {
     )
 }
 
-private val sampleUserOne = UserWithEditContext(
+private val sampleUser1 = UserWithEditContext(
     id = 1,
-    username = "sampleUserOne",
+    username = "sampleUser",
     avatarUrls = emptyMap(),
     capabilities = emptyMap(),
-    description = "User One description",
-    email = "email@userone.com",
+    description = "User description",
+    email = "email@exmaple.com",
     extraCapabilities = emptyMap(),
-    firstName = "User",
-    lastName = "One",
-    link = "link@userone.com",
+    firstName = "Sample",
+    lastName = "User",
+    link = "example.com",
     locale = "en-US",
-    name = "Sample User One",
-    nickname = "User One nickname",
+    name = "Sample User",
+    nickname = "User nickname",
     registeredDate = "2023-01-01",
-    roles = emptyList(),
-    slug = "userone",
-    url = "url@userone.com",
+    roles = listOf("admin"),
+    slug = "sample-user",
+    url = "example.com",
 )
-private val sampleUserTwo = UserWithEditContext(
+
+// TODO remove the avatar url
+private val sampleUser2 = UserWithEditContext(
     id = 2,
-    username = "sampleUserTwo",
-    avatarUrls = emptyMap(),
+    username = "sampleUser",
+    avatarUrls = mapOf("sampleUserTwo" to "https://nickbradbury.com/wp-content/uploads/2022/03/1394-2.jpg"),
     capabilities = emptyMap(),
-    description = "User Two description",
-    email = "email@usertwo.com",
+    description = "User description",
+    email = "email@exmaple.com",
     extraCapabilities = emptyMap(),
-    firstName = "User",
-    lastName = "Two",
-    link = "link@usertwo.com",
+    firstName = "Sample",
+    lastName = "User",
+    link = "example.com",
     locale = "en-US",
-    name = "Sample User Two",
-    nickname = "User Two nickname",
+    name = "Sample User",
+    nickname = "User nickname",
     registeredDate = "2023-01-01",
-    roles = emptyList(),
-    slug = "usertwo",
-    url = "url@usertwo.com",
+    roles = listOf("admin"),
+    slug = "sample-user",
+    url = "example.com",
 )
 val sampleUserList = listOf(
-    sampleUserOne, sampleUserTwo
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
 )
