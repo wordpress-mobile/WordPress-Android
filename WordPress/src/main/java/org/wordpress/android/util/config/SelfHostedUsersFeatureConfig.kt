@@ -15,4 +15,8 @@ class SelfHostedUsersFeatureConfig
     appConfig,
     BuildConfig.ENABLE_SELF_HOSTED_USERS,
     ENABLE_SELF_HOSTED_USERS_REMOTE_FIELD
-)
+) {
+    override fun isEnabled(): Boolean {
+        return super.isEnabled() && BuildConfig.DEBUG
+    }
+}
