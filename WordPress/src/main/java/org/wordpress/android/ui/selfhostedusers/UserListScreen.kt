@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,6 +19,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,11 +28,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
@@ -40,20 +45,24 @@ import uniffi.wp_api.UserWithEditContext
 fun UserListScreen(
     users: State<List<UserWithEditContext>>,
     progressDialogState: State<ProgressDialogState?>?,
+    onCloseClick: (context: Context) -> Unit = {},
 ) {
+    val context = LocalContext.current
     val content: @Composable () -> Unit = @Composable {
-        if (users.value.isNotEmpty()) {
-            UserList(users.value)
-        } else {
-            EmptyView()
-        }
         progressDialogState?.value?.let {
             ProgressDialog(it)
+        } ?: run {
+            if (users.value.isNotEmpty()) {
+                UserList(users.value)
+            } else {
+                EmptyView()
+            }
         }
     }
     Screen(
         content = content,
-        onCloseClick = {}
+        onCloseClick = { onCloseClick(context) },
+        isScrollable = users.value.isNotEmpty()
     )
 }
 
@@ -82,15 +91,19 @@ fun UserCard(user: UserWithEditContext) {
 @Composable
 private fun EmptyView() {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Image(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_people_white_24dp),
+            contentDescription = null,
+            modifier = Modifier
+                .size(85.dp)
+        )
         Text(
             text = stringResource(id = R.string.no_users),
-            modifier = Modifier.fillMaxSize(),
-            fontSize = 42.sp,
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
@@ -99,7 +112,8 @@ private fun EmptyView() {
 @Composable
 private fun Screen(
     content: @Composable () -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    isScrollable: Boolean = true,
 ) {
     M3Theme {
         Scaffold(
@@ -115,11 +129,18 @@ private fun Screen(
             },
         ) { contentPadding ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .imePadding()
-                    .padding(contentPadding)
-                    .verticalScroll(rememberScrollState())
+                modifier = if (isScrollable) {
+                    Modifier
+                        .fillMaxSize()
+                        .imePadding()
+                        .padding(contentPadding)
+                        .verticalScroll(rememberScrollState())
+                } else {
+                    Modifier
+                        .fillMaxSize()
+                        .imePadding()
+                        .padding(contentPadding)
+                }
             ) {
                 content()
             }

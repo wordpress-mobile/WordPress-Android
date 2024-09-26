@@ -50,7 +50,9 @@ class UserListActivity : LocaleAwareActivity() {
                     UserListScreen(
                         viewModel.users.collectAsState(),
                         viewModel.progressDialogState.collectAsState(),
-
+                        onCloseClick = {
+                            viewModel.onCloseClick(this@UserListActivity)
+                        },
                     )
                 }
             }

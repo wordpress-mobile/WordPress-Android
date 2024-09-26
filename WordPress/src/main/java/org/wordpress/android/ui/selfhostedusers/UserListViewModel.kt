@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import android.app.Activity
+import android.content.Context
 import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -70,5 +72,9 @@ class UserListViewModel @Inject constructor(
 
     private fun hideProgressDialog() {
         _progressDialogState.value = null
+    }
+
+    fun onCloseClick(context: Context) {
+        (context as? Activity)?.finish()
     }
 }
