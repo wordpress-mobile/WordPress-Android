@@ -20,7 +20,8 @@ data class BlazeCampaignCreationRequest(
     val mainImage: MediaModel,
     val targetingParameters: BlazeTargetingParameters?,
     val timeZoneId: String = TimeZone.getDefault().id,
-    val isEndlessCampaign: Boolean
+    val isEndlessCampaign: Boolean,
+    val objectiveId: String
 )
 
 data class BlazeCampaignCreationRequestBudget(
