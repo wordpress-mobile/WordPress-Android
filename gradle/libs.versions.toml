@@ -39,6 +39,7 @@ automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
 bumptech-glide = '4.16.0'
 cascade = '2.3.0'
+checkstyle = '10.17.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
 detekt = '1.23.7'
@@ -227,6 +228,7 @@ zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zend
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+checkstyle = { id = "checkstyle", version.ref = "checkstyle" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

@@ -40,7 +40,7 @@ measureBuilds {
 }
 
 allprojects {
-    apply plugin: 'checkstyle'
+    apply plugin: libs.plugins.checkstyle.get().pluginId
     apply plugin: libs.plugins.detekt.get().pluginId
 
     repositories {
@@ -70,7 +70,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '10.17.0'
+        toolVersion = libs.plugins.checkstyle.get().version
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 
