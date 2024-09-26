@@ -90,27 +90,7 @@ fun UserRow(user: UserWithEditContext) {
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull()
-            if (avatarUrl.isNullOrEmpty()) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier
-                        .size(48.dp)
-                )
-            } else {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(avatarUrl)
-                        .error(R.drawable.ic_user_placeholder_primary_24)
-                        .crossfade(true)
-                        .build(),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(48.dp)
-                )
-            }
+            UserAvatar(avatarUrl)
         }
         Column(
             modifier = Modifier
@@ -142,6 +122,31 @@ fun UserRow(user: UserWithEditContext) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun UserAvatar(avatarUrl: String?) {
+    if (avatarUrl.isNullOrEmpty()) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.outline,
+            modifier = Modifier
+                .size(48.dp)
+        )
+    } else {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(avatarUrl)
+                .error(R.drawable.ic_user_placeholder_primary_24)
+                .crossfade(true)
+                .build(),
+            contentScale = ContentScale.Fit,
+            contentDescription = null,
+            modifier = Modifier
+                .size(48.dp)
+        )
     }
 }
 
