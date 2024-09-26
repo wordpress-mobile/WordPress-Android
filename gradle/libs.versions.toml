@@ -41,6 +41,7 @@ bumptech-glide = '4.16.0'
 cascade = '2.3.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
+detekt = '1.23.7'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
@@ -166,6 +167,7 @@ cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", versio
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
@@ -225,6 +227,7 @@ zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zend
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
