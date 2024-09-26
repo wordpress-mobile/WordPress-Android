@@ -1,14 +1,10 @@
 plugins {
     id "java"
-    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-
-    withSourcesJar()
-    withJavadocJar()
 }
 
 dependencies {
@@ -16,18 +12,4 @@ dependencies {
     implementation sharedLibs.google.autoService
     annotationProcessor sharedLibs.google.autoService
     implementation sharedLibs.squareup.javapoet
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            FluxCProcessorPublication(MavenPublication) {
-                from components.java
-
-                groupId "org.wordpress.fluxc"
-                artifactId "fluxc-processor"
-                // version is set by 'publish-to-s3' plugin
-            }
-        }
-   }
 }
