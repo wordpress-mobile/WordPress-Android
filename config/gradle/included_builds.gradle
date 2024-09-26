@@ -1,4 +1,3 @@
-gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
@@ -25,15 +24,6 @@ if (localBuilds.exists()) {
     Note that `project` dependencies are resolved in the context of the included build.
     https://docs.gradle.org/current/javadoc/org/gradle/api/initialization/ConfigurableIncludedBuild.html#dependencySubstitution-org.gradle.api.Action-
     */
-
-    if (ext.has("localFluxCPath")) {
-        includeBuild(ext.localFluxCPath) {
-            dependencySubstitution {
-                println "Substituting fluxc with the local build"
-                substitute module("$gradle.ext.fluxCBinaryPath") using project(':fluxc')
-            }
-        }
-    }
 
     if (ext.has("localWPUtilsPath")) {
         includeBuild(ext.localWPUtilsPath) {
