@@ -69,14 +69,38 @@ fun UserListScreen(
 @Composable
 private fun UserList(users: List<UserWithEditContext>) {
     for (user in users) {
-        UserCard(user)
+        UserRow(user)
     }
 }
 
 @Composable
-fun UserCard(user: UserWithEditContext) {
-    Row(modifier = Modifier.padding(all = 8.dp)) {
-        Column {
+fun UserRow(user: UserWithEditContext) {
+    Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(
+            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            if (user.avatarUrls.isNullOrEmpty()) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_primary_white_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier
+                        .size(48.dp)
+                )
+            } else {
+                coil.compose.AsyncImage(
+                    model = user.avatarUrls!!["0"],
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(48.dp)
+                )
+            }
+        }
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .align(Alignment.CenterVertically)
+        ) {
             Text(
                 text = user.name,
             )
@@ -113,7 +137,7 @@ private fun EmptyView() {
 private fun Screen(
     content: @Composable () -> Unit,
     onCloseClick: () -> Unit,
-    isScrollable: Boolean = true,
+    isScrollable: Boolean,
 ) {
     M3Theme {
         Scaffold(
