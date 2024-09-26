@@ -38,6 +38,8 @@ facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
 google-exoplayer = '2.13.3'
 google-flexboxlayout = '3.0.0'
+google-firebase-bom = '33.3.0'
+google-firebase-iid = '21.1.0'
 google-gson = '2.11.0'
 google-material = '1.12.0'
 google-mlkit-barcode-scanning-common = '17.0.0'
@@ -135,6 +137,9 @@ facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.r
 fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "fastlane-screengrab" }
 google-exoplayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref = "google-exoplayer" }
 google-flexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "google-flexboxlayout" }
+google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
+google-firebase-iid = { group = "com.google.firebase", name = "firebase-iid", version.ref = "google-firebase-iid" }
+google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 google-mlkit-barcode-scanning-common = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref = "google-mlkit-barcode-scanning-common" }

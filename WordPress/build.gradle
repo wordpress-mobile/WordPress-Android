@@ -560,12 +560,11 @@ dependencies {
     lintChecks(libs.wordpress.lint)
 
     // Firebase
-    def firebaseBom = platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
-    implementation(firebaseBom)
+    implementation(platform(libs.google.firebase.bom))
     // Firebase - Main
-    implementation "com.google.firebase:firebase-messaging"
+    implementation(libs.google.firebase.messaging)
     // Firebase - Deprecated
-    implementation "com.google.firebase:firebase-iid:$firebaseIidVersion"
+    implementation(libs.google.firebase.iid)
 
     // Jetpack Compose
     def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")
