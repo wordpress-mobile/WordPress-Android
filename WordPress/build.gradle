@@ -598,7 +598,7 @@ dependencies {
     implementation(libs.cascade.compose)
 
     implementation(libs.automattic.tracks.crashlogging)
-    lintChecks 'com.android.security.lint:lint:1.0.1'
+    lintChecks(libs.android.security.lint)
 }
 
 dependencyAnalysis {

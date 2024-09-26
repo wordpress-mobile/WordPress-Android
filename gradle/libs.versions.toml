@@ -2,6 +2,7 @@
 airbnb-lottie = '6.5.2'
 android-desugar = '2.1.2'
 android-installreferrer = '2.2'
+android-security-lint = '1.0.1'
 android-volley = '1.2.1'
 androidx-activity = '1.9.2'
 androidx-annotation = '1.8.2'
@@ -86,6 +87,7 @@ airbnb-lottie-main = { group = "com.airbnb.android", name = "lottie", version.re
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }
 android-installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "android-installreferrer" }
+android-security-lint = { group = "com.android.security.lint", name = "lint", version.ref = "android-security-lint" }
 android-volley = { group = "com.android.volley", name = "volley", version.ref = "android-volley" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-activity-main = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
