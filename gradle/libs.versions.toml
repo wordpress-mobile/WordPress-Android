@@ -35,6 +35,7 @@ automattic-about = '1.4.0'
 automattic-rest = '1.0.8'
 automattic-tracks = '5.1.0'
 bumptech-glide = '4.16.0'
+coil = '2.7.0'
 commons-fileupload = '1.5'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
@@ -148,6 +149,8 @@ automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "cras
 bumptech-glide-main = { group = "com.github.bumptech.glide", name = "glide", version.ref = "bumptech-glide" }
 bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "bumptech-glide" }
 bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref = "bumptech-glide" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-android", version.ref = "facebook-react" }
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
