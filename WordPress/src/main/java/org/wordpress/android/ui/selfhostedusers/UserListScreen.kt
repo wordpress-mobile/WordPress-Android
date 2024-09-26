@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -74,52 +74,45 @@ fun UserListScreen(
 @Composable
 private fun UserList(users: List<UserWithEditContext>) {
     for (user in users) {
-        UserRow(user)
+        UserLazyRow(user)
         HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
     }
 }
 
 @Composable
-fun UserRow(user: UserWithEditContext) {
-    Row(
+private fun UserLazyRow(user: UserWithEditContext) {
+    LazyRow(
         modifier = Modifier
             .padding(all = 16.dp)
             .fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.align(Alignment.CenterVertically)
-        ) {
-            val avatarUrl = user.avatarUrls?.values?.firstOrNull()
+        item {
+            val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
             UserAvatar(avatarUrl)
         }
-        Column(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .align(Alignment.CenterVertically)
-                .weight(0.7F)
-        ) {
-            Text(
-                text = user.name,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = user.username,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-        if (user.roles.isNotEmpty()) {
+
+        item {
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .weight(0.3F)
             ) {
                 Text(
-                    text = user.roles.joinToString(", "),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.align(Alignment.End)
+                    text = user.name,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = user.username,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (user.roles.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = user.roles.joinToString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                }
             }
         }
     }
@@ -131,7 +124,7 @@ private fun UserAvatar(avatarUrl: String?) {
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(48.dp)
         )
