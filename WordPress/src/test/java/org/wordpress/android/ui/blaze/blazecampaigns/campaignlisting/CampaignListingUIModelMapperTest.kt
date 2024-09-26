@@ -4,9 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -17,7 +15,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class CampaignListingUIModelMapperTest : BaseUnitTest() {
     @Mock
     lateinit var statsUtils: StatsUtils
@@ -41,6 +38,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         targetUrn = null,
         totalBudget = 1.0,
         spentBudget = 0.0,
+        isEndlessCampaign = false,
     )
 
     @Test
@@ -71,6 +69,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         targetUrn = null,
         totalBudget = 0.0,
         spentBudget = 0.0,
+        isEndlessCampaign = false,
     )
 
     @Test
