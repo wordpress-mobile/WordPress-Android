@@ -46,6 +46,7 @@
     <issue id="WeakPrng" severity="warning" />
     <issue id="TapjackingVulnerable" severity="warning" />
     <issue id="InsecurePermissionProtectionLevel" severity="warning" />
+    <issue id="CustomX509TrustManager" severity="warning" />
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
