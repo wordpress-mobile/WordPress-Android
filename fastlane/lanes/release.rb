@@ -331,6 +331,47 @@ platform :android do
     end
   end
 
+  # This lane publishes a release on GitHub and creates a PR to backmerge the current release branch into the next release/ branch
+  #
+  # @param [Boolean] skip_confirm (default: false) If set, will skip the confirmation prompt before running the rest of the lane
+  #
+  # @example Running the lane
+  #          bundle exec fastlane publish_release skip_confirm:true
+  #
+  lane :publish_release do |skip_confirm: false|
+    ensure_git_status_clean
+    ensure_git_branch(branch: '^release/')
+
+    version_number = current_release_version
+
+    current_branch = "release/#{version_number}"
+    next_release_branch = "release/#{next_release_version}"
+
+    UI.important <<~PROMPT
+      Publish the #{version_number} release. This will:
+      - Publish the existing draft `#{version_number}` release on GitHub
+      - Which will also have GitHub create the associated git tag, pointing to the tip of the branch
+      - If the release branch for the next version `#{next_release_branch}` already exists, backmerge `#{current_branch}` into it
+      - If needed, backmerge `#{current_branch}` back into `#{DEFAULT_BRANCH}`
+      - Delete the `#{current_branch}` branch
+    PROMPT
+    UI.user_error!("Terminating as requested. Don't forget to run the remainder of this automation manually.") unless skip_confirm || UI.confirm('Do you want to continue?')
+
+    UI.important "Publishing release #{version_number} on GitHub"
+
+    publish_github_release(
+      repository: GITHUB_REPO,
+      name: version_number
+    )
+
+    create_backmerge_pr
+
+    # At this point, an intermediate branch has been created by creating a backmerge PR to a hotfix or the next version release branch.
+    # This allows us to safely delete the `release/*` branch.
+    # Note that if a hotfix or new release branches haven't been created, the backmerge PR won't be created as well.
+    delete_remote_git_branch!(current_branch)
+  end
+
   lane :check_translations_coverage do |options|
     UI.message('Checking WordPress app strings translation status...')
     check_translation_progress(
@@ -557,6 +598,14 @@ platform :android do
     buildkite_annotate(style: 'error', context: 'error-checking-branch', message: error_message) if is_ci
 
     UI.user_error!(error_message)
+  end
+
+  # Delete a branch remotely, after having removed any GitHub branch protection
+  #
+  def delete_remote_git_branch!(branch_name)
+    remove_branch_protection(repository: GITHUB_REPO, branch: branch_name)
+
+    Git.open(Dir.pwd).push('origin', branch_name, delete: true)
   end
 
   def report_milestone_error(error_title:)
