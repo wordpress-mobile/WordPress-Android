@@ -369,7 +369,7 @@ android {
         compose true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = androidxComposeCompilerVersion
+            kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
         }
     }
 }
@@ -567,23 +567,22 @@ dependencies {
     implementation(libs.google.firebase.iid)
 
     // Jetpack Compose
-    def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     // - Jetpack Compose - Android Studio
-    debugImplementation "androidx.compose.ui:ui-test-manifest"
-    debugImplementation "androidx.compose.ui:ui-tooling"
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling.main)
     // - Jetpack Compose - Main
-    implementation "androidx.compose.runtime:runtime"
-    implementation "androidx.compose.runtime:runtime-livedata"
-    implementation "androidx.compose.foundation:foundation"
-    implementation "androidx.compose.foundation:foundation-layout"
-    implementation "androidx.compose.ui:ui"
-    implementation "androidx.compose.ui:ui-graphics"
-    implementation "androidx.compose.ui:ui-text"
-    implementation "androidx.compose.ui:ui-unit"
-    implementation "androidx.compose.ui:ui-tooling-preview"
-    implementation "androidx.compose.material:material"
+    implementation(libs.androidx.compose.runtime.main)
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.foundation.main)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui.main)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.compose.ui.unit)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material)
     // - Jetpack Compose - AndroidX
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.constraintlayout.compose)
@@ -592,8 +591,8 @@ dependencies {
     implementation "io.coil-kt:coil-video:$coilComposeVersion"
     implementation(libs.airbnb.lottie.compose)
     // - Jetpack Compose - UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
-    implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    implementation(libs.androidx.compose.material3)
 
     // Cascade - Compose nested menu
     implementation "me.saket.cascade:cascade-compose:2.3.0"
