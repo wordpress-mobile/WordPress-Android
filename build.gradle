@@ -24,10 +24,6 @@ ext {
 ext {
     // main
     androidxComposeNavigationVersion = '2.7.7'
-    androidxGridlayoutVersion = '1.0.0'
-    googleAutoServiceVersion = '1.0.1'
-
-    googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
 }
 
 measureBuilds {
