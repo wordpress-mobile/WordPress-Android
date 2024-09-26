@@ -10,16 +10,20 @@ class AuthenticationRepository
 ) {
     private val authenticatedSites = mutableMapOf<AuthenticatedSite, WpAuthentication>()
 
-    // TODO: Remove this test data and DO NOT COMMIT
+    // TODO: Remove this test data and DO NOT PUSH
     private val localTestSiteUrl = "https://content-heavy.wpmt.co/"
-    private val localTestSiteUsername = "admin"
-    private val localTestSitePassword = "9SACBHoWIZMALNLDW8G"
+    private val localTestSiteUsername = "nbradbury"
+    private val localTestSitePassword = "DU8I z1Mc BiMc TI3m rh8k 0KuN"
 
     init {
-        addAuthenticatedSite(localTestSiteUrl, localTestSiteUsername, localTestSitePassword)
+        addAuthenticatedSite(
+            localTestSiteUrl,
+            localTestSiteUsername,
+            localTestSitePassword
+        )
     }
 
-    fun addAuthenticatedSite(siteUrl: String, username: String, password: String): Boolean {
+    private fun addAuthenticatedSite(siteUrl: String, username: String, password: String): Boolean {
         if (siteUrl.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
             authenticatedSites[AuthenticatedSite(name = siteUrl, url = ParsedUrl.parse(siteUrl))] =
                 wpAuthenticationFromUsernameAndPassword(username, password)

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.selfhostedusers
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +39,6 @@ class UserListActivity : LocaleAwareActivity() {
             name = site!!.name,
             url = ParsedUrl.parse(site!!.url)
         )
-        viewModel.setAuthenticatedSite(authenticatedSite)
 
         setContentView(
             ComposeView(this).apply {
@@ -48,11 +48,16 @@ class UserListActivity : LocaleAwareActivity() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     UserListScreen(
-                        viewModel.fetchUsers()
+                        viewModel.users.collectAsState(),
+                        viewModel.progressDialogState.collectAsState(),
+
                     )
                 }
             }
         )
+
+        viewModel.setAuthenticatedSite(authenticatedSite)
+        viewModel.fetchUsers()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

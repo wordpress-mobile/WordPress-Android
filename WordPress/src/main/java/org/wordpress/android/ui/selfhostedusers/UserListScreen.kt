@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,31 +16,52 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ProgressDialog
+import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.M3Theme
 import uniffi.wp_api.UserWithEditContext
 
 @Composable
-fun UserListScreen(users: List<UserWithEditContext>) {
+fun UserListScreen(
+    users: State<List<UserWithEditContext>>,
+    progressDialogState: State<ProgressDialogState?>?,
+) {
     val content: @Composable () -> Unit = @Composable {
-        for (user in users) {
-            UserCard(user)
+        if (users.value.isNotEmpty()) {
+            UserList(users.value)
+        } else {
+            EmptyView()
+        }
+        progressDialogState?.value?.let {
+            ProgressDialog(it)
         }
     }
     Screen(
         content = content,
         onCloseClick = {}
     )
+}
+
+@Composable
+private fun UserList(users: List<UserWithEditContext>) {
+    for (user in users) {
+        UserCard(user)
+    }
 }
 
 @Composable
@@ -56,6 +76,22 @@ fun UserCard(user: UserWithEditContext) {
                 text = user.email,
             )
         }
+    }
+}
+
+@Composable
+private fun EmptyView() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Text(
+            text = stringResource(id = R.string.no_users),
+            modifier = Modifier.fillMaxSize(),
+            fontSize = 42.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -92,7 +128,15 @@ private fun Screen(
 }
 
 @Composable
-@Preview
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
 fun UserListScreenPreview() {
     val userList = listOf(
         UserWithEditContext(
@@ -134,17 +178,47 @@ fun UserListScreenPreview() {
             url = "url@usertwo.com",
         )
     )
-    MaterialTheme {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            LazyColumn {
-                items(userList) {
-                    UserCard(it)
-                }
-            }
-        }
-    }
+    UserListScreen(
+        users = MutableStateFlow(userList).collectAsState(),
+        progressDialogState = null,
+    )
+}
+
+@Composable
+@Preview(
+    name = "Empty View Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Empty View Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+fun EmptyUserListScreenPreview() {
+    UserListScreen(
+        users = MutableStateFlow(emptyList<UserWithEditContext>()).collectAsState(),
+        progressDialogState = null,
+    )
+}
+
+@Composable
+@Preview(
+    name = "Progress Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Progress Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+fun ProgressPreview() {
+    val progressDialogState = ProgressDialogState(
+        message = R.string.loading,
+        showCancel = false,
+        progress = 50f / 100f,
+    )
+    UserListScreen(
+        users = MutableStateFlow(emptyList<UserWithEditContext>()).collectAsState(),
+        progressDialogState = MutableStateFlow(progressDialogState).collectAsState(),
+    )
 }
