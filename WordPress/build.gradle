@@ -595,7 +595,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     // Cascade - Compose nested menu
-    implementation "me.saket.cascade:cascade-compose:2.3.0"
+    implementation(libs.cascade.compose)
 
     implementation(libs.automattic.tracks.crashlogging)
     lintChecks 'com.android.security.lint:lint:1.0.1'
