@@ -63,6 +63,7 @@ jetty-webapp = '9.4.51.v20230217'
 json-path = '2.9.0'
 jsoup = '1.18.1'
 junit = '4.13.2'
+kotlin-main = '1.9.24'
 kotlin-compile-testing = "1.5.0"
 kotlinx-coroutines = '1.8.1'
 mockito-android = '5.13.0'
@@ -184,6 +185,8 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-compile-testing-main = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin-main" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin-main" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -201,3 +204,10 @@ wordpress-rs-android = { group = "rs.wordpress.api", name = "android", version.r
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
 yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
+
+[plugins]
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-main" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }

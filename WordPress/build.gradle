@@ -4,9 +4,9 @@ import se.bjurr.violations.lib.model.SEVERITY
 
 plugins {
     id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.plugin.parcelize"
-    id "org.jetbrains.kotlin.plugin.allopen"
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.allopen)
     id "io.sentry.android.gradle"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
@@ -518,7 +518,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.mockito.android)
     testImplementation(libs.mockito.kotlin)
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
+    testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlinx.coroutines.test)
 

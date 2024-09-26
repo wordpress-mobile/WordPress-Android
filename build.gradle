@@ -11,7 +11,11 @@ plugins {
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
-    id "org.jetbrains.kotlin.plugin.parcelize" apply false
+    alias(libs.plugins.kotlin.allopen).apply(false)
+    alias(libs.plugins.kotlin.android).apply(false)
+    alias(libs.plugins.kotlin.jvm).apply(false)
+    alias(libs.plugins.kotlin.parcelize).apply(false)
+    alias(libs.plugins.kotlin.serialization).apply(false)
     id "com.google.devtools.ksp" apply false
 }
 
