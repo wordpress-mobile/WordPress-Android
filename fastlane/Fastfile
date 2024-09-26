@@ -156,7 +156,6 @@ end
 ########################################################################
 # Import domain-specific lanes
 ########################################################################
-import 'helpers/github.rb'
 import 'lanes/build.rb'
 import 'lanes/localization.rb'
 import 'lanes/release.rb'
