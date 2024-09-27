@@ -54,4 +54,8 @@ class UserListViewModel @Inject constructor(
     fun onCloseClick(context: Context) {
         (context as? Activity)?.finish()
     }
+
+    fun onUserClick(context: Context, user: UserWithEditContext) {
+
+    }
 }

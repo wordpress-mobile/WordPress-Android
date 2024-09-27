@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.selfhostedusers
 
-import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,15 +51,15 @@ import uniffi.wp_api.UserWithEditContext
 fun UserListScreen(
     users: State<List<UserWithEditContext>>,
     progressDialogState: State<ProgressDialogState?>?,
-    onCloseClick: (context: Context) -> Unit = {},
+    onCloseClick: () -> Unit = {},
+    onUserClick: (user: UserWithEditContext) -> Unit = { }
 ) {
-    val context = LocalContext.current
     val content: @Composable () -> Unit = @Composable {
         progressDialogState?.value?.let {
             ProgressDialog(it)
         } ?: run {
             if (users.value.isNotEmpty()) {
-                UserList(users.value)
+                UserList(users.value, onUserClick)
             } else {
                 EmptyView()
             }
@@ -67,25 +67,34 @@ fun UserListScreen(
     }
     Screen(
         content = content,
-        onCloseClick = { onCloseClick(context) },
+        onCloseClick = { onCloseClick() },
         isScrollable = users.value.isNotEmpty()
     )
 }
 
 @Composable
-private fun UserList(users: List<UserWithEditContext>) {
+private fun UserList(
+    users: List<UserWithEditContext>,
+    onUserClick: (user: UserWithEditContext) -> Unit,
+) {
     for (user in users) {
-        UserLazyRow(user)
+        UserLazyRow(user, onUserClick)
         HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
     }
 }
 
 @Composable
-private fun UserLazyRow(user: UserWithEditContext) {
+private fun UserLazyRow(
+    user: UserWithEditContext,
+    onUserClick: (user: UserWithEditContext) -> Unit,
+) {
     LazyRow(
         modifier = Modifier
             .padding(all = 16.dp)
             .fillMaxWidth()
+            .clickable {
+                onUserClick(user)
+            }
     ) {
         item {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""

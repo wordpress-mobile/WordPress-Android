@@ -47,6 +47,9 @@ class UserListActivity : LocaleAwareActivity() {
                         onCloseClick = {
                             viewModel.onCloseClick(this@UserListActivity)
                         },
+                        onUserClick = { user ->
+                            viewModel.onUserClick(this@UserListActivity, user)
+                        }
                     )
                 }
             }
