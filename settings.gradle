@@ -60,6 +60,7 @@ include ':libs:annotations'
 include ':libs:mocks'
 
 include ':fluxc', ':fluxc-annotations', ':fluxc-processor'
+include ':WordPressLoginFlow'
 
 apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_cache.gradle'
