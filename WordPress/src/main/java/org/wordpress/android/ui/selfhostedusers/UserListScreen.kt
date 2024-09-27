@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.selfhostedusers
 
-import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,9 +50,8 @@ import uniffi.wp_api.UserWithEditContext
 fun UserListScreen(
     users: State<List<UserWithEditContext>>,
     progressDialogState: State<ProgressDialogState?>?,
-    onCloseClick: (context: Context) -> Unit = {},
+    onCloseClick: () -> Unit = {},
 ) {
-    val context = LocalContext.current
     val content: @Composable () -> Unit = @Composable {
         progressDialogState?.value?.let {
             ProgressDialog(it)
@@ -67,7 +65,7 @@ fun UserListScreen(
     }
     Screen(
         content = content,
-        onCloseClick = { onCloseClick(context) },
+        onCloseClick = { onCloseClick() },
         isScrollable = users.value.isNotEmpty()
     )
 }
