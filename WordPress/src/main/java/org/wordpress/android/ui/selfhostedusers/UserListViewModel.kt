@@ -32,14 +32,12 @@ class UserListViewModel @Inject constructor(
         _users.value = listOf()
         launch {
             delay(1000L)
-            _users.value = sampleUserList
+            _users.value = SampleUsers.getSampleUsers()
             hideProgressDialog()
         }
     }
 
-    private fun showProgressDialog(
-        @StringRes message: Int
-    ) {
+    private fun showProgressDialog(@StringRes message: Int) {
         _progressDialogState.value =
             ProgressDialogState(
                 message = message,
