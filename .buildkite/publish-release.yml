@@ -2,7 +2,7 @@
 ---
 
 steps:
-  - label: "Finalize release"
+  - label: Publish Release
     plugins: [$CI_TOOLKIT]
     command: |
       echo '--- :robot_face: Use bot for git operations'
@@ -11,15 +11,13 @@ steps:
       echo '--- :git: Checkout Release Branch'
       .buildkite/commands/checkout-release-branch.sh
 
-      echo '--- :ruby: Setup Ruby Tools'
+      echo '--- :ruby: Setup Ruby tools'
       install_gems
 
-      cp gradle.properties-example gradle.properties
-
-      echo '--- :shipit: Finalize Release'
-      bundle exec fastlane finalize_release skip_confirm:true
+      echo '--- :package: Publish Release'
+      bundle exec fastlane publish_release skip_confirm:true
     agents:
-       queue: "tumblr-metal"
+       queue: tumblr-metal
     retry:
       manual:
         # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite

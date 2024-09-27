@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
 platform :android do
-  #####################################################################################
-  # code_freeze
-  # -----------------------------------------------------------------------------------
-  # This lane executes the steps planned on code freeze
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane code_freeze [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
+  # Creates a new release branch from the current trunk for code freeze.
   #
-  # Example:
-  # bundle exec fastlane code_freeze
-  # bundle exec fastlane code_freeze update_release_branch_version:false
-  # bundle exec fastlane code_freeze skip_confirm:true
-  #####################################################################################
-  desc 'Creates a new release branch from the current trunk'
-  lane :code_freeze do |options|
+  # @param [Boolean] skip_confirm Whether to skip the confirmation prompt
+  #
+  lane :code_freeze do |skip_confirm: false|
     ensure_git_status_clean
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
     ensure_git_branch(branch: DEFAULT_BRANCH)
@@ -33,11 +23,14 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
+
+    release_branch_name = "release/#{next_release_version}"
+    ensure_branch_does_not_exist!(release_branch_name)
 
     # Create the release branch
     UI.message 'Creating release branch...'
-    Fastlane::Helper::GitHelper.create_branch("release/#{next_release_version}", from: DEFAULT_BRANCH)
+    Fastlane::Helper::GitHelper.create_branch(release_branch_name, from: DEFAULT_BRANCH)
     ensure_git_branch(branch: '^release/')
     UI.success "Done! New release branch is: #{git_branch}"
 
@@ -81,7 +74,38 @@ platform :android do
       from_branch: DEFAULT_BRANCH,
       to_branch: "release/#{new_version}"
     )
-    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: new_version)
+
+    begin
+      # Move PRs to next milestone
+      moved_prs = update_assigned_milestone(
+        repository: GHHELPER_REPO,
+        from_milestone: new_version,
+        to_milestone: next_release_version,
+        comment: "Version `#{new_version}` has now entered code-freeze, so the milestone of this PR has been updated to `#{next_release_version}`."
+      )
+
+      # Add ❄️ marker to milestone title to indicate we entered code-freeze
+      set_milestone_frozen_marker(
+        repository: GHHELPER_REPO,
+        milestone: new_version
+      )
+    rescue StandardError => e
+      moved_prs = []
+
+      report_milestone_error(error_title: "Error freezing milestone `#{new_version}`: #{e.message}")
+    end
+
+    UI.message("Moved the following PRs to milestone #{next_release_version}: #{moved_prs.join(', ')}")
+
+    # Annotate the build with the moved PRs
+    moved_prs_info = if moved_prs.empty?
+                       "👍 No open PR were targeting `#{new_version}` at the time of code-freeze"
+                     else
+                       "#{moved_prs.count} PRs targeting `#{new_version}` were still open and thus moved to `#{next_release_version}`:\n" \
+                         + moved_prs.map { |pr_num| "[##{pr_num}](https://github.com/#{GHHELPER_REPO}/pull/#{pr_num})" }.join(', ')
+                     end
+
+    buildkite_annotate(style: moved_prs.empty? ? 'success' : 'warning', context: 'start-code-freeze', message: moved_prs_info) if is_ci
   end
 
   #####################################################################################
@@ -115,27 +139,14 @@ platform :android do
 
     trigger_beta_build(branch_to_build: "release/#{new_version}")
 
-    # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("merge/#{new_version}-code-freeze-into-trunk")
-    push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze into trunk")
+    create_backmerge_pr
   end
 
-  #####################################################################################
-  # new_beta_release
-  # -----------------------------------------------------------------------------------
-  # This lane updates the release branch for a new beta release. It will update the
-  # current release branch by default.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane new_beta_release [skip_confirm:<skip confirm>]
+  # Updates a release branch for a new beta release, triggering a beta build using the `.buildkite/beta-builds.yml` pipeline.
   #
-  # Example:
-  # bundle exec fastlane new_beta_release
-  # bundle exec fastlane new_beta_release skip_confirm:true
-  #####################################################################################
-  desc 'Updates a release branch for a new beta release'
-  lane :new_beta_release do |options|
+  # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
+  #
+  lane :new_beta_release do |skip_confirm: false|
     # Checkout default branch and update
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
 
@@ -158,7 +169,7 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     update_frozen_strings_for_translation
     download_translations
@@ -172,35 +183,25 @@ platform :android do
     commit_version_bump
     UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
-    release_branch = "release/#{current_release_version}"
-    release_version = current_version_name
-
-    # Create an intermediate branch
-    new_beta_branch_name = "new_beta/#{release_version}"
-    Fastlane::Helper::GitHelper.create_branch(new_beta_branch_name)
-
     push_to_git_remote(tags: false)
 
-    trigger_beta_build(branch_to_build: new_beta_branch_name)
+    trigger_beta_build(branch_to_build: "release/#{current_release_version}")
 
-    create_release_management_pull_request(release_branch, "Merge #{release_version} to #{release_branch}")
+    create_backmerge_pr
   end
 
-  #####################################################################################
-  # new_hotfix_release
-  # -----------------------------------------------------------------------------------
-  # This lane updates the release branch for a new hotfix release.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version_name:<x.y.z>] [build_code:<nnnn>]
+  # Prepares a new hotfix branch cut from the previous tag and bumps the version.
   #
-  # Example:
-  # bundle exec fastlane new_hotfix_release version_name:10.6.1 build_code:1070
-  #####################################################################################
-  desc 'Prepare a new hotfix branch cut from the previous tag, and bump the version'
-  lane :new_hotfix_release do |options|
-    new_version = options[:version_name] || UI.input('Version number for the new hotfix?')
-    new_build_code = options[:build_code] || UI.input('Version code for the new hotfix?')
+  # @param version_name [String] The version number for the new hotfix (e.g., "10.6.1")
+  # @param build_code [String] The build code for the new hotfix (e.g., "1070")
+  # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
+  #
+  # @example
+  #   bundle exec fastlane new_hotfix_release version_name:10.6.1 build_code:1070 skip_confirm:true
+  #
+  lane :new_hotfix_release do |version_name: nil, build_code: nil, skip_confirm: false|
+    new_version = version_name || UI.input('Version number for the new hotfix?')
+    new_build_code = build_code || UI.input('Version code for the new hotfix?')
 
     ensure_git_status_clean
 
@@ -223,7 +224,7 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     # Check tags
     UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
@@ -246,58 +247,49 @@ platform :android do
     push_to_git_remote(tags: false)
   end
 
-  #####################################################################################
-  # finalize_hotfix_release
-  # -----------------------------------------------------------------------------------
-  # This lane finalizes the hotfix branch.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane finalize_hotfix_release
+  # This lane finalizes the hotfix branch, triggering a release build and closing the milestone.
   #
-  # Example:
-  # bundle exec fastlane finalize_hotfix_release
-  #####################################################################################
-  desc 'Finalizes a hotfix release by triggering a release build'
-  lane :finalize_hotfix_release do |options|
+  # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
+  #
+  lane :finalize_hotfix_release do |skip_confirm: false|
     ensure_git_branch(branch: '^release/')
     ensure_git_status_clean unless is_ci
 
     UI.important("Triggering hotfix build for version: #{current_release_version}")
 
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
+
+    create_backmerge_pr
+
+    # Close hotfix milestone
+    begin
+      close_milestone(
+        repository: GHHELPER_REPO,
+        milestone: current_release_version
+      )
+    rescue StandardError => e
+      report_milestone_error(error_title: "Error closing milestone `#{current_release_version}`: #{e.message}")
+    end
   end
 
-  #####################################################################################
-  # finalize_release
-  # -----------------------------------------------------------------------------------
-  # This lane finalize a release: updates store metadata and runs the release checks
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane finalize_release [skip_confirm:<skip confirm>]
+  # This lane finalizes a release by updating store metadata and running release checks.
   #
-  # Example:
-  # bundle exec fastlane finalize_release
-  # bundle exec fastlane finalize_release skip_confirm:true
-  #####################################################################################
-  desc 'Updates store metadata and runs the release checks'
-  lane :finalize_release do |options|
+  # @param skip_confirm [Boolean] Whether to skip the confirmation prompt
+  #
+  lane :finalize_release do |skip_confirm: false|
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(version_properties_path: VERSION_PROPERTIES_PATH)
 
     ensure_git_status_clean
     ensure_git_branch(branch: '^release/')
 
     UI.important("Finalizing release: #{current_release_version}")
-
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     configure_apply(force: is_ci)
 
     release_branch = "release/#{current_release_version}"
-
-    # Remove branch protection first, so that we can push the final commits directly to the release branch
-    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
 
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
@@ -317,18 +309,67 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    # Wrap up
-    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
-    create_new_milestone(repository: GHHELPER_REPO)
-    close_milestone(repository: GHHELPER_REPO, milestone: version_name)
-
-    # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
-    # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("merge/#{version_name}-final-into-trunk")
-    push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{version_name} final into trunk")
+    create_backmerge_pr
+
+    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
+
+    # Close milestone
+    begin
+      set_milestone_frozen_marker(
+        repository: GHHELPER_REPO,
+        milestone: version_name,
+        freeze: false
+      )
+      close_milestone(
+        repository: GHHELPER_REPO,
+        milestone: version_name
+      )
+    rescue StandardError => e
+      report_milestone_error(error_title: "Error closing milestone `#{version}`: #{e.message}")
+    end
+  end
+
+  # This lane publishes a release on GitHub and creates a PR to backmerge the current release branch into the next release/ branch
+  #
+  # @param [Boolean] skip_confirm (default: false) If set, will skip the confirmation prompt before running the rest of the lane
+  #
+  # @example Running the lane
+  #          bundle exec fastlane publish_release skip_confirm:true
+  #
+  lane :publish_release do |skip_confirm: false|
+    ensure_git_status_clean
+    ensure_git_branch(branch: '^release/')
+
+    version_number = current_release_version
+
+    current_branch = "release/#{version_number}"
+    next_release_branch = "release/#{next_release_version}"
+
+    UI.important <<~PROMPT
+      Publish the #{version_number} release. This will:
+      - Publish the existing draft `#{version_number}` release on GitHub
+      - Which will also have GitHub create the associated git tag, pointing to the tip of the branch
+      - If the release branch for the next version `#{next_release_branch}` already exists, backmerge `#{current_branch}` into it
+      - If needed, backmerge `#{current_branch}` back into `#{DEFAULT_BRANCH}`
+      - Delete the `#{current_branch}` branch
+    PROMPT
+    UI.user_error!("Terminating as requested. Don't forget to run the remainder of this automation manually.") unless skip_confirm || UI.confirm('Do you want to continue?')
+
+    UI.important "Publishing release #{version_number} on GitHub"
+
+    publish_github_release(
+      repository: GITHUB_REPO,
+      name: version_number
+    )
+
+    create_backmerge_pr
+
+    # At this point, an intermediate branch has been created by creating a backmerge PR to a hotfix or the next version release branch.
+    # This allows us to safely delete the `release/*` branch.
+    # Note that if a hotfix or new release branches haven't been created, the backmerge PR won't be created as well.
+    delete_remote_git_branch!(current_branch)
   end
 
   lane :check_translations_coverage do |options|
@@ -361,86 +402,81 @@ platform :android do
     )
   end
 
-  #####################################################################################
-  # trigger_beta_build
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane trigger_beta_build branch_to_build:<branch_name>
+  # Triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
   #
-  #####################################################################################
-  lane :trigger_beta_build do |options|
-    buildkite_trigger_build(
-      buildkite_organization: 'automattic',
-      buildkite_pipeline: 'wordpress-android',
-      branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'beta-builds.yml',
-      message: 'Beta Builds'
+  # @param branch_to_build [String] The branch to build. Defaults to the current git branch.
+  #
+  # @example
+  #   bundle exec fastlane trigger_beta_build branch_to_build:"release/1.2.3"
+  #
+  lane :trigger_beta_build do |branch_to_build: git_branch|
+    trigger_buildkite_release_build(
+      branch: branch_to_build,
+      beta: true
     )
   end
 
-  #####################################################################################
-  # trigger_release_build
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a release build using the `.buildkite/release-builds.yml`
-  # pipeline.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
+  # Triggers a release build using the `.buildkite/release-builds.yml` pipeline.
   #
-  #####################################################################################
-  lane :trigger_release_build do |options|
-    buildkite_trigger_build(
-      buildkite_organization: 'automattic',
-      buildkite_pipeline: 'wordpress-android',
-      branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'release-builds.yml',
-      message: 'Release Builds'
+  # @param branch_to_build [String] The branch to build. Defaults to the current git branch.
+  #
+  # @example
+  #   bundle exec fastlane trigger_release_build branch_to_build:"release/1.2.3"
+  #
+  lane :trigger_release_build do |branch_to_build: git_branch|
+    trigger_buildkite_release_build(
+      branch: branch_to_build,
+      beta: false
     )
   end
 
-  #####################################################################################
-  # create_gh_release
-  # -----------------------------------------------------------------------------------
-  # This lane creates a GitHub release for the current version
-  #   - Attaching the existing .aab files in `build/` as the release assets
-  #   - Using the WP & JP release_notes.txt as description
-  #   - If `prerelease:<true|false>`` is not provided, the pre-release status will be inferred from the version name
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version_name:string] [prerelease:<true|false>]
+  # Creates a GitHub release for the current version.
   #
-  # Examples:
-  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPBeta+JPBeta
-  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPBeta
-  # bundle exec fastlane create_gh_release version_name:12.3-rc-4 prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
-  # bundle exec fastlane create_gh_release app:jetpack version_name:12.3-rc-4 prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
-  #####################################################################################
-  lane :create_gh_release do |options|
-    apps = options[:app].nil? ? %w[wordpress jetpack] : [get_app_name_option!(options)]
-    versions = options[:version_name].nil? ? [current_version_name] : [options[:version_name]]
+  # This lane creates a GitHub release for the specified version, attaching existing .aab files
+  # in the `build/` directory as release assets. It uses the WordPress and Jetpack release notes
+  # as the description. If the `prerelease` parameter is not provided, the pre-release status
+  # will be inferred from the version name.
+  #
+  # @param [String] app The app to create the release for. Can be 'wordpress' or 'jetpack'. If not specified, both apps are included.
+  # @param [String] version_name The version name for the release. Defaults to the current version name.
+  # @param [Boolean] prerelease Whether this is a pre-release. If not specified, it's inferred from the version name.
+  #
+  # @example Create a release for both WordPress and Jetpack, inferring pre-release status
+  #   bundle exec fastlane create_gh_release
+  #
+  # @example Create a pre-release for WordPress
+  #   bundle exec fastlane create_gh_release app:wordpress prerelease:true
+  #
+  # @example Create a release for both apps with a specific version
+  #   bundle exec fastlane create_gh_release version_name:12.3-rc-4 prerelease:true
+  #
+  # @example Create a release for Jetpack with a specific version
+  #   bundle exec fastlane create_gh_release app:jetpack version_name:12.3-rc-4 prerelease:true
+  #
+  lane :create_gh_release do |app: nil, version_name: nil, prerelease: nil|
+    apps = app.nil? ? %w[wordpress jetpack] : [get_app_name_option!(app: app)]
+    versions = version_name.nil? ? [current_version_name] : [version_name]
 
-    download_signed_apks_from_google_play(app: options[:app])
+    download_signed_apks_from_google_play(app: app)
 
-    release_assets = apps.flat_map do |app|
-      versions.flat_map { |vers| [bundle_file_path(app, vers), signed_apk_path(app, vers)] }
+    release_assets = apps.flat_map do |current_app|
+      versions.flat_map { |vers| [bundle_file_path(current_app, vers), signed_apk_path(current_app, vers)] }
     end.select { |f| File.exist?(f) }
 
     release_title = versions.last
-    set_prerelease_flag = options[:prerelease].nil? ? /-rc-|alpha-/.match?(release_title) : options[:prerelease]
+    set_prerelease_flag = prerelease.nil? ? /-rc-|alpha-/.match?(release_title) : prerelease
 
     UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
 
     app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
     tmp_file = File.absolute_path('unified-release-notes.txt')
-    unified_notes = apps.map do |app|
-      notes = File.read(release_notes_path(app))
-      "## #{app_titles[app]}\n\n#{notes}"
+    unified_notes = apps.map do |current_app|
+      notes = File.read(release_notes_path(current_app))
+      "## #{app_titles[current_app]}\n\n#{notes}"
     end.join("\n\n")
     File.write(tmp_file, unified_notes)
 
-    create_release(
+    create_github_release(
       repository: GHHELPER_REPO,
       version: release_title,
       release_notes_file_path: tmp_file,
@@ -509,5 +545,79 @@ platform :android do
       message: 'Bump version number',
       files: VERSION_PROPERTIES_PATH
     )
+  end
+
+  def trigger_buildkite_release_build(branch:, beta:)
+    pipeline_file = beta ? 'beta-builds.yml' : 'release-builds.yml'
+    message = beta ? 'Beta Builds' : 'Release Builds'
+
+    build_url = buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: branch,
+      pipeline_file: pipeline_file,
+      message: message
+    )
+
+    message = "This build triggered a build on <code>#{branch}</code>:<br>- #{build_url}"
+    buildkite_annotate(style: 'info', context: 'trigger-release-build', message: message) if is_ci
+  end
+
+  def create_backmerge_pr
+    version = current_release_version
+
+    pr_url = create_release_backmerge_pull_request(
+      repository: GHHELPER_REPO,
+      source_branch: "release/#{version}",
+      labels: ['Releases'],
+      milestone_title: next_release_version
+    )
+  rescue StandardError => e
+    error_message = <<-MESSAGE
+      Error creating backmerge pull request:
+
+      #{e.message}
+
+      If this is not the first time you are running the release task, the backmerge PR for the version `#{version}` might have already been previously created.
+      Please close any previous backmerge PR for `#{version}`, delete the previous merge branch, then run the release task again.
+    MESSAGE
+
+    buildkite_annotate(style: 'error', context: 'error-creating-backmerge', message: error_message) if is_ci
+
+    UI.user_error!(error_message)
+
+    pr_url
+  end
+
+  def ensure_branch_does_not_exist!(branch_name)
+    return unless Fastlane::Helper::GitHelper.branch_exists_on_remote?(branch_name: branch_name)
+
+    error_message = "The branch `#{branch_name}` already exists. Please check first if there is an existing Pull Request that needs to be merged or closed first, " \
+                    'or delete the branch to then run again the release task.'
+
+    buildkite_annotate(style: 'error', context: 'error-checking-branch', message: error_message) if is_ci
+
+    UI.user_error!(error_message)
+  end
+
+  # Delete a branch remotely, after having removed any GitHub branch protection
+  #
+  def delete_remote_git_branch!(branch_name)
+    remove_branch_protection(repository: GITHUB_REPO, branch: branch_name)
+
+    Git.open(Dir.pwd).push('origin', branch_name, delete: true)
+  end
+
+  def report_milestone_error(error_title:)
+    error_message = <<-MESSAGE
+      #{error_title}
+
+      - If this is not the first time you are running the release task (e.g. retrying because it failed on first attempt), the milestone might have already been closed and this error is expected.
+      - Otherwise if this is the first you are running the release task for this version, please investigate the error.
+    MESSAGE
+
+    UI.error(error_message)
+
+    buildkite_annotate(style: 'warning', context: 'error-with-milestone', message: error_message) if is_ci
   end
 end

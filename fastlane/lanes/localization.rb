@@ -134,8 +134,7 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    release_branch = "release/#{version}"
-    create_release_management_pull_request(release_branch, "Merge #{version} editorialized release notes to #{release_branch}")
+    create_backmerge_pr
   end
 
   # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
