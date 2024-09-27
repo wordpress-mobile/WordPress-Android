@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import uniffi.wp_api.UserWithEditContext;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -732,7 +733,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-
+    public static void viewSelfHostedUserDetail(Context context, SiteModel site, UserWithEditContext user) {
+        // TODO
+    }
 
     public static void viewPluginBrowser(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {

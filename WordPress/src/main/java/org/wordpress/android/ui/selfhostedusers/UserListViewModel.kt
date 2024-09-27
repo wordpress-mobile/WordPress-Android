@@ -9,7 +9,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.UserWithEditContext
@@ -55,7 +57,7 @@ class UserListViewModel @Inject constructor(
         (context as? Activity)?.finish()
     }
 
-    fun onUserClick(context: Context, user: UserWithEditContext) {
-
+    fun onUserClick(context: Context, site: SiteModel, user: UserWithEditContext) {
+        ActivityLauncher.viewSelfHostedUserDetail(context, site, user)
     }
 }
