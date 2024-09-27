@@ -23,6 +23,10 @@ class WPAPIHeadRequest(
     override fun parseNetworkResponse(response: NetworkResponse): Response<List<Header>?>? {
         val headers = response.allHeaders
             ?.filter { it.name.equals(LINK_HEADER_NAME, ignoreCase = true) }
+            ?.flatMap {
+                it.value.split(",")
+                    .map { value -> Header(LINK_HEADER_NAME, value.trimStart()) }
+            }
             ?.ifEmpty { null }
 
         return if (headers != null) {
