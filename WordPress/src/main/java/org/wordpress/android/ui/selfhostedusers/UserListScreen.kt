@@ -2,7 +2,6 @@ package org.wordpress.android.ui.selfhostedusers
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -30,6 +30,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -138,8 +139,9 @@ private fun UserAvatar(avatarUrl: String?) {
             contentScale = ContentScale.Fit,
             contentDescription = null,
             modifier = Modifier
-                .size(48.dp)
-        )
+                .clip(CircleShape)
+                .size(48.dp),
+            )
     }
 }
 
@@ -150,15 +152,17 @@ private fun EmptyView() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
+        Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_people_white_24dp),
             contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(85.dp)
         )
         Text(
             text = stringResource(id = R.string.no_users),
             style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -301,6 +305,86 @@ private val sampleUser2 = UserWithEditContext(
 )
 
 val sampleUserList = listOf(
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
+    sampleUser1,
+    sampleUser2,
     sampleUser1,
     sampleUser2,
     sampleUser1,
