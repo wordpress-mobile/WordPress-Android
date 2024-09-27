@@ -70,6 +70,7 @@ object SampleUsers {
         url = "example.com",
     )
 
+    @Suppress("MagicNumber")
     fun getSampleUsers(): ArrayList<UserWithEditContext> {
         if (sampleUserList.isEmpty()) {
             repeat(25) {

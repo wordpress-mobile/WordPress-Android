@@ -27,6 +27,7 @@ class UserListViewModel @Inject constructor(
     val users = _users.asStateFlow()
 
     // TODO this uses dummy data for now - no network request is involved yet
+    @Suppress("MagicNumber")
     fun fetchUsers() {
         showProgressDialog(R.string.loading)
         _users.value = listOf()

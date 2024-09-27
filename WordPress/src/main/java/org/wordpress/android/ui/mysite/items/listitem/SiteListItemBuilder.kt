@@ -147,7 +147,7 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildSelfHostedUserListItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        // TODO: Should this excluded JetPack users?
+        // TODO Should this excluded JetPack users?
         return if (selfHostedUsersFeatureConfig.isEnabled() && site.selfHostedSiteId > 0) {
             ListItem(
                 R.drawable.ic_user_white_24dp,
