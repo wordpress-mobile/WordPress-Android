@@ -639,12 +639,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showHintPickerDialogIfNeeded() {
         // If autofill is available and enabled, we favor the active autofill service over the hint picker dialog.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final AutofillManager autofillManager = requireContext().getSystemService(AutofillManager.class);
-            if (autofillManager != null && autofillManager.isEnabled()) {
-                AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is enabled. Disabling hint picker dialog.");
-                return;
-            }
+        final AutofillManager autofillManager = requireContext().getSystemService(AutofillManager.class);
+        if (autofillManager != null && autofillManager.isEnabled()) {
+            AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is enabled. Disabling hint picker dialog.");
+            return;
         }
 
         AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is unavailable or disabled. Showing hint picker dialog.");
