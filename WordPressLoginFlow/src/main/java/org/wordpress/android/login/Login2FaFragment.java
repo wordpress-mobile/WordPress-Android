@@ -1,7 +1,5 @@
 package org.wordpress.android.login;
 
-import static android.content.Context.CLIPBOARD_SERVICE;
-
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -56,6 +54,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dagger.android.support.AndroidSupportInjection;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
