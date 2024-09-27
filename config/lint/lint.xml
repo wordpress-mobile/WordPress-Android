@@ -83,4 +83,8 @@
     <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
     <!--  We rely on more granural checks from WordPress-Lint-Android  -->
     <issue id="UnknownNullness" severity="ignore" />
+
+    <issue id="VectorRaster" severity="warning" />
+    <issue id="IconDensities" severity="warning" />
+    <issue id="KaptUsageInsteadOfKsp" severity="warning" />
 </lint>
