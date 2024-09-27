@@ -86,4 +86,8 @@ object SampleUsers {
         }
         return sampleUserList
     }
+
+    fun getSampleUserById(id: Int): UserWithEditContext? {
+        return getSampleUsers().find { it.id == id }
+    }
 }
