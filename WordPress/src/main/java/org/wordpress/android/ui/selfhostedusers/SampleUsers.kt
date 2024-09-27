@@ -51,7 +51,7 @@ object SampleUsers {
     )
 
     private val sampleUser3 = UserWithEditContext(
-        id = 1,
+        id = 3,
         username = "@sampleUser",
         avatarUrls = emptyMap(),
         capabilities = emptyMap(),
@@ -72,11 +72,16 @@ object SampleUsers {
 
     @Suppress("MagicNumber")
     fun getSampleUsers(): ArrayList<UserWithEditContext> {
+        fun addWithId(user: UserWithEditContext) {
+            sampleUserList.add(
+                user.copy(id = sampleUserList.size)
+            )
+        }
         if (sampleUserList.isEmpty()) {
             repeat(25) {
-                sampleUserList.add(sampleUser1)
-                sampleUserList.add(sampleUser2)
-                sampleUserList.add(sampleUser3)
+                addWithId(sampleUser1)
+                addWithId(sampleUser2)
+                addWithId(sampleUser3)
             }
         }
         return sampleUserList
