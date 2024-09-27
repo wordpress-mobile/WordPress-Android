@@ -1,7 +1,6 @@
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
-gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
 gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
 gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
@@ -40,15 +39,6 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting gutenberg-mobile with the local build"
                 substitute module("$gradle.ext.gutenbergMobileBinaryPath") using project(':react-native-bridge')
-            }
-        }
-    }
-
-    if (ext.has("localLoginFlowPath")) {
-        includeBuild(ext.localLoginFlowPath) {
-            dependencySubstitution {
-                println "Substituting login-flow with the local build"
-                substitute module("$gradle.ext.loginFlowBinaryPath") using project(':WordPressLoginFlow')
             }
         }
     }
