@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +39,11 @@ fun SelfHostedUsersScreen(
     val title = when(state) {
         is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> state.user.name
         else -> stringResource(R.string.users)
+    }
+
+    val closeIcon = when(state) {
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> Icons.Default.Close
+        else ->  Icons.AutoMirrored.Filled.ArrowBack
     }
 
     val content: @Composable () -> Unit = @Composable {
@@ -71,6 +79,7 @@ fun SelfHostedUsersScreen(
     UserScreen(
         content = content,
         title = title,
+        closeIcon = closeIcon,
         onCloseClick = { onCloseClick() },
         isScrollable = state is SelfHostedUsersViewModel.SelfHostedUserState.UserList
     )

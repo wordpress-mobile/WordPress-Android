@@ -620,6 +620,7 @@
     <string name="https" translatable="false">https:\/\/</string>
     <string name="close">Close</string>
     <string name="submit">Submit</string>
+    <string name="back">Back</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
