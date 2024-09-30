@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.selfhostedusers
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,8 +29,15 @@ import uniffi.wp_api.UserWithEditContext
 fun SelfHostedUsersScreen(
     uiState: StateFlow<SelfHostedUsersViewModel.SelfHostedUserState>,
     onCloseClick: () -> Unit = {},
+    onUserClick: (UserWithEditContext) -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
+
+    val title = when(state) {
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> state.user.name
+        else -> stringResource(R.string.users)
+    }
+
     val content: @Composable () -> Unit = @Composable {
         when (state) {
             is SelfHostedUsersViewModel.SelfHostedUserState.Loading -> {
@@ -44,7 +52,7 @@ fun SelfHostedUsersScreen(
 
             is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> {
                 if (state.users.isNotEmpty()) {
-                    UserList(state.users)
+                    UserList(state.users, onUserClick)
                 } else {
                     UserEmptyView(stringResource(R.string.no_users))
                 }
@@ -59,28 +67,36 @@ fun SelfHostedUsersScreen(
             }
         }
     }
+
     UserScreen(
         content = content,
-        title = stringResource(R.string.users),
+        title = title,
         onCloseClick = { onCloseClick() },
         isScrollable = state is SelfHostedUsersViewModel.SelfHostedUserState.UserList
     )
 }
 
 @Composable
-private fun UserList(users: List<UserWithEditContext>) {
+private fun UserList(
+    users: List<UserWithEditContext>,
+    onUserClick: (UserWithEditContext) -> Unit
+) {
     for (user in users) {
-        UserLazyRow(user)
+        UserLazyRow(user, onUserClick)
         HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
     }
 }
 
 @Composable
-private fun UserLazyRow(user: UserWithEditContext) {
+private fun UserLazyRow(
+    user: UserWithEditContext,
+    onUserClick: (UserWithEditContext) -> Unit
+) {
     LazyRow(
         modifier = Modifier
             .padding(all = 16.dp)
             .fillMaxWidth()
+            .clickable { onUserClick(user) }
     ) {
         item {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""

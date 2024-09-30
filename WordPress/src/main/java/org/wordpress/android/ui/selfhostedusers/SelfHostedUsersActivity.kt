@@ -46,7 +46,7 @@ class SelfHostedUsersActivity : LocaleAwareActivity() {
                             viewModel.onCloseClick(this@SelfHostedUsersActivity)
                         },
                         onUserClick = { user ->
-                            viewModel.onUserClick(this@UserListActivity, site!!,  user)
+                            viewModel.onUserClick(user)
                         }
                     )
                 }
