@@ -2982,9 +2982,12 @@
 
 
     <!-- Self-hosted Users -->
-    <string name="name_section">Name</string>
+    <string name="name">Name</string>
     <string name="nickname">Nickname</string>
-
+    <string name="contact_info">Contact info</string>
+    <string name="website">Website</string>
+    <string name="about_the_user">About the user</string>
+    <string name="biographical_info">Biographical Info</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>

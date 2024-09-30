@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,16 +158,7 @@ private fun UserDetail(
             modifier = Modifier
                 .padding(start = 16.dp)
         ) {
-            /*--------------
-            NAME
-            --------------
-            Username
-            Role
-            First name
-            Last name
-            Nickname
-            --------------*/
-            UserDetailSection(title = stringResource(R.string.name_section)) {
+            UserDetailSection(title = stringResource(R.string.name)) {
                 UserDetailRow(
                     label = stringResource(R.string.username),
                     text = user.username,
@@ -189,6 +181,25 @@ private fun UserDetail(
                 )
                 // TODO display name is missing from the model
             }
+
+            UserDetailSection(title = stringResource(R.string.contact_info)) {
+                UserDetailRow(
+                    label = stringResource(R.string.email),
+                    text = user.email,
+                )
+                UserDetailRow(
+                    label = stringResource(R.string.website),
+                    text = user.url,
+                )
+            }
+
+            UserDetailSection(title = stringResource(R.string.about_the_user)) {
+                UserDetailRow(
+                    label = stringResource(R.string.biographical_info),
+                    text = user.description,
+                    isMultiline = true
+                )
+            }
         }
     }
 }
@@ -205,12 +216,14 @@ private fun UserDetailSection(
     Spacer(modifier = Modifier.height(16.dp))
     content()
     HorizontalDivider(thickness = 1.dp)
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
 private fun UserDetailRow(
     label: String,
     text: String,
+    isMultiline: Boolean = false,
 ) {
     Text(
         text = label,
@@ -219,6 +232,8 @@ private fun UserDetailRow(
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge,
+        maxLines = if (isMultiline) 10 else 1,
+        overflow = TextOverflow.Ellipsis
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
