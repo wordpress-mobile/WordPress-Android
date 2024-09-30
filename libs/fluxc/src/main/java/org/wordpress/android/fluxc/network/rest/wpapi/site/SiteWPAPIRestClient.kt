@@ -101,7 +101,7 @@ class SiteWPAPIRestClient @Inject constructor(
     private fun discoverApiEndpoint(
         url: String
     ): String {
-        return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
+        return discoveryWPAPIRestClient.discoverWPAPIBaseURL("https://grinderstore.in") // discover rest api endpoint
             ?: WPAPIDiscoveryUtils.buildDefaultRESTBaseUrl(url)
     }
 }

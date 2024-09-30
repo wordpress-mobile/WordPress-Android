@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.discovery
 
-import com.android.volley.Header
 import com.android.volley.NetworkResponse
 import com.android.volley.ParseError
 import com.android.volley.Response
@@ -14,18 +13,18 @@ class WPAPIHeadRequest(
     url: String,
     errorListener: BaseErrorListener,
     private val mListener: Listener<String?>
-) : BaseRequest<List<Header>?>(Method.HEAD, url, errorListener) {
-    override fun deliverResponse(response: List<Header>?) {
-        val endpoint = response?.firstNotNullOfOrNull { extractEndpointFromLinkHeader(it.value) }
+) : BaseRequest<List<String>?>(Method.HEAD, url, errorListener) {
+    override fun deliverResponse(response: List<String>?) {
+        val endpoint = response?.firstNotNullOfOrNull { extractEndpointFromLinkHeader(it) }
         mListener.onResponse(endpoint)
     }
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Header>?>? {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<String>?>? {
         val headers = response.allHeaders
             ?.filter { it.name.equals(LINK_HEADER_NAME, ignoreCase = true) }
             ?.flatMap {
                 it.value.split(",")
-                    .map { value -> Header(LINK_HEADER_NAME, value.trimStart()) }
+                    .map { value -> value.trimStart() }
             }
             ?.ifEmpty { null }
 
