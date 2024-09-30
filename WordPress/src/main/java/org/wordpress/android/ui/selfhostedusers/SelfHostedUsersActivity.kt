@@ -3,7 +3,6 @@ package org.wordpress.android.ui.selfhostedusers
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,8 +15,8 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
-class UserListActivity : LocaleAwareActivity() {
-    private val viewModel by viewModels<UserListViewModel>()
+class SelfHostedUsersActivity : LocaleAwareActivity() {
+    private val viewModel by viewModels<SelfHostedUsersViewModel>()
     private var site: SiteModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,18 +40,15 @@ class UserListActivity : LocaleAwareActivity() {
                 }
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    UserListScreen(
-                        viewModel.users.collectAsState(),
-                        viewModel.progressDialogState.collectAsState(),
+                    SelfHostedUsersScreen(
+                        uiState = viewModel.uiState,
                         onCloseClick = {
-                            viewModel.onCloseClick(this@UserListActivity)
+                            viewModel.onCloseClick(this@SelfHostedUsersActivity)
                         },
                     )
                 }
             }
         )
-
-        viewModel.fetchUsers()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
