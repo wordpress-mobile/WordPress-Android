@@ -2,6 +2,7 @@ package org.wordpress.android.ui.selfhostedusers
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,12 +33,15 @@ fun SelfHostedUsersScreen(
     val content: @Composable () -> Unit = @Composable {
         when (state) {
             is SelfHostedUsersViewModel.SelfHostedUserState.Loading -> {
-                ProgressDialog(ProgressDialogState(
-                    message = R.string.loading,
-                    showCancel = false,
-                    dismissible = false
-                ))
+                ProgressDialog(
+                    ProgressDialogState(
+                        message = R.string.loading,
+                        showCancel = false,
+                        dismissible = false
+                    )
+                )
             }
+
             is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> {
                 if (state.users.isNotEmpty()) {
                     UserList(state.users)
@@ -45,9 +49,11 @@ fun SelfHostedUsersScreen(
                     UserEmptyView(stringResource(R.string.no_users))
                 }
             }
+
             is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> {
-                // TODO
+                UserDetail(state.user)
             }
+
             is SelfHostedUsersViewModel.SelfHostedUserState.Offline -> {
                 // TODO
             }
@@ -103,6 +109,45 @@ private fun UserLazyRow(user: UserWithEditContext) {
                         color = MaterialTheme.colorScheme.outline,
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UserDetail(
+    user: UserWithEditContext,
+) {
+    Row(
+        modifier = Modifier
+            .padding(all = 16.dp)
+            .fillMaxWidth()
+    ) {
+        Column {
+            val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
+            UserAvatar(avatarUrl)
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+        ) {
+            Text(
+                text = user.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = user.username,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            if (user.roles.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = user.roles.joinToString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                )
             }
         }
     }

@@ -7,7 +7,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.UserWithEditContext
 import javax.inject.Inject
@@ -40,6 +42,10 @@ class SelfHostedUsersViewModel @Inject constructor(
 
     fun onCloseClick(context: Context) {
         (context as? Activity)?.finish()
+    }
+
+    fun onUserClick(user: UserWithEditContext) {
+        _uiState.value = SelfHostedUserState.UserDetail(user)
     }
 
     sealed class SelfHostedUserState {
