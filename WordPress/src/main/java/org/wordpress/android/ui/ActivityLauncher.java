@@ -1,6 +1,5 @@
 package org.wordpress.android.ui;
 
-import uniffi.wp_api.UserWithEditContext;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -106,7 +105,7 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.selfhostedusers.UserListActivity;
+import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -728,13 +727,9 @@ public class ActivityLauncher {
 
     public static void viewSelfHostedUsers(Context context, SiteModel site) {
         // TODO tracks
-        Intent intent = new Intent(context, UserListActivity.class);
+        Intent intent = new Intent(context, SelfHostedUsersActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-    }
-
-    public static void viewSelfHostedUserDetail(Context context, SiteModel site, UserWithEditContext user) {
-        // TODO
     }
 
     public static void viewPluginBrowser(Context context, SiteModel site) {

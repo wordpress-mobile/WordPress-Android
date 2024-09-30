@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,33 +11,45 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import uniffi.wp_api.UserWithEditContext
 
 @Composable
-fun UserListScreen(
-    users: State<List<UserWithEditContext>>,
-    progressDialogState: State<ProgressDialogState?>?,
+fun SelfHostedUsersScreen(
+    uiState: StateFlow<SelfHostedUsersViewModel.SelfHostedUserState>,
     onCloseClick: () -> Unit = {},
-    onUserClick: (user: UserWithEditContext) -> Unit = { }
 ) {
+    val state = uiState.collectAsState().value
     val content: @Composable () -> Unit = @Composable {
-        progressDialogState?.value?.let {
-            ProgressDialog(it)
-        } ?: run {
-            if (users.value.isNotEmpty()) {
-                UserList(users.value, onUserClick)
-            } else {
-                UserEmptyView(stringResource(R.string.no_users))
+        when (state) {
+            is SelfHostedUsersViewModel.SelfHostedUserState.Loading -> {
+                ProgressDialog(ProgressDialogState(
+                    message = R.string.loading,
+                    showCancel = false,
+                    dismissible = false
+                ))
+            }
+            is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> {
+                if (state.users.isNotEmpty()) {
+                    UserList(state.users)
+                } else {
+                    UserEmptyView(stringResource(R.string.no_users))
+                }
+            }
+            is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> {
+                // TODO
+            }
+            is SelfHostedUsersViewModel.SelfHostedUserState.Offline -> {
+                // TODO
             }
         }
     }
@@ -46,33 +57,24 @@ fun UserListScreen(
         content = content,
         title = stringResource(R.string.users),
         onCloseClick = { onCloseClick() },
-        isScrollable = users.value.isNotEmpty()
+        isScrollable = state is SelfHostedUsersViewModel.SelfHostedUserState.UserList
     )
 }
 
 @Composable
-private fun UserList(
-    users: List<UserWithEditContext>,
-    onUserClick: (user: UserWithEditContext) -> Unit,
-) {
+private fun UserList(users: List<UserWithEditContext>) {
     for (user in users) {
-        UserLazyRow(user, onUserClick)
+        UserLazyRow(user)
         HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
     }
 }
 
 @Composable
-private fun UserLazyRow(
-    user: UserWithEditContext,
-    onUserClick: (user: UserWithEditContext) -> Unit,
-) {
+private fun UserLazyRow(user: UserWithEditContext) {
     LazyRow(
         modifier = Modifier
             .padding(all = 16.dp)
             .fillMaxWidth()
-            .clickable {
-                onUserClick(user)
-            }
     ) {
         item {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
@@ -117,10 +119,8 @@ private fun UserLazyRow(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun UserListScreenPreview() {
-    UserListScreen(
-        users = MutableStateFlow(SampleUsers.getSampleUsers()).collectAsState(),
-        progressDialogState = null,
-    )
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(SampleUsers.getSampleUsers())
+    SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
 @Composable
@@ -134,10 +134,8 @@ fun UserListScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun EmptyUserListScreenPreview() {
-    UserListScreen(
-        users = MutableStateFlow(emptyList<UserWithEditContext>()).collectAsState(),
-        progressDialogState = null,
-    )
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(emptyList())
+    SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
 @Composable
@@ -151,13 +149,6 @@ fun EmptyUserListScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun ProgressPreview() {
-    val progressDialogState = ProgressDialogState(
-        message = R.string.loading,
-        showCancel = false,
-        progress = 50f / 100f,
-    )
-    UserListScreen(
-        users = MutableStateFlow(emptyList<UserWithEditContext>()).collectAsState(),
-        progressDialogState = MutableStateFlow(progressDialogState).collectAsState(),
-    )
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.Loading
+    SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
