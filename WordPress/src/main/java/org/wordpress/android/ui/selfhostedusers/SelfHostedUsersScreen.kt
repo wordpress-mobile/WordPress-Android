@@ -157,25 +157,70 @@ private fun UserDetail(
             modifier = Modifier
                 .padding(start = 16.dp)
         ) {
-            Text(
-                text = user.name,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = user.username,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            if (user.roles.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = user.roles.joinToString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.outline,
+            /*--------------
+            NAME
+            --------------
+            Username
+            Role
+            First name
+            Last name
+            Nickname
+            --------------*/
+            UserDetailSection(title = stringResource(R.string.name_section)) {
+                UserDetailRow(
+                    label = stringResource(R.string.username),
+                    text = user.username,
                 )
+                UserDetailRow(
+                    label = stringResource(R.string.role),
+                    text = user.roles.joinToString(),
+                )
+                UserDetailRow(
+                    label = stringResource(R.string.first_name),
+                    text = user.firstName,
+                )
+                UserDetailRow(
+                    label = stringResource(R.string.last_name),
+                    text = user.lastName,
+                )
+                UserDetailRow(
+                    label = stringResource(R.string.nickname),
+                    text = user.nickname,
+                )
+                // TODO display name is missing from the model
             }
         }
     }
+}
+
+@Composable
+private fun UserDetailSection(
+    title: String,
+    content: @Composable () -> Unit,
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleLarge,
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    content()
+    HorizontalDivider(thickness = 1.dp)
+}
+
+@Composable
+private fun UserDetailRow(
+    label: String,
+    text: String,
+) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.labelLarge,
+    )
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
@@ -192,6 +237,22 @@ fun UserListScreenPreview() {
     val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(SampleUsers.getSampleUsers())
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
+
+@Composable
+@Preview(
+    name = "Detail Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Detail Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+fun UserDetailScreenPreview() {
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserDetail(SampleUsers.getSampleUsers().first())
+    SelfHostedUsersScreen(MutableStateFlow(uiState))
+}
+
 
 @Composable
 @Preview(

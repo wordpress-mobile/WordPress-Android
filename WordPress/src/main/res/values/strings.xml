@@ -2980,6 +2980,12 @@
     <string name="gravatar_info_sync_message">Updates might take some time to sync with your Gravatar profile.</string>
     <string name="gravatar_info_sync_done_button">Done</string>
 
+
+    <!-- Self-hosted Users -->
+    <string name="name_section">Name</string>
+    <string name="nickname">Nickname</string>
+
+
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
