@@ -2988,6 +2988,7 @@
     <string name="website">Website</string>
     <string name="about_the_user">About the user</string>
     <string name="biographical_info">Biographical Info</string>
+    <string name="biographical_info_empty">None given</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>

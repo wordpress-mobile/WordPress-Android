@@ -104,19 +104,18 @@ private fun UserLazyRow(
 ) {
     LazyRow(
         modifier = Modifier
-            .padding(all = 16.dp)
+            .padding(all = userScreenPaddingDp)
             .fillMaxWidth()
             .clickable { onUserClick(user) }
     ) {
         item {
-            val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
-            UserAvatar(avatarUrl)
+            UserAvatar(user)
         }
 
         item {
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = userScreenPaddingDp)
             ) {
                 Text(
                     text = user.name,
@@ -146,17 +145,16 @@ private fun UserDetail(
 ) {
     Row(
         modifier = Modifier
-            .padding(all = 16.dp)
+            .padding(all = userScreenPaddingDp)
             .fillMaxWidth()
     ) {
         Column {
-            val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
-            UserAvatar(avatarUrl)
+            UserAvatar(user)
         }
 
         Column(
             modifier = Modifier
-                .padding(start = 16.dp)
+                .padding(start = userScreenPaddingDp)
         ) {
             UserDetailSection(title = stringResource(R.string.name)) {
                 UserDetailRow(
@@ -196,7 +194,9 @@ private fun UserDetail(
             UserDetailSection(title = stringResource(R.string.about_the_user)) {
                 UserDetailRow(
                     label = stringResource(R.string.biographical_info),
-                    text = user.description,
+                    text = user.description.ifEmpty {
+                        stringResource(R.string.biographical_info_empty)
+                    },
                     isMultiline = true
                 )
             }
@@ -213,10 +213,10 @@ private fun UserDetailSection(
         text = title,
         style = MaterialTheme.typography.titleLarge,
     )
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(userScreenPaddingDp))
     content()
     HorizontalDivider(thickness = 1.dp)
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(userScreenPaddingDp))
 }
 
 @Composable
@@ -235,7 +235,7 @@ private fun UserDetailRow(
         maxLines = if (isMultiline) 10 else 1,
         overflow = TextOverflow.Ellipsis
     )
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(userScreenPaddingDp))
 }
 
 @Composable

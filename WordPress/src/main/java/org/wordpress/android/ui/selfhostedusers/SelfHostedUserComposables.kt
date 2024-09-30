@@ -30,10 +30,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.M3Theme
+import uniffi.wp_api.UserWithEditContext
 
 @Composable
-fun UserAvatar(avatarUrl: String?) {
-    if (avatarUrl.isNullOrEmpty()) {
+fun UserAvatar(user: UserWithEditContext) {
+    val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
+    if (avatarUrl.isEmpty()) {
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
             contentDescription = null,
@@ -120,3 +122,5 @@ fun UserScreen(
         }
     }
 }
+
+val userScreenPaddingDp = 16.dp
