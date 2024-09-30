@@ -98,7 +98,7 @@ ext {
     // test
     assertjVersion = '3.26.3'
     junitVersion = '4.13.2'
-    mockitoAndroidVersion = '5.13.0'
+    mockitoAndroidVersion = '5.14.0'
     mockitoKotlinVersion = '4.1.0'
 
     // android test
