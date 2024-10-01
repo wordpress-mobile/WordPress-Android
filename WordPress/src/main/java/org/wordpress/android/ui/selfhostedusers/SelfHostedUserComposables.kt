@@ -37,7 +37,7 @@ import uniffi.wp_api.UserWithEditContext
 @Composable
 fun UserAvatar(
     user: UserWithEditContext,
-    onUserAvatarClick: (UserWithEditContext) -> Unit = {},
+    onUserAvatarClick: ((UserWithEditContext) -> Unit)? = null,
 ) {
     val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
     if (avatarUrl.isEmpty()) {
@@ -49,6 +49,13 @@ fun UserAvatar(
                 .size(48.dp)
         )
     } else {
+        val extraModifier = if (onUserAvatarClick != null) {
+            Modifier.clickable {
+                onUserAvatarClick(user)
+            }
+        } else {
+            Modifier
+        }
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(avatarUrl)
@@ -60,9 +67,9 @@ fun UserAvatar(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(48.dp)
-                .clickable {
-                    onUserAvatarClick(user)
-                }
+                .then(
+                    extraModifier
+                )
         )
     }
 }
