@@ -7,7 +7,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.wordpress.android.WordPress
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.UserWithEditContext
 import javax.inject.Inject
@@ -29,6 +31,11 @@ class SelfHostedUsersViewModel @Inject constructor(
     // TODO this uses dummy data for now - no network request is involved yet
     @Suppress("MagicNumber")
     private fun fetchUsers() {
+        if (NetworkUtils.isNetworkAvailable(WordPress.getContext()).not()) {
+            _uiState.value = SelfHostedUserState.Offline
+            return
+        }
+
         _uiState.value = SelfHostedUserState.Loading
         launch {
             delay(1000L)

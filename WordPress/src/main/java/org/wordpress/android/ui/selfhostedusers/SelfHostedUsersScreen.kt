@@ -72,7 +72,7 @@ fun SelfHostedUsersScreen(
             }
 
             is SelfHostedUsersViewModel.SelfHostedUserState.Offline -> {
-                // TODO
+                UserOfflineView()
             }
         }
     }
@@ -268,7 +268,6 @@ fun UserDetailScreenPreview() {
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
-
 @Composable
 @Preview(
     name = "Empty View Light Mode",
@@ -281,6 +280,21 @@ fun UserDetailScreenPreview() {
 )
 fun EmptyUserListScreenPreview() {
     val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(emptyList())
+    SelfHostedUsersScreen(MutableStateFlow(uiState))
+}
+
+@Composable
+@Preview(
+    name = "Offline View Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Offline View Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+fun OfflineScreenPreview() {
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.Offline
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
