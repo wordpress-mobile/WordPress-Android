@@ -20,6 +20,7 @@ class SelfHostedUsersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
     private val users = ArrayList<UserWithEditContext>()
+    private var selectedUser: UserWithEditContext? = null
 
     private val _uiState = MutableStateFlow<SelfHostedUserState>(SelfHostedUserState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -48,19 +49,29 @@ class SelfHostedUsersViewModel @Inject constructor(
     fun onCloseClick(context: Context) {
         if (_uiState.value is SelfHostedUserState.UserDetail) {
             _uiState.value = SelfHostedUserState.UserList(users)
+        } else if (_uiState.value is SelfHostedUserState.UserAvatar) {
+            _uiState.value = SelfHostedUserState.UserDetail(selectedUser!!)
         } else {
             (context as? Activity)?.finish()
         }
     }
 
     fun onUserClick(user: UserWithEditContext) {
-        _uiState.value = SelfHostedUserState.UserDetail(user)
+        selectedUser = user
+       _uiState.value = SelfHostedUserState.UserDetail(user)
+    }
+
+    fun onUserAvatarClick(user: UserWithEditContext) {
+        user.avatarUrls?.values?.firstOrNull()?.let { avatarUrl ->
+            _uiState.value = SelfHostedUserState.UserAvatar(avatarUrl)
+        }
     }
 
     sealed class SelfHostedUserState {
         data object Loading : SelfHostedUserState()
         data class UserList(val users: List<UserWithEditContext>) : SelfHostedUserState()
         data class UserDetail(val user: UserWithEditContext) : SelfHostedUserState()
+        data class UserAvatar(val avatarUrl: String) : SelfHostedUserState()
         data object Offline : SelfHostedUserState()
     }
 }

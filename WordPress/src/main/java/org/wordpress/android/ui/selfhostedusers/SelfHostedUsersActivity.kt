@@ -47,6 +47,9 @@ class SelfHostedUsersActivity : LocaleAwareActivity() {
                         },
                         onUserClick = { user ->
                             viewModel.onUserClick(user)
+                        },
+                        onUserAvatarClick = { user ->
+                            viewModel.onUserAvatarClick(user)
                         }
                     )
                 }

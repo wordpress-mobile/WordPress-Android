@@ -34,16 +34,19 @@ fun SelfHostedUsersScreen(
     uiState: StateFlow<SelfHostedUsersViewModel.SelfHostedUserState>,
     onCloseClick: () -> Unit = {},
     onUserClick: (UserWithEditContext) -> Unit = {},
+    onUserAvatarClick: (UserWithEditContext) -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
 
     val title = when(state) {
         is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> state.user.name
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> ""
         else -> stringResource(R.string.users)
     }
 
     val closeIcon = when(state) {
         is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> Icons.Default.Close
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> Icons.Default.Close
         else ->  Icons.AutoMirrored.Filled.ArrowBack
     }
 
@@ -67,8 +70,15 @@ fun SelfHostedUsersScreen(
                 }
             }
 
+            is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> {
+                UserLargeAvatar(state.avatarUrl)
+            }
+
             is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> {
-                UserDetail(state.user)
+                UserDetail(
+                    state.user,
+                    onUserAvatarClick
+                )
             }
 
             is SelfHostedUsersViewModel.SelfHostedUserState.Offline -> {
@@ -142,6 +152,7 @@ private fun UserLazyRow(
 @Composable
 private fun UserDetail(
     user: UserWithEditContext,
+    onUserAvatarClick: (UserWithEditContext) -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -149,7 +160,10 @@ private fun UserDetail(
             .fillMaxWidth()
     ) {
         Column {
-            UserAvatar(user)
+            UserAvatar(
+                user,
+                onUserAvatarClick
+            )
         }
 
         Column(
