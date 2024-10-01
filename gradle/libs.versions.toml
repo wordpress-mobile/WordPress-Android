@@ -14,7 +14,7 @@ androidx-cardview = '1.0.0'
 androidx-compose-bom = '2024.08.00'
 androidx-compose-compiler = '1.5.14'
 androidx-compose-material3 = '1.2.1'
-androidx-constraintlayout = '2.1.4'
+androidx-constraintlayout-main = '2.1.4'
 androidx-constraintlayout-compose = '1.0.1'
 androidx-core = '1.13.1'
 androidx-fragment = '1.8.3'
@@ -125,7 +125,7 @@ androidx-compose-ui-tooling-main = { group = "androidx.compose.ui", name = "ui-t
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-unit = { group = "androidx.compose.ui", name = "ui-unit" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout-compose" }
-androidx-constraintlayout-main = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-constraintlayout-main = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout-main" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "androidx-camera" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camera" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidx-camera" }
