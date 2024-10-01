@@ -1505,7 +1505,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onDestroy() {
         if (mIsNewGutenbergEnabled && mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
-            mGutenbergView.destroy();
             mContentChangeListener = null;
         }
         hideSavingProgressDialog();

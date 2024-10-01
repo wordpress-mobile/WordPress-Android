@@ -1000,9 +1000,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         editorMedia.toastMessage.observe(this) { event: Event<ToastMessageHolder?> ->
             event.getContentIfNotHandled()?.show(this)
         }
-        storePostViewModel.onSavePostTriggered.observe(this) { unitEvent: Event<Unit> ->
-            unitEvent.applyIfNotHandled {
-                updateAndSavePostAsync()
+        if (!isNewGutenbergEditor) {
+            storePostViewModel.onSavePostTriggered.observe(this) { unitEvent: Event<Unit> ->
+                unitEvent.applyIfNotHandled {
+                    updateAndSavePostAsync()
+                }
             }
         }
         storePostViewModel.onFinish.observe(this) { finishEvent ->
