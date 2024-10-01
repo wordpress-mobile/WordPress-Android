@@ -3,116 +3,27 @@ import com.automattic.android.measure.reporters.SlowSlowTasksMetricsReporter
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id "io.gitlab.arturbosch.detekt"
-    id 'com.automattic.android.measure-builds'
-    id "org.jetbrains.kotlinx.kover"
-    id "com.autonomousapps.dependency-analysis"
-    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
-    id "androidx.navigation.safeargs.kotlin" apply false
-    id "com.android.library" apply false
-    id 'com.google.gms.google-services' apply false
-    id "org.jetbrains.kotlin.plugin.parcelize" apply false
-    id "com.google.devtools.ksp" apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.automattic.measure.builds)
+    alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.dependency.analysis)
+    alias(libs.plugins.violation.comments).apply(false)
+    alias(libs.plugins.androidx.navigation.safeargs).apply(false)
+    alias(libs.plugins.android.application).apply(false)
+    alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.google.services).apply(false)
+    alias(libs.plugins.kotlin.allopen).apply(false)
+    alias(libs.plugins.kotlin.android).apply(false)
+    alias(libs.plugins.kotlin.jvm).apply(false)
+    alias(libs.plugins.kotlin.parcelize).apply(false)
+    alias(libs.plugins.kotlin.serialization).apply(false)
+    alias(libs.plugins.ksp).apply(false)
 }
 
 ext {
     minSdkVersion = 26
     compileSdkVersion = 34
     targetSdkVersion = 34
-}
-
-ext {
-    // libs
-    automatticAboutVersion = '1.4.0'
-    automatticRestVersion = '1.0.8'
-    automatticTracksVersion = '5.1.0'
-    gutenbergMobileVersion = 'v1.121.0'
-    wordPressAztecVersion = 'v2.1.4'
-    wordPressFluxCVersion = '2.97.0'
-    wordPressLoginVersion = '1.16.0'
-    wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressRsVersion = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
-    wordPressUtilsVersion = '3.14.0'
-    indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
-    gravatarVersion = '1.0.0'
-
-    // main
-    androidInstallReferrerVersion = '2.2'
-    androidVolleyVersion = '1.2.1'
-    androidxAnnotationVersion = '1.8.2'
-    androidxAppcompatVersion = '1.7.0'
-    androidxArchCoreVersion = '2.2.0'
-    androidxCameraVersion = '1.3.4'
-    androidxComposeBomVersion = '2024.08.00'
-    androidxComposeCompilerVersion = '1.5.14'
-    androidxComposeNavigationVersion = '2.7.7'
-    androidxCardviewVersion = '1.0.0'
-    androidxConstraintlayoutVersion = '2.1.4'
-    androidxConstraintlayoutComposeVersion = '1.0.1'
-    androidxCoreVersion = '1.13.1'
-    androidxActivityVersion = '1.9.2'
-    androidxFragmentVersion = '1.8.3'
-    androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.8.5'
-    androidxPercentlayoutVersion = '1.0.0'
-    androidxPreferenceVersion = '1.2.1'
-    androidxRecyclerviewVersion = '1.3.2'
-    androidxSwipeToRefreshVersion = '1.1.0'
-    androidxViewpager2Version = '1.1.0'
-    androidxWorkManagerVersion = "2.9.1"
-    androidxComposeMaterial3Version = '1.2.1'
-    androidxWebkitVersion =  '1.12.0'
-    apacheCommonsTextVersion = '1.12.0'
-    coilComposeVersion = '2.7.0'
-    chrisbanesPhotoviewVersion = '2.3.0'
-    eventBusVersion = '3.3.1'
-    facebookShimmerVersion = '0.5.0'
-    firebaseBomVersion = '33.3.0'
-    firebaseIidVersion = '21.1.0'
-    glideVersion = '4.16.0'
-    googleAutoServiceVersion = '1.0.1'
-    googleExoPlayerVersion = '2.13.3'
-    googleFlexboxlayoutVersion = '3.0.0'
-    googleGsonVersion = '2.11.0'
-    googleMaterialVersion = '1.12.0'
-
-    googleMLKitBarcodeScanningVersion = '17.3.0'
-    googleMLKitBarcodeScanningCommonVersion = '17.0.0'
-    googleMLKitTextRecognitionVersion = '16.0.1'
-    googlePlayReviewVersion = '2.0.1'
-    googlePlayServicesAuthVersion = '20.4.1'
-    googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-    jsoupVersion = '1.18.1'
-    kotlinxCoroutinesVersion = '1.8.1'
-    lottieVersion = '6.5.2'
-    philjayMpAndroidChartVersion = 'v3.1.0'
-    squareupKotlinPoetVersion = '1.18.1'
-    squareupRetrofitVersion = '2.11.0'
-    uCropVersion = '2.2.9'
-    zendeskVersion = '5.1.2'
-    googlePlayInAppUpdateVersion = '2.1.0'
-
-    // react native
-    facebookReactVersion = '0.73.3'
-
-    // test
-    assertjVersion = '3.26.3'
-    junitVersion = '4.13.2'
-    mockitoAndroidVersion = '5.13.0'
-    mockitoKotlinVersion = '4.1.0'
-
-    // android test
-    androidxTestCoreVersion = '1.5.0'
-    androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.2.1'
-    androidxTestUiAutomatorVersion = '2.3.0'
-    screengrabVersion = '2.1.1'
-    wiremockVersion = '2.26.3'
-    wiremockHttpClientVersion = '4.3.5.1'
-
-    // other
-    androidDesugarVersion = '2.1.2'
-    wordPressLintVersion = '2.1.0'
 }
 
 measureBuilds {
@@ -129,8 +40,8 @@ measureBuilds {
 }
 
 allprojects {
-    apply plugin: 'checkstyle'
-    apply plugin: 'io.gitlab.arturbosch.detekt'
+    apply plugin: libs.plugins.checkstyle.get().pluginId
+    apply plugin: libs.plugins.detekt.get().pluginId
 
     repositories {
         google()
@@ -159,12 +70,12 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '10.17.0'
+        toolVersion = libs.plugins.checkstyle.get().version
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 
     detekt {
-        toolVersion = gradle.ext.detektVersion
+        toolVersion = libs.plugins.detekt.get().version
         baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
@@ -254,7 +165,7 @@ tasks.register("configureApply") {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
+    detektPlugins(libs.detekt.formatting)
 }
 
 apply from: './config/gradle/code_coverage.gradle'
