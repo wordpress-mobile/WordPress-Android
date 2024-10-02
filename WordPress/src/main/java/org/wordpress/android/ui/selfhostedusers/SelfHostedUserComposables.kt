@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -93,51 +95,52 @@ fun UserLargeAvatar(avatarUrl: String) {
 }
 
 @Composable
-fun UserEmptyView(emptyText: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_people_white_24dp),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .size(85.dp)
-        )
-        Text(
-            text = emptyText,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    }
+fun UserEmptyView() {
+    UserMessageView(
+        R.drawable.ic_people_white_24dp,
+        R.string.no_users,
+    )
 }
 
 @Composable
 fun UserOfflineView() {
+    UserMessageView(
+        R.drawable.ic_wifi_off_24px,
+        R.string.no_network_title,
+        R.string.no_network_message,
+    )
+}
+
+@Composable
+private fun UserMessageView(
+    @DrawableRes iconRes: Int,
+    @StringRes titleRes: Int,
+    @StringRes messageRes: Int? = null,
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_wifi_off_24px),
+            imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(85.dp)
         )
         Text(
-            text = stringResource(R.string.no_network_title),
+            text = stringResource(titleRes),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        Text(
-            text = stringResource(R.string.no_network_message),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+        if (messageRes != null) {
+            Text(
+                text = stringResource(messageRes),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
     }
 }
 

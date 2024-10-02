@@ -74,7 +74,7 @@ fun SelfHostedUsersScreen(
             }
 
             is SelfHostedUserState.EmptyUserList -> {
-                UserEmptyView(stringResource(R.string.no_users))
+                UserEmptyView()
             }
 
             is SelfHostedUserState.UserAvatar -> {
