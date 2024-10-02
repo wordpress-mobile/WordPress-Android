@@ -32,30 +32,32 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.M3Theme
-import uniffi.wp_api.UserWithEditContext
 
 @Composable
 fun UserAvatar(
-    user: UserWithEditContext,
-    onUserAvatarClick: ((UserWithEditContext) -> Unit)? = null,
+    avatarUrl: String?,
+    onAvatarClick: ((String?) -> Unit)? = null,
 ) {
-    val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
-    if (avatarUrl.isEmpty()) {
+    val extraModifier = if (onAvatarClick != null) {
+        Modifier.clickable {
+            onAvatarClick(avatarUrl)
+        }
+    } else {
+        Modifier
+    }
+
+    if (avatarUrl.isNullOrEmpty()) {
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(48.dp)
+                .then(
+                    extraModifier
+                )
         )
     } else {
-        val extraModifier = if (onUserAvatarClick != null) {
-            Modifier.clickable {
-                onUserAvatarClick(user)
-            }
-        } else {
-            Modifier
-        }
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(avatarUrl)

@@ -76,9 +76,9 @@ class SelfHostedUsersViewModel @Inject constructor(
     /**
      * Called when the avatar of a user is clicked in the detail screen
      */
-    fun onUserAvatarClick(user: UserWithEditContext) {
-        user.avatarUrls?.values?.firstOrNull()?.let { avatarUrl ->
-            _uiState.value = SelfHostedUserState.UserAvatar(avatarUrl)
+    fun onUserAvatarClick(avatarUrl: String?) {
+        avatarUrl?.let {
+            _uiState.value = SelfHostedUserState.UserAvatar(it)
         }
     }
 

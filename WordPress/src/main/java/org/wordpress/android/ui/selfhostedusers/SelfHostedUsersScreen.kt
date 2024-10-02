@@ -35,7 +35,7 @@ fun SelfHostedUsersScreen(
     uiState: StateFlow<SelfHostedUserState>,
     onCloseClick: () -> Unit = {},
     onUserClick: (UserWithEditContext) -> Unit = {},
-    onUserAvatarClick: (UserWithEditContext) -> Unit = {},
+    onUserAvatarClick: (avatarUrl: String?) -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
 
@@ -126,7 +126,7 @@ private fun UserLazyRow(
             .clickable { onUserClick(user) }
     ) {
         item {
-            UserAvatar(user)
+            UserAvatar(user.avatarUrls?.values?.firstOrNull())
         }
 
         item {
@@ -159,7 +159,7 @@ private fun UserLazyRow(
 @Composable
 private fun UserDetail(
     user: UserWithEditContext,
-    onUserAvatarClick: (UserWithEditContext) -> Unit = {},
+    onAvatarClick: (String?) -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -168,8 +168,8 @@ private fun UserDetail(
     ) {
         Column {
             UserAvatar(
-                user,
-                onUserAvatarClick
+                avatarUrl = user.avatarUrls?.values?.firstOrNull(),
+                onAvatarClick = onAvatarClick
             )
         }
 
