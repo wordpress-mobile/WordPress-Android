@@ -46,6 +46,9 @@ class SelfHostedUsersViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Called when the back/close button is clicked
+     */
     fun onCloseClick(context: Context) {
         when (_uiState.value) {
             is SelfHostedUserState.UserDetail -> {
@@ -62,11 +65,17 @@ class SelfHostedUsersViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Called when a user is clicked in the list screen
+     */
     fun onUserClick(user: UserWithEditContext) {
         selectedUser = user
-       _uiState.value = SelfHostedUserState.UserDetail(user)
+        _uiState.value = SelfHostedUserState.UserDetail(user)
     }
 
+    /**
+     * Called when the avatar of a user is clicked in the detail screen
+     */
     fun onUserAvatarClick(user: UserWithEditContext) {
         user.avatarUrls?.values?.firstOrNull()?.let { avatarUrl ->
             _uiState.value = SelfHostedUserState.UserAvatar(avatarUrl)
