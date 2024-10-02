@@ -332,3 +332,5 @@ fun ProgressPreview() {
     val uiState = SelfHostedUsersViewModel.SelfHostedUserState.Loading
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
+
+private val userScreenPaddingDp = 16.dp

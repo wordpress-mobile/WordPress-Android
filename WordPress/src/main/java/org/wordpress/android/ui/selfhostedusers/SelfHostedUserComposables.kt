@@ -180,5 +180,3 @@ fun UserScreen(
         }
     }
 }
-
-val userScreenPaddingDp = 16.dp
