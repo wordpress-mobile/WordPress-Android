@@ -47,6 +47,12 @@ fun SelfHostedUsersScreen(
         else ->  Icons.AutoMirrored.Filled.ArrowBack
     }
 
+    val isScrollable = when(state) {
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> true
+        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> true
+        else ->  false
+    }
+
     val content: @Composable () -> Unit = @Composable {
         when (state) {
             is SelfHostedUsersViewModel.SelfHostedUserState.Loading -> {
@@ -82,7 +88,7 @@ fun SelfHostedUsersScreen(
         title = title,
         closeIcon = closeIcon,
         onCloseClick = { onCloseClick() },
-        isScrollable = state is SelfHostedUsersViewModel.SelfHostedUserState.UserList
+        isScrollable = isScrollable
     )
 }
 
