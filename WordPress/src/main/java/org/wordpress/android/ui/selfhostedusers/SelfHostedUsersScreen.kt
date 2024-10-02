@@ -121,18 +121,23 @@ private fun UserLazyRow(
 ) {
     LazyRow(
         modifier = Modifier
-            .padding(all = userScreenPaddingDp)
             .fillMaxWidth()
             .clickable { onUserClick(user) }
     ) {
         item {
-            UserAvatar(user.avatarUrls?.values?.firstOrNull())
+            Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
+                UserAvatar(user.avatarUrls?.values?.firstOrNull())
+            }
         }
 
         item {
             Column(
                 modifier = Modifier
-                    .padding(start = userScreenPaddingDp)
+                    .padding(
+                        top = userScreenPaddingDp,
+                        bottom = userScreenPaddingDp,
+                        end = userScreenPaddingDp
+                    )
             ) {
                 Text(
                     text = user.name,
