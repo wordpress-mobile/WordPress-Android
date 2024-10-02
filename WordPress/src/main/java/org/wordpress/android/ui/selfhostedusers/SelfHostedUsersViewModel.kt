@@ -59,8 +59,9 @@ class SelfHostedUsersViewModel @Inject constructor(
 
     sealed class SelfHostedUserState {
         data object Loading : SelfHostedUserState()
+        data object Offline : SelfHostedUserState()
+        data object EmptyUserList : SelfHostedUserState()
         data class UserList(val users: List<UserWithEditContext>) : SelfHostedUserState()
         data class UserDetail(val user: UserWithEditContext) : SelfHostedUserState()
-        data object Offline : SelfHostedUserState()
     }
 }

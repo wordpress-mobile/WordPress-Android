@@ -66,11 +66,11 @@ fun SelfHostedUsersScreen(
             }
 
             is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> {
-                if (state.users.isNotEmpty()) {
-                    UserList(state.users, onUserClick)
-                } else {
-                    UserEmptyView(stringResource(R.string.no_users))
-                }
+                UserList(state.users, onUserClick)
+            }
+
+            is SelfHostedUsersViewModel.SelfHostedUserState.EmptyUserList -> {
+                UserEmptyView(stringResource(R.string.no_users))
             }
 
             is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> {
@@ -285,7 +285,7 @@ fun UserDetailScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun EmptyUserListScreenPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(emptyList())
+    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.EmptyUserList
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
