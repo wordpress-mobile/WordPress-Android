@@ -27,38 +27,39 @@ import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
+import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersViewModel.SelfHostedUserState
 import uniffi.wp_api.UserWithEditContext
 
 @Composable
 fun SelfHostedUsersScreen(
-    uiState: StateFlow<SelfHostedUsersViewModel.SelfHostedUserState>,
+    uiState: StateFlow<SelfHostedUserState>,
     onCloseClick: () -> Unit = {},
     onUserClick: (UserWithEditContext) -> Unit = {},
     onUserAvatarClick: (UserWithEditContext) -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
 
-    val title = when(state) {
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> state.user.name
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> ""
+    val title = when (state) {
+        is SelfHostedUserState.UserDetail -> state.user.name
+        is SelfHostedUserState.UserAvatar -> ""
         else -> stringResource(R.string.users)
     }
 
-    val closeIcon = when(state) {
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> Icons.Default.Close
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> Icons.Default.Close
-        else ->  Icons.AutoMirrored.Filled.ArrowBack
+    val closeIcon = when (state) {
+        is SelfHostedUserState.UserDetail -> Icons.Default.Close
+        is SelfHostedUserState.UserAvatar -> Icons.Default.Close
+        else -> Icons.AutoMirrored.Filled.ArrowBack
     }
 
-    val isScrollable = when(state) {
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> true
-        is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> true
-        else ->  false
+    val isScrollable = when (state) {
+        is SelfHostedUserState.UserList -> true
+        is SelfHostedUserState.UserDetail -> true
+        else -> false
     }
 
     val content: @Composable () -> Unit = @Composable {
         when (state) {
-            is SelfHostedUsersViewModel.SelfHostedUserState.Loading -> {
+            is SelfHostedUserState.Loading -> {
                 ProgressDialog(
                     ProgressDialogState(
                         message = R.string.loading,
@@ -68,26 +69,26 @@ fun SelfHostedUsersScreen(
                 )
             }
 
-            is SelfHostedUsersViewModel.SelfHostedUserState.UserList -> {
+            is SelfHostedUserState.UserList -> {
                 UserList(state.users, onUserClick)
             }
 
-            is SelfHostedUsersViewModel.SelfHostedUserState.EmptyUserList -> {
+            is SelfHostedUserState.EmptyUserList -> {
                 UserEmptyView(stringResource(R.string.no_users))
             }
 
-            is SelfHostedUsersViewModel.SelfHostedUserState.UserAvatar -> {
+            is SelfHostedUserState.UserAvatar -> {
                 UserLargeAvatar(state.avatarUrl)
             }
 
-            is SelfHostedUsersViewModel.SelfHostedUserState.UserDetail -> {
+            is SelfHostedUserState.UserDetail -> {
                 UserDetail(
                     state.user,
                     onUserAvatarClick
                 )
             }
 
-            is SelfHostedUsersViewModel.SelfHostedUserState.Offline -> {
+            is SelfHostedUserState.Offline -> {
                 UserOfflineView()
             }
         }
@@ -269,7 +270,7 @@ private fun UserDetailRow(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun UserListScreenPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserList(SampleUsers.getSampleUsers())
+    val uiState = SelfHostedUserState.UserList(SampleUsers.getSampleUsers())
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
@@ -284,7 +285,7 @@ fun UserListScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun UserDetailScreenPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.UserDetail(SampleUsers.getSampleUsers().first())
+    val uiState = SelfHostedUserState.UserDetail(SampleUsers.getSampleUsers().first())
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
@@ -299,7 +300,7 @@ fun UserDetailScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun EmptyUserListScreenPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.EmptyUserList
+    val uiState = SelfHostedUserState.EmptyUserList
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
@@ -314,7 +315,7 @@ fun EmptyUserListScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun OfflineScreenPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.Offline
+    val uiState = SelfHostedUserState.Offline
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
@@ -329,7 +330,7 @@ fun OfflineScreenPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 fun ProgressPreview() {
-    val uiState = SelfHostedUsersViewModel.SelfHostedUserState.Loading
+    val uiState = SelfHostedUserState.Loading
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
 
