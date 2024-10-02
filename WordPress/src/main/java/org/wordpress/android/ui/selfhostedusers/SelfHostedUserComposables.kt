@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +35,10 @@ import org.wordpress.android.ui.compose.theme.M3Theme
 import uniffi.wp_api.UserWithEditContext
 
 @Composable
-fun UserAvatar(user: UserWithEditContext) {
+fun UserAvatar(
+    user: UserWithEditContext,
+    onUserAvatarClick: ((UserWithEditContext) -> Unit)? = null,
+) {
     val avatarUrl = user.avatarUrls?.values?.firstOrNull() ?: ""
     if (avatarUrl.isEmpty()) {
         Icon(
@@ -44,6 +49,13 @@ fun UserAvatar(user: UserWithEditContext) {
                 .size(48.dp)
         )
     } else {
+        val extraModifier = if (onUserAvatarClick != null) {
+            Modifier.clickable {
+                onUserAvatarClick(user)
+            }
+        } else {
+            Modifier
+        }
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(avatarUrl)
@@ -54,9 +66,28 @@ fun UserAvatar(user: UserWithEditContext) {
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(48.dp),
-            )
+                .size(48.dp)
+                .then(
+                    extraModifier
+                )
+        )
     }
+}
+
+@Composable
+fun UserLargeAvatar(avatarUrl: String) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(avatarUrl)
+            .error(R.drawable.ic_user_placeholder_primary_24)
+            .crossfade(true)
+            .build(),
+        contentScale = ContentScale.Fit,
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    )
 }
 
 @Composable
