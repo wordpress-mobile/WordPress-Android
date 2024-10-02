@@ -35,6 +35,10 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.M3Theme
 
+/**
+ * These composables were created for the self-hosted users feature but were written to be reusable
+ * in other projects.
+ */
 @Composable
 fun UserAvatar(
     avatarUrl: String?,
@@ -166,19 +170,18 @@ fun UserScreen(
                 )
             },
         ) { contentPadding ->
+            val extraModifier = if (isScrollable) {
+                Modifier
+                    .padding(contentPadding)
+                    .verticalScroll(rememberScrollState())
+            } else {
+                Modifier
+            }
             Column(
-                modifier = if (isScrollable) {
-                    Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                        .padding(contentPadding)
-                        .verticalScroll(rememberScrollState())
-                } else {
-                    Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                        .padding(contentPadding)
-                }
+                modifier = Modifier
+                    .fillMaxSize()
+                    .imePadding()
+                    .then(extraModifier)
             ) {
                 content()
             }
