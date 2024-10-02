@@ -167,9 +167,14 @@ private fun UserDetail(
             .fillMaxWidth()
     ) {
         Column {
+            val avatarUrl = user.avatarUrls?.values?.firstOrNull()
             UserAvatar(
-                avatarUrl = user.avatarUrls?.values?.firstOrNull(),
-                onAvatarClick = onAvatarClick
+                avatarUrl = avatarUrl,
+                onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
+                    null
+                } else {
+                    onAvatarClick
+                }
             )
         }
 
