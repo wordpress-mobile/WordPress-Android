@@ -605,7 +605,7 @@ dependencyAnalysis {
     issues {
         onUnusedDependencies {
             // This dependency is actually needed otherwise the app will crash with a runtime exception.
-            exclude("org.greenrobot:eventbus")
+            exclude(libs.greenrobot.eventbus.main.get().module.toString())
             // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
             exclude(libs.mockito.android.get().module.toString())
         }
