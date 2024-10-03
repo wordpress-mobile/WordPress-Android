@@ -39,6 +39,11 @@ import org.wordpress.android.ui.compose.theme.M3Theme
  * These composables were created for the self-hosted users feature but were written to be reusable
  * in other projects.
  */
+
+/**
+ * A composable that displays a user's avatar image, optionally with a click listener.
+ * This is suitable for use in a list of users, such as in the self-hosted users feature.
+ */
 @Composable
 fun UserAvatar(
     avatarUrl: String?,
@@ -82,6 +87,9 @@ fun UserAvatar(
     }
 }
 
+/**
+ * A composable that displays a user's large avatar image at the maximum size
+ */
 @Composable
 fun UserLargeAvatar(avatarUrl: String) {
     AsyncImage(
@@ -98,6 +106,9 @@ fun UserLargeAvatar(avatarUrl: String) {
     )
 }
 
+/**
+ * A composable that displays a message when there are no users
+ */
 @Composable
 fun UserEmptyView() {
     UserMessageView(
@@ -106,6 +117,9 @@ fun UserEmptyView() {
     )
 }
 
+/**
+ * A composable that displays a message when there's no network connection
+ */
 @Composable
 fun UserOfflineView() {
     UserMessageView(
@@ -115,6 +129,10 @@ fun UserOfflineView() {
     )
 }
 
+/**
+ * A composable that displays a title with an icon above it and an optional
+ * message below it
+ */
 @Composable
 private fun UserMessageView(
     @DrawableRes iconRes: Int,
@@ -148,6 +166,9 @@ private fun UserMessageView(
     }
 }
 
+/**
+ * A composable that displays a screen with a top bar and a content area
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserScreen(

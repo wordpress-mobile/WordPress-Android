@@ -74,7 +74,7 @@ class SelfHostedUsersViewModel @Inject constructor(
     }
 
     /**
-     * Called when the avatar of a user is clicked in the detail screen
+     * Called when a user's avatar is clicked in the detail screen
      */
     fun onUserAvatarClick(avatarUrl: String?) {
         avatarUrl?.let {
