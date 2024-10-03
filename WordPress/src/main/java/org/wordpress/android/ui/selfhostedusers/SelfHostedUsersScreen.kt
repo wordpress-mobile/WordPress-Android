@@ -99,9 +99,9 @@ fun SelfHostedUsersScreen(
     ScreenWithTopBar(
         content = content,
         title = title,
-        closeIcon = closeIcon,
         onCloseClick = { onCloseClick() },
-        isScrollable = isScrollable
+        isScrollable = isScrollable,
+        closeIcon = closeIcon,
     )
 }
 
@@ -281,7 +281,7 @@ private fun UserDetailRow(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
-fun UserListScreenPreview() {
+private fun UserListScreenPreview() {
     val uiState = SelfHostedUserState.UserList(SampleUsers.getSampleUsers())
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
@@ -296,7 +296,7 @@ fun UserListScreenPreview() {
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
-fun UserDetailScreenPreview() {
+private fun UserDetailScreenPreview() {
     val uiState = SelfHostedUserState.UserDetail(SampleUsers.getSampleUsers().first())
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
@@ -311,7 +311,7 @@ fun UserDetailScreenPreview() {
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
-fun EmptyUserListScreenPreview() {
+private fun EmptyUserListScreenPreview() {
     val uiState = SelfHostedUserState.EmptyUserList
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
@@ -326,7 +326,7 @@ fun EmptyUserListScreenPreview() {
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
-fun OfflineScreenPreview() {
+private fun OfflineScreenPreview() {
     val uiState = SelfHostedUserState.Offline
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }
@@ -341,7 +341,7 @@ fun OfflineScreenPreview() {
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
-fun ProgressPreview() {
+private fun ProgressPreview() {
     val uiState = SelfHostedUserState.Loading
     SelfHostedUsersScreen(MutableStateFlow(uiState))
 }

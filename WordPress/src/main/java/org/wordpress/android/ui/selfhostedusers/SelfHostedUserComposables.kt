@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -162,9 +166,9 @@ fun MessageView(
 fun ScreenWithTopBar(
     title: String,
     content: @Composable () -> Unit,
-    closeIcon: ImageVector,
     onCloseClick: () -> Unit,
     isScrollable: Boolean,
+    closeIcon: ImageVector = Icons.Default.Close,
 ) {
     M3Theme {
         Scaffold(
@@ -196,4 +200,26 @@ fun ScreenWithTopBar(
             }
         }
     }
+}
+
+@Composable
+@Preview(
+    name = "Offline Screen Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Offline Screen Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+private fun OfflineScreenPreview() {
+    val content: @Composable () -> Unit = @Composable {
+        OfflineView()
+    }
+    ScreenWithTopBar(
+        title = "Title",
+        content = content,
+        onCloseClick = {},
+        isScrollable = false
+    )
 }
