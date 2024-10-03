@@ -21,7 +21,7 @@ data class BlazeCampaignCreationRequest(
     val targetingParameters: BlazeTargetingParameters?,
     val timeZoneId: String = TimeZone.getDefault().id,
     val isEndlessCampaign: Boolean,
-    val objectiveId: String
+    val objectiveId: String?
 )
 
 data class BlazeCampaignCreationRequestBudget(
