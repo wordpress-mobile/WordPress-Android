@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.selfhostedusers
 
 import android.content.res.Configuration
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,47 +59,55 @@ fun SelfHostedUsersScreen(
         else -> false
     }
 
-    ScreenWithTopBar(
-        title = title,
-        onCloseClick = { onCloseClick() },
-        isScrollable = isScrollable,
-        closeIcon = closeIcon,
-    ) {
-        when (state) {
-            is SelfHostedUserState.Loading -> {
-                ProgressDialog(
-                    ProgressDialogState(
-                        message = R.string.loading,
-                        showCancel = false,
-                        dismissible = false
+    Crossfade(
+        targetState = state,
+        animationSpec = tween(
+            durationMillis = integerResource(android.R.integer.config_shortAnimTime)
+        ),
+        label = "Crossfade"
+    ) { targetState ->
+        ScreenWithTopBar(
+            title = title,
+            onCloseClick = { onCloseClick() },
+            isScrollable = isScrollable,
+            closeIcon = closeIcon,
+        ) {
+            when (targetState) {
+                is SelfHostedUserState.Loading -> {
+                    ProgressDialog(
+                        ProgressDialogState(
+                            message = R.string.loading,
+                            showCancel = false,
+                            dismissible = false
+                        )
                     )
-                )
-            }
+                }
 
-            is SelfHostedUserState.UserList -> {
-                UserList(state.users, onUserClick)
-            }
+                is SelfHostedUserState.UserList -> {
+                    UserList(targetState.users, onUserClick)
+                }
 
-            is SelfHostedUserState.EmptyUserList -> {
-                MessageView(
-                    R.drawable.ic_people_white_24dp,
-                    R.string.no_users,
-                )
-            }
+                is SelfHostedUserState.EmptyUserList -> {
+                    MessageView(
+                        R.drawable.ic_people_white_24dp,
+                        R.string.no_users,
+                    )
+                }
 
-            is SelfHostedUserState.UserAvatar -> {
-                LargeAvatar(state.avatarUrl)
-            }
+                is SelfHostedUserState.UserAvatar -> {
+                    LargeAvatar(targetState.avatarUrl)
+                }
 
-            is SelfHostedUserState.UserDetail -> {
-                UserDetail(
-                    state.user,
-                    onUserAvatarClick
-                )
-            }
+                is SelfHostedUserState.UserDetail -> {
+                    UserDetail(
+                        targetState.user,
+                        onUserAvatarClick
+                    )
+                }
 
-            is SelfHostedUserState.Offline -> {
-                OfflineView()
+                is SelfHostedUserState.Offline -> {
+                    OfflineView()
+                }
             }
         }
     }
