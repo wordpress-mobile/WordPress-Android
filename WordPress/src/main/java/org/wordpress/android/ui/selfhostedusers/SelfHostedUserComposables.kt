@@ -41,11 +41,11 @@ import org.wordpress.android.ui.compose.theme.M3Theme
  */
 
 /**
- * A composable that displays a user's avatar image, optionally with a click listener.
- * This is suitable for use in a list of users, such as in the self-hosted users feature.
+ * A composable that displays an avatar image optionally with a click listener. This
+ * is suitable for use in a list, such as in the self-hosted user list feature.
  */
 @Composable
-fun UserAvatar(
+fun SmallAvatar(
     avatarUrl: String?,
     onAvatarClick: ((String?) -> Unit)? = null,
 ) {
@@ -88,10 +88,10 @@ fun UserAvatar(
 }
 
 /**
- * A composable that displays a user's large avatar image at the maximum size
+ * A composable that displays an avatar image at the maximum screen size
  */
 @Composable
-fun UserLargeAvatar(avatarUrl: String) {
+fun LargeAvatar(avatarUrl: String) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(avatarUrl)
@@ -107,22 +107,11 @@ fun UserLargeAvatar(avatarUrl: String) {
 }
 
 /**
- * A composable that displays a message when there are no users
+ * A composable that displays a message when there is no network connection
  */
 @Composable
-fun UserEmptyView() {
-    UserMessageView(
-        R.drawable.ic_people_white_24dp,
-        R.string.no_users,
-    )
-}
-
-/**
- * A composable that displays a message when there's no network connection
- */
-@Composable
-fun UserOfflineView() {
-    UserMessageView(
+fun OfflineView() {
+    MessageView(
         R.drawable.ic_wifi_off_24px,
         R.string.no_network_title,
         R.string.no_network_message,
@@ -130,14 +119,13 @@ fun UserOfflineView() {
 }
 
 /**
- * A composable that displays a title with an icon above it and an optional
- * message below it
+ * A composable that displays a title with an icon above it and an optional subtitle below it
  */
 @Composable
-private fun UserMessageView(
+fun MessageView(
     @DrawableRes iconRes: Int,
     @StringRes titleRes: Int,
-    @StringRes messageRes: Int? = null,
+    @StringRes subtitleRes: Int? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -156,9 +144,9 @@ private fun UserMessageView(
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        if (messageRes != null) {
+        if (subtitleRes != null) {
             Text(
-                text = stringResource(messageRes),
+                text = stringResource(subtitleRes),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -171,7 +159,7 @@ private fun UserMessageView(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserScreen(
+fun ScreenWithTopBar(
     title: String,
     content: @Composable () -> Unit,
     closeIcon: ImageVector,

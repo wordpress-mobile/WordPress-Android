@@ -46,7 +46,6 @@ fun SelfHostedUsersScreen(
     }
 
     val closeIcon = when (state) {
-        is SelfHostedUserState.UserDetail -> Icons.Default.Close
         is SelfHostedUserState.UserAvatar -> Icons.Default.Close
         else -> Icons.AutoMirrored.Filled.ArrowBack
     }
@@ -74,11 +73,14 @@ fun SelfHostedUsersScreen(
             }
 
             is SelfHostedUserState.EmptyUserList -> {
-                UserEmptyView()
+                MessageView(
+                    R.drawable.ic_people_white_24dp,
+                    R.string.no_users,
+                )
             }
 
             is SelfHostedUserState.UserAvatar -> {
-                UserLargeAvatar(state.avatarUrl)
+                LargeAvatar(state.avatarUrl)
             }
 
             is SelfHostedUserState.UserDetail -> {
@@ -89,12 +91,12 @@ fun SelfHostedUsersScreen(
             }
 
             is SelfHostedUserState.Offline -> {
-                UserOfflineView()
+                OfflineView()
             }
         }
     }
 
-    UserScreen(
+    ScreenWithTopBar(
         content = content,
         title = title,
         closeIcon = closeIcon,
@@ -126,7 +128,7 @@ private fun UserLazyRow(
     ) {
         item {
             Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
-                UserAvatar(user.avatarUrls?.values?.firstOrNull())
+                SmallAvatar(user.avatarUrls?.values?.firstOrNull())
             }
         }
 
@@ -173,7 +175,7 @@ private fun UserDetail(
     ) {
         Column {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull()
-            UserAvatar(
+            SmallAvatar(
                 avatarUrl = avatarUrl,
                 onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
                     null
