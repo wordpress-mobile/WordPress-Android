@@ -56,7 +56,12 @@ fun SelfHostedUsersScreen(
         else -> false
     }
 
-    val content: @Composable () -> Unit = @Composable {
+    ScreenWithTopBar(
+        title = title,
+        onCloseClick = { onCloseClick() },
+        isScrollable = isScrollable,
+        closeIcon = closeIcon,
+    ) {
         when (state) {
             is SelfHostedUserState.Loading -> {
                 ProgressDialog(
@@ -95,14 +100,6 @@ fun SelfHostedUsersScreen(
             }
         }
     }
-
-    ScreenWithTopBar(
-        content = content,
-        title = title,
-        onCloseClick = { onCloseClick() },
-        isScrollable = isScrollable,
-        closeIcon = closeIcon,
-    )
 }
 
 @Composable

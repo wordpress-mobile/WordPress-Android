@@ -165,10 +165,10 @@ fun MessageView(
 @Composable
 fun ScreenWithTopBar(
     title: String,
-    content: @Composable () -> Unit,
     onCloseClick: () -> Unit,
     isScrollable: Boolean,
     closeIcon: ImageVector = Icons.Default.Close,
+    content: @Composable () -> Unit,
 ) {
     M3Theme {
         Scaffold(
