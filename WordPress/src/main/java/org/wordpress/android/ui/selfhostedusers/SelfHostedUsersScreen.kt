@@ -62,7 +62,7 @@ fun SelfHostedUsersScreen(
     Crossfade(
         targetState = state,
         animationSpec = tween(
-            durationMillis = integerResource(android.R.integer.config_shortAnimTime)
+            durationMillis = integerResource(android.R.integer.config_mediumAnimTime)
         ),
         label = "Crossfade"
     ) { targetState ->
