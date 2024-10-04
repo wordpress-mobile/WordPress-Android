@@ -19,7 +19,7 @@ import javax.inject.Named
 class SelfHostedUsersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    private val users = ArrayList<UserWithEditContext>()
+    private val userList = ArrayList<UserWithEditContext>()
     private var selectedUser: UserWithEditContext? = null
 
     private val _uiState = MutableStateFlow<SelfHostedUserState>(SelfHostedUserState.Loading)
@@ -40,9 +40,14 @@ class SelfHostedUsersViewModel @Inject constructor(
         _uiState.value = SelfHostedUserState.Loading
         launch {
             delay(1000L)
-            users.clear()
-            users.addAll(SampleUsers.getSampleUsers())
-            _uiState.value = SelfHostedUserState.UserList(users)
+            userList.clear()
+            val users = SampleUsers.getSampleUsers()
+            if (users.isEmpty()) {
+                _uiState.value = SelfHostedUserState.EmptyUserList
+            } else {
+                userList.addAll(users)
+                _uiState.value = SelfHostedUserState.UserList(userList)
+            }
         }
     }
 
@@ -52,7 +57,7 @@ class SelfHostedUsersViewModel @Inject constructor(
     fun onCloseClick(context: Context) {
         when (_uiState.value) {
             is SelfHostedUserState.UserDetail -> {
-                _uiState.value = SelfHostedUserState.UserList(users)
+                _uiState.value = SelfHostedUserState.UserList(userList)
             }
 
             is SelfHostedUserState.UserAvatar -> {
