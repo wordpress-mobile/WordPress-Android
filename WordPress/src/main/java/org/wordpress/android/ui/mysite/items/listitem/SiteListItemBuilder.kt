@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SELF_HOSTED_USERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -41,7 +43,8 @@ class SiteListItemBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
+    private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
+    private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -137,6 +140,20 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.people),
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
+            )
+        } else {
+            null
+        }
+    }
+
+    fun buildSelfHostedUserListItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        // TODO Should this excluded JetPack users?
+        return if (selfHostedUsersFeatureConfig.isEnabled() && site.selfHostedSiteId > 0) {
+            ListItem(
+                R.drawable.ic_user_white_24dp,
+                UiStringRes(R.string.users),
+                onClick = ListItemInteraction.create(SELF_HOSTED_USERS, onClick),
+                listItemAction = SELF_HOSTED_USERS
             )
         } else null
     }
