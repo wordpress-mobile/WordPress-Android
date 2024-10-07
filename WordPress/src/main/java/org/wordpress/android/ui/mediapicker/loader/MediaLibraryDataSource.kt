@@ -59,8 +59,7 @@ class MediaLibraryDataSource(
     ): MediaLoadingResult {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return Failure(
-                UiStringRes(R.string.no_network_title),
-                htmlSubtitle = UiStringRes(R.string.no_network_subtitle),
+                UiStringRes(R.string.no_network_message),
                 image = R.drawable.img_illustration_cloud_off_152dp,
                 data = if (loadMore) get(mediaTypes, filter) else listOf()
             )

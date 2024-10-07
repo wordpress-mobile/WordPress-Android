@@ -116,9 +116,8 @@ fun LargeAvatar(avatarUrl: String) {
 @Composable
 fun OfflineView() {
     MessageView(
-        R.drawable.ic_wifi_off_24px,
-        R.string.no_network_title,
-        R.string.no_network_subtitle,
+        R.drawable.img_illustration_cloud_off_152dp,
+        R.string.no_network_message,
     )
 }
 
