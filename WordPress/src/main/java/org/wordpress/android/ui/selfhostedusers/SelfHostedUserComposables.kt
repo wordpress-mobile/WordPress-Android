@@ -118,7 +118,7 @@ fun OfflineView() {
     MessageView(
         R.drawable.ic_wifi_off_24px,
         R.string.no_network_title,
-        R.string.no_network_message,
+        R.string.no_network_subtitle,
     )
 }
 
