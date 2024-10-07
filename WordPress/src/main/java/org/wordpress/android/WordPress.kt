@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
@@ -25,6 +26,9 @@ abstract class WordPress : Application(), ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .crossfade(true)
+            .components {
+                add(VideoFrameDecoder.Factory())
+            }
             .build()
     }
 
