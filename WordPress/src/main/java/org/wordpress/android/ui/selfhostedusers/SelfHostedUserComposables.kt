@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -143,15 +144,14 @@ fun MessageView(
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(imageRes),
+            tint = colorResource(R.color.neutral_30),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .size(85.dp)
         )
         Text(
             text = stringResource(messageRes),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 16.dp),
         )
         if (buttonRes != null && onButtonClick != null) {
             Button(
