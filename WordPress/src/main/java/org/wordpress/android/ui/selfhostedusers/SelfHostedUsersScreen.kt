@@ -39,6 +39,7 @@ fun SelfHostedUsersScreen(
     onCloseClick: () -> Unit = {},
     onUserClick: (UserWithEditContext) -> Unit = {},
     onUserAvatarClick: (avatarUrl: String?) -> Unit = {},
+    onRetryClick: () -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
 
@@ -106,7 +107,9 @@ fun SelfHostedUsersScreen(
                 }
 
                 is SelfHostedUserState.Offline -> {
-                    OfflineView()
+                    OfflineView(
+                        onRetryClick = onRetryClick
+                    )
                 }
             }
         }

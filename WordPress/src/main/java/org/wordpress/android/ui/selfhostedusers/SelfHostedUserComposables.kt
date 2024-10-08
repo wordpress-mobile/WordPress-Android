@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -16,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -114,21 +117,28 @@ fun LargeAvatar(avatarUrl: String) {
  * A composable that displays a message when there is no network connection
  */
 @Composable
-fun OfflineView() {
+fun OfflineView(
+    onRetryClick: (() -> Unit)? = null,
+) {
     MessageView(
         R.drawable.img_illustration_cloud_off_152dp,
         R.string.no_network_message,
+        R.string.retry,
+        onButtonClick = onRetryClick
     )
 }
 
 /**
- * A composable that displays a title with an icon above it and an optional subtitle below it
+ * A composable that displays a title with an icon above it and an optional subtitle below it and an
+ * optional button below that
  */
 @Composable
 fun MessageView(
     @DrawableRes iconRes: Int,
     @StringRes titleRes: Int,
     @StringRes subtitleRes: Int? = null,
+    @StringRes buttonRes: Int? = null,
+    onButtonClick: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -153,6 +163,26 @@ fun MessageView(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
+        }
+        if (buttonRes != null && onButtonClick != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                Button(
+                    modifier = Modifier.padding(
+                        top = 48.dp
+                    ),
+                    onClick = onButtonClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.secondary,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(R.string.retry).uppercase(),
+                    )
+                }
+            }
         }
     }
 }
@@ -213,12 +243,14 @@ fun ScreenWithTopBar(
 )
 private fun OfflineScreenPreview() {
     val content: @Composable () -> Unit = @Composable {
-        OfflineView()
+        OfflineView(
+            onRetryClick = {}
+        )
     }
     ScreenWithTopBar(
         title = "Title",
         content = content,
         onCloseClick = {},
-        isScrollable = false
+        isScrollable = false,
     )
 }
