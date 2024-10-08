@@ -74,7 +74,10 @@ object SampleUsers {
     fun getSampleUsers(): ArrayList<UserWithEditContext> {
         fun addWithId(user: UserWithEditContext) {
             sampleUserList.add(
-                user.copy(id = sampleUserList.size)
+                user.copy(
+                    id = sampleUserList.size,
+                    name = "${user.name}${sampleUserList.size}"
+                )
             )
         }
         if (sampleUserList.isEmpty()) {
