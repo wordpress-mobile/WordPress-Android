@@ -80,8 +80,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
 
         val result = dataSource.load(forced = false, loadMore = false, filter = null) as Failure
 
-        assertThat(result.title).isEqualTo(UiStringRes(R.string.no_network_title))
-        assertThat(result.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+        assertThat(result.title).isEqualTo(UiStringRes(R.string.no_network_message))
         assertThat(result.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         assertThat(result.data).isEmpty()
     }
@@ -96,8 +95,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
 
         val result = dataSource.load(forced = false, loadMore = true, filter = null) as Failure
 
-        assertThat(result.title).isEqualTo(UiStringRes(R.string.no_network_title))
-        assertThat(result.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+        assertThat(result.title).isEqualTo(UiStringRes(R.string.no_network_message))
         assertThat(result.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         assertThat(result.data).hasSize(1)
         result.data.assertContains(mediaModel, 0)
