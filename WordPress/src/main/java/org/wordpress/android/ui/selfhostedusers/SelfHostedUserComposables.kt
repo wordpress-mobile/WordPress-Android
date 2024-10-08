@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -121,22 +120,20 @@ fun OfflineView(
     onRetryClick: (() -> Unit)? = null,
 ) {
     MessageView(
-        R.drawable.img_illustration_cloud_off_152dp,
-        R.string.no_network_message,
-        R.string.retry,
+       imageRes =  R.drawable.img_illustration_cloud_off_152dp,
+        messageRes = R.string.no_network_message,
+        buttonRes = R.string.retry,
         onButtonClick = onRetryClick
     )
 }
 
 /**
- * A composable that displays a title with an icon above it and an optional subtitle below it and an
- * optional button below that
+ * A composable that displays a message with an image above it and an optional button below it
  */
 @Composable
 fun MessageView(
-    @DrawableRes iconRes: Int,
-    @StringRes titleRes: Int,
-    @StringRes subtitleRes: Int? = null,
+    @DrawableRes imageRes: Int,
+    @StringRes messageRes: Int,
     @StringRes buttonRes: Int? = null,
     onButtonClick: (() -> Unit)? = null,
 ) {
@@ -146,37 +143,24 @@ fun MessageView(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(iconRes),
+            imageVector = ImageVector.vectorResource(imageRes),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(85.dp)
         )
         Text(
-            text = stringResource(titleRes),
+            text = stringResource(messageRes),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        if (subtitleRes != null) {
-            Text(
-                text = stringResource(subtitleRes),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
         if (buttonRes != null && onButtonClick != null) {
             Box(
                 contentAlignment = Alignment.Center,
+                modifier = Modifier.padding(top = 16.dp)
             ) {
                 Button(
-                    modifier = Modifier.padding(
-                        top = 48.dp
-                    ),
                     onClick = onButtonClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.secondary,
-                    ),
                 ) {
                     Text(
                         text = stringResource(R.string.retry).uppercase(),
