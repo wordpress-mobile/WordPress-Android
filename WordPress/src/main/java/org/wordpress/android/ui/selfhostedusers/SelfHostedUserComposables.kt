@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -120,7 +119,7 @@ fun OfflineView(
     onRetryClick: (() -> Unit)? = null,
 ) {
     MessageView(
-       imageRes =  R.drawable.img_illustration_cloud_off_152dp,
+        imageRes = R.drawable.img_illustration_cloud_off_152dp,
         messageRes = R.string.no_network_message,
         buttonRes = R.string.retry,
         onButtonClick = onRetryClick
@@ -155,17 +154,13 @@ fun MessageView(
             color = MaterialTheme.colorScheme.onSurface,
         )
         if (buttonRes != null && onButtonClick != null) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.padding(top = 16.dp)
+            Button(
+                modifier = Modifier.padding(top = 16.dp),
+                onClick = onButtonClick,
             ) {
-                Button(
-                    onClick = onButtonClick,
-                ) {
-                    Text(
-                        text = stringResource(R.string.retry).uppercase(),
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.retry).uppercase(),
+                )
             }
         }
     }
