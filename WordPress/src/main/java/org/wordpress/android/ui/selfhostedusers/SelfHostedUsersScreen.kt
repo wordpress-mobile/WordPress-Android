@@ -39,6 +39,7 @@ fun SelfHostedUsersScreen(
     onCloseClick: () -> Unit = {},
     onUserClick: (UserWithEditContext) -> Unit = {},
     onUserAvatarClick: (avatarUrl: String?) -> Unit = {},
+    onRetryClick: () -> Unit = {},
 ) {
     val state = uiState.collectAsState().value
 
@@ -89,8 +90,8 @@ fun SelfHostedUsersScreen(
 
                 is SelfHostedUserState.EmptyUserList -> {
                     MessageView(
-                        R.drawable.ic_people_white_24dp,
-                        R.string.no_users,
+                        imageRes = R.drawable.ic_people_white_24dp,
+                        messageRes = R.string.no_users,
                     )
                 }
 
@@ -106,7 +107,9 @@ fun SelfHostedUsersScreen(
                 }
 
                 is SelfHostedUserState.Offline -> {
-                    OfflineView()
+                    OfflineView(
+                        onRetryClick = onRetryClick
+                    )
                 }
             }
         }
