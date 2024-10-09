@@ -30,10 +30,11 @@ object SampleUsers {
         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non quam viverra, viverra est vel, interdum felis. Pellentesque interdum libero quis metus pharetra ullamcorper. Morbi nec libero ligula. Quisque consectetur, purus sit amet lobortis porttitor, ligula ex imperdiet massa, in ullamcorper augue odio sit amet metus. In sollicitudin mauris et risus mollis commodo. Aliquam vel vehicula ante, nec blandit erat. Aenean non turpis porttitor orci fringilla fringilla nec ac nunc. Nulla ultrices urna ut ipsum posuere blandit. Phasellus mauris nulla, tincidunt at leo at, auctor interdum felis. Sed pharetra risus a ullamcorper dictum. Suspendisse pharetra justo molestie risus lobortis facilisis.",
     )
 
+    // TODO remove avatar
     private val sampleUser2 = UserWithEditContext(
         id = 2,
         username = "@sampleUserWithALongUserName",
-        avatarUrls = emptyMap(),
+        avatarUrls = mapOf("sampleUserTwo" to "https://nickbradbury.com/wp-content/uploads/2022/03/1394-2.jpg"),
         capabilities = emptyMap(),
         description = "User description",
         email = "email@exmaple.com",

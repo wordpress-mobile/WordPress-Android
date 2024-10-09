@@ -142,7 +142,6 @@ private fun UserLazyRow(
             Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
                 SmallAvatar(
                     avatarUrl = user.avatarUrls?.values?.firstOrNull(),
-                    contentDescription = stringResource(R.string.user_avatar_content_description, user.name)
                 )
             }
             Column(
