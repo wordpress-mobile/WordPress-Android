@@ -140,11 +140,11 @@ private fun UserLazyRow(
     ) {
         item {
             Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
-                SmallAvatar(user.avatarUrls?.values?.firstOrNull())
+                SmallAvatar(
+                    avatarUrl = user.avatarUrls?.values?.firstOrNull(),
+                    contentDescription = stringResource(R.string.user_avatar_content_description, user.name)
+                )
             }
-        }
-
-        item {
             Column(
                 modifier = Modifier
                     .padding(
@@ -189,6 +189,7 @@ private fun UserDetail(
             val avatarUrl = user.avatarUrls?.values?.firstOrNull()
             SmallAvatar(
                 avatarUrl = avatarUrl,
+                contentDescription = stringResource(R.string.user_avatar_content_description, user.name),
                 onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
                     null
                 } else {

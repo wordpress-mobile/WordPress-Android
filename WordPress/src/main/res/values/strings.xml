@@ -2990,6 +2990,7 @@
     <string name="biographical_info">Biographical Info</string>
     <string name="biographical_info_empty">None given</string>
     <string name="user_row_content_description">Show detail for user %s</string>
+    <string name="user_avatar_content_description">Avatar for user %s</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>
