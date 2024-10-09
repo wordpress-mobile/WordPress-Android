@@ -119,13 +119,13 @@ private fun UserList(
     onUserClick: (UserWithEditContext) -> Unit
 ) {
     for (user in users) {
-        UserLazyRow(user, onUserClick)
+        UserListItem(user, onUserClick)
         HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
     }
 }
 
 @Composable
-private fun UserLazyRow(
+private fun UserListItem(
     user: UserWithEditContext,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
