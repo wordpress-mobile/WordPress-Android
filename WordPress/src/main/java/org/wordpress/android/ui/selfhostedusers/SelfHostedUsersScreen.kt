@@ -132,7 +132,11 @@ private fun UserLazyRow(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onUserClick(user) }
+            .clickable(
+                onClickLabel = stringResource(R.string.user_row_content_description, user.name)
+            ) {
+                onUserClick(user)
+            }
     ) {
         item {
             Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
