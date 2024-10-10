@@ -87,6 +87,14 @@ class SelfHostedUsersViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Called when the retry button is clicked
+     */
+    fun onRetryClick() {
+        _uiState.value = SelfHostedUserState.Loading
+        fetchUsers()
+    }
+
     sealed class SelfHostedUserState {
         data object Loading : SelfHostedUserState()
         data object Offline : SelfHostedUserState()

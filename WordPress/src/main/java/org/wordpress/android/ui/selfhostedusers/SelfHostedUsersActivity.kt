@@ -50,6 +50,9 @@ class SelfHostedUsersActivity : LocaleAwareActivity() {
                         },
                         onUserAvatarClick = { avatarUrl ->
                             viewModel.onUserAvatarClick(avatarUrl)
+                        },
+                        onRetryClick = {
+                            viewModel.onRetryClick()
                         }
                     )
                 }

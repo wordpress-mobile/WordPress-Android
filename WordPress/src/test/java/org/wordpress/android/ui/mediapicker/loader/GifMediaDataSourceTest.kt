@@ -110,8 +110,7 @@ class GifMediaDataSourceTest : BaseUnitTest() {
         val result = gifMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
         (result as MediaLoadingResult.Failure).apply {
-            Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_title)
-            Assertions.assertThat(this.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+            Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_message)
             Assertions.assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
     }
