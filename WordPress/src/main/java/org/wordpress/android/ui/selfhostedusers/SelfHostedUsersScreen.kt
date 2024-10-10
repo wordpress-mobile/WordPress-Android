@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -258,6 +259,7 @@ private fun UserDetailSection(
     Text(
         text = title,
         style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.semantics { heading() }
     )
     Spacer(modifier = Modifier.height(userScreenPaddingDp))
     content()
