@@ -167,7 +167,7 @@ fun MessageView(
 fun ScreenWithTopBar(
     title: String,
     onCloseClick: () -> Unit,
-    isScrollable: Boolean,
+    isScrollable: Boolean = false,
     closeIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {

@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -54,8 +55,7 @@ fun SelfHostedUsersScreen(
     }
 
     val isScrollable = when (state) {
-        is SelfHostedUserState.UserList -> true
-        is SelfHostedUserState.UserDetail -> true
+        is SelfHostedUserState.UserDetail -> false
         else -> false
     }
 
@@ -118,9 +118,14 @@ private fun UserList(
     users: List<UserWithEditContext>,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
-    for (user in users) {
-        UserListItem(user, onUserClick)
-        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        items(items = users) { user ->
+            UserListItem(user, onUserClick)
+            HorizontalDivider(thickness = 1.dp)
+        }
     }
 }
 
@@ -129,7 +134,7 @@ private fun UserListItem(
     user: UserWithEditContext,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
-    LazyRow(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
@@ -138,37 +143,35 @@ private fun UserListItem(
                 onUserClick(user)
             }
     ) {
-        item {
-            Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
-                SmallAvatar(
-                    avatarUrl = user.avatarUrls?.values?.firstOrNull(),
+        Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
+            SmallAvatar(
+                avatarUrl = user.avatarUrls?.values?.firstOrNull(),
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = userScreenPaddingDp,
+                    bottom = userScreenPaddingDp,
+                    end = userScreenPaddingDp
                 )
-            }
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = userScreenPaddingDp,
-                        bottom = userScreenPaddingDp,
-                        end = userScreenPaddingDp
-                    )
-            ) {
-                Text(
-                    text = user.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+        ) {
+            Text(
+                text = user.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = user.username,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            if (user.roles.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = user.username,
-                    style = MaterialTheme.typography.bodyMedium
+                    text = user.roles.joinToString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
                 )
-                if (user.roles.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = user.roles.joinToString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.outline,
-                    )
-                }
             }
         }
     }
