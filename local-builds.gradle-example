@@ -21,6 +21,5 @@ ext {
     //localGutenbergKitPath = "../GutenbergKit"
     //localLoginFlowPath = "../WordPress-Login-Flow-Android"
     //localAztecAndroidPath = "../AztecEditor-Android"
-    //localTracksPath = "../Automattic-Tracks-Android"
     //localGravatarAndroidPath = "../Gravatar-SDK-Android"
 }

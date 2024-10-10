@@ -29,6 +29,7 @@ import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -57,6 +58,9 @@ class SiteListItemBuilderTest {
     @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
 
+    @Mock
+    lateinit var selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig
+
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -68,7 +72,8 @@ class SiteListItemBuilderTest {
             buildConfigWrapper,
             themeBrowserUtils,
             jetpackFeatureRemovalPhaseHelper,
-            siteMonitoringFeatureConfig
+            siteMonitoringFeatureConfig,
+            selfHostedUsersFeatureConfig
         )
     }
 

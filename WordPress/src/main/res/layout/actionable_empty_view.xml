@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_person_reading_device_notification"
+                android:contentDescription="@null"
                 android:visibility="gone" />
 
             <ProgressBar

@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-
 steps:
   - label: "New Beta Release"
     plugins: [$CI_TOOLKIT]
@@ -18,3 +17,7 @@ steps:
       bundle exec fastlane new_beta_release skip_confirm:true
     agents:
        queue: "tumblr-metal"
+    retry:
+      manual:
+        # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+        allowed: false

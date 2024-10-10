@@ -1,7 +1,6 @@
 #!/bin/bash -eu
 
-# RELEASE_VERSION is passed as an environment variable from fastlane to Buildkite
-#
+# RELEASE_VERSION is passed as an environment variable passed to Buildkite by ReleasesV2.
 if [[ -z "${RELEASE_VERSION}" ]]; then
     echo "RELEASE_VERSION is not set."
     exit 1

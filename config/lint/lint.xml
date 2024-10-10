@@ -21,6 +21,7 @@
         <!-- GCM -->
         <ignore path="**/generated/ksp/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
+    <issue id="AndroidGradlePluginVersion" severity="ignore" /> <!-- The AGP update is done manually -->
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
     <issue id="MissingNullAnnotationOnField">
         <ignore path="**/generated/**" />
@@ -39,6 +40,12 @@
         <!-- EDITOR -->
         <ignore path="**/org.jsoup/**" /> <!-- jsoup -->
     </issue>
+    <!--  TODO: After addressing them, remove the below set of security issues from this list  -->
+    <issue id="MissingAutoVerifyAttribute" severity="warning" />
+    <issue id="SensitiveExternalPath" severity="warning" />
+    <issue id="WeakPrng" severity="warning" />
+    <issue id="TapjackingVulnerable" severity="warning" />
+    <issue id="InsecurePermissionProtectionLevel" severity="warning" />
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
@@ -73,4 +80,6 @@
 
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/21065 -->
     <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
+    <!--  We rely on more granural checks from WordPress-Lint-Android  -->
+    <issue id="UnknownNullness" severity="ignore" />
 </lint>

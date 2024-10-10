@@ -1,5 +1,5 @@
 plugins {
-    id "com.android.library"
+    alias(libs.plugins.android.library)
 }
 
 repositories {
@@ -14,12 +14,12 @@ repositories {
 }
 
 dependencies {
-    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    implementation(libs.automattic.tracks.android)
+    implementation(libs.wordpress.utils)
 
-    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation(libs.androidx.preference)
 
-    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+    lintChecks(libs.wordpress.lint)
 }
 
 android {

@@ -32,8 +32,7 @@ class StockMediaDataSource
     ): MediaLoadingResult {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return Failure(
-                UiStringRes(R.string.no_network_title),
-                htmlSubtitle = UiStringRes(R.string.no_network_message),
+                UiStringRes(R.string.no_network_message),
                 image = R.drawable.img_illustration_cloud_off_152dp,
                 data = if (loadMore) get() else listOf()
             )

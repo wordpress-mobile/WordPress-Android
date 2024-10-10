@@ -151,6 +151,7 @@ class SiteItemsBuilder @Inject constructor(
         return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             listOfNotNull(
                     siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
+                    siteListItemBuilder.buildSelfHostedUserListItemIfAvailable(params.site, params.onClick),
                     siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
                     siteListItemBuilder.buildShareItemIfAvailable(
                             params.site,
