@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -115,22 +118,26 @@ fun LargeAvatar(avatarUrl: String) {
  * A composable that displays a message when there is no network connection
  */
 @Composable
-fun OfflineView() {
+fun OfflineView(
+    onRetryClick: (() -> Unit)? = null,
+) {
     MessageView(
-        R.drawable.ic_wifi_off_24px,
-        R.string.no_network_title,
-        R.string.no_network_message,
+        imageRes = R.drawable.img_illustration_cloud_off_152dp,
+        messageRes = R.string.no_network_message,
+        buttonRes = R.string.retry,
+        onButtonClick = onRetryClick
     )
 }
 
 /**
- * A composable that displays a title with an icon above it and an optional subtitle below it
+ * A composable that displays a message with an image above it and an optional button below it
  */
 @Composable
 fun MessageView(
-    @DrawableRes iconRes: Int,
-    @StringRes titleRes: Int,
-    @StringRes subtitleRes: Int? = null,
+    @DrawableRes imageRes: Int,
+    @StringRes messageRes: Int,
+    @StringRes buttonRes: Int? = null,
+    onButtonClick: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -138,23 +145,26 @@ fun MessageView(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(iconRes),
+            imageVector = ImageVector.vectorResource(imageRes),
+            tint = colorResource(R.color.neutral_30),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .size(85.dp)
         )
         Text(
-            text = stringResource(titleRes),
+            text = stringResource(messageRes),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 16.dp),
         )
-        if (subtitleRes != null) {
-            Text(
-                text = stringResource(subtitleRes),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+        if (buttonRes != null && onButtonClick != null) {
+            Button(
+                modifier = Modifier.padding(top = 16.dp),
+                shape = RoundedCornerShape(2.dp),
+                onClick = onButtonClick,
+            ) {
+                Text(
+                    text = stringResource(R.string.retry).uppercase(),
+                )
+            }
         }
     }
 }
@@ -215,12 +225,14 @@ fun ScreenWithTopBar(
 )
 private fun OfflineScreenPreview() {
     val content: @Composable () -> Unit = @Composable {
-        OfflineView()
+        OfflineView(
+            onRetryClick = {}
+        )
     }
     ScreenWithTopBar(
         title = "Title",
         content = content,
         onCloseClick = {},
-        isScrollable = false
+        isScrollable = false,
     )
 }

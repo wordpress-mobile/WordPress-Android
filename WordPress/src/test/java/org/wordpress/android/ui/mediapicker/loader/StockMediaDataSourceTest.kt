@@ -138,8 +138,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         val result = stockMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
         (result as MediaLoadingResult.Failure).apply {
-            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_title)
-            assertThat(this.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_message)
             assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
         verifyNoInteractions(stockMediaStore)
