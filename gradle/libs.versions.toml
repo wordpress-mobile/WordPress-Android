@@ -63,7 +63,7 @@ google-play-app-update = '2.1.0'
 google-play-review = '2.0.1'
 google-play-services-auth = '20.4.1'
 google-services = '4.4.2'
-gravatar = '1.0.0'
+gravatar = '2.0.0-rc1'
 greenrobot-eventbus = '3.3.1'
 gutenberg-mobile = 'v1.121.0'
 indexos-media-for-mobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
@@ -93,7 +93,7 @@ wordpress-login = '1.16.0'
 wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
 wordpress-utils = '3.14.0'
-yalantis-ucrop = '2.2.9'
+yalantis-ucrop = '2.2.10'
 zendesk = '5.1.2'
 
 [libraries]
@@ -226,7 +226,7 @@ wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpr
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
 wordpress-rs-android = { group = "rs.wordpress.api", name = "android", version.ref = "wordpress-rs" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
-yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
+yalantis-ucrop = { group = "com.automattic", name = "ucrop", version.ref = "yalantis-ucrop" }
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
 
 [plugins]

@@ -69,7 +69,7 @@
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         android:theme="@style/WordPress"
-        tools:replace="allowBackup, icon,android:supportsRtl"
+        tools:replace="allowBackup, icon,android:supportsRtl, android:dataExtractionRules, android:fullBackupContent"
         android:supportsRtl="true"
         tools:ignore="UnusedAttribute">
 
@@ -772,12 +772,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"
             tools:ignore="DiscouragedApi,LockedOrientationActivity"/>
-
-        <!-- Lib activities-->
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:label="@string/edit_photo_screen_title"
-            android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
             android:name=".ui.posts.JetpackSecuritySettingsActivity"

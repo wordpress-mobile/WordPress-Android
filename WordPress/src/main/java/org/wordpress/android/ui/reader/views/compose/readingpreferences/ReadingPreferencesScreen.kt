@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -292,18 +291,9 @@ private fun ReadingPreferencesPreviewFeedback(
     }
 
     val buttonLabel = stringResource(R.string.reader_preferences_screen_preview_text_feedback_label)
-    ClickableText(
+    Text(
         text = annotatedString,
         style = textStyle,
-        onClick = { offset ->
-            annotatedString.getStringAnnotations(tag = "url", start = offset, end = offset)
-                .firstOrNull()
-                ?.let { annotation ->
-                    if (annotation.item == "feedback") {
-                        onSendFeedbackClick()
-                    }
-                }
-        },
         modifier = Modifier.semantics {
             onClick(
                 label = buttonLabel,

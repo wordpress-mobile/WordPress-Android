@@ -115,7 +115,7 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         }
         return new AvatarUrl(
                 new Email(site.getEmail()),
-                new AvatarQueryOptions(getAvatarSize(context), DefaultAvatarOption.Status404.INSTANCE, null, null)
-        ).url().toString();
+                new AvatarQueryOptions.Builder().setPreferredSize(getAvatarSize(context)).setDefaultAvatarOption(DefaultAvatarOption.Status404.INSTANCE).build()
+        ).url(null).toString();
     }
 }
