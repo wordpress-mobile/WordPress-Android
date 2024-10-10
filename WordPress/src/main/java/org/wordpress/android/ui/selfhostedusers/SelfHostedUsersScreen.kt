@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -22,6 +21,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -122,53 +123,54 @@ private fun UserList(
     onUserClick: (UserWithEditContext) -> Unit
 ) {
     for (user in users) {
-        UserLazyRow(user, onUserClick)
-        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(start = 80.dp))
+        UserListItem(user, onUserClick)
+        HorizontalDivider(thickness = 1.dp)
     }
 }
 
 @Composable
-private fun UserLazyRow(
+private fun UserListItem(
     user: UserWithEditContext,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
-    LazyRow(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onUserClick(user) }
-    ) {
-        item {
-            Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
-                SmallAvatar(user.avatarUrls?.values?.firstOrNull())
-            }
-        }
-
-        item {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = userScreenPaddingDp,
-                        bottom = userScreenPaddingDp,
-                        end = userScreenPaddingDp
-                    )
+            .clickable(
+                onClickLabel = stringResource(R.string.user_row_content_description, user.name)
             ) {
-                Text(
-                    text = user.name,
-                    style = MaterialTheme.typography.bodyLarge,
+                onUserClick(user)
+            }
+    ) {
+        Column(modifier = Modifier.padding(all = userScreenPaddingDp)) {
+            SmallAvatar(
+                avatarUrl = user.avatarUrls?.values?.firstOrNull(),
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = userScreenPaddingDp,
+                    bottom = userScreenPaddingDp,
+                    end = userScreenPaddingDp
                 )
+        ) {
+            Text(
+                text = user.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = user.username,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            if (user.roles.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = user.username,
-                    style = MaterialTheme.typography.bodyMedium
+                    text = user.roles.joinToString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
                 )
-                if (user.roles.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = user.roles.joinToString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.outline,
-                    )
-                }
             }
         }
     }
@@ -188,6 +190,7 @@ private fun UserDetail(
             val avatarUrl = user.avatarUrls?.values?.firstOrNull()
             SmallAvatar(
                 avatarUrl = avatarUrl,
+                contentDescription = stringResource(R.string.user_avatar_content_description, user.name),
                 onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
                     null
                 } else {
@@ -201,23 +204,23 @@ private fun UserDetail(
                 .padding(start = userScreenPaddingDp)
         ) {
             UserDetailSection(title = stringResource(R.string.name)) {
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.username),
                     text = user.username,
                 )
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.role),
                     text = user.roles.joinToString(),
                 )
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.first_name),
                     text = user.firstName,
                 )
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.last_name),
                     text = user.lastName,
                 )
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.nickname),
                     text = user.nickname,
                 )
@@ -225,18 +228,18 @@ private fun UserDetail(
             }
 
             UserDetailSection(title = stringResource(R.string.contact_info)) {
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.email),
                     text = user.email,
                 )
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.website),
                     text = user.url,
                 )
             }
 
             UserDetailSection(title = stringResource(R.string.about_the_user)) {
-                UserDetailRow(
+                UserDetailItem(
                     label = stringResource(R.string.biographical_info),
                     text = user.description.ifEmpty {
                         stringResource(R.string.biographical_info_empty)
@@ -256,6 +259,7 @@ private fun UserDetailSection(
     Text(
         text = title,
         style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.semantics { heading() }
     )
     Spacer(modifier = Modifier.height(userScreenPaddingDp))
     content()
@@ -264,22 +268,28 @@ private fun UserDetailSection(
 }
 
 @Composable
-private fun UserDetailRow(
+private fun UserDetailItem(
     label: String,
     text: String,
     isMultiline: Boolean = false,
 ) {
-    Text(
-        text = label,
-        style = MaterialTheme.typography.labelLarge,
-    )
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyLarge,
-        maxLines = if (isMultiline) 10 else 1,
-        overflow = TextOverflow.Ellipsis
-    )
-    Spacer(modifier = Modifier.height(userScreenPaddingDp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            maxLines = if (isMultiline) 10 else 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(userScreenPaddingDp))
+    }
 }
 
 @Composable

@@ -54,6 +54,7 @@ import org.wordpress.android.ui.compose.theme.M3Theme
 @Composable
 fun SmallAvatar(
     avatarUrl: String?,
+    contentDescription: String? = null,
     onAvatarClick: ((String?) -> Unit)? = null,
 ) {
     val extraModifier = if (onAvatarClick != null) {
@@ -83,7 +84,7 @@ fun SmallAvatar(
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Fit,
-            contentDescription = null,
+            contentDescription = contentDescription,
             modifier = Modifier
                 .clip(CircleShape)
                 .size(48.dp)
@@ -176,7 +177,7 @@ fun MessageView(
 fun ScreenWithTopBar(
     title: String,
     onCloseClick: () -> Unit,
-    isScrollable: Boolean,
+    isScrollable: Boolean = false,
     closeIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {
