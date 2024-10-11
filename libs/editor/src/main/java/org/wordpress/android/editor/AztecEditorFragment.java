@@ -707,7 +707,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return new Pair<>(getTitle(), getContent(originalContent));
     }
 
-    @Override public void onEditorContentChanged(ContentChangeListener listener) {
+    @Override public void onEditorContentChanged(@Nullable ContentChangeListener listener) {
     }
 
     @Override

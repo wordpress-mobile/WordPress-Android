@@ -118,7 +118,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
-    private GutenbergView mGutenbergView;
+    @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -156,7 +156,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
-    private ContentChangeListener mContentChangeListener = null;
+    @Nullable private ContentChangeListener mContentChangeListener = null;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -180,7 +180,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private String mUpdatedStoryBlockContent = null;
 
     private ProgressDialog mSavingContentProgressDialog;
-    private static Map<String, Object> mSettings;
+    @Nullable private static Map<String, Object> mSettings;
 
     public static GutenbergEditorFragment newInstance(Context context,
                                                       boolean isNewPost,
@@ -188,7 +188,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
                                                       boolean jetpackFeaturesEnabled,
                                                       boolean newGutenbergEnabled,
-                                                      Map<String, Object> settings) {
+                                                      @Nullable Map<String, Object> settings) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
