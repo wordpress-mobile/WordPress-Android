@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -55,12 +57,6 @@ fun SelfHostedUsersScreen(
         else -> Icons.AutoMirrored.Filled.ArrowBack
     }
 
-    val isScrollable = when (state) {
-        is SelfHostedUserState.UserList -> true
-        is SelfHostedUserState.UserDetail -> true
-        else -> false
-    }
-
     Crossfade(
         targetState = state,
         animationSpec = tween(
@@ -71,7 +67,7 @@ fun SelfHostedUsersScreen(
         ScreenWithTopBar(
             title = title,
             onCloseClick = { onCloseClick() },
-            isScrollable = isScrollable,
+            isScrollable = false,
             closeIcon = closeIcon,
         ) {
             when (targetState) {
@@ -122,9 +118,11 @@ private fun UserList(
     users: List<UserWithEditContext>,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
-    for (user in users) {
-        UserListItem(user, onUserClick)
-        HorizontalDivider(thickness = 1.dp)
+    LazyColumn {
+        items(users) { user ->
+            UserListItem(user, onUserClick)
+            HorizontalDivider(thickness = 1.dp)
+        }
     }
 }
 
@@ -181,50 +179,48 @@ private fun UserDetail(
     user: UserWithEditContext,
     onAvatarClick: (String?) -> Unit = {},
 ) {
-    Row(
+    LazyColumn(
         modifier = Modifier
             .padding(all = userScreenPaddingDp)
             .fillMaxWidth()
     ) {
-        Column {
-            val avatarUrl = user.avatarUrls?.values?.firstOrNull()
-            SmallAvatar(
-                avatarUrl = avatarUrl,
-                contentDescription = stringResource(R.string.user_avatar_content_description, user.name),
-                onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
-                    null
-                } else {
-                    onAvatarClick
+        item {
+            Column {
+                val avatarUrl = user.avatarUrls?.values?.firstOrNull()
+                SmallAvatar(
+                    avatarUrl = avatarUrl,
+                    contentDescription = stringResource(R.string.user_avatar_content_description, user.name),
+                    onAvatarClick = if (avatarUrl.isNullOrEmpty()) {
+                        null
+                    } else {
+                        onAvatarClick
+                    }
+                )
+            }
+            Column {
+                UserDetailSection(title = stringResource(R.string.name)) {
+                    UserDetailItem(
+                        label = stringResource(R.string.username),
+                        text = user.username,
+                    )
+                    UserDetailItem(
+                        label = stringResource(R.string.role),
+                        text = user.roles.joinToString(),
+                    )
+                    UserDetailItem(
+                        label = stringResource(R.string.first_name),
+                        text = user.firstName,
+                    )
+                    UserDetailItem(
+                        label = stringResource(R.string.last_name),
+                        text = user.lastName,
+                    )
+                    UserDetailItem(
+                        label = stringResource(R.string.nickname),
+                        text = user.nickname,
+                    )
+                    // TODO display name is missing from the model
                 }
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(start = userScreenPaddingDp)
-        ) {
-            UserDetailSection(title = stringResource(R.string.name)) {
-                UserDetailItem(
-                    label = stringResource(R.string.username),
-                    text = user.username,
-                )
-                UserDetailItem(
-                    label = stringResource(R.string.role),
-                    text = user.roles.joinToString(),
-                )
-                UserDetailItem(
-                    label = stringResource(R.string.first_name),
-                    text = user.firstName,
-                )
-                UserDetailItem(
-                    label = stringResource(R.string.last_name),
-                    text = user.lastName,
-                )
-                UserDetailItem(
-                    label = stringResource(R.string.nickname),
-                    text = user.nickname,
-                )
-                // TODO display name is missing from the model
             }
 
             UserDetailSection(title = stringResource(R.string.contact_info)) {
