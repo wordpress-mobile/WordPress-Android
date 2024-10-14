@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -32,6 +36,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersViewModel.SelfHostedUserState
+import org.wordpress.android.util.AppLog
 import uniffi.wp_api.UserWithEditContext
 
 @Composable
@@ -55,12 +60,6 @@ fun SelfHostedUsersScreen(
         else -> Icons.AutoMirrored.Filled.ArrowBack
     }
 
-    val isScrollable = when (state) {
-        is SelfHostedUserState.UserList -> true
-        is SelfHostedUserState.UserDetail -> true
-        else -> false
-    }
-
     Crossfade(
         targetState = state,
         animationSpec = tween(
@@ -71,7 +70,6 @@ fun SelfHostedUsersScreen(
         ScreenWithTopBar(
             title = title,
             onCloseClick = { onCloseClick() },
-            isScrollable = isScrollable,
             closeIcon = closeIcon,
         ) {
             when (targetState) {
@@ -122,9 +120,13 @@ private fun UserList(
     users: List<UserWithEditContext>,
     onUserClick: (UserWithEditContext) -> Unit
 ) {
-    for (user in users) {
-        UserListItem(user, onUserClick)
-        HorizontalDivider(thickness = 1.dp)
+    LazyColumn {
+        items(users) { user ->
+            UserListItem(user, onUserClick)
+            HorizontalDivider(thickness = 1.dp)
+            // TODO remove logging
+            AppLog.d(AppLog.T.MAIN, "user: ${user.id}")
+        }
     }
 }
 
@@ -185,6 +187,7 @@ private fun UserDetail(
         modifier = Modifier
             .padding(all = userScreenPaddingDp)
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
         Column {
             val avatarUrl = user.avatarUrls?.values?.firstOrNull()

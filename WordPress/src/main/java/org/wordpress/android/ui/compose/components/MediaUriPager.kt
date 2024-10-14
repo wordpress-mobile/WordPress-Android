@@ -30,9 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.decode.VideoFrameDecoder
+import coil.imageLoader
 import coil.request.ImageRequest
 import org.wordpress.android.R
 
@@ -81,18 +80,13 @@ private fun MediaUriImage(uri: Uri) {
     val context = LocalContext.current
     val mimeType = context.contentResolver.getType(uri)
     if (mimeType?.startsWith("video/") == true) {
-        val imageLoader = ImageLoader.Builder(LocalContext.current)
-            .components {
-                add(VideoFrameDecoder.Factory())
-            }
-            .build()
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(uri)
                     .crossfade(true)
                     .build(),
-                imageLoader = imageLoader,
+                imageLoader = context.imageLoader,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier

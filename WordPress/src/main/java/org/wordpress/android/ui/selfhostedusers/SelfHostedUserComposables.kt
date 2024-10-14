@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -177,7 +175,6 @@ fun MessageView(
 fun ScreenWithTopBar(
     title: String,
     onCloseClick: () -> Unit,
-    isScrollable: Boolean = false,
     closeIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {
@@ -194,18 +191,11 @@ fun ScreenWithTopBar(
                 )
             },
         ) { contentPadding ->
-            val extraModifier = if (isScrollable) {
-                Modifier
-                    .padding(contentPadding)
-                    .verticalScroll(rememberScrollState())
-            } else {
-                Modifier
-            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .imePadding()
-                    .then(extraModifier)
+                    .padding(contentPadding)
             ) {
                 content()
             }
@@ -233,6 +223,5 @@ private fun OfflineScreenPreview() {
         title = "Title",
         content = content,
         onCloseClick = {},
-        isScrollable = false,
     )
 }
