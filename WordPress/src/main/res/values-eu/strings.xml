@@ -5,7 +5,7 @@ Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: eu_ES
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="pages_copy_link">Kopiatu esteka</string>
     <string name="quick_start_list_upload_media_title">Igo argazki edo bideoak</string>
     <string name="quick_start_dialog_check_notifications_title">Egiaztatu zure jakinarazpenak</string>
@@ -13,29 +13,29 @@ Language: eu_ES
     <string name="reader_comment_menu_trash">Zakarrontzira mugitu</string>
     <string name="reader_comment_menu_spam">Markatu zabor bezala</string>
     <string name="reader_comment_menu_unapprove">Baztertu</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_app_icon_description">App ikonoa</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_source_code_item_title">Iturburu Kodea</string>
-    <string name="about_automattic_privacy_policy_item_title">Pribatutasun politika</string>
-    <string name="about_automattic_terms_of_service_item_title">Zerbitzuaren terminoak</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_rate_us_item_title">Baloratu gaitzazu</string>
-    <string name="about_automattic_version_label">%1$s bertsioa</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App ikonoa</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Iturburu Kodea</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pribatutasun politika</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Zerbitzuaren terminoak</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Baloratu gaitzazu</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">%1$s bertsioa</string>
     <string name="about_blog">Bloga</string>
-    <string name="gutenberg_native_font_size">Letra-tipo tamaina</string>
-    <string name="about_automattic_main_page_title">%1$s(r)i buruz</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Letra-tipo tamaina</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">%1$s(r)i buruz</string>
     <string name="reader_comments_view_all">Ikusi iruzkin guztiak</string>
     <string name="reader_comments_follow_conversation">Elkarrizketa jarraitu</string>
     <string name="reader_comments_be_first_to_comment">Izan erantzuten lehena</string>
     <string name="me_btn_about">WordPressi buruz</string>
-    <string name="gutenberg_native_featured_image">Nabarmendutako irudia</string>
-    <string name="gutenberg_native_from_clipboard">Arbeletik</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Nabarmendutako irudia</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">Arbeletik</string>
     <string name="my_site_post_card_link_create_post">Bidalketa sortu</string>
     <string name="my_site_create_first_post_title">Sortu ezazu zure lehen bidalketa</string>
     <string name="my_site_untitled_post">Izenbururik gabe</string>
-    <string name="gutenberg_native_create_link">Sortu esteka</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Sortu esteka</string>
     <string name="domains_title">Domeinuak</string>
     <string name="post_status_sticky">Itsaskorra</string>
     <string name="domains_search_for_a_domain_button">Bilatu domeinu bat</string>
@@ -47,15 +47,15 @@ Language: eu_ES
     <string name="comment_edit_menu_done">Eginda</string>
     <string name="my_site_btn_domains">Domeinuak</string>
     <string name="my_site_quick_actions_title">Esteka azkarrak</string>
-    <string name="gutenberg_native_selected_s">Hautatuta: %s</string>
-    <string name="gutenberg_native_move_blocks">Mugitu blokeak</string>
-    <string name="gutenberg_native_customize_blocks">Pertsonalizatu blokeak</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Hautatuta: %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">Mugitu blokeak</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Pertsonalizatu blokeak</string>
     <string name="create_site_notification_create_site_action">Sortu gunea</string>
-    <string name="gutenberg_native_what_is_a_block">Zer da blokea?</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">Zer da blokea?</string>
     <string name="stats_disabled_title">Estatistiken bila?</string>
     <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>
-    <string name="gutenberg_native_choose_images">Aukeratu irudiak</string>
-    <string name="gutenberg_native_customize_gradient">Pertsonalizatu gradientea</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Aukeratu irudiak</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Pertsonalizatu gradientea</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Utzi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Zirrriborrora mugitu</string>
     <string name="post_status_post_published">Argitaratuta</string>
@@ -68,7 +68,7 @@ Language: eu_ES
     <string name="page_homepage_update_failed">Huts egin du hasierako orrialdea eguneratzean</string>
     <string name="page_homepage_successfully_updated">Hasiera orrialdea ondo eguneratuta</string>
     <string name="pages_and_posts_cancel_auto_upload">Utzi igotzeari</string>
-    <string name="gutenberg_native_customize">PERTSONALIZATU</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">PERTSONALIZATU</string>
     <string name="post_list_tab_published_posts">Argitaratuta</string>
     <string name="post_list_tab_scheduled_posts">Programatuta</string>
     <string name="post_list_tab_trashed_posts">Zakarrontzian</string>
@@ -86,15 +86,15 @@ Language: eu_ES
     <string name="reader_my_likes_display_name">Atsegiteak</string>
     <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
     <string name="suffix_1_000">%sK</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
-    <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
-    <string name="gutenberg_native_ungroup">Taldea desegin</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap egin teklatua ezkutatzeko</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tap egin hemen laguntza erakusteko</string>
-    <string name="gutenberg_native_start_writing">Hasi idazten…</string>
-    <string name="gutenberg_native_take_a_photo">Atera argazkia</string>
-    <string name="gutenberg_native_take_a_video">Grabatu Bideoa</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Atera argazki edo bideo bat</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Liburutegia</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Ez Bateragarria</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Taldea desegin</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap egin teklatua ezkutatzeko</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap egin hemen laguntza erakusteko</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Hasi idazten…</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Atera argazkia</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Grabatu Bideoa</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Atera argazki edo bideo bat</string>
     <string name="notifications_tab_dialog_switch_desc">Jakinarazpenak</string>
     <string name="post_preview_saving_draft">Gordetzen…</string>
     <string name="post_list_tab_drafts">Zirriborroak</string>
@@ -114,8 +114,8 @@ Language: eu_ES
     <string name="stats_posts_and_pages_views_label">Ikustaldiak</string>
     <string name="stats_posts_and_pages_title_label">Izenburua</string>
     <string name="stats_comments_posts_and_pages">Bidalketak eta orrialdeak</string>
-    <string name="pages_published">Argitaratuta</string>
-    <string name="pages_drafts">Zirriborroak</string>
+    <string name="pages_published" tools:ignore="UnusedResources">Argitaratuta</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Zirriborroak</string>
     <string name="page_moved_to_published">Orrialdea argitaratua izan da</string>
     <string name="reader_gallery_images_desc">Irudi galeria</string>
     <string name="reader_save_for_later_title">Gordetako bidalketak</string>
@@ -148,7 +148,7 @@ Language: eu_ES
     <string name="add_media_progress">Media gehitzen</string>
     <string name="login_epilogue_mysites_other">Nire guneak</string>
     <string name="login_epilogue_mysites_one">Nire gunea</string>
-    <string name="login_site_address_help_title">Zein da nire gunearen helbidea?</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">Zein da nire gunearen helbidea?</string>
     <string name="post_title">Izenburua</string>
     <string name="post_status_draft">Zirriborroa</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
@@ -175,7 +175,7 @@ Language: eu_ES
     <string name="sign_in_wpcom">Hasi saioa WordPress.com-en</string>
     <string name="reader_label_global_related_posts">Gehiago WordPress.com-en</string>
     <string name="invite_invalid_email">%s: e-posta baliogabea</string>
-    <string name="timespan_now">orain</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">orain</string>
     <string name="role_viewer">Ikuslea</string>
     <string name="error_post_my_profile_no_connection">Konexiorik ez, ezin izan da profila gorde</string>
     <string name="alignment_none">Bat ere ez</string>
@@ -188,18 +188,18 @@ Language: eu_ES
     <string name="invite_message_usernames_limit">Gonbidatu gehienez 10 e-posta helbide eta WordPress.com erabiltzaile-izen. Erabiltzaile-izena behar dutenek bat sortzeko argibideak jasoko dituzte.</string>
     <string name="follower_subscribed_since">%1$s-(e)tik</string>
     <string name="error_remove_viewer">Ezin izan da ikuslea kendu</string>
-    <string name="visual_editor">Editore bisuala</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Editore bisuala</string>
     <string name="image_settings_save_toast">Aldaketak gorde dira</string>
-    <string name="image_alt_text">Testu alternatiboa</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Testu alternatiboa</string>
     <string name="image_link_to">Estekatu:</string>
     <string name="image_width">Zabalera</string>
     <string name="image_caption">Izenburua</string>
     <string name="image_settings_dismiss_dialog_title">Gorde gabeko aldaketa baztertu?</string>
     <string name="stop_upload_dialog_title">Karga gelditu?</string>
-    <string name="alert_error_adding_media">Errore bat gertatu da mediak txertatzean</string>
-    <string name="alert_action_while_uploading">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
-    <string name="alert_insert_image_html_mode">Ezin da media zuzenean txertatu HTML moduan. Itzuli modu bisualera, mesedez.</string>
-    <string name="uploading_gallery_placeholder">Galeria igotzen…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Errore bat gertatu da mediak txertatzean</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ezin da media zuzenean txertatu HTML moduan. Itzuli modu bisualera, mesedez.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Galeria igotzen…</string>
     <string name="invite_sent">Gonbidapena ondo bidali da</string>
     <string name="tap_to_try_again">Egin tap berriro saiatzeko!</string>
     <string name="invite_error_some_failed">Gonbidapena bidalita baina errorea(k) gertatu da/dira!</string>
@@ -222,7 +222,7 @@ Language: eu_ES
     <string name="error_update_role">Ezin izan da erabiltzailearen rola eguneratu</string>
     <string name="error_updating_gravatar">Errorea zure Gravatarra kargatzean</string>
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
-    <string name="checking_email">E-posta egiaztatzen</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="plan">Plana</string>
@@ -411,9 +411,9 @@ Language: eu_ES
     <string name="hide">Ezkutatu</string>
     <string name="select_all">Aukeratu denak</string>
     <string name="language">Hizkuntza</string>
-    <string name="verification_code">Egiaztaketa kodea</string>
-    <string name="invalid_verification_code">Egiaztaketa kode okerra</string>
-    <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Egiaztaketa kodea</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Egiaztaketa kode okerra</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Hasi saioa berriro jarraitzeko.</string>
     <string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>
     <string name="stats_view_authors">Egileak</string>
     <string name="pages_fetching">Orrialdeak eskuratzen…</string>
@@ -463,7 +463,7 @@ Language: eu_ES
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
     <string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
-    <string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Orrialdeak ezin dira momentu honetan eguneratu.</string>
     <string name="mnu_comment_unspam">Ez da spama</string>
     <string name="adding_cat_failed">Ezin izan da kategoria gehitu</string>
     <string name="notifications_empty_list">Jakinarazpenik gabe</string>
@@ -471,7 +471,7 @@ Language: eu_ES
     <string name="error_edit_comment">Iruzkina editatzean errore bat gertatu da</string>
     <string name="error_moderate_comment">Iruzkina moderatzean errore bat gertatu da</string>
     <string name="invalid_email_message">Zure posta helbidea ez da zuzena</string>
-    <string name="email_invalid">Sartu posta helbide zuzen bat</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Sartu posta helbide zuzen bat</string>
     <string name="cat_name_required">Kategoria izena beharrezkoa da</string>
     <string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
     <string name="error_downloading_image">Irudia deskargatzean errorea</string>
@@ -500,14 +500,14 @@ Language: eu_ES
     <string name="local_changes">Aldaketa lokalak</string>
     <string name="wordpress_blog">WordPress-eko bloga</string>
     <string name="select_categories">Kategoriak aukeratu</string>
-    <string name="create_a_link">Esteka sortu</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Esteka sortu</string>
     <string name="local_draft">Zirriborro lokala</string>
     <string name="view_in_browser">Nabigatzailean ikusi</string>
-    <string name="horizontal_alignment">Lerrokatze horizontala</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lerrokatze horizontala</string>
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
     <string name="learn_more">Gehiago jakin</string>
     <string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
-    <string name="http_authorization_required">Baimena beharrezkoa</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Baimena beharrezkoa</string>
     <string name="connection_error">Errorea konektatzean</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
     <string name="remove_account">Ezabatu gunea</string>
@@ -554,7 +554,7 @@ Language: eu_ES
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>
     <string name="reader_view_reblog">Birblogeatu </string>
     <string name="comments_empty_list">Oraindik iruzkin gabe</string>
-    <string name="sign_up_label">Izena eman</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">Izena eman</string>
     <string name="media_gallery_type_squares">Karratuak</string>
     <string name="media_edit_title_text">Izenburua</string>
     <string name="share_action">Partekatu</string>
@@ -582,26 +582,26 @@ Language: eu_ES
     <string name="note_reply_successful">Erantzuna argitaratuta.</string>
     <string name="sign_in">Hasi saioa</string>
     <string name="loading">Kargatzen…</string>
-    <string name="httppassword">HTTP pasahitza</string>
-    <string name="httpuser">HTTP erabiltzaile-izena</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP pasahitza</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP erabiltzaile-izena</string>
     <string name="error_media_upload">Errore bat gertatu da mediak kargatzean</string>
     <string name="incorrect_credentials">Erabiltzaile-izen edo pasahitz okerra.</string>
     <string name="password">Pasahitza</string>
-    <string name="log_in">Saioa hasi</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Saioa hasi</string>
     <string name="username">Erabiltzaile-izena</string>
     <string name="reader">Irakurlea</string>
-    <string name="featured">Nabarmendutako irudi bezala erabili</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nabarmendutako irudi bezala erabili</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
     <string name="pages">Orrialdeak</string>
-    <string name="width">Zabalera</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zabalera</string>
     <string name="anonymous">Anonimoa</string>
-    <string name="featured_in_post">Txertatu irudia mezuaren edukian</string>
-    <string name="caption">Legenda (hautazkoa)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Txertatu irudia mezuaren edukian</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Legenda (hautazkoa)</string>
     <string name="posts">Bidalketak</string>
     <string name="ok">Ados</string>
     <string name="done">egina</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Igotzen…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Igotzen…</string>
     <string name="image_alignment">Lerrokatzea</string>
     <string name="refresh">Freskatu</string>
     <string name="untitled">Izenbururik gabe</string>

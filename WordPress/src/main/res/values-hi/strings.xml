@@ -5,24 +5,24 @@ Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: hi_IN
 -->
-<resources>
-    <string name="gutenberg_native_tap_to_edit">संपादित करने के लिए टैप करें</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">संपादित करने के लिए टैप करें</string>
     <string name="reader_dropdown_menu_tags">आपके टैग</string>
     <string name="stats_subscribers_marker_view_plural">अभिदाता</string>
     <string name="stats_subscribers_marker_view_singular">अभिदाता</string>
     <string name="privacy_banner_save">सहेजें</string>
     <string name="help_buttons_screen_title">सहायता</string>
     <string name="about_news">समाचार</string>
-    <string name="dialog_button_ok">ठीक है</string>
-    <string name="stop_upload_dialog_button_no">नहीं</string>
-    <string name="stop_save_dialog_ok_button">ठीक हैं</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ठीक है</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">नहीं</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ठीक हैं</string>
     <string name="my_site_menu_tab_title">मेनू</string>
     <string name="user_profile_site_section_header">साइट</string>
-    <string name="gutenberg_native_new">नया</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">नया</string>
     <string name="reader_post_details_header_by_author_name">द्वारा</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">छिपायें</string>
-    <string name="login_or">या</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">या</string>
     <string name="login_done">हो गया</string>
     <string name="me">मैं</string>
     <string name="suffix_1_000">%sK</string>
@@ -33,12 +33,12 @@ Language: hi_IN
     <string name="main_switch_default_title_off">ऑफ</string>
     <string name="site_settings_site_accelerator_off">ऑफ</string>
     <string name="site_settings_site_accelerator_on">ऑन</string>
-    <string name="link_dialog_button_ok">ठीक है</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">ठीक है</string>
     <string name="domain_contact_information_city_hint">शहर</string>
     <string name="stats_months_and_years_views_label">व्यू</string>
     <string name="stats_insights_today_stats">आज</string>
     <string name="stats_videos_title_label">शीर्षक</string>
-    <string name="quick_start_button_positive">जाओ</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">जाओ</string>
     <string name="support_identity_input_dialog_email_label">ईमेल</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">साप्ताहिक</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">प्रतिदिन</string>
@@ -92,10 +92,10 @@ Language: hi_IN
     <string name="uploading_media">मीडिया अपलोड हो रही है…</string>
     <string name="button_retry">पुन: प्रयास करें</string>
     <string name="login_epilogue_mysites_one">मेरी साइट</string>
-    <string name="login_site_address">साइट का पता</string>
-    <string name="login_continue">जारी रखें</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">साइट का पता</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">जारी रखें</string>
     <string name="next">अगला</string>
-    <string name="open_mail">मेल खोलें</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">मेल खोलें</string>
     <string name="post_title">शीर्षक</string>
     <string name="media_audio">ऑडियो</string>
     <string name="permission_camera">कैमरा</string>
@@ -121,8 +121,8 @@ Language: hi_IN
     <string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
     <string name="notifications_label_new_notifications">नई सूचनाएं I</string>
     <string name="like">लाइक</string>
-    <string name="timespan_now">अब</string>
-    <string name="visual_editor">विजुअल सम्पादक</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">अब</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">विजुअल सम्पादक</string>
     <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
@@ -210,7 +210,7 @@ Language: hi_IN
     <string name="hide">छुपाएँ</string>
     <string name="select_all">सभी चुनें</string>
     <string name="language">भाषा</string>
-    <string name="verification_code">सत्यापन कोड</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">सत्यापन कोड</string>
     <string name="pages_fetching">पृष्ठ ला रहे है…</string>
     <string name="stats_view_authors">लेखक</string>
     <string name="stats_search_terms_unknown_search_terms">अज्ञात खोज शब्द</string>
@@ -239,7 +239,7 @@ Language: hi_IN
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
     <string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
-    <string name="email_invalid">मान्य ईमेल पता दर्ज करें</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">मान्य ईमेल पता दर्ज करें</string>
     <string name="error_generic">एक त्रुटि हुई</string>
     <string name="adding_cat_success">श्रेणी सफलतापूर्वक जोड़ा गया</string>
     <string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
@@ -253,7 +253,7 @@ Language: hi_IN
     <string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
     <string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
     <string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>
-    <string name="error_refresh_pages">पृष्ठे इस समय रिफ्रेश नहीं हो सकती</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">पृष्ठे इस समय रिफ्रेश नहीं हो सकती</string>
     <string name="theme_fetch_failed">थीम को प्राप्त करने में असफल</string>
     <string name="cat_name_required">श्रेणी नाम फ़ील्ड आवश्यक है</string>
     <string name="blog_not_found">इस ब्लॉग से पहुँच स्थापित करते समय ​​एक त्रुटि हुई</string>
@@ -261,10 +261,10 @@ Language: hi_IN
     <string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
     <string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
     <string name="add_new_category">नई श्रेणी जोड़ें</string>
-    <string name="http_authorization_required">प्रमाणीकरण आवश्यक</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">प्रमाणीकरण आवश्यक</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="category_name">श्रेणी नाम</string>
-    <string name="create_a_link">एक कड़ी बनाएं</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">एक कड़ी बनाएं</string>
     <string name="image_settings">छवि सेटिंग्स</string>
     <string name="learn_more">और जानें</string>
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
@@ -291,7 +291,7 @@ Language: hi_IN
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
-    <string name="horizontal_alignment">क्षैतिज संरेखण</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">क्षैतिज संरेखण</string>
     <string name="local_changes">स्थानीय परिवर्तन</string>
     <string name="local_draft">स्थानीय प्रारूप</string>
     <string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
@@ -352,8 +352,8 @@ Language: hi_IN
     <string name="more_notifications">और %d और भी.</string>
     <string name="sign_in">लॉग इन</string>
     <string name="loading">लोड किया जा रहा…</string>
-    <string name="httppassword">एचटीटीपी कूटशब्द</string>
-    <string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">एचटीटीपी कूटशब्द</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">एचटीटीपी उपयोगकर्ता नाम</string>
     <string name="error_media_upload">मीडिया अपलोड करने के दौरान एक त्रुटि हुई</string>
     <string name="incorrect_credentials">गलत उपयोगकर्ता नाम या कूटशब्द.</string>
     <string name="username">उपयोगकर्ता नाम</string>
@@ -363,13 +363,13 @@ Language: hi_IN
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
     <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
-    <string name="width">चौडाई</string>
-    <string name="caption">शीर्षक (वैकल्पिक)</string>
-    <string name="featured">विशेष छवि के रुप में उपयोग करें</string>
-    <string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">चौडाई</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">शीर्षक (वैकल्पिक)</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">विशेष छवि के रुप में उपयोग करें</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
-    <string name="uploading">अपलोड किया जा रहा</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">अपलोड किया जा रहा</string>
     <string name="image_alignment">संरेखण</string>
     <string name="refresh">रिफ्रेश</string>
     <string name="untitled">बिना शीर्षक का</string>
