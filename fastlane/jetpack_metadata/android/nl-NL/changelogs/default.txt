@@ -1,5 +1,0 @@
-25.2:
-We hebben in deze release twee grote problemen opgelost:
-* Je kan nu de datum van een gepubliceerd bericht opnieuw bijwerken.
-* Een aantal gebruikers kon de inhoud van hun bericht niet bewerken.
-Zoals altijd, neem contact met ons op als iets niet naar behoren werkt!
