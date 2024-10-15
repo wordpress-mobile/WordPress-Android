@@ -76,8 +76,14 @@ fun PrimaryButtonM3(
     }
 }
 
-@Preview
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    name = "Light Mode",
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun PrimaryButtonPreview() {
     M3Theme {
@@ -86,16 +92,22 @@ private fun PrimaryButtonPreview() {
 }
 
 @Preview
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun PrimaryButtonInProgressPreview() {
     M3Theme {
-        PrimaryButtonM3(text = "Continue", onClick = {}, isInProgress = true)
+        PrimaryButtonM3(text = "", onClick = {}, isInProgress = true)
     }
 }
 
 @Preview
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun PrimaryButtonLargePreview() {
     M3Theme {
