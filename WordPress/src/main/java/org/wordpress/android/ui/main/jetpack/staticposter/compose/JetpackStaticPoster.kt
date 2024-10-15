@@ -146,7 +146,15 @@ fun JetpackStaticPoster(
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
 @Composable
 private fun PreviewJetpackStaticPoster() {
     AppTheme {
