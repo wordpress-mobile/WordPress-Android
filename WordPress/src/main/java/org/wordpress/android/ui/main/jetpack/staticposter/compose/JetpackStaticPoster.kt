@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,10 +38,11 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import org.wordpress.android.R
+import org.wordpress.android.designsystem.heading1
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
-import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
@@ -52,7 +53,7 @@ import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
 import org.wordpress.android.util.extensions.isRtl
 
 @Composable
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun JetpackStaticPoster(
     uiState: UiState.Content,
     onPrimaryClick: () -> Unit = {},
@@ -99,7 +100,7 @@ fun JetpackStaticPoster(
                             R.string.wp_jp_static_poster_title_plural else R.string.wp_jp_static_poster_title,
                         uiStringText(featureName)
                     ),
-                    style = MaterialTheme.typography.h1.copy(
+                    style = MaterialTheme.typography.heading1.copy(
                         fontSize = 34.sp,
                         fontWeight = FontWeight.Bold,
                         lineHeight = 48.sp
@@ -107,32 +108,32 @@ fun JetpackStaticPoster(
                 )
                 Text(
                     stringResource(R.string.wp_jp_static_poster_message),
-                    style = MaterialTheme.typography.body1.copy(fontSize = 17.sp),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
                 )
                 Text(
                     stringResource(R.string.wp_jp_static_poster_footnote),
-                    style = MaterialTheme.typography.body1.copy(colorResource(R.color.gray_50), 17.sp),
+                    style = MaterialTheme.typography.bodyLarge.copy(colorResource(R.color.gray_50), 17.sp),
                 )
             }
-            PrimaryButton(
+            PrimaryButtonM3(
                 stringResource(R.string.wp_jp_static_poster_button_primary),
                 onPrimaryClick,
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = JpColorPalette().primary,
+                    containerColor = JpColorPalette().primary,
                     contentColor = AppColor.White,
                 ),
                 padding = PaddingValues(bottom = 15.dp),
-                textStyle = MaterialTheme.typography.body1.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold),
             )
-            SecondaryButton(
+            SecondaryButtonM3(
                 stringResource(R.string.wp_jp_static_poster_button_secondary),
                 onSecondaryClick,
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     contentColor = JpColorPalette().primary,
                 ),
                 padding = PaddingValues(0.dp),
-                textStyle = MaterialTheme.typography.body1.copy(fontSize = 17.sp),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),
             ) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
