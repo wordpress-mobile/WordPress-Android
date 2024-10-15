@@ -33,7 +33,7 @@ fun PrimaryButtonM3(
     isInProgress: Boolean = false,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         contentColor = AppColor.White,
-        disabledContentColor = AppColor.White.copy(alpha =  0.38f),
+        disabledContentColor = AppColor.White.copy(alpha = 0.38f),
         disabledContainerColor = colorResource(R.color.jetpack_green_70),
     ),
     padding: PaddingValues = PaddingValues(
