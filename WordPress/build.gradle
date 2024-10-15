@@ -220,6 +220,7 @@ android {
         buildConfigField "boolean", "SYNC_PUBLISHING", "false"
         buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
         buildConfigField "boolean", "ENABLE_NEW_GUTENBERG", "false"
+        buildConfigField "boolean", "ENABLE_NEW_GUTENBERG_THEME_STYLES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

@@ -236,6 +236,7 @@ import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.config.NewGutenbergFeatureConfig
+import org.wordpress.android.util.config.NewGutenbergThemeStylesFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
@@ -314,6 +315,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
     private var isNewGutenbergEditor = false
+    private var isNewGutenbergEditorThemeStyles = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -411,6 +413,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
     @Inject lateinit var newGutenbergFeatureConfig: NewGutenbergFeatureConfig
+    @Inject lateinit var newGutenbergThemeStylesConfig: NewGutenbergThemeStylesFeatureConfig
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -2444,7 +2447,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 "postContent" to editPostRepository.getPost()?.content,
                 "siteApiRoot" to siteApiRoot,
                 "authHeader" to authHeader,
-                "siteApiNamespace" to siteApiNamespace
+                "siteApiNamespace" to siteApiNamespace,
+                "themeStyles" to newGutenbergThemeStylesConfig.isEnabled()
             )
 
             return GutenbergEditorFragment.newInstance(
