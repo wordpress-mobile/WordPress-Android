@@ -106,12 +106,12 @@ dependencies {
 // Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
     Properties gradleProperties = new Properties()
-    File propertiesFile = file("gradle.properties-example")
+    File propertiesFile = file("gradle.properties")
     if (propertiesFile.exists()) {
         gradleProperties.load(new FileInputStream(propertiesFile))
     } else {
         // Load defaults
-        gradleProperties.load(new FileInputStream(file("gradle.properties-example-example")))
+        gradleProperties.load(new FileInputStream(file("gradle.properties-example")))
     }
     gradleProperties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
