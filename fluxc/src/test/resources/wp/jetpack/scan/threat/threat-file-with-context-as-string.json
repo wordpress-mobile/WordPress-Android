@@ -1,0 +1,9 @@
+{
+  "id": 22917236,
+  "signature": "PHP.Generic.BadPattern.5",
+  "first_detected": "2020-06-25T13:10:05.000Z",
+  "description": "This code pattern is often used to run a very dangerous shell programs on your server. The code in these files needs to be reviewed, and possibly cleaned.",
+  "status": "current",
+  "fixable": false,
+  "context": ""
+}

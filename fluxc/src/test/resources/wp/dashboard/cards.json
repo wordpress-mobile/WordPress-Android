@@ -1,0 +1,106 @@
+{
+  "todays_stats": {
+    "views": 100,
+    "visitors": 30,
+    "likes": 50,
+    "comments": 10
+  },
+  "posts": {
+    "has_published": true,
+    "draft": [
+      {
+        "id": 708,
+        "title": "",
+        "content": "Draft Content 2",
+        "featured_image": "https:\/\/test.blog\/wp-content\/uploads\/2021\/11\/draft-featured-image-2.jpeg?w=200",
+        "date": "2021-11-02 15:47:42"
+      },
+      {
+        "id": 659,
+        "title": "Draft Title 1",
+        "content": "Draft Content 1",
+        "featured_image": null,
+        "date": "2021-10-27 12:25:57"
+      }
+    ],
+    "scheduled": [
+      {
+        "id": 762,
+        "title": "Scheduled Title 1",
+        "content": "",
+        "featured_image": "https:\/\/test.blog\/wp-content\/uploads\/2021\/11\/scheduled-featured-image-1.jpeg?w=200",
+        "date": "2021-12-26 23:00:33"
+      }
+    ]
+  },
+  "pages": [
+    {
+      "id": 1,
+      "title": "Page title",
+      "content": "Page content",
+      "modified": "2021-11-02 15:47:42",
+      "status": "publish",
+      "date": "2021-11-02 15:47:42"
+    },
+    {
+      "id": 2,
+      "title": "Page title 2",
+      "content": "Page content 2",
+      "modified": "2023-03-02 11:55:49",
+      "status": "publish",
+      "date": "2023-03-02 11:55:49"
+    }
+  ],
+  "activity": {
+    "summary": "response",
+    "totalItems": 1,
+    "current": {
+      "orderedItems": [
+        {
+          "summary": "activity",
+          "name": "name",
+          "actor": {
+            "type": "author",
+            "name": "John Smith",
+            "external_user_id": 10,
+            "wpcom_user_id": 15,
+            "icon": {
+              "type": "jpg",
+              "url": "dog.jpg",
+              "width": 100,
+              "height": 100
+            },
+            "role": "admin"
+          },
+          "type": "create a blog",
+          "generator": {
+            "jetpack_version": 10.3,
+            "blog_id": 123
+          },
+          "is_rewindable": false,
+          "rewind_id": "10.0",
+          "gridicon": "gridicon.jpg",
+          "status": "OK",
+          "activity_id": "activity123"
+        }
+      ]
+    }
+  },
+  "dynamic": [
+    {
+      "id": "year_in_review_2023",
+      "title": "News",
+      "featured_image": "https://path/to/image",
+      "url": "https://wordpress.com",
+      "action": "Call to action",
+      "order": "top",
+      "rows": [
+        {
+          "icon": "https://path/to/image",
+          "title": "Row title",
+          "description": "Row description"
+        }
+      ]
+    }
+  ]
+}

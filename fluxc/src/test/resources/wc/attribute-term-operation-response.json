@@ -1,0 +1,20 @@
+{
+  "id": 23,
+  "name": "XXS",
+  "slug": "xxs",
+  "description": "",
+  "menu_order": 1,
+  "count": 1,
+  "_links": {
+    "self": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/products/attributes/2/terms/23"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/products/attributes/2/terms"
+      }
+    ]
+  }
+}

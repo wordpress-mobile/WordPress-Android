@@ -1,0 +1,343 @@
+[
+  {
+    "id": 5499,
+    "date_created": "2019-07-09T09:48:07",
+    "date_created_gmt": "2019-07-09T15:48:07",
+    "product_id": 18,
+    "status": "approved",
+    "reviewer": "Johnny",
+    "reviewer_email": "johnny@gmail.com",
+    "review": "<p>What a lovely cap!<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/136c70acb946f0f37b12bb6fbfe56f2c?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/136c70acb946f0f37b12bb6fbfe56f2c?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/136c70acb946f0f37b12bb6fbfe56f2c?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5499"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/18"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5435,
+    "date_created": "2019-07-08T02:56:41",
+    "date_created_gmt": "2019-07-08T08:56:41",
+    "product_id": 18,
+    "status": "approved",
+    "reviewer": "Lara",
+    "reviewer_email": "lara@gmail.com",
+    "review": "<p>It\u2019s a really good cap!<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/8f656d8cb56afcaf509bf82b2b2a3d72?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/8f656d8cb56afcaf509bf82b2b2a3d72?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/8f656d8cb56afcaf509bf82b2b2a3d72?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5435"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/18"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5404,
+    "date_created": "2019-07-05T08:51:12",
+    "date_created_gmt": "2019-07-05T14:51:12",
+    "product_id": 18,
+    "status": "approved",
+    "reviewer": "Steve jobs",
+    "reviewer_email": "stevie@gmail.com",
+    "review": "<p>It\u2019s a great cap!!<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/e7012d4db0d6d329fd1a6c4055b8de5d?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/e7012d4db0d6d329fd1a6c4055b8de5d?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/e7012d4db0d6d329fd1a6c4055b8de5d?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5404"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/18"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5273,
+    "date_created": "2019-07-03T13:38:45",
+    "date_created_gmt": "2019-07-03T19:38:45",
+    "product_id": 19,
+    "status": "approved",
+    "reviewer": "Brian Copernile",
+    "reviewer_email": "bcopernile@example.org",
+    "review": "<p>Review for Sunglasses<br \/>\n\u2605 \u2605 \u2605 \u2605 \u2605 <\/p>\n",
+    "rating": 5,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/7116ede0a0991db4d580367e274ade2d?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/7116ede0a0991db4d580367e274ade2d?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/7116ede0a0991db4d580367e274ade2d?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5273"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/19"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5212,
+    "date_created": "2019-07-03T02:26:26",
+    "date_created_gmt": "2019-07-03T08:26:26",
+    "product_id": 22,
+    "status": "approved",
+    "reviewer": "Kandi",
+    "reviewer_email": "kandi@gmail.com",
+    "review": "<p>Love it!!<\/p>\n",
+    "rating": 5,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/5c73533373b443ff87aabf6ae0a1d495?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/5c73533373b443ff87aabf6ae0a1d495?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/5c73533373b443ff87aabf6ae0a1d495?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5212"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/22"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5211,
+    "date_created": "2019-07-03T02:23:22",
+    "date_created_gmt": "2019-07-03T08:23:22",
+    "product_id": 22,
+    "status": "approved",
+    "reviewer": "Kevin peterson",
+    "reviewer_email": "kevin@gmail.com",
+    "review": "<p>Not really<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/28e70af0551872dd431635b96a65d70d?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/28e70af0551872dd431635b96a65d70d?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/28e70af0551872dd431635b96a65d70d?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5211"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/22"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5205,
+    "date_created": "2019-07-02T19:54:52",
+    "date_created_gmt": "2019-07-03T01:54:52",
+    "product_id": 22,
+    "status": "approved",
+    "reviewer": "Karen Smith",
+    "reviewer_email": "anitaa22@gmail.com",
+    "review": "<p>The sleeves are too big<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/9a7f84dd7216a5a7d7cfde7870f074c0?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/9a7f84dd7216a5a7d7cfde7870f074c0?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/9a7f84dd7216a5a7d7cfde7870f074c0?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5205"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/22"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5112,
+    "date_created": "2019-07-02T04:37:06",
+    "date_created_gmt": "2019-07-02T10:37:06",
+    "product_id": 17,
+    "status": "approved",
+    "reviewer": "Brad",
+    "reviewer_email": "anitaa2@gmail.com",
+    "review": "<p>It&#8217;s a belt!!<\/p>\n",
+    "rating": 3,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/942a803775b965cd9c2dcfda44cb84f0?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/942a803775b965cd9c2dcfda44cb84f0?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/942a803775b965cd9c2dcfda44cb84f0?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5112"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/17"
+        }
+      ]
+    }
+  },
+  {
+    "id": 5060,
+    "date_created": "2019-07-02T00:17:06",
+    "date_created_gmt": "2019-07-02T06:17:06",
+    "product_id": 24,
+    "status": "approved",
+    "reviewer": "Terry Brickheld",
+    "reviewer_email": "tbrickheld2211@example.org",
+    "review": "<p>Half the CD was blank?<\/p>\n",
+    "rating": 2,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/39ab6021225bfc2073e4c5e49d0ebfb6?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/39ab6021225bfc2073e4c5e49d0ebfb6?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/39ab6021225bfc2073e4c5e49d0ebfb6?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/5060"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/24"
+        }
+      ]
+    }
+  },
+  {
+    "id": 4525,
+    "date_created": "2019-06-15T00:12:22",
+    "date_created_gmt": "2019-06-15T06:12:22",
+    "product_id": 2231,
+    "status": "approved",
+    "reviewer": "Jake Towne",
+    "reviewer_email": "jt@example.org",
+    "review": "<p>My kids love lounging around in this hoodie!<\/p>\n",
+    "rating": 4,
+    "verified": false,
+    "reviewer_avatar_urls": {
+      "24": "https:\/\/secure.gravatar.com\/avatar\/d19e8c5e3bc54f331a0ab72b63318285?s=24&d=mm&r=g",
+      "48": "https:\/\/secure.gravatar.com\/avatar\/d19e8c5e3bc54f331a0ab72b63318285?s=48&d=mm&r=g",
+      "96": "https:\/\/secure.gravatar.com\/avatar\/d19e8c5e3bc54f331a0ab72b63318285?s=96&d=mm&r=g"
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews\/4525"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/reviews"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v3\/products\/2231"
+        }
+      ]
+    }
+  }
+]
+

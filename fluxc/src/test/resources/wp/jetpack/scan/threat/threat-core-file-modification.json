@@ -1,0 +1,13 @@
+{
+  "id": 22922422,
+  "signature": "Core.File.Modification",
+  "first_detected": "2020-06-25T14:41:37.000Z",
+  "description": "Core WordPress files are not normally changed. If you did not make these changes you should review the code.",
+  "status": "current",
+  "fixable": {
+    "fixer": "replace",
+    "file": "/srv/users/user7e06fe30/apps/user7e06fe30/public/wp-blog-header.php"
+  },
+  "filename": "/srv/users/user7e06fe30/apps/user7e06fe30/public/wp-blog-header.php",
+  "diff": "--- /tmp/wordpress/5.4.2-en_US/wordpress/wp-blog-header.php\t2020-06-11 19:20:31.379828991 +0000\n+++ /tmp/4253212943/core-file-557lXS8J4crSxgB\t2020-06-25 15:35:57.977974552 +0000\n@@ -5,6 +5,8 @@\n  * @package WordPress\n  */\n \n+// dasdasd\n+// dasdasd\n if ( ! isset( $wp_did_header ) ) {\n \n \t$wp_did_header = true;\n"
+}
