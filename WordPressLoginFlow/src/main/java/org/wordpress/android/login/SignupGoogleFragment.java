@@ -23,11 +23,11 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 
+import dagger.android.support.AndroidSupportInjection;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.GOOGLE;
-
-import dagger.android.support.AndroidSupportInjection;
 
 public class SignupGoogleFragment extends GoogleFragment {
     private static final String OLD_SITES_IDS = "old_sites_ids";

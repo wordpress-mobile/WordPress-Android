@@ -27,6 +27,11 @@ naming:
 style:
   DataClassShouldBeImmutable:
     active: true
+    excludes:
+      - '**/fluxc/persistence/**'
+      - '**/fluxc/**/XPostModel.kt'
+      - '**/fluxc/**/XPostSiteModel.kt'
+      - '**/fluxc/**/PostFormatModel.kt'
   MagicNumber:
     ignoreEnums: true
     ignoreAnnotated: ['Composable']

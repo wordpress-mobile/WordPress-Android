@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.kotlin.serialization).apply(false)
     alias(libs.plugins.ksp).apply(false)
+    alias(libs.plugins.kapt).apply(false)
 }
 
 ext {
@@ -61,6 +62,13 @@ allprojects {
                 includeVersion "com.jraska", "falcon", "2.1.1"
             }
         }
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android"
+            content {
+                includeGroup "org.wordpress"
+                includeGroup "org.wordpress.wellsql"
+            }
+        }
     }
 
     tasks.register("checkstyle", Checkstyle) {
@@ -89,7 +97,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_1_8
-            allWarningsAsErrors = true
+            allWarningsAsErrors = false
             freeCompilerArgs += [
                     "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"

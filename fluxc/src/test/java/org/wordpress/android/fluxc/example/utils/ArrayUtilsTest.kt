@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.example.utils
 
+import org.apache.commons.lang3.ArrayUtils
 import org.assertj.core.api.Assertions.assertThat
 
 import org.junit.Test

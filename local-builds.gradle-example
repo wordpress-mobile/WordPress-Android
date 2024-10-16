@@ -15,10 +15,8 @@ binary build if you're not working on a specific library.
 */
 ext {
     //localAboutAutomatticPath = "../about-automattic-android"
-    //localFluxCPath = "../WordPress-FluxC-Android"
     //localWPUtilsPath = "../WordPress-Utils-Android"
     //localGutenbergMobilePath = "../gutenberg-mobile"
-    //localLoginFlowPath = "../WordPress-Login-Flow-Android"
     //localAztecAndroidPath = "../AztecEditor-Android"
     //localGravatarAndroidPath = "../Gravatar-SDK-Android"
 }

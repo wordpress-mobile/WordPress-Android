@@ -17,6 +17,16 @@ elif [ "$1" == "image-editor" ]; then
     test_results_dir="libs/image-editor/build/test-results"
     test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
     code_coverage_report="libs/image-editor/build/reports/kover/reportRelease.xml"
+elif [ "$1" == "fluxc" ]; then
+    test_suite=":fluxc:testReleaseUnitTest :fluxc:koverXmlReportRelease"
+    test_results_dir="fluxc/build/test-results"
+    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
+    code_coverage_report="fluxc/build/reports/kover/reportRelease.xml"
+elif [ "$1" == "WordPressLoginFlow" ]; then
+    test_suite=":WordPressLoginFlow:testReleaseUnitTest :WordPressLoginFlow:koverXmlReportRelease"
+    test_results_dir="WordPressLoginFlow/build/test-results"
+    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
+    code_coverage_report="WordPressLoginFlow/build/reports/kover/reportRelease.xml"
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
     exit 1
