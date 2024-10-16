@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        WPLoginInputRow
+    -->
+    <declare-styleable name="wpLoginInputRow">
+        <attr name="android:inputType" />
+        <attr name="android:hint" />
+        <attr name="android:imeOptions" />
+        <attr name="passwordToggleEnabled" />
+        <attr name="android:textAlignment" />
+    </declare-styleable>
+
+</resources>
