@@ -66,5 +66,4 @@ object DateUtils {
         val dateFormat = SimpleDateFormat(pattern, Locale.ROOT)
         return dateFormat.format(date)
     }
-
 }
