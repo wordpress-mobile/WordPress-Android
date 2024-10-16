@@ -28,6 +28,7 @@ android {
 
     lint {
         enable += 'UnknownNullness'
+        disable 'UseTomlInstead', 'IgnoreWithoutReason'
     }
 
     testOptions {

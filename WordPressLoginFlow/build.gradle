@@ -34,6 +34,7 @@ android {
 
     lint {
         enable += 'UnknownNullness'
+        ignore 'UseTomlInstead'
     }
 }
 
