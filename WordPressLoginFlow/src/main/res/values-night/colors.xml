@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temporarily using a hardcoded color for the avatar placeholder in order
+    to avoid having to handle tint programmatically in more than one place -->
+    <color name="avatar_placeholder">#61FFFFFF</color>
+</resources>

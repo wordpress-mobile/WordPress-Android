@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email_address">Email address</string>
+    <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="send_link_by_email">Send link by email</string>
+    <string name="create_account">Create account</string>
+    <string name="or_type_your_password">Or type your password</string>
+    <string name="or_use_password">Use password to sign in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="help">Help</string>
+    <string name="log_in">Log In</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
+    <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
+    <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
+    <string name="get_started">Get Started</string>
+    <string name="next">Next</string>
+    <string name="check_email">Check email</string>
+    <string name="open_mail">Open Mail</string>
+    <string name="enter_verification_code">Almost there! Please enter the verification code for WordPress.com from your authenticator app.</string>
+    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
+    <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_security_key">Use a security key</string>
+    <string name="login_text_otp_another">Text me another code instead</string>
+    <string name="requesting_otp">Requesting a verification code via SMS.</string>
+    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
+    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
+    <string name="login_magic_links_label">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
+    <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
+    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_label_short">Check your email on this device!</string>
+    <string name="login_magic_links_email_sent">We just sent a magic link to</string>
+    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="login_get_link_by_email">Get a login link by email</string>
+    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
+    <string name="login_continue">Continue</string>
+    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
+    <string name="login_site_address">Site address</string>
+    <string name="login_site_address_help_title">What\'s my site address?</string>
+    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_find_your_site_adress">Find your site address</string>
+    <string name="login_find_your_connected_email">Find your connected email</string>
+    <string name="login_checking_site_address">Checking site address</string>
+    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC services are disabled on this site.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
+    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
+    <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_password">Please enter a password</string>
+    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="continue_google_button_suffix">Continue with Google</string>
+    <string name="continue_site_credentials">Continue with store credentials</string>
+    <string name="login_or">or</string>
+    <string name="login_error_button">Close</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
+    <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
+    <string name="login_error_generic_start">Google login could not be started.</string>
+    <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="login_error_security_key">There was some trouble with the Security key login</string>
+    <string name="sign_up_label">Sign Up</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error_button_negative">Close</string>
+    <string name="signup_magic_link_error_button_positive">Retry</string>
+    <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
+    <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
+    <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
+
+    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+
+    <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
+    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
+    <string name="duplicate_site_detected">A duplicate site has been detected.</string>
+    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="auth_required">Log in again to continue.</string>
+    <string name="checking_email">Checking email</string>
+    <string name="email_invalid">Enter a valid email address</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
+    <string name="logging_in">Logging in</string>
+    <string name="reset_your_password">Reset your password</string>
+    <string name="error_generic">An error occurred</string>
+    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
+    <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        this problem.</string>
+    <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b>XMLRPC file&lt;/b> on your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b>HTTP Authentication&lt;/b>. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
+    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
+
+    <string name="notification_login_title_success">Logged in!</string>
+    <string name="notification_logged_in">Tap to continue.</string>
+
+    <string name="notification_login_title_in_progress">Login in progress…</string>
+    <string name="notification_logging_in">Please wait while logging in.</string>
+
+    <string name="notification_login_title_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
+    <string name="notification_security_key_needed">Please provide your security key to continue.</string>
+
+    <!-- Screen titles -->
+    <string name="email_address_login_title">Email address login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
+
+    <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="signup_confirmation_title">Signup confirmation</string>
+
+
+    <!-- HTTP Authentication -->
+    <string name="http_authorization_required">Authorization required</string>
+    <string name="httpuser">HTTP username</string>
+    <string name="httppassword">HTTP password</string>
+
+    <!-- Placeholder for the generated default_web_client_id for Google login.
+    This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
+    <string name="default_web_client_id">placeholder</string>
+
+    <!-- Placeholder for notification channel to be used by login service notification.
+     This resource must be overwritten in the host project with a real notification channel id it has configured. -->
+    <string name="login_notification_channel_id">placeholder</string>
+</resources>
