@@ -1,5 +1,0 @@
-25.2:
-Abbiamo risolto due grandi problemi in questa versione:
-* Ora puoi aggiornare nuovamente la data di pubblicazione di un articolo.
-* Alcuni utenti non riuscivano ad aggiornare i contenuti del loro articolo.
-Come sempre, contatta il supporto se c'è qualcosa che non va.

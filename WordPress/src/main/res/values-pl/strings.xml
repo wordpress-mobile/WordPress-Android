@@ -5,8 +5,8 @@ Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && 
 Generator: GlotPress/4.0.1
 Language: pl
 -->
-<resources>
-    <string name="gutenberg_native_tap_to_edit">Stuknij, aby edytować</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij, aby edytować</string>
     <string name="voice_to_content_permissions_required_msg">Aby nagrywać dźwięk, aplikacja potrzebuje pozwolenia na dostęp do mikrofonu. Wcześniej odmówiono. Włącz uprawnienia mikrofonu w ustawieniach aplikacji, aby nagrywać.</string>
     <string name="voice_to_content_permissions_required_title">Wymagana zgoda na nagrywanie dźwięku</string>
     <string name="permission_access_media_location">Położenie plików</string>
@@ -37,8 +37,8 @@ Language: pl
     <string name="stats_view_subscriber_growth">Wzrost liczby subskrybentów</string>
     <string name="role_subscriber">Subskrybent</string>
     <string name="stats_traffic">Ruch</string>
-    <string name="gutenberg_native_font_size_1_s">Rozmiar liter, %1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Plik nie jest obsługiwany jako plik mediów.</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rozmiar liter, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Plik nie jest obsługiwany jako plik mediów.</string>
     <string name="media_cannot_be_started">Nie można odtworzyć pliku mediów. Spróbuj ponownie później</string>
     <string name="domains_just_search_for_a_domain_button">Wyszukaj domenę</string>
     <string name="domains_site_domain_never_expires">Nigdy nie wygasa</string>
@@ -60,10 +60,10 @@ Language: pl
     <string name="reader_discover_recommended_header_new">Może polubisz</string>
     <string name="pages_no_site_something_went_wrong">Coś poszło nie tak. Proszę spróbować później.</string>
     <string name="missing_splits_dialog_button">ZAMKNIJ</string>
-    <string name="gutenberg_native_insert_video_block">Wstaw blok filmu</string>
-    <string name="gutenberg_native_insert_image_block">Wstaw blok obrazka</string>
-    <string name="gutenberg_native_insert_gallery_block">Wstaw blok galerii</string>
-    <string name="gutenberg_native_insert_audio_block">Wstaw blok audio</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wstaw blok filmu</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wstaw blok obrazka</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wstaw blok galerii</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wstaw blok audio</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Utwórz</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Nie utworzono żadnej kampanii. Kliknij utwórz, aby rozpocząć.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Nie masz żadnych kampanii</string>
@@ -81,10 +81,10 @@ Language: pl
     <string name="menu_close_editor">Zamknij edytor</string>
     <string name="menu_redo_context">Powtórz ostatnią zmianę</string>
     <string name="menu_undo_context">Cofnij ostatnią zmianę</string>
-    <string name="gutenberg_native_s_detached">odłączono %s</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Edycja zsynchronizowanych wzorców nie jest jeszcze obsługiwana w %s dla iOS</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Edytowanie zsynchronizowanych wzorców nie jest jeszcze obsługiwane w %s w androidzie</string>
-    <string name="gutenberg_native_reusable">Wielokrotnego użycia</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">odłączono %s</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edycja zsynchronizowanych wzorców nie jest jeszcze obsługiwana w %s dla iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edytowanie zsynchronizowanych wzorców nie jest jeszcze obsługiwane w %s w androidzie</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wielokrotnego użycia</string>
     <string name="privacy_banner_error_save">Wystąpił błąd podczas zapisywania ustawień prywatności.</string>
     <string name="privacy_banner_save">Zapisz</string>
     <string name="privacy_banner_settings">Ustawienia</string>
@@ -94,8 +94,8 @@ Language: pl
     <string name="privacy_banner_description">Twoja prywatność jest dla nas niezwykle ważna i zawsze była. Używamy, przechowujemy i przetwarzamy twoje dane osobowe w celu optymalizacji naszej aplikacji (i łatwości użycia) na różne sposoby. Niektóre sposoby wykorzystania danych są nam absolutnie niezbędne do prawidłowego działania aplikacji, a inne możesz dostosować w ustawieniach.</string>
     <string name="tabbar_accessibility_label_me">Ja. Zarządzaj szczegółami swojego profilu.</string>
     <string name="social_item_message_title">Wiadomość</string>
-    <string name="gutenberg_native_block_ungrouped">Blok niezgrupowany</string>
-    <string name="gutenberg_native_block_grouped">Blok zgrupowany</string>
+    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok niezgrupowany</string>
+    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok zgrupowany</string>
     <string name="dashboard_card_plans_checkout_success_info">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest konfigurowana.</string>
     <string name="dashboard_card_plans_checkout_success_title">Wszystko gotowe do pracy!</string>
@@ -117,8 +117,8 @@ Language: pl
     <string name="close_account">Zamknij konto</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Dowiedz się więcej</string>
     <string name="dashboard_activity_card_title">Ostatnia aktywność</string>
-    <string name="gutenberg_native_remove_blocks">Usuń bloki</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Opisz zawartość obrazka. Pozostaw puste pole, jeśli jest on wyłącznie dekoracją.</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Usuń bloki</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opisz zawartość obrazka. Pozostaw puste pole, jeśli jest on wyłącznie dekoracją.</string>
     <string name="dashboard_pages_card_create_another_page_button">Utwórz kolejną stronę</string>
     <string name="blogging_reminders_notifications_permission_caption">Aby korzystać z przypomnień należy mieć włączone powiadomienia typu PUSH</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Dodaj strony do swojej witryny</string>
@@ -148,8 +148,8 @@ Language: pl
     <string name="jp_migration_finish_button">Koniec</string>
     <string name="jp_migration_done_subtitle">Przenieśliśmy wszystkie twoje dane i ustawienia. Wszystko jest dokładnie tam, gdzie było.</string>
     <string name="support_title">Pomoc techniczna</string>
-    <string name="notification_disable_broadcast_permission_desc">Pozwala aplikacji wyłączyć powiadomienia od WordPressa.</string>
-    <string name="notification_disable_broadcast_permission_label">wyłącz powiadomienia od WordPressa</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Pozwala aplikacji wyłączyć powiadomienia od WordPressa.</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">wyłącz powiadomienia od WordPressa</string>
     <string name="jp_migration_help_button">Potrzebujesz pomocy?</string>
     <string name="jp_migration_continue_button">Dalej</string>
     <string name="jp_migration_avatar_content_description">Twoje zdjęcie profilowe</string>
@@ -159,11 +159,11 @@ Language: pl
     <string name="icon_desc">ikona</string>
     <string name="post_settings_parent">Strona nadrzędna</string>
     <string name="post_settings_page_attributes">Atrybuty strony</string>
-    <string name="about_automattic_contribute_item_title">Dodaj coś od siebie</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Dodaj coś od siebie</string>
     <string name="about_news">Aktualności</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">jedna odpowiedź</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonka WordPressa</string>
-    <string name="login_prologue_revamped_tagline">Pisz, edytuj i publikuj z dowolnego miejsca.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">Ikonka WordPressa</string>
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Pisz, edytuj i publikuj z dowolnego miejsca.</string>
     <string name="error_fetch_authors_list">Nie można było pobrać autorów</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Lubisz %s?</string>
@@ -171,9 +171,9 @@ Language: pl
     <string name="connections_label">Połączenia społecznościowe Jetpacka</string>
     <string name="stats_widget_log_in_to_add_message">Proszę zalogować się do aplikacji Jetpacka, aby dodać widżet.</string>
     <string name="stats_view_publicize">Połączenia społecznościowe Jetpacka</string>
-    <string name="login_magic_links_email_sent">Właśnie wysłaliśmy magiczny odnośnik do</string>
-    <string name="login_magic_links_sent_label_short">Sprawdź pocztę na tym urządzeniu!</string>
-    <string name="or_use_password">Użyj hasła, aby się zalogować</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">Właśnie wysłaliśmy magiczny odnośnik do</string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Sprawdź pocztę na tym urządzeniu!</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">Użyj hasła, aby się zalogować</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Bądź na bieżąco dzięki aktualizacjom w czasie rzeczywistym o nowych komentarzach, ruchu w witrynie, raportach bezpieczeństwa i nie tylko.</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Obserwuj wzrost ruchu i poznaj swoich odbiorców dzięki przeprojektowanym statystykom i statystykom, które są teraz dostępne w nowej aplikacji Jetpack.</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statystyki obsługiwane są przez Jetpack</string>
@@ -181,9 +181,9 @@ Language: pl
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Czytnik obsługiwany jest przez Jetpack</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Znajduj, obserwuj i polub ulubione witryny i posty dzięki czytnikowi, który jest teraz dostępny w nowej aplikacji Jetpack.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress jest lepszy z JetPackiem</string>
-    <string name="gutenberg_native_invalid_url">Nieprawidłowy adres URL.</string>
-    <string name="gutenberg_native_gradient">Gradient</string>
-    <string name="gutenberg_native_jetpack_powered">Obsługiwane przez Jetpack</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nieprawidłowy adres URL.</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gradient</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Obsługiwane przez Jetpack</string>
     <string name="wp_jetpack_continue_to_notifications">Przejdź do powiadomień</string>
     <string name="wp_jetpack_continue_to_stats">Przejdź do statystyk</string>
     <string name="weekly_roundup_notification_text_all">W zeszłym tygodniu było %1$s wyświetleń %2$s polubień i %3$s komentarzy</string>
@@ -205,8 +205,8 @@ Language: pl
     <string name="stats_action_card_blogging_reminders_button_label">Ustaw przypomnienia</string>
     <string name="stats_action_card_schedule_post_title">Zaplanuj swój wpis</string>
     <string name="stats_action_card_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
-    <string name="gutenberg_native_drag_drop">Przeciągnij i upuść</string>
-    <string name="gutenberg_native_image_file_not_found">Nie znaleziono pliku obrazka.</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Przeciągnij i upuść</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nie znaleziono pliku obrazka.</string>
     <string name="quick_start_sites_type_all_tasks_completed">Ukończono wszystkie zadania</string>
     <string name="quick_start_list_task_complete">Zadanie zostało ukończone</string>
     <string name="me_btn_scan_login_code">Zeskanuj kod logowania</string>
@@ -233,7 +233,7 @@ Language: pl
     <string name="stats_view_total_comments">Łączna liczba komentarzy</string>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedź</string>
     <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
     <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
@@ -242,31 +242,31 @@ Language: pl
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
     <string name="locale_picker_current_language">Aktualny język:</string>
     <string name="hpp_choose_and_create_site">Utwórz witrynę</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">Dodaj bloki</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Dodaj bloki</string>
     <string name="initial_screen">Ekran początkowy</string>
     <string name="blogging_prompts_onboarding_notification_action">Dowiedz się więcej</string>
     <string name="new_site_creation_site_name_title">Nazwa witryny</string>
-    <string name="featured_image_confirmation_notice">Ustaw obrazek wyróżniający</string>
-    <string name="featured_image_removed_notice">Usuń obrazek wyróżniający</string>
-    <string name="featured_image_replace_dialog_confirm">Zastąp obrazek wyróżniający</string>
-    <string name="featured_image_replace_dialog_description">Twój obrazek wyróżniający już jest ustawiony. Czy chcesz go zastąpić nowym?</string>
-    <string name="featured_image_replace_dialog_title">Zmienić obecny obrazek wyróżniający?</string>
-    <string name="dialog_dismiss_try_block_editor">Odrzuć</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="stop_upload_dialog_button_no">Nie</string>
-    <string name="stop_upload_dialog_button_yes">Tak</string>
-    <string name="dialog_button_cancel">Anuluj</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="retry_failed_upload_yes">Ponów</string>
-    <string name="long_post_dlg_saving">Zapisywanie</string>
-    <string name="retry_failed_upload_retry_all">Spróbuj ponownie</string>
-    <string name="dialog_title">Wstaw odnośnik</string>
-    <string name="editor_title_beta">Beta</string>
-    <string name="stop_save_dialog_ok_button">OK</string>
-    <string name="pixel_suffix">%dpx</string>
-    <string name="media_bar_description_gallery">Wybierz media z biblioteki</string>
-    <string name="stop_save_dialog_message">Poczekaj aż wszystkie pliki zostaną zapisane</string>
-    <string name="stop_save_dialog_title">Zapisywanie plików</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ustaw obrazek wyróżniający</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Usuń obrazek wyróżniający</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zastąp obrazek wyróżniający</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Twój obrazek wyróżniający już jest ustawiony. Czy chcesz go zastąpić nowym?</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zmienić obecny obrazek wyróżniający?</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Odrzuć</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nie</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tak</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Anuluj</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ponów</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zapisywanie</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Spróbuj ponownie</string>
+    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Wstaw odnośnik</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Beta</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dpx</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Wybierz media z biblioteki</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Poczekaj aż wszystkie pliki zostaną zapisane</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zapisywanie plików</string>
     <string name="blogging_prompts_onboarding_content_note_title">Adnotacja:</string>
     <string name="blogging_prompt_set_reminders">Ustaw przypomnienia</string>
     <string name="site_creation_intent_technology">Technologia</string>
@@ -309,76 +309,76 @@ Language: pl
     <string name="my_site_blogging_prompt_card_answer_prompt">Odpowiedź</string>
     <string name="my_site_blogging_prompt_card_title">Podpowiedzi</string>
     <string name="my_site_all_tab_title">Wszystko</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć jaśniejszego koloru tła i/lub ciemniejszego koloru tekstu.</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć ciemniejszego koloru tła i/lub jaśniejszego koloru tekstu.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Nie udało się wstawić mediów. Kliknij po więcej informacji.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć jaśniejszego koloru tła i/lub ciemniejszego koloru tekstu.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć ciemniejszego koloru tła i/lub jaśniejszego koloru tekstu.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">Nie udało się wstawić mediów. Kliknij po więcej informacji.</string>
     <string name="new_site_creation_intents_header_subtitle">Wybierz temat z listy poniżej lub dodaj swój własny.</string>
     <string name="new_site_creation_intents_header_title">O czym będzie Twoja witryna?</string>
     <string name="adding_cat">Dodawanie kategorii</string>
     <string name="login_select_email_client">Której aplikacji pocztowej używasz?</string>
     <string name="my_site_menu_tab_title">Menu</string>
-    <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="login">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>
     <string name="reader_comment_menu_edit">Edytuj</string>
     <string name="reader_comment_menu_trash">Przenieś do kosza</string>
     <string name="reader_comment_menu_spam">Oznacz jako spam</string>
-    <string name="gutenberg_native_gallery_style">Styl galerii</string>
-    <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
-    <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_logo_description">Logo Automattic</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_dayone">Dzień pierwszy</string>
-    <string name="about_automattic_source_code_item_title">Kod źródłowy</string>
-    <string name="about_automattic_privacy_policy_item_title">Polityka prywatności</string>
-    <string name="about_automattic_work_with_us_item_subtitle">Pracuj z dowolnego miejsca</string>
-    <string name="about_automattic_terms_of_service_item_title">Warunki usługi</string>
-    <string name="about_automattic_work_with_us_item_title">Pracuj dla nas</string>
-    <string name="about_automattic_family_item_title">Rodzina Automattic</string>
-    <string name="about_automattic_legal_and_more_item_title">Sprawy prawne i więcej</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_rate_us_item_title">Oceń nas</string>
-    <string name="about_automattic_share_with_friends_item_title">Udostępnij znajomym</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Możesz edytować ten blok za pomocą przeglądarkowej wersji tego edytora.</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">Otwórz ustawienia zabezpieczeń Jetpacka</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Uwaga: Aby edytować ten blok w edytorze mobilnym należy zezwolić na logowanie na WordPress.com</string>
-    <string name="gutenberg_native_add_media">DODAJ PLIKI MEDIÓW</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ może się różnić pomiędzy tematami i rozmiarami ekranów</string>
-    <string name="gutenberg_native_address_settings">Ustawienia adresu</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Styl galerii</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikona aplikacji</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikona Cofnij/Wstecz</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Logo Automattic</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Dzień pierwszy</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Kod źródłowy</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Polityka prywatności</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Pracuj z dowolnego miejsca</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Warunki usługi</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pracuj dla nas</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Rodzina Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Sprawy prawne i więcej</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Oceń nas</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Udostępnij znajomym</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">Możesz edytować ten blok za pomocą przeglądarkowej wersji tego edytora.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Otwórz ustawienia zabezpieczeń Jetpacka</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Uwaga: Aby edytować ten blok w edytorze mobilnym należy zezwolić na logowanie na WordPress.com</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">DODAJ PLIKI MEDIÓW</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Uwaga: Układ może się różnić pomiędzy tematami i rozmiarami ekranów</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Ustawienia adresu</string>
     <string name="my_site_error_card_subtitle">Mamy problem z załadowaniem danych twojej witryny.</string>
     <string name="my_site_error_card_title">Niektóre z danych nie zostały zaczytane</string>
     <string name="my_site_dashboard_stale_message">Kokpit nie został zaktualizowany. Proszę sprawdzić swoje połączenie i wówczas zaktualizować.</string>
     <string name="my_site_dashboard_update_error">Nie można było zaktualizować kokpitu.</string>
     <string name="error_media_video_duration_exceeds_limit">Film nie został przesłany! Przesyłanie filmów dłuższych niż 5 minut wymaga przejścia na plan płatny.</string>
-    <string name="about_automattic_acknowledgements_item_title">Podziękowania</string>
-    <string name="about_automattic_california_privacy_notice_item_title">Notka prywatności stanu Kalifornia</string>
-    <string name="about_automattic_version_label">Wersja %1$s</string>
-    <string name="about_automattic_main_page_title">O %1$s</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Podziękowania</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Notka prywatności stanu Kalifornia</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Wersja %1$s</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">O %1$s</string>
     <string name="about_blog">Blog</string>
-    <string name="gutenberg_native_the_basics">Podstawy</string>
-    <string name="gutenberg_native_selected_default">Wybrano: Domyślne</string>
-    <string name="about_automattic_acknowledgements_page_title">Podziękowania</string>
-    <string name="about_automattic_legal_page_title">Sprawy prawne i więcej</string>
-    <string name="gutenberg_native_more_support_options">Więcej opcji wsparcia</string>
-    <string name="gutenberg_native_get_support">Uzyskaj wsparcie</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
-    <string name="gutenberg_native_font_size">Wielkość liter</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">Podstawy</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">Wybrano: Domyślne</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Podziękowania</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Sprawy prawne i więcej</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">Więcej opcji wsparcia</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Uzyskaj wsparcie</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Wielkość liter</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
+    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Obserwuj konwersację</string>
     <string name="reader_comments_be_first_to_comment">Napisz pierwszy komentarz</string>
     <string name="reader_comments_view_all">Zobacz wszystkie komentarze</string>
     <string name="reader_comments_post_fetch_failure">Wystąpił błąd podczas pobierania danych wpisu</string>
-    <string name="gutenberg_native_contact_support">Kontakt z pomocą techniczną</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">Kontakt z pomocą techniczną</string>
     <string name="reader_comments_fetch_failure">Wystąpił błąd podczas pobierania komentarzy</string>
     <string name="reader_btn_follow_conversation_settings">Obserwuj ustawienia konwersacji</string>
-    <string name="gutenberg_native_from_clipboard">Że schowka</string>
-    <string name="gutenberg_native_featured_image">Obrazek wyróżniający</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Skopiuj adres URL ze schowka, %s</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">Że schowka</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Obrazek wyróżniający</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">Skopiuj adres URL ze schowka, %s</string>
     <string name="me_btn_about">O WordPressie</string>
     <string name="my_site_post_card_link_create_post">Utwórz wpis</string>
     <string name="my_site_create_next_post_excerpt">Regularne dodawanie wpisów pomaga w budowaniu publiki!</string>
@@ -396,7 +396,7 @@ Language: pl
     <string name="my_site_create_first_post_excerpt">Wpisy pojawiają się na stronie twojego blogu w odwrotnym porządku chronologicznym. Czas najwyższy aby podzielić się ze światem twoimi pomysłami!</string>
     <string name="my_site_post_card_draft_title">Pracuj nad wpisem roboczym</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Darmowy w pierwszym roku&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Stwórz odnośnik</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
     <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
@@ -432,14 +432,14 @@ Language: pl
     <string name="comment_edit_user_name">Nazwa</string>
     <string name="comment_edit_menu_done">Gotowe</string>
     <string name="comment_edit_email_address">Adres e-mail</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Podglądy zagnieżdżonych bloków już wkrótce</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Podglądy zagnieżdżonych bloków już wkrótce</string>
     <string name="weekly_roundup">W każdym tygodniu</string>
-    <string name="gutenberg_native_embed_options">Opcje zagnieżdzania</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">Stuknij dwukrotnie aby podejrzeć opcje zagnieżdzania.</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">Opcje zagnieżdzania</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">Stuknij dwukrotnie aby podejrzeć opcje zagnieżdzania.</string>
     <string name="quick_start_list_create_site_message">Utworzono witrynę! Ukończ kolejne zadanie.</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
-    <string name="gutenberg_native_line_height">Interlinia</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">Interlinia</string>
     <string name="recommend_app_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="recommend_app_null_response">Nie otrzymano odpowiedzi</string>
     <string name="me_btn_share">Udostępnij WordPress znajomemu</string>
@@ -450,31 +450,31 @@ Language: pl
     <string name="weekly_roundup_notification_title">W każdym tygodniu: %s</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Otrzymasz powiadomienia o blogowaniu &lt;b&gt;każdego dnia&lt;/b&gt; o &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s razy w tygodniu o %2$s</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Kontrolki formatowania tekstu znajdują się w ramach paska narzędzi ulokowanego ponad klawiaturą - podczas edycji bloku</string>
-    <string name="gutenberg_native_select_a_color_above">Wybierz kolor powyżej</string>
-    <string name="gutenberg_native_navigates_to_select_s">Kieruje do wybrania %s</string>
-    <string name="gutenberg_native_move_blocks">Przesuń bloki</string>
-    <string name="gutenberg_native_how_to_edit_your_post">Jak edytować swój wpis</string>
-    <string name="gutenberg_native_how_to_edit_your_page">Jak edytować swoją stronę</string>
-    <string name="gutenberg_native_selected_s">Wybrano: %s</string>
-    <string name="gutenberg_native_customize_blocks">Personalizuj bloki</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Przyciski cofnij/ponów nie będą miały wpływu na zmiany w obrazku wyróżniającym</string>
-    <string name="gutenberg_native_applies_the_setting">Zatwierdza ustawienie</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Witamy w świecie bloków</string>
-    <string name="gutenberg_native_s_block_newly_available">Blok %s, dostępny od niedawna</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Niektóre bloki mają dodatkowe opcje. Stuknij na ikonę ustawień w prawej dolnej części bloku aby przejrzeć dodatkowe opcje.</string>
-    <string name="gutenberg_native_rich_text_editing">Edycja przy pomocy wzbogaconego formatu tekstowego RTF</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Jak tylko zaznajomisz się z nazewnictwem różnych bloków, możesz dodać blok wpisując prawy ukośnik a następnie nazwę bloku - np. /image lub /heading.</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Spraw aby twoje treści wybijały się dodając do stron zdjęcia, podarunki, filmy i osadzone pliki mediów.</string>
-    <string name="gutenberg_native_embed_media">Osadź pliki mediów</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Spróbuj dodać kilka bloków to swojego wpisu lub strony!</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Każdy blok ma swoje ustawienia. Aby je odnaleźć, stuknij w blok. Jego ustawienia pojawią się na pasku na narzędzie na dole ekranu.</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Bloki to kawałki treści, które możesz osadzać, przearanżowywać, i zmieniać ich styl nie posiadając wiedzy o programowaniu. Bloki są łatwym i nowoczesnym sposobem na tworzenie pięknych układów.</string>
-    <string name="gutenberg_native_build_layouts">Buduj układy</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Bloki pomagają ci skoncentrować się na pisaniu treści, wiedząc, że wszystkie narzędzia do formatowania są w zasięgu ręki - gotowe, abyś mógł/mogła trafić że swoimi treściami do szerokiej publiki.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Zorganizuj swoje treści w kolumny, dodaj przyciski Wezwania do Działania i nakładaj tekst ponad obrazki.</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Kontrolki formatowania tekstu znajdują się w ramach paska narzędzi ulokowanego ponad klawiaturą - podczas edycji bloku</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">Wybierz kolor powyżej</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Kieruje do wybrania %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">Przesuń bloki</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">Jak edytować swój wpis</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">Jak edytować swoją stronę</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Wybrano: %s</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Personalizuj bloki</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">Przyciski cofnij/ponów nie będą miały wpływu na zmiany w obrazku wyróżniającym</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Zatwierdza ustawienie</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">Witamy w świecie bloków</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">Blok %s, dostępny od niedawna</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">Niektóre bloki mają dodatkowe opcje. Stuknij na ikonę ustawień w prawej dolnej części bloku aby przejrzeć dodatkowe opcje.</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Edycja przy pomocy wzbogaconego formatu tekstowego RTF</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Jak tylko zaznajomisz się z nazewnictwem różnych bloków, możesz dodać blok wpisując prawy ukośnik a następnie nazwę bloku - np. /image lub /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">Spraw aby twoje treści wybijały się dodając do stron zdjęcia, podarunki, filmy i osadzone pliki mediów.</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Osadź pliki mediów</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Spróbuj dodać kilka bloków to swojego wpisu lub strony!</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">Każdy blok ma swoje ustawienia. Aby je odnaleźć, stuknij w blok. Jego ustawienia pojawią się na pasku na narzędzie na dole ekranu.</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">Bloki to kawałki treści, które możesz osadzać, przearanżowywać, i zmieniać ich styl nie posiadając wiedzy o programowaniu. Bloki są łatwym i nowoczesnym sposobem na tworzenie pięknych układów.</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">Buduj układy</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">Bloki pomagają ci skoncentrować się na pisaniu treści, wiedząc, że wszystkie narzędzia do formatowania są w zasięgu ręki - gotowe, abyś mógł/mogła trafić że swoimi treściami do szerokiej publiki.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Zorganizuj swoje treści w kolumny, dodaj przyciski Wezwania do Działania i nakładaj tekst ponad obrazki.</string>
     <string name="quick_start_sites_type_tasks_completed">Wykonano %1$s z %2$s</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">W dowolnym momencie można dodać nowy blok stukając w ikonkę + w pasku narzędzi na dole po lewej stronie.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">W dowolnym momencie można dodać nowy blok stukając w ikonkę + w pasku narzędzi na dole po lewej stronie.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Naucz się podstaw przy pomocy krótkiego samouczka.</string>
     <string name="comment_batch_moderation_error">Nie udało się zmienić jednego lub więcej komentarzy</string>
     <string name="create_site_notification_create_site_action">Utwórz witrynę</string>
@@ -484,16 +484,16 @@ Language: pl
     <string name="stats_disabled_enable_stats_button">Uaktywnij statystyki witryny</string>
     <string name="stats_disabled_subtitle">Uaktywnij statystyki witryny aby sprawdzić szczegółowe informacje o twoim ruchu, polubieniach, komentarzach i subskrybentach.</string>
     <string name="stats_disabled_title">Szukasz statystyk?</string>
-    <string name="gutenberg_native_what_is_a_block">Co to jest blok?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Pracujemy ciężko aby dodać wsparcie dla poglądów %s. W międzyczasie, możesz podejrzeć osadzoną treść we wpisie.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Pracujemy ciężko aby dodać wsparcie dla poglądów %s. W międzyczasie, możesz podejrzeć osadzoną treść na stronie.</string>
-    <string name="gutenberg_native_unable_to_embed_media">Nie można było osadzić pliku mediów</string>
-    <string name="gutenberg_native_try_another_search_term">Spróbuj innego słowa wyszukiwania</string>
-    <string name="gutenberg_native_no_blocks_found">Nie odnaleziono bloków</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">%s podglądów nie jest jeszcze dostępnych</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s podglądów bloków osadzonych już wkrótce</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">Stuknij dwukrotnie aby podejrzeć wpis.</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">Stuknij dwukrotnie aby podejrzeć stronę.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">Co to jest blok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">Pracujemy ciężko aby dodać wsparcie dla poglądów %s. W międzyczasie, możesz podejrzeć osadzoną treść we wpisie.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">Pracujemy ciężko aby dodać wsparcie dla poglądów %s. W międzyczasie, możesz podejrzeć osadzoną treść na stronie.</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">Nie można było osadzić pliku mediów</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">Spróbuj innego słowa wyszukiwania</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">Nie odnaleziono bloków</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s podglądów nie jest jeszcze dostępnych</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s podglądów bloków osadzonych już wkrótce</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">Stuknij dwukrotnie aby podejrzeć wpis.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">Stuknij dwukrotnie aby podejrzeć stronę.</string>
     <string name="quick_start_list_upload_icon_subtitle">Pokazane w zakładce przeglądarki odwiedzającego twoja witrynę, a także w innych miejscach na sieci.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Pokaż mi co i jak</string>
     <string name="login_epilogue_create_new_site_button">Utwórz nową witrynę</string>
@@ -502,9 +502,9 @@ Language: pl
     <string name="quick_start_dialog_need_help_manage_site_title">Potrzebujesz pomocy w zarządzaniu tą witryną dzięki aplikacji?</string>
     <string name="scan_multisite_not_supported_subtitle">Bardzo na przykro, skanowanie Jetpacka nie jest kompatybilne z instalacjami witryn multi WordPressa.</string>
     <string name="scan_multisite_not_supported_title">Witryny Multi WordPressa nie są wapierane</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Nieprawidłowy adres URL. Wprowadź poprawny adres URL.</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">Nieprawidłowy adres URL. Wprowadź poprawny adres URL.</string>
     <string name="activity_log_visit_our_documentation_page">przejdź do strony z dokumentacją</string>
-    <string name="gutenberg_native_embed_caption_s">Podpis. %s</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Podpis. %s</string>
     <string name="blogging_reminders_tip">Wskazówka</string>
     <string name="blogging_reminders_select_days_message">Możesz to zaktualizować w dowolnym czasie</string>
     <string name="blogging_reminders_select_days">Wybierz dni w których chcesz blogować</string>
@@ -523,43 +523,43 @@ Language: pl
     <string name="set_your_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
     <string name="blogging_reminders_notification_text">To jest przypomnienie aby dzisiaj coś stworzyć</string>
     <string name="blogging_reminders_notification_title">Czas na dodanie wpisów na bloga dnia %s</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edytowania bloków do ponownego wykorzystania nie jest jeszcze wspierane.</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edytowanie bloków do późniejszego wykorzystania nie jest jeszcze wspierane w WordPressie dla Androida</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Edytowania bloków do ponownego wykorzystania nie jest jeszcze wspierane.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Edytowanie bloków do późniejszego wykorzystania nie jest jeszcze wspierane w WordPressie dla Androida</string>
     <string name="blogging_reminders_done">Gotowe</string>
     <string name="blogging_reminders_notify_me">Powiadom mnie</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Wprowadź dane uwierzytelniające swojego serwera&lt;/a&gt; aby uaktywnić opcję odzyskiwania z kopii zapasowych za pomocą jednego kliknięcia.</string>
-    <string name="gutenberg_native_set_as_featured_image">Użyj jako obrazka wyróżniającego</string>
-    <string name="gutenberg_native_remove_as_featured_image">Usuń obrazek wyróżniający</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Użyj jako obrazka wyróżniającego</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Usuń obrazek wyróżniający</string>
     <string name="fab_add_category_desc">Utwórz kategorię</string>
     <string name="support_ticket_subject">Wsparcie dla WordPressa dla Androida</string>
     <string name="site_settings_categories_hint">Zarządzaj kategoriami swojej witryny</string>
     <string name="site_settings_categories_title">Kategorie</string>
     <string name="page_is_posts_page_warning">Zawartość twoich ostatnich wpisów jest automatycznie generowana i nie może być edytowana.</string>
     <string name="site_settings_blogging_reminders_title">Przypomnienia</string>
-    <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">Ustawienia obramowania</string>
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
     <string name="storage_utils_dialog_message">Musimy zapisać twoje treści na urządzeniu zanim zostaną opublikowane. Przejrzyj ustawienia dostępnej przestrzeni i usuń pliki aby zwolnić miejsce.</string>
     <string name="storage_utils_dialog_title">Niewystarczająca ilość pamięci w urządzeniu</string>
-    <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
-    <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
-    <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
-    <string name="gutenberg_native_s_has_url_set">%s ma ustawiony adres URL</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s nie ma ustawionego adresu URL</string>
-    <string name="gutenberg_native_s_block">blok %s</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s przekształcone na zwykłe bloki</string>
-    <string name="gutenberg_native_media_options">Opcje mediów</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">NIeprawidłowy adres URL. Nie odnaleziono pliku dźwiękowego.</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">Przesuń i dostosuj punkt ostrości</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć dolną zakładkę aby dodać zdjęcie lub film</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby dodać zdjęcie lub film</string>
-    <string name="gutenberg_native_insert_crosspost">Wstaw wpis na wielu witrynach</string>
-    <string name="gutenberg_native_current_unit_is_s">Bieżącą jednostką jest %s</string>
-    <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
-    <string name="gutenberg_native_crosspost">Wpis na wielu witrynach</string>
-    <string name="gutenberg_native_add_link_to_s">Dodaj odnośnik do %s</string>
-    <string name="gutenberg_native_add_link_text">Dodaj tekst odnośnika</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Dodaj zdjęcie lub film</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Pozycja osi Y</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">Pozycja osi X</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Wpisz adres URL</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s ma ustawiony adres URL</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s nie ma ustawionego adresu URL</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">blok %s</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s przekształcone na zwykłe bloki</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">Opcje mediów</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">NIeprawidłowy adres URL. Nie odnaleziono pliku dźwiękowego.</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">Przesuń i dostosuj punkt ostrości</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć dolną zakładkę aby dodać zdjęcie lub film</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby dodać zdjęcie lub film</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Wstaw wpis na wielu witrynach</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Bieżącą jednostką jest %s</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Ustawienia kolumn</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Wpis na wielu witrynach</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Dodaj odnośnik do %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Dodaj tekst odnośnika</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Dodaj zdjęcie lub film</string>
     <string name="error_media_could_not_find_media_in_path">Nie można było odnaleźć pliku mediów w ścieżce</string>
     <string name="error_media_path_is_directory">Określona ścieżka jest katalogiem zamiast plikiem mediów</string>
     <string name="error_media_unexpected_empty_media_file_path">Nieoczekiwanie pusta ścieżka do pliku mediów</string>
@@ -569,96 +569,96 @@ Language: pl
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Wprowadź dane uwierzytelniające swojego serwera&lt;/a&gt; aby naprawić zagrożenie.</string>
     <string name="login_empty_view_try_another_account">Spróbuj z innym kontem</string>
     <string name="login_empty_view_see_instructions">Sprawdź instrukcje</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">Stuknij dwukrotnie aby dodać odnośnik.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">Stuknij dwukrotnie aby dodać odnośnik.</string>
     <string name="login_no_jetpack_sites_error_message">Jeśli już posiadasz witrynę, musisz zainstalować darmową wtyczkę Jetpack i połączyć ją ze swoim kontem WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Zdjęcie twojego profilu</string>
     <string name="login_not_a_jetpack_site">Aby użyć tej aplikacji na %1$s potrzebujesz mieć zainstalowaną wtyczkę Jepack i połączoną ze swoim kontem WordPress.com.</string>
-    <string name="gutenberg_native_move_image_forward">Przenieś obraz do przodu</string>
-    <string name="gutenberg_native_move_image_backward">Przesuń obrazek do tyłu</string>
-    <string name="gutenberg_native_width_settings">Ustawienia szerokości</string>
-    <string name="gutenberg_native_column_settings">Ustawienia kolumny</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Przenieś obraz do przodu</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Przesuń obrazek do tyłu</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Ustawienia szerokości</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Ustawienia kolumny</string>
     <string name="user_profile_site_section_header">Witryna</string>
     <string name="user_profile_untitled_site">(Bez nazwy)</string>
     <string name="user_profile_bottom_sheet_description">Informacja o profilu użytkownika na dolnej zakładce</string>
     <string name="likes_list_screen_title">Lista polubień %s</string>
-    <string name="gutenberg_native_two">Dwa</string>
-    <string name="gutenberg_native_three">Trzy</string>
-    <string name="gutenberg_native_no_title">Brak tytułu</string>
-    <string name="gutenberg_native_s_social_icon">Ikona społecznościowa %s</string>
-    <string name="gutenberg_native_mention">Wzmianka</string>
-    <string name="gutenberg_native_new">NOWOŚĆ</string>
-    <string name="gutenberg_native_preview_post">Podgląd wpisu</string>
-    <string name="gutenberg_native_preview_page">Podgląd strony</string>
-    <string name="gutenberg_native_retry">Spróbuj ponownie</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">Jeden</string>
-    <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
-    <string name="gutenberg_native_add_title">Dodaj tytuł</string>
-    <string name="gutenberg_native_loading">Wczytywanie</string>
-    <string name="gutenberg_native_s_link">%s łącze</string>
-    <string name="gutenberg_native_text_color">Kolor tekstu</string>
-    <string name="gutenberg_native_padding">Dopełnienie</string>
-    <string name="gutenberg_native_featured">Wyróżnione</string>
-    <string name="gutenberg_native_four">Cztery</string>
-    <string name="gutenberg_native_custom_url">Własny adres URL</string>
-    <string name="gutenberg_native_create_embed">Utwórz osadzoną treść</string>
-    <string name="gutenberg_native_column_d">Kolumna %d</string>
-    <string name="gutenberg_native_more">Więcej</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Krótko opisz odnośnik, aby pomóc użytkownikom korzystającym z czytnika.</string>
-    <string name="gutenberg_native_add_blocks">Dodaj bloki</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">Dwa</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">Trzy</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Brak tytułu</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">Ikona społecznościowa %s</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">Wzmianka</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NOWOŚĆ</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">Podgląd wpisu</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">Podgląd strony</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">Spróbuj ponownie</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">Jeden</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Podgląd nie jest dostępny</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dodaj tytuł</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wczytywanie</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s łącze</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Kolor tekstu</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Dopełnienie</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wyróżnione</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">Cztery</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">Własny adres URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Utwórz osadzoną treść</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Kolumna %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Więcej</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">Krótko opisz odnośnik, aby pomóc użytkownikom korzystającym z czytnika.</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dodaj bloki</string>
     <string name="login_no_jetpack_sites">Nie odnaleziono witryn Jetpack</string>
-    <string name="gutenberg_native_what_is_alt_text">Co to jest tekst alternatywny?</string>
-    <string name="gutenberg_native_transform_s_to">Przekształć %s w</string>
-    <string name="gutenberg_native_transform_block">Przekształć blok…</string>
-    <string name="gutenberg_native_failed_to_insert_media">Nie udało się osadzić pliku mediów.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">Nie udało się osadzić pliku dźwiękowego.</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">Co to jest tekst alternatywny?</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">Przekształć %s w</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Przekształć blok…</string>
+    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">Nie udało się osadzić pliku mediów.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Nie udało się osadzić pliku dźwiękowego.</string>
     <string name="like_title_plural">%d polubień</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s przekształcony w %2$s</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$s przekształcony w %2$s</string>
     <string name="like_faces_error_loading_message">Błąd wczytywania danych o polubieniach. %s.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Opisz zawartość obrazka. Pozostaw pole puste jeśli jest on wyłącznie dekoracją.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Opisz zawartość obrazka. Pozostaw pole puste jeśli jest on wyłącznie dekoracją.</string>
     <string name="like_title_singular">1 polubienie</string>
     <string name="suggestion">Sugestia:</string>
-    <string name="gutenberg_native_use_icon_button">Użyj ikony przycisku</string>
-    <string name="gutenberg_native_search_input_field">Przeszukaj pole wpisu.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Przycisk przeszukiwania. Aktualny tekst przycisku to</string>
-    <string name="gutenberg_native_search_blocks">Szukaj bloków</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Szukaj etykiety bloku. Aktualny tekst to</string>
-    <string name="gutenberg_native_inside">Wewnątrz</string>
-    <string name="gutenberg_native_outside">Na zewnątrz</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Stuknij dwukrotnie aby edytować tekst zastępczy</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Stuknij dwukrotnie aby edytować tekst etykiety</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Stuknij dwukrotnie aby edytować tekst przycisku</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Nie ustawiono własnego tekstu zastępczego</string>
-    <string name="gutenberg_native_hide_search_heading">Ukryj nagłówek wyszukiwania</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">stuknij dwukrotnie aby zmienić jednostkę</string>
-    <string name="gutenberg_native_clear_search">Usuń wyszukiwanie</string>
-    <string name="gutenberg_native_cancel_search">Anuluj wyszukiwanie</string>
-    <string name="gutenberg_native_button_position">Pozycja przycisku</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">Użyj ikony przycisku</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Przeszukaj pole wpisu.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Przycisk przeszukiwania. Aktualny tekst przycisku to</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Szukaj bloków</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Szukaj etykiety bloku. Aktualny tekst to</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Wewnątrz</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Na zewnątrz</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Stuknij dwukrotnie aby edytować tekst zastępczy</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Stuknij dwukrotnie aby edytować tekst etykiety</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Stuknij dwukrotnie aby edytować tekst przycisku</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">Nie ustawiono własnego tekstu zastępczego</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Ukryj nagłówek wyszukiwania</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">stuknij dwukrotnie aby zmienić jednostkę</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Usuń wyszukiwanie</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Anuluj wyszukiwanie</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Pozycja przycisku</string>
     <string name="get_likes_no_network_error">Brak dostępnej sieci</string>
     <string name="comments_empty_list_filtered_unreplied">Brak komentarzy bez odpowiedzi</string>
     <string name="get_likes_unknown_error">Wystąpił nieznany błąd podczas pobierania polubień.</string>
     <string name="get_likes_empty_state_title">Wystąpił błąd podczas pobierania danych polubień</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s jest %3$s %4$s.</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Aktualny tekst zastępczy to</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s jest %3$s %4$s.</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Aktualny tekst zastępczy to</string>
     <string name="comment_status_unreplied">Bez odpowiedzi</string>
-    <string name="gutenberg_native_search_settings">Ustawienia przeszukiwania</string>
-    <string name="gutenberg_native_add_link">DODAJ ODNOŚNIK</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Ustawienia przeszukiwania</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">DODAJ ODNOŚNIK</string>
     <string name="jetpack_brute_force_allowlist_title">Zawsze dozwolone adresy IP</string>
     <string name="site_settings_denylist_title">Niedozwolone komentarze</string>
-    <string name="gutenberg_native_add_button_text">Dodaj tekst przycisku</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Dodaj tekst przycisku</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Odrzuć</string>
     <string name="activity_log_backup_download_notice_download_action">Pobierz</string>
     <string name="threat_fix_all_confirmation_message_plural">Proszę o potwierdzenie, że chcesz usunąć wszyskie %s aktywne/ych zagrożeń/nia.</string>
     <string name="threat_fix_all_status_success_message_plural">Zagrożenia zostały z powodzeniem usunięte.</string>
     <string name="scan_fixing_threats_description_plural">Pracujemy nad usunięciem tych zagrożeń. Możesz używać swojej witryny jak dotychczas i w dowolnym czasie sprawdzać nasze postępy.</string>
-    <string name="gutenberg_native_edit_focal_point">Edytuj punkt ogniskowy</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edytuj punkt ogniskowy</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Wprowadź nazwę swojej witryny</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby edytować, zamienić lub wyczyścić obrazek</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby edytować, zamienić lub wyczyścić obrazek</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Dotrzesz do większej liczby ludzi. Dobra robota!</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Stuknij dwukrotnie aby otworzyć dolną zakładkę, aby edytować, zamienić lub usunąć obrazek</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć dolną zakładkę, aby edytować, zamienić lub usunąć obrazek</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Twoja witryna została spersonalizowana. Dobra robota!</string>
-    <string name="magic_link_not_meaning_to_create_account">Nie zamierzałaś/eś tworzyć nowego konta? Cofnij się i wprowadź ponownie swój adres email.</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Nie zamierzałaś/eś tworzyć nowego konta? Cofnij się i wprowadź ponownie swój adres email.</string>
     <string name="invite_links_disable_dialog_message">Po włączeniu tego łącza z zaproszeniem, nie będzie możliwości wykorzystania go do zaproszenia kogoś do zespołu. Czy jesteś pewien/pewna?</string>
     <string name="invite_links_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="invite_links_null_response">Nie otrzymano odpowiedzi</string>
@@ -703,26 +703,26 @@ Language: pl
     <string name="backup_item_contents">Katalog WP-content</string>
     <string name="backup_item_roots">Root WordPressa</string>
     <string name="backup_download_details_choose_items_header">Elementy zawarte w tej paczce do pobrania</string>
-    <string name="gutenberg_native_uploading">Przesyłanie…</string>
-    <string name="gutenberg_native_replace_file">Zastąp plik</string>
-    <string name="gutenberg_native_replace_audio">Zastąp plik dźwiękowy</string>
-    <string name="gutenberg_native_problem_opening_the_audio">Problem podczas otwierania pliku dźwiękowego</string>
-    <string name="gutenberg_native_open">OTWÓRZ</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">Brak aplikacji, która może obsłużyć to zapytanie.</string>
-    <string name="gutenberg_native_lock_icon">Ikona kłódki</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Błąd podczas osadzania pliku dźwiękowego.\nStuknij aby dostać się do opcji.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Stuknij dwukrotnie aby wybrać plik dźwiękowy</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Stuknij dwukrotnie aby odsłuchać plik dźwiękowy</string>
-    <string name="gutenberg_native_choose_audio">Wybierz plik dźwiękowy</string>
-    <string name="gutenberg_native_audio_player">Odtwarzacz plików dźwiękowych</string>
-    <string name="gutenberg_native_audio_file">plik dźwiękowy</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">Przesyłanie…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Zastąp plik</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Zastąp plik dźwiękowy</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem podczas otwierania pliku dźwiękowego</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">OTWÓRZ</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">Brak aplikacji, która może obsłużyć to zapytanie.</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">Ikona kłódki</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Błąd podczas osadzania pliku dźwiękowego.\nStuknij aby dostać się do opcji.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać plik dźwiękowy</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">Stuknij dwukrotnie aby odsłuchać plik dźwiękowy</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Wybierz plik dźwiękowy</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">Odtwarzacz plików dźwiękowych</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">plik dźwiękowy</string>
     <string name="photo_picker_use_audio">Wykorzystaj ten plik dźwiękowy</string>
     <string name="photo_picker_choose_audio">Wybierz plik dźwiękowy z tego urządzenia</string>
     <string name="continue_with_wpcom">Zaloguj się lub zarejestruj w WordPress.com</string>
     <string name="people_optional_custom_message_helper_text">Opcjonalne: wprowadź własną wiadomość, która zostanie wysłana wraz z zaproszeniem.</string>
-    <string name="gutenberg_native_audio_caption_s">Podpis pliku audio. %s</string>
-    <string name="gutenberg_native_audio_caption_empty">Podpis pliku audio. Pusty</string>
-    <string name="gutenberg_native_add_audio">Dodaj plik audio</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">Podpis pliku audio. %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Podpis pliku audio. Pusty</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dodaj plik audio</string>
     <string name="people_learn_more_about_roles">Dowiedz się więcej o rolach</string>
     <string name="threat_found_header">Znaleziono</string>
     <string name="threat_status_fixed">Naprawiono</string>
@@ -767,9 +767,9 @@ Language: pl
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
     <string name="web_preview_mobile">Urządzenie przenośne</string>
     <string name="quick_start_dialog_review_pages_title">Przejrzyj strony witryny</string>
-    <string name="quick_start_dialog_review_pages_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
+    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
     <string name="quick_start_dialog_review_pages_message">Zmień, dodaj, lub usuń strony swojej witryny.</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">Wybierz %1$s Strona główna %2$s aby edytować swoją stronę główną.</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Wybierz %1$s Strona główna %2$s aby edytować swoją stronę główną.</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
     <string name="error_media_upload_failed_for_reason">Nie udało się przesłać plików mediów.\n%1$s</string>
@@ -801,8 +801,8 @@ Language: pl
     <string name="backup_empty_subtitle">Twoja pierwsza kopia zapasowa pojawi się tutaj w ciągu 24 godzin. Otrzymasz powiadomienie po ukończeniu kopii zapasowej</string>
     <string name="backup_empty_title">Twoja pierwsza kopia zapasowa będzie wkrótce gotowa</string>
     <string name="request_failed_message">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować później.</string>
-    <string name="gutenberg_native_change_block_position">Zmień pozycję bloku</string>
-    <string name="gutenberg_native_move_to_bottom">Przenieś na dół</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Zmień pozycję bloku</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Przenieś na dół</string>
     <string name="jetpack_icon_content_description">ikona</string>
     <string name="backup_download_complete_info">Przesłaliśmy również odnośnik do twojego pliku na adres email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Przycisk udostępniania łącza</string>
@@ -881,8 +881,8 @@ Language: pl
     <string name="backup_download_details_icon_content_description">Utwórz ikonę dla kopii zapasowej, którą można pobrać</string>
     <string name="backup_item_sqls">Baza danych witryny</string>
     <string name="backup_item_roots_hint">(zawiera wp-config.php oraz pliki nie należące do WordPressa)</string>
-    <string name="gutenberg_native_error">Błąd</string>
-    <string name="gutenberg_native_choose_file">Wybierz plik</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">Błąd</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Wybierz plik</string>
     <string name="activity_log_activity_type_filter_label">Typ aktywności</string>
     <string name="activity_log_date_range_filter_label">Zakres dat</string>
     <string name="backup_download_details_action_button">Utwórz plik do pobrania</string>
@@ -896,12 +896,12 @@ Language: pl
     <string name="dialog_confirm_copy_local_edit_button">Najpierw edytuj wpis</string>
     <string name="dialog_confirm_copy_local_title">Konflikt synchronizacji wpisu</string>
     <string name="button_copy">Powiel</string>
-    <string name="gutenberg_native_file_block_settings">Ustawienia bloku pliku</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Nie można było zapisać plików.\nStuknij aby wejść w opcje.</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
-    <string name="gutenberg_native_edit_file">Edytuj plik</string>
-    <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
-    <string name="gutenberg_native_file_name">Nazwa pliku</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">Ustawienia bloku pliku</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Nie można było zapisać plików.\nStuknij aby wejść w opcje.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edytuj plik</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Kopiuj adres URL pliku</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">Nazwa pliku</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nie można było cofnąć subskrypcji komentarzy dla tego wpisu</string>
@@ -919,8 +919,8 @@ Language: pl
     <string name="hpp_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online</string>
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
     <string name="hpp_choose_error">Wystąpił błąd podczas wyboru szablonu</string>
-    <string name="continue_site_credentials">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
-    <string name="login_find_your_connected_email">Odnajdź swój połączony email</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="login">Odnajdź swój połączony email</string>
     <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>
@@ -929,8 +929,8 @@ Language: pl
     <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b&gt;50 polubień&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; polubił(a) twój wpis</string>
     <string name="hpp_choose_button">Wybierz</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">Zamknięto przewijalne menu blokowe. </string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Zamknięto przewijalne menu blokowe. </string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="prepublishing_nudges_home_categories_not_set">Nie ustawiono</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
@@ -958,11 +958,11 @@ Language: pl
     <string name="login_prologue_second_subtitle_one">Czerpanie inspiracji</string>
     <string name="login_prologue_title_fifth">Obserwuj swoje ulubione witryny i odkrywaj nowe blogi.</string>
     <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierane</string>
-    <string name="gutenberg_native_help_button">Przycisk wsparcia</string>
-    <string name="gutenberg_native_edit_using_web_editor">Edytuj używając edytora web</string>
-    <string name="gutenberg_native_choose_images">Wybierz obrazki</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' nie jest w pełni wspierane</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Przycisk wsparcia</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edytuj używając edytora web</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Wybierz obrazki</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
@@ -979,44 +979,44 @@ Language: pl
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ten polecający nie może być oznaczony jako Spam</string>
     <string name="media_uploading_stock_library_photo">Przesyłanie stockowych mediów</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako spam</string>
-    <string name="gutenberg_native_search_or_type_url">Przeszukaj lub wpisz adres URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
-    <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
-    <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
+    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Przeszukaj lub wpisz adres URL</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">Dodaj ten odnośnik do numeru telefonu</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">Dodaj ten odnośnik</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
-    <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
     <string name="media_browse_for_items">Przeglądaj elementy</string>
-    <string name="email_not_registered_wpcom">Hmm, nie możemy odnaleźć konta WordPress.com skojarzonego z tym adresem email.</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="login">Hmm, nie możemy odnaleźć konta WordPress.com skojarzonego z tym adresem email.</string>
     <string name="reader_menu_report_post">Opublikuj wpis ponownie</string>
     <string name="reader_welcome_banner">Witamy w Czytniku. Odkryj miliony blogów. Są w zasięgu ręki.</string>
     <string name="error_media_xmlrcp_server_error">Wystąpił wewnętrzny błąd serwera</string>
     <string name="error_media_xmlrpc_not_allowed">Twoje działanie nie jest dozwolone</string>
     <string name="show_n_hidden_items_desc">%1$s więcej elementów</string>
-    <string name="gutenberg_native_select_a_layout">Wybierz układ</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ kolumny może różnić się pomiędzy motywami i różnymi wymiarami ekranów</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Wybierz układ</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Uwaga: Układ kolumny może różnić się pomiędzy motywami i różnymi wymiarami ekranów</string>
     <string name="reader_discover_interests_header">Może polubisz</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ukryj</string>
     <string name="create_post_story_fab_tooltip">Utwórz wpis lub relację</string>
     <string name="create_page_fab_tooltip">Utwórz stronę</string>
     <string name="create_post_fab_tooltip">Utwórz wpis</string>
-    <string name="gutenberg_native_updates_the_title">Uaktualnia tytuł.</string>
-    <string name="gutenberg_native_paste_block_after">Wklej blok po</string>
-    <string name="gutenberg_native_page_title_s">Tytuł strony. %s</string>
-    <string name="gutenberg_native_page_title_empty">Tytuł strony. Pusty</string>
-    <string name="toast_error_playing_video">Podczas odtwarzania filmu wystąpił błąd</string>
-    <string name="camera_error">To urządzenie nie wspiera API Camera2.</string>
-    <string name="gutenberg_native_video_caption_empty">Podpis pod filmem. Pusty</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Uaktualnia tytuł.</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Wklej blok po</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Tytuł strony. %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Tytuł strony. Pusty</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">Podczas odtwarzania filmu wystąpił błąd</string>
+    <string name="camera_error" tools:ignore="UnusedResources">To urządzenie nie wspiera API Camera2.</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Podpis pod filmem. Pusty</string>
     <string name="label_close_button">Zamknij</string>
     <string name="mlp_preview_page">Podgląd</string>
     <string name="mlp_create_page">Utwórz stronę</string>
     <string name="mlp_create_blank_page">Utwórz pustą stronę</string>
     <string name="mlp_choose_layout_subtitle">Zacznij od wybrania układu z szerokiej gamy gotowców lub rozpocznij z pustą stroną.</string>
     <string name="mlp_choose_layout_title">Wybierz układ</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
@@ -1025,65 +1025,65 @@ Language: pl
     <string name="my_site_bottom_sheet_add_story">Wpis z relacją</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Edytowanie ikon witryn z samodzielnym hostingiem wymaga wtyczki Jetpack.</string>
     <string name="pick_file">Dodaj plik</string>
-    <string name="gutenberg_native_replace_image_or_video">Zamień zdjęcie lub film</string>
-    <string name="gutenberg_native_replace_video">Zastąp film</string>
-    <string name="gutenberg_native_choose_video">Wybierz film</string>
-    <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
-    <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
-    <string name="gutenberg_native_block_removed">Blok usunięto</string>
-    <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
-    <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Zamień zdjęcie lub film</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Zastąp film</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Wybierz film</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Wybierz zdjęcie lub film</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Wybierz obrazek</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Blok usunięto</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="login">Potwierdzenie rejestracji</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
-    <string name="gutenberg_native_convert_to_link">Przekształć na odnośnik</string>
-    <string name="continue_terms_of_service_text">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
-    <string name="signup_confirmation_message">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
-    <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com. Sprawdź pocztę na tym urządzeniu, i stuknij odnośnik we wiadomości email, którą otrzymasz od WordPress.com</string>
-    <string name="enter_account_info_for_site">Wprowadź informacje dotyczące swoje konta dla %1$s.</string>
-    <string name="login_or">lub</string>
-    <string name="continue_google_button_suffix">Zaloguj się za pośrednictwem Google</string>
-    <string name="login_find_your_site_adress">Znajdź adres swojej witryny</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Przekształć na odnośnik</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="login">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="login">Wysłaliśmy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com. Sprawdź pocztę na tym urządzeniu, i stuknij odnośnik we wiadomości email, którą otrzymasz od WordPress.com</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź informacje dotyczące swoje konta dla %1$s.</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">lub</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się za pośrednictwem Google</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="login">Znajdź adres swojej witryny</string>
     <string name="login_done">Gotowe</string>
-    <string name="magic_link_not_seeing_email_message">Nie widzisz wiadomości email? Sprawdź folder Spam lub Wiadomości Śmieci w swoim programie pocztowym.</string>
-    <string name="login_magic_links_sent_label">Sprawdź pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email, którą otrzymałe(a)ś od WordPress.com.</string>
-    <string name="login_magic_links_label">Prześlemy tobie odnośnik, który zaloguje ciebie natychmiast, bez konieczności wpisywania hasła.</string>
-    <string name="get_started">Rozpocznij</string>
-    <string name="enter_email_to_continue_wordpress_com">Wprowadź adres email aby zalogować się albo utworzyć konto WordPress.com.</string>
-    <string name="or_type_your_password">Lub wprowadź hasło</string>
-    <string name="create_account">Utwórz konto</string>
-    <string name="send_link_by_email">Wyślij odnośnik przez email</string>
-    <string name="reset_your_password">Zresetuj hasło</string>
-    <string name="check_email">Sprawdź skrzynkę e-mail</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="login">Nie widzisz wiadomości email? Sprawdź folder Spam lub Wiadomości Śmieci w swoim programie pocztowym.</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="login">Sprawdź pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email, którą otrzymałe(a)ś od WordPress.com.</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="login">Prześlemy tobie odnośnik, który zaloguje ciebie natychmiast, bez konieczności wpisywania hasła.</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">Rozpocznij</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź adres email aby zalogować się albo utworzyć konto WordPress.com.</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Lub wprowadź hasło</string>
+    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Utwórz konto</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Wyślij odnośnik przez email</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Zresetuj hasło</string>
+    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">Sprawdź skrzynkę e-mail</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby nadać nowy tytuł</string>
     <string name="quick_start_list_update_site_title_title">Sprawdź tytuł witryny</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
-    <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
-    <string name="gutenberg_native_remove_block">Usuń blok</string>
-    <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
-    <string name="gutenberg_native_copy_block">Skopiuj blok</string>
-    <string name="gutenberg_native_copied_block">Skopiowany blok</string>
-    <string name="gutenberg_native_block_pasted">Blok wklejony</string>
-    <string name="gutenberg_native_block_duplicated">Blok zduplikowany</string>
-    <string name="gutenberg_native_block_cut">Blok wycięty</string>
-    <string name="gutenberg_native_block_copied">Blok skopiowano</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s opcje bloku</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Usuń blok</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplikuj blok</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Skopiuj blok</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Skopiowany blok</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Blok wklejony</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Blok zduplikowany</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Blok wycięty</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Blok skopiowano</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Tytuł witryny może być zmieniony wyłącznie przez użytkownika z rolą administratora.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niezapisane zmiany</string>
     <string name="my_site_title_changer_dialog_hint">Tytuł witryny jest wyświetlony na pasku tytułu przeglądarki a także w nagłówku większości motywów.</string>
     <string name="error_update_site_title_network">Nie można było zaktualizować tytułu witryny. Sprawdź ustawienia sieci i spróbuj ponownie.</string>
-    <string name="gutenberg_native_open_link_in_a_browser">Otwórz odnośnik w przeglądarce</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Przechodzi do poprzedniego arkusza z treściami</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">Przechodzi do personalizacji gradientów</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">Przechodzi do personalizacji selektora kolorów</string>
-    <string name="gutenberg_native_gradient_type">Typ gradientu</string>
-    <string name="gutenberg_native_go_back">Wróć</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">Stuknij dwukrotnie aby wybrać opcję</string>
-    <string name="gutenberg_native_customize_gradient">Personalizuj gradient</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Otwórz odnośnik w przeglądarce</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Przechodzi do poprzedniego arkusza z treściami</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Przechodzi do personalizacji gradientów</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Przechodzi do personalizacji selektora kolorów</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Typ gradientu</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Wróć</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać opcję</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Personalizuj gradient</string>
     <string name="pages_list_author">Autor strony</string>
     <string name="error_media_thumbnail_not_loaded">Nie można było wczytać miniatury tego pliku mediów</string>
     <string name="menu_content_info">Struktura treści</string>
     <string name="everyone">Wszyscy</string>
     <string name="me">Ja</string>
-    <string name="gutenberg_native_dismiss">Odrzuć</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Odrzuć</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
     <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
@@ -1112,11 +1112,11 @@ Language: pl
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
-    <string name="gutenberg_native_move_to_top">Przenieś na górę</string>
-    <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Otwórz menu działań na blokach</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">Przenieś na górę</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Wstaw wzmiankę</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
     <string name="pages_set_as_homepage">Ustaw jako stronę domową</string>
     <string name="site_settings_posts_page">Strona z wpisami</string>
@@ -1140,8 +1140,8 @@ Language: pl
     <string name="page_posts_page_update_failed">Nie udało się zaktualizować Strony z wpisami</string>
     <string name="page_posts_page_successfully_updated">Strona z wpisami zaktualizowana</string>
     <string name="page_cannot_set_homepage">Aby ustawić Stronę główną włącz opcję \"Statyczna strona główna\" w ustawieniach witryny</string>
-    <string name="gutenberg_native_select_a_color">Wybierz kolor</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Wybierz kolor</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
@@ -1166,22 +1166,22 @@ Language: pl
     <string name="reader_no_blog_to_reblog_action">Zarządzanie blogami</string>
     <string name="reader_no_blog_to_reblog_detail">Po utworzeniu bloga WordPress.com możesz ponownie publikować wybrane treści na własnej witrynie.</string>
     <string name="reader_no_blog_to_reblog_title">Brak dostępnych blogów WordPress.com</string>
-    <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
-    <string name="gutenberg_native_move_block_left">Przesuń blok w lewo</string>
-    <string name="gutenberg_native_move_block_right">Przesuń blok w prawo</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Przesuń blok w prawo z pozycji %1$s na pozycję %2$s</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Liczba kolumn</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Przesuń blok w lewo</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Przesuń blok w prawo</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Przesuń blok w prawo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nPrawie gotowe</string>
     <string name="new_site_creation_creating_site_loading_3">Ustawianie motywu</string>
     <string name="new_site_creation_creating_site_loading_4">Tworzenie kokpitu</string>
     <string name="new_site_creation_creating_site_loading_1">Pobieranie adresu URL witryny</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Twoja witryna będzie niebawem gotowa</string>
     <string name="new_site_creation_creating_site_loading_2">Dodawanie funkcji witryny</string>
-    <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Ustawienia bloku</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
-    <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">Wystąpił problem podczas wykonywania żądania</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
     <string name="photo_picker_gif">Wybierz z Tenor</string>
     <string name="weekday_monday">poniedziałek</string>
@@ -1228,17 +1228,17 @@ Language: pl
     <string name="editor_page_saved_online">Strona zapisana online</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
-    <string name="gutenberg_native_warning_message">Wiadomość ostrzeżenia</string>
-    <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
-    <string name="gutenberg_native_link_to">Odnośnik do</string>
-    <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
-    <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
-    <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
-    <string name="gutenberg_native_edit_cover_media">Edytuj okładkę</string>
-    <string name="gutenberg_native_customize">PERSONALIZUJ</string>
-    <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
-    <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
-    <string name="gutenberg_native_border_radius">Zaokrąglenie obramowania</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wiadomość ostrzeżenia</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Pokaż treść wpisu</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Odnośnik do</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Pokaż tylko zajawkę</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Ustawienia odnośnika</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Długość zajawki (ilość słów)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Edytuj okładkę</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">PERSONALIZUJ</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">Przycisk z odnośnikiem URL</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Dodaj blok paragrafu</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">Zaokrąglenie obramowania</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
@@ -1259,16 +1259,16 @@ Language: pl
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>
     <string name="reader_bottom_sheet_select_content_description">Wybierz tag lub blog, wyskakujące okno</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Zaloguj się do WordPress.com, aby zobaczyć najnowsze wpisy z subskrybowanych blogów</string>
-    <string name="gutenberg_native_replace_current_block">Zamień aktualny blok</string>
-    <string name="gutenberg_native_add_to_end">Dodaj zakończenie</string>
-    <string name="gutenberg_native_add_to_beginning">Dodaj początek</string>
-    <string name="gutenberg_native_add_block_before">Dodaj blok przed</string>
-    <string name="gutenberg_native_add_block_after">Dodaj blok za</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Zamień aktualny blok</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Dodaj zakończenie</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Dodaj początek</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Dodaj blok przed</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Dodaj blok za</string>
     <string name="reader_filter_cta">Filtr</string>
-    <string name="gutenberg_native_edit_video">Edytuj film</string>
-    <string name="gutenberg_native_edit_media">Edytuj media</string>
-    <string name="gutenberg_native_add_a_shortcode">Dodaj krótki kod (shortcode)…</string>
-    <string name="gutenberg_native_video_caption_s">Podpis pod filmem. %s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edytuj film</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edytuj media</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Dodaj krótki kod (shortcode)…</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Podpis pod filmem. %s</string>
     <string name="post_list_author">Autor wpisu</string>
     <string name="fab_create_desc">Utwórz wpis</string>
     <string name="stats_posting_activity_empty_description">Brak statystyk za ten okres</string>
@@ -1283,8 +1283,8 @@ Language: pl
     <string name="stats_posting_activity_end_description">Sprawdziłeś już statystyki za ten okres.\n      Stuknij jeszcze raz i rozpoczniesz od nowa.</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
-    <string name="gutenberg_native_gallery_caption_s">Podpis galerii. %s</string>
-    <string name="gutenberg_native_replace_image">Zastąp obrazek</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Podpis galerii. %s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zastąp obrazek</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="content_description_person_building_website">Osoba budująca witrynę</string>
     <string name="post_signup_interstitial_subtitle">Cokolwiek chcesz stworzyć lub udostępnić, pomożemy tobie do zrobić właśnie tu.</string>
@@ -1302,12 +1302,12 @@ Language: pl
     <string name="dialog_confirm_scheduled_post_sync_title">Gotowe do synchronizacji?</string>
     <string name="new_site_creation_unavailable_domain">Domena nie jest dostępna</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b&gt;SSL Certificatem&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b&gt;Authentykacji HTTP&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="enter_credentials_for_site">Zaloguj się za pomocą danych uwierzytelniających %1$s tej witryny</string>
-    <string name="login_discovery_error_xmlrpc">Nie byliśmy w stanie uzyskać dostępu do &lt;b&gt;pliku XMLRPC&lt;/b&gt; na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b&gt;%1$s&lt;/b&gt; podłączony do Jetpacka</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="login">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b&gt;SSL Certificatem&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="login">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b&gt;Authentykacji HTTP&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się za pomocą danych uwierzytelniających %1$s tej witryny</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="login">Nie byliśmy w stanie uzyskać dostępu do &lt;b&gt;pliku XMLRPC&lt;/b&gt; na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="login">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b&gt;%1$s&lt;/b&gt; podłączony do Jetpacka</string>
     <string name="my_site_bottom_sheet_add_page">Strona witryny</string>
     <string name="suffix_1_000">%s tys.</string>
     <string name="suffix_1_000_000_000">%s mld</string>
@@ -1320,56 +1320,56 @@ Language: pl
     <string name="reader_my_likes_display_name">Polubienia</string>
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
-    <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
-    <string name="gutenberg_native_unsupported">Niewspierane</string>
-    <string name="gutenberg_native_ungroup">Rozgrupuj</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Stuknij aby ukryć klawiaturę</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Stuknij tutaj aby otworzyć pomoc</string>
-    <string name="gutenberg_native_take_a_video">Nakręć film</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Zrób zdjęcie lub nakręć film</string>
-    <string name="gutenberg_native_take_a_photo">Wykonaj zdjęcie</string>
-    <string name="gutenberg_native_start_writing">Rozpocznij pisanie…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
-    <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
-    <string name="gutenberg_native_cut_block">Wytnij blok</string>
-    <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
-    <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
-    <string name="gutenberg_native_post_title_s">Tytuł wpisu. %s</string>
-    <string name="gutenberg_native_post_title_empty">Tytuł wpisu. Pusty</string>
-    <string name="gutenberg_native_paste_url">Wklej adres URL</string>
-    <string name="gutenberg_native_open_settings">Otwórz Ustawienia</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Żadna aplikacja nie jest w stanie obsłużyć tego zapytania. Proszę zainstalować przeglądarkę.</string>
-    <string name="gutenberg_native_page_break_block_s">Blok końca strony. %s</string>
-    <string name="gutenberg_native_navigate_up">Nawiguj w górę</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
-    <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
-    <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
-    <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
-    <string name="gutenberg_native_help_icon">Ikona pomocy</string>
-    <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
-    <string name="gutenberg_native_link_text">Treść odnośnika</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
-    <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">Stuknij dwukrotnie aby cofnąć ostatnią zmianę</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">Stuknij dwukrotnie aby zmienić ustawienie</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Stuknij dwukrotnie aby przesunąć blok do góry</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Stuknij dwukrotnie aby przesunąć blok w dół</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">Stuknij dwukrotnie aby edytować tą wartość</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">Stuknij dwukrotnie aby dodać blok</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
-    <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
-    <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
-    <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
-    <string name="gutenberg_native_add_url">Dodaj adres URL</string>
-    <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
-    <string name="gutenberg_native_add_description">Dodaj opis</string>
-    <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
-    <string name="gutenberg_native_add_video">Dodaj film</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">Biblioteka mediów WordPressa</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Niewspierane</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Rozgrupuj</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Stuknij aby ukryć klawiaturę</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Stuknij tutaj aby otworzyć pomoc</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Nakręć film</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Zrób zdjęcie lub nakręć film</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Wykonaj zdjęcie</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Rozpocznij pisanie…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s blok. Ten blok ma nieprawidłową zawartość</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s blok. Puste</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Wytnij blok</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem podczas otwierania filmu</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem z wyświetlaniem bloku</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Tytuł wpisu. %s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Tytuł wpisu. Pusty</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Wklej adres URL</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Otwórz Ustawienia</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">Żadna aplikacja nie jest w stanie obsłużyć tego zapytania. Proszę zainstalować przeglądarkę.</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Blok końca strony. %s</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Nawiguj w górę</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Przesuń blok w górę</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Stuknij dwukrotnie aby cofnąć zmiany</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Przesuń blok w dół</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Wstawiono odnośnik</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Ukryj klawiaturę</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Ikona pomocy</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Podpis pod obrazkiem. %s</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Treść odnośnika</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać obrazek</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać plik filmowy</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Stuknij dwukrotnie aby wybrać</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Stuknij dwukrotnie aby cofnąć ostatnią zmianę</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Stuknij dwukrotnie aby zmienić ustawienie</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Stuknij dwukrotnie aby przesunąć blok do góry</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">Stuknij dwukrotnie aby przesunąć blok w dół</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Stuknij dwukrotnie aby edytować tą wartość</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Stuknij dwukrotnie aby dodać blok</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Aktualna wartość to %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Wybierz z urządzenia</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Tekst alternatywny</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Dodaj adres URL</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">DODAJ TUTAJ BLOK</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dodaj opis</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Dodaj tekst alternatywny</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dodaj film</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
@@ -1473,9 +1473,9 @@ Language: pl
     <string name="post_settings_notification">Powiadomienie</string>
     <string name="post_settings_time_and_date">Data i godzina</string>
     <string name="post_notification_off">Wyłączono</string>
-    <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
-    <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
     <string name="stats_post_label">Wpis</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_item_collapsed">Element zwinięto</string>
@@ -1490,13 +1490,13 @@ Language: pl
     <string name="description_collapse">Zwiń</string>
     <string name="my_site_verify_your_email_without_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na twój e-mail</string>
     <string name="my_site_verify_your_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na adres %s</string>
-    <string name="link_dialog_title">Wstaw odnośnik</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">Wstaw odnośnik</string>
     <string name="post_settings_retry_featured_image">Prześlij ponownie</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Przesyłanie pliku mediów.\nStuknij aby dostać się do opcji.</string>
-    <string name="link_dialog_button_remove_link">Usuń odnośnik</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_ok">OK</string>
-    <string name="link_dialog_button_cancel">Anuluj</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">Usuń odnośnik</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">Anuluj</string>
     <string name="link_open_new_window">Otwórz odnośnik w nowym oknie lub karcie</string>
     <string name="stats_widget_error_no_access_token">Aby przejrzeć statystyki witryny, zaloguj się do konta WordPress.com.</string>
     <string name="stats_widget_minified_name">W skrócie</string>
@@ -1558,7 +1558,7 @@ Language: pl
     <string name="stats_management_news_card_message">Wybierz statystyki, które chcesz widzieć i skup się na danych na których najbardziej tobie zależy. Stuknij %1$s na dole strony Trendów aby spersonalizować statystyki.</string>
     <string name="stats_management_new">Nowe</string>
     <string name="history_fetching_revisions">Pobieranie wersji…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
     <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
     <string name="post_uploading_draft">Przesyłanie wpisu</string>
@@ -1588,8 +1588,8 @@ Language: pl
     <string name="posts_scheduled_empty">Nie masz żadnych zaplanowanych wpisów</string>
     <string name="posts_published_empty">Nie opublikowałeś jeszcze żadnych wpisów</string>
     <string name="post_list_toggle_item_layout_cards_view">Przełącz na widok kart</string>
-    <string name="notification_wpcom_username_needed">Zaloguj się za pomocą swojej nazwy użytkownika i hasła.</string>
-    <string name="error_user_username_instead_of_email">Zaloguj się przy pomocy użytkonika WordPress.com zamiast swojego adresu email.</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się za pomocą swojej nazwy użytkownika i hasła.</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się przy pomocy użytkonika WordPress.com zamiast swojego adresu email.</string>
     <string name="stats_insights_average_words">Średnio słów/wpis</string>
     <string name="stats_insights_total_words">Suma słów</string>
     <string name="stats_insights_average_likes">Średnio polub./wpis</string>
@@ -1597,7 +1597,7 @@ Language: pl
     <string name="stats_insights_average_comments">Średnio koment./wpis</string>
     <string name="stats_insights_total_comments">Suma komentarzy</string>
     <string name="stats_insights_year">Rok</string>
-    <string name="no_site_error">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="login">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
     <string name="stats_insights_posts">Wpisy</string>
     <string name="stats_insights_this_year_site_stats">Bieżący rok</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Sprawdzanie środków domeny</string>
@@ -1615,7 +1615,7 @@ Language: pl
     <string name="publish_on">Zostanie opublikowany w dniu: %s</string>
     <string name="stats_months_and_years_views_label">Wyświetlenia</string>
     <string name="published_on">Opublikowano dnia: %s</string>
-    <string name="stats_insights_load_more">Załaduj więcej</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Załaduj więcej</string>
     <string name="stats_insights_best_hour">Najlepsza godzina</string>
     <string name="stats_insights_best_day">Najlepszy Dzień</string>
     <string name="showing_stats_for">Prezentacja statystyk dla wpisu:</string>
@@ -1626,7 +1626,7 @@ Language: pl
     <string name="app_rating_rate_never">Nie, dziękuję</string>
     <string name="editor_post_converted_back_to_draft">Wpis z powrotem zamieniony na wpis</string>
     <string name="stats_insights_posting_activity">Aktywność publikowania wpisów</string>
-    <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Witryna jeszcze nie załadowana</string>
     <string name="stats_more_posts">Więcej wpisów</string>
     <string name="stats_fewer_posts">Mniej wpisów</string>
     <string name="new_site_creation_preview_back_pressed_warning">Utracisz postęp swoich prac. Czy na pewno chcesz wyjść?</string>
@@ -1648,14 +1648,14 @@ Language: pl
     <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
-    <string name="quick_start_dialog_check_stats_message_short">Wybierz %1$s statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
-    <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
-    <string name="quick_start_dialog_enable_sharing_message">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Wybierz %1$s statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Uaktywnij udostępnianie wpisów</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
     <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
     <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco z wydajnością swojej witryny.</string>
     <string name="quick_start_task_skip_menu_title">Pomiń zadanie</string>
-    <string name="notification_channel_reminder_title">Przypomnienie</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Przypomnienie</string>
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
     <string name="stats_insights_popular">Najbardziej popularna pora</string>
@@ -1714,7 +1714,7 @@ Language: pl
     <string name="stats_insights_share_post">Udostępnij wpis</string>
     <string name="stats_insights_create_post">Stwórz wpis</string>
     <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
-    <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">Brak plików mediów dopasowanych do twojego zapytania</string>
     <string name="stats_countries">Kraje</string>
     <string name="stats_country_label">Kraj</string>
     <string name="stats_search_terms_views_label">Wyświetlenia</string>
@@ -1765,7 +1765,7 @@ Language: pl
     <string name="history_empty_title">Brak historii</string>
     <string name="history_empty_subtitle_post">Kiedy wprowadzisz zmiany do swoich wpisów, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
     <string name="history_empty_subtitle_page">Kiedy wprowadzisz zmiany do swoich stron, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
-    <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
     <string name="history_footer_post">Wpis utworzono %1$s o %2$s</string>
     <string name="history_footer_page">Utworzono stronę %1$s o %2$s</string>
     <string name="history_load_dialog_button_positive">Ładowanie</string>
@@ -1787,13 +1787,13 @@ Language: pl
     <string name="pages_move_to_trash">Przenieś do kosza</string>
     <string name="pages_search_suggestion">Wyszukaj strony</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
-    <string name="pages_scheduled">Zaplanowano</string>
-    <string name="pages_drafts">Szkice</string>
-    <string name="pages_published">Opublikowano</string>
-    <string name="login_error_sms_throttled">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS - zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Zaplanowano</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Szkice</string>
+    <string name="pages_published" tools:ignore="UnusedResources">Opublikowano</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS - zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
     <string name="pages_view">Zobacz</string>
-    <string name="pages_trashed">W koszu</string>
-    <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">W koszu</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
     <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
     <string name="page_parent_changed">Strona nadrzędną została zmieniona</string>
     <string name="page_permanently_deleted">Strona została trwale usunięta</string>
@@ -1818,15 +1818,15 @@ Language: pl
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
     <string name="quick_start_dialog_view_site_message">Podejrzyj witrynę aby sprawdzić jej wygląd, który zobaczą odwiedzający. </string>
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
-    <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
     <string name="quick_start_dialog_follow_sites_title">Podłącz inne witryny</string>
-    <string name="quick_start_button_positive">Dalej</string>
-    <string name="quick_start_button_negative_short">Anuluj</string>
-    <string name="quick_start_button_negative">Nie teraz</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">Dalej</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Anuluj</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Nie teraz</string>
     <string name="content_description_more">Więcej</string>
     <string name="my_site_create_new_site_title">Nie masz żadnych witryn</string>
-    <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najczęściej zadawane pytania Jetpacka</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
@@ -1863,7 +1863,7 @@ Language: pl
     <string name="support_push_notification_message">Nowe wiadomości od zespołu \'Pomocy i wsparcia\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nie ustawiono</string>
-    <string name="notification_channel_transient_title">Krótkotrwały</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Krótkotrwały</string>
     <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Trwa przywracanie</string>
     <string name="support_contact_email">Adres e-mail do kontaktu</string>
@@ -1879,13 +1879,13 @@ Language: pl
     <string name="reader_empty_search_title">Niczego nie znaleziono</string>
     <string name="comment_read_source_post">Przeczytaj wpis źródłowy</string>
     <string name="sites">Witryny</string>
-    <string name="signup_magic_link_title">Wysłano Magic Linka</string>
-    <string name="verification_2fa_screen_title">Weryfikacja kodu</string>
-    <string name="selfhosted_site_login_title">Dane uwierzytelniające logowania</string>
-    <string name="email_address_login_title">Logowanie adresem email</string>
-    <string name="site_address_login_title">Logowanie adresem witryny</string>
-    <string name="magic_link_login_title">Logowanie przy użyciu Magic Linka</string>
-    <string name="magic_link_sent_login_title">Wysłano Magic Linka</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">Wysłano Magic Linka</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">Weryfikacja kodu</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Dane uwierzytelniające logowania</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Logowanie adresem email</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Logowanie adresem witryny</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Logowanie przy użyciu Magic Linka</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Wysłano Magic Linka</string>
     <string name="reader_bookmark_snack_title">Wpis zapisano</string>
     <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
     <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
@@ -1948,8 +1948,8 @@ Language: pl
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
     <string name="content_description_person_reading_device_notification">Osoba czytająca na urządzeniu z powiadomieniami</string>
     <string name="comment_title">%1$s - %2$s</string>
-    <string name="notification_channel_important_title">Ważne</string>
-    <string name="notification_channel_general_title">Ogólne</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Ważne</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
     <string name="media_preview_title">%1$d z %2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">Zdjęcia dostarczone przez %s</string>
@@ -1981,7 +1981,7 @@ Language: pl
     <string name="media_grid_item_trash_desc">kosz</string>
     <string name="media_grid_item_retry_desc">ponów próbę</string>
     <string name="invite_user_delete_desc">usuń %s</string>
-    <string name="signup_with_google_progress">Rejestrowanie zaś pomocą Google…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Rejestrowanie zaś pomocą Google…</string>
     <string name="profile_picture">zdjęcie profilu użytkownika %s</string>
     <string name="media_grid_item_image_desc">pogląd mediów, plik %s</string>
     <string name="navigate_up_desc">nawiguj w górę</string>
@@ -2065,7 +2065,7 @@ Language: pl
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
-    <string name="google_error_timeout">Odpowiedź zajęła Google zbyt dużo czasu. Możliwe, że będziesz musiał poczekać na lepsze połączenie z internetem.</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Odpowiedź zajęła Google zbyt dużo czasu. Możliwe, że będziesz musiał poczekać na lepsze połączenie z internetem.</string>
     <string name="username_changer_title">Zmień nazwę użytkownika</string>
     <string name="username_changer_hint">Wpisz aby uzyskać więcej sugestii</string>
     <string name="username_changer_header">Twoja aktualna nazwa użytkownika to %1$s%2$s%3$s. Z kilkoma wyjątkami, inni będą tylko widzieli twoją Nazwę Wyświetlaną, %4$s%5$s%6$s.</string>
@@ -2077,16 +2077,16 @@ Language: pl
     <string name="content_description_add_avatar">Dodaj zdjęcie profilowe</string>
     <string name="signup_user_exists">Email już istnieje na WordPress.com.\nKontynuowanie logowania.</string>
     <string name="signup_updating_account">Aktualizacja konta…</string>
-    <string name="signup_magic_link_progress">Wysyłanie emaila</string>
-    <string name="signup_magic_link_error_button_negative">Zamknij</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Wysyłanie emaila</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">Zamknij</string>
     <string name="signup_epilogue_hint_username">Nazwa użytkownika</string>
     <string name="signup_epilogue_hint_password_detail">Możesz zawsze zalogować się za pomocą odnośnika którego właśnie użyłeś, ale możesz również założyć hasło jeśli wolisz.</string>
     <string name="signup_epilogue_hint_password">Hasło (opcjonalnie)</string>
     <string name="signup_epilogue_error_button_negative">Cofnij</string>
     <string name="signup_epilogue_error_generic">Wystąpił problem podczas aktualizacji twojego konta. Możesz spróbować ponownie lub cofnąć zmianę użytkownika aby kontynuować.</string>
     <string name="signup_epilogue_error_avatar">Wystąpił błąd przesyłania swojego zdjęcia profilowego.</string>
-    <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
-    <string name="signup_magic_link_error_button_positive">Spróbuj ponownie</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">Spróbuj ponownie</string>
     <string name="signup_epilogue_error_button_positive">Spróbuj ponownie</string>
     <string name="signup_epilogue_hint_display">Wyświetlana nazwa</string>
     <string name="plugin_needs_update">Wymaga aktualizacji/subskrypcji</string>
@@ -2178,18 +2178,18 @@ Language: pl
     <string name="media_edit_link_hint">Otwórz odnośnik w nowym oknie lub karcie</string>
     <string name="plugin_active">Włączono</string>
     <string name="media_edit_link_text">Odnośnik do</string>
-    <string name="notification_login_failed">Wystąpił błąd.</string>
-    <string name="notification_2fa_needed">Proszę wprowadzić kod autoryzacji aby kontynuować. </string>
-    <string name="notification_error_wrong_password">Proszę sprawdzić swoje hasło aby kontynuować. </string>
-    <string name="notification_login_title_stopped">Logowanie zatrzymane. </string>
-    <string name="notification_logging_in">Proszę czekać, trwa logowanie. </string>
-    <string name="notification_login_title_in_progress">Logowanie w toku… </string>
-    <string name="notification_logged_in">Stuknij aby kontynuować. </string>
-    <string name="notification_login_title_success">Zalogowano! </string>
-    <string name="login_error_generic_start">Nie można było rozpocząć logowania Google. </string>
-    <string name="login_empty_password">Proszę wprowadzić hasło</string>
-    <string name="login_text_otp_another">Prześlij mi po prostu kolejny kod</string>
-    <string name="enter_verification_code_sms">Przesłaliśmy wiadomość tekstową na numer telefonu kończący się na %s. Proszę wprowadzić kod weryfikacyjny z SMSa. </string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">Wystąpił błąd.</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę wprowadzić kod autoryzacji aby kontynuować. </string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę sprawdzić swoje hasło aby kontynuować. </string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">Logowanie zatrzymane. </string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę czekać, trwa logowanie. </string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Logowanie w toku… </string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">Stuknij aby kontynuować. </string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">Zalogowano! </string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">Nie można było rozpocząć logowania Google. </string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę wprowadzić hasło</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">Prześlij mi po prostu kolejny kod</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">Przesłaliśmy wiadomość tekstową na numer telefonu kończący się na %s. Proszę wprowadzić kod weryfikacyjny z SMSa. </string>
     <string name="image_size">Rozmiar</string>
     <string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
     <string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
@@ -2206,15 +2206,15 @@ Language: pl
     <string name="confirm_remove_media_image">Usunąć ten obrazek z wpisu</string>
     <string name="media_edit_file_details_card_caption">Szczegóły pliku</string>
     <string name="media_edit_customize_card_caption">Dostosuj</string>
-    <string name="login_error_suffix">\nMoże spróbujesz innego konta? </string>
-    <string name="login_error_generic">Wystąpił błąd połączenia z kontem Google. </string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">\nMoże spróbujesz innego konta? </string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Wystąpił błąd połączenia z kontem Google. </string>
     <string name="login_error_button">Zamknij</string>
-    <string name="enter_wpcom_password_google">Aby kontynuować ze swoim kontem Google, proszę uzupełnić odpowiednie hasłow WordPress.com. Zostaniesz o to zapytany tylko raz.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">Aby kontynuować ze swoim kontem Google, proszę uzupełnić odpowiednie hasłow WordPress.com. Zostaniesz o to zapytany tylko raz.</string>
     <string name="error_generic_network">Wystąpił błąd sieci. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="post_settings_remove_featured_image">Usuń obrazek wyróżniający</string>
     <string name="post_settings_choose_featured_image">Wybierz obrazek wyróżniający</string>
-    <string name="login_log_in_for_share_intent">Zaloguj się do WordPress.com aby udostępnić treści. </string>
-    <string name="enter_site_address_share_intent">Wprowadź adres WordPressowej witryny, której chciałbyś udostępnić treści. </string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się do WordPress.com aby udostępnić treści. </string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź adres WordPressowej witryny, której chciałbyś udostępnić treści. </string>
     <string name="jetpack_disconnect_error_toast">Błąd rozłączania witryny</string>
     <string name="jetpack_disconnect_success_toast">Witryna rozłączona</string>
     <string name="jetpack_disconnect_confirm">Rozłącz</string>
@@ -2298,34 +2298,34 @@ Language: pl
     <string name="login_epilogue_mysites_other">Moje witryny</string>
     <string name="login_epilogue_mysites_one">Moja witryna</string>
     <string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
-    <string name="login_empty_2fa">Wprowadź kod weryfkacyjny</string>
-    <string name="login_empty_username">Proszę podać nazwę użytkownika</string>
-    <string name="login_log_in_for_deeplink">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
-    <string name="login_error_while_adding_site">Błąd podczas dodawania witryny. Kod błędu: %s</string>
-    <string name="login_checking_site_address">Sprawdzanie adresu witryny</string>
-    <string name="login_site_address_more_help">Potrzebujesz pomocy?</string>
-    <string name="login_site_address_help_content">Adres twojej witryny pojawia się w belce na górze ekrany kiedy przechodzisz na stronę witryny w przeglądarce Chrome.</string>
-    <string name="login_site_address_help_title">Jaki jest adres mojej witryny?</string>
-    <string name="login_site_address">Adres witryny</string>
-    <string name="enter_site_address">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź kod weryfkacyjny</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">Proszę podać nazwę użytkownika</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">Błąd podczas dodawania witryny. Kod błędu: %s</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Sprawdzanie adresu witryny</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">Potrzebujesz pomocy?</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">Adres twojej witryny pojawia się w belce na górze ekrany kiedy przechodzisz na stronę witryny w przeglądarce Chrome.</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">Jaki jest adres mojej witryny?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Adres witryny</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
     <string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
-    <string name="login_continue">Kontynuuj</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">Kontynuuj</string>
     <string name="connect_more">Połącz kolejną witrynę</string>
-    <string name="enter_wpcom_password">Wprowadź swoje hasło WordPress.com</string>
-    <string name="login_magic_link_email_requesting">Wymagany adres email do logowania</string>
-    <string name="password_incorrect">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
-    <string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
-    <string name="login_text_otp">Wyślij mi zamiast tego kod przez SMS</string>
-    <string name="open_mail">Otwórz pocztę</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">Wprowadź swoje hasło WordPress.com</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">Wymagany adres email do logowania</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Żądanie kodu weryfikacyjnego przez SMS</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Wyślij mi zamiast tego kod przez SMS</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Otwórz pocztę</string>
     <string name="next">Następny</string>
-    <string name="enter_email_wordpress_com">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>
     <string name="me_profile_photo">Zdjęcie profilowe</string>
     <string name="error_media_parse_error">Nieoczekiwana odpowiedź z serwera</string>
     <string name="upload_finished_toast">Nie można zatrzymać przesyłania, zakończyło się.</string>
     <string name="menu_redo">Ponów</string>
     <string name="menu_undo">Cofnij</string>
     <string name="post_title">Tytuł</string>
-    <string name="media_insert_unimplemented">Przepraszamy! Funkcjonalność nie jest jeszcze wdrożona :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Przepraszamy! Funkcjonalność nie jest jeszcze wdrożona :(</string>
     <string name="error_media_small">Plik mediów zbyt mały aby go wyświetlić</string>
     <string name="editor_dropped_unsupported_files">Ostrzeżenie: nie wszystkie upuszczone obiekty są wspierane!</string>
     <string name="editor_dropped_title_images_not_allowed">Upuszczanie obrazków w tytule nie jest dozwolone</string>
@@ -2467,8 +2467,8 @@ Language: pl
     <string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
     <string name="error_unknown_post_type">Nieznany format wpisu</string>
     <string name="submit_for_review">Wyślij</string>
-    <string name="duplicate_site_detected">Wykryto duplikat witryny</string>
-    <string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">Wykryto duplikat witryny</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
     <string name="already_logged_in_wpcom">Jesteś już zalogowany na swoje konto WordPress.com, nie można dodać konta WordPress.com połączonego z innym kontem.</string>
     <string name="error_media_load">Nie można wyczytać mediów</string>
     <string name="error_media_refresh_no_connection">Aby odświeżyć bibliotekę wymagane jest połączenie internetowe</string>
@@ -2480,8 +2480,8 @@ Language: pl
     <string name="media_upload_error">Wystąpił błąd przesyłania mediów</string>
     <string name="retry">Spróbuj ponownie</string>
     <string name="confirm">Potwierdź</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do \npunktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania\n tego problemu.</string>
-    <string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do \npunktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania\n tego problemu.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
     <string name="pending_draft_one_generic">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie. </string>
     <string name="pending_draft_one_month">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie</string>
     <string name="pending_draft_one_week_2">\'%1$s\' pozostaje szkicem. Pamiętaj aby opublikować ten wpis! </string>
@@ -2519,7 +2519,7 @@ Language: pl
     <string name="invite_username_not_found">%s: Użytkownik nie odnaleziony</string>
     <string name="comment_moderated_approved">Komentarz zatwierdzony!</string>
     <string name="like">Lubię</string>
-    <string name="timespan_now">teraz</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">teraz</string>
     <string name="role_viewer">Oglądający</string>
     <string name="error_post_my_profile_no_connection">Brak połączenia, nie można zapisać twojego profilu</string>
     <string name="alignment_none">Brak wyrównania</string>
@@ -2535,19 +2535,19 @@ Language: pl
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nie można usunąć oglądającego</string>
     <string name="editor_failed_uploads_switch_html">Nie udało się przesłać niektórych mediów. Nie możesz przejść do trybu HTML w tym momencie. Usunąć wszystkie błędnie przesłane media i kontynuować?</string>
-    <string name="image_thumbnail">Miniaturka obrazka</string>
-    <string name="visual_editor">Edytor wizualny</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Miniaturka obrazka</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Edytor wizualny</string>
     <string name="image_width">Szerokość</string>
     <string name="image_link_to">Odnośnik do</string>
     <string name="image_settings_save_toast">Zmiany zostały zapisane</string>
     <string name="image_caption">Podpis</string>
-    <string name="image_alt_text">Tekst alternatywny</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tekst alternatywny</string>
     <string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
     <string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
-    <string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
-    <string name="alert_action_while_uploading">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
-    <string name="alert_insert_image_html_mode">Nie można wstawić mediów bezpośrednio w trybie HTML. Przełącz się na tryb wizualny.</string>
-    <string name="uploading_gallery_placeholder">Przesyłanie galerii…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Błąd podczas wstawiania mediów</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nie można wstawić mediów bezpośrednio w trybie HTML. Przełącz się na tryb wizualny.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Przesyłanie galerii…</string>
     <string name="invite_error_some_failed">Zaproszenie wysłano, ale wystąpiły błędy!</string>
     <string name="invite_sent">Zaproszenie zostało poprawnie wysłane</string>
     <string name="tap_to_try_again">Stuknij aby spróbować ponownie!</string>
@@ -2580,8 +2580,8 @@ Language: pl
     <string name="error_refreshing_gravatar">Błąd wczytywania twojego obrazka profilowego</string>
     <string name="error_locating_image">Błąd lokalizacji skadrowanego obrazka</string>
     <string name="error_cropping_image">Błąd kadrowania obrazka</string>
-    <string name="checking_email">Sprawdzanie emaili</string>
-    <string name="magic_link_unavailable_error_message">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">Sprawdzanie emaili</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
     <string name="logging_in">Logowanie</string>
     <string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
     <string name="capture_or_pick_photo">Wykonaj lub wybierz zdjęcie</string>
@@ -2617,7 +2617,7 @@ Language: pl
     <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących na moderację</string>
     <string name="comments_empty_list_filtered_approved">Brak zaakceptowanych komentarzy</string>
     <string name="button_skip">Pomiń</string>
-    <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Film</string>
     <string name="alignment_center">Wyśrodkowanie</string>
@@ -2677,7 +2677,7 @@ Language: pl
     <string name="about_the_app">O aplikacji</string>
     <string name="error_post_account_settings">Nie udało się zapisać ustawień twojego konta</string>
     <string name="error_fetch_account_settings">Nie można pobrać ustawień twojego konta</string>
-    <string name="error_fetch_my_profile">Nie można pobrać twojego profilu</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Nie można pobrać twojego profilu</string>
     <string name="site_settings_unknown_language_code_error">Kod języka nie został rozpoznany</string>
     <string name="site_settings_threading_dialog_description">Zezwól na zagnieżdżanie komentarzy w wątkach</string>
     <string name="site_settings_threading_dialog_header">Wątek do</string>
@@ -2879,9 +2879,9 @@ Language: pl
     <string name="deselect_all">Odznacz wszystko</string>
     <string name="select_all">Zaznacz wszystko</string>
     <string name="language">Język</string>
-    <string name="verification_code">Kod weryfikacyjny</string>
-    <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
-    <string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Kod weryfikacyjny</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Niewłaściwy kod weryfikacyjny</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się ponownie, by kontynuować.</string>
     <string name="reader_empty_posts_request_failed">Nie udało się pobrać wpisów</string>
     <string name="error_notification_open">Nie udało się otworzyć powiadomienia</string>
     <string name="stats_search_terms_unknown_search_terms">Nieznane kryteria wyszukiwania</string>
@@ -2947,10 +2947,10 @@ Language: pl
     <string name="notifications_empty_list">Brak powiadomień</string>
     <string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
     <string name="invalid_email_message">Twój adres email nie jest poprawny</string>
-    <string name="email_invalid">Wpisz poprawny adres email</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Wpisz poprawny adres email</string>
     <string name="error_generic">Wystąpił błąd</string>
     <string name="no_network_message">Brak dostępnej sieci</string>
-    <string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Strony nie mogły zostać odświeżone w tej chwili</string>
     <string name="error_refresh_comments">Komentarze nie mogły zostać odświeżone w tej chwili</string>
     <string name="error_moderate_comment">Przy próbie moderacji wystąpił błąd.</string>
     <string name="error_edit_comment">Przy edytowaniu komentarza wystąpił błąd.</string>
@@ -2987,20 +2987,20 @@ Language: pl
     <string name="media_error_no_permission">Nie masz uprawnień do przeglądania biblioteki mediów</string>
     <string name="cannot_delete_multi_media_items">Niektóre media nie mogły zostać w tej chwili usunięte. Spróbuj ponownie później. \n</string>
     <string name="file_error_create">Nie udało się utworzyć tymczasowego pliku do wgrania. Upewnij się, że na Twoim urządzeniu jest wystarczająco dużo wolnego miejsca.</string>
-    <string name="http_authorization_required">Wymagana autoryzacja</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Wymagana autoryzacja</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
     <string name="mnu_comment_trash">Kosz</string>
     <string name="select_categories">Wybierz kategorie</string>
     <string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>
     <string name="post_not_found">Wykryto błąd podczas ładowania wpisu. Odśwież listę wpisów i spróbuj ponownie.</string>
-    <string name="horizontal_alignment">Wyrównanie w poziomie</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Wyrównanie w poziomie</string>
     <string name="file_not_found">Nie znaleziono pliku do wysłania. Został usunięty lub przeniesiony?</string>
     <string name="notifications_empty_all">Brak powiadomień… na razie. </string>
     <string name="invalid_site_url_message">Sprawdź, czy wpisany adres URL jest prawidłowy</string>
     <string name="link_enter_url_text">Tekst odnośnika (opcjonalny)</string>
     <string name="comment_status_trash">W koszu</string>
     <string name="remove_account">Usuń blog</string>
-    <string name="create_a_link">Stwórz odnośnik</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Stwórz odnośnik</string>
     <string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
     <string name="plugin_not_found">Wystąpił błąd podczas próby dostępu do tej wtyczki</string>
     <string name="delete_post">Usunąć wpis?</string>
@@ -3033,7 +3033,7 @@ Language: pl
     <string name="reader_likes_only_you">Lubisz to</string>
     <string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>
     <string name="reader_view_reblog">Rebloguj</string>
-    <string name="sign_up_label">Zarejestruj się</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">Zarejestruj się</string>
     <string name="reader_untitled_post">(Bez nazwy)</string>
     <string name="comments_empty_list">Brak komentarzy</string>
     <string name="themes">Motywy</string>
@@ -3063,26 +3063,26 @@ Language: pl
     <string name="more_notifications">i %d więcej.</string>
     <string name="sign_in">Zaloguj się</string>
     <string name="loading">Wczytywanie…</string>
-    <string name="httpuser">Nazwa użytkownika protokołu HTTP</string>
-    <string name="httppassword">Hasło protokołu HTTP</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">Nazwa użytkownika protokołu HTTP</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">Hasło protokołu HTTP</string>
     <string name="error_media_upload">Napotkano błąd podczas wysyłania multimediów.</string>
     <string name="incorrect_credentials">Nieprawidłowa nazwa użytkownika lub hasło.</string>
     <string name="username">Nazwa użytkownika</string>
     <string name="password">Hasło</string>
-    <string name="log_in">Zaloguj się</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Zaloguj się</string>
     <string name="reader">Czytnik</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="pages">Strony</string>
-    <string name="width">Szerokość</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Szerokość</string>
     <string name="posts">Wpisy</string>
-    <string name="featured_in_post">Załącz obraz w treści wpisu</string>
-    <string name="featured">Ustaw jako obrazek wyróżniający</string>
-    <string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Załącz obraz w treści wpisu</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ustaw jako obrazek wyróżniający</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Podpis pod obrazkiem (opcjonalnie)</string>
     <string name="anonymous">Anonim</string>
     <string name="ok">OK</string>
     <string name="done">gotowe</string>
     <string name="link_enter_url">Adres URL</string>
-    <string name="uploading">Przesyłanie…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Przesyłanie…</string>
     <string name="image_alignment">Wyrównanie</string>
     <string name="refresh">Odśwież</string>
     <string name="untitled">Nienazwane</string>

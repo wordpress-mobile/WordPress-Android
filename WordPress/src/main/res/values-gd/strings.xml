@@ -5,7 +5,7 @@ Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) 
 Generator: GlotPress/4.0.1
 Language: gd_GB
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
     <string name="people_dropdown_item_viewers">Luchd-coimhid</string>
     <string name="people_dropdown_item_team">Sgioba</string>
@@ -14,19 +14,19 @@ Language: gd_GB
     <string name="follower_subscribed_since">A-mach o %1$s</string>
     <string name="error_remove_viewer">Cha b’ urrainn dhuinn an neach-coimhid a thoirt air falbh</string>
     <string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
-    <string name="visual_editor">An deasaiche lèirsinneach</string>
-    <string name="image_thumbnail">Dealbhagan deilbh</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">An deasaiche lèirsinneach</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Dealbhagan deilbh</string>
     <string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>
     <string name="image_caption">Caipsean</string>
-    <string name="image_alt_text">Roghainn teacsa</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Roghainn teacsa</string>
     <string name="image_link_to">Ceangal ri</string>
     <string name="image_width">Leud</string>
     <string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
     <string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
-    <string name="alert_error_adding_media">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
-    <string name="alert_action_while_uploading">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
-    <string name="alert_insert_image_html_mode">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
-    <string name="uploading_gallery_placeholder">A’ luchdadh suas a’ ghailearaidh…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">A’ luchdadh suas a’ ghailearaidh…</string>
     <string name="invite_error_some_failed">Chaidh an cuireadh a chur ach thachair co-dhiù aon mhearachd!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Chaidh an cuireadh a chur</string>
@@ -57,8 +57,8 @@ Language: gd_GB
     <string name="hide">Falaich</string>
     <string name="select_all">Tagh na h-uile</string>
     <string name="language">Cànan</string>
-    <string name="verification_code">Còd dearbhaidh</string>
-    <string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Còd dearbhaidh</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Còd dearbhadh mì-dhligheach</string>
     <string name="reader_empty_posts_request_failed">Chan urrainn dhuinn na puist fhaighinn</string>
     <string name="error_notification_open">Cha b’ urrainn dhuinn am brath fhosgladh</string>
     <string name="stats_search_terms_unknown_search_terms">Faclan-luirg nach aithnichear</string>
@@ -126,7 +126,7 @@ Language: gd_GB
     <string name="sdcard_message">Feumaidh tu cairt SD a chaidh a mhunntachadh mus urrainn dhut meadhanan a luchdadh suas</string>
     <string name="notifications_empty_list">Gun bhrathan</string>
     <string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
-    <string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
     <string name="error_refresh_comments">Cha b’ urrainn dhuinn na beachdan ath-nuadhachadh aig an àm seo</string>
     <string name="error_generic">Thachair mearachd</string>
     <string name="error_moderate_comment">Thachair mearachd fhad \'s a bha sinn ri modarataireachd</string>
@@ -134,7 +134,7 @@ Language: gd_GB
     <string name="error_load_comment">Cha b’ urrainn dhuinn am beachd a luchdadh</string>
     <string name="error_downloading_image">Mearachd le luchdadh a-nuas an deilbh</string>
     <string name="invalid_email_message">Chan eil am post-d agad dligheach</string>
-    <string name="email_invalid">Cuir a-steach post-d dligheach</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Cuir a-steach post-d dligheach</string>
     <string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a-steach cearr</string>
     <string name="select_categories">Tagh roinnean-seòrsa</string>
     <string name="connection_error">Mearachd leis a’ cheangal</string>
@@ -144,10 +144,10 @@ Language: gd_GB
     <string name="media_error_no_permission">Chan eil cead agad coimhead air leabhar-lann nam meadhanan</string>
     <string name="cannot_delete_multi_media_items">Tha meadhanan ann ach gabh an sguabadh às an-dràsta fhèin. Feuch ris a-rithist an ceann greis.</string>
     <string name="link_enter_url_text">Teacsa a’ cheangail (roghainneil)</string>
-    <string name="create_a_link">Cruthaich ceangal</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cruthaich ceangal</string>
     <string name="page_settings">Roghainnean na duilleige</string>
     <string name="local_draft">Dreachd ionadail</string>
-    <string name="horizontal_alignment">Co-thaobhadh còmhnard</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Co-thaobhadh còmhnard</string>
     <string name="post_settings">Roghainnean a’ phuist</string>
     <string name="comment_status_approved">Air aontachadh</string>
     <string name="comment_status_unapproved">Ri dhèanamh</string>
@@ -166,7 +166,7 @@ Language: gd_GB
     <string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
     <string name="category_name">Ainm na roinne-seòrsa</string>
     <string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
-    <string name="http_authorization_required">Tha feum air ùghdarrasadh</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Tha feum air ùghdarrasadh</string>
     <string name="new_post">Post ùr</string>
     <string name="new_media">Meadhan ùr</string>
     <string name="local_changes">Atharraichean ionadail</string>
@@ -227,25 +227,25 @@ Language: gd_GB
     <string name="new_notifications">%d brath(an) ùra</string>
     <string name="more_notifications">agus %d a bharrachd.</string>
     <string name="loading">\'Ga luchdadh…</string>
-    <string name="httpuser">Ainm-cleachdaiche HTTP</string>
-    <string name="httppassword">Facal-faire HTTP</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">Ainm-cleachdaiche HTTP</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">Facal-faire HTTP</string>
     <string name="error_media_upload">Thachair mearachd fhad \'s a bha sinn a\' luchdadh suas meadhan</string>
     <string name="incorrect_credentials">Ainm-cleachdaiche no facal-faire cearr.</string>
     <string name="password">Facal-faire</string>
     <string name="username">Ainm-cleachdaiche</string>
-    <string name="log_in">Clàraich a-steach</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Clàraich a-steach</string>
     <string name="reader">Leughadair</string>
-    <string name="featured">Cleachd mar dhealbh brosnaichte</string>
-    <string name="featured_in_post">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cleachd mar dhealbh brosnaichte</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
     <string name="no_network_title">Chan eil lìonra ri fhaighinn</string>
     <string name="pages">Duilleagan</string>
-    <string name="caption">Caipsean (roghainneil)</string>
-    <string name="width">Leud</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Caipsean (roghainneil)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Leud</string>
     <string name="posts">Puist</string>
     <string name="anonymous">Gun urra</string>
     <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">’Ga luchdadh suas…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">’Ga luchdadh suas…</string>
     <string name="image_alignment">Co-thaobhadh</string>
     <string name="refresh">Ath-nuadhaich</string>
     <string name="untitled">Gun tiotal</string>
