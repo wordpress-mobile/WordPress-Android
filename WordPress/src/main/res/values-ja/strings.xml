@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-26 09:54:08+0000
+Translation-Revision-Date: 2024-08-29 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_btn_feedback">フィードバックを送る</string>
+    <string name="media_pager_remove_item_content_description">アイテム%1$dを削除</string>
+    <string name="feedback_form_add_attachments">添付ファイルを追加</string>
+    <string name="feedback_form_unable_to_create_tempfile">一時ファイルを作成できません</string>
+    <string name="feedback_form_attachment_already_added">添付ファイルがすでに追加済みです</string>
+    <string name="feedback_form_attachment_too_large">添付ファイルは32MB 以下である必要があります</string>
+    <string name="feedback_form_unsupported_attachment">このファイルタイプはサポートされていません</string>
+    <string name="feedback_form_max_attachments_reached">最大添付ファイル数に達しました</string>
+    <string name="feedback_form_failure">フィードバックを送信できませんでした</string>
+    <string name="feedback_form_success">フィードバックをご送信いただきありがとうございます。</string>
+    <string name="feedback_form_discard">フィードバックを破棄しますか ?</string>
+    <string name="feedback_form_message_hint">皆さまからのフィードバックをお待ちしております。</string>
+    <string name="feedback_form_title">フィードバック</string>
+    <string name="submit">送信</string>
+    <string name="close">閉じる</string>
+    <string name="sending">送信中</string>
     <string name="voice_to_content_generic_error">音声ファイルからの投稿は現在利用できません。後ほどもう一度お試しください。</string>
     <string name="voice_to_content_done_label">完了</string>
     <string name="voice_to_content_upgrade">アップグレードしてリクエストを増やす</string>
@@ -17,7 +33,7 @@ Language: ja_JP
     <string name="voice_to_content_processing_label">処理中</string>
     <string name="voice_to_content_error_label">エラー</string>
     <string name="voice_to_content_processing">処理中</string>
-    <string name="gutenberg_native_tap_to_edit">タップして編集</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">タップして編集</string>
     <string name="voice_to_content_permissions_required_msg">音声を録音するには、このアプリにマイクへのアクセス権限が必要です。 以前、この権限を拒否しています。 この機能を使用するには、アプリの設定でマイクの権限を有効化してください。</string>
     <string name="voice_to_content_permissions_required_title">音声録音の権限が必須</string>
     <string name="permission_access_media_location">メディアの位置</string>
@@ -118,19 +134,19 @@ Language: ja_JP
     <string name="reader_preferences_screen_preview_title">閲覧の設定</string>
     <string name="reader_filter_empty_tags_action_follow">タグをフォローする</string>
     <string name="button_read">読む</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">エディターで予期しないエラーが発生しました。</string>
-    <string name="gutenberg_native_tap_here_to_copy_post_text">投稿内容をコピーするには、ここをタップします</string>
-    <string name="gutenberg_native_tap_here_to_copy_error_details">エラーの詳細をコピーするには、ここをタップします</string>
-    <string name="gutenberg_native_copy_post_text">投稿内容をコピー</string>
-    <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
-    <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
-    <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">エディターで予期しないエラーが発生しました。</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">投稿内容をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">エラーの詳細をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">投稿内容をコピー</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">エラーの詳細をコピー</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">投稿内容をコピーするボタン</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">エラーの詳細をコピーするボタン</string>
     <string name="editor_updating_content_failed">コンテンツの更新に失敗しました</string>
-    <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
-    <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
-    <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
-    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">ユーザーによっては、自動再生を不便に感じる場合があります。</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動画のキャプション。 %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動画のキャプション。 空</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動画を編集</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ユーザーによっては、自動再生を不便に感じる場合があります。</string>
     <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
     <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
@@ -199,13 +215,13 @@ Language: ja_JP
     <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
     <string name="reader_filter_by_tag_title">タグで絞り込む</string>
     <string name="reader_filter_by_blog_title">ブログで絞り込む</string>
-    <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">接続を待機中</string>
     <string name="stats_traffic">トラフィック</string>
-    <string name="gutenberg_native_working_offline">オフラインで作業</string>
-    <string name="gutenberg_native_network_connection_re_established">ネットワーク接続が再確立されました</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline">ネットワーク接続が失われ、オフラインで作業しています</string>
-    <string name="gutenberg_native_font_size_1_s">フォントサイズ、%1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">メディアファイルとしてサポートされていないファイルタイプです。</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">オフラインで作業</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ネットワーク接続が再確立されました</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ネットワーク接続が失われ、オフラインで作業しています</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">フォントサイズ、%1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">メディアファイルとしてサポートされていないファイルタイプです。</string>
     <string name="media_cannot_be_started">現在メディアを開けません。 後でもう一度お試しください</string>
     <string name="domains_just_search_for_a_domain_button">ドメイン検索のみ</string>
     <string name="domains_upgrade_to_a_plan_button">プランをアップグレード</string>
@@ -224,9 +240,9 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
     <string name="bloganuary_dashboard_nudge_title_december">まもなく Bloganuary が登場します !</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">このため、Web エディターでブロックを編集することをお勧めします。</string>
-    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">あるいは、ブロックのグループ化を解除してコンテンツをフラットにすることもできます。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">このため、Web エディターでブロックを編集することをお勧めします。</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">あるいは、ブロックのグループ化を解除してコンテンツをフラットにすることもできます。</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">設定に移動</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">キャンセル</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">付与</string>
@@ -235,14 +251,14 @@ Language: ja_JP
     <string name="barcode_scanning_alert_dialog_title">カメラの権限を付与</string>
     <string name="barcode_scanning_camera_permission_denied">バーコードをスキャンするにはカメラの権限が必要です。</string>
     <string name="barcode_scanning_title">バーコードをスキャンする</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
     <string name="jp_migration_lets_go_button">スタート</string>
     <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
-    <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>
-    <string name="login_error_security_key">セキュリティキーログインで問題が発生しました</string>
-    <string name="login_text_security_key">セキュリティキーを使用</string>
+    <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">続行するにはセキュリティキーを入力してください。</string>
+    <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">セキュリティキーログインで問題が発生しました</string>
+    <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">セキュリティキーを使用</string>
     <string name="new_domain_search_screen_error_title">ドメインを取得できませんでした</string>
     <string name="new_domain_search_screen_list_item_sale_price">初年度: %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s / 年</string>
@@ -259,8 +275,8 @@ Language: ja_JP
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">&lt;b&gt;Bloganuary&lt;/b&gt; より</string>
     <string name="post_status_post_edited">編集済み</string>
     <string name="post_list_toggle_author_filter">投稿者別に絞り込む</string>
-    <string name="gutenberg_native_s_block_converted_to_blocks">「%s」ブロックがブロックに変換されました</string>
-    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">またはコンテンツをブロックに変換することもできます。</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">「%s」ブロックがブロックに変換されました</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">またはコンテンツをブロックに変換することもできます。</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">ショートカットを追加または削除</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">無効なショートカット</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">有効なショートカット</string>
@@ -292,12 +308,12 @@ Language: ja_JP
     <string name="reader_secondary_bookmarked">保存しました</string>
     <string name="reader_secondary_bookmark">保存</string>
     <string name="reader_discover_recommended_header_new">おすすめ</string>
-    <string name="gutenberg_native_ungroup_block">グループ解除ブロック</string>
-    <string name="gutenberg_native_tap_here_to_show_more_details">こちらをタップすると詳細が表示されます。</string>
-    <string name="gutenberg_native_synced_patterns">同期済みパターン</string>
-    <string name="gutenberg_native_deeply_nested_block">深くネストされたブロック</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web エディターでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">ブロックは深くネストされているためレンダリングできません。 こちらをタップして詳細を表示。</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">グループ解除ブロック</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">こちらをタップすると詳細が表示されます。</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同期済みパターン</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">深くネストされたブロック</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web エディターでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックは深くネストされているためレンダリングできません。 こちらをタップして詳細を表示。</string>
     <string name="pages_no_site_something_went_wrong">エラーが発生しました。 後でもう一度お試しください。</string>
     <string name="sharing_connect_via_web_warning_positive_button">ウェブに移動</string>
     <string name="my_site_dashboard_no_cards_message_description">パーソナライズボタンをタップして他のカードを表示します。</string>
@@ -322,15 +338,15 @@ Language: ja_JP
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">すべてのキャンペーンを表示</string>
     <string name="dashboard_activity_card_menu_all_activity">すべてのアクティビティ</string>
     <string name="dashboard_pages_card_more_menu_all_pages">固定ページ一覧</string>
-    <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
-    <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ファイルを選択</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像または動画を追加</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">すべての予約済みの投稿を表示する</string>
     <string name="my_site_post_card_menu_view_all_drafts">すべての下書きを表示する</string>
     <string name="my_site_todays_stats_menu_view_stats">統計情報を表示する</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">このアイテムを非表示</string>
     <string name="contact_support_first_message_hint">問題が解決しない場合は、当社のチームがサポートチケットを開くお手伝いをいたします。</string>
     <string name="contact_support_first_message_hi">こんにちは。Jetpack AI アシスタントです。</string>
-    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">詳細設定を行うには、Web ブラウザーでこの有料区分ブロックにアクセスしてください。</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">詳細設定を行うには、Web ブラウザーでこの有料区分ブロックにアクセスしてください。</string>
     <string name="contact_support_bot_ticket_comment_answer">回答:</string>
     <string name="contact_support_bot_ticket_comment_question">質問:</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack モバイルのボットのトランスクリプト:</string>
@@ -367,10 +383,10 @@ Language: ja_JP
     <string name="post_settings_jetpack_social_share_message_title">メッセージをカスタマイズ</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">後で</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">アカウントを連携</string>
-    <string name="gutenberg_native_insert_video_block">動画ブロックを挿入</string>
-    <string name="gutenberg_native_insert_image_block">画像ブロックを挿入</string>
-    <string name="gutenberg_native_insert_gallery_block">ギャラリーブロックを挿入</string>
-    <string name="gutenberg_native_insert_audio_block">音声ブロックを挿入</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動画ブロックを挿入</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像ブロックを挿入</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ギャラリーブロックを挿入</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">音声ブロックを挿入</string>
     <string name="campaign_listing_page_no_campaigns_button_text">作成</string>
     <string name="campaign_listing_page_no_campaigns_message_description">まだキャンペーンを作成していません。 開始するには「作成」をクリックしてください。</string>
     <string name="campaign_listing_page_no_campaigns_message_title">キャンペーンがありません</string>
@@ -396,10 +412,10 @@ Language: ja_JP
     <string name="post_settings_jetpack_social_subscribe_share_more">購読してさらにシェア</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">ソーシャルメディアで自分の投稿を友人に自動共有してトラフィックを増やします。</string>
     <string name="post_settings_jetpack_social_header">ソーシャル共有</string>
-    <string name="gutenberg_native_s_detached">%sを切り離しました</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">同期済みパターンの編集は iOS 用 %s ではまだサポートされていません</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">同期済みパターンの編集は Android 用 %s ではまだサポートされていません</string>
-    <string name="gutenberg_native_reusable">再利用可能</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%sを切り離しました</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同期済みパターンの編集は iOS 用 %s ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同期済みパターンの編集は Android 用 %s ではまだサポートされていません</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再利用可能</string>
     <string name="privacy_banner_error_save">プライバシーに関する選択を保存しているときにエラーが発生しました。</string>
     <string name="privacy_banner_save">保存</string>
     <string name="privacy_banner_settings">設定</string>
@@ -409,8 +425,8 @@ Language: ja_JP
     <string name="privacy_banner_description">当社はユーザーのプライバシーを常に重要視しています。 アプリ (そしてアプリの操作性) を最適化するために、個人データをさまざまな形で使用、保存、処理しています。 個人データの使用用途の一部は、アプリが機能するために必須のものです。それ以外の用途については設定でカスタマイズできます。</string>
     <string name="tabbar_accessibility_label_me">自分。 プロフィール詳細を管理します。</string>
     <string name="social_item_message_title">メッセージ</string>
-    <string name="gutenberg_native_block_ungrouped">ブロックのグループが解除されました</string>
-    <string name="gutenberg_native_block_grouped">ブロックがグループ化されました</string>
+    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックのグループが解除されました</string>
+    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックがグループ化されました</string>
     <string name="dashboard_card_plans_checkout_success_info">ドメインが正常に使用可能になるまでに最大で30分かかる場合があります。</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">新しいドメイン &lt;b&gt;%s&lt;/b&gt; の設定中です。</string>
     <string name="dashboard_card_plans_checkout_success_title">準備完了 !</string>
@@ -432,13 +448,13 @@ Language: ja_JP
     <string name="sharing_twitter_deprecation_notice_find_out_more">さらに詳しく</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter の自動共有機能は Twitter の規約と価格に変更があったため利用できなくなりました。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter の自動共有機能は利用できなくなりました</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">再利用ブロックの編集は iOS 用 %s ではまだサポートされていません</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">再利用ブロックの編集は Android 用 %s ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再利用ブロックの編集は iOS 用 %s ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再利用ブロックの編集は Android 用 %s ではまだサポートされていません</string>
     <string name="jp_migration_notifications_allow_title">サイトを更新するよう通知を許可する</string>
     <string name="wp_jp_static_poster_message">Jetpack アプリで WordPress アプリの全機能に加えて統計、Reader、通知などを特別に利用できるようになりました。</string>
     <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
     <string name="wp_jp_static_poster_title">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
-    <string name="gutenberg_native_unlabeled_color_s">ラベルない色。 %s</string>
+    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ラベルない色。 %s</string>
     <string name="dashboard_activity_card_title">最近のアクティビティ</string>
     <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
@@ -454,13 +470,13 @@ Language: ja_JP
     <string name="jp_migration_delete_title">お使いの端末に WordPress アプリは不要になりました</string>
     <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
     <string name="jp_migration_success_card_message">Jetpack アプリへようこそ。WordPress アプリはアンインストールできます。</string>
-    <string name="gutenberg_native_remove_blocks">ブロックを削除</string>
-    <string name="gutenberg_native_privacy_and_rating">プライバシーと評価</string>
-    <string name="gutenberg_native_playback_settings">再生設定</string>
-    <string name="gutenberg_native_playback_bar_color">再生バーの色</string>
-    <string name="gutenberg_native_manual">手動</string>
-    <string name="gutenberg_native_dynamic">ダイナミック</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">画像の目的を説明します。 デザインである場合は、空欄のままにします。</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックを削除</string>
+    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">プライバシーと評価</string>
+    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再生設定</string>
+    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">再生バーの色</string>
+    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">手動</string>
+    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ダイナミック</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像の目的を説明します。 デザインである場合は、空欄のままにします。</string>
     <string name="dashboard_pages_card_create_another_page_description">カスタムメイドのスマートフォンに対応したレイアウトから始める</string>
     <string name="dashboard_pages_card_create_another_page_button">別のページを作成</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">サイトにページを追加</string>
@@ -526,7 +542,7 @@ Language: ja_JP
     <string name="tickets">チケット</string>
     <string name="free">無料</string>
     <string name="help_buttons_screen_title">ヘルプ</string>
-    <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックのメニュー</string>
     <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
     <string name="promote_blaze_card_title">Blaze を使ってコンテンツを宣伝</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">閉じる</string>
@@ -616,7 +632,7 @@ Language: ja_JP
     <string name="blogging_prompts_list_answered_prompt">✓回答済み</string>
     <string name="blogging_prompts_list_title">プロンプト</string>
     <string name="close_desc">閉</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">または、「切り離す」をタップして、このブロックを個別に切り離して編集できます。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">または、「切り離す」をタップして、このブロックを個別に切り離して編集できます。</string>
     <string name="dlg_confirm_delete_category">「%s」カテゴリーを完全に削除しますか ?</string>
     <string name="deleting_cat_success">カテゴリーを削除しました</string>
     <string name="deleting_cat_failed">カテゴリーの削除に失敗しました</string>
@@ -661,8 +677,8 @@ Language: ja_JP
     <string name="jp_migration_notifications_subtitle">通知内容はすべて同じですが、Jetpack アプリから送信されるようになりました。</string>
     <string name="wordpress_help_center_button">WordPress ヘルプセンター</string>
     <string name="support_title">サポート</string>
-    <string name="notification_disable_broadcast_permission_desc">アプリが WordPress の通知を無効にすることを許可します。</string>
-    <string name="notification_disable_broadcast_permission_label">WordPress の通知を無効化</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">アプリが WordPress の通知を無効にすることを許可します。</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">WordPress の通知を無効化</string>
     <string name="jp_migration_help_button">ヘルプが必要ですか ?</string>
     <string name="jp_migration_continue_button">続行</string>
     <string name="jp_migration_welcome_site_found_message">サイトが見つかりました。 すべてのデータを転送して Jetpack に自動でログインするには続行します。</string>
@@ -673,11 +689,11 @@ Language: ja_JP
     <string name="icon_desc">アイコン</string>
     <string name="post_settings_parent">親ページ</string>
     <string name="post_settings_page_attributes">ページ属性</string>
-    <string name="about_automattic_contribute_item_title">参加</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">参加</string>
     <string name="about_news">ニュース</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1件の回答</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress アイコン</string>
-    <string name="login_prologue_revamped_tagline">どこからでも記事の作成、編集、投稿が可能です。</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress アイコン</string>
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">どこからでも記事の作成、編集、投稿が可能です。</string>
     <string name="error_fetch_authors_list">投稿者を取得できませんでした</string>
     <string name="post_settings_author">投稿者</string>
     <string name="app_rating_title">%sをお楽しみいただいていますか ?</string>
@@ -685,9 +701,9 @@ Language: ja_JP
     <string name="connections_label">Jetpack ソーシャル連携</string>
     <string name="stats_widget_log_in_to_add_message">ウィジェットを追加するには Jetpack アプリにログインしてください。</string>
     <string name="stats_view_publicize">Jetpack ソーシャル連携</string>
-    <string name="login_magic_links_email_sent">マジックリンクを次のアドレスに送信しました: </string>
-    <string name="login_magic_links_sent_label_short">この端末でメールアドレスを確認してください。</string>
-    <string name="or_use_password">パスワードを使用してログイン</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">マジックリンクを次のアドレスに送信しました: </string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">この端末でメールアドレスを確認してください。</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">パスワードを使用してログイン</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">新しいコメント、サイトトラフィック、セキュリティレポートなど、リアルタイムの更新を入手できます。</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知は、Jetpack が提供しています。</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">新しい Jetpack アプリで利用できる新しい統計情報と統計概要を使用して、トラフィックの増加を監視し、オーディエンスについて学びましょう。</string>
@@ -696,16 +712,16 @@ Language: ja_JP
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader は Jetpack が提供しています。</string>
     <string name="wp_jetpack_powered_features">新しい Jetpack アプリには、WordPress をパワーアップできる統計情報、ブログ購読ツール、通知などがあります。</string>
     <string name="wp_jetpack_powered_better_with_jetpack">Jetpack で WordPress をパワーアップ</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">プランをアップグレードして動画のカバーを使う</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">プランをアップグレードして音声をアップロードする</string>
-    <string name="gutenberg_native_jetpack_powered">Jetpack 提供</string>
-    <string name="gutenberg_native_invalid_url">無効な URL。</string>
-    <string name="gutenberg_native_gradient">グラデーション</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">プランをアップグレードして動画のカバーを使う</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">プランをアップグレードして音声をアップロードする</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jetpack 提供</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">無効な URL。</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">グラデーション</string>
     <string name="wp_jetpack_continue_to_notifications">通知に進む</string>
     <string name="wp_jetpack_continue_to_stats">統計に進む</string>
     <string name="wp_jetpack_continue_to_reader">Reader に進む</string>
     <string name="wp_jetpack_get_new_jetpack_app">新しい Jetpack アプリを試す</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
     <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
     <string name="weekly_roundup_notification_text_views_only">先週、%1$s件の表示がありました。</string>
@@ -759,12 +775,12 @@ Language: ja_JP
     <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
     <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
     <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
-    <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">ドラッグ &amp; ドロップで簡単にブロックの位置を編集できます。 長押ししながら新しい場所にブロックをドラッグします。</string>
-    <string name="gutenberg_native_drag_drop">ドラッグ &amp; ドロップ</string>
-    <string name="gutenberg_native_arrow_buttons">矢印ボタン</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s 選択中: %2$s</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像ファイルが見つかりませんでした。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ドラッグ &amp; ドロップで簡単にブロックの位置を編集できます。 長押ししながら新しい場所にブロックをドラッグします。</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ドラッグ &amp; ドロップ</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">矢印ボタン</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s 選択中: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
     <string name="quick_start_list_task_complete">タスクが完了しました</string>
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
@@ -782,7 +798,7 @@ Language: ja_JP
     <string name="quick_start_dialog_check_notifications_message">ポケットからリアルタイムで最新情報を入手できます。</string>
     <string name="quick_start_dialog_check_notifications_title">通知を確認</string>
     <string name="quick_start_dialog_check_notifications_message_short">%1$s「通知」タブ%2$sを選択すると、外出先で最新情報を確認できます。</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">%1$s「+」%2$sを選択するとメディアをアップロードできます。 端末から投稿やページに追加できます。</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">%1$s「+」%2$sを選択するとメディアをアップロードできます。 端末から投稿やページに追加できます。</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">サイトやタグを探すには&lt;b&gt;「発見する」&lt;/b&gt;を使います。</string>
     <string name="photo_picker_video_thumbnail_content_description">動画のサムネイル</string>
     <string name="stats_details_top_commentators">上位コメント投稿者</string>
@@ -803,8 +819,8 @@ Language: ja_JP
     <string name="blogging_prompts_answer_prompt_notification_answer_action">回答</string>
     <string name="blogging_prompts_answer_prompt_notification_title">毎日のプロンプト </string>
     <string name="blogging_prompts_onboarding_got_it">理解しました</string>
-    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;をタップしてサイトを表示</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">別のサイトを検索するには%1$s「Reader」%2$sを選択します。</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">&lt;b&gt;%1$s&lt;/b&gt;をタップしてサイトを表示</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">別のサイトを検索するには%1$s「Reader」%2$sを選択します。</string>
     <string name="blogging_reminders_prompt_help_button_desc">プロンプトについて詳しく読む</string>
     <string name="photo_picker_video_thumbnail_unselected">選択解除した動画</string>
     <string name="photo_picker_video_thumbnail_selected">選択中の動画</string>
@@ -816,7 +832,7 @@ Language: ja_JP
     <string name="scan_vault_press_active_on_site_title">サイトに VaultPress を搭載済み</string>
     <string name="locale_picker_current_language">現在の言語: </string>
     <string name="hpp_choose_and_create_site">サイトを作成</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">ブロックを追加</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">ブロックを追加</string>
     <string name="initial_screen">初期画面</string>
     <string name="blogging_prompts_onboarding_notification_action">さらに詳しく</string>
     <string name="blogging_prompts_onboarding_notification_text">書く習慣をつけて執筆の腕を磨きましょう。 タップして詳細をご確認ください。</string>
@@ -826,40 +842,40 @@ Language: ja_JP
     <string name="new_site_creation_site_name_title">サイト名</string>
     <string name="my_site_todays_stats_get_more_views_message">読者を増やしたいとお考えですか ? &lt;a href=\"%1$s\"&gt;トップのヒント&lt;/a&gt;をご覧ください。</string>
     <string name="stats_insights_views_and_visitors">表示数と訪問者数</string>
-    <string name="featured_image_removed_notice">アイキャッチ画像を削除</string>
-    <string name="featured_image_confirmation_notice">アイキャッチ画像として設定</string>
-    <string name="featured_image_replace_dialog_cancel">現在の状態を維持</string>
-    <string name="featured_image_replace_dialog_confirm">アイキャッチ画像の置き換え</string>
-    <string name="featured_image_replace_dialog_description">アイキャッチ画像はすでに設定されています。 新しい画像に置き換えますか ?</string>
-    <string name="featured_image_replace_dialog_title">現在のアイキャッチ画像を置き換えますか ?</string>
-    <string name="dialog_dismiss_try_block_editor">非表示</string>
-    <string name="dialog_body_try_block_editor">新規投稿のクラシックエディターはまもなく削除されますが、既存の投稿やページの編集に影響はありません。 サイト設定でブロックエディターを有効にして一足早くはじめましょう。</string>
-    <string name="dialog_title_try_block_editor">新しいブロックエディターを試す</string>
-    <string name="menu_toolbar_title">%s ブロックを編集</string>
-    <string name="long_post_dlg_saving">保存中</string>
-    <string name="retry_failed_upload_retry_all">すべて再試行</string>
-    <string name="retry_failed_upload_remove">アップロードを削除</string>
-    <string name="retry_failed_upload_yes">再試行</string>
-    <string name="retry_failed_upload_title">ファイルをアップロードできませんでした</string>
-    <string name="stop_upload_dialog_button_no">いいえ</string>
-    <string name="stop_upload_dialog_button_yes">はい</string>
-    <string name="dialog_button_cancel">キャンセル</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="dialog_title">リンクを挿入</string>
-    <string name="editor_title_beta">ベータ</string>
-    <string name="toast_content_info_editor_not_ready">エディターを読み込んでいます</string>
-    <string name="toast_content_info_failed">コンテンツ構造を取得できませんでした</string>
-    <string name="dialog_content_info_body">ブロック数: %1$d\n単語数: %2$d\n文字数: %3$d</string>
-    <string name="dialog_content_info_title">コンテンツ構造</string>
-    <string name="media_bar_description_library">WordPress メディアライブラリからメディアを選択</string>
-    <string name="media_bar_description_gallery">ギャラリーからメディアを選択</string>
-    <string name="media_bar_description_camera">カメラで写真または動画を撮る</string>
-    <string name="pixel_suffix">%dピクセル</string>
-    <string name="stop_save_dialog_ok_button">OK</string>
-    <string name="stop_save_dialog_message">ファイルをすべて保存するまでお待ちください</string>
-    <string name="stop_save_dialog_title">ファイルを保存しています</string>
-    <string name="post_content">コンテンツ</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アイキャッチ画像を削除</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アイキャッチ画像として設定</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">現在の状態を維持</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アイキャッチ画像の置き換え</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アイキャッチ画像はすでに設定されています。 新しい画像に置き換えますか ?</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">現在のアイキャッチ画像を置き換えますか ?</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">非表示</string>
+    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">新規投稿のクラシックエディターはまもなく削除されますが、既存の投稿やページの編集に影響はありません。 サイト設定でブロックエディターを有効にして一足早くはじめましょう。</string>
+    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">新しいブロックエディターを試す</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%s ブロックを編集</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">保存中</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">すべて再試行</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アップロードを削除</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">再試行</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ファイルをアップロードできませんでした</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">いいえ</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">はい</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">キャンセル</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
+    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">リンクを挿入</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ベータ</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">エディターを読み込んでいます</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">コンテンツ構造を取得できませんでした</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ブロック数: %1$d\n単語数: %2$d\n文字数: %3$d</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">コンテンツ構造</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">WordPress メディアライブラリからメディアを選択</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ギャラリーからメディアを選択</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">カメラで写真または動画を撮る</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dピクセル</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ファイルをすべて保存するまでお待ちください</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ファイルを保存しています</string>
+    <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">コンテンツ</string>
     <string name="blogging_prompts_onboarding_card_prompt">あなたの人生の映画をキャスティングしましょう。</string>
     <string name="blogging_prompts_onboarding_remind_me">後で再通知</string>
     <string name="blogging_prompts_onboarding_try_it_now">今すぐ試す</string>
@@ -912,19 +928,19 @@ Language: ja_JP
     <string name="my_site_blogging_prompt_card_answer_prompt">回答のプロンプト</string>
     <string name="my_site_blogging_prompt_card_title">プロンプト</string>
     <string name="my_site_all_tab_title">すべて</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">この色の組み合わせは読みにくい可能性があります。 背景色を明るくするか、文字の色を暗くしてみましょう。</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">この色の組み合わせは読みにくい可能性があります。 背景色を暗くするか、文字の色を明るくしてみましょう。</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">メディアの挿入に失敗しました。\nタップして詳細をご覧ください。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">この色の組み合わせは読みにくい可能性があります。 背景色を明るくするか、文字の色を暗くしてみましょう。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">この色の組み合わせは読みにくい可能性があります。 背景色を暗くするか、文字の色を明るくしてみましょう。</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">メディアの挿入に失敗しました。\nタップして詳細をご覧ください。</string>
     <string name="new_site_creation_intents_header_subtitle">以下のリストからテーマを選択するか、自分で入力します。</string>
     <string name="new_site_creation_intents_header_title">どのような内容のサイトですか？</string>
     <string name="notification_channel_weekly_roundup_title">1週間のまとめ</string>
     <string name="my_site_dashboard_tab_title">ホーム</string>
     <string name="adding_cat">カテゴリーを追加しています</string>
     <string name="login_select_email_client">どのメールアプリを使用していますか ?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">サイトとの通信中に問題が発生しました。 HTTP エラーコード401が返されました。</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">このサイトでは XML-RPC コールがブロックされているようです (エラーコード401)。 ログインに失敗する場合は、ヘルプアイコンをタップして FAQ をご確認ください。</string>
-    <string name="login_error_xml_rpc_cannot_read_site">ご指定の URL の WordPress サイトを読み込めません。 ヘルプアイコンをタップして FAQ を表示してください。</string>
-    <string name="login_error_xml_rpc_services_disabled">このサイトでは XML-RPC サービスが無効になっています。</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources" a8c-src-lib="login">サイトとの通信中に問題が発生しました。 HTTP エラーコード401が返されました。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">このサイトでは XML-RPC コールがブロックされているようです (エラーコード401)。 ログインに失敗する場合は、ヘルプアイコンをタップして FAQ をご確認ください。</string>
+    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources" a8c-src-lib="login">ご指定の URL の WordPress サイトを読み込めません。 ヘルプアイコンをタップして FAQ を表示してください。</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="login">このサイトでは XML-RPC サービスが無効になっています。</string>
     <string name="my_site_menu_tab_title">メニュー</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインではサポートされていない文字が含まれています。 サポートされている文字は A–Z、a–z、0–9です。</string>
     <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
@@ -935,67 +951,67 @@ Language: ja_JP
     <string name="reader_comment_menu_trash">「ゴミ箱」へ移動</string>
     <string name="reader_comment_menu_spam">「スパム」としてマーク</string>
     <string name="reader_comment_menu_unapprove">承認を解除</string>
-    <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
-    <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">タイルギャラリー設定</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">レイアウト選択画面に移動します</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">ギャラリースタイル</string>
     <string name="sharing_connect_via_web_warning_message">WordPress.com サイトでお使いの %s アカウントを接続できます。 完了したらアプリに戻り「ソーシャル」設定を変更します。</string>
-    <string name="about_automattic_app_icon_description">アプリアイコン</string>
-    <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
-    <string name="about_automattic_logo_description">Automattic ロゴ</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_pocketcasts">Pocket Casts</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_dayone">Day One</string>
-    <string name="about_automattic_source_code_item_title">ソースコード</string>
-    <string name="about_automattic_privacy_policy_item_title">プライバシーポリシー</string>
-    <string name="about_automattic_terms_of_service_item_title">利用規約</string>
-    <string name="about_automattic_work_with_us_item_subtitle">どこでも作業可能</string>
-    <string name="about_automattic_work_with_us_item_title">求人情報</string>
-    <string name="about_automattic_family_item_title">Automattic ファミリー</string>
-    <string name="about_automattic_legal_and_more_item_title">法的情報およびその他</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_rate_us_item_title">評価してください</string>
-    <string name="about_automattic_share_with_friends_item_title">友達と共有</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">このブロックは Web バージョンのエディターを使用して編集できます</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">Jetpack セキュリティの設定を開く</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注: モバイルエディターでこのブロックを編集するには、WordPress.com へのログインを許可する必要があります。</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注: レイアウトはテーマ、画面サイズによって異なります</string>
-    <string name="gutenberg_native_address_settings">アドレス設定</string>
-    <string name="gutenberg_native_add_media">メディアを追加</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">アプリアイコン</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">「戻る」アイコン</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic ロゴ</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Day One</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">ソースコード</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">プライバシーポリシー</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">利用規約</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">どこでも作業可能</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">求人情報</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic ファミリー</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">法的情報およびその他</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">評価してください</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">友達と共有</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">このブロックは Web バージョンのエディターを使用して編集できます</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Jetpack セキュリティの設定を開く</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">注: モバイルエディターでこのブロックを編集するには、WordPress.com へのログインを許可する必要があります。</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">注: レイアウトはテーマ、画面サイズによって異なります</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">アドレス設定</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">メディアを追加</string>
     <string name="my_site_error_card_subtitle">現在、サイトのデータの読み込みに問題が発生しています。</string>
     <string name="my_site_error_card_title">一部のデータを読み込めませんでした</string>
     <string name="my_site_dashboard_stale_message">ダッシュボードが更新されていません。 接続を確認してから取り込み、更新してください。</string>
     <string name="my_site_dashboard_update_error">ダッシュボードを更新できませんでした。</string>
     <string name="error_media_video_duration_exceeds_limit">動画がアップロードされていません。 5分以上の動画ファイルのアップロードには、有料プランのご利用が必要です。</string>
-    <string name="about_automattic_acknowledgements_item_title">謝辞</string>
-    <string name="about_automattic_california_privacy_notice_item_title">カリフォルニア州プライバシー通知</string>
-    <string name="about_automattic_version_label">バージョン%1$s</string>
-    <string name="about_automattic_acknowledgements_page_title">謝辞</string>
-    <string name="about_automattic_legal_page_title">法的情報およびその他</string>
-    <string name="about_automattic_main_page_title">%1$s について</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">謝辞</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">カリフォルニア州プライバシー通知</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">バージョン%1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">謝辞</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">法的情報およびその他</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">%1$s について</string>
     <string name="about_blog">ブログ</string>
-    <string name="gutenberg_native_the_basics">基本操作</string>
-    <string name="gutenberg_native_selected_default">選択済み: デフォルト</string>
-    <string name="gutenberg_native_more_support_options">その他のサポートオプション</string>
-    <string name="gutenberg_native_get_support">サポートを受ける</string>
-    <string name="gutenberg_native_font_size">フォントサイズ</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">ダブルタップしてフォントサイズを選択</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">ダブルタップしてデフォルトのフォントサイズを選択</string>
-    <string name="gutenberg_native_contact_support">サポートに問い合わせる</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">基本操作</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">選択済み: デフォルト</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">その他のサポートオプション</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">サポートを受ける</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">フォントサイズ</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">ダブルタップしてフォントサイズを選択</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">ダブルタップしてデフォルトのフォントサイズを選択</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">サポートに問い合わせる</string>
+    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">会話をフォロー</string>
     <string name="reader_comments_be_first_to_comment">最初のコメントを投稿</string>
     <string name="reader_comments_view_all">すべてのコメントを表示</string>
     <string name="reader_comments_post_fetch_failure">投稿データ取得中にエラーが発生しました</string>
     <string name="reader_comments_fetch_failure">コメント取得中にエラーが発生しました</string>
     <string name="reader_btn_follow_conversation_settings">会話設定をフォロー</string>
-    <string name="gutenberg_native_from_clipboard">クリップボードから</string>
-    <string name="gutenberg_native_featured_image">アイキャッチ画像</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">クリップボードから URL (%s) をコピーします</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">クリップボードから</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">アイキャッチ画像</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">クリップボードから URL (%s) をコピーします</string>
     <string name="me_btn_about">WordPress について</string>
     <string name="my_site_post_card_link_create_post">投稿を作成</string>
     <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
@@ -1013,7 +1029,7 @@ Language: ja_JP
     <string name="my_site_post_card_scheduled_title">予約済み投稿</string>
     <string name="my_site_post_card_draft_title">下書き投稿を作成</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;1年目は無料 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / 年&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">リンクを作成</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">リンクを作成</string>
     <string name="domains_suggestions_select_domain">ドメインを選択</string>
     <string name="domains_title">ドメイン</string>
     <string name="post_status_sticky">先頭固定表示</string>
@@ -1049,12 +1065,12 @@ Language: ja_JP
     <string name="comment_edit_comment">コメント</string>
     <string name="comment_edit_user_name">名前</string>
     <string name="comment_edit_menu_done">完了</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">埋め込みブロックのプレビューはまもなく公開予定です</string>
     <string name="weekly_roundup">1週間のまとめ</string>
-    <string name="gutenberg_native_embed_options">埋め込みオプション</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">埋め込みオプション</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">ダブルタップして埋め込みオプションを表示します。</string>
     <string name="quick_start_list_create_site_message">サイトを作成しました。 別のタスクを完了します。</string>
-    <string name="gutenberg_native_line_height">行の高さ</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
@@ -1067,32 +1083,32 @@ Language: ja_JP
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;毎日&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;時にブログ投稿のリマインダーを受け取ります。</string>
     <string name="blogging_reminders_site_settings_label">週に%1$s回%2$s時</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">書式設定コントロールは、テキストブロックの編集中に表示されるキーボードの上に位置するツールバー内にあります</string>
-    <string name="gutenberg_native_selected_s">選択済み: %s</string>
-    <string name="gutenberg_native_select_a_color_above">上記の色を選択</string>
-    <string name="gutenberg_native_navigates_to_select_s">移動して%sを選択</string>
-    <string name="gutenberg_native_move_blocks">ブロックを移動</string>
-    <string name="gutenberg_native_how_to_edit_your_post">投稿の編集方法</string>
-    <string name="gutenberg_native_how_to_edit_your_page">ページの編集方法</string>
-    <string name="gutenberg_native_customize_blocks">ブロックをカスタマイズ</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">アイキャッチ画像に対する変更は、「戻す」または「やり直す」ボタンを使用しても影響を受けません。</string>
-    <string name="gutenberg_native_applies_the_setting">設定を適用</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして他のブロックの上下に移動させることで、ブロックの配置を変更できます。</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">ブロックの世界へようこそ</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">ブロックを削除するには、そのブロックを選択し、ブロックの右下にある3つの点をクリックして設定を表示します。 ここで、ブロックを削除するオプションを選択します。</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">一部のブロックには追加の設定があります。 ブロックの右下にある設定アイコンをタップしてその他のオプションを表示します。</string>
-    <string name="gutenberg_native_s_block_newly_available">新たに追加された%sブロック</string>
-    <string name="gutenberg_native_rich_text_editing">リッチテキストの編集</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">異なるブロックの名前を確認したら、フォワードスラッシュに続けてブロック名を入力して (「/image」、「/heading」など)、ブロックを追加します。</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">画像、gif、動画、埋め込みメディアをページに追加することで、コンテンツを差別化しましょう。</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">投稿やページにブロックをいくつか追加して、どのようになるか見てみましょう。</string>
-    <string name="gutenberg_native_embed_media">メディアを埋め込む</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">各ブロックには独自の設定があります。 確認するには、ブロックをタップします。 画面下部にあるツールバーに設定が表示されます。</string>
-    <string name="gutenberg_native_build_layouts">レイアウトを構築</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">ブロックとはコーディングについて知らなくても挿入、配置変更、スタイル設定が実行できる、コンテンツの集まりです。 ブロックを使うことで、簡単かつ洗練された方法で美しいレイアウトに仕上げることができます。</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">ブロックがあることでコンテンツ作成に集中することができ、メッセージの発信に役立つすべての書式設定ツールが利用できます。</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">列へのコンテンツの配置、行動喚起ボタンの追加、テキストによる画像のオーバーレイを実行できます。</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">左下のツールバーにある + アイコンをタップして、新しいブロックをいつでも追加できます。</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">書式設定コントロールは、テキストブロックの編集中に表示されるキーボードの上に位置するツールバー内にあります</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">選択済み: %s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">上記の色を選択</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">移動して%sを選択</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">ブロックを移動</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">投稿の編集方法</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">ページの編集方法</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">ブロックをカスタマイズ</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">アイキャッチ画像に対する変更は、「戻す」または「やり直す」ボタンを使用しても影響を受けません。</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">設定を適用</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして他のブロックの上下に移動させることで、ブロックの配置を変更できます。</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">ブロックの世界へようこそ</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">ブロックを削除するには、そのブロックを選択し、ブロックの右下にある3つの点をクリックして設定を表示します。 ここで、ブロックを削除するオプションを選択します。</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">一部のブロックには追加の設定があります。 ブロックの右下にある設定アイコンをタップしてその他のオプションを表示します。</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">新たに追加された%sブロック</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">リッチテキストの編集</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">異なるブロックの名前を確認したら、フォワードスラッシュに続けてブロック名を入力して (「/image」、「/heading」など)、ブロックを追加します。</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">画像、gif、動画、埋め込みメディアをページに追加することで、コンテンツを差別化しましょう。</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">投稿やページにブロックをいくつか追加して、どのようになるか見てみましょう。</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">メディアを埋め込む</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">各ブロックには独自の設定があります。 確認するには、ブロックをタップします。 画面下部にあるツールバーに設定が表示されます。</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">レイアウトを構築</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">ブロックとはコーディングについて知らなくても挿入、配置変更、スタイル設定が実行できる、コンテンツの集まりです。 ブロックを使うことで、簡単かつ洗練された方法で美しいレイアウトに仕上げることができます。</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">ブロックがあることでコンテンツ作成に集中することができ、メッセージの発信に役立つすべての書式設定ツールが利用できます。</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">列へのコンテンツの配置、行動喚起ボタンの追加、テキストによる画像のオーバーレイを実行できます。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">左下のツールバーにある + アイコンをタップして、新しいブロックをいつでも追加できます。</string>
     <string name="quick_start_sites_type_tasks_completed">%2$s個中%1$s個が完了</string>
     <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
     <string name="comment_batch_moderation_error">1つ以上のコメントを承認できませんでした</string>
@@ -1103,16 +1119,16 @@ Language: ja_JP
     <string name="stats_disabled_enable_stats_button">サイト統計情報を有効化</string>
     <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
     <string name="stats_disabled_title">統計情報をお探しですか ?</string>
-    <string name="gutenberg_native_what_is_a_block">ブロックとは</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
-    <string name="gutenberg_native_unable_to_embed_media">メディアを埋め込むことができません</string>
-    <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
-    <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">%sプレビューはまだご利用いただけません</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 埋め込みブロックのプレビューはまもなく公開予定です</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">ブロックとは</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">メディアを埋め込むことができません</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">別の検索キーワードを試す</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">ブロックが見つかりません</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%sプレビューはまだご利用いただけません</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s 埋め込みブロックのプレビューはまもなく公開予定です</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">ダブルタップで投稿をプレビューできます。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">ダブルタップで固定ページをプレビューできます。</string>
     <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">表示</string>
     <string name="quick_start_dialog_need_help_manage_site_title">アプリでこのサイトを管理する方法をしりたいですか ?</string>
@@ -1121,9 +1137,9 @@ Language: ja_JP
     <string name="login_epilogue_mysites_heading">開くサイトを選択</string>
     <string name="scan_multisite_not_supported_subtitle">現在、Jetpack スキャンは WordPress のマルチサイトインストールとの互換性がありません。</string>
     <string name="scan_multisite_not_supported_title">WordPress マルチサイトには対応していません</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無効な URL。 正しい URL を入力してください。</string>
-    <string name="gutenberg_native_embed_caption_s">埋め込みのキャプション。 %s</string>
-    <string name="gutenberg_native_embed_caption_empty">埋め込みのキャプション。 空</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">無効な URL。 正しい URL を入力してください。</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">埋め込みのキャプション。 %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">埋め込みのキャプション。 空</string>
     <string name="activity_log_visit_our_documentation_page">ドキュメントページに移動する</string>
     <string name="activity_log_multisite_message">Jetpack Backup (Multisite) のインストールには、ダウンロード可能なバックアップは含まれますが、ワンクリックの復元機能は含まれません。 詳細については、%1$s。</string>
     <string name="blogging_reminders_tip_message">定期的に投稿することで、読者の興味を引きつけ、新たなサイト訪問者を獲得できます。</string>
@@ -1144,47 +1160,47 @@ Language: ja_JP
     <string name="set_your_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
     <string name="blogging_reminders_notification_text">本日はブログに投稿する日です</string>
     <string name="blogging_reminders_notification_title">%sのブログに投稿する日です</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">再利用ブロックの編集は WordPress for iOS ではまだサポートされていません</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">再利用ブロックの編集は WordPress for Android ではまだサポートされていません</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">または、「パターンを切り離す」をタップして、これらのブロックを個別に切り離して編集できます。</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">再利用ブロックの編集は WordPress for iOS ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">再利用ブロックの編集は WordPress for Android ではまだサポートされていません</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">または、「パターンを切り離す」をタップして、これらのブロックを個別に切り離して編集できます。</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
-    <string name="gutenberg_native_set_as_featured_image">アイキャッチ画像として設定</string>
-    <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">アイキャッチ画像として設定</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">アイキャッチ画像を削除</string>
     <string name="fab_add_category_desc">カテゴリーを作成</string>
     <string name="support_ticket_subject">WordPress for Android サポート</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="site_settings_blogging_reminders_title">リマインダー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
-    <string name="gutenberg_native_border_settings">枠線設定</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">枠線設定</string>
     <string name="storage_utils_dialog_dont_show_button">今後表示しない</string>
     <string name="storage_utils_dialog_ok_button">ストレージを表示</string>
     <string name="storage_utils_dialog_message">公開する前に端末にコンテンツを保存する必要があります。 ストレージ設定を確認して、ファイルを削除してスペースを空けてください。</string>
     <string name="storage_utils_dialog_title">端末のストレージ容量が足りません</string>
-    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
-    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
-    <string name="gutenberg_native_type_a_url">URL を入力</string>
-    <string name="gutenberg_native_slash_inserter_results">スラッシュ挿入結果</string>
-    <string name="gutenberg_native_s_has_url_set">%s には URL 設定があります</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s には URL 設定がありません</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s が通常のブロックに変換されました</string>
-    <string name="gutenberg_native_s_block">%s ブロック</string>
-    <string name="gutenberg_native_opacity">透過率</string>
-    <string name="gutenberg_native_media_options">メディア設定</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">無効な URL。 音声ファイルが見つかりません。</string>
-    <string name="gutenberg_native_insert_crosspost">クロスポストを挿入</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">ドラッグして焦点を調整</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">下部シートをダブルタップして開き、画像や動画を追加</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">アクションシートをダブルタップして開き、画像や動画を追加</string>
-    <string name="gutenberg_native_current_unit_is_s">現在のユニットは%s</string>
-    <string name="gutenberg_native_crosspost">クロスポスト</string>
-    <string name="gutenberg_native_s_converted_to_regular_block">%s が通常のブロックに変換されました</string>
-    <string name="gutenberg_native_columns_settings">カラム設定</string>
-    <string name="gutenberg_native_add_link_to_s">%s にリンクを追加</string>
-    <string name="gutenberg_native_add_link_text">リンク文字列を追加</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">画像または動画を追加</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X 軸位置</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">URL を入力</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">スラッシュ挿入結果</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s には URL 設定があります</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s には URL 設定がありません</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s が通常のブロックに変換されました</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s ブロック</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">透過率</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">メディア設定</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">無効な URL。 音声ファイルが見つかりません。</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">クロスポストを挿入</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">ドラッグして焦点を調整</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">下部シートをダブルタップして開き、画像や動画を追加</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">アクションシートをダブルタップして開き、画像や動画を追加</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">現在のユニットは%s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">クロスポスト</string>
+    <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s が通常のブロックに変換されました</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">カラム設定</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">%s にリンクを追加</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">リンク文字列を追加</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">画像または動画を追加</string>
     <string name="error_media_path_is_directory">指定パスはメディアファイルではなくディレクトリです</string>
     <string name="error_media_could_not_find_media_in_path">パスにメディアファイルがありません</string>
     <string name="error_media_unexpected_empty_media_file_path">想定に反し、メディアファイルパスが空です</string>
@@ -1192,103 +1208,103 @@ Language: ja_JP
     <string name="error_media_unexpected_null_value">メディアが空でした</string>
     <string name="threat_fix_enter_server_creds_msg_plural">脅威を修正するには&lt;a href=\"%1$s\"&gt;サーバーの認証情報を入力&lt;/a&gt;してください。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">脅威を修正するには&lt;a href=\"%1$s\"&gt;サーバーの認証情報を入力&lt;/a&gt;してください。</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">ダブルタップしてリンクを追加します。</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">ダブルタップしてリンクを追加します。</string>
     <string name="login_empty_view_try_another_account">別のアカウントで試行</string>
     <string name="login_empty_view_see_instructions">手順を参照してください</string>
     <string name="login_no_jetpack_sites_error_message">すでにサイトをお持ちの場合は、無料の Jetpack プラグインをインストールし、WordPress.com アカウントに接続する必要があります。</string>
     <string name="login_empty_view_avatar_content_description">自分のプロフィール写真</string>
     <string name="login_not_a_jetpack_site">%1$sにこのアプリを使用するには、Jetpack プラグインをインストールし、自身の WordPress アカウントに接続する必要があります。</string>
-    <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
-    <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
-    <string name="gutenberg_native_width_settings">幅設定</string>
-    <string name="gutenberg_native_link_rel">リンク rel</string>
-    <string name="gutenberg_native_column_settings">カラム設定</string>
-    <string name="gutenberg_native_no_description">説明はありません</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">画像を前に移動</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">画像を後ろに移動</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">幅設定</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">リンク rel</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">カラム設定</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">説明はありません</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_bottom_sheet_description">ユーザープロフィールボトムシート情報</string>
     <string name="likes_list_screen_title">いいねリスト%s</string>
-    <string name="gutenberg_native_two">2</string>
-    <string name="gutenberg_native_three">3</string>
-    <string name="gutenberg_native_no_title">タイトルなし</string>
-    <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
-    <string name="gutenberg_native_mention">\@ 返信</string>
-    <string name="gutenberg_native_new">新規</string>
-    <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
-    <string name="gutenberg_native_preview_page">ページをプレビュー</string>
-    <string name="gutenberg_native_retry">リトライ</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">1</string>
-    <string name="gutenberg_native_add_title">タイトルを追加</string>
-    <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
-    <string name="gutenberg_native_loading">読み込み中</string>
-    <string name="gutenberg_native_link_label">リンクラベル</string>
-    <string name="gutenberg_native_text_color">テキスト色</string>
-    <string name="gutenberg_native_s_link">%s リンク</string>
-    <string name="gutenberg_native_padding">パディング</string>
-    <string name="gutenberg_native_four">4</string>
-    <string name="gutenberg_native_featured">おすすめ</string>
-    <string name="gutenberg_native_add_image">画像を追加</string>
-    <string name="gutenberg_native_custom_url">カスタム URL</string>
-    <string name="gutenberg_native_create_embed">埋め込みを作成</string>
-    <string name="gutenberg_native_column_d">カラム %d</string>
-    <string name="gutenberg_native_more">詳細</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
-    <string name="gutenberg_native_add_blocks">ブロックを追加</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">2</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">3</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">タイトルなし</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%sソーシャルアイコン</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">\@ 返信</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新規</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">投稿をプレビュー</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">ページをプレビュー</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">リトライ</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">1</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">タイトルを追加</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">利用できるプレビューがありません</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">読み込み中</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">リンクラベル</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">テキスト色</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s リンク</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">パディング</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">4</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">おすすめ</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像を追加</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">カスタム URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">埋め込みを作成</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">カラム %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">詳細</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
-    <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
-    <string name="gutenberg_native_transform_s_to">%sを変換:</string>
-    <string name="gutenberg_native_transform_block">ブロックを変換…</string>
-    <string name="gutenberg_native_failed_to_insert_media">メディアの挿入に失敗しました。</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">音声ファイルの挿入に失敗しました。</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">画像の目的を説明します。 画像が単にデザインである場合は、空欄のままにします。</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$sを%2$sに変換しました</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">代替テキストとは ?</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">%sを変換:</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">ブロックを変換…</string>
+    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">メディアの挿入に失敗しました。</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">音声ファイルの挿入に失敗しました。</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">画像の目的を説明します。 画像が単にデザインである場合は、空欄のままにします。</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$sを%2$sに変換しました</string>
     <string name="like_faces_error_loading_message">「いいね」データの読み込みに失敗しました。%s。</string>
     <string name="like_title_plural">%d個の「いいね」</string>
     <string name="like_title_singular">1個の「いいね」</string>
     <string name="suggestion">提案:</string>
-    <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
-    <string name="gutenberg_native_search_input_field">検索入力フィールドです。</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">検索ボタンです。 現在のボタンテキストは</string>
-    <string name="gutenberg_native_search_blocks">検索ブロック</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">検索ブロックラベルです。 現在のテキストは</string>
-    <string name="gutenberg_native_outside">外側</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">カスタムプレースホルダーの設定なし</string>
-    <string name="gutenberg_native_inside">内側</string>
-    <string name="gutenberg_native_hide_search_heading">検索見出しを非表示</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">ダブルタップしてラベルテキストを編集</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">ダブルタップしてボタンテキストを編集</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
-    <string name="gutenberg_native_current_placeholder_text_is">現在のプレースホルダーテキストは</string>
-    <string name="gutenberg_native_clear_search">検索をクリア</string>
-    <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
-    <string name="gutenberg_native_button_position">ボタンの位置</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">アイコンボタンを使用</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">検索入力フィールドです。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">検索ボタンです。 現在のボタンテキストは</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">検索ブロック</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">検索ブロックラベルです。 現在のテキストは</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">外側</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">カスタムプレースホルダーの設定なし</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">内側</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">検索見出しを非表示</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">ダブルタップしてプレースホルダーテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">ダブルタップしてラベルテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">ダブルタップしてボタンテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">ダブルタップして単位を変更</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">現在のプレースホルダーテキストは</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">検索をクリア</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">検索をキャンセル</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">ボタンの位置</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$sです。%2$sは%3$s %4$sです。</string>
     <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
     <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
     <string name="get_likes_no_network_error">利用可能なネットワークがありません。</string>
     <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
     <string name="comment_status_unreplied">未返信</string>
-    <string name="gutenberg_native_add_link">リンクを追加</string>
-    <string name="gutenberg_native_search_settings">検索設定</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">リンクを追加</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">検索設定</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
-    <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">ボタンのテキストを追加</string>
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
     <string name="activity_log_backup_download_notice_download_action">ダウンロード</string>
     <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
     <string name="threat_fix_all_confirmation_message_plural">%s件のアクティブな脅威を修正してもよければ確認してください。</string>
     <string name="scan_idle_threats_description_plural">スキャンで %2$s に%1$s個の潜在的な脅威が見つかりました。以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
     <string name="scan_fixing_threats_description_plural">現在バックグラウンドでこれらの脅威を修正しています。その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
-    <string name="gutenberg_native_edit_focal_point">焦点を編集</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">ダブルタップして「ボトムシート」を開き、画像を編集、置換、クリアする</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">ダブルタップして「アクションシート」を開き、画像を編集、置換、クリアする</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">焦点を編集</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">ダブルタップして「ボトムシート」を開き、画像を編集、置換、クリアする</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">ダブルタップして「アクションシート」を開き、画像を編集、置換、クリアする</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">サイトの名前を入力してください</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;全タスク完了&lt;/b&gt;&lt;br/&gt;より多くの人に発信できるでしょう。素晴らしいです !</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;全タスク完了&lt;/b&gt;&lt;br/&gt;サイトをカスタマイズしました。いい感じです !</string>
-    <string name="magic_link_not_meaning_to_create_account">新しいアカウントを作成しない場合は、 戻ってメールアドレスを再度入力してください。</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="login">新しいアカウントを作成しない場合は、 戻ってメールアドレスを再度入力してください。</string>
     <string name="invite_links_disable_dialog_message">招待リンクを無効化すると、このリンクを使用してチームに参加できなくなります。本当に実行しますか ?</string>
     <string name="invite_links_disable_dialog_title">招待リンクを無効化</string>
     <string name="invite_links_bad_format_response">無効な応答を受信しました</string>
@@ -1335,22 +1351,22 @@ Language: ja_JP
     <string name="backup_item_contents">WP-content ディレクトリ</string>
     <string name="backup_item_roots">WordPress ルート</string>
     <string name="backup_download_details_choose_items_header">このダウンロードに含まれるアイテム</string>
-    <string name="gutenberg_native_uploading">アップロード中…</string>
-    <string name="gutenberg_native_replace_file">ファイルを置換</string>
-    <string name="gutenberg_native_replace_audio">音声ファイルを置換</string>
-    <string name="gutenberg_native_problem_opening_the_audio">音声を開く際にエラーが発生しました</string>
-    <string name="gutenberg_native_open">開く</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">このリクエストを処理できるアプリケーションはありません。</string>
-    <string name="gutenberg_native_lock_icon">錠のアイコン</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">音声ファイルの挿入に失敗しました。 タップすると、オプションが表示されます。</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">ダブルタップして音声ファイルを選択</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">ダブルタップして音声ファイルを再生</string>
-    <string name="gutenberg_native_choose_audio">音声ファイルを選択</string>
-    <string name="gutenberg_native_audio_player">音声プレーヤー</string>
-    <string name="gutenberg_native_audio_file">音声ファイル</string>
-    <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
-    <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
-    <string name="gutenberg_native_add_audio">音声ファイルを追加</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">アップロード中…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">ファイルを置換</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">音声ファイルを置換</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">音声を開く際にエラーが発生しました</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">開く</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">このリクエストを処理できるアプリケーションはありません。</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">錠のアイコン</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">音声ファイルの挿入に失敗しました。 タップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">ダブルタップして音声ファイルを選択</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">ダブルタップして音声ファイルを再生</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">音声ファイルを選択</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">音声プレーヤー</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">音声ファイル</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">音声キャプション。 %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">音声キャプション。 空</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">音声ファイルを追加</string>
     <string name="continue_with_wpcom">WordPress.com でログインまたは登録</string>
     <string name="photo_picker_use_audio">この音声を使用</string>
     <string name="photo_picker_choose_audio">端末から音声を選択</string>
@@ -1405,10 +1421,10 @@ Language: ja_JP
     <string name="backup_download_complete_failed_title">ダウンロード失敗</string>
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
-    <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
+    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">%1$s ホームページ %2$s を選択してホームページを編集します。</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">%1$s ホームページ %2$s を選択してホームページを編集します。</string>
     <string name="reader_menu_mark_as_unseen">未読にする</string>
     <string name="reader_menu_mark_as_seen">既読にする</string>
     <string name="error_media_upload_failed_for_reason">メディアのアップロードに失敗しました。\n%1$s</string>
@@ -1441,8 +1457,8 @@ Language: ja_JP
     <string name="backup_empty_subtitle">初回のバックアップは24時間以内にここに表示され、バックアップが完了すると通知が送信されます</string>
     <string name="backup_empty_title">最初のバックアップがもうすぐ完了します</string>
     <string name="request_failed_message">リクエストの処理中に問題が発生しました。 後ほどもう一度お試しください。</string>
-    <string name="gutenberg_native_move_to_bottom">一番下へ</string>
-    <string name="gutenberg_native_change_block_position">ブロックの位置を変更</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">一番下へ</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">ブロックの位置を変更</string>
     <string name="jetpack_icon_content_description">アイコン</string>
     <string name="backup_download_complete_info">ファイルへのリンクはメールでも送信されました。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">リンク共有ボタン</string>
@@ -1531,8 +1547,8 @@ Language: ja_JP
     <string name="backup_download_details_header">ダウンロード可能なバックアップを作成</string>
     <string name="backup_download_details_page_title">バックアップをダウンロードする</string>
     <string name="backup_download">バックアップのダウンロード</string>
-    <string name="gutenberg_native_error">エラー</string>
-    <string name="gutenberg_native_choose_file">ファイルを選択</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">エラー</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">ファイルを選択</string>
     <string name="activity_log_item_menu_download_backup_label">バックアップをダウンロード</string>
     <string name="activity_log_item_menu_restore_label">このポイントに復元</string>
     <string name="activity_log_activity_type_filter_label">アクティビティタイプ</string>
@@ -1543,12 +1559,12 @@ Language: ja_JP
     <string name="dialog_confirm_copy_local_message">コピーしようとしている投稿に競合する2つのバージョンが存在するか、最近行った変更が保存されていません。\n競合を解消するには投稿を編集するか、このアプリからバージョンをコピーしてください。</string>
     <string name="dialog_confirm_copy_local_title">同期後の競合</string>
     <string name="button_copy">複製</string>
-    <string name="gutenberg_native_file_name">ファイル名</string>
-    <string name="gutenberg_native_file_block_settings">ファイルブロック設定</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">ファイルの保存に失敗しました。\nタップすると、オプションが表示されます。</string>
-    <string name="gutenberg_native_edit_file">ファイルを編集</string>
-    <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">ファイル名</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">ファイルブロック設定</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">ファイルの保存に失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">ファイルを編集</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">ファイルの URL をコピー</string>
     <string name="new_site_creation_domain_header_title">ドメインを選択</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
@@ -1566,8 +1582,8 @@ Language: ja_JP
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
-    <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
-    <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="login">ストアのログイン情報で続ける</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="login">連携済みのメールアドレスを検索</string>
     <string name="reader_discover_no_posts_follow_subtitle">もっと多くのタグをフォローして、検索範囲を広げてみてください</string>
     <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
     <string name="reader_discover_empty_title">ようこそ !</string>
@@ -1575,8 +1591,8 @@ Language: ja_JP
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; さんが投稿に返信しました</string>
     <string name="login_prologue_third_subtitle_two">今日サイトで&lt;b&gt;50回「いいね」&lt;/b&gt;されました</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; さんが投稿に「いいね」しました</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">スクロール可能なブロックメニューが閉じられました。</string>
     <string name="hpp_choose_button">選択</string>
     <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
     <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
@@ -1607,11 +1623,11 @@ Language: ja_JP
     <string name="login_prologue_title_second">強力なエディターで、外出中も投稿できます。</string>
     <string name="login_prologue_title_first">世界で最も人気のサイト構築サービスへようこそ。</string>
     <string name="media_loading_failed">メディア読み込み失敗</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">リリースごとにブロックを追加できるよう努めています。</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">「%s」は十分にサポートされていません</string>
-    <string name="gutenberg_native_help_button">ヘルプボタン</string>
-    <string name="gutenberg_native_edit_using_web_editor">Web エディターを使って編集</string>
-    <string name="gutenberg_native_choose_images">画像を選択</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">リリースごとにブロックを追加できるよう努めています。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">「%s」は十分にサポートされていません</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">ヘルプボタン</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Web エディターを使って編集</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">画像を選択</string>
     <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
     <string name="mlp_notice_page_created">ページが作成されました</string>
     <string name="media_insert_failed">メディアの挿入に失敗しました。</string>
@@ -1628,15 +1644,15 @@ Language: ja_JP
     <string name="media_uploading_gif_library_photo">GIF メディアをアップロード中</string>
     <string name="media_uploading_stock_library_photo">ストックメディアをアップロード中</string>
     <string name="media_uploading_default">メディアをアップロード中</string>
-    <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
-    <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
-    <string name="gutenberg_native_add_this_link">このリンクを追加</string>
-    <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
+    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">検索または URL を入力</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">この電話リンクを追加</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">このリンクを追加</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">このメールリンクを追加</string>
     <string name="suggestion_no_connection">インターネットに接続していません。\n提案が利用できません。</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%sを選択済み</string>
-    <string name="login_get_link_by_email">ログインリンクをメールで取得</string>
-    <string name="email_not_registered_wpcom">このメールアドレスに紐付けられている WordPress.com アカウントが見つかりません。</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">ログインリンクをメールで取得</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="login">このメールアドレスに紐付けられている WordPress.com アカウントが見つかりません。</string>
     <string name="permission_microphone">マイク</string>
     <string name="comment_unable_to_show_error">このコメントを表示できません</string>
     <string name="media_browse_for_items">項目を閲覧</string>
@@ -1645,20 +1661,20 @@ Language: ja_JP
     <string name="error_media_xmlrcp_server_error">内部サーバーエラーが発生しました</string>
     <string name="error_media_xmlrpc_not_allowed">操作は許可されていません</string>
     <string name="show_n_hidden_items_desc">%1$s 件のアイテムをさらに表示</string>
-    <string name="gutenberg_native_select_a_layout">レイアウトを選択</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">注: カラムのレイアウトはテーマ、画面サイズによって異なります</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">レイアウトを選択</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">注: カラムのレイアウトはテーマ、画面サイズによって異なります</string>
     <string name="create_post_story_fab_tooltip">投稿またはストーリーを作成</string>
     <string name="create_page_fab_tooltip">ページを作成</string>
     <string name="create_post_fab_tooltip">投稿を作成</string>
     <string name="reader_discover_interests_header">おすすめ</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">非表示</string>
-    <string name="gutenberg_native_video_caption_empty">動画の見出しです。 空にする</string>
-    <string name="gutenberg_native_updates_the_title">タイトルを更新します。</string>
-    <string name="gutenberg_native_paste_block_after">ページタイトルの後に</string>
-    <string name="gutenberg_native_page_title_s">ブロックを貼り付けます。 %s</string>
-    <string name="gutenberg_native_page_title_empty">ページタイトル。 空にする</string>
-    <string name="toast_error_playing_video">動画再生時にエラーが発生しました</string>
-    <string name="camera_error">この端末は Camera2 API をサポートしていません。</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">動画の見出しです。 空にする</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">タイトルを更新します。</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">ページタイトルの後に</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">ブロックを貼り付けます。 %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">ページタイトル。 空にする</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">動画再生時にエラーが発生しました</string>
+    <string name="camera_error" tools:ignore="UnusedResources">この端末は Camera2 API をサポートしていません。</string>
     <string name="label_close_button">閉じる</string>
     <string name="mlp_preview_page">プレビュー</string>
     <string name="mlp_create_page">ページを作成</string>
@@ -1666,7 +1682,7 @@ Language: ja_JP
     <string name="mlp_choose_layout_subtitle">事前に用意されたさまざまなページレイアウトを選ぶところから始めましょう。 空白ページから始めることもできます。</string>
     <string name="mlp_choose_layout_title">レイアウトを選択</string>
     <string name="prepublishing_nudges_story_title_hint">ストーリーにタイトルを付ける</string>
-    <string name="quick_start_dialog_create_new_post_message_short">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
     <string name="photo_picker_choose_file">端末から選択</string>
     <string name="my_site_bottom_sheet_add_story">ストーリー投稿</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">インストール型の WordPress サイトでサイトアイコンを編集するには Jetpack プラグインが必要です。</string>
@@ -1674,65 +1690,65 @@ Language: ja_JP
     <string name="error_media_quota_exceeded_toast">ファイルをアップロードできません。\nストレージ割り当ての上限に達しました。</string>
     <string name="error_media_quota_exceeded">ストレージ割り当ての上限に達しました</string>
     <string name="pick_file">ファイルを追加</string>
-    <string name="gutenberg_native_replace_video">動画を置換</string>
-    <string name="gutenberg_native_replace_image_or_video">画像または動画を置換</string>
-    <string name="gutenberg_native_convert_to_link">リンクに変換</string>
-    <string name="gutenberg_native_choose_video">動画を選択</string>
-    <string name="gutenberg_native_choose_image_or_video">画像または動画を選択</string>
-    <string name="gutenberg_native_choose_image">画像を選択</string>
-    <string name="gutenberg_native_block_removed">削除したブロック</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">動画を置換</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">画像または動画を置換</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">リンクに変換</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">動画を選択</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">画像または動画を選択</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">画像を選択</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">削除したブロック</string>
     <string name="enter_your_site_address">既存のサイトアドレスを入力</string>
-    <string name="signup_confirmation_title">登録の確認</string>
-    <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
-    <string name="continue_terms_of_service_text">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
-    <string name="signup_confirmation_message">このメールアドレスは新しい WordPress.com アカウントの作成に使用します。</string>
-    <string name="signup_magic_link_message">新しい WordPress.com アカウントを作成するための登録リンクをメールでお送りしました。現在の端末でメールをチェックし、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
-    <string name="enter_account_info_for_site">%1$s のアカウント情報を入力してください。</string>
-    <string name="login_or">または</string>
-    <string name="continue_google_button_suffix">Google で続ける</string>
-    <string name="login_find_your_site_adress">サイトアドレスを検索</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="login">登録の確認</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="login">このメールアドレスは新しい WordPress.com アカウントの作成に使用します。</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="login">新しい WordPress.com アカウントを作成するための登録リンクをメールでお送りしました。現在の端末でメールをチェックし、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">%1$s のアカウント情報を入力してください。</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">または</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">Google で続ける</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="login">サイトアドレスを検索</string>
     <string name="login_done">終了</string>
-    <string name="magic_link_not_seeing_email_message">メールが表示されない場合は、 スパムメールや迷惑メールのフォルダーを確認してください。</string>
-    <string name="login_magic_links_sent_label">この端末でメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
-    <string name="login_magic_links_label">パスワードなしですぐにログインできるリンクのメールをお送りします。</string>
-    <string name="check_email">メールを確認</string>
-    <string name="get_started">今すぐ始める</string>
-    <string name="enter_email_to_continue_wordpress_com">メールアドレスを入力してログインするか、WordPress.com アカウントを作成します。</string>
-    <string name="or_type_your_password">またはパスワードを入力</string>
-    <string name="create_account">アカウントを作成</string>
-    <string name="send_link_by_email">リンクをメールで送信</string>
-    <string name="reset_your_password">パスワードをリセット</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="login">メールが表示されない場合は、 スパムメールや迷惑メールのフォルダーを確認してください。</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="login">この端末でメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="login">パスワードなしですぐにログインできるリンクのメールをお送りします。</string>
+    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">メールを確認</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">今すぐ始める</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">メールアドレスを入力してログインするか、WordPress.com アカウントを作成します。</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">またはパスワードを入力</string>
+    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">アカウントを作成</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">リンクをメールで送信</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">パスワードをリセット</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="quick_start_list_update_site_title_title">サイトタイトルを確認</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b&gt;%1$s&lt;/b&gt;をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
-    <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
-    <string name="gutenberg_native_remove_block">ブロックを削除</string>
-    <string name="gutenberg_native_duplicate_block">ブロックを複製</string>
-    <string name="gutenberg_native_copy_block">ブロックをコピー</string>
-    <string name="gutenberg_native_copied_block">コピーしたブロック</string>
-    <string name="gutenberg_native_block_pasted">ブロックを貼り付けました</string>
-    <string name="gutenberg_native_block_duplicated">ブロックを複製しました</string>
-    <string name="gutenberg_native_block_cut">ブロックを切り取りました</string>
-    <string name="gutenberg_native_block_copied">ブロックをコピーしました</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s ブロックオプション</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">ブロックを削除</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">ブロックを複製</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">ブロックをコピー</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">コピーしたブロック</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">ブロックを貼り付けました</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">ブロックを複製しました</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">ブロックを切り取りました</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">ブロックをコピーしました</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
     <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
     <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">保存されていない変更</string>
-    <string name="gutenberg_native_open_link_in_a_browser">リンクをブラウザーで開く</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">前のコンテンツシートへ移動</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">グラデーションのカスタマイズへ移動</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">カスタムカラーピッカーへ移動</string>
-    <string name="gutenberg_native_gradient_type">グラデーションタイプ</string>
-    <string name="gutenberg_native_go_back">戻る</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">ダブルタップしてオプションを選択</string>
-    <string name="gutenberg_native_customize_gradient">グラデーションをカスタマイズ</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">リンクをブラウザーで開く</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">前のコンテンツシートへ移動</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">グラデーションのカスタマイズへ移動</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">カスタムカラーピッカーへ移動</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">グラデーションタイプ</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">戻る</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">ダブルタップしてオプションを選択</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">グラデーションをカスタマイズ</string>
     <string name="pages_list_author">ページ作成者</string>
     <string name="error_media_thumbnail_not_loaded">メディアサムネイルを読み込めませんでした</string>
     <string name="menu_content_info">コンテンツ構造</string>
     <string name="everyone">誰でも</string>
     <string name="me">自分</string>
-    <string name="gutenberg_native_dismiss">非表示</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">非表示</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">公開日</string>
@@ -1761,11 +1777,11 @@ Language: ja_JP
     <string name="status_and_visibility">ステータスと公開状態</string>
     <string name="update_now">今すぐ更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
-    <string name="gutenberg_native_move_to_top">トップに移動</string>
-    <string name="gutenberg_native_insert_mention">メンションを挿入</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">ダブルタップして「アクションシート」と利用可能オプションを開く</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">ブロックの操作メニューを開く</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">トップに移動</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">メンションを挿入</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">ダブルタップして「下部シート」と利用可能オプションを開く</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">ダブルタップして「アクションシート」と利用可能オプションを開く</string>
     <string name="pages_cannot_be_started">現在、一時的にページを開けません。後ほどもう一度お試しください</string>
     <string name="pages_set_as_posts_page">投稿ページとして設定</string>
     <string name="pages_set_as_homepage">ホームページに設定する</string>
@@ -1789,8 +1805,8 @@ Language: ja_JP
     <string name="page_homepage_successfully_updated">ホームページが正常に更新されました</string>
     <string name="page_cannot_set_posts_page">「サイト設定」で「投稿」ページを「固定ホームページ」にするには</string>
     <string name="page_cannot_set_homepage">「サイト設定」でホームページを「固定ホームページ」にするには</string>
-    <string name="gutenberg_native_select_a_color">色を選択</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">ダブルタップして色設定に移動</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">色を選択</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">ダブルタップして色設定に移動</string>
     <string name="feature_announcement_find_out_mode">さらに詳しく</string>
     <string name="feature_announcement_dialog_label">%s の新機能</string>
     <string name="insert_label_with_count">%d を挿入</string>
@@ -1815,14 +1831,14 @@ Language: ja_JP
     <string name="button_insert">挿入</string>
     <string name="continue_label">次へ</string>
     <string name="copy_text">コピー</string>
-    <string name="gutenberg_native_number_of_columns">カラム数</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
-    <string name="gutenberg_native_move_block_right">ブロックを右に移動</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に左に移動</string>
-    <string name="gutenberg_native_move_block_left">ブロックを左に移動</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">ダブルタップしてブロックを右に移動</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">ダブルタップしてブロックを左に移動</string>
-    <string name="gutenberg_native_block_settings">ブロックの設定</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">カラム数</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">ブロックを右に移動</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">ブロックを%1$sの位置から%2$sの位置に左に移動</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">ブロックを左に移動</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">ダブルタップしてブロックを右に移動</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">ダブルタップしてブロックを左に移動</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">ブロックの設定</string>
     <string name="new_site_creation_creating_site_loading_4">ダッシュボードの作成</string>
     <string name="new_site_creation_creating_site_loading_3">テーマを設定する</string>
     <string name="new_site_creation_creating_site_loading_2">サイト機能の追加</string>
@@ -1830,7 +1846,7 @@ Language: ja_JP
     <string name="new_site_creation_creating_site_loading_subtitle">まもなくサイトの準備が完了します</string>
     <string name="new_site_creation_creating_site_loading_title">成功しました。\nほぼ終了</string>
     <string name="pages_and_posts_cancel_auto_upload">アップロードのキャンセル</string>
-    <string name="gif_list_search_returned_unknown_error">リクエストの処理中に問題が発生しました</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">リクエストの処理中に問題が発生しました</string>
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
     <string name="photo_picker_gif">Choose から選択</string>
     <string name="weekday_saturday">土曜日</string>
@@ -1877,17 +1893,17 @@ Language: ja_JP
     <string name="app_theme_light">ライト</string>
     <string name="app_theme">外観</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">このページに最近変更が加えられましたが、保存されませんでした。読み込むバージョンを選択します。\n\n</string>
-    <string name="gutenberg_native_warning_message">警告メッセージ</string>
-    <string name="gutenberg_native_show_post_content">投稿の内容を表示</string>
-    <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
-    <string name="gutenberg_native_link_to">リンク先</string>
-    <string name="gutenberg_native_link_settings">リンク設定</string>
-    <string name="gutenberg_native_excerpt_length_words">抜粋の長さ (単語数)</string>
-    <string name="gutenberg_native_edit_cover_media">カバーメディアを編集</string>
-    <string name="gutenberg_native_customize">カスタマイズ</string>
-    <string name="gutenberg_native_button_link_url">ボタンへのリンク用 URL</string>
-    <string name="gutenberg_native_border_radius">境界の半径</string>
-    <string name="gutenberg_native_add_paragraph_block">段落ブロックを追加</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">警告メッセージ</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">投稿の内容を表示</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">抜粋のみを表示</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">リンク先</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">リンク設定</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">抜粋の長さ (単語数)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">カバーメディアを編集</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">カスタマイズ</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">ボタンへのリンク用 URL</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">境界の半径</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">段落ブロックを追加</string>
     <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
     <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
     <string name="post_list_tab_scheduled_posts">予約済み</string>
@@ -1910,17 +1926,17 @@ Language: ja_JP
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com にログイン</string>
     <string name="reader_filter_self_hosted_empty_tags_list">WordPress.com にログインし、購読中のタグの最新投稿をチェック</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">WordPress.com にログインし、購読中のブログの最新投稿をチェック</string>
-    <string name="gutenberg_native_replace_current_block">現在のブロックを置き換え</string>
-    <string name="gutenberg_native_add_to_end">末尾に追加</string>
-    <string name="gutenberg_native_add_to_beginning">先頭に追加</string>
-    <string name="gutenberg_native_add_block_before">前にブロックを追加</string>
-    <string name="gutenberg_native_add_block_after">後にブロックを追加</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">現在のブロックを置き換え</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">末尾に追加</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">先頭に追加</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">前にブロックを追加</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">後にブロックを追加</string>
     <string name="reader_filter_empty_tags_add_action">タグを追加</string>
     <string name="reader_filter_cta">フィルター</string>
-    <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
-    <string name="gutenberg_native_edit_video">動画を編集</string>
-    <string name="gutenberg_native_edit_media">メディアを編集</string>
-    <string name="gutenberg_native_add_a_shortcode">ショートコードを追加…</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">動画の見出しです。%s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">動画を編集</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">メディアを編集</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">ショートコードを追加…</string>
     <string name="post_list_author">投稿作成者</string>
     <string name="fab_create_desc">投稿を作成</string>
     <string name="stats_posting_activity_end_description">この期間の統計情報はすべて報告済みです。\nもう1度タップすると最初から再開されます。</string>
@@ -1934,8 +1950,8 @@ Language: ja_JP
     <string name="stats_box_type_low">低い</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s、%2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">画像の置き換え</string>
-    <string name="gutenberg_native_gallery_caption_s">ギャラリーのキャプション。%s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">画像の置き換え</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">ギャラリーのキャプション。%s</string>
     <string name="create_post_page_fab_tooltip">投稿またはページを作成</string>
     <string name="content_description_person_building_website">サイトを構築する人</string>
     <string name="post_signup_interstitial_not_right_now">今はしない</string>
@@ -1954,12 +1970,12 @@ Language: ja_JP
     <string name="dialog_confirm_scheduled_post_sync_title">同期しても良いですか ?</string>
     <string name="new_site_creation_unavailable_domain">このドメインは利用できません</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
-    <string name="login_discovery_error_ssl">&lt;b&gt;SSL 証明書&lt;/b&gt;の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
-    <string name="login_discovery_error_http_auth">&lt;b&gt;HTTP 認証&lt;/b&gt;の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
-    <string name="login_discovery_error_xmlrpc">サイトの &lt;b&gt;XMLRPC ファイル&lt;/b&gt;にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
-    <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b&gt;%1$s&lt;/b&gt; を確認します</string>
-    <string name="enter_credentials_for_site">%1$s サイトのアカウント情報でログイン</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="login">&lt;b&gt;SSL 証明書&lt;/b&gt;の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="login">&lt;b&gt;HTTP 認証&lt;/b&gt;の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="login">サイトの &lt;b&gt;XMLRPC ファイル&lt;/b&gt;にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="login">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b&gt;%1$s&lt;/b&gt; を確認します</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">%1$s サイトのアカウント情報でログイン</string>
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
     <string name="reader_my_likes_display_name">いいね</string>
     <string name="reader_discover_display_name">ディスカバー</string>
@@ -1972,56 +1988,56 @@ Language: ja_JP
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">現在、投稿を開くことができません。後ほど、もう一度お試しください</string>
     <string name="site_cannot_be_loaded">現在、サイトのデータを読み込めません。後ほど、もう一度お試しください</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress メディアライブラリ</string>
-    <string name="gutenberg_native_unsupported">非サポート</string>
-    <string name="gutenberg_native_ungroup">グループ解除</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">タップしてキーボードを非表示</string>
-    <string name="gutenberg_native_tap_here_to_show_help">タップしてヘルプを表示</string>
-    <string name="gutenberg_native_take_a_video">動画を撮る</string>
-    <string name="gutenberg_native_take_a_photo_or_video">写真または動画を撮る</string>
-    <string name="gutenberg_native_take_a_photo">写真を撮る</string>
-    <string name="gutenberg_native_start_writing">執筆を開始…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
-    <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
-    <string name="gutenberg_native_cut_block">ブロックを切り取る</string>
-    <string name="gutenberg_native_problem_opening_the_video">動画を開く際に問題が発生しました</string>
-    <string name="gutenberg_native_problem_displaying_block">ブロックの表示中に問題が発生しました</string>
-    <string name="gutenberg_native_post_title_s">投稿タイトル。%s</string>
-    <string name="gutenberg_native_post_title_empty">投稿タイトル。空</string>
-    <string name="gutenberg_native_paste_url">URL を貼り付け</string>
-    <string name="gutenberg_native_page_break_block_s">改ページブロック。%s</string>
-    <string name="gutenberg_native_open_settings">設定を開く</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">このリクエストを処理できるアプリケーションはありません。Web ブラウザーをインストールしてください。</string>
-    <string name="gutenberg_native_navigate_up">上に移動</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に上に移動します</string>
-    <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
-    <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
-    <string name="gutenberg_native_link_text">リンクテキスト</string>
-    <string name="gutenberg_native_link_inserted">リンクを挿入しました</string>
-    <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
-    <string name="gutenberg_native_hide_keyboard">キーボードを非表示</string>
-    <string name="gutenberg_native_help_icon">ヘルプアイコン</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">ダブルタップして前回の変更を元に戻す</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">ダブルタップして設定を切り替え</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">ダブルタップして画像を選択</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">ダブルタップして動画を選択</string>
-    <string name="gutenberg_native_double_tap_to_select">ダブルタップして選択</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">ダブルタップして前回の変更をやり直す</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">ダブルタップしてブロックを上に移動</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">ダブルタップしてブロックを下に移動</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">ダブルタップしてこの値を編集</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">ダブルタップと長押しで編集</string>
-    <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
-    <string name="gutenberg_native_choose_from_device">端末から選択</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度お試しください。</string>
-    <string name="gutenberg_native_alt_text">代替テキスト</string>
-    <string name="gutenberg_native_add_video">動画を追加</string>
-    <string name="gutenberg_native_add_url">URL を追加</string>
-    <string name="gutenberg_native_add_alt_text">代替テキストを追加</string>
-    <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
-    <string name="gutenberg_native_add_description">説明を追加</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress メディアライブラリ</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">非サポート</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">グループ解除</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">タップしてキーボードを非表示</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">タップしてヘルプを表示</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">動画を撮る</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">写真または動画を撮る</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">写真を撮る</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">執筆を開始…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%sブロック。このブロックは無効なコンテンツです</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%sブロック。空</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">ブロックを切り取る</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">動画を開く際に問題が発生しました</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">ブロックの表示中に問題が発生しました</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">投稿タイトル。%s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">投稿タイトル。空</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">URL を貼り付け</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">改ページブロック。%s</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">設定を開く</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">このリクエストを処理できるアプリケーションはありません。Web ブラウザーをインストールしてください。</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">上に移動</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">ブロックを行 %1$s から行 %2$s に上に移動します</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">ブロックを上に移動</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">ブロックを行 %1$s から行 %2$s に下に移動します</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">ブロックを下に移動</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">リンクテキスト</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">リンクを挿入しました</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">画像キャプション。%s</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">キーボードを非表示</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">ヘルプアイコン</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">ダブルタップして前回の変更を元に戻す</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">ダブルタップして設定を切り替え</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">ダブルタップして画像を選択</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">ダブルタップして動画を選択</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">ダブルタップして選択</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">ダブルタップして前回の変更をやり直す</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">ダブルタップしてブロックを上に移動</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">ダブルタップしてブロックを下に移動</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">ダブルタップしてこの値を編集</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">ダブルタップしてブロックを追加</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">ダブルタップと長押しで編集</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">現在の値 %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">端末から選択</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">不明なエラーが発生しました。もう一度お試しください。</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">代替テキスト</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動画を追加</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">URL を追加</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">代替テキストを追加</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ここにブロックを追加</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">説明を追加</string>
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
     <string name="reader_acessibility_list_loaded">「リストに %1$d 項目が読み込まれました」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2125,8 +2141,8 @@ Language: ja_JP
     <string name="post_settings_add_to_calendar">カレンダーに追加</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日付と時刻</string>
-    <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
-    <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="login">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">WordPress.com でログインして、%1$s に接続してください</string>
     <string name="stats_post_views_label">表示数</string>
     <string name="stats_post_label">投稿</string>
     <string name="stats_list_item_description">%1$s:%2$s、%3$s:%4$s</string>
@@ -2142,11 +2158,11 @@ Language: ja_JP
     <string name="description_collapse">折りたたむ</string>
     <string name="my_site_verify_your_email_without_email">メールアドレスを検証してください。ご登録のメールアドレスに指示が送信されました</string>
     <string name="my_site_verify_your_email">メールアドレスを検証してください。指示が %s に送信されました</string>
-    <string name="link_dialog_button_cancel">キャンセル</string>
-    <string name="link_dialog_button_ok">OK</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">リンクを削除</string>
-    <string name="link_dialog_title">リンクを挿入</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">キャンセル</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">リンクを削除</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">リンクを挿入</string>
     <string name="post_settings_retry_featured_image">アップロード再試行</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">メディアをアップロードしています。\nタップすると、オプションが表示されます。</string>
     <string name="link_open_new_window">リンクを新しいウィンドウまたはタブで開く</string>
@@ -2212,7 +2228,7 @@ Language: ja_JP
     <string name="stats_management_news_card_message">表示する統計を選択し、最も重要視するデータに集中します。「統計概要」の下部にある%1$sをタップして、統計をカスタマイズします。</string>
     <string name="stats_manage_your_stats">統計を管理</string>
     <string name="history_fetching_revisions">変更を取得しています…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">メディアを挿入できませんでした。\nタップしてオプションを表示してください。</string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">メディアを挿入できませんでした。\nタップしてオプションを表示してください。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">メディアを挿入できませんでした。\nタップして再試行してください。</string>
     <string name="editor_uploading_draft">下書きをアップロードしています</string>
     <string name="post_uploading_draft">下書きをアップロードしています</string>
@@ -2242,8 +2258,8 @@ Language: ja_JP
     <string name="posts_draft_empty">投稿の下書きはありません</string>
     <string name="posts_scheduled_empty">予約済み投稿はありません</string>
     <string name="posts_published_empty">公開した投稿はまだありません</string>
-    <string name="notification_wpcom_username_needed">ユーザー名とパスワードでログインしてください。</string>
-    <string name="error_user_username_instead_of_email">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="login">ユーザー名とパスワードでログインしてください。</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="login">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
     <string name="stats_insights_average_words">1投稿あたりの平均単語数</string>
     <string name="stats_insights_total_words">総単語数</string>
     <string name="stats_insights_average_likes">1投稿あたりの「いいね」の平均数</string>
@@ -2253,7 +2269,7 @@ Language: ja_JP
     <string name="stats_insights_posts">投稿</string>
     <string name="stats_insights_year">年</string>
     <string name="stats_insights_this_year_site_stats">今年</string>
-    <string name="no_site_error">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトが WordPress を使用している必要があります。</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="login">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトが WordPress を使用している必要があります。</string>
     <string name="plugin_check_domain_credit_error">登録可能なドメインクレジットの確認に失敗しました</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">ドメインクレジットの確認</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
@@ -2269,7 +2285,7 @@ Language: ja_JP
     <string name="stats_months_and_years_views_label">表示数</string>
     <string name="stats_months_and_years_period_label">期間</string>
     <string name="stats_detail_months_and_years">月と年</string>
-    <string name="stats_insights_load_more">さらに読み込む</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">さらに読み込む</string>
     <string name="stats_insights_today_stats">今日</string>
     <string name="stats_insights_best_hour">最高記録達成時間</string>
     <string name="stats_insights_best_day">最高記録達成日</string>
@@ -2280,7 +2296,7 @@ Language: ja_JP
     <string name="app_rating_message">ご利用ありがとうございます。アプリをご利用いただきありがとうございます。Google Play ストアでの評価をお願いいたします。</string>
     <string name="editor_post_converted_back_to_draft">下書きに戻した投稿</string>
     <string name="stats_insights_posting_activity">投稿アクティビティ</string>
-    <string name="stats_site_not_loaded_yet">まだ読み込まれていないサイト</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">まだ読み込まれていないサイト</string>
     <string name="stats_more_posts">表示する投稿数を増やす</string>
     <string name="stats_fewer_posts">表示する投稿数を減らす</string>
     <string name="new_site_creation_preview_back_pressed_warning">作業内容が失われる可能性があります。終了してもよいですか ?</string>
@@ -2301,15 +2317,15 @@ Language: ja_JP
     <string name="quick_start_sites">次のステップ</string>
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
-    <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには%1$s「統計情報」%2$sを選択します。</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">サイトのパフォーマンスを表示するには%1$s「統計情報」%2$sを選択します。</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
     <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
-    <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
-    <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">投稿のシェアを有効化</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
     <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
     <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
     <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
-    <string name="notification_channel_reminder_title">リマインダー</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">リマインダー</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
     <string name="stats_select_previous_period_description">前の期間を選択</string>
     <string name="stats_most_popular_percent_views">表示数: %1$s</string>
@@ -2349,7 +2365,7 @@ Language: ja_JP
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
-    <string name="gif_picker_empty_search_list">検索と一致するメディアがありません</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">検索と一致するメディアがありません</string>
     <string name="gif_picker_initial_empty_text">GIF を検索してメディアライブラリに追加しましょう。</string>
     <string name="stats_author_views_label">表示数</string>
     <string name="stats_author_label">投稿者</string>
@@ -2414,7 +2430,7 @@ Language: ja_JP
     <string name="history_detail_button_previous">前へ</string>
     <string name="history_detail_button_next">次へ</string>
     <string name="media_space_used">%1$s を使用</string>
-    <string name="enter_wpcom_or_jetpack_site">WordPress.com または Jetpack と連携したインストール型 WordPress サイトを入力してください</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">WordPress.com または Jetpack と連携したインストール型 WordPress サイトを入力してください</string>
     <string name="history_loading_revision">変更履歴を読み込んでいます</string>
     <string name="history_loaded_revision">変更履歴の読み取りが完了しました</string>
     <string name="history_load_dialog_button_positive">読み込む</string>
@@ -2442,12 +2458,12 @@ Language: ja_JP
     <string name="pages_move_to_draft">ドラフトに移動</string>
     <string name="pages_set_parent">親の設定</string>
     <string name="pages_view">表示</string>
-    <string name="pages_trashed">ゴミ箱に移動済み</string>
-    <string name="pages_scheduled">予約済み</string>
-    <string name="pages_drafts">下書き</string>
-    <string name="pages_published">公開済み</string>
-    <string name="login_error_sms_throttled">SMS 認証コードの送信試行回数が多すぎます。しばらくしてから、新しい認証コードをリクエストしてください。</string>
-    <string name="login_error_email_not_found_v2">この Google アカウントに一致する WordPress.com アカウントはありません。</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">ゴミ箱に移動済み</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">予約済み</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">下書き</string>
+    <string name="pages_published" tools:ignore="UnusedResources">公開済み</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">SMS 認証コードの送信試行回数が多すぎます。しばらくしてから、新しい認証コードをリクエストしてください。</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">この Google アカウントに一致する WordPress.com アカウントはありません。</string>
     <string name="site_picker_remove_site_empty">検索に一致するサイトはありません</string>
     <string name="reader_no_followed_blogs_search_title">検索に一致するブログがありません</string>
     <string name="page_parent_changed">ページの親が変更されました</string>
@@ -2470,20 +2486,20 @@ Language: ja_JP
     <string name="quick_start_dialog_view_site_title">サイトを表示</string>
     <string name="quick_start_dialog_view_site_message">サイトをプレビューして訪問者に表示される内容を確認できます。</string>
     <string name="quick_start_dialog_share_site_title">サイトを共有</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$s「ソーシャル」%2$sをタップして続行する</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">%1$s「ソーシャル」%2$sをタップして続行する</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s連携%2$sをタップして、SNS アカウントを追加</string>
     <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
     <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
-    <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
     <string name="quick_start_dialog_need_help_button_negative">いいえ、結構です</string>
     <string name="quick_start_dialog_follow_sites_title">別のサイトを接続</string>
-    <string name="quick_start_button_positive">移動</string>
-    <string name="quick_start_button_negative_short">キャンセル</string>
-    <string name="quick_start_button_negative">後で</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">移動</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">キャンセル</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">後で</string>
     <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
     <string name="reader_empty_subscribed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
-    <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
     <string name="stats_jetpack_connection_setup_info">WordPress サイトの統計情報を利用するには、Jetpack プラグインのインするが必要です。</string>
@@ -2515,7 +2531,7 @@ Language: ja_JP
     <string name="featured_image_desc">アイキャッチ画像</string>
     <string name="button_discard">削除</string>
     <string name="reader_avatar_desc">プロフィール写真</string>
-    <string name="notification_channel_transient_title">Transient</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
     <string name="support_identity_input_dialog_email_label">メール</string>
     <string name="support_identity_input_dialog_enter_email">メールアドレスを入力してください</string>
     <string name="support_identity_input_dialog_enter_email_and_name">続行するには、メールアドレスと名前を入力してください</string>
@@ -2537,13 +2553,13 @@ Language: ja_JP
     <string name="reader_empty_search_title">一致する結果が見つかりません</string>
     <string name="comment_read_source_post">元の投稿を読む</string>
     <string name="sites">サイト</string>
-    <string name="signup_magic_link_title">マジックリンクが送信されました</string>
-    <string name="verification_2fa_screen_title">コードの認証</string>
-    <string name="selfhosted_site_login_title">ログイン情報</string>
-    <string name="magic_link_sent_login_title">マジックリンクが送信されました</string>
-    <string name="magic_link_login_title">マジックリンクでのログイン</string>
-    <string name="site_address_login_title">サイトアドレスでのログイン</string>
-    <string name="email_address_login_title">メールアドレスでのログイン</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">マジックリンクが送信されました</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">コードの認証</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">ログイン情報</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">マジックリンクが送信されました</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">マジックリンクでのログイン</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">サイトアドレスでのログイン</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">メールアドレスでのログイン</string>
     <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
     <string name="reader_empty_saved_posts_title">投稿はまだ保存されていません。</string>
     <string name="reader_bookmark_snack_title">投稿を保存しました</string>
@@ -2608,8 +2624,8 @@ Language: ja_JP
     <string name="content_description_people_looking_charts">グラフとチャートを見ている人</string>
     <string name="comment_title">%2$s の %1$s</string>
     <string name="dialog_confirm_delete_permanently_post">この投稿を完全に削除しますか ?</string>
-    <string name="notification_channel_important_title">重要</string>
-    <string name="notification_channel_general_title">一般</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">重要</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">一般</string>
     <string name="photo_picker_use_photo">この写真を使用</string>
     <string name="media_preview_title">%1$d/%2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">%s によって提供された写真</string>
@@ -2646,7 +2662,7 @@ Language: ja_JP
     <string name="invite_user_delete_desc">%s を削除</string>
     <string name="profile_picture">%s のプロフィール写真</string>
     <string name="comment_checkmark_desc">チェックマーク</string>
-    <string name="signup_with_google_progress">Google アカウントで登録中…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Google アカウントで登録中…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack への接続に失敗しました:%s</string>
     <string name="jetpack_already_connected_toast">すでに Jetpack に接続しています</string>
     <string name="menu_visual_mode">ビジュアルモード</string>
@@ -2727,7 +2743,7 @@ Language: ja_JP
     <string name="site_creation_domain_finish_button">サイトの作成</string>
     <string name="notification_site_creation_created">続行するにはタップしてください。</string>
     <string name="notification_site_creation_title_success">サイトを作成しました。</string>
-    <string name="google_error_timeout">Google が応答するのに時間がかかりすぎました。インターネット接続が安定するまで時間がかかる場合があります。</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Google が応答するのに時間がかかりすぎました。インターネット接続が安定するまで時間がかかる場合があります。</string>
     <string name="username_changer_title">ユーザー名の変更</string>
     <string name="username_changer_hint">入力してさらに候補を表示</string>
     <string name="username_changer_header">現在のユーザー名は %1$s%2$s%3$s です。いくつかの例外はありますが、他のユーザーには表示名 %4$s%5$s%6$s しか表示されません。</string>
@@ -2739,10 +2755,10 @@ Language: ja_JP
     <string name="content_description_add_avatar">アバターの追加</string>
     <string name="signup_user_exists">WordPress.com にすでにメールがあります。\nログインを処理しています。</string>
     <string name="signup_updating_account">アカウントを更新しています…</string>
-    <string name="signup_magic_link_progress">メールを送信中</string>
-    <string name="signup_magic_link_error_button_positive">再試行</string>
-    <string name="signup_magic_link_error_button_negative">閉じる</string>
-    <string name="signup_magic_link_error">メールの送信中にエラーが発生しました。今すぐ再試行するか、しばらくしてからもう一度お試しください。</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">メールを送信中</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">再試行</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">閉じる</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">メールの送信中にエラーが発生しました。今すぐ再試行するか、しばらくしてからもう一度お試しください。</string>
     <string name="signup_epilogue_hint_username">ユーザー名</string>
     <string name="signup_epilogue_hint_password_detail">先ほど使用したようなリンクでいつでもログインできますが、ご希望の場合はパスワードを設定することもできます。</string>
     <string name="signup_epilogue_hint_password">パスワード (オプション)</string>
@@ -2840,18 +2856,18 @@ Language: ja_JP
     <string name="my_site_btn_plugins">プラグイン</string>
     <string name="media_edit_link_hint">リンクを新しいウィンドウまたはタブで開く</string>
     <string name="media_edit_link_text">リンク先</string>
-    <string name="notification_login_failed">エラーが発生しました。</string>
-    <string name="notification_2fa_needed">続行するには認証コードを入力してください。</string>
-    <string name="notification_error_wrong_password">続行するにはパスワードをダブルチェックしてください。</string>
-    <string name="notification_login_title_stopped">ログインが停止されました</string>
-    <string name="notification_logging_in">ログインするまでしばらくお待ちください。</string>
-    <string name="notification_login_title_in_progress">ログイン中…</string>
-    <string name="notification_logged_in">続行するにはタップしてください。</string>
-    <string name="notification_login_title_success">ログインしました。</string>
-    <string name="login_error_generic_start">Google ログインを開始できませんでした。</string>
-    <string name="login_empty_password">パスワードを入力してください</string>
-    <string name="login_text_otp_another">代わりに別のコードを送信する</string>
-    <string name="enter_verification_code_sms">末尾が%sで終わる電話番号にテキストメッセージを送信しました。SMS の認証コードを入力してください。</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">エラーが発生しました。</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">続行するには認証コードを入力してください。</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">続行するにはパスワードをダブルチェックしてください。</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">ログインが停止されました</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">ログインするまでしばらくお待ちください。</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">ログイン中…</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">続行するにはタップしてください。</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">ログインしました。</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">Google ログインを開始できませんでした。</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">パスワードを入力してください</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">代わりに別のコードを送信する</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">末尾が%sで終わる電話番号にテキストメッセージを送信しました。SMS の認証コードを入力してください。</string>
     <string name="image_size">サイズ</string>
     <string name="uploading_subtitle_media_only_one">残り1ファイルです</string>
     <string name="uploading_subtitle_media_only">残り%1$d/%2$dファイルです</string>
@@ -2868,15 +2884,15 @@ Language: ja_JP
     <string name="confirm_remove_media_image">この画像を投稿から削除しますか ?</string>
     <string name="media_edit_customize_card_caption">カスタマイズ</string>
     <string name="media_edit_file_details_card_caption">ファイルの詳細</string>
-    <string name="login_error_suffix">\n別のアカウントを試してみますか ?</string>
-    <string name="login_error_generic">Google アカウントへの接続で何らかの問題が発生しました。</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">\n別のアカウントを試してみますか ?</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Google アカウントへの接続で何らかの問題が発生しました。</string>
     <string name="login_error_button">閉じる</string>
-    <string name="enter_wpcom_password_google">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>
     <string name="post_settings_choose_featured_image">アイキャッチ画像を選択</string>
-    <string name="login_log_in_for_share_intent">WordPress.com にログインしてコンテンツを共有します。</string>
-    <string name="enter_site_address_share_intent">コンテンツを共有する WordPress サイトのアドレスを入力します。</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">WordPress.com にログインしてコンテンツを共有します。</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">コンテンツを共有する WordPress サイトのアドレスを入力します。</string>
     <string name="jetpack_disconnect_error_toast">サイトの接続解除中のエラー</string>
     <string name="jetpack_disconnect_success_toast">サイトが接続解除されました</string>
     <string name="jetpack_disconnect_confirm">連携解除</string>
@@ -2960,35 +2976,35 @@ Language: ja_JP
     <string name="login_epilogue_mysites_other">自分のサイト</string>
     <string name="login_epilogue_mysites_one">自分のサイト</string>
     <string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
-    <string name="login_empty_2fa">認証コードを入力してください</string>
-    <string name="login_empty_username">ユーザー名を入力してください</string>
-    <string name="login_log_in_for_deeplink">WordPress.com にログインして投稿にアクセスしてください。</string>
-    <string name="login_error_while_adding_site">サイトを追加する際にエラーが発生しました。エラーコード: %s</string>
-    <string name="login_checking_site_address">サイトアドレスの確認</string>
-    <string name="login_site_address_more_help">問題が解決しない場合</string>
-    <string name="login_site_address_help_content">Chrome でサイトにアクセスすると、画面の上部にあるバーにサイトアドレスが表示されます。</string>
-    <string name="login_site_address_help_title">自分のサイトアドレスは ?</string>
-    <string name="login_site_address">サイトアドレス</string>
-    <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">認証コードを入力してください</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">ユーザー名を入力してください</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">WordPress.com にログインして投稿にアクセスしてください。</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">サイトを追加する際にエラーが発生しました。エラーコード: %s</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">サイトアドレスの確認</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">問題が解決しない場合</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">Chrome でサイトにアクセスすると、画面の上部にあるバーにサイトアドレスが表示されます。</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">自分のサイトアドレスは ?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">サイトアドレス</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">連携する WordPress サイトのアドレスを入力してください。</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
-    <string name="login_continue">次へ</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">次へ</string>
     <string name="connect_more">別のサイトと連携</string>
-    <string name="enter_wpcom_password">WordPress.com パスワードを入力してください。</string>
-    <string name="login_magic_link_email_requesting">ログインメールのリクエスト</string>
-    <string name="password_incorrect">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
-    <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
-    <string name="login_text_otp">代わりに SMS でコードを送信する</string>
-    <string name="enter_verification_code">もう少しです ! 認証アプリから WordPress.com の認証コードを入力してください。</string>
-    <string name="open_mail">メールを開く</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">WordPress.com パスワードを入力してください。</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">ログインメールのリクエスト</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">SMS 経由で認証コードをリクエスト。</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">代わりに SMS でコードを送信する</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">もう少しです ! 認証アプリから WordPress.com の認証コードを入力してください。</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">メールを開く</string>
     <string name="next">次へ</string>
-    <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
     <string name="me_profile_photo">プロフィール写真</string>
     <string name="error_media_parse_error">サーバーから予期しない応答が返されました</string>
     <string name="upload_finished_toast">読み込みはすでに完了しているため、停止することはできません</string>
     <string name="post_title">タイトル</string>
     <string name="menu_redo">やり直し</string>
     <string name="menu_undo">元に戻す</string>
-    <string name="media_insert_unimplemented">残念ながらまだ実装されていない機能です :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">残念ながらまだ実装されていない機能です :(</string>
     <string name="error_media_small">メディアが小さすぎて表示できません</string>
     <string name="editor_dropped_unsupported_files">警告:ドロップした項目のすべてがサポートされるわけではありません !</string>
     <string name="editor_dropped_title_images_not_allowed">タイトルに画像をドロップすることはできません</string>
@@ -3132,8 +3148,8 @@ Language: ja_JP
     <string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
     <string name="error_unknown_post_type">投稿フォーマットが不明です</string>
     <string name="submit_for_review">送信</string>
-    <string name="duplicate_site_detected">重複サイトが検出されました。</string>
-    <string name="cannot_add_duplicate_site">このサイトはすでにアプリに存在します。新たに追加することはできません。</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">重複サイトが検出されました。</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">このサイトはすでにアプリに存在します。新たに追加することはできません。</string>
     <string name="already_logged_in_wpcom">すでに WordPress.com アカウントにログインしています。別のアカウントに結び付いている WordPress.com サイトを追加することはできません。</string>
     <string name="error_media_load">メディアを読み込めません</string>
     <string name="error_media_refresh_no_connection">ライブラリのリフレッシュに接続が必要</string>
@@ -3145,8 +3161,8 @@ Language: ja_JP
     <string name="media_upload_error">メディアアップロードエラーが発生しました</string>
     <string name="retry">再試行</string>
     <string name="confirm">確認</string>
-    <string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとした際に403エラーを受け取りました。サイトと通信するために、アプリはこのエンドポイントにアクセスする必要があります。この問題を解決するには、ホスティングサービスに連絡してください。</string>
-    <string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとした際に403エラーを受け取りました。サイトと通信するために、アプリはこのエンドポイントにアクセスする必要があります。この問題を解決するには、ホスティングサービスに連絡してください。</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
     <string name="pending_draft_one_generic">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_month">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_week_2">「%1$s」は下書きのままになります。忘れずに公開してください。</string>
@@ -3184,7 +3200,7 @@ Language: ja_JP
     <string name="invite_username_not_found">%s: ユーザーが見つかりませんでした</string>
     <string name="comment_moderated_approved">コメントを承認しました。</string>
     <string name="like">いいね</string>
-    <string name="timespan_now">今</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">今</string>
     <string name="role_viewer">閲覧者</string>
     <string name="error_post_my_profile_no_connection">接続されていないためプロフィールを保存できませんでした</string>
     <string name="alignment_right">右</string>
@@ -3201,19 +3217,19 @@ Language: ja_JP
     <string name="follower_subscribed_since">購読日: %1$s</string>
     <string name="error_remove_viewer">閲覧者を削除できませんでした</string>
     <string name="editor_failed_uploads_switch_html">一部のメディアのアップロードに失敗しました。この状態では、HTML モードに切り替えることは\nできません。失敗したアップロードをすべて削除して続行しますか ?</string>
-    <string name="image_thumbnail">画像サムネイル</string>
-    <string name="visual_editor">ビジュアルエディター</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">画像サムネイル</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ビジュアルエディター</string>
     <string name="image_width">幅</string>
     <string name="image_link_to">リンク先</string>
-    <string name="image_alt_text">Alt テキスト</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alt テキスト</string>
     <string name="image_caption">見出し</string>
     <string name="image_settings_save_toast">変更を保存しました</string>
     <string name="image_settings_dismiss_dialog_title">保存されていない変更を破棄しますか ?</string>
     <string name="stop_upload_dialog_title">アップロードを中止しますか ?</string>
-    <string name="alert_error_adding_media">メディアの挿入中にエラーが発生しました</string>
-    <string name="alert_action_while_uploading">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
-    <string name="alert_insert_image_html_mode">HTML モードでは直接メディアを挿入できません。ビジュアルモードに戻してください。</string>
-    <string name="uploading_gallery_placeholder">ギャラリーをアップロードしています…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">メディアの挿入中にエラーが発生しました</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">HTML モードでは直接メディアを挿入できません。ビジュアルモードに戻してください。</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ギャラリーをアップロードしています…</string>
     <string name="tap_to_try_again">タップしてもう一度お試しください。</string>
     <string name="invite_sent">招待メールを送信しました</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -3247,8 +3263,8 @@ Language: ja_JP
     <string name="error_refreshing_gravatar">Gravatar 再読み込みエラー</string>
     <string name="error_locating_image">切り抜き済み画像位置不明エラー</string>
     <string name="error_cropping_image">画像切り抜きエラー</string>
-    <string name="checking_email">メールをチェック</string>
-    <string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">メールをチェック</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
     <string name="capture_or_pick_photo">写真を撮影または選択</string>
@@ -3284,7 +3300,7 @@ Language: ja_JP
     <string name="comments_empty_list_filtered_pending">保留中のコメントはありません</string>
     <string name="comments_empty_list_filtered_approved">承認済みのコメントはありません</string>
     <string name="button_skip">スキップ</string>
-    <string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML-RPC メソッドがサーバーにありません。</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">接続できませんでした。必要な XML-RPC メソッドがサーバーにありません。</string>
     <string name="alignment_center">中央</string>
     <string name="post_format_video">動画</string>
     <string name="post_format_status">ステータス</string>
@@ -3344,7 +3360,7 @@ Language: ja_JP
     <string name="about_the_app">このアプリについて</string>
     <string name="error_post_account_settings">アカウント設定を保存できませんでした</string>
     <string name="error_fetch_account_settings">アカウント設定を読み込めませんでした</string>
-    <string name="error_fetch_my_profile">プロフィールを読み込めませんでした</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">プロフィールを読み込めませんでした</string>
     <string name="site_settings_unknown_language_code_error">言語コードを認識できません</string>
     <string name="site_settings_threading_dialog_description">コメントスレッドでの入れ子化を許可する。</string>
     <string name="site_settings_threading_dialog_header">入れ子数の上限</string>
@@ -3547,9 +3563,9 @@ Language: ja_JP
     <string name="select_all">すべて選択</string>
     <string name="hide">隠す</string>
     <string name="show">表示</string>
-    <string name="auth_required">続けるにはログインしてください。</string>
-    <string name="invalid_verification_code">無効な認証コード</string>
-    <string name="verification_code">認証コード</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">続けるにはログインしてください。</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">無効な認証コード</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">認証コード</string>
     <string name="language">言語</string>
     <string name="reader_empty_posts_request_failed">投稿を取得できません</string>
     <string name="error_notification_open">通知を開けませんでした</string>
@@ -3613,7 +3629,7 @@ Language: ja_JP
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
     <string name="help">ヘルプ</string>
     <string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
-    <string name="email_invalid">有効なメールアドレスを入力してください</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">有効なメールアドレスを入力してください</string>
     <string name="invalid_email_message">無効なメールアドレスです</string>
     <string name="error_downloading_image">画像ダウンロードエラー</string>
     <string name="error_load_comment">コメントを読み込めませんでした</string>
@@ -3621,7 +3637,7 @@ Language: ja_JP
     <string name="error_moderate_comment">承認の際にエラーが発生しました</string>
     <string name="error_generic">エラーが発生しました</string>
     <string name="error_refresh_comments">コメントを再読み込みできませんでした</string>
-    <string name="error_refresh_pages">ページを再読み込みできませんでした</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">ページを再読み込みできませんでした</string>
     <string name="error_refresh_posts">投稿を再読み込みできませんでした</string>
     <string name="error_deleting_post">投稿を削除する際にエラーが発生しました</string>
     <string name="notifications_empty_list">通知がありません</string>
@@ -3646,7 +3662,7 @@ Language: ja_JP
     <string name="new_media">新規メディア</string>
     <string name="new_post">新規投稿</string>
     <string name="notifications_empty_all">通知はまだありません。</string>
-    <string name="http_authorization_required">認証が必要です</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">認証が必要です</string>
     <string name="invalid_site_url_message">入力したサイト URL が正しいか確認してください</string>
     <string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。端末上に空き容量があるか確認してください。</string>
     <string name="category_name">カテゴリー名</string>
@@ -3669,10 +3685,10 @@ Language: ja_JP
     <string name="delete_post">投稿を削除しますか ?</string>
     <string name="post_settings">投稿設定</string>
     <string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたのかもしれません。</string>
-    <string name="horizontal_alignment">横配置</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">横配置</string>
     <string name="local_draft">ローカルの下書き</string>
     <string name="page_settings">ページ設定</string>
-    <string name="create_a_link">リンクを作成</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">リンクを作成</string>
     <string name="link_enter_url_text">リンク​​テキスト (オプション)</string>
     <string name="cannot_delete_multi_media_items">一部のメディアは現在削除できません。後ほどもう一度お試しください。</string>
     <string name="media_error_no_permission">メディアライブラリを表示する権限がありません</string>
@@ -3693,7 +3709,7 @@ Language: ja_JP
     <string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
     <string name="pick_video">動画を選択</string>
     <string name="pick_photo">画像を選択</string>
-    <string name="sign_up_label">登録</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">登録</string>
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>
     <string name="reader_toast_err_view_image">画像を表示できません</string>
     <string name="reader_toast_err_share_intent">共有に失敗しました</string>
@@ -3737,18 +3753,18 @@ Language: ja_JP
     <string name="note_reply_successful">返信を公開しました</string>
     <string name="sign_in">ログイン</string>
     <string name="loading">読込中…</string>
-    <string name="httppassword">HTTP パスワード</string>
-    <string name="httpuser">HTTP ユーザー名</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP パスワード</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP ユーザー名</string>
     <string name="error_media_upload">メディアをアップロードする際にエラーが発生しました</string>
     <string name="incorrect_credentials">ユーザー名またはパスワードが正しくありません。</string>
-    <string name="log_in">ログイン</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">ログイン</string>
     <string name="username">ユーザー名</string>
     <string name="password">パスワード</string>
     <string name="reader">購読ブログ</string>
-    <string name="featured_in_post">投稿本文中に画像を含める</string>
-    <string name="featured">アイキャッチ画像として使用</string>
-    <string name="width">横幅</string>
-    <string name="caption">キャプション (オプション)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">投稿本文中に画像を含める</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アイキャッチ画像として使用</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">横幅</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">キャプション (オプション)</string>
     <string name="pages">ページ</string>
     <string name="posts">投稿</string>
     <string name="anonymous">匿名</string>
@@ -3756,7 +3772,7 @@ Language: ja_JP
     <string name="done">完了</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">アップロード中…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">アップロード中…</string>
     <string name="image_alignment">配置</string>
     <string name="refresh">再読み込み</string>
     <string name="untitled">名称未設定</string>

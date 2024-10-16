@@ -5,10 +5,10 @@ Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: hu
 -->
-<resources>
-    <string name="timespan_now">most</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="timespan_now" tools:ignore="UnusedResources">most</string>
     <string name="language">Nyelv</string>
-    <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">A folytatáshoz lépjünk be újra.</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="pages_fetching">Oldalak betöltése…</string>
     <string name="media_fetching">Média betöltése…</string>
@@ -46,7 +46,7 @@ Language: hu
     <string name="gallery_error">Nem sikerült a média elemet letölteni</string>
     <string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
     <string name="notifications_empty_list">Nincsenek értesítések</string>
-    <string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Adjunk meg egy valós e-mail címet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="comment_status_spam">Spam</string>
@@ -83,26 +83,26 @@ Language: hu
     <string name="new_notifications">%d új értesítés</string>
     <string name="more_notifications">és %d további.</string>
     <string name="loading">Betöltés</string>
-    <string name="httpuser">HTTP felhasználónév</string>
-    <string name="httppassword">HTTP jelszó</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP felhasználónév</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP jelszó</string>
     <string name="error_media_upload">Hiba történt a média feltöltése közben</string>
     <string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
     <string name="password">Jelszó</string>
     <string name="username">Felhasználó név</string>
-    <string name="log_in">Bejelentkezés</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Bejelentkezés</string>
     <string name="reader">Olvasó</string>
-    <string name="featured">Használat kiemelt képként</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Használat kiemelt képként</string>
     <string name="pages">Oldalak</string>
     <string name="no_network_title">Nincs elérhető hálózat</string>
-    <string name="width">Szélesség</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Szélesség</string>
     <string name="anonymous">Névtelen</string>
-    <string name="caption">Felirat (nem kötelező)</string>
-    <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Felirat (nem kötelező)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
     <string name="ok">OK</string>
     <string name="done">kész</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Feltöltés…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Feltöltés…</string>
     <string name="image_alignment">Kép igazítás</string>
     <string name="refresh">Frissítés</string>
     <string name="untitled">Cím nélküli</string>

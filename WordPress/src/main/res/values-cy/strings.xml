@@ -5,9 +5,9 @@ Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ?
 Generator: GlotPress/4.0.1
 Language: cy_GB
 -->
-<resources>
-    <string name="duplicate_site_detected">Mae gwefan dyblyg wedi\'i chanfod.</string>
-    <string name="cannot_add_duplicate_site">Mae\'r wefan hon yn bodoli eisoes yn yr ap, chewch chi ddim ychwanegu iddi.</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">Mae gwefan dyblyg wedi\'i chanfod.</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">Mae\'r wefan hon yn bodoli eisoes yn yr ap, chewch chi ddim ychwanegu iddi.</string>
     <string name="already_logged_in_wpcom">Rydych eisoes wedi mewngofnodi i gyfrif WordPress.com, chewch chi ddim ychwanegu gwefan WordPress.com sy\'n rhwym i gyfrif arall.</string>
     <string name="error_media_load">Methu llwytho cyfrwng</string>
     <string name="error_media_refresh_no_connection">Mae angen cysylltiader mwyn adnewyddu\'r llyfrgell.</string>
@@ -18,7 +18,7 @@ Language: cy_GB
     <string name="media_upload_error">Digwyddodd gwall llwytho cyfrwng</string>
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
-    <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
     <string name="pending_draft_one_generic">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_month">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_week_2">Mae \'%1$s\' yn ddrafft o hyd. Cofiwch ei gyhoeddi!</string>
@@ -54,7 +54,7 @@ Language: cy_GB
     <string name="invite_username_not_found">%s: Heb ganfod y defnyddiwr</string>
     <string name="comment_moderated_approved">Sylw wedi ei gymeradwyo!</string>
     <string name="like">Hoffi</string>
-    <string name="timespan_now">nawr</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">nawr</string>
     <string name="role_viewer">Darllenydd</string>
     <string name="error_post_my_profile_no_connection">Dim cysylltiad, methu cadw ei proffil</string>
     <string name="alignment_none">Dim</string>
@@ -70,19 +70,19 @@ Language: cy_GB
     <string name="follower_subscribed_since">Ers %1$s</string>
     <string name="error_remove_viewer">Methu tynnu darllenydd</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
-    <string name="visual_editor">Golygydd gweledol</string>
-    <string name="image_thumbnail">Llun bach delwedd</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Golygydd gweledol</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Llun bach delwedd</string>
     <string name="image_settings_save_toast">Mae\'r newidiadau wedi eu cadw</string>
     <string name="image_caption">Egluryn</string>
-    <string name="image_alt_text">Testun Amgen</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Testun Amgen</string>
     <string name="image_link_to">Cyswllt i</string>
     <string name="image_width">Lled</string>
     <string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
-    <string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
-    <string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
-    <string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
-    <string name="uploading_gallery_placeholder">Llwytho\'r oriel…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -111,8 +111,8 @@ Language: cy_GB
     <string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
     <string name="error_refreshing_gravatar">Gwall wrth ail-lwytho eich Gravatar</string>
     <string name="error_cropping_image">Bu gwall wrth docio eich delwedd.</string>
-    <string name="checking_email">Gwirio e-bost</string>
-    <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">Gwirio e-bost</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
@@ -143,7 +143,7 @@ Language: cy_GB
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="site_settings_advanced_header">Uwch</string>
     <string name="button_skip">Hepgor</string>
-    <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>
     <string name="alignment_center">Canol</string>
@@ -199,7 +199,7 @@ Language: cy_GB
     <string name="about_the_app">Am yr ap</string>
     <string name="error_post_account_settings">Nid oedd modd cadw manylion eich cyfrif</string>
     <string name="error_fetch_account_settings">Methu adfer gosodiadau eich cyfrif</string>
-    <string name="error_fetch_my_profile">Methu adfer eich proffil</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Methu adfer eich proffil</string>
     <string name="site_settings_unknown_language_code_error">Heb adnabd y cod iaith</string>
     <string name="site_settings_threading_dialog_description">Caniatáu sylwadau i\'w nythu mewn edafedd.</string>
     <string name="site_settings_threading_dialog_header">Edafedd hyd at</string>
@@ -382,9 +382,9 @@ Language: cy_GB
     <string name="hide">Cuddio</string>
     <string name="select_all">Dewis y cyfan</string>
     <string name="language">Iaith</string>
-    <string name="verification_code">Cod dilysu</string>
-    <string name="invalid_verification_code">Cod dilysu annilys</string>
-    <string name="auth_required">Mewngofnodwch eto i barhau.</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Cod dilysu</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Cod dilysu annilys</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Mewngofnodwch eto i barhau.</string>
     <string name="reader_empty_posts_request_failed">Methu adfer cofnodion</string>
     <string name="error_notification_open">Methu agor hysbysiadau</string>
     <string name="stats_search_terms_unknown_search_terms">Termau Chwilio Anhysbys</string>
@@ -453,7 +453,7 @@ Language: cy_GB
     <string name="sdcard_message">Mae angen cerdyn SD gosodedig i lwytho cyfryngau</string>
     <string name="notifications_empty_list">Dim hysbysiadau</string>
     <string name="error_refresh_posts">Nid oedd modd adnewyddu\'r cofnodion ar hyn o bryd</string>
-    <string name="error_refresh_pages">Nid oedd modd adnewyddu\'r tudalennau ar hyn o bryd</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Nid oedd modd adnewyddu\'r tudalennau ar hyn o bryd</string>
     <string name="error_refresh_comments">Nid oedd modd adnewyddu\'r cofnodion ar hyn o bryd</string>
     <string name="error_generic">Digwyddodd gwall</string>
     <string name="error_moderate_comment">Digwyddodd gwall wrth gymedroli</string>
@@ -461,7 +461,7 @@ Language: cy_GB
     <string name="error_load_comment">Methu llwytho\'r sylw</string>
     <string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
     <string name="invalid_email_message">Nid yw eich cyfeiriad e-bost yn ddilys</string>
-    <string name="email_invalid">Rhowch gyfeiriad e-bost dilys</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Rhowch gyfeiriad e-bost dilys</string>
     <string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
     <string name="select_categories">Dewis categorïau</string>
     <string name="connection_error">Gwall cysylltu</string>
@@ -471,10 +471,10 @@ Language: cy_GB
     <string name="media_error_no_permission">Nid oes gennych ganiatâd i weld y llyfrgell cyfryngau</string>
     <string name="cannot_delete_multi_media_items">Nid oes modd dileu rhai cyfryngau ar hyn o bryd. Ceisiwch eto yn nes ymlaen.</string>
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
-    <string name="create_a_link">Creu dolen</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Creu dolen</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
-    <string name="horizontal_alignment">Alinio llorweddol</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alinio llorweddol</string>
     <string name="post_settings">Gosodiadau cofnodion</string>
     <string name="comment_status_approved">Cymeradwy</string>
     <string name="comment_status_unapproved">Dan ystyriaeth</string>
@@ -493,7 +493,7 @@ Language: cy_GB
     <string name="add_new_category">Ychwanegu categori newydd</string>
     <string name="category_name">Enw categori</string>
     <string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
-    <string name="http_authorization_required">Mae angen awdurdodi</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Mae angen awdurdodi</string>
     <string name="new_post">Cofnod newydd</string>
     <string name="new_media">Cyfryngau newydd</string>
     <string name="local_changes">Newidiadau lleol</string>
@@ -554,24 +554,24 @@ Language: cy_GB
     <string name="more_notifications">a %d yn rhagor.</string>
     <string name="sign_in">Mewngofnodi</string>
     <string name="loading">Llwytho…</string>
-    <string name="httpuser">Enw defnyddiwr HTTP</string>
-    <string name="httppassword">Cyfrinair HTTP</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">Enw defnyddiwr HTTP</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">Cyfrinair HTTP</string>
     <string name="error_media_upload">Digwyddodd gwall wrth lwytho\'r cyfrwng</string>
     <string name="incorrect_credentials">Enw cyfrif neu gyfrinair anghywir.</string>
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>
     <string name="reader">Darllennydd</string>
-    <string name="featured">Defnyddio fel delwedd nodwedd</string>
-    <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Defnyddio fel delwedd nodwedd</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="pages">Tudalennau</string>
-    <string name="caption">Egluryn (dewisol)</string>
-    <string name="width">Lled</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Egluryn (dewisol)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lled</string>
     <string name="posts">Cofnodion</string>
     <string name="anonymous">Di-enw</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Llwytho…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Llwytho…</string>
     <string name="image_alignment">Alinio</string>
     <string name="refresh">Adnewyddu</string>
     <string name="untitled">Dideitl</string>

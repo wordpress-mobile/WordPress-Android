@@ -1,4 +1,3 @@
-We fixed two big issues in this release:
-* You can now update a publish post's date again.
-* Some users couldn't update their post's content.
-As always, please reach out to support if anything isn't working right!
+Lots of under-the-hood improvements this month – mostly bugfixes, but you should notice that the app doesn't prompt you for ratings nearly as often.
+We're excited to have more to share with you soon!
+We'd love to hear your feedback on the app – you can reach us at mobile-support@automattic.com.
