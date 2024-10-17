@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-24 09:54:07+0000
+Translation-Revision-Date: 2024-09-06 17:37:38+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_btn_feedback">傳送意見回饋</string>
+    <string name="media_pager_remove_item_content_description">移除商品「%1$d」</string>
+    <string name="feedback_form_add_attachments">新增附件</string>
+    <string name="feedback_form_unable_to_create_tempfile">無法建立暫存檔案</string>
+    <string name="feedback_form_attachment_already_added">已新增附件</string>
+    <string name="feedback_form_attachment_too_large">附件須為 32MB 或更小</string>
+    <string name="feedback_form_unsupported_attachment">不支援此檔案類型</string>
+    <string name="feedback_form_max_attachments_reached">已到達附件數量上限</string>
+    <string name="feedback_form_failure">無法提交意見回饋</string>
+    <string name="feedback_form_success">感謝提交意見回饋！</string>
+    <string name="feedback_form_discard">要捨棄意見回饋嗎？</string>
+    <string name="feedback_form_message_hint">感謝你的寶貴意見！</string>
+    <string name="feedback_form_title">意見回饋</string>
+    <string name="submit">提交</string>
+    <string name="close">關閉</string>
+    <string name="sending">正在傳送</string>
     <string name="voice_to_content_generic_error">從音訊張貼功能目前無法使用，請稍後再試一次。</string>
     <string name="voice_to_content_done_label">完成</string>
     <string name="voice_to_content_upgrade">若要取得更多要求，請升級</string>
@@ -17,7 +33,7 @@ Language: zh_TW
     <string name="voice_to_content_processing_label">處理中</string>
     <string name="voice_to_content_error_label">錯誤</string>
     <string name="voice_to_content_processing">處理中</string>
-    <string name="gutenberg_native_tap_to_edit">點選以編輯</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選以編輯</string>
     <string name="voice_to_content_permissions_required_msg">若你想要錄製音訊，請將麥克風的存取權限授予給這個應用程式。 你先前曾拒絕授予這項權限。 若想使用這項功能，請在應用程式設定中啟用麥克風權限。</string>
     <string name="voice_to_content_permissions_required_title">需授予音訊錄製權限</string>
     <string name="permission_access_media_location">媒體位置</string>
@@ -105,7 +121,7 @@ Language: zh_TW
     <string name="reader_preferences_screen_font_family_label">字型</string>
     <string name="reader_preferences_screen_theme_label">顏色配置</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">傳送你的意見回饋</string>
-    <string name="gutenberg_native_clear_selected_color">清除已選取的顏色</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">清除已選取的顏色</string>
     <string name="reader_no_followed_tags_text_title">尚未有追蹤的標籤</string>
     <string name="reader_toast_err_tag_already_following">你已追蹤此標籤</string>
     <string name="reader_menu_reading_preferences">閱讀喜好</string>
@@ -123,19 +139,19 @@ Language: zh_TW
     <string name="reader_preferences_screen_preview_title">閱讀喜好</string>
     <string name="reader_filter_empty_tags_action_follow">追蹤標籤</string>
     <string name="button_read">閱讀</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">為預防內容受影響，你可以複製文章文字。 複製錯誤詳細資料，以便除錯並與支援團隊分享。</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">編輯器發生未知錯誤</string>
-    <string name="gutenberg_native_tap_here_to_copy_post_text">點選此處即可複製文章文字</string>
-    <string name="gutenberg_native_tap_here_to_copy_error_details">點選此處即可複製錯誤詳細資料</string>
-    <string name="gutenberg_native_copy_post_text">複製文章文字</string>
-    <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
-    <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
-    <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">為預防內容受影響，你可以複製文章文字。 複製錯誤詳細資料，以便除錯並與支援團隊分享。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">編輯器發生未知錯誤</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選此處即可複製文章文字</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選此處即可複製錯誤詳細資料</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">複製文章文字</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">複製錯誤詳細資料</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">複製文章文字的按鈕</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">複製錯誤詳細資料的按鈕</string>
     <string name="editor_updating_content_failed">無法更新內容</string>
-    <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
-    <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
-    <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
-    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">自動播放可能會導致某些使用者無法使用。</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">影片原文字幕。 %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">影片原文字幕。 無內容</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">剪輯影片</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">自動播放可能會導致某些使用者無法使用。</string>
     <string name="notifications_action_mark_all_as_read">將全部標示為已讀</string>
     <string name="notifications_unread_content_description">未讀</string>
     <string name="qrcode_media_deeplink_error">找不到網站。 檢查你是否已登入正確的帳號。</string>
@@ -204,13 +220,13 @@ Language: zh_TW
     <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
     <string name="reader_filter_by_tag_title">依標籤篩選</string>
     <string name="reader_filter_by_blog_title">依網誌篩選</string>
-    <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">正在等待連線</string>
     <string name="stats_traffic">流量</string>
-    <string name="gutenberg_native_working_offline">離線作業</string>
-    <string name="gutenberg_native_network_connection_re_established">重新建立網路連線</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline">網路連線中斷，離線作業</string>
-    <string name="gutenberg_native_font_size_1_s">字型大小，%1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">媒體檔案不支援的檔案類型。</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">離線作業</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">重新建立網路連線</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">網路連線中斷，離線作業</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">字型大小，%1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">媒體檔案不支援的檔案類型。</string>
     <string name="media_cannot_be_started">目前我們無法開啟媒體。 請稍後再試一次</string>
     <string name="domains_just_search_for_a_domain_button">先搜尋可用網域名稱</string>
     <string name="domains_upgrade_to_a_plan_button">升級方案</string>
@@ -229,9 +245,9 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
     <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示：這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我們建議使用網頁編輯器來編輯區塊。</string>
-    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，你可以取消區塊群組來簡化內容。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">因此，我們建議使用網頁編輯器來編輯區塊。</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">或者，你可以取消區塊群組來簡化內容。</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">前往「設定」</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">取消</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">授予</string>
@@ -240,14 +256,14 @@ Language: zh_TW
     <string name="barcode_scanning_alert_dialog_title">授予相機使用權限</string>
     <string name="barcode_scanning_camera_permission_denied">需要相機權限才能掃瞄條碼。</string>
     <string name="barcode_scanning_title">掃瞄條碼</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
     <string name="jp_migration_lets_go_button">我們開始吧</string>
     <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
-    <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>
-    <string name="login_error_security_key">使用安全性金鑰登入時遇到問題</string>
-    <string name="login_text_security_key">使用安全性金鑰</string>
+    <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">請提供安全性金鑰以繼續使用。</string>
+    <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">使用安全性金鑰登入時遇到問題</string>
+    <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">使用安全性金鑰</string>
     <string name="new_domain_search_screen_error_title">無法擷取網域</string>
     <string name="new_domain_search_screen_list_item_sale_price">第一年 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s /年</string>
@@ -264,8 +280,8 @@ Language: zh_TW
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">來自 &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="post_status_post_edited">已編輯</string>
     <string name="post_list_toggle_author_filter">依作者篩選</string>
-    <string name="gutenberg_native_s_block_converted_to_blocks">\'%s\' 個區塊已轉換成區塊</string>
-    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">此外，您也可以將內容轉換成區塊。</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">\'%s\' 個區塊已轉換成區塊</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">此外，您也可以將內容轉換成區塊。</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">新增或移除捷徑</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">未啟用捷徑</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">啟用中捷徑</string>
@@ -297,12 +313,12 @@ Language: zh_TW
     <string name="reader_secondary_bookmarked">已儲存</string>
     <string name="reader_secondary_bookmark">儲存</string>
     <string name="reader_discover_recommended_header_new">你可能會喜歡</string>
-    <string name="gutenberg_native_ungroup_block">取消區塊群組</string>
-    <string name="gutenberg_native_tap_here_to_show_more_details">點選此處以顯示更多詳細資訊。</string>
-    <string name="gutenberg_native_synced_patterns">同步的版面配置</string>
-    <string name="gutenberg_native_deeply_nested_block">向下內嵌區塊</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁編輯器編輯區塊來減少內容。</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">由於區塊已向下內嵌，故無法轉譯。 點選以瞭解更多詳細資訊。</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">取消區塊群組</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選此處以顯示更多詳細資訊。</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同步的版面配置</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">向下內嵌區塊</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁編輯器編輯區塊來減少內容。</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">由於區塊已向下內嵌，故無法轉譯。 點選以瞭解更多詳細資訊。</string>
     <string name="pages_no_site_something_went_wrong">糟糕，發生錯誤… 請稍後再試。</string>
     <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
     <string name="my_site_dashboard_no_cards_message_description">點選個人化按鈕，顯示更多卡片。</string>
@@ -328,15 +344,15 @@ Language: zh_TW
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">檢視所有行銷活動</string>
     <string name="dashboard_activity_card_menu_all_activity">所有活動</string>
     <string name="dashboard_pages_card_more_menu_all_pages">所有頁面</string>
-    <string name="gutenberg_native_choose_a_file">選擇檔案</string>
-    <string name="gutenberg_native_add_image_or_video">新增圖片或影片</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">選擇檔案</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增圖片或影片</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">檢視所有已排程的文章</string>
     <string name="my_site_post_card_menu_view_all_drafts">檢視所有草稿</string>
     <string name="my_site_todays_stats_menu_view_stats">檢視統計資料</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">隱藏</string>
     <string name="contact_support_first_message_hint">如果我無法解答你的問題，會協助你開立客服支援單並提交給我們的團隊！</string>
     <string name="contact_support_first_message_hi">你好，我是 Jetpack AI 助理。</string>
-    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">請在網頁瀏覽器上存取此付費閱讀區塊，以便進階設定。</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">請在網頁瀏覽器上存取此付費閱讀區塊，以便進階設定。</string>
     <string name="contact_support_bot_ticket_comment_answer">回答：</string>
     <string name="contact_support_bot_ticket_comment_question">問題：</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack 行動版 Bot 文字稿：</string>
@@ -373,10 +389,10 @@ Language: zh_TW
     <string name="post_settings_jetpack_social_share_message_title">自訂訊息</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">現在不要</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">連結帳號</string>
-    <string name="gutenberg_native_insert_video_block">插入影片區塊</string>
-    <string name="gutenberg_native_insert_image_block">插入圖片區塊</string>
-    <string name="gutenberg_native_insert_gallery_block">插入圖庫區塊</string>
-    <string name="gutenberg_native_insert_audio_block">插入音訊區塊</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">插入影片區塊</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">插入圖片區塊</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">插入圖庫區塊</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">插入音訊區塊</string>
     <string name="campaign_listing_page_no_campaigns_button_text">建立</string>
     <string name="campaign_listing_page_no_campaigns_message_description">你尚未建立任何行銷活動。 按一下「建立」便可開始創建行銷活動。</string>
     <string name="campaign_listing_page_no_campaigns_message_title">你沒有任何行銷活動</string>
@@ -402,9 +418,9 @@ Language: zh_TW
     <string name="post_settings_jetpack_social_subscribe_share_more">立即訂購，提高分享額度</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">將文章自動分享給社群媒體上的朋友，藉此提高流量。</string>
     <string name="post_settings_jetpack_social_header">社群分享</string>
-    <string name="gutenberg_native_s_detached">%s 已中斷連結</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支援編輯同步的版面配置</string>
-    <string name="gutenberg_native_reusable">可重複使用</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 已中斷連結</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Android 版 %s 尚不支援編輯同步的版面配置</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">可重複使用</string>
     <string name="privacy_banner_error_save">儲存你的隱私權設定時發生錯誤。</string>
     <string name="privacy_banner_save">儲存</string>
     <string name="privacy_banner_settings">設定</string>
@@ -414,8 +430,8 @@ Language: zh_TW
     <string name="privacy_banner_description">你的隱私權對我們至關重要，自始至終都是如此。 我們會使用、儲存及處理你的個人資料，並以各種方式最佳化我們的應用程式 (和你的體驗)。 我們必須使用你的某些資料來讓一切順利運作，其餘則可由你透過「設定」來自訂使用方式。</string>
     <string name="tabbar_accessibility_label_me">我。 管理你的個人檔案詳細資料。</string>
     <string name="social_item_message_title">訊息</string>
-    <string name="gutenberg_native_block_ungrouped">已取消區塊群組</string>
-    <string name="gutenberg_native_block_grouped">已將區塊設為群組</string>
+    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已取消區塊群組</string>
+    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已將區塊設為群組</string>
     <string name="dashboard_card_plans_checkout_success_info">你的網域最多可能需要 30 分鐘才能開始正常運作。</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。</string>
     <string name="dashboard_card_plans_checkout_success_title">一切準備就緒！</string>
@@ -438,12 +454,12 @@ Language: zh_TW
     <string name="sharing_twitter_deprecation_notice_find_out_more">瞭解更多</string>
     <string name="sharing_twitter_deprecation_notice_description">由於 Twitter 變更條款和定價，Twitter 自動分享功能已無法使用。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 自動分享功能已無法使用</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支援編輯可重複使用區塊</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Android 版 %s 尚不支援編輯可重複使用區塊</string>
     <string name="jp_migration_notifications_allow_title">允許通知以掌握你的網站動態</string>
     <string name="wp_jp_static_poster_message">Jetpack 應用程式具備 WordPress 應用程式所有功能，現在還可獨家使用統計資料、閱讀器、通知等功能。</string>
     <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0應用程式中使用 WordPress 和 %s。</string>
     <string name="wp_jp_static_poster_title">在 Jetpack\u00A0應用程式中使用 WordPress 和 %s。</string>
-    <string name="gutenberg_native_unlabeled_color_s">未標記的顏色。 %s</string>
+    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">未標記的顏色。 %s</string>
     <string name="dashboard_activity_card_title">最近活動</string>
     <string name="site_creation_search_domain_example_body">如同上方範例，網域可讓使用者從網頁瀏覽器找到並造訪你的網站。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
@@ -459,13 +475,13 @@ Language: zh_TW
     <string name="jp_migration_delete_title">你的裝置不再需要 WordPress 應用程式了</string>
     <string name="jp_migration_done_delete_wp_message">建議&lt;b&gt;解除安裝裝置上的 WordPress 應用程式&lt;/b&gt;以避免資料衝突。</string>
     <string name="jp_migration_success_card_message">歡迎使用 Jetpack 應用程式。你可以解除安裝 WordPress 應用程式。</string>
-    <string name="gutenberg_native_remove_blocks">移除區塊</string>
-    <string name="gutenberg_native_privacy_and_rating">隱私權和評分</string>
-    <string name="gutenberg_native_playback_settings">播放設定</string>
-    <string name="gutenberg_native_playback_bar_color">播放列顏色</string>
-    <string name="gutenberg_native_manual">手動</string>
-    <string name="gutenberg_native_dynamic">動態</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">請說明圖片用途。 如果是為了裝飾，請保留空白。</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">移除區塊</string>
+    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">隱私權和評分</string>
+    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">播放設定</string>
+    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">播放列顏色</string>
+    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">手動</string>
+    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">動態</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">請說明圖片用途。 如果是為了裝飾，請保留空白。</string>
     <string name="dashboard_pages_card_create_another_page_description">從適合行動裝置瀏覽的可自訂版面開始</string>
     <string name="dashboard_pages_card_create_another_page_button">建立其他頁面</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">在網站上新增頁面</string>
@@ -531,7 +547,7 @@ Language: zh_TW
     <string name="tickets">支援票證</string>
     <string name="free">免費</string>
     <string name="help_buttons_screen_title">說明</string>
-    <string name="gutenberg_native_blocks_menu">區塊選單</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">區塊選單</string>
     <string name="promote_blaze_card_sub_title">在數百萬個網站中展示你的作品。</string>
     <string name="promote_blaze_card_title">使用 Blaze 宣傳你的內容</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">關閉</string>
@@ -621,7 +637,7 @@ Language: zh_TW
     <string name="blogging_prompts_list_answered_prompt">✓ 已回答</string>
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">關閉</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">你也可以改為點選「中斷連結」，然後中斷連結並單獨編輯此區塊。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">你也可以改為點選「中斷連結」，然後中斷連結並單獨編輯此區塊。</string>
     <string name="dlg_confirm_delete_category">是否要永久刪除「%s」分類？</string>
     <string name="deleting_cat_success">分類已成功刪除</string>
     <string name="deleting_cat_failed">刪除分類失敗</string>
@@ -666,8 +682,8 @@ Language: zh_TW
     <string name="jp_migration_notifications_subtitle">你將收到所有相同的通知，但來源為 Jetpack 應用程式。</string>
     <string name="wordpress_help_center_button">WordPress 說明中心</string>
     <string name="support_title">支援</string>
-    <string name="notification_disable_broadcast_permission_desc">允許應用程式停用 WordPress 通知。</string>
-    <string name="notification_disable_broadcast_permission_label">停用 WordPress 通知</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">允許應用程式停用 WordPress 通知。</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">停用 WordPress 通知</string>
     <string name="jp_migration_help_button">需要協助嗎？</string>
     <string name="jp_migration_continue_button">繼續</string>
     <string name="jp_migration_welcome_site_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
@@ -678,11 +694,11 @@ Language: zh_TW
     <string name="icon_desc">圖示</string>
     <string name="post_settings_parent">上層頁面</string>
     <string name="post_settings_page_attributes">頁面屬性</string>
-    <string name="about_automattic_contribute_item_title">參與</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">參與</string>
     <string name="about_news">新聞</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 圖示</string>
-    <string name="login_prologue_revamped_tagline">從任何地方都能撰寫、編輯和發表內容。</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress 圖示</string>
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">從任何地方都能撰寫、編輯和發表內容。</string>
     <string name="error_fetch_authors_list">無法擷取作者</string>
     <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜歡 %s 嗎？</string>
@@ -690,9 +706,9 @@ Language: zh_TW
     <string name="connections_label">Jetpack Social 連結</string>
     <string name="stats_widget_log_in_to_add_message">若要新增小工具，請登入 Jetpack 應用程式。</string>
     <string name="stats_view_publicize">Jetpack Social 連結</string>
-    <string name="login_magic_links_email_sent">我們剛將神奇連結傳送至：</string>
-    <string name="login_magic_links_sent_label_short">在此裝置查看你的電子郵件！</string>
-    <string name="or_use_password">使用密碼登入</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">我們剛將神奇連結傳送至：</string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">在此裝置查看你的電子郵件！</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">使用密碼登入</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">接收即時更新，掌握新留言、網站流量、安全報告等項目的第一手資訊。</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知功能採用 Jetpack 技術</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">透過重新設計的統計資料和洞察報告關注流量成長並瞭解你的讀者，這些功能現可於全新 Jetpack 應用程式中取得。</string>
@@ -701,16 +717,16 @@ Language: zh_TW
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">閱讀器採用 Jetpack 技術</string>
     <string name="wp_jetpack_powered_features">全新 Jetpack 應用程式提供統計資料、閱讀器、通知等其他功能，可讓 WordPress 功能更加完善。</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress 搭配 Jetpack 效果更加</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升級方案即可使用影片封面</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">升級方案即可上傳音訊</string>
-    <string name="gutenberg_native_jetpack_powered">採用 Jetpack 技術</string>
-    <string name="gutenberg_native_invalid_url">URL 無效。</string>
-    <string name="gutenberg_native_gradient">漸層色彩</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">升級方案即可使用影片封面</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">升級方案即可上傳音訊</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">採用 Jetpack 技術</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL 無效。</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">漸層色彩</string>
     <string name="wp_jetpack_continue_to_notifications">繼續前往「通知」功能</string>
     <string name="wp_jetpack_continue_to_stats">繼續前往「統計資料」功能</string>
     <string name="wp_jetpack_continue_to_reader">繼續前往「閱讀器」功能</string>
     <string name="wp_jetpack_get_new_jetpack_app">體驗全新 Jetpack 應用程式</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
     <string name="weekly_roundup_notification_text_views_only">上週你有 %1$s 個瀏覽次數。</string>
@@ -764,12 +780,12 @@ Language: zh_TW
     <string name="stats_action_card_blogging_reminders_title">設定你的網誌提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看課程</string>
     <string name="stats_action_card_grow_audience_title">讀者持續成長</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">若要重新排列區塊，你也可依序點選區塊和區塊左下角顯示的上下鍵，將其向上或向下移動。</string>
-    <string name="gutenberg_native_image_file_not_found">找不到圖片檔案。</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">拖放功能可讓你迅速重新排列區塊。 按住一個區塊，然後將其拖曳到新的位置再放開即可。</string>
-    <string name="gutenberg_native_drag_drop">拖曳，然後放開</string>
-    <string name="gutenberg_native_arrow_buttons">箭頭按鈕</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s。 目前選取：%2$s</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">若要重新排列區塊，你也可依序點選區塊和區塊左下角顯示的上下鍵，將其向上或向下移動。</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">找不到圖片檔案。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">拖放功能可讓你迅速重新排列區塊。 按住一個區塊，然後將其拖曳到新的位置再放開即可。</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">拖曳，然後放開</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">箭頭按鈕</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s。 目前選取：%2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">所有工作都已完成</string>
     <string name="quick_start_list_task_complete">工作完成</string>
     <string name="me_btn_scan_login_code">掃描登入碼</string>
@@ -787,7 +803,7 @@ Language: zh_TW
     <string name="quick_start_dialog_check_notifications_message">隨手查看即時更新資訊。</string>
     <string name="quick_start_dialog_check_notifications_title">查看你的通知設定</string>
     <string name="quick_start_dialog_check_notifications_message_short">選取%1$s通知分頁%2$s讓你在行動途中也可收到更新。</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">選取%1$s加號%2$s即可上傳媒體。 你可以從任何裝置將其新增至你的貼文/頁面。</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">選取%1$s加號%2$s即可上傳媒體。 你可以從任何裝置將其新增至你的貼文/頁面。</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">使用&lt;b&gt;探索&lt;/b&gt;功能來找出網站和分頁。</string>
     <string name="photo_picker_video_thumbnail_content_description">影片縮圖</string>
     <string name="stats_details_top_commentators">踴躍回應者</string>
@@ -808,8 +824,8 @@ Language: zh_TW
     <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">完全了解</string>
-    <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
     <string name="photo_picker_video_thumbnail_unselected">已取消選取影片</string>
     <string name="photo_picker_video_thumbnail_selected">已選取影片</string>
@@ -821,7 +837,7 @@ Language: zh_TW
     <string name="scan_vault_press_active_on_site_title">你的網站擁有 VaultPress 功能</string>
     <string name="locale_picker_current_language">目前語言：</string>
     <string name="hpp_choose_and_create_site">建立網站</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">新增區塊</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">新增區塊</string>
     <string name="initial_screen">初始畫面</string>
     <string name="blogging_prompts_onboarding_notification_action">深入瞭解</string>
     <string name="blogging_prompts_onboarding_notification_text">養成寫作習慣，成為更好的撰稿人 點選以深入瞭解。</string>
@@ -831,40 +847,40 @@ Language: zh_TW
     <string name="new_site_creation_site_name_title">網站名稱</string>
     <string name="my_site_todays_stats_get_more_views_message">有興趣培養你的讀者群嗎？ 查看我們的&lt;a href=\"%1$s\"&gt;頂尖秘訣&lt;/a&gt;。</string>
     <string name="stats_insights_views_and_visitors">瀏覽次數與訪客</string>
-    <string name="featured_image_removed_notice">已移除特色圖片</string>
-    <string name="featured_image_confirmation_notice">設為特色圖片</string>
-    <string name="featured_image_replace_dialog_cancel">保留目前圖片</string>
-    <string name="featured_image_replace_dialog_confirm">取代特色圖片</string>
-    <string name="featured_image_replace_dialog_description">你已有特色圖片設定。  是否要取代為新圖片？</string>
-    <string name="featured_image_replace_dialog_title">要取代目前的特色圖片嗎？</string>
-    <string name="dialog_dismiss_try_block_editor">關閉</string>
-    <string name="dialog_body_try_block_editor">我們即將為新文章移除傳統編輯器，但這不會影響你編輯任何現有文章或頁面。 立即在網站設定中啟用「區塊編輯器」，搶先體驗新功能。</string>
-    <string name="dialog_title_try_block_editor">試用全新的區塊編輯器</string>
-    <string name="menu_toolbar_title">編輯 %s 區塊</string>
-    <string name="long_post_dlg_saving">儲存中</string>
-    <string name="retry_failed_upload_retry_all">全部重試</string>
-    <string name="retry_failed_upload_remove">移除上傳</string>
-    <string name="retry_failed_upload_yes">重試</string>
-    <string name="retry_failed_upload_title">無法上傳檔案</string>
-    <string name="stop_upload_dialog_button_no">否</string>
-    <string name="stop_upload_dialog_button_yes">是</string>
-    <string name="dialog_button_cancel">取消</string>
-    <string name="dialog_button_ok">確定</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="dialog_title">插入連結</string>
-    <string name="editor_title_beta">測試版</string>
-    <string name="toast_content_info_editor_not_ready">編輯器仍在載入中</string>
-    <string name="toast_content_info_failed">無法取得內容結構</string>
-    <string name="dialog_content_info_body">區塊：%1$d\n字數：%2$d\n字元數：%3$d</string>
-    <string name="dialog_content_info_title">內容結構</string>
-    <string name="media_bar_description_library">從 WordPress 媒體庫中選擇媒體</string>
-    <string name="media_bar_description_gallery">從媒體庫中選擇媒體</string>
-    <string name="media_bar_description_camera">使用相機拍照或錄影</string>
-    <string name="pixel_suffix">%dpx</string>
-    <string name="stop_save_dialog_ok_button">確定</string>
-    <string name="stop_save_dialog_message">檔案尚未全部儲存完畢，請稍候</string>
-    <string name="stop_save_dialog_title">正在儲存檔案</string>
-    <string name="post_content">內容</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">已移除特色圖片</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">設為特色圖片</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">保留目前圖片</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">取代特色圖片</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">你已有特色圖片設定。  是否要取代為新圖片？</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">要取代目前的特色圖片嗎？</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">關閉</string>
+    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">我們即將為新文章移除傳統編輯器，但這不會影響你編輯任何現有文章或頁面。 立即在網站設定中啟用「區塊編輯器」，搶先體驗新功能。</string>
+    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">試用全新的區塊編輯器</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">編輯 %s 區塊</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">儲存中</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">全部重試</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">移除上傳</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">重試</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">無法上傳檔案</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">否</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">是</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">取消</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">確定</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
+    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">插入連結</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">測試版</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">編輯器仍在載入中</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">無法取得內容結構</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">區塊：%1$d\n字數：%2$d\n字元數：%3$d</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">內容結構</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">從 WordPress 媒體庫中選擇媒體</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">從媒體庫中選擇媒體</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">使用相機拍照或錄影</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dpx</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">確定</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">檔案尚未全部儲存完畢，請稍候</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">正在儲存檔案</string>
+    <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">內容</string>
     <string name="blogging_prompts_onboarding_card_prompt">投放你的人生電影。</string>
     <string name="blogging_prompts_onboarding_remind_me">提醒我</string>
     <string name="blogging_prompts_onboarding_try_it_now">立即試試</string>
@@ -917,19 +933,19 @@ Language: zh_TW
     <string name="my_site_blogging_prompt_card_answer_prompt">回答提示</string>
     <string name="my_site_blogging_prompt_card_title">提示</string>
     <string name="my_site_all_tab_title">全部</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此色彩組合可能讓人難以閱讀。 請嘗試更亮的背景顏色和/或較深的文字顏色。</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此色彩組合可能讓人難以閱讀。 請嘗試更深的背景顏色和/或較亮的文字顏色。</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">無法插入媒體。\n點選以瞭解更多資訊。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">此色彩組合可能讓人難以閱讀。 請嘗試更亮的背景顏色和/或較深的文字顏色。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">此色彩組合可能讓人難以閱讀。 請嘗試更深的背景顏色和/或較亮的文字顏色。</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">無法插入媒體。\n點選以瞭解更多資訊。</string>
     <string name="new_site_creation_intents_header_subtitle">請從下方清單選擇一個主題，或輸入你自己的主題。</string>
     <string name="new_site_creation_intents_header_title">你的網站主題為何？</string>
     <string name="notification_channel_weekly_roundup_title">每週綜合整理</string>
     <string name="my_site_dashboard_tab_title">首頁</string>
     <string name="adding_cat">新增類別中</string>
     <string name="login_select_email_client">你使用哪個電子郵件應用程式？</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">與網站通訊時發生問題。 已傳回 HTTP 錯誤代碼 401。</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
-    <string name="login_error_xml_rpc_cannot_read_site">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
-    <string name="login_error_xml_rpc_services_disabled">這個網站尚未開啟 XML-RPC 服務</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources" a8c-src-lib="login">與網站通訊時發生問題。 已傳回 HTTP 錯誤代碼 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources" a8c-src-lib="login">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="login">這個網站尚未開啟 XML-RPC 服務</string>
     <string name="my_site_menu_tab_title">選單</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 允許使用以下字元：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
@@ -940,67 +956,67 @@ Language: zh_TW
     <string name="reader_comment_menu_trash">移至垃圾桶</string>
     <string name="reader_comment_menu_spam">標記為垃圾訊息</string>
     <string name="reader_comment_menu_unapprove">取消核准</string>
-    <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
-    <string name="gutenberg_native_gallery_style">圖庫樣式</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">並排圖庫設定</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">導覽至版面配置選取畫面</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">圖庫樣式</string>
     <string name="sharing_connect_via_web_warning_message">你可以在 WordPress.com 網站連結 %s 帳號。 完成設定後，請返回此應用程式變更你的「社群」設定。</string>
-    <string name="about_automattic_app_icon_description">應用程式圖示</string>
-    <string name="about_automattic_back_icon_description">返回圖示</string>
-    <string name="about_automattic_logo_description">Automattic 標誌</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_pocketcasts">Pocket Casts</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_dayone">第一天</string>
-    <string name="about_automattic_source_code_item_title">原始碼</string>
-    <string name="about_automattic_privacy_policy_item_title">隱私權政策</string>
-    <string name="about_automattic_terms_of_service_item_title">服務條款</string>
-    <string name="about_automattic_work_with_us_item_subtitle">隨時隨地都能處理工作</string>
-    <string name="about_automattic_work_with_us_item_title">加入我們</string>
-    <string name="about_automattic_family_item_title">Automattic 系列</string>
-    <string name="about_automattic_legal_and_more_item_title">法律與其他</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_rate_us_item_title">為我們評分</string>
-    <string name="about_automattic_share_with_friends_item_title">與朋友分享</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">你可以使用網頁版本的編輯器來編輯此區塊。</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">開啟 Jetpack Security 設定</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注意：您必須允取登入 WordPress.com 方可在行動編輯器中編輯此區塊。</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注意：版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
-    <string name="gutenberg_native_address_settings">地址設定</string>
-    <string name="gutenberg_native_add_media">新增媒體</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">應用程式圖示</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">返回圖示</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic 標誌</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">第一天</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">原始碼</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">隱私權政策</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">服務條款</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">隨時隨地都能處理工作</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">加入我們</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic 系列</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">法律與其他</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">為我們評分</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">與朋友分享</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">你可以使用網頁版本的編輯器來編輯此區塊。</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">開啟 Jetpack Security 設定</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">注意：您必須允取登入 WordPress.com 方可在行動編輯器中編輯此區塊。</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">注意：版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">地址設定</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">新增媒體</string>
     <string name="my_site_error_card_subtitle">目前在載入你的網站資料時發生問題。</string>
     <string name="my_site_error_card_title">部分資料尚未載入</string>
     <string name="my_site_dashboard_stale_message">儀表板未更新。 請檢查你的連線，然後下拉以便重新整理。</string>
     <string name="my_site_dashboard_update_error">無法更新儀表板。</string>
     <string name="error_media_video_duration_exceeds_limit">影片未上傳！ 須購買付費方案才能上傳長度超過 5 分鐘的影片。</string>
-    <string name="about_automattic_acknowledgements_item_title">合作廠商</string>
-    <string name="about_automattic_california_privacy_notice_item_title">加州隱私權聲明</string>
-    <string name="about_automattic_version_label">版本 %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title">合作廠商</string>
-    <string name="about_automattic_legal_page_title">法律與其他</string>
-    <string name="about_automattic_main_page_title">關於 %1$s</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">合作廠商</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">加州隱私權聲明</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">版本 %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">合作廠商</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">法律與其他</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">關於 %1$s</string>
     <string name="about_blog">網誌</string>
-    <string name="gutenberg_native_the_basics">基本功能</string>
-    <string name="gutenberg_native_selected_default">已選取：預設</string>
-    <string name="gutenberg_native_more_support_options">更多支援選項</string>
-    <string name="gutenberg_native_get_support">取得支援</string>
-    <string name="gutenberg_native_font_size">字體大小</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">按兩下以選擇字型大小</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">按兩下以選擇預設字型大小</string>
-    <string name="gutenberg_native_contact_support">聯絡支援團隊</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">基本功能</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">已選取：預設</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">更多支援選項</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">取得支援</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">字體大小</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">按兩下以選擇字型大小</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">按兩下以選擇預設字型大小</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">聯絡支援團隊</string>
+    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">關注討論</string>
     <string name="reader_comments_be_first_to_comment">成為第一位留言的人</string>
     <string name="reader_comments_view_all">查看所有留言</string>
     <string name="reader_comments_post_fetch_failure">取得文章的資料時發生錯誤</string>
     <string name="reader_comments_fetch_failure">取得留言時發生錯誤</string>
     <string name="reader_btn_follow_conversation_settings">關注討論設定</string>
-    <string name="gutenberg_native_from_clipboard">從剪貼簿</string>
-    <string name="gutenberg_native_featured_image">精選圖片</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">從剪貼簿複製 URL，%s</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">從剪貼簿</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">精選圖片</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">從剪貼簿複製 URL，%s</string>
     <string name="me_btn_about">關於 WordPress</string>
     <string name="my_site_post_card_link_create_post">建立文章</string>
     <string name="my_site_create_next_post_excerpt">定期發文有助於建立讀者群！</string>
@@ -1018,7 +1034,7 @@ Language: zh_TW
     <string name="my_site_post_card_scheduled_title">即將發表的排程文章</string>
     <string name="my_site_post_card_draft_title">編輯草稿文章</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免費，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">建立連結</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">建立連結</string>
     <string name="domains_suggestions_select_domain">選取網域</string>
     <string name="domains_title">網域</string>
     <string name="post_status_sticky">置頂</string>
@@ -1054,12 +1070,12 @@ Language: zh_TW
     <string name="comment_edit_comment">留言</string>
     <string name="comment_edit_user_name">名稱</string>
     <string name="comment_edit_menu_done">搞定</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入內容區塊預覽功能即將推出</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">嵌入內容區塊預覽功能即將推出</string>
     <string name="weekly_roundup">每週綜合整理</string>
-    <string name="gutenberg_native_embed_options">嵌入選項</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">嵌入選項</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">按兩下即可查看嵌入選項。</string>
     <string name="quick_start_list_create_site_message">網站已建立！ 完成另一項任務。</string>
-    <string name="gutenberg_native_line_height">行高</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
@@ -1072,32 +1088,32 @@ Language: zh_TW
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">你會&lt;b&gt;每天&lt;/b&gt;在 &lt;b&gt;%s&lt;/b&gt; 收到寫網誌通知。</string>
     <string name="blogging_reminders_site_settings_label">每週在 %2$s 收到 %1$s 次通知</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">編輯文字區塊時，文字格式控制項就在鍵盤上方的工具列中</string>
-    <string name="gutenberg_native_selected_s">已選取：%s</string>
-    <string name="gutenberg_native_select_a_color_above">選擇上方的顏色</string>
-    <string name="gutenberg_native_navigates_to_select_s">前往選取 %s</string>
-    <string name="gutenberg_native_move_blocks">移動區塊</string>
-    <string name="gutenberg_native_how_to_edit_your_post">如何編輯文章</string>
-    <string name="gutenberg_native_how_to_edit_your_page">如何編輯頁面</string>
-    <string name="gutenberg_native_customize_blocks">自訂區塊</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">復原/取消復原按鈕無法對特色圖片所做變更產生效用。</string>
-    <string name="gutenberg_native_applies_the_setting">套用此設定</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">若要重新排列區塊，請依序點選區塊和區塊左下角顯示的上下鍵，將其移動到其他區塊的上方或下方。</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">歡迎進入內容區塊領域</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">若要移除區塊，請選取區塊，並按一下區塊右下角的三個點以檢視設定。 在設定中選擇移除區塊的選項。</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">有些區塊具有其他設定。 請點選區塊右下角的設定圖示以檢視更多選項。</string>
-    <string name="gutenberg_native_s_block_newly_available">%s區塊，全新推出</string>
-    <string name="gutenberg_native_rich_text_editing">RTF 編輯</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">熟悉不同區塊的名稱後，輸入正斜線，後面加上區塊名稱 (例如 /image 或 /heading)，就能新增區塊。</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">為頁面新增圖片、GIF、影片和嵌入式媒體，讓你的內容脫穎而出。</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">馬上嘗試為你的文章或頁面新增幾個區塊！</string>
-    <string name="gutenberg_native_embed_media">嵌入媒體</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">每個區塊都有其各自的設定。 若要找到這些設定，請點選區塊。 區塊設定會顯示在畫面底部的工具列。</string>
-    <string name="gutenberg_native_build_layouts">建構版面形式</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">區塊是讓你可以不必瞭解如何編寫程式碼，就能插入、重新排列及調整樣式的塊狀內容。 區塊可讓你用簡單且現代化的方式建立美麗的版面配置。</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">點選左下角工具列的「+」號圖示，即可隨時新增區塊。</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">編輯文字區塊時，文字格式控制項就在鍵盤上方的工具列中</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">已選取：%s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">選擇上方的顏色</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">前往選取 %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">移動區塊</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">如何編輯文章</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">如何編輯頁面</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">自訂區塊</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">復原/取消復原按鈕無法對特色圖片所做變更產生效用。</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">套用此設定</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">若要重新排列區塊，請依序點選區塊和區塊左下角顯示的上下鍵，將其移動到其他區塊的上方或下方。</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">歡迎進入內容區塊領域</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">若要移除區塊，請選取區塊，並按一下區塊右下角的三個點以檢視設定。 在設定中選擇移除區塊的選項。</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">有些區塊具有其他設定。 請點選區塊右下角的設定圖示以檢視更多選項。</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s區塊，全新推出</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">RTF 編輯</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">熟悉不同區塊的名稱後，輸入正斜線，後面加上區塊名稱 (例如 /image 或 /heading)，就能新增區塊。</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">為頁面新增圖片、GIF、影片和嵌入式媒體，讓你的內容脫穎而出。</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">馬上嘗試為你的文章或頁面新增幾個區塊！</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">嵌入媒體</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">每個區塊都有其各自的設定。 若要找到這些設定，請點選區塊。 區塊設定會顯示在畫面底部的工具列。</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">建構版面形式</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">區塊是讓你可以不必瞭解如何編寫程式碼，就能插入、重新排列及調整樣式的塊狀內容。 區塊可讓你用簡單且現代化的方式建立美麗的版面配置。</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">點選左下角工具列的「+」號圖示，即可隨時新增區塊。</string>
     <string name="quick_start_sites_type_tasks_completed">已完成 %1$s 個，共 %2$s 個</string>
     <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
     <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
@@ -1108,16 +1124,16 @@ Language: zh_TW
     <string name="stats_disabled_enable_stats_button">啟用網站統計資料</string>
     <string name="stats_disabled_subtitle">啟用網站統計資料即可查看網站詳細資訊，包括流量、按讚數、留言數和訂閱人數。</string>
     <string name="stats_disabled_title">在尋找統計資料嗎？</string>
-    <string name="gutenberg_native_what_is_a_block">什麼是區塊？</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在文章中預覽嵌入內容。</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在頁面中預覽嵌入內容。</string>
-    <string name="gutenberg_native_unable_to_embed_media">無法內嵌媒體</string>
-    <string name="gutenberg_native_try_another_search_term">嘗試其他搜尋字詞</string>
-    <string name="gutenberg_native_no_blocks_found">找不到區塊</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">尚未推出 %s 預覽</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 嵌入內容區塊預覽功能即將推出</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">點兩下可預覽文章。</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">什麼是區塊？</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在文章中預覽嵌入內容。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在頁面中預覽嵌入內容。</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">無法內嵌媒體</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">嘗試其他搜尋字詞</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">找不到區塊</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">尚未推出 %s 預覽</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s 嵌入內容區塊預覽功能即將推出</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">點兩下可預覽文章。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">點兩下可預覽頁面。</string>
     <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">逐步說明</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要協助你透過應用程式管理此網站嗎？</string>
@@ -1126,9 +1142,9 @@ Language: zh_TW
     <string name="login_epilogue_mysites_heading">選擇要開啟的網站</string>
     <string name="scan_multisite_not_supported_subtitle">不好意思，Jetpack Scan 目前與多站台 WordPress 安裝不相容。</string>
     <string name="scan_multisite_not_supported_title">不支援 WordPress 多站台</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無效網址。 請輸入正確的網址。</string>
-    <string name="gutenberg_native_embed_caption_s">內嵌字幕。 %s</string>
-    <string name="gutenberg_native_embed_caption_empty">內嵌字幕。 清空</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">無效網址。 請輸入正確的網址。</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">內嵌字幕。 %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">內嵌字幕。 清空</string>
     <string name="activity_log_visit_our_documentation_page">請造訪我們的文件頁面</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite 安裝提供可下載的備份，無需一鍵還原。 詳情請見 %1$s。</string>
     <string name="blogging_reminders_tip_message">定期發表文章有助於持續與讀者互動，並吸引更多訪客造訪網站。</string>
@@ -1149,47 +1165,47 @@ Language: zh_TW
     <string name="set_your_blogging_reminders_title">設定你的網誌提醒</string>
     <string name="blogging_reminders_notification_text">在此提醒你於今天創作一些內容</string>
     <string name="blogging_reminders_notification_title">該在 %s 新增網誌內容了</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚不支援編輯可重複使用區塊</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚不支援編輯可重複使用區塊</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">你可以改為點選「中斷連結版面配置」，然後中斷連結並單獨編輯這些區塊。</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">iOS 版 WordPress 尚不支援編輯可重複使用區塊</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Android 版 WordPress 尚不支援編輯可重複使用區塊</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">你可以改為點選「中斷連結版面配置」，然後中斷連結並單獨編輯這些區塊。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image">設為特色圖片</string>
-    <string name="gutenberg_native_remove_as_featured_image">移除特色圖片</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">設為特色圖片</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">移除特色圖片</string>
     <string name="fab_add_category_desc">建立分類</string>
     <string name="support_ticket_subject">Android 版 WordPress 支援</string>
     <string name="site_settings_categories_hint">管理你的網站分類</string>
     <string name="site_settings_categories_title">分類</string>
     <string name="site_settings_blogging_reminders_title">提醒</string>
     <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
-    <string name="gutenberg_native_border_settings">框線設定</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">框線設定</string>
     <string name="storage_utils_dialog_dont_show_button">不要再顯示</string>
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>
     <string name="storage_utils_dialog_message">我們需先將內容儲存在你的裝置上，然後才能發表。  請檢視你的儲存空間設定，並移除一些檔案以釋放空間。</string>
     <string name="storage_utils_dialog_title">裝置儲存空間不足</string>
-    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
-    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
-    <string name="gutenberg_native_type_a_url">輸入 URL</string>
-    <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
-    <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已轉換為一般區塊</string>
-    <string name="gutenberg_native_s_block">%s 區塊</string>
-    <string name="gutenberg_native_opacity">不透明度  </string>
-    <string name="gutenberg_native_media_options">媒體選項</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">無效網址。 找不到音訊檔案。</string>
-    <string name="gutenberg_native_insert_crosspost">插入多重發佈</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">拖曳以調整焦點</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">按兩下開啟底部工作表以新增圖片或視訊</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">按兩下開啟操作工作表以新增圖片或視訊</string>
-    <string name="gutenberg_native_current_unit_is_s">目前的單位為 %s</string>
-    <string name="gutenberg_native_crosspost">多重發佈</string>
-    <string name="gutenberg_native_s_converted_to_regular_block">「%s」已轉換為一般區塊</string>
-    <string name="gutenberg_native_columns_settings">欄位設定</string>
-    <string name="gutenberg_native_add_link_to_s">新增連結至 %s</string>
-    <string name="gutenberg_native_add_link_text">新增連結文字</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">新增圖片或視訊</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X 軸位置</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">輸入 URL</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">斜線插入工具結果</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s 有 URL 集</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s 沒有 URL 集</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s 已轉換為一般區塊</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s 區塊</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">不透明度  </string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">媒體選項</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">無效網址。 找不到音訊檔案。</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">插入多重發佈</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">拖曳以調整焦點</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">按兩下開啟底部工作表以新增圖片或視訊</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">按兩下開啟操作工作表以新增圖片或視訊</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">目前的單位為 %s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">多重發佈</string>
+    <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">「%s」已轉換為一般區塊</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">欄位設定</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">新增連結至 %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">新增連結文字</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">新增圖片或視訊</string>
     <string name="error_media_path_is_directory">指定的路徑是目錄而不是媒體檔案</string>
     <string name="error_media_could_not_find_media_in_path">無法在路徑中找到媒體檔案</string>
     <string name="error_media_unexpected_empty_media_file_path">未預期的空白媒體檔案路徑</string>
@@ -1197,102 +1213,102 @@ Language: zh_TW
     <string name="error_media_unexpected_null_value">媒體為空白</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">按兩下以新增連結。</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">按兩下以新增連結。</string>
     <string name="login_empty_view_try_another_account">嘗試其他帳號</string>
     <string name="login_empty_view_see_instructions">查看說明</string>
     <string name="login_no_jetpack_sites_error_message">若你已擁有網站，則需要安裝免費 Jetpack 外掛程式，並連結你的 WordPress.com 帳號。</string>
     <string name="login_empty_view_avatar_content_description">你的個人檔案照片</string>
     <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
-    <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
-    <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
-    <string name="gutenberg_native_width_settings">寬度設定</string>
-    <string name="gutenberg_native_link_rel">連結 rel 屬性</string>
-    <string name="gutenberg_native_column_settings">欄位設定</string>
-    <string name="gutenberg_native_no_description">無描述</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">向前移動圖片</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">向後移動圖片</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">寬度設定</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">連結 rel 屬性</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">欄位設定</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">無描述</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
     <string name="likes_list_screen_title">按讚清單%s</string>
-    <string name="gutenberg_native_two">貳</string>
-    <string name="gutenberg_native_three">參</string>
-    <string name="gutenberg_native_s_social_icon">%s 社交圖示</string>
-    <string name="gutenberg_native_mention">標記</string>
-    <string name="gutenberg_native_new">新功能</string>
-    <string name="gutenberg_native_preview_post">預覽文章</string>
-    <string name="gutenberg_native_preview_page">閱覽頁面</string>
-    <string name="gutenberg_native_retry">重試</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">壹</string>
-    <string name="gutenberg_native_add_title">新增標題</string>
-    <string name="gutenberg_native_no_preview_available">未提供預覽</string>
-    <string name="gutenberg_native_loading">載入中</string>
-    <string name="gutenberg_native_link_label">連結標籤</string>
-    <string name="gutenberg_native_text_color">文字顏色</string>
-    <string name="gutenberg_native_s_link">%s 連結</string>
-    <string name="gutenberg_native_padding">邊框間距</string>
-    <string name="gutenberg_native_four">肆</string>
-    <string name="gutenberg_native_featured">精選內容</string>
-    <string name="gutenberg_native_add_image">新增圖片</string>
-    <string name="gutenberg_native_custom_url">自訂 URL</string>
-    <string name="gutenberg_native_create_embed">建立嵌入內容</string>
-    <string name="gutenberg_native_column_d">欄 %d</string>
-    <string name="gutenberg_native_more">更多</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
-    <string name="gutenberg_native_add_blocks">新增區塊</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">貳</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">參</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s 社交圖示</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">標記</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新功能</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">預覽文章</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">閱覽頁面</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">重試</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">壹</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增標題</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">未提供預覽</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">載入中</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">連結標籤</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">文字顏色</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 連結</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">邊框間距</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">肆</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">精選內容</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增圖片</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">自訂 URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">建立嵌入內容</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">欄 %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">更多</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">簡述連結以協助螢幕閱讀器使用者</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增區塊</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
-    <string name="gutenberg_native_what_is_alt_text">替代文字是什麼？</string>
-    <string name="gutenberg_native_transform_s_to">將 %s 轉換為</string>
-    <string name="gutenberg_native_transform_block">轉換區塊…</string>
-    <string name="gutenberg_native_failed_to_insert_media">無法插入媒體。</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">無法插入音訊檔案。</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">請說明圖片用途。 如果圖片只是為了裝飾，請保留空白。</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s 已轉換為 %2$s</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">替代文字是什麼？</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">將 %s 轉換為</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">轉換區塊…</string>
+    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">無法插入媒體。</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">無法插入音訊檔案。</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">請說明圖片用途。 如果圖片只是為了裝飾，請保留空白。</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$s 已轉換為 %2$s</string>
     <string name="like_faces_error_loading_message">載入讚資料時發生錯誤。%s。</string>
     <string name="like_title_plural">%d 按讚數</string>
     <string name="like_title_singular">1 個讚</string>
     <string name="suggestion">建議：</string>
-    <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
-    <string name="gutenberg_native_search_input_field">搜尋意見回饋欄位。</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">搜尋按鈕。 目前的按鈕文字是</string>
-    <string name="gutenberg_native_search_blocks">搜尋區塊</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">搜尋區塊標籤。 目前的文字是</string>
-    <string name="gutenberg_native_outside">外部</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">未設定自訂預留位置</string>
-    <string name="gutenberg_native_inside">內部</string>
-    <string name="gutenberg_native_hide_search_heading">隱藏搜尋標題</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">按兩下以編輯預留位置文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">點兩下即可變更單位</string>
-    <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
-    <string name="gutenberg_native_clear_search">清除搜尋</string>
-    <string name="gutenberg_native_cancel_search">取消搜尋</string>
-    <string name="gutenberg_native_button_position">按鈕位置</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s。%2$s 是 %3$s %4$s。</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">使用圖示按鈕</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">搜尋意見回饋欄位。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">搜尋按鈕。 目前的按鈕文字是</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">搜尋區塊</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">搜尋區塊標籤。 目前的文字是</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">外部</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">未設定自訂預留位置</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">內部</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">隱藏搜尋標題</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">按兩下以編輯預留位置文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">按兩下以編輯標籤文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">按兩下以編輯按鈕文字</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">點兩下即可變更單位</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">目前的預留位置文字是</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">清除搜尋</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">取消搜尋</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">按鈕位置</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s。%2$s 是 %3$s %4$s。</string>
     <string name="get_likes_empty_state_title">取得按讚資料時發生錯誤</string>
     <string name="get_likes_unknown_error">獲得「讚」時發生未知的錯誤。</string>
     <string name="get_likes_no_network_error">沒有可用的網路。</string>
     <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
     <string name="comment_status_unreplied">尚未回覆</string>
-    <string name="gutenberg_native_add_link">新增連結</string>
-    <string name="gutenberg_native_search_settings">搜尋設定</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">新增連結</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">搜尋設定</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
-    <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">新增按鈕文字</string>
     <string name="activity_log_backup_download_notice_dismiss_action">關閉</string>
     <string name="activity_log_backup_download_notice_download_action">下載</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
     <string name="threat_fix_all_confirmation_message_plural">請確認你要修正所有 %s 個作用中威脅。</string>
     <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「修復所有威脅」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
-    <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟動作工作表，然後編輯、取代或清除圖片</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">編輯焦點</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">點兩下開啟動作工作表，然後編輯、取代或清除圖片</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你將觸及更多使用者。 做得好！</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你已自訂網站。 做得好！</string>
-    <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="login">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
     <string name="invite_links_disable_dialog_message">停用此邀請連結後，就沒有人能再用此連結加入你的團隊。 你確定嗎？</string>
     <string name="invite_links_disable_dialog_title">停用邀請連結</string>
     <string name="invite_links_bad_format_response">收到無效回應</string>
@@ -1339,21 +1355,21 @@ Language: zh_TW
     <string name="backup_item_contents">WP 內容目錄</string>
     <string name="backup_item_roots">WordPress 根目錄</string>
     <string name="backup_download_details_choose_items_header">包含在這次下載中的項目</string>
-    <string name="gutenberg_native_uploading">上傳中…</string>
-    <string name="gutenberg_native_replace_file">取代檔案</string>
-    <string name="gutenberg_native_replace_audio">替換音訊</string>
-    <string name="gutenberg_native_problem_opening_the_audio">開啟音訊時發生問題</string>
-    <string name="gutenberg_native_open">開啟</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">沒有應用程式可以處理這項要求。</string>
-    <string name="gutenberg_native_lock_icon">鎖定圖示</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">無法插入音訊檔案。 請點選以顯示選項。</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">按兩下以選擇音訊檔案</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">按兩下以聆聽音訊檔案</string>
-    <string name="gutenberg_native_choose_audio">選擇音樂</string>
-    <string name="gutenberg_native_audio_player">音樂播放器</string>
-    <string name="gutenberg_native_audio_file">音訊檔案</string>
-    <string name="gutenberg_native_audio_caption_s">音訊字幕。 %s</string>
-    <string name="gutenberg_native_audio_caption_empty">音訊字幕。 清空</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">上傳中…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">取代檔案</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">替換音訊</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">開啟音訊時發生問題</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">開啟</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">沒有應用程式可以處理這項要求。</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">鎖定圖示</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">無法插入音訊檔案。 請點選以顯示選項。</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">按兩下以選擇音訊檔案</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">按兩下以聆聽音訊檔案</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">選擇音樂</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">音樂播放器</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">音訊檔案</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">音訊字幕。 %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">音訊字幕。 清空</string>
     <string name="continue_with_wpcom">登入或註冊 WordPress.com</string>
     <string name="photo_picker_use_audio">使用這個音訊</string>
     <string name="photo_picker_choose_audio">從裝置中選擇音訊</string>
@@ -1408,10 +1424,10 @@ Language: zh_TW
     <string name="backup_download_complete_failed_title">下載失敗</string>
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
-    <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
+    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">選取%1$s「首頁」%2$s以編輯首頁。</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">選取%1$s「首頁」%2$s以編輯首頁。</string>
     <string name="reader_menu_mark_as_unseen">標示為未讀。</string>
     <string name="reader_menu_mark_as_seen">標示為已讀。</string>
     <string name="error_media_upload_failed_for_reason">上傳媒體失敗。\n%1$s</string>
@@ -1444,8 +1460,8 @@ Language: zh_TW
     <string name="backup_empty_subtitle">你的第一次備份將於 24 小時內顯示於此；備份完成後，你會收到通知</string>
     <string name="backup_empty_title">第一次備份即將準備就緒</string>
     <string name="request_failed_message">處理要求時發生問題。 請稍後再試一次。</string>
-    <string name="gutenberg_native_move_to_bottom">移至底部</string>
-    <string name="gutenberg_native_change_block_position">變更區塊位置</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">移至底部</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">變更區塊位置</string>
     <string name="jetpack_icon_content_description">圖示</string>
     <string name="backup_download_complete_info">我們也已將檔案連結透過電子郵件傳送給你。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">分享連結按鈕</string>
@@ -1534,8 +1550,8 @@ Language: zh_TW
     <string name="backup_download_details_header">建立可下載的備份</string>
     <string name="backup_download_details_page_title">下載備份</string>
     <string name="backup_download">備份下載</string>
-    <string name="gutenberg_native_error">錯誤</string>
-    <string name="gutenberg_native_choose_file">選擇檔案</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">錯誤</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">選擇檔案</string>
     <string name="activity_log_item_menu_download_backup_label">下載備份</string>
     <string name="activity_log_item_menu_restore_label">還原至此時間點</string>
     <string name="activity_log_activity_type_filter_label">活動類型</string>
@@ -1546,12 +1562,12 @@ Language: zh_TW
     <string name="dialog_confirm_copy_local_message">你嘗試複製的文章有兩個互相不一致的版本，或者你最近進行變更但沒有儲存。\n首先編輯文章，解決任何不一致，或繼續複製此應用程式的版本。</string>
     <string name="dialog_confirm_copy_local_title">文章同步不一致</string>
     <string name="button_copy">複製</string>
-    <string name="gutenberg_native_file_name">檔案名稱</string>
-    <string name="gutenberg_native_file_block_settings">檔案區塊設定</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">上傳檔案失敗。\n請點選以顯示選項。</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">存檔失敗。\n請點選以顯示選項。</string>
-    <string name="gutenberg_native_edit_file">編輯檔案</string>
-    <string name="gutenberg_native_copy_file_url">複製檔案 URL</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">檔案名稱</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">檔案區塊設定</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">上傳檔案失敗。\n請點選以顯示選項。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">存檔失敗。\n請點選以顯示選項。</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">編輯檔案</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">複製檔案 URL</string>
     <string name="new_site_creation_domain_header_title">選擇網域</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">透過電子郵件追蹤對話</string>
@@ -1569,8 +1585,8 @@ Language: zh_TW
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
-    <string name="continue_site_credentials">使用商店憑證繼續</string>
-    <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="login">使用商店憑證繼續</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="login">尋找你連結的電子郵件</string>
     <string name="reader_discover_no_posts_follow_subtitle">嘗試追蹤更多標籤，即可擴大搜尋範圍</string>
     <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
@@ -1578,8 +1594,8 @@ Language: zh_TW
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; 已回應你的文章</string>
     <string name="login_prologue_third_subtitle_two">你的網站本日獲得 &lt;b&gt;50 個讚&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; 已對你的文章按讚</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">已關閉可捲動的區塊選單。</string>
     <string name="hpp_choose_button">選擇</string>
     <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
     <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
@@ -1610,11 +1626,11 @@ Language: zh_TW
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
     <string name="login_prologue_title_first">歡迎使用全球最受歡迎的網站建置工具。</string>
     <string name="media_loading_failed">媒體載入失敗</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">系統不完全支援「%s」</string>
-    <string name="gutenberg_native_help_button">「協助」按鈕</string>
-    <string name="gutenberg_native_edit_using_web_editor">使用網頁編輯器編輯</string>
-    <string name="gutenberg_native_choose_images">選擇圖片</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">系統不完全支援「%s」</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">「協助」按鈕</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">使用網頁編輯器編輯</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">選擇圖片</string>
     <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
     <string name="mlp_notice_page_created">已建立頁面</string>
     <string name="media_insert_failed">媒體插入失敗。</string>
@@ -1631,15 +1647,15 @@ Language: zh_TW
     <string name="media_uploading_gif_library_photo">正在上傳 GIF 媒體</string>
     <string name="media_uploading_stock_library_photo">正在上傳庫存媒體</string>
     <string name="media_uploading_default">正在上傳媒體</string>
-    <string name="gutenberg_native_search_or_type_url">搜尋或輸入 URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
-    <string name="gutenberg_native_add_this_link">新增此連結</string>
-    <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
+    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">搜尋或輸入 URL</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">新增此電話連結</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">新增此連結</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">新增此電子郵件連結</string>
     <string name="suggestion_no_connection">沒有網際網路連線。\n建議無法使用。</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">已選取 %s</string>
-    <string name="login_get_link_by_email">透過電子郵件取得登入連結</string>
-    <string name="email_not_registered_wpcom">很抱歉，我們找不到與此電子郵件地址連結的 WordPress.com 帳號。</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">透過電子郵件取得登入連結</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="login">很抱歉，我們找不到與此電子郵件地址連結的 WordPress.com 帳號。</string>
     <string name="permission_microphone">麥克風</string>
     <string name="comment_unable_to_show_error">無法顯示此留言</string>
     <string name="media_browse_for_items">瀏覽項目</string>
@@ -1648,20 +1664,20 @@ Language: zh_TW
     <string name="error_media_xmlrcp_server_error">發生內部伺服器錯誤</string>
     <string name="error_media_xmlrpc_not_allowed">你無法執行此動作</string>
     <string name="show_n_hidden_items_desc">其他 %1$s 個項目</string>
-    <string name="gutenberg_native_select_a_layout">選取版面配置</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">請注意：內容欄版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">選取版面配置</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">請注意：內容欄版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
     <string name="create_post_story_fab_tooltip">建立文章或故事</string>
     <string name="create_page_fab_tooltip">建立頁面</string>
     <string name="create_post_fab_tooltip">建立文章</string>
     <string name="reader_discover_interests_header">你可能會喜歡</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">隱藏</string>
-    <string name="gutenberg_native_video_caption_empty">視訊標題。 清空</string>
-    <string name="gutenberg_native_updates_the_title">更新標題。</string>
-    <string name="gutenberg_native_paste_block_after">將區塊貼在以下物件後方：</string>
-    <string name="gutenberg_native_page_title_s">頁面標題。 %s</string>
-    <string name="gutenberg_native_page_title_empty">頁面標題。 清空</string>
-    <string name="toast_error_playing_video">播放視訊時發生錯誤</string>
-    <string name="camera_error">此裝置不支援 Camera2 API。</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">視訊標題。 清空</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">更新標題。</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">將區塊貼在以下物件後方：</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">頁面標題。 %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">頁面標題。 清空</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">播放視訊時發生錯誤</string>
+    <string name="camera_error" tools:ignore="UnusedResources">此裝置不支援 Camera2 API。</string>
     <string name="label_close_button">關閉</string>
     <string name="mlp_preview_page">預覽</string>
     <string name="mlp_create_page">建立頁面</string>
@@ -1669,7 +1685,7 @@ Language: zh_TW
     <string name="mlp_choose_layout_subtitle">首先請從各種預先製作的頁面版面配置挑選。 或從空白頁面開始也可以。</string>
     <string name="mlp_choose_layout_title">選擇版面配置</string>
     <string name="prepublishing_nudges_story_title_hint">新增故事標題</string>
-    <string name="quick_start_dialog_create_new_post_message_short">點選 %1$s「建立」。 %2$s 然後選取&lt;b&gt;「網誌文章」&lt;/b&gt;</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">點選 %1$s「建立」。 %2$s 然後選取&lt;b&gt;「網誌文章」&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">從裝置中選擇</string>
     <string name="my_site_bottom_sheet_add_story">故事文章</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">你需要 Jetpack 外掛程式才能在自助託管的 WordPress 網站上編輯網站圖示。</string>
@@ -1677,65 +1693,65 @@ Language: zh_TW
     <string name="error_media_quota_exceeded_toast">無法上傳檔案。\n已超過儲存空間配額。</string>
     <string name="error_media_quota_exceeded">已超過儲存空間配額</string>
     <string name="pick_file">加入檔案</string>
-    <string name="gutenberg_native_replace_video">替換視訊</string>
-    <string name="gutenberg_native_replace_image_or_video">替換圖片或視訊</string>
-    <string name="gutenberg_native_convert_to_link">轉換成連結</string>
-    <string name="gutenberg_native_choose_video">選擇視訊</string>
-    <string name="gutenberg_native_choose_image_or_video">選擇圖片或視訊</string>
-    <string name="gutenberg_native_choose_image">選擇圖片</string>
-    <string name="gutenberg_native_block_removed">已移除區塊</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">替換視訊</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">替換圖片或視訊</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">轉換成連結</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">選擇視訊</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">選擇圖片或視訊</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">選擇圖片</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">已移除區塊</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
-    <string name="signup_confirmation_title">註冊確認</string>
-    <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
-    <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
-    <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
-    <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
-    <string name="enter_account_info_for_site">輸入你的 %1$s 帳號資訊。</string>
-    <string name="login_or">或</string>
-    <string name="continue_google_button_suffix">繼續使用 Google</string>
-    <string name="login_find_your_site_adress">尋找你的網站位址</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="login">註冊確認</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="login">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="login">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">輸入你的 %1$s 帳號資訊。</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">或</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">繼續使用 Google</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="login">尋找你的網站位址</string>
     <string name="login_done">完成</string>
-    <string name="magic_link_not_seeing_email_message">沒看到電子郵件？ 請檢查你的「垃圾郵件」資料夾。</string>
-    <string name="login_magic_links_sent_label">請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
-    <string name="login_magic_links_label">我們會透過電子郵件傳送連結給你，讓你不必輸入密碼就能立刻登入。</string>
-    <string name="check_email">檢查電子郵件</string>
-    <string name="get_started">開始使用</string>
-    <string name="enter_email_to_continue_wordpress_com">請輸入你的電子郵件地址以登入或建立 WordPress.com 帳號。</string>
-    <string name="or_type_your_password">或輸入你的密碼</string>
-    <string name="create_account">建立帳號</string>
-    <string name="send_link_by_email">以電子郵件傳送連結</string>
-    <string name="reset_your_password">重設密碼</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="login">沒看到電子郵件？ 請檢查你的「垃圾郵件」資料夾。</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="login">請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="login">我們會透過電子郵件傳送連結給你，讓你不必輸入密碼就能立刻登入。</string>
+    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">檢查電子郵件</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">開始使用</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入你的電子郵件地址以登入或建立 WordPress.com 帳號。</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">或輸入你的密碼</string>
+    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">建立帳號</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">以電子郵件傳送連結</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">重設密碼</string>
     <string name="reader_error_request_failed_title">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="quick_start_list_update_site_title_title">確認網站標題</string>
     <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 以設定新標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
-    <string name="gutenberg_native_s_block_options">%s 區塊選項</string>
-    <string name="gutenberg_native_remove_block">移除區塊</string>
-    <string name="gutenberg_native_duplicate_block">重複區塊</string>
-    <string name="gutenberg_native_copy_block">複製區塊</string>
-    <string name="gutenberg_native_copied_block">複製的區塊</string>
-    <string name="gutenberg_native_block_pasted">已貼上區塊</string>
-    <string name="gutenberg_native_block_duplicated">已重複區塊</string>
-    <string name="gutenberg_native_block_cut">已剪下區塊</string>
-    <string name="gutenberg_native_block_copied">已複製區塊</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s 區塊選項</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">移除區塊</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">重複區塊</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">複製區塊</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">複製的區塊</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">已貼上區塊</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">已重複區塊</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">已剪下區塊</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">已複製區塊</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">只有具有管理員角色的使用者才能變更網站標題。</string>
     <string name="my_site_title_changer_dialog_hint">網站標題會顯示在網頁瀏覽器的標題列中，且會顯示在大部分佈景主題的頁首中。</string>
     <string name="error_update_site_title_network">無法更新網站標題。 請檢查你的網路連線並再試一次。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未儲存的變更</string>
-    <string name="gutenberg_native_open_link_in_a_browser">在瀏覽器中開啟連結</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">瀏覽至上一個內容表</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">瀏覽至自訂漸層色彩</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">瀏覽至自訂顏色選擇器</string>
-    <string name="gutenberg_native_gradient_type">漸層色彩類型</string>
-    <string name="gutenberg_native_go_back">返回</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">按兩下以選擇</string>
-    <string name="gutenberg_native_customize_gradient">自訂漸層色彩</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">在瀏覽器中開啟連結</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">瀏覽至上一個內容表</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">瀏覽至自訂漸層色彩</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">瀏覽至自訂顏色選擇器</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">漸層色彩類型</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">返回</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">按兩下以選擇</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">自訂漸層色彩</string>
     <string name="pages_list_author">頁面作者</string>
     <string name="error_media_thumbnail_not_loaded">無法載入媒體縮圖</string>
     <string name="menu_content_info">內容結構</string>
     <string name="everyone">所有人</string>
     <string name="me">我</string>
-    <string name="gutenberg_native_dismiss">關閉</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">關閉</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">標籤可協助讀者瞭解文章內容。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">發表日期</string>
@@ -1764,11 +1780,11 @@ Language: zh_TW
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">立即更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
-    <string name="gutenberg_native_move_to_top">移至頂端</string>
-    <string name="gutenberg_native_insert_mention">插入標記</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">按兩下以開啟含有可用選項的操作工作表</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">開啟區塊操作選單</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">移至頂端</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">插入標記</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">按兩下以開啟含有可用選項的底部工作表</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">按兩下以開啟含有可用選項的操作工作表</string>
     <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
     <string name="pages_set_as_posts_page">設為文章頁面</string>
     <string name="pages_set_as_homepage">設為首頁</string>
@@ -1792,8 +1808,8 @@ Language: zh_TW
     <string name="page_homepage_successfully_updated">首頁已成功更新</string>
     <string name="page_cannot_set_posts_page">若要設定文章頁面，請在網站設定中啟用「靜態首頁」</string>
     <string name="page_cannot_set_homepage">若要設定首頁，請在網站設定中啟用「靜態首頁」</string>
-    <string name="gutenberg_native_select_a_color">選擇顏色</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">點選兩次即可前往顏色設定</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">選擇顏色</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">點選兩次即可前往顏色設定</string>
     <string name="feature_announcement_find_out_mode">瞭解更多</string>
     <string name="feature_announcement_dialog_label">%s 新功能</string>
     <string name="insert_label_with_count">插入 %d 個</string>
@@ -1818,14 +1834,14 @@ Language: zh_TW
     <string name="button_insert">插入</string>
     <string name="continue_label">繼續</string>
     <string name="copy_text">複製</string>
-    <string name="gutenberg_native_number_of_columns">欄位數</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_right">向右移動區塊</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_left">向左移動區塊</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">按兩下將區塊向右移</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">按兩下將區塊向左移</string>
-    <string name="gutenberg_native_block_settings">區塊設定</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">欄位數</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">向右移動區塊</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">向左移動區塊</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">按兩下將區塊向右移</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">按兩下將區塊向左移</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">區塊設定</string>
     <string name="new_site_creation_creating_site_loading_4">建立儀表板</string>
     <string name="new_site_creation_creating_site_loading_3">設定佈景主題</string>
     <string name="new_site_creation_creating_site_loading_2">新增網站功能</string>
@@ -1833,7 +1849,7 @@ Language: zh_TW
     <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
     <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
     <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
-    <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">處理要求時發生問題</string>
     <string name="gif_powered_by_tenor">由 Tenor 支援</string>
     <string name="photo_picker_gif">從 Tenor 中選擇</string>
     <string name="weekday_saturday">星期六</string>
@@ -1880,16 +1896,16 @@ Language: zh_TW
     <string name="app_theme_light">淡色系</string>
     <string name="app_theme">外觀</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">你最近變更了這個頁面，但沒有儲存這些變更。選擇要載入的版本：\n\n</string>
-    <string name="gutenberg_native_show_post_content">顯示文章內容</string>
-    <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
-    <string name="gutenberg_native_link_to">連結至</string>
-    <string name="gutenberg_native_link_settings">連結設定</string>
-    <string name="gutenberg_native_excerpt_length_words">摘要長度 (字數)</string>
-    <string name="gutenberg_native_edit_cover_media">編輯封面媒體</string>
-    <string name="gutenberg_native_customize">自訂</string>
-    <string name="gutenberg_native_button_link_url">按鈕連結網址</string>
-    <string name="gutenberg_native_border_radius">框線圓角半徑</string>
-    <string name="gutenberg_native_add_paragraph_block">新增段落區塊</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">顯示文章內容</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">只顯示摘要</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">連結至</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">連結設定</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">摘要長度 (字數)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">編輯封面媒體</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">自訂</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">按鈕連結網址</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">框線圓角半徑</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">新增段落區塊</string>
     <string name="create_post_page_fab_tooltip_contributors">建立文章</string>
     <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
     <string name="post_list_tab_scheduled_posts">已排程</string>
@@ -1912,17 +1928,17 @@ Language: zh_TW
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">登入 WordPress.com，查看訂閱標籤的最新文章</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">登入 WordPress.com，查看訂閱網誌的最新文章</string>
-    <string name="gutenberg_native_replace_current_block">取代目前區塊</string>
-    <string name="gutenberg_native_add_to_end">新增至「結束」</string>
-    <string name="gutenberg_native_add_to_beginning">新增至「開始」</string>
-    <string name="gutenberg_native_add_block_before">在之前新增區塊</string>
-    <string name="gutenberg_native_add_block_after">在之後新增區塊</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">取代目前區塊</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">新增至「結束」</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">新增至「開始」</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">在之前新增區塊</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">在之後新增區塊</string>
     <string name="reader_filter_empty_tags_add_action">新增標籤</string>
     <string name="reader_filter_cta">篩選</string>
-    <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>
-    <string name="gutenberg_native_edit_video">編輯視訊</string>
-    <string name="gutenberg_native_edit_media">編輯媒體</string>
-    <string name="gutenberg_native_add_a_shortcode">新增短代碼…</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">視訊標題。%s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">編輯視訊</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">編輯媒體</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">新增短代碼…</string>
     <string name="post_list_author">文章作者</string>
     <string name="fab_create_desc">建立文章</string>
     <string name="stats_posting_activity_end_description">你已檢閱此期間的所有統計資料。\n再次點選將會重新開始。</string>
@@ -1936,8 +1952,8 @@ Language: zh_TW
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">更換圖片</string>
-    <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">更換圖片</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">圖庫標題。%s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
     <string name="post_signup_interstitial_not_right_now">現在不用</string>
@@ -1956,12 +1972,12 @@ Language: zh_TW
     <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
     <string name="new_site_creation_unavailable_domain">此網域不可使用</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
-    <string name="login_discovery_error_ssl">由於 &lt;b&gt;SSL 憑證&lt;/b&gt;發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
-    <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b&gt;HTTP 驗證&lt;/b&gt;，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
-    <string name="login_discovery_error_xmlrpc">無法存取你網站上的 &lt;b&gt;XMLRPC 檔案&lt;/b&gt;。你必須聯絡主機商以解決此問題。</string>
-    <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="login">由於 &lt;b&gt;SSL 憑證&lt;/b&gt;發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="login">由於你的網站須進行 &lt;b&gt;HTTP 驗證&lt;/b&gt;，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="login">無法存取你網站上的 &lt;b&gt;XMLRPC 檔案&lt;/b&gt;。你必須聯絡主機商以解決此問題。</string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="login">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">請使用 %1$s 網站憑證登入</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
@@ -1974,56 +1990,56 @@ Language: zh_TW
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress 媒體庫</string>
-    <string name="gutenberg_native_unsupported">不支援</string>
-    <string name="gutenberg_native_ungroup">取消群組</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">點選即可隱藏鍵盤</string>
-    <string name="gutenberg_native_tap_here_to_show_help">點選此處顯示說明</string>
-    <string name="gutenberg_native_take_a_video">拍攝視訊</string>
-    <string name="gutenberg_native_take_a_photo_or_video">拍攝相片或視訊</string>
-    <string name="gutenberg_native_take_a_photo">拍攝照片</string>
-    <string name="gutenberg_native_start_writing">開始撰寫內容…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 區塊含有無效內容</string>
-    <string name="gutenberg_native_s_block_empty">%s 區塊空白</string>
-    <string name="gutenberg_native_cut_block">剪下區塊</string>
-    <string name="gutenberg_native_problem_opening_the_video">開啟視訊時發生問題</string>
-    <string name="gutenberg_native_problem_displaying_block">顯示區塊時發生問題</string>
-    <string name="gutenberg_native_post_title_s">文章標題。%s</string>
-    <string name="gutenberg_native_post_title_empty">文章標題。空白</string>
-    <string name="gutenberg_native_paste_url">貼上 URL</string>
-    <string name="gutenberg_native_page_break_block_s">分頁符號區塊。%s</string>
-    <string name="gutenberg_native_open_settings">開啟設定</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">沒有應用程式可以處理這項要求。請安裝網頁瀏覽器。</string>
-    <string name="gutenberg_native_navigate_up">瀏覽</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向上移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_up">向上移動區塊</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_down">向下移動區塊</string>
-    <string name="gutenberg_native_link_text">連結文字</string>
-    <string name="gutenberg_native_link_inserted">連結已插入</string>
-    <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
-    <string name="gutenberg_native_hide_keyboard">隱藏鍵盤</string>
-    <string name="gutenberg_native_help_icon">說明圖示</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">按兩次即可復原上次變更</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">按兩下以切換設定</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">按兩下以選擇圖片</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">按兩下以選擇視訊</string>
-    <string name="gutenberg_native_double_tap_to_select">按兩下以選擇</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">按兩次即可取消復原上次變更</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">按兩下將區塊向上移</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">按兩下將區塊向下移</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">按兩下以編輯此數值</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">按兩下以新增區塊</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">點兩下並按住不放即可編輯</string>
-    <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
-    <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">發生不明的錯誤，請再試一次。</string>
-    <string name="gutenberg_native_alt_text">替代文字</string>
-    <string name="gutenberg_native_add_video">新增影片</string>
-    <string name="gutenberg_native_add_url">新增網址</string>
-    <string name="gutenberg_native_add_alt_text">新增替代文字</string>
-    <string name="gutenberg_native_add_block_here">在此新增區塊</string>
-    <string name="gutenberg_native_add_description">新增說明</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress 媒體庫</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">不支援</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">取消群組</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">點選即可隱藏鍵盤</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">點選此處顯示說明</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">拍攝視訊</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">拍攝相片或視訊</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">拍攝照片</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">開始撰寫內容…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s 區塊含有無效內容</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s 區塊空白</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">剪下區塊</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">開啟視訊時發生問題</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">顯示區塊時發生問題</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">文章標題。%s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">文章標題。空白</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">貼上 URL</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">分頁符號區塊。%s</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">開啟設定</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">沒有應用程式可以處理這項要求。請安裝網頁瀏覽器。</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">瀏覽</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">將區塊從第 %1$s 列向上移至第 %2$s 列</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">向上移動區塊</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">向下移動區塊</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">連結文字</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">連結已插入</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">圖片說明。%s</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">隱藏鍵盤</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">說明圖示</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">按兩次即可復原上次變更</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">按兩下以切換設定</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">按兩下以選擇圖片</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">按兩下以選擇視訊</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">按兩下以選擇</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">按兩次即可取消復原上次變更</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">按兩下將區塊向上移</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">按兩下將區塊向下移</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">按兩下以編輯此數值</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">按兩下以新增區塊</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">點兩下並按住不放即可編輯</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">目前的值是 %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">從裝置中選擇</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">發生不明的錯誤，請再試一次。</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">替代文字</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增影片</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">新增網址</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">新增替代文字</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">在此新增區塊</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">新增說明</string>
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2127,8 +2143,8 @@ Language: zh_TW
     <string name="post_settings_add_to_calendar">新增到行事曆</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日期和時間</string>
-    <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
-    <string name="enter_email_for_site">透過 WordPress.com 登入以連結至 %1$s</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入完整的網站位址，例如 example.com。</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">透過 WordPress.com 登入以連結至 %1$s</string>
     <string name="stats_post_views_label">瀏覽次數</string>
     <string name="stats_post_label">文章</string>
     <string name="stats_list_item_description">%1$s：%2$s，%3$s：%4$s</string>
@@ -2144,11 +2160,11 @@ Language: zh_TW
     <string name="description_collapse">折疊</string>
     <string name="my_site_verify_your_email_without_email">驗證你的電子郵件地址 - 已將說明傳送至你的電子郵件地址</string>
     <string name="my_site_verify_your_email">驗證你的電子郵件地址 - 已將說明傳送至 %s</string>
-    <string name="link_dialog_button_cancel">取消</string>
-    <string name="link_dialog_button_ok">確定</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">移除連結</string>
-    <string name="link_dialog_title">插入連結</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">取消</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">確定</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">移除連結</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">插入連結</string>
     <string name="post_settings_retry_featured_image">重新嘗試上傳</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">正在上傳媒體。\n請點選以顯示選項。</string>
     <string name="link_open_new_window">在新視窗或分頁開啟鏈結</string>
@@ -2214,7 +2230,7 @@ Language: zh_TW
     <string name="stats_management_news_card_message">選擇想查看的統計資料，並專注於你最在乎的資料。點選「洞察報告」底端的 %1$s，自訂你的統計資料。</string>
     <string name="stats_manage_your_stats">管理你的統計資料</string>
     <string name="history_fetching_revisions">正在擷取修訂版本…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">無法插入媒體。\n請點選以顯示選項。</string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">無法插入媒體。\n請點選以顯示選項。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
     <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
     <string name="post_uploading_draft">正在上傳草稿</string>
@@ -2244,8 +2260,8 @@ Language: zh_TW
     <string name="posts_draft_empty">你沒有任何文章草稿</string>
     <string name="posts_scheduled_empty">你沒有任何已安排時間的文章</string>
     <string name="posts_published_empty">你尚未發表任何文章</string>
-    <string name="notification_wpcom_username_needed">請透過你的使用者名稱和密碼登入。</string>
-    <string name="error_user_username_instead_of_email">請使用你的 WordPress.com 使用者名稱登入，而非電子郵件地址。</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="login">請透過你的使用者名稱和密碼登入。</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="login">請使用你的 WordPress.com 使用者名稱登入，而非電子郵件地址。</string>
     <string name="stats_insights_average_words">每篇文章平均字數</string>
     <string name="stats_insights_total_words">總字數</string>
     <string name="stats_insights_average_likes">每篇文章平均按讚數</string>
@@ -2255,7 +2271,7 @@ Language: zh_TW
     <string name="stats_insights_posts">文章</string>
     <string name="stats_insights_year">年</string>
     <string name="stats_insights_this_year_site_stats">今年</string>
-    <string name="no_site_error">此地址的網站不是 WordPress 網站。若需要我們連接網站，網站必須使用 WordPress。</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="login">此地址的網站不是 WordPress 網站。若需要我們連接網站，網站必須使用 WordPress。</string>
     <string name="plugin_check_domain_credit_error">無法查看可用的網域額度</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">正在查看網域額度</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">註冊網域</string>
@@ -2271,7 +2287,7 @@ Language: zh_TW
     <string name="stats_months_and_years_views_label">瀏覽次數</string>
     <string name="stats_months_and_years_period_label">期間</string>
     <string name="stats_detail_months_and_years">月份與年份</string>
-    <string name="stats_insights_load_more">載入更多</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">載入更多</string>
     <string name="stats_insights_today_stats">今天</string>
     <string name="stats_insights_best_hour">最佳時段</string>
     <string name="stats_insights_best_day">最好的一天</string>
@@ -2282,7 +2298,7 @@ Language: zh_TW
     <string name="app_rating_message">很高興再次與你見面！如果你喜歡我們的應用程式，歡迎前往 Google Play 商店幫忙評分。</string>
     <string name="editor_post_converted_back_to_draft">貼文已重新轉換為草稿</string>
     <string name="stats_insights_posting_activity">張貼活動</string>
-    <string name="stats_site_not_loaded_yet">尚未載入網站</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">尚未載入網站</string>
     <string name="stats_more_posts">更多文章</string>
     <string name="stats_fewer_posts">較少文章</string>
     <string name="new_site_creation_preview_back_pressed_warning">你可能會失去目前完成的進度，確定要結束嗎？</string>
@@ -2303,15 +2319,15 @@ Language: zh_TW
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_upload_icon_message">你的訪客會在他們的瀏覽器上看到你的圖示。新增自訂圖示會讓網站看起來更專業幹練。</string>
-    <string name="quick_start_dialog_check_stats_message_short">選取「%1$s 統計資料 %2$s」以查看網站成效。</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">選取「%1$s 統計資料 %2$s」以查看網站成效。</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
     <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
-    <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
-    <string name="quick_start_dialog_enable_sharing_message">自動將新文章分享到社交媒體帳號。</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">啟用文章分享功能</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">自動將新文章分享到社交媒體帳號。</string>
     <string name="quick_start_dialog_check_stats_title">檢視網站統計資料</string>
     <string name="quick_start_dialog_check_stats_message">隨時掌握你的網站成效。</string>
     <string name="quick_start_task_skip_menu_title">略過任務</string>
-    <string name="notification_channel_reminder_title">提醒</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
     <string name="stats_most_popular_percent_views">%1$s 的瀏覽次數</string>
@@ -2351,7 +2367,7 @@ Language: zh_TW
     <string name="stats_no_data_for_period">此期間沒有資料</string>
     <string name="preference_strip_image_location">從媒體移除位置資訊</string>
     <string name="stats_cannot_be_started">目前我們無法開啟統計資料。請稍後再試一次</string>
-    <string name="gif_picker_empty_search_list">沒有符合搜尋條件的媒體</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">沒有符合搜尋條件的媒體</string>
     <string name="gif_picker_initial_empty_text">搜尋 GIF 以新增至你的媒體庫！</string>
     <string name="stats_author_views_label">瀏覽數</string>
     <string name="stats_author_label">作者</string>
@@ -2416,7 +2432,7 @@ Language: zh_TW
     <string name="history_detail_button_previous">上一篇</string>
     <string name="history_detail_button_next">下一篇</string>
     <string name="media_space_used">已使用 %1$s</string>
-    <string name="enter_wpcom_or_jetpack_site">請輸入 WordPress.com 或與 Jetpack 連線的自助託管 WordPress 網站</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入 WordPress.com 或與 Jetpack 連線的自助託管 WordPress 網站</string>
     <string name="history_loading_revision">正在載入修訂版本</string>
     <string name="history_loaded_revision">修訂版本已經載入</string>
     <string name="history_load_dialog_button_positive">載入</string>
@@ -2444,12 +2460,12 @@ Language: zh_TW
     <string name="pages_move_to_draft">移至草稿</string>
     <string name="pages_set_parent">設定上層項目</string>
     <string name="pages_view">檢視</string>
-    <string name="pages_trashed">已移至垃圾桶</string>
-    <string name="pages_scheduled">已排程</string>
-    <string name="pages_drafts">草稿</string>
-    <string name="pages_published">已發佈</string>
-    <string name="login_error_sms_throttled">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
-    <string name="login_error_email_not_found_v2">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">已移至垃圾桶</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">已排程</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">草稿</string>
+    <string name="pages_published" tools:ignore="UnusedResources">已發佈</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
     <string name="site_picker_remove_site_empty">沒有網站符合你的搜尋條件</string>
     <string name="reader_no_followed_blogs_search_title">沒有網誌符合你的搜尋條件</string>
     <string name="page_parent_changed">頁面上層項目已變更</string>
@@ -2471,20 +2487,20 @@ Language: zh_TW
     <string name="quick_start_dialog_view_site_title">檢視你的網站</string>
     <string name="quick_start_dialog_view_site_message">預覽你的網站即可查看訪客將會看到的內容。</string>
     <string name="quick_start_dialog_share_site_title">分享你的網站</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">點選「%1$s社群%2$s」以繼續</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">點選「%1$s社群%2$s」以繼續</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
     <string name="quick_start_dialog_share_site_message">連結到你的社交媒體帳號 - 你的網站會自動分享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
-    <string name="quick_start_dialog_publish_post_message_short">點選%1$s建立文章%2$s以建立新文章</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">點選%1$s建立文章%2$s以建立新文章</string>
     <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">連結其他網站</string>
-    <string name="quick_start_button_positive">執行</string>
-    <string name="quick_start_button_negative_short">取消</string>
-    <string name="quick_start_button_negative">現在不要</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">執行</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">取消</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">現在不要</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
     <string name="reader_empty_subscribed_tags_subtitle">請在此處新增標籤，尋找有關最愛主題的文章</string>
-    <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
     <string name="stats_jetpack_connection_setup_info">若要在你的 WordPress 網站上使用「統計」功能，必須安裝 Jetpack 外掛程式。</string>
@@ -2516,7 +2532,7 @@ Language: zh_TW
     <string name="featured_image_desc">精選圖片</string>
     <string name="button_discard">捨棄</string>
     <string name="reader_avatar_desc">個人檔案圖像</string>
-    <string name="notification_channel_transient_title">暫時性</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">暫時性</string>
     <string name="support_identity_input_dialog_email_label">電子郵件</string>
     <string name="support_identity_input_dialog_enter_email">請輸入你的電子郵件地址</string>
     <string name="support_identity_input_dialog_enter_email_and_name">若要繼續，請輸入你的電子郵件地址和姓名</string>
@@ -2538,13 +2554,13 @@ Language: zh_TW
     <string name="reader_empty_search_title">找不到結果</string>
     <string name="comment_read_source_post">參閱原始文章</string>
     <string name="sites">網站</string>
-    <string name="signup_magic_link_title">神奇連結已傳送</string>
-    <string name="verification_2fa_screen_title">代碼驗證</string>
-    <string name="selfhosted_site_login_title">登入憑證</string>
-    <string name="magic_link_sent_login_title">神奇連結已傳送</string>
-    <string name="magic_link_login_title">神奇連結登入</string>
-    <string name="site_address_login_title">網站位址登入</string>
-    <string name="email_address_login_title">電子郵件地址登入</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">神奇連結已傳送</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">代碼驗證</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">登入憑證</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">神奇連結已傳送</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">神奇連結登入</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">網站位址登入</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">電子郵件地址登入</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
     <string name="reader_empty_saved_posts_title">尚未儲存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
@@ -2609,8 +2625,8 @@ Language: zh_TW
     <string name="content_description_people_looking_charts">正在查看圖表的使用者</string>
     <string name="comment_title">%1$s (位於 %2$s)</string>
     <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
-    <string name="notification_channel_important_title">重要</string>
-    <string name="notification_channel_general_title">一般</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">重要</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">一般</string>
     <string name="photo_picker_use_photo">使用此相片</string>
     <string name="media_preview_title">第 %1$d 個 (共 %2$d 個)</string>
     <string name="stock_media_picker_initial_empty_subtext">由 %s 提供的相片</string>
@@ -2647,7 +2663,7 @@ Language: zh_TW
     <string name="invite_user_delete_desc">移除 %s</string>
     <string name="profile_picture">%s 的個人檔案照片</string>
     <string name="comment_checkmark_desc">檢查標記</string>
-    <string name="signup_with_google_progress">透過 Google 註冊…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">透過 Google 註冊…</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_visual_mode">視覺化模式</string>
@@ -2728,7 +2744,7 @@ Language: zh_TW
     <string name="site_creation_domain_finish_button">建立網站</string>
     <string name="notification_site_creation_created">點選以繼續。</string>
     <string name="notification_site_creation_title_success">網站已建立！</string>
-    <string name="google_error_timeout">Google 太久沒有回應。你可能需要等到網際網路連線變強。</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Google 太久沒有回應。你可能需要等到網際網路連線變強。</string>
     <string name="username_changer_title">變更使用者名稱</string>
     <string name="username_changer_hint">請輸入以獲得更多建議</string>
     <string name="username_changer_header">你目前的使用者名稱為 %1$s%2$s%3$s。除少數例外情況外，其他人只會看到你的顯示名稱 %4$s%5$s%6$s。</string>
@@ -2740,10 +2756,10 @@ Language: zh_TW
     <string name="content_description_add_avatar">新增大頭貼</string>
     <string name="signup_user_exists">電子郵件已存在於 WordPress.com。\n繼續登入。</string>
     <string name="signup_updating_account">正在更新帳號……</string>
-    <string name="signup_magic_link_progress">正在傳送電子郵件</string>
-    <string name="signup_magic_link_error_button_positive">重試</string>
-    <string name="signup_magic_link_error_button_negative">關閉</string>
-    <string name="signup_magic_link_error">傳送電子郵件時發生錯誤。你可以現在重試，或先關閉並稍後再試。</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">正在傳送電子郵件</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">重試</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">關閉</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">傳送電子郵件時發生錯誤。你可以現在重試，或先關閉並稍後再試。</string>
     <string name="signup_epilogue_hint_username">使用者名稱</string>
     <string name="signup_epilogue_hint_password_detail">你可以像剛剛一樣隨時使用連結來登入，也可以依需要設定密碼。</string>
     <string name="signup_epilogue_hint_password">密碼 (非必要)</string>
@@ -2841,18 +2857,18 @@ Language: zh_TW
     <string name="my_site_btn_plugins">外掛程式</string>
     <string name="media_edit_link_hint">在新視窗或分頁開啟連結</string>
     <string name="media_edit_link_text">連結至</string>
-    <string name="notification_login_failed">發生錯誤。</string>
-    <string name="notification_2fa_needed">請提供驗證碼以便繼續進行。</string>
-    <string name="notification_error_wrong_password">請重新確認你的密碼以便繼續進行。</string>
-    <string name="notification_login_title_stopped">已停止登入</string>
-    <string name="notification_logging_in">登入時請耐心等候。</string>
-    <string name="notification_login_title_in_progress">登入中…</string>
-    <string name="notification_logged_in">點選以繼續。</string>
-    <string name="notification_login_title_success">已登入！</string>
-    <string name="login_error_generic_start">無法啟動 Google 登入程序。</string>
-    <string name="login_empty_password">請輸入密碼。</string>
-    <string name="login_text_otp_another">請改用簡訊傳送另一個驗證碼給我</string>
-    <string name="enter_verification_code_sms">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">發生錯誤。</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">請提供驗證碼以便繼續進行。</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">請重新確認你的密碼以便繼續進行。</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">已停止登入</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">登入時請耐心等候。</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">登入中…</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">點選以繼續。</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">已登入！</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">無法啟動 Google 登入程序。</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入密碼。</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">請改用簡訊傳送另一個驗證碼給我</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
     <string name="uploading_subtitle_media_only">剩下 %1$d 個檔案 (共 %2$d 個)</string>
@@ -2869,15 +2885,15 @@ Language: zh_TW
     <string name="confirm_remove_media_image">是否要將這張圖片從文章中移除？</string>
     <string name="media_edit_customize_card_caption">自訂</string>
     <string name="media_edit_file_details_card_caption">檔案詳細資料</string>
-    <string name="login_error_suffix">\n要嘗試其他帳號嗎？</string>
-    <string name="login_error_generic">連線 Google 帳號時發生一些問題。</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">\n要嘗試其他帳號嗎？</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">連線 Google 帳號時發生一些問題。</string>
     <string name="login_error_button">關閉</string>
-    <string name="enter_wpcom_password_google">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
     <string name="post_settings_remove_featured_image">移除精選圖片</string>
     <string name="post_settings_choose_featured_image">選擇特色圖片</string>
-    <string name="login_log_in_for_share_intent">登入 WordPress.com 以便分享內容。</string>
-    <string name="enter_site_address_share_intent">請輸入你要分享內容的 WordPress 網站位址。</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">登入 WordPress.com 以便分享內容。</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入你要分享內容的 WordPress 網站位址。</string>
     <string name="jetpack_disconnect_error_toast">與網站中斷連線時發生錯誤</string>
     <string name="jetpack_disconnect_success_toast">網站已中斷連線</string>
     <string name="jetpack_disconnect_confirm">中斷連線</string>
@@ -2961,35 +2977,35 @@ Language: zh_TW
     <string name="login_epilogue_mysites_other">我的網站</string>
     <string name="login_epilogue_mysites_one">我的網站</string>
     <string name="login_email_client_not_found">無法偵測電子郵件用戶端應用程式</string>
-    <string name="login_empty_2fa">請輸入驗證碼</string>
-    <string name="login_empty_username">請輸入使用者名稱</string>
-    <string name="login_log_in_for_deeplink">登入 WordPress.com 存取文章。</string>
-    <string name="login_error_while_adding_site">新增網站時出現錯誤。錯誤代碼：%s</string>
-    <string name="login_checking_site_address">檢查網站位址</string>
-    <string name="login_site_address_more_help">需要更多協助嗎？</string>
-    <string name="login_site_address_help_content">當你使用 Chrome 造訪自己的網站時，網站位址會顯示在畫面上方的網址列中。</string>
-    <string name="login_site_address_help_title">我的網站位址是？</string>
-    <string name="login_site_address">網站位址</string>
-    <string name="enter_site_address">請輸入要連結的 WordPress 網站位址。</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入驗證碼</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入使用者名稱</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">登入 WordPress.com 存取文章。</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">新增網站時出現錯誤。錯誤代碼：%s</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">檢查網站位址</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">需要更多協助嗎？</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">當你使用 Chrome 造訪自己的網站時，網站位址會顯示在畫面上方的網址列中。</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">我的網站位址是？</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">網站位址</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">請輸入要連結的 WordPress 網站位址。</string>
     <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
-    <string name="login_continue">繼續</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">繼續</string>
     <string name="connect_more">連結其他網站</string>
-    <string name="enter_wpcom_password">輸入你的 WordPress.com 密碼。</string>
-    <string name="login_magic_link_email_requesting">要求登入的電子郵件</string>
-    <string name="password_incorrect">看來你輸入的密碼不正確。請重新確認你的資訊，然後再試一次。</string>
-    <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
-    <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
-    <string name="enter_verification_code">快完成了！ 請輸入驗證器應用程式上的 WordPress.com 驗證碼。</string>
-    <string name="open_mail">開啟郵件</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">輸入你的 WordPress.com 密碼。</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">要求登入的電子郵件</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">看來你輸入的密碼不正確。請重新確認你的資訊，然後再試一次。</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">透過 SMS 要求驗證碼。</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">請改用簡訊傳送驗證碼給我</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">快完成了！ 請輸入驗證器應用程式上的 WordPress.com 驗證碼。</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">開啟郵件</string>
     <string name="next">下一篇</string>
-    <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
     <string name="me_profile_photo">個人檔案照片</string>
     <string name="error_media_parse_error">從伺服器傳來未預期的回應</string>
     <string name="upload_finished_toast">上傳已經結束，無法停止上傳</string>
     <string name="post_title">標題</string>
     <string name="menu_redo">重做</string>
     <string name="menu_undo">復原</string>
-    <string name="media_insert_unimplemented">很抱歉！ 此功能尚未推出 :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">很抱歉！ 此功能尚未推出 :(</string>
     <string name="error_media_small">媒體過小，無法顯示</string>
     <string name="editor_dropped_unsupported_files">警告：部分拖放項目不受支援！</string>
     <string name="editor_dropped_title_images_not_allowed">不可將圖片拖放至標題</string>
@@ -3131,8 +3147,8 @@ Language: zh_TW
     <string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
     <string name="error_unknown_post_type">未知的文章格式</string>
     <string name="submit_for_review">送出</string>
-    <string name="duplicate_site_detected">已偵測到重複的網站。</string>
-    <string name="cannot_add_duplicate_site">應用程式中已有此網站，你無法再度新增該網站。</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">已偵測到重複的網站。</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">應用程式中已有此網站，你無法再度新增該網站。</string>
     <string name="already_logged_in_wpcom">你已登入 WordPress.com 帳號，無法新增連結至其他帳號的 WordPress.com 網站。</string>
     <string name="error_media_load">無法載入媒體</string>
     <string name="error_media_refresh_no_connection">需要網路連線，才能重新整理媒體庫</string>
@@ -3144,8 +3160,8 @@ Language: zh_TW
     <string name="media_upload_error">發生媒體上傳錯誤</string>
     <string name="retry">重試</string>
     <string name="confirm">確認</string>
-    <string name="xmlrpc_endpoint_forbidden_error">無法連線。嘗試存取網站的 XMLRPC 終端時\n收到 403 錯誤訊息。此應用程式需要 XMLRPC 終端才能與你的網站通訊。請聯絡你的主機服務提供者，\n以解決此問題。</string>
-    <string name="xmlrpc_post_blocked_error">無法連結。你的主機服務提供者封鎖了 POST 請求，但此應用程式需要\n需要使用 POST 請求才能與你的網站通訊。請聯絡你的主機服務提供者，以解決此問題。</string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">無法連線。嘗試存取網站的 XMLRPC 終端時\n收到 403 錯誤訊息。此應用程式需要 XMLRPC 終端才能與你的網站通訊。請聯絡你的主機服務提供者，\n以解決此問題。</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">無法連結。你的主機服務提供者封鎖了 POST 請求，但此應用程式需要\n需要使用 POST 請求才能與你的網站通訊。請聯絡你的主機服務提供者，以解決此問題。</string>
     <string name="pending_draft_one_generic">別讓它晾在那裡！「%1$s」正在等你發表。</string>
     <string name="pending_draft_one_month">別讓它晾在那裡！「%1$s」正在等你發表。</string>
     <string name="pending_draft_one_week_2">「%1$s」還是草稿，請記得發表！</string>
@@ -3183,7 +3199,7 @@ Language: zh_TW
     <string name="invite_username_not_found">%s：找不到使用者</string>
     <string name="comment_moderated_approved">留言已核准！</string>
     <string name="like">讚</string>
-    <string name="timespan_now">立即</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">立即</string>
     <string name="role_viewer">瀏覽者</string>
     <string name="error_post_my_profile_no_connection">無法連線，故無法儲存你的個人檔案</string>
     <string name="alignment_right">右</string>
@@ -3200,19 +3216,19 @@ Language: zh_TW
     <string name="follower_subscribed_since">自 %1$s 開始</string>
     <string name="error_remove_viewer">無法移除瀏覽者</string>
     <string name="editor_failed_uploads_switch_html">部分媒體上傳失敗。在此狀態下，你無法\n切換至 HTML 模式。要移除所有上傳失敗的項目並繼續嗎？</string>
-    <string name="image_thumbnail">縮圖</string>
-    <string name="visual_editor">視覺化編輯器</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">縮圖</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">視覺化編輯器</string>
     <string name="image_width">寬度</string>
     <string name="image_link_to">連結至</string>
-    <string name="image_alt_text">替代文字</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">替代文字</string>
     <string name="image_caption">媒體說明文字</string>
     <string name="image_settings_save_toast">變更已儲存</string>
     <string name="image_settings_dismiss_dialog_title">要捨棄未儲存的變更嗎？</string>
     <string name="stop_upload_dialog_title">停止上傳？</string>
-    <string name="alert_error_adding_media">插入媒體時發生錯誤</string>
-    <string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
-    <string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
-    <string name="uploading_gallery_placeholder">正在上傳圖庫…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">插入媒體時發生錯誤</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">你目前正在上傳媒體。請等待此項作業完成。</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">正在上傳圖庫…</string>
     <string name="tap_to_try_again">點選以重試！</string>
     <string name="invite_sent">已成功送出邀請</string>
     <string name="invite_error_for_username">%1$s：%2$s</string>
@@ -3246,8 +3262,8 @@ Language: zh_TW
     <string name="error_refreshing_gravatar">重新載入你的 Gravatar 時發生錯誤</string>
     <string name="error_locating_image">尋找裁切的圖片時發生錯誤</string>
     <string name="error_cropping_image">裁切圖片時發生錯誤</string>
-    <string name="checking_email">正在檢查電子郵件</string>
-    <string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">正在檢查電子郵件</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">目前無法使用。請輸入你的密碼</string>
     <string name="logging_in">正在登入</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
     <string name="capture_or_pick_photo">拍攝或選取照片</string>
@@ -3283,7 +3299,7 @@ Language: zh_TW
     <string name="comments_empty_list_filtered_pending">無待審核的迴響</string>
     <string name="comments_empty_list_filtered_approved">沒有已核准的留言</string>
     <string name="button_skip">略過</string>
-    <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
     <string name="alignment_center">置中</string>
     <string name="post_format_video">影片</string>
     <string name="post_format_status">狀態</string>
@@ -3343,7 +3359,7 @@ Language: zh_TW
     <string name="about_the_app">關於此應用程式</string>
     <string name="error_post_account_settings">無法儲存你的帳號設定</string>
     <string name="error_fetch_account_settings">無法擷取你的帳號設定</string>
-    <string name="error_fetch_my_profile">無法擷取你的個人檔案</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">無法擷取你的個人檔案</string>
     <string name="site_settings_unknown_language_code_error">無法辨識語言代碼</string>
     <string name="site_settings_threading_dialog_description">允許留言以階層式嵌入留言串中。</string>
     <string name="site_settings_threading_dialog_header">留言串最多</string>
@@ -3545,9 +3561,9 @@ Language: zh_TW
     <string name="select_all">全部選取</string>
     <string name="hide">隱藏</string>
     <string name="show">顯示</string>
-    <string name="auth_required">再次登入以繼續操作。</string>
-    <string name="invalid_verification_code">驗證碼無效</string>
-    <string name="verification_code">驗證碼</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">再次登入以繼續操作。</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">驗證碼無效</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">驗證碼</string>
     <string name="language">語言</string>
     <string name="reader_empty_posts_request_failed">無法擷取文章</string>
     <string name="error_notification_open">無法開啟通知</string>
@@ -3611,7 +3627,7 @@ Language: zh_TW
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
     <string name="help">說明</string>
     <string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
-    <string name="email_invalid">輸入有效的電子郵件地址</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">輸入有效的電子郵件地址</string>
     <string name="invalid_email_message">你的電子郵件地址無效</string>
     <string name="error_downloading_image">下載圖片時發生錯誤</string>
     <string name="error_load_comment">無法載入回應</string>
@@ -3619,7 +3635,7 @@ Language: zh_TW
     <string name="error_moderate_comment">審核時發生錯誤</string>
     <string name="error_generic">發生錯誤</string>
     <string name="error_refresh_comments">目前無法重新整理回應</string>
-    <string name="error_refresh_pages">目前無法重新整理頁面</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">目前無法重新整理頁面</string>
     <string name="error_refresh_posts">目前無法重新整理文章</string>
     <string name="error_deleting_post">刪除文章時發生錯誤</string>
     <string name="notifications_empty_list">沒有通知</string>
@@ -3644,7 +3660,7 @@ Language: zh_TW
     <string name="new_media">新媒體</string>
     <string name="new_post">新文章</string>
     <string name="notifications_empty_all">尚未有任何通知。</string>
-    <string name="http_authorization_required">需要授權</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">需要授權</string>
     <string name="invalid_site_url_message">檢查輸入的網站 URL 是否有效</string>
     <string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
     <string name="category_name">類別名稱</string>
@@ -3667,10 +3683,10 @@ Language: zh_TW
     <string name="delete_post">是否要刪除文章？</string>
     <string name="post_settings">文章設定</string>
     <string name="file_not_found">找不到可上傳的檔案。該檔案是否已刪除或移走？</string>
-    <string name="horizontal_alignment">水平對齊</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">水平對齊</string>
     <string name="local_draft">本機草稿</string>
     <string name="page_settings">頁面設定</string>
-    <string name="create_a_link">建立連結</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">建立連結</string>
     <string name="link_enter_url_text">連結文字 (選填)</string>
     <string name="cannot_delete_multi_media_items">目前無法刪除部分媒體。請稍後再試一次。</string>
     <string name="media_error_no_permission">你沒有檢視媒體庫的權限</string>
@@ -3691,7 +3707,7 @@ Language: zh_TW
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
     <string name="pick_video">選取影片</string>
     <string name="pick_photo">選取照片</string>
-    <string name="sign_up_label">註冊</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">註冊</string>
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
@@ -3735,18 +3751,18 @@ Language: zh_TW
     <string name="note_reply_successful">回覆已發佈</string>
     <string name="sign_in">登入</string>
     <string name="loading">正在載入…</string>
-    <string name="httppassword">HTTP 密碼</string>
-    <string name="httpuser">HTTP 使用者帳號</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP 密碼</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
     <string name="incorrect_credentials">錯誤的使用者帳號或密碼。</string>
-    <string name="log_in">登入</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">登入</string>
     <string name="username">使用者帳號</string>
     <string name="password">密碼</string>
     <string name="reader">閱讀器</string>
-    <string name="featured_in_post">文章內容包含圖片</string>
-    <string name="featured">設定為精選圖片</string>
-    <string name="width">寬度</string>
-    <string name="caption">說明（可選）</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">文章內容包含圖片</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">設定為精選圖片</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">寬度</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">說明（可選）</string>
     <string name="pages">頁面</string>
     <string name="posts">文章</string>
     <string name="anonymous">匿名</string>
@@ -3754,7 +3770,7 @@ Language: zh_TW
     <string name="done">完成</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">上傳中…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">上傳中…</string>
     <string name="image_alignment">對齊</string>
     <string name="refresh">更新</string>
     <string name="untitled">無標題</string>

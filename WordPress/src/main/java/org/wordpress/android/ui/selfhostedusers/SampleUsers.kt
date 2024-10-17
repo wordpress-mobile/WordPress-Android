@@ -15,7 +15,7 @@ object SampleUsers {
         username = "@sampleUser",
         avatarUrls = emptyMap(),
         capabilities = emptyMap(),
-        email = "email@exmaple.com",
+        email = "email@example.com",
         extraCapabilities = emptyMap(),
         firstName = "Sample",
         lastName = "User",
@@ -36,7 +36,7 @@ object SampleUsers {
         avatarUrls = emptyMap(),
         capabilities = emptyMap(),
         description = "User description",
-        email = "email@exmaple.com",
+        email = "email@example.com",
         extraCapabilities = emptyMap(),
         firstName = "Sample",
         lastName = "User",
@@ -56,7 +56,7 @@ object SampleUsers {
         avatarUrls = emptyMap(),
         capabilities = emptyMap(),
         description = "User description",
-        email = "email@exmaple.com",
+        email = "email@example.com",
         extraCapabilities = emptyMap(),
         firstName = "Sample",
         lastName = "User",
@@ -74,7 +74,10 @@ object SampleUsers {
     fun getSampleUsers(): ArrayList<UserWithEditContext> {
         fun addWithId(user: UserWithEditContext) {
             sampleUserList.add(
-                user.copy(id = sampleUserList.size)
+                user.copy(
+                    id = sampleUserList.size,
+                    name = "${user.name}${sampleUserList.size}"
+                )
             )
         }
         if (sampleUserList.isEmpty()) {

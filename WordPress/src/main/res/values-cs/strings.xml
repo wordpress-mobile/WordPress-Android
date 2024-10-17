@@ -5,16 +5,16 @@ Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: cs_CZ
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="site_monitoring_cannot_be_started">V současné době nemůžeme spustit monitorování webu. Zkuste to prosím později</string>
     <string name="site_monitoring_tab_title_web_server_logs">Protokoly webového serveru</string>
     <string name="site_monitoring_tab_title_php_logs">Protokoly PHP</string>
     <string name="site_monitoring">Monitorování webu</string>
-    <string name="gutenberg_native_waiting_for_connection">Čekání na připojení</string>
-    <string name="gutenberg_native_font_size_1_s">Velikost písma, %1$s</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline">Ztráta síťového připojení, práce v režimu offline</string>
-    <string name="gutenberg_native_network_connection_re_established">Obnovení síťového připojení</string>
-    <string name="gutenberg_native_working_offline">Práce v režimu offline</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Čekání na připojení</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Velikost písma, %1$s</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ztráta síťového připojení, práce v režimu offline</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Obnovení síťového připojení</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Práce v režimu offline</string>
     <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Jdeme na to!</string>
     <string name="blaze_campaigns_card_footer_label">Vytvořit kampaň</string>
@@ -70,7 +70,7 @@ Language: cs_CZ
     <string name="site_creation_domain_cost">ročně</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Zavřít</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Kontaktovat podporu</string>
-    <string name="gutenberg_native_blocks_menu">Menu bloků</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu bloků</string>
     <string name="promote_blaze_card_sub_title">Zobrazte svou práci na milionech webů.</string>
     <string name="promote_blaze_card_title">Propagujte svůj zvýrazněný obsah</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Nainstalujte celý plugin</string>
@@ -157,7 +157,7 @@ Language: cs_CZ
     <string name="blogging_prompts_list_answered_prompt">✓ Odpovězeno</string>
     <string name="blogging_prompts_list_title">Výzvy</string>
     <string name="close_desc">zavřít</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Případně můžete tento blok odpojit a upravit samostatně klepnutím na „Převést na běžný blok“.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Případně můžete tento blok odpojit a upravit samostatně klepnutím na „Převést na běžný blok“.</string>
     <string name="dlg_confirm_delete_category">Trvale smazat rubriku \'%s\'?</string>
     <string name="deleting_cat_success">Rubrika byla úspěšně odstraněna</string>
     <string name="deleting_cat_failed">Mazání rubriky se nepodařilo.</string>
@@ -202,8 +202,8 @@ Language: cs_CZ
     <string name="jp_migration_notifications_disabled_in_wp_message">Vypneme oznámení z WordPress aplikace.</string>
     <string name="wordpress_help_center_button">WordPress centrum nápovědy</string>
     <string name="support_title">Podpora</string>
-    <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
-    <string name="notification_disable_broadcast_permission_label">zakázat WordPress oznámení</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Umožňuje aplikaci zakázat WordPress oznámení.</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">zakázat WordPress oznámení</string>
     <string name="jp_migration_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_continue_button">Pokračovat</string>
     <string name="jp_migration_welcome_site_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
@@ -215,10 +215,10 @@ Language: cs_CZ
     <string name="post_settings_parent">Nadřazená stránka</string>
     <string name="post_settings_page_attributes">Vlastnosti stránky</string>
     <string name="about_news">Novinky</string>
-    <string name="about_automattic_contribute_item_title">Přispět</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Přispět</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 odpověď</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress ikona</string>
-    <string name="login_prologue_revamped_tagline">Pište, upravujte a publikujte odkudkoli.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress ikona</string>
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Pište, upravujte a publikujte odkudkoli.</string>
     <string name="error_fetch_authors_list">Autory se nepodařilo načíst</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Baví vás %s?</string>
@@ -226,9 +226,9 @@ Language: cs_CZ
     <string name="connections_label">Jetpack sociální připojení</string>
     <string name="stats_widget_log_in_to_add_message">Chcete-li přidat widget, přihlaste se do aplikace Jetpack.</string>
     <string name="stats_view_publicize">Jetpack sociální připojení</string>
-    <string name="login_magic_links_email_sent">Právě jsme poslali kouzelný odkaz</string>
-    <string name="login_magic_links_sent_label_short">Zkontrolujte svůj e-mail na tomto zařízení!</string>
-    <string name="or_use_password">Pro přihlášení použijte heslo</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">Právě jsme poslali kouzelný odkaz</string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Zkontrolujte svůj e-mail na tomto zařízení!</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">Pro přihlášení použijte heslo</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Zůstaňte informováni díky aktualizacím v reálném čase pro nové komentáře, návštěvnost webu, zprávy o zabezpečení a další.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Oznámení pohání Jetpack</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Sledujte, jak vaše návštěvnost roste, a zjistěte více o svém publiku pomocí přepracovaných statistik a statistik, které jsou nyní k dispozici v nové aplikaci Jetpack.</string>
@@ -237,16 +237,16 @@ Language: cs_CZ
     <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Najděte, sledujte a lajkujte všechny své oblíbené stránky a příspěvky pomocí aplikace čtečka, která je nyní k dispozici v nové aplikaci Jetpack.</string>
     <string name="wp_jetpack_powered_features">Nová aplikace Jetpack obsahuje statistiky, čtečku, upozornění a další, díky kterým je váš WordPress lepší.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress je lepší s Jetpackem</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgradujte svůj plán na používání obálek videa</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgradujte svůj plán na nahrávání zvuku</string>
-    <string name="gutenberg_native_jetpack_powered">Poháněno Jetpackem</string>
-    <string name="gutenberg_native_invalid_url">Neplatná URL adresa.</string>
-    <string name="gutenberg_native_gradient">Přechod</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgradujte svůj plán na používání obálek videa</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgradujte svůj plán na nahrávání zvuku</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Poháněno Jetpackem</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Neplatná URL adresa.</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přechod</string>
     <string name="wp_jetpack_continue_to_stats">Pokračujte na statistiky</string>
     <string name="wp_jetpack_continue_to_notifications">Pokračujte na oznámení</string>
     <string name="wp_jetpack_continue_to_reader">Pokračovat do čtečky</string>
     <string name="wp_jetpack_get_new_jetpack_app">Vyzkoušejte novou aplikaci Jetpack</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problém se zobrazením bloku.\nKlepnutím se pokusíte o obnovení blokování.</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problém se zobrazením bloku.\nKlepnutím se pokusíte o obnovení blokování.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Minulý týden jste měli %1$s zobrazení a %2$s komentářů</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Minulý týden jste měli %1$s zhlédnutí a %2$s lajků</string>
     <string name="weekly_roundup_notification_text_views_only">Minulý týden jste měli %1$s zhlédnutí.</string>
@@ -299,12 +299,12 @@ Language: cs_CZ
     <string name="stats_action_card_blogging_reminders_title">Nastavte si připomenutí blogů</string>
     <string name="stats_action_card_grow_audience_button_label">Zkontrolujte průběh</string>
     <string name="stats_action_card_grow_audience_title">Rozšiřte své publikum</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Bloky můžete přeskupit klepnutím na blok a následným klepnutím na šipky nahoru a dolů, které se zobrazují na levé spodní straně bloku, abyste jej přesunuli nad nebo pod jiné bloky.</string>
-    <string name="gutenberg_native_image_file_not_found">Soubor obrázku nebyl nalezen.</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Drag &amp; drop dělá přeskupení bloků hračkou. Stiskněte a podržte blok, poté jej přetáhněte na nové místo a uvolněte.</string>
-    <string name="gutenberg_native_drag_drop">Drag &amp; drop</string>
-    <string name="gutenberg_native_arrow_buttons">Tlačítka se šipkami</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuálně vybráno: %2$s</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloky můžete přeskupit klepnutím na blok a následným klepnutím na šipky nahoru a dolů, které se zobrazují na levé spodní straně bloku, abyste jej přesunuli nad nebo pod jiné bloky.</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Soubor obrázku nebyl nalezen.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Drag &amp; drop dělá přeskupení bloků hračkou. Stiskněte a podržte blok, poté jej přetáhněte na nové místo a uvolněte.</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Drag &amp; drop</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tlačítka se šipkami</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Aktuálně vybráno: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">Všechny úkoly splněny</string>
     <string name="quick_start_list_task_complete">Úkol dokončen</string>
     <string name="me_btn_scan_login_code">Naskenujte přihlašovací kód</string>
@@ -321,7 +321,7 @@ Language: cs_CZ
     <string name="quick_start_dialog_check_notifications_message">Získejte aktualizace v reálném čase z vaší kapsy.</string>
     <string name="quick_start_dialog_check_notifications_title">Zkontrolujte svá oznámení</string>
     <string name="quick_start_dialog_check_notifications_message_short">Vyberte kartu %1$s Oznámení %2$s a získejte aktualizace na cestách.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Chcete-li nahrát média, vyberte %1$s plus %2$s. Můžete jej přidat do svých příspěvků/stránek z jakéhokoli zařízení.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">Chcete-li nahrát média, vyberte %1$s plus %2$s. Můžete jej přidat do svých příspěvků/stránek z jakéhokoli zařízení.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Pomocí &lt;b&gt; Objevit &lt;/b&gt; vyhledejte stránky a značky.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura videa</string>
     <string name="stats_details_top_commentators">Nejlepší komentátoři</string>
@@ -342,8 +342,8 @@ Language: cs_CZ
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
     <string name="blogging_prompts_onboarding_got_it">Mám to</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; zobrazíte svůj web</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Chcete-li najít další stránky, vyberte %1$s čtečku %2$s.</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; zobrazíte svůj web</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Chcete-li najít další stránky, vyberte %1$s čtečku %2$s.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Další informace o výzvách</string>
     <string name="photo_picker_video_thumbnail_unselected">Výběr videa zrušen</string>
     <string name="photo_picker_video_thumbnail_selected">Video vybráno</string>
@@ -355,7 +355,7 @@ Language: cs_CZ
     <string name="scan_vault_press_active_on_site_title">Váš web má VaultPress</string>
     <string name="locale_picker_current_language">Aktuální jazyk:</string>
     <string name="hpp_choose_and_create_site">Vytvořit stránku</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">Přidat bloky</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Přidat bloky</string>
     <string name="initial_screen">Počáteční obrazovka</string>
     <string name="blogging_prompts_onboarding_notification_action">Zjistit více</string>
     <string name="blogging_prompts_onboarding_notification_text">Staňte se lepším spisovatelem tím, že si vybudujete spisovatelský návyk. Klepnutím se dozvíte více.</string>
@@ -365,40 +365,40 @@ Language: cs_CZ
     <string name="new_site_creation_site_name_header_title">Pojmenujte svůj web %s</string>
     <string name="my_site_todays_stats_get_more_views_message">Máte zájem o budování publika? Podívejte se na naše &lt;a href=\"%1$s\"&gt;nejlepší tipy&lt;/a&gt;.</string>
     <string name="stats_insights_views_and_visitors">Zobrazení a návštěvníci</string>
-    <string name="featured_image_removed_notice">Odstranit náhledový obrázek</string>
-    <string name="featured_image_confirmation_notice">Použít jako náhledový obrázek</string>
-    <string name="dialog_dismiss_try_block_editor">Zamítnout</string>
-    <string name="dialog_body_try_block_editor">Brzy odstraníme klasický editor nových příspěvků, ale to nebude mít vliv na úpravy žádných vašich stávajících příspěvků nebo stránek. Získejte náskok povolením editoru bloků nyní v nastavení webu.</string>
-    <string name="featured_image_replace_dialog_description">Již máte sadu doporučených obrázků. Chcete jej nahradit novým obrázkem?</string>
-    <string name="featured_image_replace_dialog_title">Nahradit aktuální náhledový obrázek?</string>
-    <string name="featured_image_replace_dialog_cancel">Udržujte aktuální</string>
-    <string name="featured_image_replace_dialog_confirm">Nahradit náhledový obrázek</string>
-    <string name="menu_toolbar_title">Upravit %s blok</string>
-    <string name="long_post_dlg_saving">Ukládání</string>
-    <string name="retry_failed_upload_retry_all">Zopakujte všechno</string>
-    <string name="retry_failed_upload_remove">Odstranit nahrávání</string>
-    <string name="dialog_title_try_block_editor">Vyzkoušet nový blokový editor</string>
-    <string name="retry_failed_upload_yes">Zkusit znovu</string>
-    <string name="stop_upload_dialog_button_no">Ne</string>
-    <string name="stop_upload_dialog_button_yes">Ano</string>
-    <string name="retry_failed_upload_title">Soubor se nepodařilo nahrát</string>
-    <string name="dialog_button_cancel">Zrušit</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="dialog_title">Vložit odkaz</string>
-    <string name="editor_title_beta">Beta</string>
-    <string name="toast_content_info_editor_not_ready">Editor se stále načítá</string>
-    <string name="pixel_suffix">%dpx</string>
-    <string name="stop_save_dialog_ok_button">OK</string>
-    <string name="stop_save_dialog_message">Počkejte prosím, dokud nebudou uloženy všechny soubory</string>
-    <string name="toast_content_info_failed">Nepodařilo se získat strukturu obsahu</string>
-    <string name="dialog_content_info_body">Bloky: %1$d\nSlova: %2$d\nZnaky: %3$d</string>
-    <string name="dialog_content_info_title">Struktura obsahu</string>
-    <string name="media_bar_description_library">Vyberte médium z knihovny médií WordPress</string>
-    <string name="media_bar_description_gallery">Vyberte médium z galerie</string>
-    <string name="media_bar_description_camera">Pořiďte fotografii nebo video pomocí fotoaparátu</string>
-    <string name="stop_save_dialog_title">Ukládání souborů</string>
-    <string name="post_content">Obsah</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Odstranit náhledový obrázek</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Použít jako náhledový obrázek</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Zamítnout</string>
+    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Brzy odstraníme klasický editor nových příspěvků, ale to nebude mít vliv na úpravy žádných vašich stávajících příspěvků nebo stránek. Získejte náskok povolením editoru bloků nyní v nastavení webu.</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Již máte sadu doporučených obrázků. Chcete jej nahradit novým obrázkem?</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahradit aktuální náhledový obrázek?</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Udržujte aktuální</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahradit náhledový obrázek</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Upravit %s blok</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ukládání</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zopakujte všechno</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Odstranit nahrávání</string>
+    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Vyzkoušet nový blokový editor</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zkusit znovu</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ne</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ano</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Soubor se nepodařilo nahrát</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Zrušit</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
+    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vložit odkaz</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Beta</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Editor se stále načítá</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dpx</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Počkejte prosím, dokud nebudou uloženy všechny soubory</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nepodařilo se získat strukturu obsahu</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bloky: %1$d\nSlova: %2$d\nZnaky: %3$d</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Struktura obsahu</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vyberte médium z knihovny médií WordPress</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vyberte médium z galerie</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pořiďte fotografii nebo video pomocí fotoaparátu</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ukládání souborů</string>
+    <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Obsah</string>
     <string name="blogging_prompts_onboarding_card_prompt">Obsaďte film svého života.</string>
     <string name="blogging_prompts_onboarding_remind_me">Připomeň mi</string>
     <string name="blogging_prompts_onboarding_try_it_now">Zkusit teď</string>
@@ -451,19 +451,19 @@ Language: cs_CZ
     <string name="my_site_blogging_prompt_card_answer_prompt">Výzva k odpovědi</string>
     <string name="my_site_blogging_prompt_card_title">Výzvy</string>
     <string name="my_site_all_tab_title">Vše</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Tato barevná kombinace může být špatně čitelná. Zkuste použít jasnější barvu pozadí a/nebo tmavší barvu textu.</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Tato barevná kombinace může být obtížně čitelná. Zkuste použít tmavší barvu pozadí a/nebo světlejší barvu textu.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Médium se nepodařilo vložit.\nKlepnutím zobrazíte další informace.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">Tato barevná kombinace může být špatně čitelná. Zkuste použít jasnější barvu pozadí a/nebo tmavší barvu textu.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">Tato barevná kombinace může být obtížně čitelná. Zkuste použít tmavší barvu pozadí a/nebo světlejší barvu textu.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">Médium se nepodařilo vložit.\nKlepnutím zobrazíte další informace.</string>
     <string name="new_site_creation_intents_header_subtitle">Zvolit téma ze seznamu níže nebo napište své vlastní</string>
     <string name="new_site_creation_intents_header_title">O čem je váš web?</string>
     <string name="notification_channel_weekly_roundup_title">Týdenní shrnutí</string>
     <string name="my_site_dashboard_tab_title">Domů</string>
     <string name="adding_cat">Vytváření rubrik</string>
     <string name="login_select_email_client">Jakou e-mailovou aplikaci používáte?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Při komunikaci se stránkou došlo k problému. Byl vrácen kód chyby HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Zdá se, že volání XML-RPC jsou na tomto webu blokována (kód chyby 401). Pokud se pokus o přihlášení nezdaří, klepněte na ikonu nápovědy pro zobrazení FAQ.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">Nelze číst WordPress web na této adrese URL. Klepnutím na ikonu nápovědy zobrazíte FAQ.</string>
-    <string name="login_error_xml_rpc_services_disabled">Služby publikačního protokolu XML-RPC nejsou na tomto webu povoleny.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources" a8c-src-lib="login">Při komunikaci se stránkou došlo k problému. Byl vrácen kód chyby HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Zdá se, že volání XML-RPC jsou na tomto webu blokována (kód chyby 401). Pokud se pokus o přihlášení nezdaří, klepněte na ikonu nápovědy pro zobrazení FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources" a8c-src-lib="login">Nelze číst WordPress web na této adrese URL. Klepnutím na ikonu nápovědy zobrazíte FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="login">Služby publikačního protokolu XML-RPC nejsou na tomto webu povoleny.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Zkontrolujte připojení k internetu a obnovte stránku.</string>
@@ -474,67 +474,67 @@ Language: cs_CZ
     <string name="reader_comment_menu_trash">Přesunout do koše</string>
     <string name="reader_comment_menu_spam">Označit jako spam</string>
     <string name="reader_comment_menu_unapprove">Neschválit</string>
-    <string name="gutenberg_native_tiled_gallery_settings">Nastavení dlaždicové galerie</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">Přejde na obrazovku výběru rozvržení</string>
-    <string name="gutenberg_native_gallery_style">Styl galerie</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Nastavení dlaždicové galerie</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">Přejde na obrazovku výběru rozvržení</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Styl galerie</string>
     <string name="sharing_connect_via_web_warning_message">Účet %s můžete připojit na webu WordPress.com. Po dokončení se vraťte do aplikace a změňte nastavení sdílení.</string>
-    <string name="about_automattic_app_icon_description">Ikona aplikace</string>
-    <string name="about_automattic_back_icon_description">Ikona zpět</string>
-    <string name="about_automattic_logo_description">Automattic logo</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_pocketcasts">Kapesní odlitky</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_dayone">Jeden den</string>
-    <string name="about_automattic_source_code_item_title">Zdrojový kód</string>
-    <string name="about_automattic_privacy_policy_item_title">Zásady ochrany osobních údajů</string>
-    <string name="about_automattic_terms_of_service_item_title">Podmínky používání služby</string>
-    <string name="about_automattic_work_with_us_item_subtitle">Práce odkudkoli</string>
-    <string name="about_automattic_work_with_us_item_title">Pracuj s námi</string>
-    <string name="about_automattic_family_item_title">Automatická rodina</string>
-    <string name="about_automattic_legal_and_more_item_title">Právní a další</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_rate_us_item_title">Ohodnoťte nás</string>
-    <string name="about_automattic_share_with_friends_item_title">Sdílet s přáteli</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Tento blok můžete upravit pomocí webové verze editoru.</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">Otevřete nastavení Jetpack zabezpečení</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Poznámka: Chcete-li upravit tento blok v mobilním editoru, musíte povolit přihlášení na WordPress.com.</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Poznámka: Rozvržení se může lišit podle šablony a velikostí obrazovky</string>
-    <string name="gutenberg_native_address_settings">Nastavení adresy</string>
-    <string name="gutenberg_native_add_media">Přidat média</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikona aplikace</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikona zpět</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Kapesní odlitky</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Jeden den</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Zdrojový kód</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Zásady ochrany osobních údajů</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Podmínky používání služby</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Práce odkudkoli</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pracuj s námi</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automatická rodina</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Právní a další</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Ohodnoťte nás</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Sdílet s přáteli</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">Tento blok můžete upravit pomocí webové verze editoru.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Otevřete nastavení Jetpack zabezpečení</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Poznámka: Chcete-li upravit tento blok v mobilním editoru, musíte povolit přihlášení na WordPress.com.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Poznámka: Rozvržení se může lišit podle šablony a velikostí obrazovky</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Nastavení adresy</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">Přidat média</string>
     <string name="my_site_error_card_subtitle">V tuto chvíli máme potíže s načítáním dat vašeho webu.</string>
     <string name="my_site_error_card_title">Některá data se nenačetla</string>
     <string name="my_site_dashboard_stale_message">Nástěnka není aktualizován. Zkontrolujte své připojení a poté zatažením obnovte.</string>
     <string name="my_site_dashboard_update_error">Nástěnku se nepodařilo aktualizovat.</string>
     <string name="error_media_video_duration_exceeds_limit">Video nebylo nahráno! Nahrávání videí delších než 5 minut vyžaduje placený tarif.</string>
-    <string name="about_automattic_acknowledgements_item_title">Poděkování</string>
-    <string name="about_automattic_california_privacy_notice_item_title">Zásady o ochraně osobních údajů v Kalifornii</string>
-    <string name="about_automattic_version_label">Verze %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title">Poděkování</string>
-    <string name="about_automattic_legal_page_title">Právní a další</string>
-    <string name="about_automattic_main_page_title">O autorovi %1$s</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Poděkování</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Zásady o ochraně osobních údajů v Kalifornii</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Verze %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Poděkování</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Právní a další</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">O autorovi %1$s</string>
     <string name="about_blog">Blog</string>
-    <string name="gutenberg_native_the_basics">Základy</string>
-    <string name="gutenberg_native_selected_default">Vybrat: výchozí</string>
-    <string name="gutenberg_native_more_support_options">Více možností podpory</string>
-    <string name="gutenberg_native_get_support">Získejte podporu</string>
-    <string name="gutenberg_native_font_size">Velikost písma</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">Dvojitým klepnutím vyberte velikost písma</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">Dvojitým klepnutím vyberte výchozí velikost písma</string>
-    <string name="gutenberg_native_contact_support">Kontaktovat podporu</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">Základy</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">Vybrat: výchozí</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">Více možností podpory</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Získejte podporu</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Velikost písma</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte velikost písma</string>
+    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte výchozí velikost písma</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">Kontaktovat podporu</string>
     <string name="reader_comments_follow_conversation">Sledovat konverzaci</string>
     <string name="reader_comments_be_first_to_comment">Buďte první! Přidejte komentář</string>
     <string name="reader_comments_view_all">Zobrazit všechny komentáře</string>
     <string name="reader_comments_post_fetch_failure">Došlo k chybě při získávání dat příspěvku</string>
     <string name="reader_comments_fetch_failure">Došlo k chybě při získávání komentářů</string>
     <string name="reader_btn_follow_conversation_settings">Sledovat podle nastavení konverzace</string>
-    <string name="gutenberg_native_from_clipboard">Ze schránky</string>
-    <string name="gutenberg_native_featured_image">Náhledový obrázek</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Zkopírujte URL adresu ze schránky, %s</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">Ze schránky</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Náhledový obrázek</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">Zkopírujte URL adresu ze schránky, %s</string>
     <string name="me_btn_about">O WordPressu</string>
     <string name="my_site_post_card_link_create_post">Vytvořit příspěvek</string>
     <string name="my_site_create_next_post_excerpt">Pravidelné zveřejňování pomáhá budovat vaše publikum!</string>
@@ -552,7 +552,7 @@ Language: cs_CZ
     <string name="my_site_post_card_scheduled_title">Nadcházející plánované příspěvky</string>
     <string name="my_site_post_card_draft_title">Práce na konceptu příspěvku</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;První rok zdarma &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /rok&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">Vytvořit odkaz</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Vytvořit odkaz</string>
     <string name="domains_suggestions_select_domain">Vybrat doménu</string>
     <string name="domains_title">Domény</string>
     <string name="post_settings_post_sticky">Připnutý příspěvek na úvodní stránce</string>
@@ -588,12 +588,12 @@ Language: cs_CZ
     <string name="comment_edit_comment">Komentář</string>
     <string name="comment_edit_user_name">Jméno</string>
     <string name="comment_edit_menu_done">Hotovo</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Náhledy bloků pro vložení budou brzy k dispozici</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Náhledy bloků pro vložení budou brzy k dispozici</string>
     <string name="weekly_roundup">Týdenní shrnutí</string>
-    <string name="gutenberg_native_embed_options">Možnosti vložení</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">Dvojitým klepnutím zobrazíte možnosti vložení.</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">Možnosti vložení</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">Dvojitým klepnutím zobrazíte možnosti vložení.</string>
     <string name="quick_start_list_create_site_message">Stránka vytvořena! Dokončete další úkol.</string>
-    <string name="gutenberg_native_line_height">Výška řádku</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">Výška řádku</string>
     <string name="domains_free_plan_get_your_domain_title">Získejte svou doménu</string>
     <string name="recommend_app_generic_get_template_error">Neznámá chyba při načítání šablony doporučené aplikace</string>
     <string name="recommend_app_bad_format_response">Přijata neplatná odpověď</string>
@@ -606,32 +606,32 @@ Language: cs_CZ
     <string name="blogging_reminders_notification_time">Doba oznámení</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Připomenutí blogu budete dostávat &lt;b&gt;každý&lt;/b&gt; na &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s týdně v %2$s</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Ovládací prvky formátování textu se při úpravě textového bloku nacházejí na panelu nástrojů nad klávesnicí</string>
-    <string name="gutenberg_native_selected_s">Vybráno: %s</string>
-    <string name="gutenberg_native_select_a_color_above">Vyberte barvu výše</string>
-    <string name="gutenberg_native_navigates_to_select_s">Přejde k výběru %s</string>
-    <string name="gutenberg_native_move_blocks">Posunout bloky</string>
-    <string name="gutenberg_native_how_to_edit_your_post">Jak upravit svůj příspěvek</string>
-    <string name="gutenberg_native_how_to_edit_your_page">Jak upravit svou stránku</string>
-    <string name="gutenberg_native_customize_blocks">Přizpůsobte bloky</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Změny vybraného obrázku nebudou ovlivněny tlačítky zpět/znovu.</string>
-    <string name="gutenberg_native_applies_the_setting">Použije nastavení</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Bloky můžete přeskupit klepnutím na blok a následným klepnutím na šipky nahoru a dolů, které se zobrazují na levé spodní straně bloku, abyste jej přesunuli nad nebo pod jiné bloky.</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Vítejte ve světě bloků</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Chcete-li odstranit blok, vyberte blok a kliknutím na tři tečky v pravé dolní části bloku zobrazte nastavení. Odtud vyberte možnost odstranění bloku.</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Některé bloky mají další nastavení. Klepnutím na ikonu nastavení v pravém dolním rohu bloku zobrazíte další možnosti.</string>
-    <string name="gutenberg_native_s_block_newly_available">%s blok, nově k dispozici</string>
-    <string name="gutenberg_native_rich_text_editing">Úprava bohatého textu</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Jakmile se seznámíte s názvy různých bloků, můžete přidat blok zadáním lomítka následovaného názvem bloku – například /image nebo /heading.</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Nechte svůj obsah vyniknout přidáním obrázků, gifů, videí a vložených médií na své stránky.</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Vyzkoušejte to přidáním několika bloků do svého příspěvku nebo stránky!</string>
-    <string name="gutenberg_native_embed_media">Vložit médiální soubory</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Každý blok má své vlastní nastavení. Chcete-li je najít, klepněte na blok. Jeho nastavení se zobrazí na panelu nástrojů ve spodní části obrazovky.</string>
-    <string name="gutenberg_native_build_layouts">Sestavte rozvržení</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Bloky jsou části obsahu, které můžete vkládat, přeskupovat a upravovat, aniž byste museli vědět, jak kódovat. Bloky představují snadný a moderní způsob, jak vytvořit krásná rozvržení.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Bloky vám umožňují soustředit se na psaní obsahu s vědomím, že všechny nástroje pro formátování, které potřebujete, vám pomohou předat vaše sdělení.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Uspořádejte obsah do sloupců, přidejte tlačítka Výzva k akci a překryjte obrázky textem.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Nový blok můžete kdykoli přidat klepnutím na ikonu + na panelu nástrojů vlevo dole.</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Ovládací prvky formátování textu se při úpravě textového bloku nacházejí na panelu nástrojů nad klávesnicí</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Vybráno: %s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">Vyberte barvu výše</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Přejde k výběru %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">Posunout bloky</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">Jak upravit svůj příspěvek</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">Jak upravit svou stránku</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Přizpůsobte bloky</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">Změny vybraného obrázku nebudou ovlivněny tlačítky zpět/znovu.</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Použije nastavení</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">Bloky můžete přeskupit klepnutím na blok a následným klepnutím na šipky nahoru a dolů, které se zobrazují na levé spodní straně bloku, abyste jej přesunuli nad nebo pod jiné bloky.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">Vítejte ve světě bloků</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">Chcete-li odstranit blok, vyberte blok a kliknutím na tři tečky v pravé dolní části bloku zobrazte nastavení. Odtud vyberte možnost odstranění bloku.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">Některé bloky mají další nastavení. Klepnutím na ikonu nastavení v pravém dolním rohu bloku zobrazíte další možnosti.</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s blok, nově k dispozici</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Úprava bohatého textu</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Jakmile se seznámíte s názvy různých bloků, můžete přidat blok zadáním lomítka následovaného názvem bloku – například /image nebo /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">Nechte svůj obsah vyniknout přidáním obrázků, gifů, videí a vložených médií na své stránky.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Vyzkoušejte to přidáním několika bloků do svého příspěvku nebo stránky!</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Vložit médiální soubory</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">Každý blok má své vlastní nastavení. Chcete-li je najít, klepněte na blok. Jeho nastavení se zobrazí na panelu nástrojů ve spodní části obrazovky.</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">Sestavte rozvržení</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">Bloky jsou části obsahu, které můžete vkládat, přeskupovat a upravovat, aniž byste museli vědět, jak kódovat. Bloky představují snadný a moderní způsob, jak vytvořit krásná rozvržení.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">Bloky vám umožňují soustředit se na psaní obsahu s vědomím, že všechny nástroje pro formátování, které potřebujete, vám pomohou předat vaše sdělení.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Uspořádejte obsah do sloupců, přidejte tlačítka Výzva k akci a překryjte obrázky textem.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Nový blok můžete kdykoli přidat klepnutím na ikonu + na panelu nástrojů vlevo dole.</string>
     <string name="quick_start_sites_type_tasks_completed">Dokončeno: %1$s z %2$s</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Naučte se základy pomocí rychlého průvodce.</string>
     <string name="comment_batch_moderation_error">Nepodařilo se moderovat jeden nebo více komentářů</string>
@@ -642,16 +642,16 @@ Language: cs_CZ
     <string name="stats_disabled_enable_stats_button">Povolit statistiky webu</string>
     <string name="stats_disabled_subtitle">Povolte statistiky webu, abyste viděli podrobné informace o své návštěvnosti, hodnoceních Líbí se mi, komentářích a odběratelích.</string>
     <string name="stats_disabled_title">Hledáte statistiky?</string>
-    <string name="gutenberg_native_what_is_a_block">Co je to blok?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout vložený obsah příspěvku.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout náhled vloženého obsahu na stránce.</string>
-    <string name="gutenberg_native_unable_to_embed_media">Nelze vložit média</string>
-    <string name="gutenberg_native_try_another_search_term">Zkuste vyhledat jiný výraz</string>
-    <string name="gutenberg_native_no_blocks_found">Nebyly nalezeny žádné bloky</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">%s náhledy zatím nejsou k dispozici</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s náhledy bloků pro vložení budou brzy k dispozici</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">Dvojitým klepnutím zobrazíte náhled příspěvku.</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">Dvojitým klepnutím zobrazíte náhled stránky.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">Co je to blok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout vložený obsah příspěvku.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout náhled vloženého obsahu na stránce.</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">Nelze vložit média</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">Zkuste vyhledat jiný výraz</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">Nebyly nalezeny žádné bloky</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s náhledy zatím nejsou k dispozici</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s náhledy bloků pro vložení budou brzy k dispozici</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">Dvojitým klepnutím zobrazíte náhled příspěvku.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">Dvojitým klepnutím zobrazíte náhled stránky.</string>
     <string name="quick_start_list_upload_icon_subtitle">Zobrazuje se na kartě prohlížeče návštěvníka a na dalších místech online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Ukaž mi to</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Chcete trochu pomoci se správou tohoto webu pomocí aplikace?</string>
@@ -660,9 +660,9 @@ Language: cs_CZ
     <string name="login_epilogue_mysites_heading">Vyberte web, který chcete otevřít</string>
     <string name="scan_multisite_not_supported_subtitle">Je nám líto, Jetpack Scan v tuto chvíli není kompatibilní s vícemístnými instalacemi WordPress.</string>
     <string name="scan_multisite_not_supported_title">WordPress síť webů není podporována</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Neplatná URL. Zadejte platnou adresu URL.</string>
-    <string name="gutenberg_native_embed_caption_s">Vložit titulek. %s</string>
-    <string name="gutenberg_native_embed_caption_empty">Vložit titulek. Prázdný</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">Neplatná URL. Zadejte platnou adresu URL.</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Vložit titulek. %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Vložit titulek. Prázdný</string>
     <string name="activity_log_visit_our_documentation_page">navštivte naši stránku s dokumentací</string>
     <string name="activity_log_multisite_message">Jetpack Backup pro instalace na více webů poskytuje zálohy ke stažení, žádné obnovení jediným kliknutím. Další informace %1$s.</string>
     <string name="blogging_reminders_tip">Tip</string>
@@ -683,47 +683,47 @@ Language: cs_CZ
     <string name="set_your_blogging_reminders_title">Nastavte si připomenutí blogů</string>
     <string name="blogging_reminders_notification_text">Toto je vaše připomenutí, abyste dnes něco vytvořili</string>
     <string name="blogging_reminders_notification_title">Je čas blogovat na %s</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro iOS podporovány</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro Android podporovány</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativně můžete tyto bloky oddělit a upravit samostatně klepnutím na „Převést na běžné bloky“.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro iOS podporovány</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro Android podporovány</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativně můžete tyto bloky oddělit a upravit samostatně klepnutím na „Převést na běžné bloky“.</string>
     <string name="blogging_reminders_done">Hotovo</string>
     <string name="blogging_reminders_notify_me">Informujte mě</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Zadejte přihlašovací údaje k serveru&lt;/a&gt; a povolte obnovování stránek jedním kliknutím ze záloh.</string>
     <string name="support_ticket_subject">WordPress pro Android podporu</string>
     <string name="fab_add_category_desc">Vytvořit rubriku</string>
-    <string name="gutenberg_native_remove_as_featured_image">Odstranit náhledový obrázek</string>
-    <string name="gutenberg_native_set_as_featured_image">Použít jako náhledový obrázek</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Odstranit náhledový obrázek</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Použít jako náhledový obrázek</string>
     <string name="site_settings_categories_hint">Spravujte rubriky svého webu</string>
     <string name="site_settings_categories_title">Rubriky</string>
     <string name="page_is_posts_page_warning">Obsah stránky s nejnovějšími příspěvky je generován automaticky a nelze jej upravovat.</string>
     <string name="site_settings_blogging_reminders_title">Připomenutí</string>
-    <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">Nastavení okrajů</string>
     <string name="storage_utils_dialog_dont_show_button">Neptat se znovu</string>
     <string name="storage_utils_dialog_ok_button">Zobrazit úložiště</string>
     <string name="storage_utils_dialog_message">Před zveřejněním musíme obsah uložit do zařízení. Zkontrolujte své nastavení úložiště a odeberte soubory, abyste uvolnili místo.</string>
     <string name="storage_utils_dialog_title">Na zařízení není dostatek místa</string>
-    <string name="gutenberg_native_y_axis_position">Pozice na ose Y</string>
-    <string name="gutenberg_native_x_axis_position">Pozice na ose X</string>
-    <string name="gutenberg_native_type_a_url">Vložte URL</string>
-    <string name="gutenberg_native_s_has_url_set">%s má nastavenou URL</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s nemá nastavenou URL</string>
-    <string name="gutenberg_native_slash_inserter_results">Výsledky lomítka</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
-    <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_opacity">Průhlednost</string>
-    <string name="gutenberg_native_media_options">Nastavení médií</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
-    <string name="gutenberg_native_insert_crosspost">Vložit crosspost</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">Potáhnutím upravíte ohnisko</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Dvojitým klepnutím otevřete spodní list pro přídání obrázku nebo videa</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Dvojitým klepnutím otevřete akční list pro přidání obrázku nebo videa</string>
-    <string name="gutenberg_native_current_unit_is_s">Aktuální jednotka je %s</string>
-    <string name="gutenberg_native_crosspost">Crosspost</string>
-    <string name="gutenberg_native_columns_settings">Nastavení sloupců</string>
-    <string name="gutenberg_native_s_converted_to_regular_block">%s převedeno na běžný blok</string>
-    <string name="gutenberg_native_add_link_to_s">Přídat odkaz na %s</string>
-    <string name="gutenberg_native_add_link_text">Přidat text odkazu</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Přidat obrázek nebo video</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Pozice na ose Y</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">Pozice na ose X</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Vložte URL</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s má nastavenou URL</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s nemá nastavenou URL</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">Výsledky lomítka</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s převeden na běžné bloky</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s blok</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Průhlednost</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">Nastavení médií</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Vložit crosspost</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">Potáhnutím upravíte ohnisko</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete spodní list pro přídání obrázku nebo videa</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete akční list pro přidání obrázku nebo videa</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Aktuální jednotka je %s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Crosspost</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Nastavení sloupců</string>
+    <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s převedeno na běžný blok</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Přídat odkaz na %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Přidat text odkazu</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Přidat obrázek nebo video</string>
     <string name="error_media_path_is_directory">Cesta vede ke složce místo k média souboru</string>
     <string name="error_media_could_not_find_media_in_path">Na cestě se nám nepodařilo najít média soubor</string>
     <string name="error_media_unexpected_empty_media_file_path">Cesta k média souboru je neočekávaně prázdná</string>
@@ -732,98 +732,98 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">Dvojitým klepnutím přidáte odkaz</string>
     <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
     <string name="login_no_jetpack_sites_error_message">Pokud již web máte, budete si muset nainstalovat bezplatný plugin Jetpack a připojit ho ke svému účtu WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Vaše profilová fotka</string>
     <string name="login_not_a_jetpack_site">Abyste mohli tuto aplikaci používat po dobu %1$s, musíte mít nainstalovaný plugin Jetpack a připojený k vašemu účtu WordPress.com.</string>
-    <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
-    <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
-    <string name="gutenberg_native_width_settings">Nastavení šířky</string>
-    <string name="gutenberg_native_column_settings">Nastavení sloupců</string>
-    <string name="gutenberg_native_link_rel">Relativní odkaz</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Posunout obrázek dopředu</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Přesunout obrázek dozadu</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Nastavení šířky</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Nastavení sloupců</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Relativní odkaz</string>
     <string name="user_profile_untitled_site">(bez názvu)</string>
     <string name="user_profile_site_section_header">Web</string>
     <string name="user_profile_bottom_sheet_description">Informace spodního listu profilu uživatele</string>
     <string name="likes_list_screen_title">Seznam to se mi líbí %s</string>
-    <string name="gutenberg_native_two">Dva</string>
-    <string name="gutenberg_native_three">Tři</string>
-    <string name="gutenberg_native_s_social_icon">%s ikona sociální sítě</string>
-    <string name="gutenberg_native_mention">Zmínit</string>
-    <string name="gutenberg_native_new">NOVÝ</string>
-    <string name="gutenberg_native_preview_page">Náhled stránky</string>
-    <string name="gutenberg_native_preview_post">Náhled příspěvku</string>
-    <string name="gutenberg_native_retry">Opakovat</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">Jeden</string>
-    <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
-    <string name="gutenberg_native_link_label">Popisek odkazu</string>
-    <string name="gutenberg_native_s_link">%s odkaz</string>
-    <string name="gutenberg_native_text_color">Barva textu</string>
-    <string name="gutenberg_native_padding">Odsazení</string>
-    <string name="gutenberg_native_featured">Doporučené</string>
-    <string name="gutenberg_native_four">Čtyři</string>
-    <string name="gutenberg_native_add_image">Přidat obrázek</string>
-    <string name="gutenberg_native_custom_url">Vlastní URL</string>
-    <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
-    <string name="gutenberg_native_column_d">Sloupec %d</string>
-    <string name="gutenberg_native_more">Více</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
-    <string name="gutenberg_native_add_blocks">Přidat bloky</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">Dva</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">Tři</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s ikona sociální sítě</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">Zmínit</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NOVÝ</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">Náhled stránky</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">Náhled příspěvku</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">Opakovat</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">Jeden</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Popisek odkazu</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s odkaz</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Barva textu</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Odsazení</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Doporučené</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">Čtyři</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat obrázek</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">Vlastní URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Vytvořit vložení</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Sloupec %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Více</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat bloky</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
-    <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
-    <string name="gutenberg_native_transform_s_to">Změnit %s na</string>
-    <string name="gutenberg_native_transform_block">Změnit blok…</string>
-    <string name="gutenberg_native_failed_to_insert_media">Vložení média se nezdařilo.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">Vložení zvukového souboru se nezdařilo.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Popište účel obrázku. Pokud je obrázek čistě dekorativní, ponechte toto pole prázdné.</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s změnit na %2$s</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">Co je alternativní text?</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">Změnit %s na</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Změnit blok…</string>
+    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">Vložení média se nezdařilo.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Vložení zvukového souboru se nezdařilo.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Popište účel obrázku. Pokud je obrázek čistě dekorativní, ponechte toto pole prázdné.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$s změnit na %2$s</string>
     <string name="like_faces_error_loading_message">Chyba při načítání podobných dat. %s.</string>
     <string name="like_title_plural">%d to se mi líbí</string>
     <string name="like_title_singular">1 to se mi libí</string>
     <string name="suggestion">Doporučení:</string>
-    <string name="gutenberg_native_use_icon_button">Použijte ikonu tlačítka</string>
-    <string name="gutenberg_native_search_input_field">Vyhledejte vstupní pole.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Tlačítko hledat. Aktuální text tlačítka je</string>
-    <string name="gutenberg_native_search_blocks">Hledat bloky</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Vyhledat štítek bloku. Aktuální text je</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Není nastaven žádný vlastní zástupný symbol</string>
-    <string name="gutenberg_native_inside">Uvnitř</string>
-    <string name="gutenberg_native_hide_search_heading">Skrýt nadpis vyhledávání</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dvojitým klepnutím upravíte zástupný text</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dvojitým klepnutím upravíte text štítku</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dvojitým klepnutím upravíte text tlačítka</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">dvojitým klepnutím změníte jednotku</string>
-    <string name="gutenberg_native_outside">Vně</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Aktuální zástupný text je</string>
-    <string name="gutenberg_native_clear_search">Vymazat vyhledávání</string>
-    <string name="gutenberg_native_cancel_search">Zrušit vyhledávání</string>
-    <string name="gutenberg_native_button_position">Poloha tlačítka</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">Použijte ikonu tlačítka</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Vyhledejte vstupní pole.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Tlačítko hledat. Aktuální text tlačítka je</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Hledat bloky</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Vyhledat štítek bloku. Aktuální text je</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">Není nastaven žádný vlastní zástupný symbol</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Uvnitř</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Skrýt nadpis vyhledávání</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Dvojitým klepnutím upravíte zástupný text</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Dvojitým klepnutím upravíte text štítku</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Dvojitým klepnutím upravíte text tlačítka</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">dvojitým klepnutím změníte jednotku</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Vně</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s is %3$s %4$s.</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Aktuální zástupný text je</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Vymazat vyhledávání</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Zrušit vyhledávání</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Poloha tlačítka</string>
     <string name="get_likes_empty_state_title">Při získávání údajů o lajcích došlo k chybě</string>
     <string name="get_likes_unknown_error">Při získávání lajků došlo k neznámé chybě.</string>
     <string name="get_likes_no_network_error">Síť není dostupná.</string>
     <string name="comments_empty_list_filtered_unreplied">Žádné nezodpovězené komentáře</string>
     <string name="comment_status_unreplied">Bez odpovědi</string>
-    <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
-    <string name="gutenberg_native_add_link">PŘIDAT ODKAZ</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Nastavení vyhledávání</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">PŘIDAT ODKAZ</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
-    <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Přidat text tlačítka</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
     <string name="activity_log_backup_download_notice_download_action">Stáhnout</string>
     <string name="threat_fix_all_status_success_message_plural">Hrozby byly úspěšně opraveny.</string>
     <string name="threat_fix_all_confirmation_message_plural">Potvrďte, že chcete opravit všechny aktivní hrozby %s.</string>
     <string name="scan_idle_threats_description_plural">Prohledávání zjistilo %1$s potenciálních hrozeb s %2$s. Zkontrolujte je prosím níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
     <string name="scan_fixing_threats_description_plural">Na pozadí tyto hrozby tvrdě pracujeme. Mezitím můžete svůj web nadále používat jako obvykle. Průběh můžete kdykoli zkontrolovat.</string>
-    <string name="gutenberg_native_edit_focal_point">Změňte zaostřovací pole</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Změňte zaostřovací pole</string>
     <string name="new_site_creation_search_domain_example">priklad.com</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Dvojitým klepnutím otevřete spodní list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Dvojitým klepnutím otevřete akční list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete spodní list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete akční list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
     <string name="new_site_creation_search_domain_input_hint">Zadejte název svého webu</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Oslovíte více lidí. Dobrá práce!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Svůj web jste si přizpůsobili. Výborně!</string>
-    <string name="magic_link_not_meaning_to_create_account">Nechtěli jste vytvořit nový účet? Vraťte se zpět a znovu zadejte svou emailovou adresu.</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Nechtěli jste vytvořit nový účet? Vraťte se zpět a znovu zadejte svou emailovou adresu.</string>
     <string name="invite_links_disable_dialog_message">Jakmile je tento odkaz s pozvánkou deaktivován, nikdo ho nebude moci použít k připojení k vašemu týmu. Jsi si jistý?</string>
     <string name="invite_links_disable_dialog_title">Zakázat zvací odkaz</string>
     <string name="invite_links_bad_format_response">Přijata neplatná odpověď</string>
@@ -870,26 +870,26 @@ Language: cs_CZ
     <string name="backup_item_contents">WP-content adresář</string>
     <string name="backup_item_roots">WordPress root</string>
     <string name="backup_download_details_choose_items_header">Položky obsažené v tomto stažení</string>
-    <string name="gutenberg_native_uploading">Nahrávání…</string>
-    <string name="gutenberg_native_lock_icon">Ikona zámku</string>
-    <string name="gutenberg_native_replace_file">Nahradit soubor</string>
-    <string name="gutenberg_native_replace_audio">Nahradit zvuk</string>
-    <string name="gutenberg_native_problem_opening_the_audio">Problém s otevřením zvuku</string>
-    <string name="gutenberg_native_open">OTEVŘENO</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">Aplikace nedokáže zpracovat tento požadavek. </string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Vložení zvukového souboru se nezdařilo. Klepněte pro možnosti.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Dvojitým klepnutím vyberte audio soubor</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Dvojitým klepnutním poslechnete zvukový soubor</string>
-    <string name="gutenberg_native_choose_audio">Zvolit zvuk</string>
-    <string name="gutenberg_native_audio_player">Audio přehrávač</string>
-    <string name="gutenberg_native_audio_caption_s">Zvukový titulek. %s</string>
-    <string name="gutenberg_native_audio_caption_empty">Zvukový titulek. Prázdný</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">Nahrávání…</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">Ikona zámku</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Nahradit soubor</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Nahradit zvuk</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problém s otevřením zvuku</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">OTEVŘENO</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">Aplikace nedokáže zpracovat tento požadavek. </string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Vložení zvukového souboru se nezdařilo. Klepněte pro možnosti.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte audio soubor</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">Dvojitým klepnutním poslechnete zvukový soubor</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Zvolit zvuk</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">Audio přehrávač</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">Zvukový titulek. %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Zvukový titulek. Prázdný</string>
     <string name="continue_with_wpcom">Přihlaste se nebo se zaregistrujte pomocí WordPress.com </string>
     <string name="photo_picker_use_audio">Použijte tento zvuk</string>
     <string name="photo_picker_choose_audio">Vyberte zvuk ze zařízení</string>
     <string name="people_optional_custom_message_helper_text">Volitelné: Vložte vlastní vzkaz, který bude odeslán s pozvánkou.</string>
-    <string name="gutenberg_native_audio_file">zvukový soubor</string>
-    <string name="gutenberg_native_add_audio">Přidat zvuk</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">zvukový soubor</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat zvuk</string>
     <string name="threat_status_fixed">Fixní</string>
     <string name="threat_found_header">Nalezeno</string>
     <string name="people_learn_more_about_roles">Dozvědět se více o uživatelských úrovních</string>
@@ -937,10 +937,10 @@ Language: cs_CZ
     <string name="restore_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro obnovení.</string>
     <string name="restore_details_action_button">Obnovit web</string>
     <string name="restore_details_icon_content_description">Ikona obnovení</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">Vyberte domovskou stránku %1$s a upravte svou domovskou stránku %2$s.</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Vyberte domovskou stránku %1$s a upravte svou domovskou stránku %2$s.</string>
     <string name="quick_start_dialog_review_pages_title">Zkontrolujte stránky webu</string>
     <string name="quick_start_dialog_review_pages_message">Změňte, přidejte nebo odeberte stránky svého webu.</string>
-    <string name="quick_start_dialog_review_pages_message_short">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
+    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Stažení se nezdařilo</string>
@@ -976,8 +976,8 @@ Language: cs_CZ
     <string name="threat_item_sub_header_status_fixed_on">Hrozba opravena v %s</string>
     <string name="request_failed_message">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
     <string name="backup_empty_title">Vaše první záloha bude brzy připravena</string>
-    <string name="gutenberg_native_move_to_bottom">Přesunout dolů</string>
-    <string name="gutenberg_native_change_block_position">Změňte pozici bloku</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Přesunout dolů</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Změňte pozici bloku</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Tlačítko sdílet odkaz</string>
     <string name="backup_download_complete_info">Také jsme vám zaslali e-mailem odkaz na váš soubor.</string>
     <string name="jetpack_icon_content_description">ikona</string>
@@ -1062,10 +1062,10 @@ Language: cs_CZ
     <string name="backup_item_media_uploads">Nahrávání médií</string>
     <string name="backup_item_roots_hint">Kořen WordPressu (zahrnuje wp-config.php a všechny soubory, které nejsou WordPress)</string>
     <string name="backup_item_sqls">Databáze stránek (SQL)</string>
-    <string name="gutenberg_native_error">Chyba</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">Chyba</string>
     <string name="backup_download_details_page_title">Stáhnout zálohu</string>
     <string name="backup_download">Stáhnout zálohu</string>
-    <string name="gutenberg_native_choose_file">Zvolit soubor</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Zvolit soubor</string>
     <string name="activity_log_item_menu_download_backup_label">Stáhnout zálohu</string>
     <string name="backup_download_details_header">Vytvořit zálohu ke stažení</string>
     <string name="activity_log_date_range_filter_label">Časové období</string>
@@ -1078,12 +1078,12 @@ Language: cs_CZ
     <string name="dialog_confirm_copy_local_edit_button">Nejprve upravte příspěvek</string>
     <string name="dialog_confirm_copy_local_copy_button">Zkopírujte verzi z této aplikace</string>
     <string name="activity_log_activity_type_filter_header">Filtrovat podle typu aktivity</string>
-    <string name="gutenberg_native_file_name">Název souboru</string>
-    <string name="gutenberg_native_edit_file">Upravit soubor</string>
-    <string name="gutenberg_native_copy_file_url">Zkopírujte adresu URL souboru</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Uložení souborů se nezdařilo.\nMožnosti zobrazíte klepnutím.</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nepodařilo se nahrát soubory.\nMožnosti zobrazíte klepnutím.</string>
-    <string name="gutenberg_native_file_block_settings">Nastavení blok souboru</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">Název souboru</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Upravit soubor</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Zkopírujte adresu URL souboru</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Uložení souborů se nezdařilo.\nMožnosti zobrazíte klepnutím.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Nepodařilo se nahrát soubory.\nMožnosti zobrazíte klepnutím.</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">Nastavení blok souboru</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_get_status_error">Chyba při načítání stavu předplatného příspěvku</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nelze se přihlásit k odběru komentářů k tomuto příspěvku</string>
@@ -1104,14 +1104,14 @@ Language: cs_CZ
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
-    <string name="login_find_your_connected_email">Najděte svůj připojený e-mail</string>
-    <string name="continue_site_credentials">Pokračujte s přihlašovacími údaji úložiště</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="login">Najděte svůj připojený e-mail</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračujte s přihlašovacími údaji úložiště</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; lajkoval váš příspěvek</string>
     <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b&gt;50 lajků&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpověděl na váš příspěvek</string>
     <string name="hpp_choose_button">Vybrat</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">Nabídka rolovatelného bloku uzavřena.</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Nabídka rolovatelného bloku uzavřena.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="mlp_error_title">Rozložení nejsou k dispozici kvůli chybě</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
@@ -1141,11 +1141,11 @@ Language: cs_CZ
     <string name="login_prologue_second_subtitle_one">Inspirovat se</string>
     <string name="login_prologue_title_fifth">Sledujte své oblíbené weby a objevujte nové blogy.</string>
     <string name="media_loading_failed">Načítání média se nezdařilo</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' není plně podporován</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Usilovně pracujeme na přidání dalších bloků s každým vydáním.</string>
-    <string name="gutenberg_native_choose_images">Vyberte obrázky</string>
-    <string name="gutenberg_native_edit_using_web_editor">Upravit pomocí webového editoru</string>
-    <string name="gutenberg_native_help_button">Tlačítko nápověda</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' není plně podporován</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">Usilovně pracujeme na přidání dalších bloků s každým vydáním.</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Vyberte obrázky</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Upravit pomocí webového editoru</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Tlačítko nápověda</string>
     <string name="mlp_notice_page_created">Stránka byla vytvořena</string>
     <string name="mlp_notice_blank_page_created">Prázdná stránka vytvořena</string>
     <string name="photo_picker_wordpress_media_library">Vyberte si z knihovny médií WordPress</string>
@@ -1161,41 +1161,41 @@ Language: cs_CZ
     <string name="stats_referrer_popup_menu_mark_as_spam">Označit jako spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Zrušit označení jako spam</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Tento odkazující server nemůže být označen jako spam</string>
-    <string name="gutenberg_native_search_or_type_url">Vyhledejte nebo zadejte URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">Přidejte tento telefonní odkaz</string>
-    <string name="gutenberg_native_add_this_email_link">Přidejte tento e-mailový odkaz</string>
-    <string name="gutenberg_native_add_this_link">Přidejte tento odkaz</string>
+    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Vyhledejte nebo zadejte URL</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">Přidejte tento telefonní odkaz</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">Přidejte tento e-mailový odkaz</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">Přidejte tento odkaz</string>
     <string name="suggestion_no_connection">Žádné internetové připojení.\nNávrhy nejsou k dispozici.</string>
     <string name="mlp_selected_description">%s vybrat</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="media_browse_for_items">Vyhledejte položky</string>
     <string name="comment_unable_to_show_error">Tento komentář nelze zobrazit</string>
     <string name="permission_microphone">Mikrofon</string>
-    <string name="email_not_registered_wpcom">Hmm, nemůžeme najít účet WordPress.com připojený k této e-mailové adrese.</string>
-    <string name="login_get_link_by_email">Získejte odkaz pro přihlášení e-mailem</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="login">Hmm, nemůžeme najít účet WordPress.com připojený k této e-mailové adrese.</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Získejte odkaz pro přihlášení e-mailem</string>
     <string name="reader_menu_report_post">Oznámit tento příspěvek</string>
     <string name="show_n_hidden_items_desc">%1$s více položek</string>
     <string name="error_media_xmlrpc_not_allowed">Vaše akce není povolena</string>
     <string name="error_media_xmlrcp_server_error">Došlo k interní chybě serveru</string>
     <string name="reader_welcome_banner">Vítejte v aplikaci Reader. Objevte miliony blogů na dosah ruky.</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Poznámka: Rozložení sloupců se může u různých šablon a velikostí obrazovky lišit</string>
-    <string name="gutenberg_native_select_a_layout">Vyberte rozložení</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Poznámka: Rozložení sloupců se může u různých šablon a velikostí obrazovky lišit</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Vyberte rozložení</string>
     <string name="create_page_fab_tooltip">Vytvořit stránku</string>
     <string name="create_post_fab_tooltip">Vytvořit příspěvek</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Skrýt</string>
     <string name="reader_discover_interests_header">Možná se vám bude líbit</string>
     <string name="create_post_story_fab_tooltip">Vytvořte příspěvek nebo příběh</string>
-    <string name="camera_error">Toto zařízení nepodporuje API Camera2.</string>
-    <string name="toast_error_playing_video">Při přehrávání videa došlo k chybě</string>
-    <string name="gutenberg_native_page_title_empty">Název stránky. Prázdný</string>
-    <string name="gutenberg_native_page_title_s">Název stránky. %s</string>
-    <string name="gutenberg_native_paste_block_after">Vložte blok za</string>
-    <string name="gutenberg_native_updates_the_title">Aktualizuje název.</string>
-    <string name="gutenberg_native_video_caption_empty">Titulek videa. Prázdný</string>
+    <string name="camera_error" tools:ignore="UnusedResources">Toto zařízení nepodporuje API Camera2.</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">Při přehrávání videa došlo k chybě</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Název stránky. Prázdný</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Název stránky. %s</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Vložte blok za</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Aktualizuje název.</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Titulek videa. Prázdný</string>
     <string name="mlp_preview_page">Náhled</string>
     <string name="mlp_create_page">Vytvořit stránku</string>
     <string name="mlp_create_blank_page">Vytvořit prázdnou stránku</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
     <string name="prepublishing_nudges_story_title_hint">Dejte svému příběhu název</string>
     <string name="mlp_choose_layout_title">Vyberte rozložení</string>
     <string name="mlp_choose_layout_subtitle">Začněte výběrem z široké škály předem připravených rozvržení stránky. Nebo jen začněte s prázdnou stránkou.</string>
@@ -1207,65 +1207,65 @@ Language: cs_CZ
     <string name="my_site_bottom_sheet_add_story">Příběhový příspěvek</string>
     <string name="photo_picker_choose_file">Vyberte si ze zařízení</string>
     <string name="pick_file">Přidat soubor</string>
-    <string name="gutenberg_native_replace_image_or_video">Vyměňte obrázek nebo video</string>
-    <string name="gutenberg_native_replace_video">Nahradit video</string>
-    <string name="gutenberg_native_choose_video">Zvolit video</string>
-    <string name="gutenberg_native_choose_image_or_video">Zvolit obrázek nebo video</string>
-    <string name="gutenberg_native_choose_image">Zvolit obrázek</string>
-    <string name="continue_with_google_terms_of_service_text">Pokud budete pokračovat se společností Google a ještě nemáte účet WordPress.com, vytváříte si účet a souhlasíte s našimi %1$sSmluvními podmínkami%2$s..</string>
-    <string name="signup_confirmation_title">Potvrzení registrace</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Vyměňte obrázek nebo video</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Nahradit video</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Zvolit video</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Zvolit obrázek nebo video</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Zvolit obrázek</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Pokud budete pokračovat se společností Google a ještě nemáte účet WordPress.com, vytváříte si účet a souhlasíte s našimi %1$sSmluvními podmínkami%2$s..</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="login">Potvrzení registrace</string>
     <string name="enter_your_site_address">Zadejte svou stávající adresu</string>
-    <string name="gutenberg_native_block_removed">Blok odstraněn</string>
-    <string name="gutenberg_native_convert_to_link">Převést na odkaz</string>
-    <string name="continue_terms_of_service_text">Pokračováním vyjadřujete souhlas s našimi %1$spodmínkami služby%2$s.</string>
-    <string name="signup_confirmation_message">Tuto e-mailovou adresu použijeme k vytvoření vašeho nového účtu WordPress.com.</string>
-    <string name="signup_magic_link_message">Poslali jsme vám e-mailem odkaz na přihlášení k vytvoření nového účtu WordPress.com. Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
-    <string name="enter_account_info_for_site">Zadejte informace o svém účtu pro %1$s.</string>
-    <string name="login_or">nebo</string>
-    <string name="continue_google_button_suffix">Pokračovat s Google</string>
-    <string name="login_magic_links_label">Zašleme vám e-mailem odkaz, který vás okamžitě přihlásí, není třeba žádné heslo.</string>
-    <string name="login_magic_links_sent_label">Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
-    <string name="magic_link_not_seeing_email_message">Nevidíte e-mail? Zkontrolujte složku spamu nebo nevyžádané pošty.</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Blok odstraněn</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Převést na odkaz</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračováním vyjadřujete souhlas s našimi %1$spodmínkami služby%2$s.</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="login">Tuto e-mailovou adresu použijeme k vytvoření vašeho nového účtu WordPress.com.</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="login">Poslali jsme vám e-mailem odkaz na přihlášení k vytvoření nového účtu WordPress.com. Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte informace o svém účtu pro %1$s.</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">nebo</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračovat s Google</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="login">Zašleme vám e-mailem odkaz, který vás okamžitě přihlásí, není třeba žádné heslo.</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="login">Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="login">Nevidíte e-mail? Zkontrolujte složku spamu nebo nevyžádané pošty.</string>
     <string name="login_done">Hotovo</string>
-    <string name="login_find_your_site_adress">Najděte adresu svého webu</string>
-    <string name="get_started">Začínáme</string>
-    <string name="check_email">Zkontrolovat e-mail</string>
-    <string name="reset_your_password">Resetovat vaše heslo</string>
-    <string name="send_link_by_email">Odeslat odkaz e-mailem</string>
-    <string name="create_account">Vytvořit účet</string>
-    <string name="or_type_your_password">Nebo zadejte své heslo</string>
-    <string name="enter_email_to_continue_wordpress_com">Zadejte svou e-mailovou adresu pro přihlášení nebo vytvořte účet WordPress.com.</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="login">Najděte adresu svého webu</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">Začínáme</string>
+    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">Zkontrolovat e-mail</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Resetovat vaše heslo</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Odeslat odkaz e-mailem</string>
+    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Vytvořit účet</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Nebo zadejte své heslo</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte svou e-mailovou adresu pro přihlášení nebo vytvořte účet WordPress.com.</string>
     <string name="reader_error_request_failed_title">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; nastavíte nový název</string>
     <string name="quick_start_list_update_site_title_title">Zadejte název svého webu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Vymazáním tohoto příspěvku také zrušíte místní změny. Opravdu chcete pokračovat?</string>
-    <string name="gutenberg_native_s_block_options">%s možnosti bloku</string>
-    <string name="gutenberg_native_copy_block">Kopírovat blok</string>
-    <string name="gutenberg_native_copied_block">Zkopírovaný blok</string>
-    <string name="gutenberg_native_duplicate_block">Duplikovat blok</string>
-    <string name="gutenberg_native_block_cut">Vyjmout blok</string>
-    <string name="gutenberg_native_block_duplicated">Blok byl zduplikován</string>
-    <string name="gutenberg_native_block_pasted">Blok byl vložen</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s možnosti bloku</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Kopírovat blok</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Zkopírovaný blok</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplikovat blok</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Vyjmout blok</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Blok byl zduplikován</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Blok byl vložen</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Název webu může změnit pouze uživatel s rolí správce.</string>
-    <string name="gutenberg_native_block_copied">Blok zkopírován</string>
-    <string name="gutenberg_native_remove_block">Odstranit blok</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Blok zkopírován</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Odstranit blok</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Neuložené změny</string>
     <string name="error_update_site_title_network">Název webu se nepodařilo aktualizovat. Zkontrolujte připojení k síti a zkuste to znovu.</string>
     <string name="my_site_title_changer_dialog_hint">Název webu se zobrazuje v záhlaví webového prohlížeče a u většiny šablon se zobrazuje v záhlaví.</string>
-    <string name="gutenberg_native_open_link_in_a_browser">Otevřít odkaz v prohlížeči</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Přejde na předchozí stránku s obsahem</string>
-    <string name="gutenberg_native_customize_gradient">Přizpůsobte přechod</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">Dvojitým klepnutím vyberte možnost</string>
-    <string name="gutenberg_native_gradient_type">Typ přechodu</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">Přejde na vlastní výběr barev</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">Přejde k přizpůsobení přechodu</string>
-    <string name="gutenberg_native_go_back">Zpět</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Otevřít odkaz v prohlížeči</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Přejde na předchozí stránku s obsahem</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Přizpůsobte přechod</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte možnost</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Typ přechodu</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Přejde na vlastní výběr barev</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Přejde k přizpůsobení přechodu</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Zpět</string>
     <string name="pages_list_author">Autor stránky</string>
     <string name="everyone">Každý</string>
     <string name="me">Já</string>
     <string name="menu_content_info">Struktura obsahu</string>
     <string name="error_media_thumbnail_not_loaded">Nelze načíst miniaturu média</string>
-    <string name="gutenberg_native_dismiss">Zamítnout</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Zamítnout</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nenastaveno</string>
     <string name="prepublishing_nudges_back_button">Zpět</string>
     <string name="prepublishing_nudges_home_save_button">Uložit nyní</string>
@@ -1293,11 +1293,11 @@ Language: cs_CZ
     <string name="update_now">Aktualizovat nyní</string>
     <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">Otevřete nabídku blokovat akce</string>
-    <string name="gutenberg_native_move_to_top">Přesunout nahoru</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dvojitým klepnutím otevřete spodní list s dostupnými možnostmi</string>
-    <string name="gutenberg_native_insert_mention">Vložit zmínku</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Otevřete nabídku blokovat akce</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">Přesunout nahoru</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Dvojitým klepnutím otevřete spodní list s dostupnými možnostmi</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Vložit zmínku</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Vybraná domovská stránka a stránka pro příspěvky nemohou být stejné.</string>
     <string name="site_settings_classic_blog">Klasický blog</string>
     <string name="site_settings_static_homepage">Statická domovská stránka</string>
@@ -1321,8 +1321,8 @@ Language: cs_CZ
     <string name="page_posts_page_successfully_updated">Stránka příspěvků byla úspěšně aktualizována</string>
     <string name="page_posts_page_update_failed">Aktualizace stránky příspěvků se nezdařila</string>
     <string name="site_settings_homepage">Domovská stránka</string>
-    <string name="gutenberg_native_select_a_color">Zvolit barvu</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dvojitým klepnutím přejdete do nastavení barev</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Zvolit barvu</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">Dvojitým klepnutím přejdete do nastavení barev</string>
     <string name="site_picker_ask_site_select">Web se nepodařilo vybrat. Prosím zkuste to znovu.</string>
     <string name="photo_picker_video_title">Zvolit video</string>
     <string name="photo_picker_photo_or_video_title">Vybrat média</string>
@@ -1344,21 +1344,21 @@ Language: cs_CZ
     <string name="copy_link_address">Kopírovat adresu odkazu</string>
     <string name="comment_q_action_copied_url">Adresa odkazu byla zkopírována</string>
     <string name="reader_reblog_error">Reblog se nezdařil</string>
-    <string name="gutenberg_native_number_of_columns">Počet sloupců</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dvojitým klepnutím přesunete blok doleva</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dvojitým klepnutím přesunete blok doprava</string>
-    <string name="gutenberg_native_move_block_left">Přesuňte blok doleva</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Přesuňte blok doleva z pozice %1$s do polohy %2$s</string>
-    <string name="gutenberg_native_move_block_right">Přesuňte blok doprava</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Přesuňte blok doprava z pozice %1$s do polohy %2$s</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Počet sloupců</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Dvojitým klepnutím přesunete blok doleva</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Dvojitým klepnutím přesunete blok doprava</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Přesuňte blok doleva</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Přesuňte blok doleva z pozice %1$s do polohy %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Přesuňte blok doprava</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Přesuňte blok doprava z pozice %1$s do polohy %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Hurá!\nSkoro hotovo</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Váš web bude brzy připraven</string>
     <string name="new_site_creation_creating_site_loading_1">Získání adresy URL webových stránek</string>
     <string name="new_site_creation_creating_site_loading_2">Přidávání funkcí webu</string>
     <string name="new_site_creation_creating_site_loading_3">Nastavení šablony</string>
     <string name="new_site_creation_creating_site_loading_4">Vytváření řídicího panelu</string>
-    <string name="gutenberg_native_block_settings">Nastavení bloku</string>
-    <string name="gif_list_search_returned_unknown_error">Při zpracování požadavku došlo k problému</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Nastavení bloku</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">Při zpracování požadavku došlo k problému</string>
     <string name="pages_and_posts_cancel_auto_upload">Zrušit nahrávání</string>
     <string name="weekday_saturday">Sobota</string>
     <string name="weekday_friday">Pátek</string>
@@ -1406,17 +1406,17 @@ Language: cs_CZ
     <string name="editor_page_saved_locally">Stránka byla uložena v zařízení</string>
     <string name="editor_page_saved_locally_failed_media">Příspěvek selhal při nahrávání médií a byl uložen lokálně na zařízení</string>
     <string name="editor_uploading_page">Vaše stránka se nahrává</string>
-    <string name="gutenberg_native_warning_message">Varovná zpráva</string>
-    <string name="gutenberg_native_show_post_content">Zobrazit obsah příspěvku</string>
-    <string name="gutenberg_native_link_settings">Nastavení odkazu</string>
-    <string name="gutenberg_native_link_to">Odkaz na</string>
-    <string name="gutenberg_native_only_show_excerpt">Zobrazit pouze výňatek</string>
-    <string name="gutenberg_native_excerpt_length_words">Délka výňatku (slova)</string>
-    <string name="gutenberg_native_edit_cover_media">Upravit náhled médií</string>
-    <string name="gutenberg_native_customize">PŘIZPŮSOBIT</string>
-    <string name="gutenberg_native_button_link_url">URL odkaz tlačítka</string>
-    <string name="gutenberg_native_add_paragraph_block">Přidat blok odstavců</string>
-    <string name="gutenberg_native_border_radius">Zaoblení okrajů</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Varovná zpráva</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Zobrazit obsah příspěvku</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Nastavení odkazu</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Odkaz na</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Zobrazit pouze výňatek</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Délka výňatku (slova)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Upravit náhled médií</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">PŘIZPŮSOBIT</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">URL odkaz tlačítka</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Přidat blok odstavců</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">Zaoblení okrajů</string>
     <string name="create_post_page_fab_tooltip_contributors">Vytvořit příspěvek</string>
     <string name="post_list_tab_trashed_posts">Smazané</string>
     <string name="post_list_tab_scheduled_posts">Naplánováno</string>
@@ -1436,16 +1436,16 @@ Language: cs_CZ
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Přihlásit se k WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">Odstraňte aktuální filtr</string>
     <string name="reader_self_hosted_select_filter">Pomocí tlačítka filtru vyhledejte příspěvky týkající se konkrétních témat</string>
-    <string name="gutenberg_native_add_block_after">Přidat blok po</string>
-    <string name="gutenberg_native_add_block_before">Přidat blok před</string>
-    <string name="gutenberg_native_add_to_beginning">Přidat na začátek</string>
-    <string name="gutenberg_native_add_to_end">Přidat na konec</string>
-    <string name="gutenberg_native_replace_current_block">Vyměňte aktuální blok</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Přidat blok po</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Přidat blok před</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Přidat na začátek</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Přidat na konec</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Vyměňte aktuální blok</string>
     <string name="reader_filter_cta">Filtr</string>
-    <string name="gutenberg_native_add_a_shortcode">Přidat krátký kód …</string>
-    <string name="gutenberg_native_edit_video">Upravit video</string>
-    <string name="gutenberg_native_video_caption_s">Titulek videa. %s</string>
-    <string name="gutenberg_native_edit_media">Upravit mediální soubor</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Přidat krátký kód …</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Upravit video</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Titulek videa. %s</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Upravit mediální soubor</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_box_type_low">nízký</string>
     <string name="stats_box_type_medium">střední</string>
@@ -1460,8 +1460,8 @@ Language: cs_CZ
     <string name="post_list_author">Autor příspěvku</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Vytvořte příspěvek nebo stránku</string>
-    <string name="gutenberg_native_gallery_caption_s">Titulek galerie. %s</string>
-    <string name="gutenberg_native_replace_image">Nahradit obrázek</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Titulek galerie. %s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nahradit obrázek</string>
     <string name="post_signup_interstitial_subtitle">Cokoli chcete vytvořit nebo sdílet, pomůžeme vám to udělat tady.</string>
     <string name="post_signup_interstitial_not_right_now">Teď ne</string>
     <string name="content_description_person_building_website">Web pro budování osob</string>
@@ -1479,13 +1479,13 @@ Language: cs_CZ
     <string name="dialog_confirm_scheduled_post_sync_yes">Nyní synchronizovat</string>
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Tato doména není k dispozici</string>
-    <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_discovery_error_generic">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="my_site_bottom_sheet_add_page">Stránka webu</string>
-    <string name="enter_credentials_for_site">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
-    <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="login_discovery_error_xmlrpc">Nepodařilo se nám získat přístup k &lt;b&gt;souboru XMLRPC&lt;/b&gt; na vašem webu. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="login">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodařilo se nám získat přístup k &lt;b&gt;souboru XMLRPC&lt;/b&gt; na vašem webu. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="site_cannot_be_loaded">Momentálně nemůžeme načíst data pro váš web. Prosím zkuste to znovu později</string>
     <string name="posts_cannot_be_started">Právě nemůžeme otevřít příspěvky. Prosím zkuste to znovu později</string>
     <string name="suffix_1_000">%sK</string>
@@ -1497,56 +1497,56 @@ Language: cs_CZ
     <string name="reader_discover_display_name">Objevujte</string>
     <string name="reader_my_likes_display_name">Líbí se</string>
     <string name="reader_save_for_later_display_name">Uloženo</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress knihovna médií</string>
-    <string name="gutenberg_native_start_writing">Začněte psát…</string>
-    <string name="gutenberg_native_take_a_photo">Vyfoť</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Pořiďte fotografii nebo video</string>
-    <string name="gutenberg_native_take_a_video">Pořiďte video</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Klepnutím sem zobrazíte nápovědu</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Klepnutím skryjete klávesnici</string>
-    <string name="gutenberg_native_ungroup">Rozdělit</string>
-    <string name="gutenberg_native_unsupported">Nepodporováno</string>
-    <string name="gutenberg_native_cut_block">Vyjmout blok</string>
-    <string name="gutenberg_native_s_block_empty">%s blok. Prázdný</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Tento blok má neplatný obsah</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Žádost nedokáže zpracovat tento požadavek. Nainstalujte si prosím webový prohlížeč.</string>
-    <string name="gutenberg_native_open_settings">Otevřít nastavení</string>
-    <string name="gutenberg_native_page_break_block_s">Blok zalomení stránky. %s</string>
-    <string name="gutenberg_native_paste_url">Vložit URL</string>
-    <string name="gutenberg_native_post_title_empty">Název příspěvku. Prázdný</string>
-    <string name="gutenberg_native_post_title_s">Název příspěvku. %s</string>
-    <string name="gutenberg_native_problem_displaying_block">Blok se zobrazením problému</string>
-    <string name="gutenberg_native_problem_opening_the_video">Problém s otevřením videa</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Přesunout blok dolů z řádku %1$s do řádku %2$s</string>
-    <string name="gutenberg_native_move_block_up">Posunout blok nahoru</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Přesunout blok nahoru z řádku %1$s do řádku %2$s</string>
-    <string name="gutenberg_native_navigate_up">Přejděte nahoru</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">Poslední změnu vrátíte dvojitým klepnutím</string>
-    <string name="gutenberg_native_help_icon">Ikona nápovědy</string>
-    <string name="gutenberg_native_hide_keyboard">Skrýt klávesnici</string>
-    <string name="gutenberg_native_image_caption_s">Titulek obrázku. %s</string>
-    <string name="gutenberg_native_move_block_down">Přesuňte blok dolů</string>
-    <string name="gutenberg_native_link_text">Text odkazu</string>
-    <string name="gutenberg_native_link_inserted">Odkaz vložen</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">Poslední změnu provedete dvojitým klepnutím</string>
-    <string name="gutenberg_native_double_tap_to_select">Vyberte dvojitým klepnutím</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">Dvojitým klepnutím vyberte video</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">Dvojitým klepnutím vyberte obrázek</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">Dvojitým klepnutím přepnete nastavení</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">Dvojitým klepnutím přidáte blok</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">Tuto hodnotu upravíte dvojitým klepnutím</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Dvojitým klepnutím přesunete blok dolů</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Dvojitým klepnutím posunete blok nahoru</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Upravte dvojitým klepnutím a podržením</string>
-    <string name="gutenberg_native_choose_from_device">Vyberte si ze zařízení</string>
-    <string name="gutenberg_native_current_value_is_s">Aktuální hodnota je %s</string>
-    <string name="gutenberg_native_add_block_here">PŘIDAT BLOK TADY</string>
-    <string name="gutenberg_native_add_url">Přidat URL</string>
-    <string name="gutenberg_native_alt_text">Alternativní text</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Nastala neznámá chyba. Prosím zkuste to znovu.</string>
-    <string name="gutenberg_native_add_alt_text">Přidejte alternativní text</string>
-    <string name="gutenberg_native_add_description">Přidat popis</string>
-    <string name="gutenberg_native_add_video">Přidat video</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress knihovna médií</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Začněte psát…</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Vyfoť</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Pořiďte fotografii nebo video</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Pořiďte video</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Klepnutím sem zobrazíte nápovědu</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Klepnutím skryjete klávesnici</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Rozdělit</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Nepodporováno</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Vyjmout blok</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s blok. Prázdný</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s blok. Tento blok má neplatný obsah</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">Žádost nedokáže zpracovat tento požadavek. Nainstalujte si prosím webový prohlížeč.</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Otevřít nastavení</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Blok zalomení stránky. %s</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Vložit URL</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Název příspěvku. Prázdný</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Název příspěvku. %s</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Blok se zobrazením problému</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problém s otevřením videa</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Přesunout blok dolů z řádku %1$s do řádku %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Posunout blok nahoru</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Přesunout blok nahoru z řádku %1$s do řádku %2$s</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Přejděte nahoru</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Poslední změnu vrátíte dvojitým klepnutím</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Ikona nápovědy</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Skrýt klávesnici</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Titulek obrázku. %s</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Přesuňte blok dolů</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Text odkazu</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Odkaz vložen</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Poslední změnu provedete dvojitým klepnutím</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Vyberte dvojitým klepnutím</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte video</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Dvojitým klepnutím vyberte obrázek</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Dvojitým klepnutím přepnete nastavení</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Dvojitým klepnutím přidáte blok</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Tuto hodnotu upravíte dvojitým klepnutím</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">Dvojitým klepnutím přesunete blok dolů</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Dvojitým klepnutím posunete blok nahoru</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Upravte dvojitým klepnutím a podržením</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Vyberte si ze zařízení</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Aktuální hodnota je %s</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">PŘIDAT BLOK TADY</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Přidat URL</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alternativní text</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">Nastala neznámá chyba. Prosím zkuste to znovu.</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Přidejte alternativní text</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat popis</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Přidat video</string>
     <string name="reader_acessibility_list_loaded">\"Seznam má načteno %1$d položek.\"</string>
     <string name="reader_empty_saved_posts_content_description">Klepnutím na tlačítko Přidat k uložení příspěvků uložíte příspěvek do svého seznamu.</string>
     <string name="notifications_tab_dialog_main_off_message">Vypnutím oznámení pro tento web zakážete zobrazování oznámení na kartě oznámení pro tento web. Po zapnutí oznámení pro tento web můžete doladit, jaký druh oznámení se vám zobrazí.</string>
@@ -1650,7 +1650,7 @@ Language: cs_CZ
     <string name="post_notification_one_hour_before">Před hodinou</string>
     <string name="post_notification_off">Off</string>
     <string name="post_settings_add_to_calendar">Přidat do kalendáře</string>
-    <string name="login_invalid_site_url">Zadejte úplnou adresu webu, například example.com.</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte úplnou adresu webu, například example.com.</string>
     <string name="stats_post_views_label">Zobrazení</string>
     <string name="stats_post_label">Příspěvek</string>
     <string name="stats_expand_content_description">Rozbalit</string>
@@ -1662,18 +1662,18 @@ Language: cs_CZ
     <string name="stats_overview_content_description">%1$s %2$s pro období: %3$s, změna z předchozího období - %4$s</string>
     <string name="stats_graph_updated">Graf aktualizován.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="enter_email_for_site">Přihlaste se přes WordPress.com a připojte se k %1$s</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se přes WordPress.com a připojte se k %1$s</string>
     <string name="my_site_verify_your_email">Ověřte svou e-mailovou adresu - pokyny zaslané na %s</string>
     <string name="my_site_verify_your_email_without_email">Ověřte svou e-mailovou adresu - pokyny zaslané na váš e-mail</string>
     <string name="description_collapse">Kolaps</string>
     <string name="description_expand">Rozšířit</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Nahrávání médií.\nMožnosti zobrazíte klepnutím.</string>
     <string name="post_settings_retry_featured_image">Opakujte nahrávání</string>
-    <string name="link_dialog_title">Vložte odkaz</string>
-    <string name="link_dialog_button_remove_link">Odebrat odkaz</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_ok">Ok</string>
-    <string name="link_dialog_button_cancel">Zrušit</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">Vložte odkaz</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">Odebrat odkaz</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">Ok</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">Zrušit</string>
     <string name="link_open_new_window">Otevřít odkaz v novém okně/záložce</string>
     <string name="stats_widget_error_no_access_token">Chcete-li zobrazit své statistiky, přihlaste se k účtu WordPress.com.</string>
     <string name="stats_widget_all_time_insights_name">Pořád</string>
@@ -1737,7 +1737,7 @@ Language: cs_CZ
     <string name="history_fetching_revisions">Načítání revizí …</string>
     <string name="editor_uploading_draft">Váš koncept se nahrává</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Vložení média se nezdařilo.\nProsím, klikněte pro opakování.</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Vložení média se nezdařilo .\nKlepněte na nastavení.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vložení média se nezdařilo .\nKlepněte na nastavení.</string>
     <string name="post_uploading_draft">Nahrávám koncept</string>
     <string name="post_list_tab_drafts">Koncepty</string>
     <string name="error_restoring_post">Při obnovování příspěvku došlo k chybě</string>
@@ -1765,8 +1765,8 @@ Language: cs_CZ
     <string name="post_list_toggle_item_layout_cards_view">Přepnout do zobrazení karet</string>
     <string name="post_list_toggle_item_layout_list_view">Přepnout na zobrazení seznamu</string>
     <string name="button_move_to_draft">Přesunout do konceptu</string>
-    <string name="error_user_username_instead_of_email">Přihlaste se prosím pomocí svého uživatelského jména WordPress.com místo vaší e-mailové adresy.</string>
-    <string name="notification_wpcom_username_needed">Přihlaste se prosím pomocí svého uživatelského jména a hesla.</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se prosím pomocí svého uživatelského jména WordPress.com místo vaší e-mailové adresy.</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se prosím pomocí svého uživatelského jména a hesla.</string>
     <string name="stats_insights_this_year_site_stats">Tento rok</string>
     <string name="stats_insights_posts">Příspěvky</string>
     <string name="stats_insights_year">Rok</string>
@@ -1776,7 +1776,7 @@ Language: cs_CZ
     <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
     <string name="stats_insights_total_likes">Celkem to se mi líbí</string>
     <string name="stats_insights_average_comments">Průměr komentářů/příspěvek</string>
-    <string name="no_site_error">Web na této adrese není web WordPress. Abychom se k němu mohli připojit, musí web používat WordPress.</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="login">Web na této adrese není web WordPress. Abychom se k němu mohli připojit, musí web používat WordPress.</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Kontrola kreditů domény</string>
     <string name="plugin_check_domain_credit_error">Nepodařilo se zkontrolovat dostupné kredity domény</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrace domény</string>
@@ -1792,7 +1792,7 @@ Language: cs_CZ
     <string name="stats_months_and_years_views_label">Zobrazení</string>
     <string name="stats_months_and_years_period_label">Doba</string>
     <string name="stats_detail_months_and_years">Měsíce a roky</string>
-    <string name="stats_insights_load_more">Zobrazit více</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Zobrazit více</string>
     <string name="stats_insights_today_stats">Dnes</string>
     <string name="stats_insights_best_hour">Nejlepší hodiny</string>
     <string name="stats_insights_best_day">Nejlepší den</string>
@@ -1805,7 +1805,7 @@ Language: cs_CZ
     <string name="stats_fewer_posts">Méně příspěvků</string>
     <string name="editor_post_converted_back_to_draft">Příspěvek byl převeden zpět na koncept</string>
     <string name="stats_insights_posting_activity">Aktivita publikování</string>
-    <string name="stats_site_not_loaded_yet">Stránka dosud nenačtena</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Stránka dosud nenačtena</string>
     <string name="new_site_creation_preview_back_pressed_warning">Můžete ztratit svůj pokrok. Opravdu chcete skončit?</string>
     <string name="plans_loading_error_with_cache_button">Zobrazit plány stejně</string>
     <string name="plans_loading_error_no_plans_subtitle">V tuto chvíli nemůžeme načíst plány. Prosím zkuste to znovu později.</string>
@@ -1825,14 +1825,14 @@ Language: cs_CZ
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
-    <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
-    <string name="quick_start_dialog_enable_sharing_title">Povolit sdílení příspěvků</string>
-    <string name="quick_start_dialog_enable_sharing_message">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Povolit sdílení příspěvků</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
     <string name="quick_start_dialog_check_stats_message">Mějte aktuální informace o výkonu svého webu.</string>
     <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
-    <string name="notification_channel_reminder_title">Připomenutí</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Připomenutí</string>
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
     <string name="stats_select_next_period_description">Vyberte další období</string>
@@ -1902,7 +1902,7 @@ Language: cs_CZ
     <string name="stats_insights_path">Cesta</string>
     <string name="stats_insights_latest_post_message">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován…</string>
     <string name="gif_picker_initial_empty_text">Vyhledejte GIF a přidejte jej do knihovny médií!</string>
-    <string name="gif_picker_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="stats_insights_tags_and_categories">Štítky a Rubriky</string>
     <string name="stats_insights_all_time_stats">Pořád</string>
     <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Zvyšte počet zobrazení příspěvku tím, že ho budete sdílet:</string>
@@ -1937,7 +1937,7 @@ Language: cs_CZ
     <string name="history_detail_button_next">Další</string>
     <string name="history_detail_button_previous">Zpět</string>
     <string name="media_space_used">Použito %1$s</string>
-    <string name="enter_wpcom_or_jetpack_site">Zadejte adresu WordPress.com stránky nebo stránky s Jetpack pluginem</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte adresu WordPress.com stránky nebo stránky s Jetpack pluginem</string>
     <string name="history_loading_revision">Načítám revizi</string>
     <string name="history_loaded_revision">Revize načtena</string>
     <string name="history_load_dialog_button_positive">Načíst</string>
@@ -1964,13 +1964,13 @@ Language: cs_CZ
     <string name="pages_move_to_trash">Přesunout do koše</string>
     <string name="pages_move_to_draft">Přesunout do konceptů</string>
     <string name="pages_set_parent">Přiřadit nadřazenou stránku</string>
-    <string name="pages_trashed">Smazané</string>
-    <string name="pages_scheduled">Naplánované</string>
-    <string name="pages_drafts">Koncepty</string>
-    <string name="pages_published">Zveřejněné</string>
-    <string name="login_error_sms_throttled">Překročen počet pokusů na odeslání SMS s ověřovacím kódem — zkuste to znovu za minutu.</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Smazané</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Naplánované</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Koncepty</string>
+    <string name="pages_published" tools:ignore="UnusedResources">Zveřejněné</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">Překročen počet pokusů na odeslání SMS s ověřovacím kódem — zkuste to znovu za minutu.</string>
     <string name="pages_view">Zobrazení</string>
-    <string name="login_error_email_not_found_v2">Nenašli jsme WordPress.com účet propojený s tímto Google účtem.</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">Nenašli jsme WordPress.com účet propojený s tímto Google účtem.</string>
     <string name="site_picker_remove_site_empty">Stránka nenalezena</string>
     <string name="page_parent_changed">Nadřazená stránka byla změněna</string>
     <string name="page_permanently_deleted">Stránka trvale odstraněna</string>
@@ -1993,20 +1993,20 @@ Language: cs_CZ
     <string name="quick_start_dialog_share_site_title">Sdílení stránky</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
     <string name="quick_start_dialog_view_site_message">Zobrazte náhled pro kontrolu, jak uvidí stránku ostatní</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Klikněte na %1$s Sdílení %2$s</string>
     <string name="quick_start_dialog_share_site_message">Propojte se socialní sítí - příspěvky se budou automaticky sdílet.</string>
     <string name="quick_start_dialog_publish_post_title">Zveřejnit příspěvek</string>
-    <string name="quick_start_dialog_publish_post_message_short">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
     <string name="quick_start_dialog_follow_sites_title">Sledujte další stránky</string>
     <string name="quick_start_dialog_need_help_button_negative">Ne, děkuji</string>
-    <string name="quick_start_button_negative_short">Zrušit</string>
-    <string name="quick_start_button_negative">Né teď</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Zrušit</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Né teď</string>
     <string name="content_description_more">Hotovo</string>
-    <string name="quick_start_button_positive">Go</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="login_to_to_connect_jetpack">Přihlaste se k účtu WordPress.com, který jste použili k připojení Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se k účtu WordPress.com, který jste použili k připojení Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">K zobrazení statistik je třeba mít nainstalovaný Jetpack plugin.</string>
     <string name="themes_empty_list">Žádné šablony neodpovídají hledanému výrazu</string>
     <string name="reader_label_post_search_explainer">Po čem se koukáte?</string>
@@ -2038,7 +2038,7 @@ Language: cs_CZ
     <string name="support_push_notification_message">Nová zpráva od \"Pomoc a Podpora\"</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nezadán</string>
-    <string name="notification_channel_transient_title">Přechodný</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Přechodný</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Zadejte e-mailovou adresu</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Pro pokračování je třeba nejprve zadat e-mailovou adresu a jméno</string>
@@ -2057,13 +2057,13 @@ Language: cs_CZ
     <string name="reader_empty_search_title">Nebyly nalezeny žádné výsledky</string>
     <string name="sites">Stránky</string>
     <string name="comment_read_source_post">Přečtěte si zdrojový příspěvek</string>
-    <string name="signup_magic_link_title">Magický odkaz odeslán</string>
-    <string name="verification_2fa_screen_title">Ověřovací kód</string>
-    <string name="selfhosted_site_login_title">Přihlašovací údaje</string>
-    <string name="magic_link_sent_login_title">Magický odkaz odeslán</string>
-    <string name="magic_link_login_title">Přihlašení magickým odkazem</string>
-    <string name="site_address_login_title">Přihlášení k webu</string>
-    <string name="email_address_login_title">E-mailová adresa přihlášení</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">Magický odkaz odeslán</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">Ověřovací kód</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlašovací údaje</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Magický odkaz odeslán</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlašení magickým odkazem</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlášení k webu</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">E-mailová adresa přihlášení</string>
     <string name="reader_empty_saved_posts_description">Kliknutím na %s přispěvek uložíte.</string>
     <string name="reader_empty_saved_posts_title">Zatím jste neuložili žádné příspěvky.</string>
     <string name="reader_bookmark_snack_title">Příspěvek uložen</string>
@@ -2126,8 +2126,8 @@ Language: cs_CZ
     <string name="content_description_person_reading_device_notification">Čtecí zařízení s upozorněním</string>
     <string name="content_description_people_looking_charts">Lidé, kteří se dívají na grafy</string>
     <string name="comment_title">%1$s na %2$s</string>
-    <string name="notification_channel_important_title">Důležité</string>
-    <string name="notification_channel_general_title">Všeobecné</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Důležité</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>
     <string name="media_preview_title">%1$d z %2$d</string>
     <string name="add_count">Přidat %d</string>
@@ -2161,7 +2161,7 @@ Language: cs_CZ
     <string name="media_grid_item_image_desc">náhled obrázku, jméno souboru %s</string>
     <string name="invite_user_delete_desc">odstranit %s</string>
     <string name="comment_checkmark_desc">zaškrtnutí</string>
-    <string name="signup_with_google_progress">Registrace přes Google…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Registrace přes Google…</string>
     <string name="profile_picture">%s\'s profilový obrázek</string>
     <string name="open_external_link_desc">Otevřít externí odkaz</string>
     <string name="media_grid_item_retry_desc">opakovat</string>
@@ -2252,14 +2252,14 @@ Language: cs_CZ
     <string name="username_changer_hint">Zadejte další návrhy</string>
     <string name="username_changer_dismiss_button_positive">Vyřadit</string>
     <string name="content_description_add_avatar">Přidat avatar</string>
-    <string name="google_error_timeout">Google delší chvíli nereaguje. Možná byste měli počkat, až budete mít silnější připojení k internetu.</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Google delší chvíli nereaguje. Možná byste měli počkat, až budete mít silnější připojení k internetu.</string>
     <string name="username_changer_header">Vaše uživatelské jméno je %1$s%2$s%3$s. Až na pár výjimek vás ostatní  uvidí na webu pod jménem: %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">Není navrženo žádné uživatelské jméno dle %1$s%2$s%3$s. Zadejte další písmena nebo čísla pro získání návrhů.</string>
     <string name="signup_user_exists">E-mail je již registrovaný na WordPress.com.\nPokračujte na přihlášení.</string>
     <string name="signup_updating_account">Probíhá aktualizace účtu…</string>
-    <string name="signup_magic_link_progress">Odesílání e-mailu</string>
-    <string name="signup_magic_link_error_button_positive">Opakovat</string>
-    <string name="signup_magic_link_error_button_negative">Zavřít</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Odesílání e-mailu</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">Opakovat</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">Zavřít</string>
     <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>
     <string name="signup_epilogue_error_button_negative">Zpět</string>
@@ -2268,7 +2268,7 @@ Language: cs_CZ
     <string name="signup_epilogue_error_generic">Objevili se potíže při aktualizaci vašeho účtu. Můžete to zkusit znovu nebo vrátit změny.</string>
     <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
     <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
-    <string name="signup_magic_link_error">Při odesílání e-mailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">Při odesílání e-mailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
     <string name="plugin_caption_new">Nový</string>
     <string name="plugin_caption_popular">Populární</string>
     <string name="plugin_caption_search">Hledat pluginy</string>
@@ -2358,18 +2358,18 @@ Language: cs_CZ
     <string name="my_site_btn_plugins">Pluginy</string>
     <string name="media_edit_link_hint">Otevřít odkaz v novém okně/tabu\"</string>
     <string name="media_edit_link_text">Odkaz na</string>
-    <string name="notification_login_failed">Došlo k chybě.</string>
-    <string name="notification_2fa_needed">Pro pokračování zadejte ověřovací kód.</string>
-    <string name="notification_error_wrong_password">Před pokračováním si znovu překontrolujte heslo.</string>
-    <string name="notification_login_title_stopped">Přihlášení bylo zastaveno</string>
-    <string name="notification_logging_in">Počkejte prosím, probíhá přihlašování.</string>
-    <string name="notification_login_title_in_progress">Probíhá přihlašování…</string>
-    <string name="notification_logged_in">Pokračujte klepnutím.</string>
-    <string name="notification_login_title_success">Přihlášeno!</string>
-    <string name="login_error_generic_start">Přihlášení pomocí Google nemůže být spuštěno.</string>
-    <string name="login_empty_password">Zadejte heslo</string>
-    <string name="login_text_otp_another">Pošlete mi nový kód</string>
-    <string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">Došlo k chybě.</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Pro pokračování zadejte ověřovací kód.</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">Před pokračováním si znovu překontrolujte heslo.</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlášení bylo zastaveno</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">Počkejte prosím, probíhá přihlašování.</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Probíhá přihlašování…</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračujte klepnutím.</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlášeno!</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlášení pomocí Google nemůže být spuštěno.</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte heslo</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">Pošlete mi nový kód</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
     <string name="uploading_subtitle_media_only">Zbývá %1$d z %2$d souborů</string>
@@ -2386,15 +2386,15 @@ Language: cs_CZ
     <string name="confirm_remove_media_image">Odstranit tento obrázek z příspěvku?</string>
     <string name="media_edit_customize_card_caption">Přizpůsobit</string>
     <string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
-    <string name="login_error_generic">Při připojování ke Google účtu se objevily nějaké potíže.</string>
-    <string name="login_error_suffix">Možná zkuste jiný účet?</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Při připojování ke Google účtu se objevily nějaké potíže.</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">Možná zkuste jiný účet?</string>
     <string name="login_error_button">Zavřít</string>
-    <string name="enter_wpcom_password_google">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
     <string name="error_generic_network">Vyskytla se chyba sítě. Zkontrolujte připojení a zkuste znovu.</string>
     <string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
     <string name="post_settings_choose_featured_image">Zvolit náhledový obrázek</string>
-    <string name="login_log_in_for_share_intent">Pro sdílení obsahu se přihlašte na WordPress.com.</string>
-    <string name="enter_site_address_share_intent">Zadejte adresu WordPress webu, na který chcete sdílet obsah.</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Pro sdílení obsahu se přihlašte na WordPress.com.</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte adresu WordPress webu, na který chcete sdílet obsah.</string>
     <string name="jetpack_disconnect_error_toast">Chyba při odpojování webové stránky</string>
     <string name="jetpack_disconnect_success_toast">Webová stránka odpojena</string>
     <string name="jetpack_disconnect_confirm">Odpojit</string>
@@ -2477,36 +2477,36 @@ Language: cs_CZ
     <string name="connection_to_server_lost">Připojení k serveru bylo ztraceno</string>
     <string name="login_epilogue_mysites_other">Moje weby</string>
     <string name="login_epilogue_mysites_one">Můj web</string>
-    <string name="login_empty_2fa">Vložte ověřovací kód</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">Vložte ověřovací kód</string>
     <string name="login_email_client_not_found">Nepodařilo se najít e-mailovou aplikaci</string>
-    <string name="login_empty_username">Vložte uživatelské jméno</string>
-    <string name="login_log_in_for_deeplink">Pro přístup k příspěvku se přihlaste na WordPress.com.</string>
-    <string name="login_error_while_adding_site">Chyba při vytváření webu. Kód chyby: %s</string>
-    <string name="login_checking_site_address">Kontrola adresy webu</string>
-    <string name="login_site_address_more_help">Potřebujete poradit?</string>
-    <string name="login_site_address_help_content">Pokud navštívíte web v Chrome, adresa webu se objeví v řádku nahoře na obrazovce.</string>
-    <string name="login_site_address_help_title">Jaká je adresa mého webu?</string>
-    <string name="login_site_address">Adresa webu</string>
-    <string name="enter_site_address">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">Vložte uživatelské jméno</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">Pro přístup k příspěvku se přihlaste na WordPress.com.</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">Chyba při vytváření webu. Kód chyby: %s</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Kontrola adresy webu</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">Potřebujete poradit?</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">Pokud navštívíte web v Chrome, adresa webu se objeví v řádku nahoře na obrazovce.</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">Jaká je adresa mého webu?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Adresa webu</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
     <string name="login_already_logged_in_wpcom">Již jste přihlášeni na WordPress.com</string>
-    <string name="login_continue">Pokračovat</string>
-    <string name="enter_wpcom_password">Zadejte heslo k WordPress.com.</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračovat</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">Zadejte heslo k WordPress.com.</string>
     <string name="connect_more">Připojit se k jinému webu</string>
-    <string name="login_magic_link_email_requesting">Je vyžadován přihlašovací e-mail</string>
-    <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
-    <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
-    <string name="login_text_otp">Pošlete mi raději kód.</string>
-    <string name="enter_verification_code">Už to skoro je! Zadejte ověřovací kód pro WordPress.com z aplikace autentizátoru.</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">Je vyžadován přihlašovací e-mail</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Vyžádání ověřovacího kódu pomocí SMS.</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Pošlete mi raději kód.</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Už to skoro je! Zadejte ověřovací kód pro WordPress.com z aplikace autentizátoru.</string>
     <string name="next">Další</string>
-    <string name="open_mail">Otevřít e-mail</string>
-    <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Otevřít e-mail</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="me_profile_photo">Profilová fotka</string>
     <string name="error_media_parse_error">Neočekávaná odpověď ze serveru</string>
     <string name="upload_finished_toast">Nahrávání nelze zastavit, protože je již dokončeno</string>
     <string name="menu_redo">Znovu</string>
     <string name="menu_undo">Zpět</string>
     <string name="post_title">Nadpis</string>
-    <string name="media_insert_unimplemented">Omluva! Funkce zatím není implementována :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Omluva! Funkce zatím není implementována :(</string>
     <string name="error_media_small">Média jsou příliš malá na zobrazení</string>
     <string name="editor_dropped_unsupported_files">Upozornění: ne všechny vložené soubory jsou podporovány!</string>
     <string name="editor_dropped_title_images_not_allowed">Odstraňování obrázků v názvu není povoleno</string>
@@ -2650,8 +2650,8 @@ Language: cs_CZ
     <string name="error_all_media_upload_canceled">Všechna nahrání médií byla zrušena kvůli neznámé chybě. Opakujte nahrávání</string>
     <string name="error_unknown_post_type">Neznámý formát příspěvku</string>
     <string name="submit_for_review">Odeslat</string>
-    <string name="duplicate_site_detected">Bylo zjištěna duplicitní stránka.</string>
-    <string name="cannot_add_duplicate_site">Tyto stránky již v aplikaci existují, nelze je přidat.</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">Bylo zjištěna duplicitní stránka.</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">Tyto stránky již v aplikaci existují, nelze je přidat.</string>
     <string name="already_logged_in_wpcom">Již jste přihlášeni do účtu WordPress.com, nemůžete přidat stránku WordPress.com vázanou na jiný účet.</string>
     <string name="error_media_load">Nelze načíst média</string>
     <string name="error_media_refresh_no_connection">Potřebujeme připojení pro obnovení knihovny</string>
@@ -2663,8 +2663,8 @@ Language: cs_CZ
     <string name="media_generic_error">Chyba médií</string>
     <string name="retry">Znovu</string>
     <string name="confirm">Potvrdit</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Při pokusu o přístup k vašemu nám došlo k chybě 403\n         koncový bod XMLRPC webu. Aplikace to potřebuje, aby mohla komunikovat s vaším webem. Požádejte svého hostitele o řešení\n         tento problém.</string>
-    <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nelze se připojit. Při pokusu o přístup k vašemu nám došlo k chybě 403\n         koncový bod XMLRPC webu. Aplikace to potřebuje, aby mohla komunikovat s vaším webem. Požádejte svého hostitele o řešení\n         tento problém.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
@@ -2702,7 +2702,7 @@ Language: cs_CZ
     <string name="invite_username_not_found">Uživatel %s nenalezen</string>
     <string name="comment_moderated_approved">Komentář schválen!</string>
     <string name="like">To se mi líbí</string>
-    <string name="timespan_now">nyní</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">nyní</string>
     <string name="role_viewer">Návštěvník</string>
     <string name="error_post_my_profile_no_connection">Žádné přípojení, nepodařilo se uložit váš profil</string>
     <string name="alignment_none">Žádné</string>
@@ -2718,19 +2718,19 @@ Language: cs_CZ
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nepodařilo se odstranit zobrazení</string>
     <string name="editor_failed_uploads_switch_html">Některá média se nenahrála. Nelze přepnout do režimu HTML\n        v tomhle stavu. Chcete odstranit všechny neúspěšně nahrané soubory a pak pokračovat?</string>
-    <string name="visual_editor">Vizuální editor</string>
-    <string name="image_thumbnail">Náhled</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vizuální editor</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Náhled</string>
     <string name="image_settings_save_toast">Změny byly uloženy</string>
-    <string name="image_alt_text">Alt text</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alt text</string>
     <string name="image_caption">Titulek</string>
     <string name="image_link_to">Odkaz na</string>
     <string name="image_width">Šířka</string>
     <string name="image_settings_dismiss_dialog_title">Zahodit neuložené změny?</string>
     <string name="stop_upload_dialog_title">Zastavit nahrávání?</string>
-    <string name="alert_error_adding_media">Během vkládání média se vyskytla neočekávaná chyba</string>
-    <string name="alert_action_while_uploading">Momentálně se nahrávají média. Počkejte, dokud se to nedokončí.</string>
-    <string name="alert_insert_image_html_mode">Média se nedaří vložit přímo v režimu HTML. Přejděte do editoru.</string>
-    <string name="uploading_gallery_placeholder">Nahrávám galerii…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Během vkládání média se vyskytla neočekávaná chyba</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Momentálně se nahrávají média. Počkejte, dokud se to nedokončí.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Média se nedaří vložit přímo v režimu HTML. Přejděte do editoru.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahrávám galerii…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Pozvánka odeslána, ale vyskytla se chyba(y)!</string>
     <string name="invite_sent">Pozvánka úspěšně odeslána.</string>
@@ -2763,8 +2763,8 @@ Language: cs_CZ
     <string name="error_locating_image">Chyba při umístění oříznutého obrázku</string>
     <string name="error_refreshing_gravatar">Chyba při znovu nahrání vašeho Gravataru</string>
     <string name="error_cropping_image">Chyba při oříznutí obrázku</string>
-    <string name="checking_email">Ověřuji e-mail</string>
-    <string name="magic_link_unavailable_error_message">Momentálně nedostupné. Prosím zadejte své heslo</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">Ověřuji e-mail</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">Momentálně nedostupné. Prosím zadejte své heslo</string>
     <string name="logging_in">Přihlašování</string>
     <string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
     <string name="capture_or_pick_photo">Vyfoťte nebo vyberte fotku</string>
@@ -2800,7 +2800,7 @@ Language: cs_CZ
     <string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
     <string name="comments_empty_list_filtered_approved">Žádné schválené komentáře</string>
     <string name="button_skip">Přeskočit</string>
-    <string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
     <string name="post_format_status">Aktualita</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Na střed</string>
@@ -2860,7 +2860,7 @@ Language: cs_CZ
     <string name="about_the_app">O aplikaci</string>
     <string name="error_post_account_settings">Nelze uložit nastavení účtu</string>
     <string name="error_fetch_account_settings">Nelze načíst nastavení účtu</string>
-    <string name="error_fetch_my_profile">Nelze načíst váš profil</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Nelze načíst váš profil</string>
     <string name="site_settings_unknown_language_code_error">Kód jazyka nebyl rozpoznán</string>
     <string name="site_settings_threading_dialog_description">Povolit vnoření komentářů do vláken.</string>
     <string name="site_settings_threading_dialog_header">Vlákno do</string>
@@ -3062,9 +3062,9 @@ Language: cs_CZ
     <string name="deselect_all">Zrušit výběr</string>
     <string name="show">Zobrazit</string>
     <string name="language">Jazyk</string>
-    <string name="verification_code">Ověřovací kód</string>
-    <string name="invalid_verification_code">Neplatný ověřovací kód</string>
-    <string name="auth_required">Pro pokračování, se přihlaste ještě jednou.</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Ověřovací kód</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Neplatný ověřovací kód</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Pro pokračování, se přihlaste ještě jednou.</string>
     <string name="pages_fetching">Načítám stránky…</string>
     <string name="posts_fetching">Načítám příspěvky…</string>
     <string name="media_fetching">Načítám mediální soubory…</string>
@@ -3131,7 +3131,7 @@ Language: cs_CZ
     <string name="sdcard_message">Pro nahrání media musí být připojená SD karta</string>
     <string name="notifications_empty_list">Žádná oznámení</string>
     <string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
-    <string name="error_refresh_pages">Stránky momentálně nemohly být obnoveny</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Stránky momentálně nemohly být obnoveny</string>
     <string name="error_refresh_comments">Komentáře momentálně nemohly být obnoveny</string>
     <string name="error_generic">Nastala chyba</string>
     <string name="error_edit_comment">Nastala chyba při opravě komentáře</string>
@@ -3144,11 +3144,11 @@ Language: cs_CZ
     <string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
     <string name="cat_name_required">Název rubriky je vyžadován</string>
     <string name="error_deleting_post">Nastala chyba při mazání příspěvku</string>
-    <string name="email_invalid">Vlož platnou e-mailovou adresu</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Vlož platnou e-mailovou adresu</string>
     <string name="invalid_email_message">Tvoje e-mailová adresa není platná</string>
     <string name="connection_error">Ztráta spojení</string>
     <string name="link_enter_url_text">Text odkazu</string>
-    <string name="create_a_link">Vytvořit odkaz</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vytvořit odkaz</string>
     <string name="page_settings">Nastavení stránky</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Koš</string>
@@ -3170,7 +3170,7 @@ Language: cs_CZ
     <string name="media_gallery_type_thumbnail_grid">Mřížka náhledů</string>
     <string name="media_error_no_permission">Nemáte oprávnění pro zobrazení mediální knihovny</string>
     <string name="cannot_delete_multi_media_items">Některá média momentálně nelze odstranit. Zkuste to později.</string>
-    <string name="horizontal_alignment">Vodorovné zarovnání</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vodorovné zarovnání</string>
     <string name="file_not_found">Nepodařilo se najít mediální soubor pro nahrávání. Nebyl odstraněný nebo přesunutý?</string>
     <string name="comment_status_approved">Schváleno</string>
     <string name="mnu_comment_approve">Schválit</string>
@@ -3181,7 +3181,7 @@ Language: cs_CZ
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>
-    <string name="http_authorization_required">Je vyžadována autorizace</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Je vyžadována autorizace</string>
     <string name="notifications_empty_all">Doposud nejsou k dispozici žádná oznámení.</string>
     <string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
     <string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>
@@ -3217,7 +3217,7 @@ Language: cs_CZ
     <string name="reader_label_added_tag">%s byl přidán</string>
     <string name="reader_likes_only_you">To se vám líbí</string>
     <string name="comments_empty_list">Zatím žádné komentáře</string>
-    <string name="sign_up_label">Zaregistrovat se</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">Zaregistrovat se</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="stats">Statistiky</string>
     <string name="share_action">Sdílet</string>
@@ -3246,26 +3246,26 @@ Language: cs_CZ
     <string name="more_notifications">a %d dalších.</string>
     <string name="sign_in">Přihlásit se</string>
     <string name="loading">Nahrávám…</string>
-    <string name="httpuser">HTTP uživ.jméno</string>
-    <string name="httppassword">HTTP heslo</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP uživ.jméno</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP heslo</string>
     <string name="error_media_upload">Došlo k chybě během nahrávání médií</string>
     <string name="incorrect_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
     <string name="password">Heslo</string>
     <string name="username">Uživatelské jméno</string>
-    <string name="log_in">Přihlásit</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Přihlásit</string>
     <string name="reader">Čtenář</string>
-    <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vložit obrázek do obsahu příspěvku</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="pages">Stránky</string>
     <string name="posts">Příspěvky</string>
     <string name="anonymous">Anonymní</string>
-    <string name="width">Šířka</string>
-    <string name="caption">Popis (nepovinné)</string>
-    <string name="featured">Použít jako náhledový obrázek</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Šířka</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Popis (nepovinné)</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Použít jako náhledový obrázek</string>
     <string name="ok">OK</string>
     <string name="done">hotovo</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Nahrávám…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahrávám…</string>
     <string name="image_alignment">Zarovnání</string>
     <string name="refresh">Obnovit</string>
     <string name="untitled">Bez názvu</string>

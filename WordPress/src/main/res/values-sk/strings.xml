@@ -5,8 +5,8 @@ Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: sk
 -->
-<resources>
-    <string name="gutenberg_native_add_button_text">Pridať text tlačidla</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Pridať text tlačidla</string>
     <string name="activity_log_backup_download_notice_download_action">Stiahnuť</string>
     <string name="error_failed_to_crop_and_save_image">Nepodarilo sa orezať a uložiť obrázok, skúste znova.</string>
     <string name="preview_image_description">Náhľad obrázku</string>
@@ -18,8 +18,8 @@ Language: sk
     <string name="app_theme_light">Svetlá</string>
     <string name="app_theme_dark">Tmavá</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
-    <string name="gutenberg_native_link_to">Odkaz na</string>
-    <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Odkaz na</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Nastavenia odkazu</string>
     <string name="reader_filter_empty_tags_add_action">Pridať značku</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
@@ -28,7 +28,7 @@ Language: sk
     <string name="stats_months_and_years_views_label">Zobrazení</string>
     <string name="stats_months_and_years_period_label">Obdobie</string>
     <string name="stats_detail_months_and_years">Mesiace a roky</string>
-    <string name="stats_insights_load_more">Načítaj viac</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Načítaj viac</string>
     <string name="new_site_creation_preview_subtitle">Neskôr si budete môcť prispôsobiť vzhľad svojej stránky</string>
     <string name="stats_insights_today_stats">Dnes</string>
     <string name="stats_insights_best_hour">Najlepšia hodina</string>
@@ -120,7 +120,7 @@ Language: sk
     <string name="history_empty_title">Žiadna história</string>
     <string name="history_empty_subtitle_post">Keď spravíte zmeny vo svojom článku, zobrazí sa vám história</string>
     <string name="history_empty_subtitle_page">Keď spravíte zmeny na stránke, zobrazí sa vám história</string>
-    <string name="enter_wpcom_or_jetpack_site">Zadajte WordPress.com alebo samo-hostovanú WordPress webovú stránku pripojenú s Jetpack.</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">Zadajte WordPress.com alebo samo-hostovanú WordPress webovú stránku pripojenú s Jetpack.</string>
     <string name="description_user">Avatar používateľa</string>
     <string name="image_size_full_label">Plná veľkosť</string>
     <string name="image_size_large_label">Veľké</string>
@@ -140,12 +140,12 @@ Language: sk
     <string name="pages_move_to_draft">Presunúť do Koncepty</string>
     <string name="pages_set_parent">Nastaviť predlohu</string>
     <string name="pages_view">Zobraziť</string>
-    <string name="pages_trashed">Vyhodené</string>
-    <string name="pages_scheduled">Naplánované</string>
-    <string name="pages_drafts">Koncepty</string>
-    <string name="pages_published">Zverejnené</string>
-    <string name="login_error_sms_throttled">Vynaložili sme veľké úsilie, aby sme odoslali cez SMS overovací kód - skús opätovne neskôr.</string>
-    <string name="login_error_email_not_found_v2">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Vyhodené</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Naplánované</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Koncepty</string>
+    <string name="pages_published" tools:ignore="UnusedResources">Zverejnené</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">Vynaložili sme veľké úsilie, aby sme odoslali cez SMS overovací kód - skús opätovne neskôr.</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
     <string name="site_picker_remove_site_empty">Žiadna webová stránka nezodpovedá vyhľadávaniu.</string>
     <string name="page_parent_changed">Strana predlohy sa zmenila</string>
     <string name="reader_no_followed_blogs_search_title">Žiadne blogy zodpovedajúce vášmu vyhľadávaniu</string>
@@ -169,18 +169,18 @@ Language: sk
     <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
     <string name="quick_start_dialog_view_site_message">Zobrazte náhľad svojej stránky, aby ste videli, čo uvidia vaši návštevníci.</string>
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
-    <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
     <string name="quick_start_dialog_follow_sites_title">Spojenie s inými stránkami</string>
-    <string name="quick_start_button_positive">Ísť</string>
-    <string name="quick_start_button_negative_short">Zrušiť</string>
-    <string name="quick_start_button_negative">Teraz nie</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">Ísť</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Zrušiť</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Teraz nie</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="content_description_more">Viac</string>
     <string name="reader_empty_subscribed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
-    <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">Budete si musieť nainštalovať Jetpack plugin, keď chcete používať Štatistiky na vašej webovej stránke WordPress.</string>
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>
@@ -210,7 +210,7 @@ Language: sk
     <string name="theme_image_desc">obrázok témy</string>
     <string name="button_discard">Odstrániť</string>
     <string name="reader_avatar_desc">profilová fotka</string>
-    <string name="notification_channel_transient_title">Prechodný</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Prechodný</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email">Kontaktný email</string>
     <string name="support_contact_email_not_set">Nevyplnený</string>
@@ -232,13 +232,13 @@ Language: sk
     <string name="reader_save_posts_locally_dialog_title">Uložiť články na neskôr</string>
     <string name="comment_read_source_post">článok</string>
     <string name="sites">Webové stránky</string>
-    <string name="signup_magic_link_title">Magický odkaz bol odoslaný</string>
-    <string name="site_address_login_title">Prihlásenie cez adresu webovej stránky</string>
-    <string name="email_address_login_title">Prihlásenie cez emailovú adresu</string>
-    <string name="verification_2fa_screen_title">Overenie kódu</string>
-    <string name="selfhosted_site_login_title">Prihlasovacie údaje</string>
-    <string name="magic_link_sent_login_title">Magický odkaz bol odoslaný</string>
-    <string name="magic_link_login_title">Prihlásenie pre magický odkaz</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">Magický odkaz bol odoslaný</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásenie cez adresu webovej stránky</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásenie cez emailovú adresu</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">Overenie kódu</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlasovacie údaje</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Magický odkaz bol odoslaný</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásenie pre magický odkaz</string>
     <string name="reader_empty_saved_posts_description">Klepnite na %s pre uloženie článku do Vášho zoznamu</string>
     <string name="reader_empty_saved_posts_title">Žiadne uložené články — zatiaľ!</string>
     <string name="reader_bookmark_snack_title">Článok bol uložený</string>
@@ -303,8 +303,8 @@ Language: sk
     <string name="content_description_person_reading_device_notification">Človek čítajúci na zariadení s notifikáciami</string>
     <string name="content_description_people_looking_charts">Ľudia pozerajúci sa na grafy a tabuľky</string>
     <string name="comment_title">%1$s na %2$s</string>
-    <string name="notification_channel_important_title">Dôležité</string>
-    <string name="notification_channel_general_title">Všeobecné</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Dôležité</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">Všeobecné</string>
     <string name="photo_picker_use_photo">Použiť túto fotografiu</string>
     <string name="media_preview_title">%1$d z %2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografie poskytnuté %s</string>
@@ -324,7 +324,7 @@ Language: sk
     <string name="plugin_detail_logo_desc">logo pluginu</string>
     <string name="photo_picker_camera_desc">otvoriť fotoaparát</string>
     <string name="photo_picker_device_desc">vybrať zo zariadenia</string>
-    <string name="signup_with_google_progress">Prebieha prihlasovanie cez Google…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Prebieha prihlasovanie cez Google…</string>
     <string name="navigate_up_desc">navigovať hore</string>
     <string name="reader_cardview_post_play_video_desc">prehrať odporúčané video</string>
     <string name="plugin_detail_banner_desc">banner pluginu</string>
@@ -427,17 +427,17 @@ Language: sk
     <string name="signup_user_exists">Tento email už na WordPress.com existuje.\nPrihlasovanie pokračuje.</string>
     <string name="notification_site_creation_created">Klepnutím pokračujte.</string>
     <string name="notification_site_creation_title_success">Webová stránka bola vytvorená!</string>
-    <string name="google_error_timeout">Spoločnosti Google trvalo príliš dlho kým reagovala. Možno budete musieť počkať, kým budete mať lepšie pripojenie na internet.</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Spoločnosti Google trvalo príliš dlho kým reagovala. Možno budete musieť počkať, kým budete mať lepšie pripojenie na internet.</string>
     <string name="username_changer_title">Zmeniť používateľské meno</string>
     <string name="username_changer_hint">Začnite písať pre ďalšie návrhy</string>
     <string name="username_changer_header">Vaše aktuálne používateľské meno je %1$s%2$s%3$s. S niekoľkými výnimkami, ostatní budú vidieť len vaše zobrazené meno, %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">Žiadne používateľské mená nie sú navrhnuté z %1$s%2$s%3$s. Zadajte ďalšie písmená alebo čísla, aby ste dostali ďalšie návrhy.</string>
     <string name="content_description_add_avatar">Pridať avatar</string>
     <string name="signup_updating_account">Účet sa aktualizuje…</string>
-    <string name="signup_magic_link_progress">Posiela sa email</string>
-    <string name="signup_magic_link_error_button_positive">Opakovať</string>
-    <string name="signup_magic_link_error_button_negative">Zatvoriť</string>
-    <string name="signup_magic_link_error">Vyskytol sa problém s odoslaním e-mailu. Môžete to zopakovať teraz alebo zavrieť a skúsiť to neskôr.</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Posiela sa email</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">Opakovať</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">Zatvoriť</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">Vyskytol sa problém s odoslaním e-mailu. Môžete to zopakovať teraz alebo zavrieť a skúsiť to neskôr.</string>
     <string name="signup_epilogue_hint_username">Používateľské meno</string>
     <string name="signup_epilogue_hint_password">Heslo (voliteľné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované meno</string>
@@ -535,18 +535,18 @@ Language: sk
     <string name="plugin_inactive">Neaktívny</string>
     <string name="media_edit_link_hint">Otvoriť odkaz v novom okne/záložke</string>
     <string name="media_edit_link_text">Odkaz na</string>
-    <string name="notification_login_failed">Vyskytla sa chyba.</string>
-    <string name="notification_2fa_needed">Na pokračovanie prosím zadajte overovací kód.</string>
-    <string name="notification_error_wrong_password">Na pokračovanie prosím ešte raz skontrolujte svoje heslo.</string>
-    <string name="notification_login_title_stopped">Prihlásenie zastavené</string>
-    <string name="notification_logging_in">Prosím čakajte, pokiaľ sa prihlásim. </string>
-    <string name="notification_login_title_in_progress">Prihlasujem sa…</string>
-    <string name="notification_logged_in">Ťuknite a pokračujte.</string>
-    <string name="notification_login_title_success">Prihlásený!</string>
-    <string name="login_error_generic_start">Google prihlásenie nemože byť spustené.</string>
-    <string name="login_empty_password">Prosím zadajte heslo </string>
-    <string name="login_text_otp_another">Pošlite mi druhý kód</string>
-    <string name="enter_verification_code_sms">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">Vyskytla sa chyba.</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Na pokračovanie prosím zadajte overovací kód.</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">Na pokračovanie prosím ešte raz skontrolujte svoje heslo.</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásenie zastavené</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">Prosím čakajte, pokiaľ sa prihlásim. </string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlasujem sa…</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">Ťuknite a pokračujte.</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásený!</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">Google prihlásenie nemože byť spustené.</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">Prosím zadajte heslo </string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">Pošlite mi druhý kód</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
     <string name="image_size">Veľkosť</string>
     <string name="uploading_subtitle_media_only_one">1 súbor zostáva</string>
     <string name="uploading_subtitle_media_only">%1$d z %2$d súborov zostáva</string>
@@ -563,15 +563,15 @@ Language: sk
     <string name="confirm_remove_media_image">Odstrániť tento obrázok z príspevku?</string>
     <string name="media_edit_customize_card_caption">Prispôsobiť</string>
     <string name="media_edit_file_details_card_caption">Podrobnosti súboru</string>
-    <string name="login_error_generic">Počas pripájania na Google účet došlo k nejakým chybám.</string>
-    <string name="login_error_suffix">\nMožno skúste iný účet?</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Počas pripájania na Google účet došlo k nejakým chybám.</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">\nMožno skúste iný účet?</string>
     <string name="login_error_button">Zavrieť</string>
-    <string name="enter_wpcom_password_google">Ak chcete pokračovať s týmto účtom Google, zadajte zodpovedajúce heslo WordPress.com. Toto bude požiadané len raz.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">Ak chcete pokračovať s týmto účtom Google, zadajte zodpovedajúce heslo WordPress.com. Toto bude požiadané len raz.</string>
     <string name="error_generic_network">Vyskytla sa chyba siete. Skontrolujte svoje pripojenie a skúste to znova.</string>
     <string name="post_settings_remove_featured_image">Odstráňte vybraný obrázok</string>
     <string name="post_settings_choose_featured_image">Vyberte si vybraný obrázok</string>
-    <string name="login_log_in_for_share_intent">Prihláste sa do WordPress.com pre zdieľanie obsahu.</string>
-    <string name="enter_site_address_share_intent">Zadajte adresu vašj WordPress webovej stránky, na ktorej by ste chceli zdieľať obsah.</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Prihláste sa do WordPress.com pre zdieľanie obsahu.</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Zadajte adresu vašj WordPress webovej stránky, na ktorej by ste chceli zdieľať obsah.</string>
     <string name="jetpack_disconnect_success_toast">Webová stránka odpojená</string>
     <string name="jetpack_disconnect_error_toast">Chyba pri odpájaní webovej stránky</string>
     <string name="jetpack_disconnect_confirm">Odpojenie</string>
@@ -655,34 +655,34 @@ Language: sk
     <string name="login_epilogue_mysites_other">Moje webové stránky</string>
     <string name="login_epilogue_mysites_one">Moja  webová stránka</string>
     <string name="login_email_client_not_found">Nemožno zistiť vašu aplikáciu e-mailového klienta</string>
-    <string name="login_empty_2fa">Prosím, zadajte overovací kód</string>
-    <string name="login_empty_username">Prosím, zadajte používateľské meno</string>
-    <string name="login_log_in_for_deeplink">Prihláste sa do WordPress.com a prejdite k článku.</string>
-    <string name="login_error_while_adding_site">Chyba pri pridávaní webovej stránky. Kód chyby: %s.</string>
-    <string name="login_checking_site_address">Kontrolovanie adresy webovej stránky.</string>
-    <string name="login_site_address_more_help">Potrebujete pomoc?</string>
-    <string name="login_site_address_help_content">Adresa vašej webovej stránky sa zobrazí v paneli na vrchu obrazovky, keď navštívite vašu stránku v prehliadači Chrome.</string>
-    <string name="login_site_address_help_title">Aká je adresa mojej webovej stránky?</string>
-    <string name="login_site_address">Adresa webovej stránky</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">Prosím, zadajte overovací kód</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">Prosím, zadajte používateľské meno</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">Prihláste sa do WordPress.com a prejdite k článku.</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">Chyba pri pridávaní webovej stránky. Kód chyby: %s.</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Kontrolovanie adresy webovej stránky.</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">Potrebujete pomoc?</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">Adresa vašej webovej stránky sa zobrazí v paneli na vrchu obrazovky, keď navštívite vašu stránku v prehliadači Chrome.</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">Aká je adresa mojej webovej stránky?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Adresa webovej stránky</string>
     <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
-    <string name="login_continue">Pokračovať</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">Pokračovať</string>
     <string name="connect_more">Pripojiť ďalšiu webovú stránku</string>
-    <string name="enter_wpcom_password">Vpíšte heslo na WordPress.com.</string>
-    <string name="login_magic_link_email_requesting">Vyžaduje sa prihlasovací e-mail.</string>
-    <string name="password_incorrect">Zdá sa, že heslo je nesprávne. Prosím, skontrolujte informáciu a skúste opäť.</string>
-    <string name="requesting_otp">Vyžaduje sa overenie kódu prostredníctvom SMS.</string>
-    <string name="login_text_otp">Radšej mi pošlite kód</string>
-    <string name="enter_verification_code">Už je to takmer hotové! Zadajte overovací kód pre WordPress.com z aplikácie autentifikátora.</string>
-    <string name="open_mail">Otvoriť e-mail</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">Vpíšte heslo na WordPress.com.</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">Vyžaduje sa prihlasovací e-mail.</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">Zdá sa, že heslo je nesprávne. Prosím, skontrolujte informáciu a skúste opäť.</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Vyžaduje sa overenie kódu prostredníctvom SMS.</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Radšej mi pošlite kód</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Už je to takmer hotové! Zadajte overovací kód pre WordPress.com z aplikácie autentifikátora.</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Otvoriť e-mail</string>
     <string name="next">Ďalej</string>
-    <string name="enter_email_wordpress_com">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
     <string name="me_profile_photo">Profilová fotografia</string>
     <string name="error_media_parse_error">Neočakávaná odpoveď od serveru</string>
     <string name="upload_finished_toast">Nemožno zastaviť nahrávanie, pretože je už dokončené.</string>
     <string name="post_title">Názov</string>
     <string name="menu_redo">Opakovať</string>
     <string name="menu_undo">Zrušiť</string>
-    <string name="media_insert_unimplemented">Ospravedlňujeme sa! Doplnok ešte nie je implementovaný :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ospravedlňujeme sa! Doplnok ešte nie je implementovaný :(</string>
     <string name="error_media_small">Príliš malé médiá na zobrazenie</string>
     <string name="editor_dropped_unsupported_files">Upozornenie: nie všetky zrušené príspevky sú podporované!</string>
     <string name="editor_dropped_title_images_not_allowed">Odovzdávanie obrázkov v Názve nie je povolené.</string>
@@ -826,8 +826,8 @@ Language: sk
     <string name="error_all_media_upload_canceled">Nahrávanie všetkých médii bolo zrušené pre neznámu chybu. Prosím, opakujte nahrávanie</string>
     <string name="error_unknown_post_type">Neznámy formát článku</string>
     <string name="submit_for_review">Odoslať</string>
-    <string name="duplicate_site_detected">Zistili sa duplikátne webové stránky.</string>
-    <string name="cannot_add_duplicate_site">Táto webová stránka už existuje v aplikácii, nemožno ju pridať.</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">Zistili sa duplikátne webové stránky.</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">Táto webová stránka už existuje v aplikácii, nemožno ju pridať.</string>
     <string name="already_logged_in_wpcom">Už ste prihlásený do účtu WordPress.com, nemôžete pridať webovú stránku WordPress.com, ktorá je viazaná na iný účet.</string>
     <string name="error_media_load">Nepodarilo sa nahrať média</string>
     <string name="error_media_refresh_no_connection">Vyžaduje sa pripojenie na obnovenie knižnice</string>
@@ -839,8 +839,8 @@ Language: sk
     <string name="media_upload_error">Vyskytla sa chyba pri nahrávaní médií</string>
     <string name="retry">Opakovať</string>
     <string name="confirm">Potvrdiť</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
-    <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>
@@ -878,7 +878,7 @@ Language: sk
     <string name="invite_already_a_member">%s: je už členom</string>
     <string name="comment_moderated_approved">Komentár schválený!</string>
     <string name="like">Lajk</string>
-    <string name="timespan_now">teraz</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">teraz</string>
     <string name="role_viewer">Návštevník</string>
     <string name="error_post_my_profile_no_connection">Žiadne pripojenie, nemožno uložiť váš profil</string>
     <string name="alignment_left">Vľavo</string>
@@ -895,19 +895,19 @@ Language: sk
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
-    <string name="visual_editor">Vizuálny editor</string>
-    <string name="image_thumbnail">Obrázok miniatúry</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vizuálny editor</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Obrázok miniatúry</string>
     <string name="image_settings_save_toast">Zmeny uložené</string>
     <string name="image_width">Šírka</string>
     <string name="image_link_to">Odkaz na</string>
     <string name="image_caption">Titulok</string>
-    <string name="image_alt_text">Alt text</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alt text</string>
     <string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
     <string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
-    <string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
-    <string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
-    <string name="alert_insert_image_html_mode">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
-    <string name="uploading_gallery_placeholder">Nahrávanie galérie…</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nastala chyba pri vkladaní súboru</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Práve nahrávate súbory. Počkajte na dokončenie.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahrávanie galérie…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Pozvánka úspešne odoslaná</string>
     <string name="tap_to_try_again">Ťuknite a skúste ešte raz!</string>
@@ -941,8 +941,8 @@ Language: sk
     <string name="error_refreshing_gravatar">Chyba pri znovu nahrávaní vášho Gravatu</string>
     <string name="error_locating_image">Chyba pri umiestnení zmenšeného obrázku</string>
     <string name="error_cropping_image">Chyba pri orezaní obrázku</string>
-    <string name="checking_email">Kontrola emailu</string>
-    <string name="magic_link_unavailable_error_message">Momentálne nedostupné. Prosím vložte vaše heslo</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">Kontrola emailu</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">Momentálne nedostupné. Prosím vložte vaše heslo</string>
     <string name="logging_in">Prihlasovanie</string>
     <string name="web_address_dialog_hint">Zobraziť verejne, keď píšete komentáre.</string>
     <string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
@@ -978,7 +978,7 @@ Language: sk
     <string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
     <string name="comments_empty_list_filtered_approved">Žiadne schválené komentáre</string>
     <string name="button_skip">Preskočiť</string>
-    <string name="xmlrpc_missing_method_error">Nepodarilo sa pripojiť. Vyžadované metódy XML-RPC chýbajú na tomto serveri. </string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodarilo sa pripojiť. Vyžadované metódy XML-RPC chýbajú na tomto serveri. </string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Na stred</string>
     <string name="post_format_status">Status</string>
@@ -1038,7 +1038,7 @@ Language: sk
     <string name="about_the_app">O aplikácii</string>
     <string name="error_post_account_settings">Nepodarilo sa uložiť nastavenia vášho účtu</string>
     <string name="error_fetch_account_settings">Nepodarilo sa načítať nastavenia vášho účtu</string>
-    <string name="error_fetch_my_profile">Nepodarilo sa načítať váš profil</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Nepodarilo sa načítať váš profil</string>
     <string name="site_settings_unknown_language_code_error">Kód jazyka nebol rozpoznaný</string>
     <string name="site_settings_threading_dialog_description">Povoliť vnorenie komentárov do vlákien.</string>
     <string name="site_settings_threading_dialog_header">Vlákna do úrovne</string>
@@ -1239,9 +1239,9 @@ Language: sk
     <string name="deselect_all">Odznačiť všetky</string>
     <string name="select_all">Vybrať všetky</string>
     <string name="language">Jazyk</string>
-    <string name="verification_code">Overovací kód</string>
-    <string name="invalid_verification_code">Nesprávny overovací kód</string>
-    <string name="auth_required">Ak chcete pokračovať, prihláste sa znova.</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Overovací kód</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Nesprávny overovací kód</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Ak chcete pokračovať, prihláste sa znova.</string>
     <string name="error_notification_open">Nie je možné otvoríť oznámenie</string>
     <string name="stats_view_authors">Autori</string>
     <string name="stats_view_search_terms">Hľadané výrazy</string>
@@ -1305,7 +1305,7 @@ Language: sk
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
     <string name="theme_fetch_failed">Chyba pri načítavaní témy</string>
     <string name="error_downloading_image">Chyba pri sťahovaní obrázka</string>
-    <string name="email_invalid">Vložte platnú emailovú adresu</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Vložte platnú emailovú adresu</string>
     <string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
     <string name="mnu_comment_unspam">Žiadny spam</string>
     <string name="adding_cat_failed">Chyba pri pridávaní kategórie</string>
@@ -1317,7 +1317,7 @@ Language: sk
     <string name="invalid_email_message">Zadaná emailová adresa nie je platná</string>
     <string name="notifications_empty_list">Žiadne notifikácie</string>
     <string name="error_refresh_posts">Príspevky nebolo možné znova načítať</string>
-    <string name="error_refresh_pages">Stránky nebolo možné znova načítať</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Stránky nebolo možné znova načítať</string>
     <string name="error_refresh_comments">Komentáre nebolo možné znova načítať</string>
     <string name="error_moderate_comment">Počas moderovania nastala chyba</string>
     <string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
@@ -1329,9 +1329,9 @@ Language: sk
     <string name="connection_error">Chyba pripojenia</string>
     <string name="learn_more">Zistiť viac</string>
     <string name="select_categories">Vyberte si kategórie</string>
-    <string name="create_a_link">Vytvoriť odkaz</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vytvoriť odkaz</string>
     <string name="page_settings">Nastavenia stránky</string>
-    <string name="horizontal_alignment">Horizontálne zarovnanie</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Horizontálne zarovnanie</string>
     <string name="post_settings">Nastavenia príspevku</string>
     <string name="comment_status_approved">Schválené</string>
     <string name="comment_status_spam">Spam</string>
@@ -1348,7 +1348,7 @@ Language: sk
     <string name="add_new_category">Pridať novú kategóriu</string>
     <string name="category_name">Názov kategórie</string>
     <string name="new_post">Nový príspevok</string>
-    <string name="http_authorization_required">Požaduje sa autorizácia</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Požaduje sa autorizácia</string>
     <string name="image_settings">Nastavenie obrázka</string>
     <string name="trash">Kôš</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
@@ -1425,25 +1425,25 @@ Language: sk
     <string name="more_notifications">a %d ďalším.</string>
     <string name="sign_in">Prihlásiť sa</string>
     <string name="loading">Načítava sa…</string>
-    <string name="httpuser">HTTP používateľské meno</string>
-    <string name="httppassword">HTTP heslo</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP používateľské meno</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP heslo</string>
     <string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>
     <string name="incorrect_credentials">Nesprávne používatelské meno alebo heslo.</string>
     <string name="password">Heslo</string>
     <string name="username">Používatelské meno</string>
-    <string name="log_in">Prihlásiť sa</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Prihlásiť sa</string>
     <string name="reader">Čitateľ</string>
     <string name="posts">Príspevky</string>
-    <string name="width">Šírka</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Šírka</string>
     <string name="anonymous">Anonymný</string>
     <string name="no_network_title">Sieť nedostupná</string>
-    <string name="caption">Titulok (voliteľný)</string>
-    <string name="featured_in_post">Vložiť obrázok do príspevku</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Titulok (voliteľný)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vložiť obrázok do príspevku</string>
     <string name="pages">Podstránky</string>
-    <string name="featured">Použiť ilustračný obrázok</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Použiť ilustračný obrázok</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL adresa</string>
-    <string name="uploading">Nahrávanie…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahrávanie…</string>
     <string name="image_alignment">Zarovnanie</string>
     <string name="refresh">Obnoviť</string>
     <string name="untitled">Bez názvu</string>

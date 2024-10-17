@@ -1,5 +1,0 @@
-25.2:
-In diesem Release haben wir zwei große Probleme behoben:
-* Du kannst jetzt das Veröffentlichungsdatum eines Beitrags wieder aktualisieren.
-* Einige Benutzer konnten den Inhalt ihrer Beiträge nicht aktualisieren.
-Bitte wende dich weiterhin an den Support, wenn etwas nicht richtig funktioniert!

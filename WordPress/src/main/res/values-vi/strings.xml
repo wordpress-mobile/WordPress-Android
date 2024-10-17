@@ -5,9 +5,9 @@ Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: vi_VN
 -->
-<resources>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Nâng cấp gói để có thể tải audio lên</string>
-    <string name="gutenberg_native_invalid_url">Đường dẫn không hợp lệ.</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nâng cấp gói để có thể tải audio lên</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Đường dẫn không hợp lệ.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Tuần trước bạn đã có %1$s lượt xem và %2$s bình luận</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Tuần trước bạn đã có %1$s lượt xem và %2$s lượt thích</string>
     <string name="weekly_roundup_notification_text_views_only">Tuần trước bạn đã có %1$s lượt xem.</string>
@@ -40,12 +40,12 @@ Language: vi_VN
     <string name="stats_action_card_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="stats_action_card_grow_audience_button_label">Chọn khóa học</string>
     <string name="stats_action_card_grow_audience_title">Thu hút độc giả</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Bạn cũng có thể sắp xếp lại các khối bằng cách chạm vào một khối rồi nhấn vào mũi tên lên và xuống xuất hiện ở phía dưới bên trái của khối để di chuyển khối lên hoặc xuống.</string>
-    <string name="gutenberg_native_image_file_not_found">Không tìm thấy hình.</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Kéo và thả giúp việc sắp xếp lại các khối trở nên dễ dàng. Nhấn và giữ một khối, sau đó kéo khối đó đến vị trí mới và thả ra.</string>
-    <string name="gutenberg_native_drag_drop">Kéo &amp; thả</string>
-    <string name="gutenberg_native_arrow_buttons">Nút mũi tên</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Đã chọn: %2$s</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bạn cũng có thể sắp xếp lại các khối bằng cách chạm vào một khối rồi nhấn vào mũi tên lên và xuống xuất hiện ở phía dưới bên trái của khối để di chuyển khối lên hoặc xuống.</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Không tìm thấy hình.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kéo và thả giúp việc sắp xếp lại các khối trở nên dễ dàng. Nhấn và giữ một khối, sau đó kéo khối đó đến vị trí mới và thả ra.</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kéo &amp; thả</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nút mũi tên</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Đã chọn: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">Đã hoàn thành xong!</string>
     <string name="quick_start_list_task_complete">Hoàn thành mục tiêu</string>
     <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
@@ -62,7 +62,7 @@ Language: vi_VN
     <string name="quick_start_dialog_check_notifications_message">Cập nhật thời gian thực trong bàn tay.</string>
     <string name="quick_start_dialog_check_notifications_title">Xem thông báo của bạn</string>
     <string name="quick_start_dialog_check_notifications_message_short">Chọn tab %1$s Thông báo %2$s để nhận cập nhật mới.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Chọn %1$s thêm %2$s để tải lên media. Bạn có thể thêm nó vào bài viết/trang từ bất kỳ thiết bị nào.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">Chọn %1$s thêm %2$s để tải lên media. Bạn có thể thêm nó vào bài viết/trang từ bất kỳ thiết bị nào.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Dùng &lt;b&gt; Khám phá &lt;/b&gt; để tìm blog và thẻ.</string>
     <string name="photo_picker_video_thumbnail_content_description">Ảnh đại diện video</string>
     <string name="stats_details_top_commentators">Top người bình luận</string>
@@ -83,8 +83,8 @@ Language: vi_VN
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Câu hỏi</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Nhắc Mỗi Ngày</string>
     <string name="blogging_prompts_onboarding_got_it">Đã hiểu</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để xem blog của bạn</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Chọn %1$s Đọc %2$s để tìm những blog khác.</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để xem blog của bạn</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Chọn %1$s Đọc %2$s để tìm những blog khác.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Tìm hiểu thêm về nhắc nhở</string>
     <string name="photo_picker_video_thumbnail_unselected">Bỏ chọn video</string>
     <string name="photo_picker_video_thumbnail_selected">Đã chọn video</string>
@@ -96,7 +96,7 @@ Language: vi_VN
     <string name="scan_vault_press_active_on_site_title">Trang của bạn có VaultPress</string>
     <string name="locale_picker_current_language">Ngôn ngữ hiện tại:</string>
     <string name="hpp_choose_and_create_site">Tạo blog</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">Thêm khối</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Thêm khối</string>
     <string name="initial_screen">Màn hình chào mừng</string>
     <string name="blogging_prompts_onboarding_notification_action">Tìm hiểu</string>
     <string name="blogging_prompts_onboarding_notification_text">Trở thành một nhà văn giỏi hơn bằng cách xây dựng thói quen viết lách. Nhấn để tìm hiểu thêm.</string>
@@ -106,40 +106,40 @@ Language: vi_VN
     <string name="new_site_creation_site_name_title">Tên blog</string>
     <string name="my_site_todays_stats_get_more_views_message">Hứng thú xây dựng độc giả? Đọc qua &lt;a href=\"%1$s\"&gt;mẹo hàng đầu&lt;/a&gt;.</string>
     <string name="stats_insights_views_and_visitors">Lượt xem &amp; Truy cập</string>
-    <string name="featured_image_removed_notice">Xóa ảnh minh họa</string>
-    <string name="featured_image_confirmation_notice">Dùng làm ảnh minh họa</string>
-    <string name="featured_image_replace_dialog_cancel">Giữ nguyên</string>
-    <string name="featured_image_replace_dialog_confirm">Thay ảnh minh họa</string>
-    <string name="featured_image_replace_dialog_description">Bạn đã dùng ảnh minh họa rồi. Bạn có muốn thay thế nó?</string>
-    <string name="featured_image_replace_dialog_title">Thay thế ảnh minh họa hiện tại?</string>
-    <string name="dialog_dismiss_try_block_editor">Bỏ qua</string>
-    <string name="dialog_body_try_block_editor">Chúng tôi sẽ sớm bỏ trình soạn thảo mặc định, nhưng điều này không ảnh hưởng tới những bài viết hoặc trang cũ của bạn. Hãy bắt đầu bật Trình soạn thảo Khối trong cài đặt blog.</string>
-    <string name="dialog_title_try_block_editor">Dùng thử Trình soạn thảo Khối</string>
-    <string name="menu_toolbar_title">Sửa %s khối</string>
-    <string name="long_post_dlg_saving">Đang lưu</string>
-    <string name="retry_failed_upload_retry_all">Thử lại toàn bộ</string>
-    <string name="retry_failed_upload_remove">Thôi tải lên</string>
-    <string name="retry_failed_upload_yes">Thử lại</string>
-    <string name="retry_failed_upload_title">Không thể tải lên</string>
-    <string name="stop_upload_dialog_button_no">Không</string>
-    <string name="stop_upload_dialog_button_yes">Có</string>
-    <string name="dialog_button_cancel">Hủy bỏ</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="dialog_title">Thêm đường dẫn</string>
-    <string name="editor_title_beta">Beta</string>
-    <string name="toast_content_info_editor_not_ready">Đang tải trình soạn thảo</string>
-    <string name="toast_content_info_failed">Không thể tải cấu trúc nội dung</string>
-    <string name="dialog_content_info_body">Khối: %1$d\nTừ: %2$d\nKý tự: %3$d</string>
-    <string name="dialog_content_info_title">Cấu trúc nội dung</string>
-    <string name="media_bar_description_library">Chọn từ thư viện media WordPress</string>
-    <string name="media_bar_description_gallery">Chọn từ bộ sưu tập</string>
-    <string name="media_bar_description_camera">Chụp Ảnh hoặc quay Video bằng máy ảnh</string>
-    <string name="pixel_suffix">%dpx</string>
-    <string name="stop_save_dialog_ok_button">OK</string>
-    <string name="stop_save_dialog_message">Xin đợi cho tới khi tất cả tập tin được lưu</string>
-    <string name="stop_save_dialog_title">Đang lưu tập tin</string>
-    <string name="post_content">Nội dung</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Xóa ảnh minh họa</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Dùng làm ảnh minh họa</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Giữ nguyên</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thay ảnh minh họa</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bạn đã dùng ảnh minh họa rồi. Bạn có muốn thay thế nó?</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thay thế ảnh minh họa hiện tại?</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Bỏ qua</string>
+    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Chúng tôi sẽ sớm bỏ trình soạn thảo mặc định, nhưng điều này không ảnh hưởng tới những bài viết hoặc trang cũ của bạn. Hãy bắt đầu bật Trình soạn thảo Khối trong cài đặt blog.</string>
+    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Dùng thử Trình soạn thảo Khối</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sửa %s khối</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Đang lưu</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thử lại toàn bộ</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thôi tải lên</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thử lại</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Không thể tải lên</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Không</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Có</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hủy bỏ</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
+    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Thêm đường dẫn</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Beta</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Đang tải trình soạn thảo</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Không thể tải cấu trúc nội dung</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Khối: %1$d\nTừ: %2$d\nKý tự: %3$d</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cấu trúc nội dung</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chọn từ thư viện media WordPress</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chọn từ bộ sưu tập</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chụp Ảnh hoặc quay Video bằng máy ảnh</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dpx</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Xin đợi cho tới khi tất cả tập tin được lưu</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Đang lưu tập tin</string>
+    <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nội dung</string>
     <string name="blogging_prompts_onboarding_card_prompt">Quay lại bộ phim về cuộc đời bạn</string>
     <string name="blogging_prompts_onboarding_remind_me">Nhắc tôi</string>
     <string name="blogging_prompts_onboarding_try_it_now">Thử ngay</string>
@@ -188,19 +188,19 @@ Language: vi_VN
     <string name="my_site_blogging_prompt_card_answer_prompt">Kiểu trả lời</string>
     <string name="my_site_blogging_prompt_card_title">Lời dạy</string>
     <string name="my_site_all_tab_title">Toàn bộ</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Màu phối này có thể gây khó đọc. Hãy thử sử dụng màu nền sáng hơn hoặc màu văn bản tối hơn.</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Màu này có thể gây khó đọc cho mọi người. Thử dùng màu nền tối hơn hoặc chữ sáng hơn.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Không thể chèn media.\nNhấn để biết thêm thông tin.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">Màu phối này có thể gây khó đọc. Hãy thử sử dụng màu nền sáng hơn hoặc màu văn bản tối hơn.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">Màu này có thể gây khó đọc cho mọi người. Thử dùng màu nền tối hơn hoặc chữ sáng hơn.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">Không thể chèn media.\nNhấn để biết thêm thông tin.</string>
     <string name="new_site_creation_intents_header_subtitle">Chọn một thẻ từ danh sách bên dưới hoặc tự nhập</string>
     <string name="new_site_creation_intents_header_title">Nội dung blog của bạn là gì?</string>
     <string name="notification_channel_weekly_roundup_title">Tóm Tắt Tuần</string>
     <string name="my_site_dashboard_tab_title">Tổng quan</string>
     <string name="adding_cat">Thêm chuyên mục</string>
     <string name="login_select_email_client">Bạn dùng ứng dụng email nào?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">Xảy ra lỗi khi giao tiếp với blog. Mã lỗi HTTP 401.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC bị chặn trên blog này (mã lỗi 401). Nếu tiếp tục đăng nhập thất bại, nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">Không thể đọc blog WordPress trên URL này. Nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
-    <string name="login_error_xml_rpc_services_disabled">Dịch vụ XML-RPC bị chặn trên blog này.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources" a8c-src-lib="login">Xảy ra lỗi khi giao tiếp với blog. Mã lỗi HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">XML-RPC bị chặn trên blog này (mã lỗi 401). Nếu tiếp tục đăng nhập thất bại, nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
+    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể đọc blog WordPress trên URL này. Nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="login">Dịch vụ XML-RPC bị chặn trên blog này.</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tên miền WordPress.com không chứa những ký tự này. Chỉ có chữ và số được cho phép.</string>
     <string name="my_site_error_within_card_subtitle">Kiểm tra kết nối mạng và thử lại.</string>
@@ -211,66 +211,66 @@ Language: vi_VN
     <string name="reader_comment_menu_trash">Chuyển vào thùng rác</string>
     <string name="reader_comment_menu_spam">Đánh dấu là spam</string>
     <string name="reader_comment_menu_unapprove">Không duyệt</string>
-    <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
-    <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
-    <string name="about_automattic_app_icon_description">Biểu tượng app</string>
-    <string name="about_automattic_back_icon_description">Biểu tượng trở về</string>
-    <string name="about_automattic_logo_description">Biểu tượng Automattic</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_pocketcasts">Pocket Casts</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_dayone">Day One</string>
-    <string name="about_automattic_source_code_item_title">Mã nguồn</string>
-    <string name="about_automattic_privacy_policy_item_title">Chính sách bảo mật</string>
-    <string name="about_automattic_terms_of_service_item_title">Điều khoản dịch vụ</string>
-    <string name="about_automattic_work_with_us_item_subtitle">Làm việc từ xa</string>
-    <string name="about_automattic_work_with_us_item_title">Cơ hội nghề nghiệp</string>
-    <string name="about_automattic_family_item_title">Dịch vụ của Automattic</string>
-    <string name="about_automattic_legal_and_more_item_title">Pháp lý</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_rate_us_item_title">Đánh giá</string>
-    <string name="about_automattic_share_with_friends_item_title">Chia sẻ với bạn bè</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Bạn chỉ có thể sửa khối bằng cách sử dụng trình soạn thảo trên bản web.</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">Mở cài đặt Jetpack Security</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Lưu ý: Bạn phải cho phép WordPress.com đăng nhập để sửa khối này trong trình soạn thảo di động.</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Lưu ý: Bố cục có thể khác nhau nếu khác chủ đề hoặc kích cỡ màn hình</string>
-    <string name="gutenberg_native_address_settings">Tùy chỉnh địa chỉ</string>
-    <string name="gutenberg_native_add_media">THÊM MEDIA</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Cài đặt bộ sưu tập dạng ô</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">Chuyển đến chọn màn hình bố cục</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Dạng bộ sưu tập</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Biểu tượng app</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Biểu tượng trở về</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Biểu tượng Automattic</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Day One</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Mã nguồn</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Chính sách bảo mật</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Điều khoản dịch vụ</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Làm việc từ xa</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Cơ hội nghề nghiệp</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Dịch vụ của Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pháp lý</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Đánh giá</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Chia sẻ với bạn bè</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">Bạn chỉ có thể sửa khối bằng cách sử dụng trình soạn thảo trên bản web.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Mở cài đặt Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Lưu ý: Bạn phải cho phép WordPress.com đăng nhập để sửa khối này trong trình soạn thảo di động.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Lưu ý: Bố cục có thể khác nhau nếu khác chủ đề hoặc kích cỡ màn hình</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Tùy chỉnh địa chỉ</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">THÊM MEDIA</string>
     <string name="my_site_error_card_subtitle">Xảy ra lỗi khi tải dữ liệu blog của bạn.</string>
     <string name="my_site_error_card_title">Chưa tải được một vài dữ liệu</string>
     <string name="my_site_dashboard_stale_message">Chưa cập nhật được trang tổng quan. Vui lòng kiểm tra kết nối mạng và làm mới.</string>
     <string name="my_site_dashboard_update_error">Chưa cập nhật được trang tổng quan.</string>
     <string name="error_media_video_duration_exceeds_limit">Chưa tải lên được video. Bạn phải mua gói mới tải lên được video dài trên 5 phút.</string>
-    <string name="about_automattic_acknowledgements_item_title">Lời cảm ơn</string>
-    <string name="about_automattic_california_privacy_notice_item_title">Lưu ý người dùng California</string>
-    <string name="about_automattic_version_label">Phiên bản %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title">Lời cảm ơn</string>
-    <string name="about_automattic_legal_page_title">Pháp lý</string>
-    <string name="about_automattic_main_page_title">Giới thiệu %1$s</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Lời cảm ơn</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Lưu ý người dùng California</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Phiên bản %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Lời cảm ơn</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pháp lý</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Giới thiệu %1$s</string>
     <string name="about_blog">Blog</string>
-    <string name="gutenberg_native_the_basics">Cơ bản</string>
-    <string name="gutenberg_native_selected_default">Đã chọn: Mặc định</string>
-    <string name="gutenberg_native_more_support_options">Tùy chọn hỗ trợ khác</string>
-    <string name="gutenberg_native_get_support">Hỗ trợ</string>
-    <string name="gutenberg_native_font_size">Cỡ chữ</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">Nhấn hai lần để cỡ chữ</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">Nhấn hai lần để chọn cỡ chữ mặc định</string>
-    <string name="gutenberg_native_contact_support">Hỗ trợ</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">Cơ bản</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">Đã chọn: Mặc định</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">Tùy chọn hỗ trợ khác</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Hỗ trợ</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Cỡ chữ</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">Nhấn hai lần để cỡ chữ</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">Nhấn hai lần để chọn cỡ chữ mặc định</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">Hỗ trợ</string>
+    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Theo dõi thảo luận</string>
     <string name="reader_comments_be_first_to_comment">Trở thành người phản hồi đầu tiên</string>
     <string name="reader_comments_view_all">Xem tất cả bình luận</string>
     <string name="reader_comments_post_fetch_failure">Xảy ra lỗi khi tải dữ liệu bài viết</string>
     <string name="reader_comments_fetch_failure">Xảy ra lỗi khi tải bình luận</string>
     <string name="reader_btn_follow_conversation_settings">Tùy chọn theo dõi thảo luận</string>
-    <string name="gutenberg_native_from_clipboard">Từ bộ nhớ tạm</string>
-    <string name="gutenberg_native_featured_image">Ảnh minh họa</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Chép URL từ bộ nhớ tạm, %s</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">Từ bộ nhớ tạm</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Ảnh minh họa</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">Chép URL từ bộ nhớ tạm, %s</string>
     <string name="me_btn_about">Về WordPress</string>
     <string name="my_site_post_card_link_create_post">Viết bài mới</string>
     <string name="my_site_create_next_post_excerpt">Đăng thường xuyên để thu hút độc giả!</string>
@@ -288,7 +288,7 @@ Language: vi_VN
     <string name="my_site_post_card_scheduled_title">Bài viết đã lên lịch sắp tới</string>
     <string name="my_site_post_card_draft_title">Chỉnh sửa bản nháp</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">Chèn liên kết</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Chèn liên kết</string>
     <string name="domains_suggestions_select_domain">Chọn tên miền</string>
     <string name="domains_title">Tên miền</string>
     <string name="post_status_sticky">Ghim</string>
@@ -324,12 +324,12 @@ Language: vi_VN
     <string name="comment_edit_comment">Bình luận</string>
     <string name="comment_edit_user_name">Tên</string>
     <string name="comment_edit_menu_done">Xong</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Xem trước nhúng khối sẽ cập nhật sau</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Xem trước nhúng khối sẽ cập nhật sau</string>
     <string name="weekly_roundup">Tóm Tắt Tuần</string>
-    <string name="gutenberg_native_embed_options">Tùy chọn nhúng</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">Nhấn hai lần để xem tùy chọn nhúng.</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">Tùy chọn nhúng</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">Nhấn hai lần để xem tùy chọn nhúng.</string>
     <string name="quick_start_list_create_site_message">Đã tạo blog! Tiếp tục nhiệm vụ khác.</string>
-    <string name="gutenberg_native_line_height">Khoảng cách dòng</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">Khoảng cách dòng</string>
     <string name="domains_free_plan_get_your_domain_title">Tên miền miễn phí</string>
     <string name="recommend_app_generic_get_template_error">Xảy ra lỗi khi tải mẫu ứng dụng đề xuất</string>
     <string name="recommend_app_bad_format_response">Phản hồi đã nhận không hợp lệ</string>
@@ -342,32 +342,32 @@ Language: vi_VN
     <string name="blogging_reminders_notification_time">Thời gian thông báo</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Bạn sẽ nhận thông báo &lt;b&gt;mỗi ngày&lt;/b&gt; vào lúc &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s mỗi tuần vào lúc %2$s</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Khi chỉnh sửa khối văn bản, các nút định dạng văn bản nằm ở thanh công cụ đặt phía trên bàn phím</string>
-    <string name="gutenberg_native_selected_s">Đã chọn: %s</string>
-    <string name="gutenberg_native_select_a_color_above">Chọn một màu ở trên</string>
-    <string name="gutenberg_native_navigates_to_select_s">Chọn điều hướng %s</string>
-    <string name="gutenberg_native_move_blocks">Di chuyển khối</string>
-    <string name="gutenberg_native_how_to_edit_your_post">Cách chỉnh sửa bài viết</string>
-    <string name="gutenberg_native_how_to_edit_your_page">Cách chỉnh sửa trang</string>
-    <string name="gutenberg_native_customize_blocks">Tùy chỉnh khối</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Những thay đổi của ảnh minh họa sẽ không bị ảnh hưởng bởi nút làm lại.</string>
-    <string name="gutenberg_native_applies_the_setting">Áp dụng thiết lập</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Bạn có thể sắp xếp các khối bằng cách nhấn vào một khối, rồi nhấn tiếp vào mũi tên lên hoặc xuống xuất hiện ở phía dưới bên trái.</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Chào mừng đến thế giới của khối</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Để xóa khối, chọn khối và nhấn vào biểu tượng dấu ba chấm ở phía dưới bên phải khối. Sau đó, chọn tùy chọn xóa khối.</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Một số khối có những thiết lập bổ sung. Nhấn vào biểu tượng cài đặt ở phía dưới bên phải khối để xem thêm.</string>
-    <string name="gutenberg_native_s_block_newly_available">%s khối, khả dụng mới</string>
-    <string name="gutenberg_native_rich_text_editing">Chỉnh sửa văn bản thuần</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Khi đã quen thuộc với tên các khối, bạn có thể thêm một khối bằng cách nhập nhanh tên khối sau dấu / — ví dụ, /image hoặc /heading.</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Tạo nội dung phong phú bằng cách chèn ảnh, gif, video và nhúng media vào trang.</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Hãy thử thêm khối vào bài viết hoặc trang!</string>
-    <string name="gutenberg_native_embed_media">Nhúng media</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Mỗi khối có những thiết lập riêng. Để xem, nhấn vào khối. Những thiết lập đó sẽ xuất hiện ở thanh công cụ phía dưới màn hình.</string>
-    <string name="gutenberg_native_build_layouts">Xây dựng bố cục</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Khối là những phần nội dung mà bạn có thể chèn, sắp xếp và tùy chỉnh mà không cần biết lập trình. Khối là cách hiện đại và dễ dàng để bạn tạo những bố cục tuyệt đẹp.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Khối cho phép bạn trọng tâm vào việc viết nội dung, mọi công cụ định dạng đều có sẵn để giúp thông điệp của bạn bay xa.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Xếp nội dung của bạn thành nhiều cột, chèn nút Kêu Gọi, và thêm văn bản trên ảnh. </string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Thêm khối mới bằng cách nhấn biểu tượng dấu + trên thanh công cụ phía dưới bên trái.</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Khi chỉnh sửa khối văn bản, các nút định dạng văn bản nằm ở thanh công cụ đặt phía trên bàn phím</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Đã chọn: %s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">Chọn một màu ở trên</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Chọn điều hướng %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">Di chuyển khối</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">Cách chỉnh sửa bài viết</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">Cách chỉnh sửa trang</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Tùy chỉnh khối</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">Những thay đổi của ảnh minh họa sẽ không bị ảnh hưởng bởi nút làm lại.</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Áp dụng thiết lập</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">Bạn có thể sắp xếp các khối bằng cách nhấn vào một khối, rồi nhấn tiếp vào mũi tên lên hoặc xuống xuất hiện ở phía dưới bên trái.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">Chào mừng đến thế giới của khối</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">Để xóa khối, chọn khối và nhấn vào biểu tượng dấu ba chấm ở phía dưới bên phải khối. Sau đó, chọn tùy chọn xóa khối.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">Một số khối có những thiết lập bổ sung. Nhấn vào biểu tượng cài đặt ở phía dưới bên phải khối để xem thêm.</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s khối, khả dụng mới</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Chỉnh sửa văn bản thuần</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Khi đã quen thuộc với tên các khối, bạn có thể thêm một khối bằng cách nhập nhanh tên khối sau dấu / — ví dụ, /image hoặc /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">Tạo nội dung phong phú bằng cách chèn ảnh, gif, video và nhúng media vào trang.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Hãy thử thêm khối vào bài viết hoặc trang!</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Nhúng media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">Mỗi khối có những thiết lập riêng. Để xem, nhấn vào khối. Những thiết lập đó sẽ xuất hiện ở thanh công cụ phía dưới màn hình.</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">Xây dựng bố cục</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">Khối là những phần nội dung mà bạn có thể chèn, sắp xếp và tùy chỉnh mà không cần biết lập trình. Khối là cách hiện đại và dễ dàng để bạn tạo những bố cục tuyệt đẹp.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">Khối cho phép bạn trọng tâm vào việc viết nội dung, mọi công cụ định dạng đều có sẵn để giúp thông điệp của bạn bay xa.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Xếp nội dung của bạn thành nhiều cột, chèn nút Kêu Gọi, và thêm văn bản trên ảnh. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Thêm khối mới bằng cách nhấn biểu tượng dấu + trên thanh công cụ phía dưới bên trái.</string>
     <string name="quick_start_sites_type_tasks_completed">Đã xong %1$s trong tổng số %2$s</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Học cách sử dụng cơ bản với hướng dẫn nhanh.</string>
     <string name="comment_batch_moderation_error">Không thể kiểm duyệt một hoặc nhiều bình luận</string>
@@ -378,16 +378,16 @@ Language: vi_VN
     <string name="stats_disabled_enable_stats_button">Bật thống kê blog</string>
     <string name="stats_disabled_subtitle">Bật thống kê blog để xem thông tin chi tiết về số lượt truy cập, lượt thích, lượt bình luận, lượt theo dõi.</string>
     <string name="stats_disabled_title">Đang tìm thống kê?</string>
-    <string name="gutenberg_native_what_is_a_block">Khối là gì?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Chúng tôi đang khẩn trương bổ sung tính năng hỗ trợ xem trước %s. Lúc đó, bạn có thể xem trước nội dung nhúng trên bài viết.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Chúng tôi đang khẩn trương bổ sung tính năng hỗ trợ xem trước %s. Lúc đó, bạn có thể xem trước nội dung nhúng trên trang.</string>
-    <string name="gutenberg_native_unable_to_embed_media">Không thể nhúng media</string>
-    <string name="gutenberg_native_try_another_search_term">Thử tìm cụm từ khác</string>
-    <string name="gutenberg_native_no_blocks_found">Không có khối nào</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">Xem thể xem trước %s</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Xem trước khối %s sẽ sớm được cập nhật</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">Nhấn hai lần để xem trước bài viết.</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">Nhấn hai lần để xem trước trang.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">Khối là gì?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">Chúng tôi đang khẩn trương bổ sung tính năng hỗ trợ xem trước %s. Lúc đó, bạn có thể xem trước nội dung nhúng trên bài viết.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">Chúng tôi đang khẩn trương bổ sung tính năng hỗ trợ xem trước %s. Lúc đó, bạn có thể xem trước nội dung nhúng trên trang.</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">Không thể nhúng media</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">Thử tìm cụm từ khác</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">Không có khối nào</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">Xem thể xem trước %s</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Xem trước khối %s sẽ sớm được cập nhật</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">Nhấn hai lần để xem trước bài viết.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">Nhấn hai lần để xem trước trang.</string>
     <string name="quick_start_list_upload_icon_subtitle">Hiển thị trên tab trình duyệt của khách truy cập và những nơi khác.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Hướng dẫn thêm</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Cần trợ giúp quản lý blog này trong ứng dụng?</string>
@@ -396,9 +396,9 @@ Language: vi_VN
     <string name="login_epilogue_mysites_heading">Chọn một blog</string>
     <string name="scan_multisite_not_supported_subtitle">Rất tiếc, Jetpack Scan không tương thích với cài đặt nhiều trang WordPress cùng lúc.</string>
     <string name="scan_multisite_not_supported_title">Không hỗ trợ nhiều trang WordPress cùng lúc</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL không hợp lệ. Hãy nhập lại.</string>
-    <string name="gutenberg_native_embed_caption_s">Chú thích nhúng. %s</string>
-    <string name="gutenberg_native_embed_caption_empty">Chú thích nhúng. Trống</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">URL không hợp lệ. Hãy nhập lại.</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Chú thích nhúng. %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Chú thích nhúng. Trống</string>
     <string name="activity_log_visit_our_documentation_page">xem trang tài liệu</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite cung cấp các bản sao lưu có thể tải xuống, dễ dàng khôi phục nội dung. Tìm hiểu thêm %1$s.</string>
     <string name="blogging_reminders_tip_message">Đăng thường xuyên để giữ tương tác với độc giả, cũng như thu hút khách truy cập.</string>
@@ -419,43 +419,43 @@ Language: vi_VN
     <string name="set_your_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="blogging_reminders_notification_text">Hôm nay là ngày bạn đăng bài</string>
     <string name="blogging_reminders_notification_title">Hãy đăng bài trên %s</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress iOS</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress Android</string>
     <string name="blogging_reminders_done">Xong</string>
     <string name="blogging_reminders_notify_me">Nhắc tôi</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khôi phục blog từ các bản sao lưu.</string>
-    <string name="gutenberg_native_set_as_featured_image">Đặt làm Ảnh minh họa</string>
-    <string name="gutenberg_native_remove_as_featured_image">Xóa Ảnh minh họa</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Đặt làm Ảnh minh họa</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Xóa Ảnh minh họa</string>
     <string name="fab_add_category_desc">Tạo Chuyên mục</string>
     <string name="support_ticket_subject">Hỗ trợ cho WordPress Android</string>
     <string name="site_settings_categories_hint">Quản lý chuyên mục</string>
     <string name="site_settings_categories_title">Chuyên mục</string>
     <string name="page_is_posts_page_warning">Nội dung từ những bài viết gần đây nhất sẽ được tự động tạo và không thể chỉnh sửa.</string>
-    <string name="gutenberg_native_border_settings">Thiết lập Viền</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">Thiết lập Viền</string>
     <string name="storage_utils_dialog_dont_show_button">Không hiện nữa</string>
     <string name="storage_utils_dialog_ok_button">Dung lượng lưu trữ</string>
     <string name="storage_utils_dialog_message">Chúng tôi cần lưu nội dung của bạn trên thiết bị trước khi đăng. Xem lại cài đặt lưu trữ và xóa bớt tập tin để thêm dung lượng trống.</string>
     <string name="storage_utils_dialog_title">Không đủ bộ nhớ thiết bị</string>
-    <string name="gutenberg_native_y_axis_position">Tọa độ Trục Tung</string>
-    <string name="gutenberg_native_x_axis_position">Tọa độ Trục Hoành</string>
-    <string name="gutenberg_native_type_a_url">Nhập URL</string>
-    <string name="gutenberg_native_slash_inserter_results">Kết quả nhập</string>
-    <string name="gutenberg_native_s_has_url_set">%s có áp dụng URL</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s không áp dụng URL</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s đã chuyển sang khối thông dụng</string>
-    <string name="gutenberg_native_s_block">%s khối</string>
-    <string name="gutenberg_native_media_options">Tùy chọn Media</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">UR không hợp lệ. Không tìm thấy tập tin âm thanh.</string>
-    <string name="gutenberg_native_insert_crosspost">Nhập đăng chéo</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">Kéo để điều chỉnh tiêu điểm</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Nhấn hai lần để mở Menu Dưới, sau đó thêm hình ảnh hoặc video</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Nhấn hai lần để mở Menu Hành Động, sau đó thêm hình ảnh hoặc video</string>
-    <string name="gutenberg_native_current_unit_is_s">Đơn vị hiện tại là %s</string>
-    <string name="gutenberg_native_crosspost">Đăng chéo</string>
-    <string name="gutenberg_native_columns_settings">Thiết lập Cột</string>
-    <string name="gutenberg_native_add_link_to_s">Chèn liên kết vào %s</string>
-    <string name="gutenberg_native_add_link_text">Chèn văn bản liên kết</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Thêm ảnh hoặc video</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Tọa độ Trục Tung</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">Tọa độ Trục Hoành</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Nhập URL</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">Kết quả nhập</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s có áp dụng URL</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s không áp dụng URL</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s đã chuyển sang khối thông dụng</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s khối</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">Tùy chọn Media</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">UR không hợp lệ. Không tìm thấy tập tin âm thanh.</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Nhập đăng chéo</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">Kéo để điều chỉnh tiêu điểm</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Dưới, sau đó thêm hình ảnh hoặc video</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Hành Động, sau đó thêm hình ảnh hoặc video</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Đơn vị hiện tại là %s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Đăng chéo</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Thiết lập Cột</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Chèn liên kết vào %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Chèn văn bản liên kết</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Thêm ảnh hoặc video</string>
     <string name="error_media_path_is_directory">Đường dẫn được chỉ định là một thư mục chứ không phải tập tin Media</string>
     <string name="error_media_could_not_find_media_in_path">Không tìm thấy tập tin media</string>
     <string name="error_media_unexpected_empty_media_file_path">Không có media trong đường dẫn chỉ định</string>
@@ -463,95 +463,95 @@ Language: vi_VN
     <string name="error_media_unexpected_null_value">Media trống</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục các mối đe dọa.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục mối đe dọa.</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">Nhấn hai lần để chèn liên kết</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">Nhấn hai lần để chèn liên kết</string>
     <string name="login_empty_view_try_another_account">Thử một tài khoản khác</string>
     <string name="login_empty_view_see_instructions">Xem hướng dẫn</string>
     <string name="login_no_jetpack_sites_error_message">Nếu bạn đã có sẵn một trang, bạn cần cài đặt plugin Jetpack miễn phí và kết nối nó với tài khoản WordPress.com của bạn.</string>
     <string name="login_empty_view_avatar_content_description">Ảnh hồ sơ của bạn</string>
     <string name="login_not_a_jetpack_site">Để sử dụng ứng dụng cho %1$s, bạn cần cài đặt Jetpack và kết nối nó với tài khoản WordPress.com.</string>
-    <string name="gutenberg_native_move_image_forward">Chuyển Ảnh lên</string>
-    <string name="gutenberg_native_move_image_backward">Chuyển Ảnh xuống</string>
-    <string name="gutenberg_native_width_settings">Thiết lập Chiều Rộng</string>
-    <string name="gutenberg_native_column_settings">Tùy chỉnh cột</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Chuyển Ảnh lên</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Chuyển Ảnh xuống</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Thiết lập Chiều Rộng</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Tùy chỉnh cột</string>
     <string name="user_profile_untitled_site">(Không tựa)</string>
     <string name="user_profile_site_section_header">Blog</string>
     <string name="user_profile_bottom_sheet_description">Thông tin menu dưới của hồ sơ người dùng</string>
     <string name="likes_list_screen_title">Những người thích %s</string>
-    <string name="gutenberg_native_two">Hai</string>
-    <string name="gutenberg_native_three">Ba</string>
-    <string name="gutenberg_native_s_social_icon">%s biểu tượng mạng xã hội</string>
-    <string name="gutenberg_native_mention">Nhắc đến</string>
-    <string name="gutenberg_native_new">MỚI</string>
-    <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
-    <string name="gutenberg_native_preview_page">Xem trước trang</string>
-    <string name="gutenberg_native_retry">Thử lại</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">Một</string>
-    <string name="gutenberg_native_no_preview_available">Không có bản xem trước</string>
-    <string name="gutenberg_native_text_color">Màu chữ</string>
-    <string name="gutenberg_native_s_link">%s link</string>
-    <string name="gutenberg_native_padding">Khoảng giãn cách</string>
-    <string name="gutenberg_native_four">Bốn</string>
-    <string name="gutenberg_native_featured">Nổi Bật</string>
-    <string name="gutenberg_native_custom_url">URL tùy chỉnh</string>
-    <string name="gutenberg_native_create_embed">Chèn mã nhúng</string>
-    <string name="gutenberg_native_column_d">Cột %d</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Mô tả ngắn gọn các liên kết để độc giả hiểu.</string>
-    <string name="gutenberg_native_add_blocks">Thêm khối</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">Hai</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">Ba</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s biểu tượng mạng xã hội</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">Nhắc đến</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">MỚI</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">Xem trước bài viết</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">Xem trước trang</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">Thử lại</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">Một</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Không có bản xem trước</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Màu chữ</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s link</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Khoảng giãn cách</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">Bốn</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nổi Bật</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">URL tùy chỉnh</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Chèn mã nhúng</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Cột %d</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">Mô tả ngắn gọn các liên kết để độc giả hiểu.</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Thêm khối</string>
     <string name="login_no_jetpack_sites">Không tìm thấy blog có Jetpack</string>
-    <string name="gutenberg_native_what_is_alt_text">Alt text là gì?</string>
-    <string name="gutenberg_native_transform_s_to">Chuyển %s thành</string>
-    <string name="gutenberg_native_transform_block">Biến đổi khối</string>
-    <string name="gutenberg_native_failed_to_insert_media">Không thể chèn media.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">Không thể chèn tập tin âm thanh.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu chỉ dùng hình để trang trí.</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s đã chuyển thành %2$s</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">Alt text là gì?</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">Chuyển %s thành</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Biến đổi khối</string>
+    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">Không thể chèn media.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Không thể chèn tập tin âm thanh.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Mô tả về hình ảnh. Để trống nếu chỉ dùng hình để trang trí.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$s đã chuyển thành %2$s</string>
     <string name="like_faces_error_loading_message">Lỗi khi tải dữ liệu. %s.</string>
     <string name="like_title_plural">%d người thích bài này</string>
     <string name="like_title_singular">1 người thích</string>
     <string name="suggestion">Đề xuất:</string>
-    <string name="gutenberg_native_use_icon_button">Dùng nút biểu tượng</string>
-    <string name="gutenberg_native_search_input_field">Chữ ở thanh tìm kiếm.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Nút tìm kiếm. Chữ hiện tại là</string>
-    <string name="gutenberg_native_search_blocks">Tìm kiếm khối</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Nhãn khối tìm kiếm. Chữ hiện tại là</string>
-    <string name="gutenberg_native_outside">Bên ngoài</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Không cài chữ xem trước</string>
-    <string name="gutenberg_native_inside">Bên trong</string>
-    <string name="gutenberg_native_hide_search_heading">Ẩn tiêu đề tìm kiếm</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Nhấn hai lần để sửa chữ xem trước</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Nhấn hai lần để sửa chữ của nhãn</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Nhấn hai lần để sửa chữ trên nút</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Nhấn hai lần để đổi đơn vị</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Chữ xem trước hiện tại là</string>
-    <string name="gutenberg_native_clear_search">Xóa tìm kiếm</string>
-    <string name="gutenberg_native_cancel_search">Hủy tìm kiếm</string>
-    <string name="gutenberg_native_button_position">Vị trí nút</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s là %3$s %4$s.</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">Dùng nút biểu tượng</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Chữ ở thanh tìm kiếm.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Nút tìm kiếm. Chữ hiện tại là</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Tìm kiếm khối</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Nhãn khối tìm kiếm. Chữ hiện tại là</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Bên ngoài</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">Không cài chữ xem trước</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Bên trong</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Ẩn tiêu đề tìm kiếm</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Nhấn hai lần để sửa chữ xem trước</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Nhấn hai lần để sửa chữ của nhãn</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Nhấn hai lần để sửa chữ trên nút</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">Nhấn hai lần để đổi đơn vị</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Chữ xem trước hiện tại là</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Xóa tìm kiếm</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Hủy tìm kiếm</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Vị trí nút</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s là %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Xảy ra lỗi khi tải lượt thích</string>
     <string name="get_likes_unknown_error">Xảy ra lỗi khi tải lượt thích.</string>
     <string name="get_likes_no_network_error">Không có kết nối mạng.</string>
     <string name="comments_empty_list_filtered_unreplied">Không có bình luận chưa trả lời</string>
     <string name="comment_status_unreplied">Chưa trả lời</string>
-    <string name="gutenberg_native_add_link">Chèn liên kết</string>
-    <string name="gutenberg_native_search_settings">Thiết lập Tìm Kiếm</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">Chèn liên kết</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Thiết lập Tìm Kiếm</string>
     <string name="jetpack_brute_force_allowlist_title">Luôn cho phép những IP</string>
     <string name="site_settings_denylist_title">Cấm bình luận</string>
-    <string name="gutenberg_native_add_button_text">Thêm chữ trên nút</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Thêm chữ trên nút</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Bỏ qua</string>
     <string name="activity_log_backup_download_notice_download_action">Tải về</string>
     <string name="threat_fix_all_status_success_message_plural">Đã sửa mối đe dọa xong.</string>
     <string name="threat_fix_all_confirmation_message_plural">Hãy xác nhận bạn muốn sửa mọi %s mối đe dọa.</string>
     <string name="scan_idle_threats_description_plural">Tìm thấy %1$s mối đe dọa tiềm tàng với %2$s. Xin hãy xem lại và nhấn vào nút sửa toàn bộ. Chúng tôi luôn %3$s nếu bạn cần giúp.</string>
     <string name="scan_fixing_threats_description_plural">Chúng tôi đang cố gắng sửa những mối đe dọa đó. Vào lúc này, bạn vẫn có thể sử dụng blog bình thường và quay lại kiểm tra quá trình này bất cứ lúc nào.</string>
-    <string name="gutenberg_native_edit_focal_point">Sửa tiêu điểm</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Nhấn hai lần để mở Menu Dưới, sau đó sửa, thay thế hoặc xóa hình ảnh</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Nhấn hai lần để mở Menu Hành Động, sau đó sửa, thay thế hoặc xóa hình ảnh</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Sửa tiêu điểm</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Dưới, sau đó sửa, thay thế hoặc xóa hình ảnh</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Hành Động, sau đó sửa, thay thế hoặc xóa hình ảnh</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Nhận tên blog của bạn</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Đã xong tất cả bước&lt;/b&gt;&lt;br/&gt;Bạn sẽ tiếp cận nhiều người hơn. Làm tốt lắm!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Đã xong tất cả các bước&lt;/b&gt;&lt;br/&gt;Bạn đã tùy biến blog của bạn xong. Giỏi lắm!</string>
-    <string name="magic_link_not_meaning_to_create_account">Không muốn tạo tài khoản mới? Quay lại và nhập địa chỉ email khác.</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Không muốn tạo tài khoản mới? Quay lại và nhập địa chỉ email khác.</string>
     <string name="invite_links_disable_dialog_message">Nếu thư mời này bị vô hiệu hóa, mọi người sẽ không thể dùng để tham gia nhóm của bạn nữa. Bạn chắc chứ?</string>
     <string name="invite_links_disable_dialog_title">Vô hiệu hóa thư mời</string>
     <string name="invite_links_bad_format_response">Phản hồi đã nhận không hợp lệ</string>
@@ -598,21 +598,21 @@ Language: vi_VN
     <string name="backup_item_contents">Chỉ mục WP-content</string>
     <string name="backup_item_roots">WordPress root</string>
     <string name="backup_download_details_choose_items_header">Những thứ có trong bản tải về này</string>
-    <string name="gutenberg_native_uploading">Đang tải lên…</string>
-    <string name="gutenberg_native_replace_file">Thay thế tập tin</string>
-    <string name="gutenberg_native_replace_audio">Thay thế âm thanh</string>
-    <string name="gutenberg_native_problem_opening_the_audio">Xảy ra lỗi khi mở âm thanh</string>
-    <string name="gutenberg_native_open">MỞ</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">Không có ứng dụng nào đáp ứng yêu cầu.</string>
-    <string name="gutenberg_native_lock_icon">Biểu tượng khóa</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Không thể chèn tập tin âm thanh. Xin nhấn vào tùy chọn.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Nhấn hai lần để chọn một tập tin âm thanh</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Nhấn hai lần để nghe tập tin âm thanh</string>
-    <string name="gutenberg_native_choose_audio">Chọn âm thanh</string>
-    <string name="gutenberg_native_audio_player">Trình phát âm thanh</string>
-    <string name="gutenberg_native_audio_file">tập tin âm thanh</string>
-    <string name="gutenberg_native_audio_caption_s">Chú thích âm thanh. %s</string>
-    <string name="gutenberg_native_audio_caption_empty">Chú thích âm thanh. Trống</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">Đang tải lên…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Thay thế tập tin</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Thay thế âm thanh</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Xảy ra lỗi khi mở âm thanh</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">MỞ</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">Không có ứng dụng nào đáp ứng yêu cầu.</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">Biểu tượng khóa</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Không thể chèn tập tin âm thanh. Xin nhấn vào tùy chọn.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">Nhấn hai lần để chọn một tập tin âm thanh</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">Nhấn hai lần để nghe tập tin âm thanh</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Chọn âm thanh</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">Trình phát âm thanh</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">tập tin âm thanh</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">Chú thích âm thanh. %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Chú thích âm thanh. Trống</string>
     <string name="continue_with_wpcom">Đăng nhập hoặc đăng ký WordPress.com</string>
     <string name="photo_picker_use_audio">Dùng âm thanh này</string>
     <string name="photo_picker_choose_audio">Chọn âm thanh từ thiết bị</string>
@@ -667,10 +667,10 @@ Language: vi_VN
     <string name="backup_download_complete_failed_title">Tải về thất bại</string>
     <string name="web_preview_tablet">Máy tính bảng</string>
     <string name="web_preview_mobile">Điện thoại</string>
-    <string name="quick_start_dialog_review_pages_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
+    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
     <string name="quick_start_dialog_review_pages_message">Cập nhật, tạo hoặc xóa trang.</string>
     <string name="quick_start_dialog_review_pages_title">Xem lại trang</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">Chọn %1$s Trang chủ %2$s để sửa Trang chủ.</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Chọn %1$s Trang chủ %2$s để sửa Trang chủ.</string>
     <string name="reader_menu_mark_as_unseen">Đánh dấu chưa đọc</string>
     <string name="reader_menu_mark_as_seen">Đánh dấu đã đọc</string>
     <string name="error_media_upload_failed_for_reason">Tải lên media thất bại.\n%1$s</string>
@@ -703,8 +703,8 @@ Language: vi_VN
     <string name="backup_empty_subtitle">Bản sao lưu đầu tiên của bạn sẽ xuất hiện ở đây trong vòng 24h. Chúng tôi sẽ thông báo khi chuẩn bị xong</string>
     <string name="backup_empty_title">Bản sao lưu đầu tiên đang tới</string>
     <string name="request_failed_message">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
-    <string name="gutenberg_native_move_to_bottom">Chuyển xuống</string>
-    <string name="gutenberg_native_change_block_position">Đổi vị trí khối</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Chuyển xuống</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Đổi vị trí khối</string>
     <string name="jetpack_icon_content_description">Biểu tượng</string>
     <string name="backup_download_complete_info">Chúng tôi cũng sẽ gửi liên kết tải tập tin cho bạn qua email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Nút chia sẻ liên kết</string>
@@ -793,8 +793,8 @@ Language: vi_VN
     <string name="backup_download_details_header">Tạo sao lưu có thể tải về</string>
     <string name="backup_download_details_page_title">Tải về sao lưu</string>
     <string name="backup_download">Sao lưu cho phép tải về</string>
-    <string name="gutenberg_native_error">Lỗi</string>
-    <string name="gutenberg_native_choose_file">Chọn tập tin</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">Lỗi</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Chọn tập tin</string>
     <string name="activity_log_item_menu_download_backup_label">Tải về sao lưu</string>
     <string name="activity_log_item_menu_restore_label">Khôi phục tới điểm này</string>
     <string name="activity_log_activity_type_filter_label">Kiểu hoạt động</string>
@@ -805,12 +805,12 @@ Language: vi_VN
     <string name="dialog_confirm_copy_local_message">Bài viết mà bạn sao chép có hai phiên bản đang xung đột bởi vì bạn đã chỉnh sửa nhưng chưa lưu.\nSửa bài viết để hết xung đột hoặc tiếp tục sao chép phiên bản từ ứng dụng này.</string>
     <string name="dialog_confirm_copy_local_title">Lỗi đồng bộ bài viết</string>
     <string name="button_copy">Tạo bản sao</string>
-    <string name="gutenberg_native_file_name">Tên tập tin</string>
-    <string name="gutenberg_native_file_block_settings">Thiết lập khối tập tin</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Tải lên tập tin thất bại.\nNhấn để xem tùy chọn.</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Lưu tập tin thất bại.\nNhấn để xem tùy chọn.</string>
-    <string name="gutenberg_native_edit_file">Sửa tập tin</string>
-    <string name="gutenberg_native_copy_file_url">Chép URL tập tin</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">Tên tập tin</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">Thiết lập khối tập tin</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Tải lên tập tin thất bại.\nNhấn để xem tùy chọn.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Lưu tập tin thất bại.\nNhấn để xem tùy chọn.</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Sửa tập tin</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Chép URL tập tin</string>
     <string name="new_site_creation_domain_header_title">Chọn tên miền</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Đang theo dõi bình luận qua email</string>
@@ -828,16 +828,16 @@ Language: vi_VN
     <string name="hpp_retry_error">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="hpp_error_subtitle">Nhấn thử lại khi có mạng trở lại.</string>
     <string name="hpp_error_title">Không dùng được bố cục khi rớt mạng</string>
-    <string name="continue_site_credentials">Tiếp tục với định giá đã lưu</string>
-    <string name="login_find_your_connected_email">Tìm email đã kết nối</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="login">Tiếp tục với định giá đã lưu</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="login">Tìm email đã kết nối</string>
     <string name="reader_discover_no_posts_title">Không có bài viết mới</string>
     <string name="reader_discover_empty_title">Chào mừng!</string>
     <string name="scan">Quét</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; bình luận bài viết của bạn</string>
     <string name="login_prologue_third_subtitle_two">Hôm nay bạn nhận được &lt;b&gt;50 lượt thích&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; thích bài viết của bạn</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Đã mở menu khối có thể cuộn. Chọn một khối.</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">Đã đóng menu khối có thể cuộn.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Đã mở menu khối có thể cuộn. Chọn một khối.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Đã đóng menu khối có thể cuộn.</string>
     <string name="hpp_choose_button">Chọn</string>
     <string name="mlp_network_error_subtitle">Nhấn thử lại khi có mạng trở lại hoặc tạo một trang trống bằng nút phía dưới.</string>
     <string name="mlp_network_error_title">Bố cục không khả dụng khi ngoại tuyến</string>
@@ -868,11 +868,11 @@ Language: vi_VN
     <string name="login_prologue_title_second">Đăng mọi nơi với công cụ chỉnh sửa mạnh mẽ.</string>
     <string name="login_prologue_title_first">Chào mừng đến với nền tảng blog nổi tiếng nhất thế giới.</string>
     <string name="media_loading_failed">Tải media thất bại</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Chúng tôi đang cố gắng thêm nhiều khối trong các bản cập nhật.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' chưa được hỗ trợ</string>
-    <string name="gutenberg_native_help_button">Nút trợ giúp</string>
-    <string name="gutenberg_native_edit_using_web_editor">Sửa bằng trình chỉnh sửa web</string>
-    <string name="gutenberg_native_choose_images">Chọn ảnh</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">Chúng tôi đang cố gắng thêm nhiều khối trong các bản cập nhật.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' chưa được hỗ trợ</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Nút trợ giúp</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Sửa bằng trình chỉnh sửa web</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Chọn ảnh</string>
     <string name="mlp_notice_blank_page_created">Đã tạo trang trống</string>
     <string name="mlp_notice_page_created">Đã tạo trang</string>
     <string name="media_insert_failed">Chèn media thất bại.</string>
@@ -888,15 +888,15 @@ Language: vi_VN
     <string name="media_uploading_gif_library_photo">Đang tải lên GIF</string>
     <string name="media_uploading_stock_library_photo">Đang tải lên media stock</string>
     <string name="media_uploading_default">Đang tải lên media</string>
-    <string name="gutenberg_native_search_or_type_url">Tìm hoặc nhập URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">Thêm số điện thoại này</string>
-    <string name="gutenberg_native_add_this_link">Thêm liên kết này</string>
-    <string name="gutenberg_native_add_this_email_link">Thêm email này</string>
+    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Tìm hoặc nhập URL</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">Thêm số điện thoại này</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">Thêm liên kết này</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">Thêm email này</string>
     <string name="suggestion_no_connection">Không có kết nối mạng.\nKhông thể tải đề xuất.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Đã chọn %s</string>
-    <string name="login_get_link_by_email">Đăng nhập bằng email</string>
-    <string name="email_not_registered_wpcom">Hmm, chúng tôi không tìm thấy tài khoản WordPress.com kết nối với địa chỉ email này.</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập bằng email</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="login">Hmm, chúng tôi không tìm thấy tài khoản WordPress.com kết nối với địa chỉ email này.</string>
     <string name="permission_microphone">Micrô</string>
     <string name="comment_unable_to_show_error">Không thể hiện bình luận này</string>
     <string name="media_browse_for_items">Duyệt qua</string>
@@ -905,20 +905,20 @@ Language: vi_VN
     <string name="error_media_xmlrcp_server_error">Máy chủ của trang web gặp sự cố</string>
     <string name="error_media_xmlrpc_not_allowed">Hành động của bạn không cho phép</string>
     <string name="show_n_hidden_items_desc">nhiều hơn %1$s mục</string>
-    <string name="gutenberg_native_select_a_layout">Chọn một bố cục</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Lưu ý: Bố cục cột có thể khác nhau nếu khác chủ đề hoặc kích cỡ màn hình</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Chọn một bố cục</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Lưu ý: Bố cục cột có thể khác nhau nếu khác chủ đề hoặc kích cỡ màn hình</string>
     <string name="create_post_story_fab_tooltip">Viết bài hoặc story</string>
     <string name="create_page_fab_tooltip">Tạo trang</string>
     <string name="create_post_fab_tooltip">Tạo bài viết</string>
     <string name="reader_discover_interests_header">Có thể bạn sẽ thích</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ẩn</string>
-    <string name="gutenberg_native_video_caption_empty">Chú thích video. Trống</string>
-    <string name="gutenberg_native_updates_the_title">Cập nhật tựa đề.</string>
-    <string name="gutenberg_native_paste_block_after">Dán khối sau</string>
-    <string name="gutenberg_native_page_title_s">Tựa đề trang. %s</string>
-    <string name="gutenberg_native_page_title_empty">Tựa đề trang. Trống</string>
-    <string name="toast_error_playing_video">Xảy ra lỗi khi phát video</string>
-    <string name="camera_error">Thiết bị này không hỗ trợ API Camera2.</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Chú thích video. Trống</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Cập nhật tựa đề.</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Dán khối sau</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Tựa đề trang. %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Tựa đề trang. Trống</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">Xảy ra lỗi khi phát video</string>
+    <string name="camera_error" tools:ignore="UnusedResources">Thiết bị này không hỗ trợ API Camera2.</string>
     <string name="label_close_button">Đóng</string>
     <string name="mlp_preview_page">Xem trước</string>
     <string name="mlp_create_page">Tạo trang</string>
@@ -926,7 +926,7 @@ Language: vi_VN
     <string name="mlp_choose_layout_subtitle">Bắt đầu bằng cách chọn một trong những bố cục cho sẵn. Hoặc tạo một trang trống.</string>
     <string name="mlp_choose_layout_title">Chọn bố cục</string>
     <string name="prepublishing_nudges_story_title_hint">Đặt tựa đề story</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Chọn từ thiết bị</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Cần phải có plugin Jetpack để sửa biểu tượng trang WordPress tự lưu trữ.</string>
@@ -934,65 +934,65 @@ Language: vi_VN
     <string name="error_media_quota_exceeded_toast">Không thể tải tập tin lên.\nVượt quá dung lượng lưu trữ cho phép.</string>
     <string name="error_media_quota_exceeded">Vượt quá dung lượng lưu trữ cho phép</string>
     <string name="pick_file">Chọn tập tin</string>
-    <string name="gutenberg_native_replace_video">Thay thế video</string>
-    <string name="gutenberg_native_replace_image_or_video">Thay thế ảnh hoặc video</string>
-    <string name="gutenberg_native_convert_to_link">Chuyển thành liên kết</string>
-    <string name="gutenberg_native_choose_video">Chọn video</string>
-    <string name="gutenberg_native_choose_image_or_video">Chọn ảnh hoặc video</string>
-    <string name="gutenberg_native_choose_image">Chọn ảnh</string>
-    <string name="gutenberg_native_block_removed">Đã xóa khối</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Thay thế video</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Thay thế ảnh hoặc video</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Chuyển thành liên kết</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Chọn video</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Chọn ảnh hoặc video</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Chọn ảnh</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Đã xóa khối</string>
     <string name="enter_your_site_address">Dùng địa chỉ blog có sẵn</string>
-    <string name="signup_confirmation_title">Xác nhận đăng ký</string>
-    <string name="continue_with_google_terms_of_service_text">Nếu bạn tiếp tục với Google mà chưa có tài khoản WordPress.com, bạn sẽ được tạo một tài khoản và đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
-    <string name="continue_terms_of_service_text">Tiếp tục nghĩa là bạn đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
-    <string name="signup_confirmation_message">Chúng tôi sẽ sử dụng địa chỉ email này để tạo tài khoản WordPress mới cho bạn.</string>
-    <string name="signup_magic_link_message">Chúng tôi đã gửi email cho bạn một liên kết để tạo tài khoản WordPress.com mới. Kiểm tra email trên thiết bị này, và nhấn vào liên kết trong thư.</string>
-    <string name="enter_account_info_for_site">Nhập thông tin tài khoản %1$s.</string>
-    <string name="login_or">hoặc</string>
-    <string name="continue_google_button_suffix">Tiếp tục với Google</string>
-    <string name="login_find_your_site_adress">Tìm địa chỉ blog của bạn</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="login">Xác nhận đăng ký</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Nếu bạn tiếp tục với Google mà chưa có tài khoản WordPress.com, bạn sẽ được tạo một tài khoản và đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="login">Tiếp tục nghĩa là bạn đồng ý %1$sĐiều khoản dịch vụ%2$s.</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi sẽ sử dụng địa chỉ email này để tạo tài khoản WordPress mới cho bạn.</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi đã gửi email cho bạn một liên kết để tạo tài khoản WordPress.com mới. Kiểm tra email trên thiết bị này, và nhấn vào liên kết trong thư.</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập thông tin tài khoản %1$s.</string>
+    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="login">hoặc</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">Tiếp tục với Google</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="login">Tìm địa chỉ blog của bạn</string>
     <string name="login_done">Xong</string>
-    <string name="magic_link_not_seeing_email_message">Không thấy email? Kiểm tra mục Spam hoặc Thư Rác.</string>
-    <string name="login_magic_links_sent_label">Kiểm tra email trên thiết bị này và nhấn vào liên kết trong email được gửi từ WordPress.com.</string>
-    <string name="login_magic_links_label">Chúng tôi đã gửi cho bạn liên kết đăng nhập trực tiếp, không cần mật khẩu.</string>
-    <string name="check_email">Kiểm tra email</string>
-    <string name="get_started">Bắt đầu</string>
-    <string name="enter_email_to_continue_wordpress_com">Nhập địa chỉ email để đăng nhập hoặc tạo tài khoản WordPress.com.</string>
-    <string name="or_type_your_password">Nhập mật khẩu</string>
-    <string name="create_account">Tạo tài khoản</string>
-    <string name="send_link_by_email">Gửi liên kết qua email</string>
-    <string name="reset_your_password">Đổi mật khẩu</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="login">Không thấy email? Kiểm tra mục Spam hoặc Thư Rác.</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="login">Kiểm tra email trên thiết bị này và nhấn vào liên kết trong email được gửi từ WordPress.com.</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi đã gửi cho bạn liên kết đăng nhập trực tiếp, không cần mật khẩu.</string>
+    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">Kiểm tra email</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">Bắt đầu</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập địa chỉ email để đăng nhập hoặc tạo tài khoản WordPress.com.</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập mật khẩu</string>
+    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Tạo tài khoản</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Gửi liên kết qua email</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="login">Đổi mật khẩu</string>
     <string name="reader_error_request_failed_title">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
     <string name="quick_start_list_update_site_title_title">Kiểm tra tiêu đề blog</string>
     <string name="quick_start_dialog_update_site_title_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để thêm tựa đề mới</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Cho bài này vào thùng rác sẽ hủy bỏ hết thay đổi, bạn có chắc muốn tiếp tục?</string>
-    <string name="gutenberg_native_s_block_options">Tùy chọn %s</string>
-    <string name="gutenberg_native_remove_block">Xóa khối</string>
-    <string name="gutenberg_native_duplicate_block">Nhân đôi khối</string>
-    <string name="gutenberg_native_copy_block">Chép khối</string>
-    <string name="gutenberg_native_copied_block">Đã chép khối</string>
-    <string name="gutenberg_native_block_pasted">Đã dán khối</string>
-    <string name="gutenberg_native_block_duplicated">Đã nhân đôi khối</string>
-    <string name="gutenberg_native_block_cut">Cắt khối</string>
-    <string name="gutenberg_native_block_copied">Đã chép khối</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">Tùy chọn %s</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Xóa khối</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Nhân đôi khối</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Chép khối</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Đã chép khối</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Đã dán khối</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Đã nhân đôi khối</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Cắt khối</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Đã chép khối</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Chỉ có quản trị viên mới có quyền đổi tiêu đề blog.</string>
     <string name="my_site_title_changer_dialog_hint">Tiêu đề blog xuất hiện trên thanh tiêu đề trình duyệt và hiển thị ở phần đầu trang của hầu hết các chủ đề.</string>
     <string name="error_update_site_title_network">Không thể đổi tiêu đề blog. Kiểm tra kết nối mạng và thử lại.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Thay đổi chưa được lưu</string>
-    <string name="gutenberg_native_open_link_in_a_browser">Mở liên kết trong trình duyệt</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Điều hướng đến trang nội dung trước</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">Điều hướng đến tùy chỉnh màu gradient</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">Điều hướng đến tùy chỉnh bộ chọn màu</string>
-    <string name="gutenberg_native_gradient_type">Kiểu Gradient</string>
-    <string name="gutenberg_native_go_back">Trở lại</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">Nhấn hai lần để chọn tùy chọn</string>
-    <string name="gutenberg_native_customize_gradient">Tùy chỉnh Gradient</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Mở liên kết trong trình duyệt</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Điều hướng đến trang nội dung trước</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Điều hướng đến tùy chỉnh màu gradient</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Điều hướng đến tùy chỉnh bộ chọn màu</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Kiểu Gradient</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Trở lại</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Nhấn hai lần để chọn tùy chọn</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Tùy chỉnh Gradient</string>
     <string name="pages_list_author">Trang tác giả</string>
     <string name="error_media_thumbnail_not_loaded">Không thể tải xem trước media</string>
     <string name="menu_content_info">Cấu trúc nội dung</string>
     <string name="everyone">Mọi người</string>
     <string name="me">Tôi</string>
-    <string name="gutenberg_native_dismiss">Bỏ qua</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Bỏ qua</string>
     <string name="prepublishing_nudges_home_tags_not_set">Không dùng</string>
     <string name="prepublishing_tags_description">Thẻ giúp độc giả biết bài nói về điều gì.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Ngày đăng</string>
@@ -1019,11 +1019,11 @@ Language: vi_VN
     <string name="ccpa_privacy_notice_header">Lưu ý bảo mật cho người dùng California</string>
     <string name="status_and_visibility">Trạng thái</string>
     <string name="update_now">Cập Nhật</string>
-    <string name="gutenberg_native_open_block_actions_menu">Menu mở khối hành động</string>
-    <string name="gutenberg_native_move_to_top">Chuyển lên trên cùng</string>
-    <string name="gutenberg_native_insert_mention">Nhắc đến ai đó</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Nhấn hai lần để mở Menu Dưới xem tùy chọn</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Nhấn hai lần để mở Menu Hành Động xem tùy chọn</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Menu mở khối hành động</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">Chuyển lên trên cùng</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Nhắc đến ai đó</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Dưới xem tùy chọn</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">Nhấn hai lần để mở Menu Hành Động xem tùy chọn</string>
     <string name="pages_cannot_be_started">Chúng tôi không thể mở trang. Hãy thử lại sau</string>
     <string name="pages_set_as_posts_page">Cài làm trang bài viết</string>
     <string name="pages_set_as_homepage">Cài làm trang chủ</string>
@@ -1047,8 +1047,8 @@ Language: vi_VN
     <string name="page_homepage_successfully_updated">Cập nhật trang chủ thành công</string>
     <string name="page_cannot_set_posts_page">Chọn \"Trang chủ\" trong Cài đặt Blog để kích hoạt trang Bài Viết</string>
     <string name="page_cannot_set_homepage">Chọn \"Trang Chủ\" trong Cài đặt Blog để kích hoạt trang Trang Chủ</string>
-    <string name="gutenberg_native_select_a_color">Chọn màu</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Nhấn hai lần để thiết lập màu</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Chọn màu</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">Nhấn hai lần để thiết lập màu</string>
     <string name="feature_announcement_find_out_mode">Tìm hiểu thêm</string>
     <string name="insert_label_with_count">Chèn %d</string>
     <string name="crop">cắt</string>
@@ -1069,14 +1069,14 @@ Language: vi_VN
     <string name="button_insert">Chèn</string>
     <string name="continue_label">Tiếp tục</string>
     <string name="copy_text">Chép</string>
-    <string name="gutenberg_native_number_of_columns">Số cột</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Chuyển khối phải từ vị trí %1$s đến %2$s</string>
-    <string name="gutenberg_native_move_block_right">Chuyển khối phải</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Chuyển khối trái từ vị trí %1$s đến %2$s</string>
-    <string name="gutenberg_native_move_block_left">Chuyển khối trái</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Nhấn hai lần để chuyển khối sang phải</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Nhấn hai lần để chuyển khối sang trái</string>
-    <string name="gutenberg_native_block_settings">Thiết lập khối</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Số cột</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Chuyển khối phải từ vị trí %1$s đến %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Chuyển khối phải</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Chuyển khối trái từ vị trí %1$s đến %2$s</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Chuyển khối trái</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Nhấn hai lần để chuyển khối sang phải</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Nhấn hai lần để chuyển khối sang trái</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Thiết lập khối</string>
     <string name="new_site_creation_creating_site_loading_4">Đang tạo trang quản trị</string>
     <string name="new_site_creation_creating_site_loading_3">Đang khởi tạo chủ đề</string>
     <string name="new_site_creation_creating_site_loading_2">Đang thêm tính năng blog</string>
@@ -1084,7 +1084,7 @@ Language: vi_VN
     <string name="new_site_creation_creating_site_loading_subtitle">Blog của bạn sắp sẵn sàng</string>
     <string name="new_site_creation_creating_site_loading_title">Hooray!\nGần xong</string>
     <string name="pages_and_posts_cancel_auto_upload">Hủy tải lên</string>
-    <string name="gif_list_search_returned_unknown_error">Có vấn đề khi xử lý yêu cầu</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">Có vấn đề khi xử lý yêu cầu</string>
     <string name="gif_powered_by_tenor">Cung cấp bởi Tenor</string>
     <string name="photo_picker_gif">Chọn từ Tenor</string>
     <string name="weekday_saturday">Thứ Bảy</string>
@@ -1131,16 +1131,16 @@ Language: vi_VN
     <string name="app_theme_light">Sáng</string>
     <string name="app_theme">Giao diện</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Trang này gần đây có thay đổi nhưng bạn chưa lưu lại. Chọn một phiên bản nạp:\n\n</string>
-    <string name="gutenberg_native_show_post_content">Hiện nội dung bài viết</string>
-    <string name="gutenberg_native_only_show_excerpt">Chỉ hiện tóm lược</string>
-    <string name="gutenberg_native_link_to">Liên kết tới</string>
-    <string name="gutenberg_native_link_settings">Thiết lập liên kết</string>
-    <string name="gutenberg_native_excerpt_length_words">Độ dài tóm lược (chữ)</string>
-    <string name="gutenberg_native_edit_cover_media">Sửa ảnh cover</string>
-    <string name="gutenberg_native_customize">TÙY CHỈNH</string>
-    <string name="gutenberg_native_button_link_url">URL nút liên kết</string>
-    <string name="gutenberg_native_border_radius">Tỉ lệ viền</string>
-    <string name="gutenberg_native_add_paragraph_block">Thêm khối đoạn văn</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Hiện nội dung bài viết</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Chỉ hiện tóm lược</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Liên kết tới</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Thiết lập liên kết</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Độ dài tóm lược (chữ)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Sửa ảnh cover</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">TÙY CHỈNH</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">URL nút liên kết</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">Tỉ lệ viền</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Thêm khối đoạn văn</string>
     <string name="create_post_page_fab_tooltip_contributors">Viết bài</string>
     <string name="post_list_tab_trashed_posts">Thùng rác</string>
     <string name="post_list_tab_scheduled_posts">Lên lịch</string>
@@ -1159,16 +1159,16 @@ Language: vi_VN
     <string name="reader_self_hosted_select_filter">Dùng nút lọc để tìm bài viết cụ thể</string>
     <string name="reader_btn_remove_filter_content_description">Xóa bộ lọc hiện tại</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Đăng nhập WordPress.com</string>
-    <string name="gutenberg_native_replace_current_block">Thay thế khối hiện tại</string>
-    <string name="gutenberg_native_add_to_end">Thêm đến Hết</string>
-    <string name="gutenberg_native_add_to_beginning">Thêm đến Bắt Đầu</string>
-    <string name="gutenberg_native_add_block_before">Thêm khối trước</string>
-    <string name="gutenberg_native_add_block_after">Thêm khối sau</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Thay thế khối hiện tại</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Thêm đến Hết</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Thêm đến Bắt Đầu</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Thêm khối trước</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Thêm khối sau</string>
     <string name="reader_filter_cta">Bộ lọc</string>
-    <string name="gutenberg_native_video_caption_s">Chú thích video. %s</string>
-    <string name="gutenberg_native_edit_video">Sửa video</string>
-    <string name="gutenberg_native_edit_media">Sửa media</string>
-    <string name="gutenberg_native_add_a_shortcode">Thêm shortcode</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Chú thích video. %s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Sửa video</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Sửa media</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Thêm shortcode</string>
     <string name="post_list_author">Tác giả bài viết</string>
     <string name="fab_create_desc">Viết bài</string>
     <string name="stats_posting_activity_end_description">Bạn đã xem hết thống kê này.\n        Nhấn lại để bắt đầu lại từ đầu.</string>
@@ -1182,7 +1182,7 @@ Language: vi_VN
     <string name="stats_box_type_low">thấp</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_gallery_caption_s">Chú thích Gallery. %s</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Chú thích Gallery. %s</string>
     <string name="create_post_page_fab_tooltip">Tạo một bài viết hoặc trang</string>
     <string name="content_description_person_building_website">Trang web cá nhân</string>
     <string name="post_signup_interstitial_not_right_now">Để sau</string>
@@ -1201,12 +1201,12 @@ Language: vi_VN
     <string name="dialog_confirm_scheduled_post_sync_title">Sẵn sàng đồng bộ?</string>
     <string name="new_site_creation_unavailable_domain">Tên miền không khả dụng</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">Chúng tôi không thể truy cập blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_discovery_error_ssl">Không thể truy cập blog của bạn bởi vì xảy ra lỗi &lt;b&gt;Chứng Chỉ SSL&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_discovery_error_http_auth">Chúng tôi không thể truy cập blog của bạn vì nó yêu cầu &lt;b&gt;Xác Thực HTTP&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_discovery_error_xmlrpc">Chúng tôi không thể truy cập &lt;b&gt;tập tin XMLRPC&lt;/b&gt; trên blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
-    <string name="login_site_credentials_magic_link_label">Sắp xong! Chúng tôi cần xác minh địa chỉ email &lt;b&gt;%1$s&lt;/b&gt; của bạn đã kết nối Jetpack</string>
-    <string name="enter_credentials_for_site">Đăng nhập với chứng chỉ trang %1$s</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi không thể truy cập blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể truy cập blog của bạn bởi vì xảy ra lỗi &lt;b&gt;Chứng Chỉ SSL&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi không thể truy cập blog của bạn vì nó yêu cầu &lt;b&gt;Xác Thực HTTP&lt;/b&gt;. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi không thể truy cập &lt;b&gt;tập tin XMLRPC&lt;/b&gt; trên blog của bạn. Hãy liên hệ máy chủ của bạn để xử lý vấn đề.</string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="login">Sắp xong! Chúng tôi cần xác minh địa chỉ email &lt;b&gt;%1$s&lt;/b&gt; của bạn đã kết nối Jetpack</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập với chứng chỉ trang %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Trang</string>
     <string name="reader_my_likes_display_name">Đã thích</string>
     <string name="reader_discover_display_name">Khám phá</string>
@@ -1219,54 +1219,54 @@ Language: vi_VN
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">Không thể mở bài viết lúc này. Hãy thử lại sau</string>
     <string name="site_cannot_be_loaded">Không thể tải dữ liệu blog của bạn lúc này. Hãy thử lại sau</string>
-    <string name="gutenberg_native_wordpress_media_library">Thư viện Media WordPress</string>
-    <string name="gutenberg_native_unsupported">Không hỗ trợ</string>
-    <string name="gutenberg_native_ungroup">Hủy nhóm</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Nhấn để ẩn bàn phím</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Nhấn để hiện trợ giúp</string>
-    <string name="gutenberg_native_take_a_video">Quay video</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Chụp Ảnh hoặc quay Video</string>
-    <string name="gutenberg_native_take_a_photo">Chụp ảnh</string>
-    <string name="gutenberg_native_start_writing">Bắt đầu viết…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Khối %s. Khối này có nội dung không hợp lệ</string>
-    <string name="gutenberg_native_s_block_empty">Khối %s. Trống</string>
-    <string name="gutenberg_native_cut_block">Cắt khối</string>
-    <string name="gutenberg_native_problem_opening_the_video">Vấn đề khi mở video</string>
-    <string name="gutenberg_native_problem_displaying_block">Vấn đề khi hiển thị khối</string>
-    <string name="gutenberg_native_post_title_s">Tựa đề bài viết. %s</string>
-    <string name="gutenberg_native_post_title_empty">Tựa đề bài viết. Trống</string>
-    <string name="gutenberg_native_paste_url">Dán URL</string>
-    <string name="gutenberg_native_page_break_block_s">Ngắt trang khối. %s</string>
-    <string name="gutenberg_native_open_settings">Mở thiết lập</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Không có ứng dụng xử lý yêu cầu. Hãy cài đặt một trình duyệt web.</string>
-    <string name="gutenberg_native_navigate_up">Chuyển lên</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Chuyển khối lên từ hàng %1$s tới hàng %2$s</string>
-    <string name="gutenberg_native_move_block_up">Chuyển khối lên</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Chuyển khối xuống từ hàng %1$s tới hàng %2$s</string>
-    <string name="gutenberg_native_move_block_down">Chuyển khối xuống</string>
-    <string name="gutenberg_native_link_text">Văn bản liên kết</string>
-    <string name="gutenberg_native_link_inserted">Đã chèn liên kết</string>
-    <string name="gutenberg_native_image_caption_s">Chú thích ảnh. %s</string>
-    <string name="gutenberg_native_hide_keyboard">Ẩn bàn phím</string>
-    <string name="gutenberg_native_help_icon">Biểu tượng trợ giúp</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">Nhấn hai lần để trở lại thay đổi cuối cùng</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">Nhấn hai lần để chuyển đổi thiết lập</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">Nhấn hai lần để chọn ảnh</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">Nhấn hai lần để chọn video</string>
-    <string name="gutenberg_native_double_tap_to_select">Nhấn hai lần để chọn</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">Nhấn hai lần để trở về thay đổi cuối cùng</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Nhấn hai lần để chuyển khối lên</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Nhấn hai lần để di chuyển khối xuống</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">Nhấn hai lần để sửa đổi giá trị</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">Nhấn hai lần để thêm khối</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Nhấn hai lần và giữ để sửa</string>
-    <string name="gutenberg_native_current_value_is_s">Giá trị hiện tại là %s</string>
-    <string name="gutenberg_native_choose_from_device">Chọn từ thiết bị</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Đã có lỗi xảy ra. Xin thử lại.</string>
-    <string name="gutenberg_native_alt_text">Văn bản thay thế</string>
-    <string name="gutenberg_native_add_url">Chèn URL</string>
-    <string name="gutenberg_native_add_alt_text">Thêm văn bản thay thế</string>
-    <string name="gutenberg_native_add_block_here">THÊM KHỐI Ở ĐÂY</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">Thư viện Media WordPress</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Không hỗ trợ</string>
+    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Hủy nhóm</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Nhấn để ẩn bàn phím</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Nhấn để hiện trợ giúp</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Quay video</string>
+    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Chụp Ảnh hoặc quay Video</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Chụp ảnh</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Bắt đầu viết…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">Khối %s. Khối này có nội dung không hợp lệ</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">Khối %s. Trống</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cắt khối</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Vấn đề khi mở video</string>
+    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Vấn đề khi hiển thị khối</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Tựa đề bài viết. %s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Tựa đề bài viết. Trống</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Dán URL</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Ngắt trang khối. %s</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Mở thiết lập</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">Không có ứng dụng xử lý yêu cầu. Hãy cài đặt một trình duyệt web.</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Chuyển lên</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Chuyển khối lên từ hàng %1$s tới hàng %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Chuyển khối lên</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Chuyển khối xuống từ hàng %1$s tới hàng %2$s</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Chuyển khối xuống</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Văn bản liên kết</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Đã chèn liên kết</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Chú thích ảnh. %s</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Ẩn bàn phím</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Biểu tượng trợ giúp</string>
+    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Nhấn hai lần để trở lại thay đổi cuối cùng</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Nhấn hai lần để chuyển đổi thiết lập</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Nhấn hai lần để chọn ảnh</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Nhấn hai lần để chọn video</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Nhấn hai lần để chọn</string>
+    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Nhấn hai lần để trở về thay đổi cuối cùng</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Nhấn hai lần để chuyển khối lên</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">Nhấn hai lần để di chuyển khối xuống</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Nhấn hai lần để sửa đổi giá trị</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Nhấn hai lần để thêm khối</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Nhấn hai lần và giữ để sửa</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Giá trị hiện tại là %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Chọn từ thiết bị</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">Đã có lỗi xảy ra. Xin thử lại.</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Văn bản thay thế</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Chèn URL</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Thêm văn bản thay thế</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">THÊM KHỐI Ở ĐÂY</string>
     <string name="reader_empty_saved_posts_content_description">Nhấn nút Lưu Bài Viết để lưu một bài viết vào danh sách của bạn.</string>
     <string name="reader_acessibility_list_loaded">\"Danh sách này có %1$d bài.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Thông báo</string>
@@ -1369,8 +1369,8 @@ Language: vi_VN
     <string name="post_settings_add_to_calendar">Thêm vào lịch</string>
     <string name="post_settings_notification">Thông báo</string>
     <string name="post_settings_time_and_date">Ngày và Giờ</string>
-    <string name="login_invalid_site_url">Nhập địa chỉ trang web đầy đủ, ví dụ example.com.</string>
-    <string name="enter_email_for_site">Đăng nhập WordPress.com để kết nối với %1$s</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập địa chỉ trang web đầy đủ, ví dụ example.com.</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập WordPress.com để kết nối với %1$s</string>
     <string name="stats_post_views_label">Lượt xem</string>
     <string name="stats_post_label">Bài viết</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -1386,11 +1386,11 @@ Language: vi_VN
     <string name="description_collapse">Ẩn</string>
     <string name="my_site_verify_your_email_without_email">Xác minh địa chỉ email - đã gửi tới địa chỉ email của bạn</string>
     <string name="my_site_verify_your_email">Xác minh địa chỉ email - đã gửi tới %s</string>
-    <string name="link_dialog_button_cancel">Hủy bỏ</string>
-    <string name="link_dialog_button_ok">OK</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">Xóa liên kết</string>
-    <string name="link_dialog_title">Chèn liên kết</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">Hủy bỏ</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">Xóa liên kết</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">Chèn liên kết</string>
     <string name="post_settings_retry_featured_image">Đang thử tải lên lại</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Đang tải lên media.\nNhấn để xem tùy chọn.</string>
     <string name="link_open_new_window">Mở liên kết trong cửa sổ/tab mới</string>
@@ -1454,7 +1454,7 @@ Language: vi_VN
     <string name="stats_management_news_card_message">Chọn chỉ số thống kê muốn xem hoặc những dữ liệu bạn quan tâm nhất. Nhấn %1$s ở phía dưới Phân tích để tùy chỉnh các mục.</string>
     <string name="stats_manage_your_stats">Quản lý thống kê</string>
     <string name="history_fetching_revisions">Đang nạp phiên bản cũ…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Chèn media thất bại.\nNhấn để xem tùy chọn.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chèn media thất bại.\nNhấn để xem tùy chọn.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Nhập media thất bại.\nNhấn để thử lại.</string>
     <string name="editor_uploading_draft">Đang tải lên bản nháp của bạn</string>
     <string name="post_uploading_draft">Đang tải lên bản nháp</string>
@@ -1484,8 +1484,8 @@ Language: vi_VN
     <string name="posts_draft_empty">Bạn không có bài viết nháp</string>
     <string name="posts_scheduled_empty">Bạn không có bài viết đã lên lịch</string>
     <string name="posts_published_empty">Bạn chưa đăng bài viết nào cả</string>
-    <string name="notification_wpcom_username_needed">Hãy đăng nhập với tên người dùng và mật khẩu của bạn.</string>
-    <string name="error_user_username_instead_of_email">Hãy đăng nhập với tên người dùng WordPress.com thay vì địa chỉ email.</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy đăng nhập với tên người dùng và mật khẩu của bạn.</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy đăng nhập với tên người dùng WordPress.com thay vì địa chỉ email.</string>
     <string name="stats_insights_average_words">Số chữ mỗi bài viết</string>
     <string name="stats_insights_total_words">Tổng số chữ đã viết</string>
     <string name="stats_insights_average_likes">Lượt thích mỗi bài viết</string>
@@ -1495,7 +1495,7 @@ Language: vi_VN
     <string name="stats_insights_posts">Bài viết</string>
     <string name="stats_insights_year">Năm</string>
     <string name="stats_insights_this_year_site_stats">Năm nay</string>
-    <string name="no_site_error">Đây không phải là trang WordPress. Để kết nối, phải dùng WordPress.</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="login">Đây không phải là trang WordPress. Để kết nối, phải dùng WordPress.</string>
     <string name="plugin_check_domain_credit_error">Kiểu tra tên miền khả dụng thất bại</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Đang kiểm tra tên miền khả dụng</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Đăng ký tên miền</string>
@@ -1511,7 +1511,7 @@ Language: vi_VN
     <string name="stats_months_and_years_views_label">Lượt xem</string>
     <string name="stats_months_and_years_period_label">Chu kỳ</string>
     <string name="stats_detail_months_and_years">Tháng</string>
-    <string name="stats_insights_load_more">Xem thêm</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Xem thêm</string>
     <string name="stats_insights_today_stats">Hôm nay</string>
     <string name="stats_insights_best_hour">Giờ cao điểm</string>
     <string name="stats_insights_best_day">Ngày tốt nhất</string>
@@ -1522,7 +1522,7 @@ Language: vi_VN
     <string name="app_rating_message">Rất vui gặp lại bạn! Nếu bạn thích ứng dụng, hãy đánh giá trên Google Play Store.</string>
     <string name="editor_post_converted_back_to_draft">Đã chuyển bài viết về nháp</string>
     <string name="stats_insights_posting_activity">Hoạt động</string>
-    <string name="stats_site_not_loaded_yet">Chưa tải blog xong</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Chưa tải blog xong</string>
     <string name="stats_more_posts">Nhiều bài hơn</string>
     <string name="stats_fewer_posts">Ít bài hơn</string>
     <string name="new_site_creation_preview_back_pressed_warning">Bạn sẽ mất quá trình này. Bạn có chắc muốn thoát?</string>
@@ -1543,15 +1543,15 @@ Language: vi_VN
     <string name="quick_start_sites">Kế tiếp</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
     <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
-    <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
-    <string name="quick_start_dialog_enable_sharing_message">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Bật chia sẻ bài viết</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
     <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>
     <string name="quick_start_dialog_check_stats_message">Tối ưu hóa hiệu suất blog.</string>
     <string name="quick_start_task_skip_menu_title">Bỏ qua</string>
-    <string name="notification_channel_reminder_title">Lượt nhắc</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
     <string name="stats_insights_popular">Phổ biến mọi lúc</string>
@@ -1588,7 +1588,7 @@ Language: vi_VN
     <string name="stats_no_data_for_period">Chưa có dữ liệu</string>
     <string name="preference_strip_image_location">Xóa định vị vị trí khỏi ảnh</string>
     <string name="stats_cannot_be_started">Không thể mở thống kê vào lúc này. Hãy thử lại sau</string>
-    <string name="gif_picker_empty_search_list">Không có media nào trùng khớp</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">Không có media nào trùng khớp</string>
     <string name="gif_picker_initial_empty_text">Tìm GIF để thêm vào Thư viện Media!</string>
     <string name="stats_author_views_label">Lượt xem</string>
     <string name="stats_author_label">Tác giả</string>
@@ -1653,7 +1653,7 @@ Language: vi_VN
     <string name="history_detail_button_previous">Trước</string>
     <string name="history_detail_button_next">Kế</string>
     <string name="media_space_used">đã dùng %1$s</string>
-    <string name="enter_wpcom_or_jetpack_site">Hãy nhập một trang WordPress.com hoặc một trang WordPress tự lưu trữ đã tích hợp Jetpack</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy nhập một trang WordPress.com hoặc một trang WordPress tự lưu trữ đã tích hợp Jetpack</string>
     <string name="history_loading_revision">Đang tải quá khứ</string>
     <string name="history_loaded_revision">Đã tải quá khứ</string>
     <string name="history_load_dialog_button_positive">Tải</string>
@@ -1681,12 +1681,12 @@ Language: vi_VN
     <string name="pages_move_to_draft">Chuyển về bản nháp</string>
     <string name="pages_set_parent">Chọn trang mẹ</string>
     <string name="pages_view">Xem</string>
-    <string name="pages_trashed">Thùng rác</string>
-    <string name="pages_scheduled">Lên lịch</string>
-    <string name="pages_drafts">Nháp</string>
-    <string name="pages_published">Đã đăng</string>
-    <string name="login_error_sms_throttled">Chúng tôi đã gửi mã xác minh SMS quá nhiều lần - hãy tạm dừng và yêu cầu mã mới sau một phút.</string>
-    <string name="login_error_email_not_found_v2">Không có tài khoản WordPress.com nào kết nối với tài khoản Google này.</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Thùng rác</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Lên lịch</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Nháp</string>
+    <string name="pages_published" tools:ignore="UnusedResources">Đã đăng</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi đã gửi mã xác minh SMS quá nhiều lần - hãy tạm dừng và yêu cầu mã mới sau một phút.</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="login">Không có tài khoản WordPress.com nào kết nối với tài khoản Google này.</string>
     <string name="site_picker_remove_site_empty">Không có blog nào trùng khớp</string>
     <string name="page_parent_changed">Trang mẹ đã bị thay đổi</string>
     <string name="page_permanently_deleted">Đã xóa trang vĩnh viễn</string>
@@ -1710,15 +1710,15 @@ Language: vi_VN
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Nhấn %1$s Kết nối %2$s để thêm các tài khoản mạng xã hội của bạn</string>
     <string name="quick_start_dialog_share_site_message">Kết nối tới các tài khoản mạng xã hội của bạn - blog của bạn sẽ tự động chia sẻ các bài viết mới.</string>
     <string name="quick_start_dialog_publish_post_title">Viết bài</string>
-    <string name="quick_start_dialog_publish_post_message_short">Nhấn %1$s Viết bài %2$s để tạo 1 bài viết mới</string>
+    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Nhấn %1$s Viết bài %2$s để tạo 1 bài viết mới</string>
     <string name="quick_start_dialog_need_help_button_negative">Để sau</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các blog khác</string>
-    <string name="quick_start_button_positive">Bắt đầu</string>
-    <string name="quick_start_button_negative_short">Hủy bỏ</string>
-    <string name="quick_start_button_negative">Để sau</string>
+    <string name="quick_start_button_positive" tools:ignore="UnusedResources">Bắt đầu</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Hủy bỏ</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Để sau</string>
     <string name="content_description_more">Thêm</string>
     <string name="my_site_create_new_site_title">Bạn chưa có blog nào</string>
-    <string name="login_to_to_connect_jetpack">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">Để xem Thống Kê trên trang WordPress, bạn phải cài đặt plugin Jetpack.</string>
@@ -1749,7 +1749,7 @@ Language: vi_VN
     <string name="featured_image_desc">ảnh minh họa</string>
     <string name="button_discard">Hủy bỏ</string>
     <string name="reader_avatar_desc">ảnh đại diện</string>
-    <string name="notification_channel_transient_title">Ngắn</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Ngắn</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Nhập địa chỉ email của bạn</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Để tiếp tục, hãy nhập địa chỉ email của bạn và tên</string>
@@ -1771,13 +1771,13 @@ Language: vi_VN
     <string name="reader_empty_search_title">Không tìm thấy gì</string>
     <string name="comment_read_source_post">Đọc bài viết gốc</string>
     <string name="sites">Blog</string>
-    <string name="signup_magic_link_title">Đã gửi email đăng ký</string>
-    <string name="verification_2fa_screen_title">Mã xác minh</string>
-    <string name="selfhosted_site_login_title">Chứng chỉ đăng nhập</string>
-    <string name="magic_link_sent_login_title">Đã gửi email đăng nhập</string>
-    <string name="magic_link_login_title">Email đăng nhập</string>
-    <string name="site_address_login_title">Đăng nhập địa chỉ blog</string>
-    <string name="email_address_login_title">Đăng nhập địa chỉ email</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="login">Đã gửi email đăng ký</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="login">Mã xác minh</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Chứng chỉ đăng nhập</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Đã gửi email đăng nhập</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email đăng nhập</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập địa chỉ blog</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập địa chỉ email</string>
     <string name="reader_empty_saved_posts_description">Nhấn %s để lưu bài viết để dành đọc sau.</string>
     <string name="reader_empty_saved_posts_title">Chưa lưu bài viết nào!</string>
     <string name="reader_bookmark_snack_title">Đã lưu bài viết</string>
@@ -1840,8 +1840,8 @@ Language: vi_VN
     <string name="content_description_people_looking_charts">Mọi người thích nhìn đồ thị và biểu đồ</string>
     <string name="comment_title">%1$s trong %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">Bạn chắc chắn muốn xóa vĩnh viễn bài viết này?</string>
-    <string name="notification_channel_important_title">Quan trọng</string>
-    <string name="notification_channel_general_title">Chung</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Quan trọng</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">Chung</string>
     <string name="photo_picker_use_photo">Dùng ảnh này</string>
     <string name="media_preview_title">%1$d trong %2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">Cung cấp bởi %s</string>
@@ -1878,7 +1878,7 @@ Language: vi_VN
     <string name="invite_user_delete_desc">xóa %s</string>
     <string name="profile_picture">Ảnh đại diện của %s</string>
     <string name="comment_checkmark_desc">dấu tick</string>
-    <string name="signup_with_google_progress">Đang đăng ký với Google…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Đang đăng ký với Google…</string>
     <string name="jetpack_connection_failed_with_reason">Kết nối Jetpack thất bại: %s</string>
     <string name="jetpack_already_connected_toast">Bạn đã được kết nối với Jetpack</string>
     <string name="menu_visual_mode">Chế độ Trực Quan</string>
@@ -1957,7 +1957,7 @@ Language: vi_VN
     <string name="site_creation_domain_finish_button">Tạo blog</string>
     <string name="notification_site_creation_created">Nhấn để tiếp tục.</string>
     <string name="notification_site_creation_title_success">Đã tạo blog!</string>
-    <string name="google_error_timeout">Google phản hồi quá lâu. Hãy đợi cho tới khi bạn có kết nối mạng mạnh hơn.</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="login">Google phản hồi quá lâu. Hãy đợi cho tới khi bạn có kết nối mạng mạnh hơn.</string>
     <string name="username_changer_title">Đổi tên người dùng</string>
     <string name="username_changer_hint">Nhập để có nhiều gợi ý hơn</string>
     <string name="username_changer_header">Tên người dùng gần đây của bạn là %1$s%2$s%3$s. Với ngoài ngoại lệ, mọi người chỉ có thể xem tên hiển thị %4$s%5$s%6$s.</string>
@@ -1969,10 +1969,10 @@ Language: vi_VN
     <string name="content_description_add_avatar">Thêm ảnh đại diện</string>
     <string name="signup_user_exists">Email đã tồn tại trên WordPress.com.\nTiếp tục đăng nhập.</string>
     <string name="signup_updating_account">Đang cập nhật tài khoản…</string>
-    <string name="signup_magic_link_progress">Đang gửi email</string>
-    <string name="signup_magic_link_error_button_positive">Thử lại</string>
-    <string name="signup_magic_link_error_button_negative">Đóng</string>
-    <string name="signup_magic_link_error">Xảy ra lỗi khi gửi email. Hãy đóng và thử lại sau.</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Đang gửi email</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="login">Thử lại</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="login">Đóng</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="login">Xảy ra lỗi khi gửi email. Hãy đóng và thử lại sau.</string>
     <string name="signup_epilogue_hint_username">Tên người dùng</string>
     <string name="signup_epilogue_hint_password_detail">Bạn có thể đăng nhập bằng liên kết giống như gần đây, tuy nhiên bạn nên đặt mật khẩu.</string>
     <string name="signup_epilogue_hint_password">Mật khẩu (tùy chọn)</string>
@@ -2070,18 +2070,18 @@ Language: vi_VN
     <string name="my_site_btn_plugins">Plugin</string>
     <string name="media_edit_link_hint">Mở liên kết trong cửa sổ/tab mới</string>
     <string name="media_edit_link_text">Liên kết tới</string>
-    <string name="notification_login_failed">Đã xảy ra lỗi.</string>
-    <string name="notification_2fa_needed">Hãy cung cấp mã xác minh để tiếp tục.</string>
-    <string name="notification_error_wrong_password">Kiểm tra kỹ mật khẩu để tiếp tục.</string>
-    <string name="notification_login_title_stopped">Tạm dừng đăng nhập</string>
-    <string name="notification_logging_in">Xin đợi khi đăng nhập.</string>
-    <string name="notification_login_title_in_progress">Đang đăng nhập…</string>
-    <string name="notification_logged_in">Nhấn để tiếp tục.</string>
-    <string name="notification_login_title_success">Đã đăng nhập!</string>
-    <string name="login_error_generic_start">Không thể đăng nhập bằng Google.</string>
-    <string name="login_empty_password">Hãy nhập mật khẩu</string>
-    <string name="login_text_otp_another">Gửi cho tôi mã khác</string>
-    <string name="enter_verification_code_sms">Chúng tôi đã gửi tin nhắn tới số điện thoại có số đuôi %s. Hãy kiểm tra mã xác minh trong SMS.</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="login">Đã xảy ra lỗi.</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy cung cấp mã xác minh để tiếp tục.</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="login">Kiểm tra kỹ mật khẩu để tiếp tục.</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="login">Tạm dừng đăng nhập</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="login">Xin đợi khi đăng nhập.</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="login">Đang đăng nhập…</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="login">Nhấn để tiếp tục.</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="login">Đã đăng nhập!</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể đăng nhập bằng Google.</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy nhập mật khẩu</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">Gửi cho tôi mã khác</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">Chúng tôi đã gửi tin nhắn tới số điện thoại có số đuôi %s. Hãy kiểm tra mã xác minh trong SMS.</string>
     <string name="image_size">Kích thước</string>
     <string name="uploading_subtitle_media_only_one">Còn lại 1 tập tin</string>
     <string name="uploading_subtitle_media_only">Còn lại %1$d trong %2$d tập tin</string>
@@ -2098,15 +2098,15 @@ Language: vi_VN
     <string name="confirm_remove_media_image">Xóa ảnh này khỏi bài viết?</string>
     <string name="media_edit_customize_card_caption">Tùy biến</string>
     <string name="media_edit_file_details_card_caption">Chi tiết tập tin</string>
-    <string name="login_error_suffix">\nThử một tài khoản khác?</string>
-    <string name="login_error_generic">Xảy ra lỗi khi kết nối với tài khoản Google.</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="login">\nThử một tài khoản khác?</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="login">Xảy ra lỗi khi kết nối với tài khoản Google.</string>
     <string name="login_error_button">Đóng</string>
-    <string name="enter_wpcom_password_google">Để tiếp tục với tài khoản Google account này, hãy cung cấp mật khẩu WordPress.com trùng khớp. Sau này không hỏi lại.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="login">Để tiếp tục với tài khoản Google account này, hãy cung cấp mật khẩu WordPress.com trùng khớp. Sau này không hỏi lại.</string>
     <string name="error_generic_network">Lỗi kết nối mạng. Hãy kiểm tra kết nối và thử lại.</string>
     <string name="post_settings_remove_featured_image">Xóa ảnh minh họa</string>
     <string name="post_settings_choose_featured_image">Chọn ảnh minh họa</string>
-    <string name="login_log_in_for_share_intent">Đăng nhập WordPress.com để chia sẻ nội dung.</string>
-    <string name="enter_site_address_share_intent">Nhập địa chỉ trang WordPress mà bạn muốn chia sẻ nội dung lên.</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập WordPress.com để chia sẻ nội dung.</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập địa chỉ trang WordPress mà bạn muốn chia sẻ nội dung lên.</string>
     <string name="jetpack_disconnect_error_toast">Lỗi kết nối blog</string>
     <string name="jetpack_disconnect_success_toast">Đã ngắt kết nối blog</string>
     <string name="jetpack_disconnect_confirm">Hủy kết nối</string>
@@ -2190,33 +2190,33 @@ Language: vi_VN
     <string name="login_epilogue_mysites_other">Blog của tôi</string>
     <string name="login_epilogue_mysites_one">Blog của tôi</string>
     <string name="login_email_client_not_found">Không nhận diện được ứng dụng email</string>
-    <string name="login_empty_2fa">Hãy nhập mã xác minh</string>
-    <string name="login_empty_username">Hãy nhập tên người dùng</string>
-    <string name="login_log_in_for_deeplink">Đăng nhập WordPress.com để xem bài viết.</string>
-    <string name="login_error_while_adding_site">Lỗi khi thêm blog. Mã lỗi: %s</string>
-    <string name="login_checking_site_address">Đang kiểm tra địa chỉ blog</string>
-    <string name="login_site_address_more_help">Cần trợ giúp?</string>
-    <string name="login_site_address_help_content">Địa chỉ blog của bạn xuất hiện trong thanh địa chỉ trình duyệt.</string>
-    <string name="login_site_address_help_title">Địa chỉ blog của tôi là gì?</string>
-    <string name="login_site_address">Địa chỉ blog</string>
-    <string name="enter_site_address">Nhập địa chỉ trang WordPress mà bạn muốn kết nối.</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy nhập mã xác minh</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="login">Hãy nhập tên người dùng</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập WordPress.com để xem bài viết.</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="login">Lỗi khi thêm blog. Mã lỗi: %s</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Đang kiểm tra địa chỉ blog</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="login">Cần trợ giúp?</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="login">Địa chỉ blog của bạn xuất hiện trong thanh địa chỉ trình duyệt.</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="login">Địa chỉ blog của tôi là gì?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Địa chỉ blog</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập địa chỉ trang WordPress mà bạn muốn kết nối.</string>
     <string name="login_already_logged_in_wpcom">Đã đăng nhập WordPress.com</string>
-    <string name="login_continue">Tiếp tục</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="login">Tiếp tục</string>
     <string name="connect_more">Kết nối blog khác</string>
-    <string name="enter_wpcom_password">Nhập mật khẩu WordPress.com của bạn.</string>
-    <string name="login_magic_link_email_requesting">Đang yêu cầu đăng nhập email</string>
-    <string name="password_incorrect">Mật khẩu không hợp lệ. Kiểm tra kỹ thông tin và thử lại.</string>
-    <string name="requesting_otp">Đang yêu cầu mã xác minh qua SMS.</string>
-    <string name="login_text_otp">Nhắn mã cho tôi</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập mật khẩu WordPress.com của bạn.</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="login">Đang yêu cầu đăng nhập email</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="login">Mật khẩu không hợp lệ. Kiểm tra kỹ thông tin và thử lại.</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Đang yêu cầu mã xác minh qua SMS.</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Nhắn mã cho tôi</string>
     <string name="next">Kế</string>
-    <string name="enter_email_wordpress_com">Đăng nhập WordPress.com sử dụng một địa chỉ email để quản lý toàn bộ trang WordPress khác.</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập WordPress.com sử dụng một địa chỉ email để quản lý toàn bộ trang WordPress khác.</string>
     <string name="me_profile_photo">Ảnh hồ sơ</string>
     <string name="error_media_parse_error">Phản hồi không mong muốn từ máy chủ</string>
     <string name="upload_finished_toast">Không thể dừng tải lên bởi vì đã tải lên xong</string>
     <string name="post_title">Tựa đề</string>
     <string name="menu_redo">Làm lại</string>
     <string name="menu_undo">Làm lại</string>
-    <string name="media_insert_unimplemented">Xin lỗi! Tính năng này chưa được cải thiện :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Xin lỗi! Tính năng này chưa được cải thiện :(</string>
     <string name="error_media_small">Media quá nhỏ để có thể hiển thị</string>
     <string name="editor_dropped_unsupported_files">Cảnh báo: không phải tất cả mục đều hỗ trợ!</string>
     <string name="editor_dropped_title_images_not_allowed">Không cho phép thả hình vào Tựa Đề</string>
@@ -2354,8 +2354,8 @@ Language: vi_VN
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
     <string name="submit_for_review">Gửi</string>
-    <string name="duplicate_site_detected">Đã phát hiện blog trùng lặp.</string>
-    <string name="cannot_add_duplicate_site">Blog này đã có trong ứng dụng, bạn không thể thêm nó.</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="login">Đã phát hiện blog trùng lặp.</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="login">Blog này đã có trong ứng dụng, bạn không thể thêm nó.</string>
     <string name="already_logged_in_wpcom">Bạn đã đăng nhập tài khoản WordPress.com, không thể thêm một trang WordPress.com liên kết với một tài khoản khác.</string>
     <string name="error_media_load">Không thể tải media</string>
     <string name="error_media_refresh_no_connection">Cần có kết nối mạng để xem thư viện</string>
@@ -2367,8 +2367,8 @@ Language: vi_VN
     <string name="media_upload_error">Lỗi tải lên media</string>
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Không thể kết nối. Chúng tôi đã nhận được lỗi 403 khi cố gắng truy cập\n        XMLRPC endpoint. Ứng dụng cần thứ này để giao tiếp với trang web của bạn. Liên hệ với máy chủ của bạn để giải quyết\n        vấn đề này.</string>
-    <string name="xmlrpc_post_blocked_error">Không thể kết nối. Máy chủ của bạn đang chặn các yêu cầu ĐĂNG\n         mà ứng dụng cần để giao tiếp với trang của bạn. Liên hệ với máy chủ của bạn để giải quyết vấn đề này.</string>
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể kết nối. Chúng tôi đã nhận được lỗi 403 khi cố gắng truy cập\n        XMLRPC endpoint. Ứng dụng cần thứ này để giao tiếp với trang web của bạn. Liên hệ với máy chủ của bạn để giải quyết\n        vấn đề này.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể kết nối. Máy chủ của bạn đang chặn các yêu cầu ĐĂNG\n         mà ứng dụng cần để giao tiếp với trang của bạn. Liên hệ với máy chủ của bạn để giải quyết vấn đề này.</string>
     <string name="pending_draft_one_generic">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_month">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' vẫn là bản nháp. Nhớ đăng nó!</string>
@@ -2406,7 +2406,7 @@ Language: vi_VN
     <string name="invite_username_not_found">%s: Không tìm thấy người dùng</string>
     <string name="comment_moderated_approved">Đã duyệt bình luận!</string>
     <string name="like">Thích</string>
-    <string name="timespan_now">vừa xong</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">vừa xong</string>
     <string name="role_viewer">Độc giả</string>
     <string name="error_post_my_profile_no_connection">Không có kết nối, không thể lưu hồ sơ của bạn</string>
     <string name="alignment_right">Phải</string>
@@ -2422,19 +2422,19 @@ Language: vi_VN
     <string name="follower_subscribed_since">Từ %1$s</string>
     <string name="error_remove_viewer">Không thể chặn độc giả</string>
     <string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n      trong tình huống này. Xóa những media tải lên bị lỗi và tiếp tục?</string>
-    <string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
-    <string name="visual_editor">Trình biên tập trực quan</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hình thu nhỏ Ảnh</string>
+    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Trình biên tập trực quan</string>
     <string name="image_width">Chiều rộng</string>
     <string name="image_link_to">Liên kết tới</string>
-    <string name="image_alt_text">Văn bản thay thế</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Văn bản thay thế</string>
     <string name="image_caption">Chú thích</string>
     <string name="image_settings_save_toast">Các thay đổi đã lưu</string>
     <string name="image_settings_dismiss_dialog_title">Hủy các thay đổi chưa lưu?</string>
     <string name="stop_upload_dialog_title">Ngừng tải lên?</string>
-    <string name="alert_error_adding_media">Một lỗi đã xảy ra trong khi chèn media</string>
-    <string name="alert_action_while_uploading">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
-    <string name="alert_insert_image_html_mode">Không thể chèn media trực tiếp trong chế độ HTML. Vui lòng chuyển sang chế độ trực quan.</string>
-    <string name="uploading_gallery_placeholder">Đang tải lên bộ sưu tập …</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Một lỗi đã xảy ra trong khi chèn media</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Không thể chèn media trực tiếp trong chế độ HTML. Vui lòng chuyển sang chế độ trực quan.</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Đang tải lên bộ sưu tập …</string>
     <string name="tap_to_try_again">Nhấn để thử lại!</string>
     <string name="invite_sent">Lời mời đã được gửi thành công</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2467,8 +2467,8 @@ Language: vi_VN
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
     <string name="error_locating_image">Lỗi định vị hình ảnh được cắt</string>
     <string name="error_cropping_image">Lỗi cắt ảnh</string>
-    <string name="checking_email">Đang kiểm tra email</string>
-    <string name="magic_link_unavailable_error_message">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
+    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="login">Đang kiểm tra email</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="login">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
     <string name="web_address_dialog_hint">Hiển thị công khai khi bạn bình luận.</string>
     <string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
@@ -2504,7 +2504,7 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận đã duyệt</string>
     <string name="button_skip">Bỏ qua</string>
-    <string name="xmlrpc_missing_method_error">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
     <string name="alignment_center">Giữa</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Trạng thái</string>
@@ -2564,7 +2564,7 @@ Language: vi_VN
     <string name="about_the_app">Giới thiệu</string>
     <string name="error_post_account_settings">Không thể lưu các thiết đặt tài khoản của bạn</string>
     <string name="error_fetch_account_settings">Không thể tải các thiết lập tài khoản của bạn</string>
-    <string name="error_fetch_my_profile">Không thể tải hồ sơ của bạn</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Không thể tải hồ sơ của bạn</string>
     <string name="site_settings_unknown_language_code_error">Mã ngôn ngữ không được nhận dạng</string>
     <string name="site_settings_threading_dialog_description">Cho phép các bình luận được rẽ nhánh.</string>
     <string name="site_settings_threading_dialog_header">Rẽ nhánh tối đa</string>
@@ -2765,9 +2765,9 @@ Language: vi_VN
     <string name="select_all">Chọn tất cả</string>
     <string name="hide">Ẩn</string>
     <string name="show">Hiện</string>
-    <string name="auth_required">Đăng nhập lại để tiếp tục.</string>
-    <string name="invalid_verification_code">Mã xác minh không hợp lệ</string>
-    <string name="verification_code">Mã xác minh</string>
+    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập lại để tiếp tục.</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Mã xác minh không hợp lệ</string>
+    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Mã xác minh</string>
     <string name="language">Ngôn ngữ</string>
     <string name="reader_empty_posts_request_failed">Không tải được bài viết</string>
     <string name="error_notification_open">Không thể mở thông báo</string>
@@ -2829,7 +2829,7 @@ Language: vi_VN
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>
     <string name="help">Trợ giúp</string>
     <string name="username_or_password_incorrect">Tên người dùng và mật khẩu bạn đã nhập không đúng</string>
-    <string name="email_invalid">Nhập một địa chỉ email hợp lệ</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="login">Nhập một địa chỉ email hợp lệ</string>
     <string name="invalid_email_message">Địa chỉ email của bạn không hợp lệ</string>
     <string name="error_downloading_image">Lỗi tải ảnh về</string>
     <string name="error_load_comment">Không thể tải bình luận</string>
@@ -2837,7 +2837,7 @@ Language: vi_VN
     <string name="error_moderate_comment">Xảy ra lỗi khi kiểm duyệt</string>
     <string name="error_generic">Đã xảy ra lỗi</string>
     <string name="error_refresh_comments">Không thể tải bình luận mới tại thời điểm này</string>
-    <string name="error_refresh_pages">Không thể tải trang mới tại thời điểm này</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Không thể tải trang mới tại thời điểm này</string>
     <string name="error_refresh_posts">Không thể tải bài viết mới tại thời điểm này</string>
     <string name="error_deleting_post">Xảy ra lỗi khi xoá bài viết</string>
     <string name="notifications_empty_list">Không có thông báo</string>
@@ -2860,7 +2860,7 @@ Language: vi_VN
     <string name="new_media">Tải lên media</string>
     <string name="new_post">Viết bài</string>
     <string name="notifications_empty_all">Chưa có thông báo</string>
-    <string name="http_authorization_required">Cần được cấp phép</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="login">Cần được cấp phép</string>
     <string name="invalid_site_url_message">Kiểm tra URL trang hợp lệ chưa</string>
     <string name="file_error_create">Không thể tạo tập tin tạm cho media tải lên. Hãy chắc là có đủ không gian trống trên thiết bị của bạn.</string>
     <string name="category_name">Tên chuyên mục</string>
@@ -2883,10 +2883,10 @@ Language: vi_VN
     <string name="delete_post">Xóa bài viết?</string>
     <string name="post_settings">Cài đặt bài viết</string>
     <string name="file_not_found">Không tìm thấy tập tin để tải lên. Nó đã bị xóa hoặc dời đi?</string>
-    <string name="horizontal_alignment">Canh ngang</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Canh ngang</string>
     <string name="local_draft">Bản nháp trên điện thoại</string>
     <string name="page_settings">Cài đặt trang</string>
-    <string name="create_a_link">Tạo một liên kết</string>
+    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tạo một liên kết</string>
     <string name="link_enter_url_text">Văn bản liên kết (tùy chọn)</string>
     <string name="cannot_delete_multi_media_items">Không thể xóa một vài media tại thời điểm này. Thử lại sau.</string>
     <string name="media_error_no_permission">Bạn không có quyền xem thư viện media</string>
@@ -2907,7 +2907,7 @@ Language: vi_VN
     <string name="reader_likes_you_and_one">Bạn và 1 người khác thích bài viết này</string>
     <string name="pick_video">Chọn video</string>
     <string name="pick_photo">Chọn ảnh</string>
-    <string name="sign_up_label">Đăng ký</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng ký</string>
     <string name="reader_toast_err_url_intent">Không thể mở %s</string>
     <string name="reader_toast_err_view_image">Không thể xem ảnh</string>
     <string name="reader_toast_err_share_intent">Không thể chia sẻ</string>
@@ -2950,18 +2950,18 @@ Language: vi_VN
     <string name="note_reply_successful">Đã gửi bình luận</string>
     <string name="sign_in">Đăng nhập</string>
     <string name="loading">Đang tải…</string>
-    <string name="httppassword">Mật khẩu HTTP</string>
-    <string name="httpuser">Tên người dùng HTTP</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">Mật khẩu HTTP</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">Tên người dùng HTTP</string>
     <string name="error_media_upload">Xảy ra lỗi khi tải lên media</string>
     <string name="incorrect_credentials">Tên người dùng hoặc mật khẩu không đúng.</string>
-    <string name="log_in">Đăng nhập</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Đăng nhập</string>
     <string name="username">Tên người dùng</string>
     <string name="password">Mật khẩu</string>
     <string name="reader">Người đọc</string>
-    <string name="featured_in_post">Bao gồm ảnh trong nội dung bài viết</string>
-    <string name="featured">Sử dụng như là hình ảnh đặc trưng</string>
-    <string name="width">Chiều rộng</string>
-    <string name="caption">Tiêu đề (tùy chọn)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bao gồm ảnh trong nội dung bài viết</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sử dụng như là hình ảnh đặc trưng</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chiều rộng</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tiêu đề (tùy chọn)</string>
     <string name="pages">Trang</string>
     <string name="posts">Bài viết</string>
     <string name="anonymous">Ẩn danh</string>
@@ -2969,7 +2969,7 @@ Language: vi_VN
     <string name="done">xong</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Đang tải lên…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Đang tải lên…</string>
     <string name="image_alignment">Canh lề</string>
     <string name="refresh">Làm mới</string>
     <string name="untitled">Chưa có tựa đề</string>

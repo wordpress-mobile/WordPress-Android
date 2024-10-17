@@ -1,5 +1,0 @@
-25.2:
-We hebben twee grote problemen opgelost in deze release:
-* Je kunt nu weer de datum van een gepubliceerd bericht updaten.
-* Sommige gebruikers konden de inhoud van hun bericht niet updaten.
-Zoals altijd, neem contact op met ondersteuning als er iets niet goed werkt!

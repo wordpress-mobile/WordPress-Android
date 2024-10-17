@@ -5,7 +5,7 @@ Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: uz
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
     <string name="comment_unapproved">Mulohaza inkor qilindi</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
@@ -55,25 +55,25 @@ Language: uz
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
     <string name="loading">Yuklanmoqda…</string>
-    <string name="httppassword">HTTP parol</string>
-    <string name="httpuser">HTTP foydalanuvchi nomi</string>
+    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP parol</string>
+    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="login">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
     <string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
-    <string name="log_in">Kirish</string>
+    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="login">Kirish</string>
     <string name="password">Parol</string>
     <string name="username">Foydalanuvchi nomi</string>
     <string name="reader">Rider</string>
     <string name="anonymous">Anonim</string>
-    <string name="featured">Yuz rasm sifatida foydalanish</string>
-    <string name="featured_in_post">Postga rasm qo‘shish</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Yuz rasm sifatida foydalanish</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Postga rasm qo‘shish</string>
     <string name="no_network_title">Netvork mavjud emas</string>
     <string name="pages">Sahifalar</string>
-    <string name="width">En</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">En</string>
     <string name="posts">Postlar</string>
-    <string name="caption">Titr (ixtiyoriy)</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Titr (ixtiyoriy)</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Yuklanmoqda</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Yuklanmoqda</string>
     <string name="image_alignment">Tekislash</string>
     <string name="refresh">Yangila</string>
     <string name="untitled">Nomsiz</string>
