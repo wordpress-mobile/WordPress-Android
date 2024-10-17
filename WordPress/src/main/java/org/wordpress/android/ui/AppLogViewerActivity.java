@@ -147,20 +147,22 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
     }
 
     @Override
-    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.app_log_share:
-                shareAppLog();
-                return true;
-            case R.id.app_log_copy_to_clipboard:
-                copyAppLogToClipboard();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
+
+        if (item.getItemId() == R.id.app_log_share) {
+            shareAppLog();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.app_log_copy_to_clipboard) {
+            copyAppLogToClipboard();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
