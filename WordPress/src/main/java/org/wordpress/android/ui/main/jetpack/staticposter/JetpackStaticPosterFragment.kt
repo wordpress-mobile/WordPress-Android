@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -15,7 +15,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_STATIC_POSTER
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.M3Theme
 import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -34,7 +34,7 @@ class JetpackStaticPosterFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            M3Theme {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Content -> JetpackStaticPoster(
