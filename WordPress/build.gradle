@@ -93,6 +93,7 @@ repositories {
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroup "org.wordpress.gutenbergkit"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
@@ -218,6 +219,7 @@ android {
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
         buildConfigField "boolean", "SYNC_PUBLISHING", "false"
         buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
+        buildConfigField "boolean", "ENABLE_NEW_GUTENBERG", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -430,6 +432,8 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
+
+    implementation("$gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")
 
     implementation(libs.automattic.rest) {
         exclude group: 'com.mcxiaoke.volley'

@@ -12,6 +12,7 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroup "org.wordpress.gutenbergkit"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
@@ -92,6 +93,10 @@ dependencies {
         exclude module: 'hermes-android'
         exclude module: 'react-android'
     }
+
+    // This dependency will be substituted if the `local-builds.gradle` file contains
+    // `localGutenbergKitPath`. Details for this can be found in the `settings.gradle` file.
+    implementation("$rootProject.gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")
 
     implementation(libs.wordpress.utils)
 

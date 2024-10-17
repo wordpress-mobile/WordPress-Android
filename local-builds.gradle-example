@@ -18,6 +18,7 @@ ext {
     //localFluxCPath = "../WordPress-FluxC-Android"
     //localWPUtilsPath = "../WordPress-Utils-Android"
     //localGutenbergMobilePath = "../gutenberg-mobile"
+    //localGutenbergKitPath = "../GutenbergKit"
     //localLoginFlowPath = "../WordPress-Login-Flow-Android"
     //localAztecAndroidPath = "../AztecEditor-Android"
     //localGravatarAndroidPath = "../Gravatar-SDK-Android"
