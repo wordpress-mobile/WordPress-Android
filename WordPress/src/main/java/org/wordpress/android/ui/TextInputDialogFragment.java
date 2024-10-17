@@ -51,6 +51,7 @@ public class TextInputDialogFragment extends DialogFragment {
         return textInputDialogFragment;
     }
 
+    /** @noinspection checkstyle:RightCurly*/
     @Override
     @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -78,9 +79,14 @@ public class TextInputDialogFragment extends DialogFragment {
             hintView.setVisibility(View.GONE);
         }
 
-        if (!isMultiline) {
-            editText.setMaxLines(1);
+        if (isMultiline) {
+            editText.setSingleLine(false);
+            editText.setMaxLines(10);
+            editText.setHorizontallyScrolling(false);
+        } else {
+            editText.setSingleLine(true);
         }
+
         if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
             editText.setSelection(0, initialText.length());
