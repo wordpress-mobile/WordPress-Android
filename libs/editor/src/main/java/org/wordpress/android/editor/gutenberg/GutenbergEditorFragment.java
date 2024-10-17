@@ -96,6 +96,7 @@ import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
+import org.wordpress.gutenberg.MediaItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -1400,15 +1401,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void appendMediaFiles(Map<String, MediaFile> mediaList) {
         // Disabling media sharing with the new editor until support is added.
-        if (getActivity() == null || mIsNewGutenbergEnabled) {
+        if (getActivity() == null) {
             // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
             // Activity may have already be gone.
             // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
             AppLog.d(T.MEDIA, "appendMediaFiles() called but Activity is null!");
             return;
         }
-
-        ArrayList<Media> rnMediaList = new ArrayList<>();
 
         // Get media URL of first of media first to check if it is network or local one.
         String mediaUrl = "";
@@ -1418,32 +1417,56 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         boolean isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl);
-        if (!isNetworkUrl) {
-            for (Media media : rnMediaList) {
-                mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
-            }
-        }
 
-        for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-            int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
-                    : mediaEntry.getValue().getId();
-            String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
-            MediaFile mediaFile = mediaEntry.getValue();
-            WritableNativeMap metadata = new WritableNativeMap();
-            String videoPressGuid = mediaFile.getVideoPressGuid();
-            if (videoPressGuid != null) {
-                metadata.putString("videopressGUID", videoPressGuid);
-            }
-            rnMediaList.add(createRNMediaUsingMimeType(mediaId,
-                    url,
-                    mediaFile.getMimeType(),
-                    mediaFile.getCaption(),
-                    mediaFile.getTitle(),
-                    mediaFile.getAlt(),
-                    metadata));
-        }
+        if (mIsNewGutenbergEnabled) {
+            ArrayList<MediaItem> processedMediaList = new ArrayList<>();
 
-        getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
+                        : mediaEntry.getValue().getId();
+                String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+                MediaFile mediaFile = mediaEntry.getValue();
+                processedMediaList.add(new MediaItem(
+                        mediaId,
+                        url,
+                        mediaFile.getMimeType(),
+                        mediaFile.getCaption(),
+                        mediaFile.getTitle(),
+                        mediaFile.getAlt()
+                ));
+            }
+
+            mGutenbergView.appendMedia(processedMediaList);
+        } else {
+            ArrayList<Media> rnMediaList = new ArrayList<>();
+
+            if (!isNetworkUrl) {
+                for (Media media : rnMediaList) {
+                    mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
+                }
+            }
+
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
+                        : mediaEntry.getValue().getId();
+                String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+                MediaFile mediaFile = mediaEntry.getValue();
+                WritableNativeMap metadata = new WritableNativeMap();
+                String videoPressGuid = mediaFile.getVideoPressGuid();
+                if (videoPressGuid != null) {
+                    metadata.putString("videopressGUID", videoPressGuid);
+                }
+                rnMediaList.add(createRNMediaUsingMimeType(mediaId,
+                        url,
+                        mediaFile.getMimeType(),
+                        mediaFile.getCaption(),
+                        mediaFile.getTitle(),
+                        mediaFile.getAlt(),
+                        metadata));
+            }
+
+            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+        }
     }
 
     @Override
