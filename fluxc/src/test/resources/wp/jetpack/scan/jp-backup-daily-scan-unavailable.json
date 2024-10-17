@@ -1,0 +1,6 @@
+{
+	"state": "unavailable",
+	"threats": null,
+	"has_cloud": true,
+	"reason": "missing_scan_capability"
+}

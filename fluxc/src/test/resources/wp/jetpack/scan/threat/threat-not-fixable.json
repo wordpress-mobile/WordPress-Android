@@ -1,0 +1,8 @@
+{
+  "id": 16422401,
+  "signature": "GoogleSafeBrowsing.Warning",
+  "first_detected": "2020-03-03T22:50:30.000Z",
+  "description": "Your site has been flagged by Google's Safe Browsing database, which attempts to identify sites that may be phishing sites, hosting malware, or otherwise malicious. This is likely the result of a compromise of your site that has resulted in a malicious payload being installed.\n\nGoogle works to provide the most accurate and up-to-date phishing, malware, and unwanted software information. However, Google cannot guarantee that its information is comprehensive and error-free:  some risky sites may not be identified, and some safe sites may be identified in error. Advisory provided by Google: https://developers.google.com/safe-browsing/safebrowsing_faq#whyAdvisory",
+  "status": "current",
+  "fixable": false
+}

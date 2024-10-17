@@ -1,0 +1,21 @@
+{
+  "text": "You've received 20 likes on My Site",
+  "ranges": [
+    {
+      "type": "b",
+      "indices": [
+        16,
+        18
+      ]
+    },
+    {
+      "type": "site",
+      "indices": [
+        28,
+        35
+      ],
+      "url": "http://mysite.wordpress.com",
+      "id": 123
+    }
+  ]
+}
