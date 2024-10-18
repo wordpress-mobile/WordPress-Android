@@ -97,6 +97,7 @@ repositories {
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
+            includeGroup "com.automattic.ucrop"
             includeGroup "com.gravatar"
             includeGroup "rs.wordpress.api"
         }
@@ -203,6 +204,7 @@ android {
         buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
         buildConfigField "boolean", "READER_FLOATING_BUTTON", "false"
         buildConfigField "boolean", "ENABLE_SELF_HOSTED_USERS", "false"
+        buildConfigField "boolean", "GRAVATAR_QUICK_EDITOR", "true"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -440,6 +442,7 @@ dependencies {
     }
     implementation(libs.wordpress.persistent.edittext)
     implementation("$gradle.ext.gravatarBinaryPath:${libs.versions.gravatar.get()}")
+    implementation("$gradle.ext.gravatarQuickEditorBinaryPath:${libs.versions.gravatar.get()}")
 
     implementation(libs.google.play.app.update)
 
@@ -488,7 +491,7 @@ dependencies {
     implementation(libs.apache.commons.text)
     implementation(libs.airbnb.lottie.main)
     implementation(libs.facebook.shimmer)
-    implementation(libs.yalantis.ucrop) {
+    implementation(libs.automattic.ucrop) {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'

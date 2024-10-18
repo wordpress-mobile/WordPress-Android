@@ -94,7 +94,7 @@ wordpress-login = '155-de03d4d605843dd2f37b46430523d92e22c47432'
 wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
 wordpress-utils = '3.14.0'
-yalantis-ucrop = '2.2.9'
+automattic-ucrop = '2.2.10'
 zendesk = '5.1.2'
 
 [libraries]
@@ -227,7 +227,7 @@ wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpr
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
 wordpress-rs-android = { group = "rs.wordpress.api", name = "android", version.ref = "wordpress-rs" }
 wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "wordpress-utils" }
-yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "yalantis-ucrop" }
+automattic-ucrop = { group = "com.automattic", name = "ucrop", version.ref = "automattic-ucrop" }
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
 
 [plugins]

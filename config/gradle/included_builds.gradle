@@ -12,6 +12,7 @@ gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
 gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
 gradle.ext.aboutAutomatticBinaryPath = "com.automattic:about"
 gradle.ext.gravatarBinaryPath = "com.gravatar:gravatar"
+gradle.ext.gravatarQuickEditorBinaryPath = "com.gravatar:gravatar-quickeditor"
 
 def localBuilds = new File("${rootDir}/local-builds.gradle")
 if (localBuilds.exists()) {

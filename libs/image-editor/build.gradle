@@ -39,7 +39,13 @@ android {
 }
 
 repositories {
-    maven { url "https://www.jitpack.io" }
+    maven {
+        url 'https://a8c-libs.s3.amazonaws.com/android'
+        content {
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.ucrop"
+        }
+    }
 }
 
 dependencies {
@@ -57,7 +63,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.main)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.livedata.core)
-    implementation(libs.yalantis.ucrop) {
+    implementation(libs.automattic.ucrop) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
