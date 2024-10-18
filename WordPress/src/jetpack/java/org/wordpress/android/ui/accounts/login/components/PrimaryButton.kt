@@ -3,9 +3,9 @@ package org.wordpress.android.ui.accounts.login.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -25,12 +25,12 @@ fun PrimaryButton(
 ) {
     Button(
         onClick = onClick,
-        elevation = ButtonDefaults.elevation(
+        elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
         ),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.bg_jetpack_login_splash_primary_button),
+            containerColor = colorResource(R.color.bg_jetpack_login_splash_primary_button),
             contentColor = colorResource(R.color.text_color_jetpack_login_splash_primary_button),
         ),
         modifier = modifier

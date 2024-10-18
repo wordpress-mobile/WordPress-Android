@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun AccountClosureDialog(
@@ -21,7 +21,7 @@ fun AccountClosureDialog(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val padding = 10.dp
-    M3Theme {
+    AppThemeM3 {
         Dialog(
             onDismissRequest = onDismissRequest,
             properties = DialogProperties(

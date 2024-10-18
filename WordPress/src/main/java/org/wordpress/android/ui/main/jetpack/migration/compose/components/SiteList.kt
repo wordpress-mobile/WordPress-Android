@@ -12,18 +12,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -31,9 +34,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.text.Message
-import org.wordpress.android.ui.compose.components.text.Subtitle
-import org.wordpress.android.ui.compose.components.text.Title
+import org.wordpress.android.ui.compose.components.text.MessageM3
+import org.wordpress.android.ui.compose.components.text.SubtitleM3
+import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
@@ -55,7 +58,7 @@ fun SiteList(
         state = listState,
         modifier = modifier
             .conditionalThen(!userScrollEnabled, Modifier.disableUserScroll())
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxHeight()
             .then(blurModifier),
     ) {
@@ -70,7 +73,7 @@ fun SiteList(
                 uiState = site,
                 isDimmed = uiState.isProcessing,
             )
-            Divider(
+            HorizontalDivider(
                 color = colorResource(R.color.gray_10),
                 thickness = 0.5.dp,
                 modifier = Modifier
@@ -108,27 +111,40 @@ private fun SiteListHeader(uiState: UiState.Content.Welcome): Unit = with(uiStat
             .dimmed(uiState.isProcessing)
     ) {
         ScreenIcon(iconRes = screenIconRes)
-        Title(text = uiStringText(title))
-        Subtitle(text = uiStringText(subtitle))
-        Message(text = uiStringText(message))
+        TitleM3(text = uiStringText(title))
+        SubtitleM3(text = uiStringText(subtitle))
+        MessageM3(text = uiStringText(message))
     }
 }
 
 @Composable
 private fun SiteIcon(iconUrl: String) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(iconUrl)
-            .error(R.drawable.ic_site_icon_placeholder_primary_24)
-            .crossfade(true)
-            .build(),
-        contentDescription = stringResource(R.string.blavatar_desc),
-        modifier = Modifier
-            .padding(vertical = 15.dp)
-            .padding(end = 20.dp)
-            .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
-            .clip(RoundedCornerShape(3.dp))
-    )
+    if (iconUrl.isEmpty()) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_site_icon_placeholder_primary_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+                .padding(end = 20.dp)
+                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .clip(RoundedCornerShape(3.dp))
+        )
+    } else {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(iconUrl)
+                .error(R.drawable.ic_site_icon_placeholder_primary_24)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.blavatar_desc),
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+                .padding(end = 20.dp)
+                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .clip(RoundedCornerShape(3.dp))
+        )
+    }
 }
 
 @Composable

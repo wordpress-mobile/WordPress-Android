@@ -31,7 +31,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -111,7 +111,7 @@ class PreviewStatusProvider: PreviewParameterProvider<Pair<DomainStatus, LocalDa
 fun DomainStatusRowPreview(
     @PreviewParameter(PreviewStatusProvider::class) status: Pair<DomainStatus, LocalDate?>?,
 ) {
-    M3Theme {
+    AppThemeM3 {
         Column (Modifier.padding(8.dp)) {
             StatusRow(
                 uiState = status?.let { (domainStatus, expiry) ->

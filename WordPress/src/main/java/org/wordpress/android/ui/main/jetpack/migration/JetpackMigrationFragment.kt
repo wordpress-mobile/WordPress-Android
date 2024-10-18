@@ -25,7 +25,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.JETPACK_MIGRATION_HELP
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
@@ -64,7 +64,7 @@ class JetpackMigrationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM3 {
                 val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
 
                 LocaleAwareComposable(

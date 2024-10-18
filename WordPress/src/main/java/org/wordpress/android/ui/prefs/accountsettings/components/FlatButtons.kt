@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.compose.theme.M3ThemeWithoutBackground
+import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 
 @Composable
 fun FlatButton(
@@ -69,7 +69,7 @@ fun FlatOutlinedButton(
 @Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewFlatButton() {
-    M3ThemeWithoutBackground {
+    AppThemeM3WithoutBackground {
         FlatButton(
             text = "Flat",
             onClick = {},
@@ -81,7 +81,7 @@ fun PreviewFlatButton() {
 @Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewOutlinedButton() {
-    M3ThemeWithoutBackground {
+    AppThemeM3WithoutBackground {
         FlatOutlinedButton(
             text = "Outlined",
             onClick = {},
