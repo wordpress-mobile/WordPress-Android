@@ -440,6 +440,7 @@ dependencies {
     }
     implementation(libs.wordpress.persistent.edittext)
     implementation("$gradle.ext.gravatarBinaryPath:${libs.versions.gravatar.get()}")
+    implementation("$gradle.ext.gravatarQuickEditorBinaryPath:${libs.versions.gravatar.get()}")
 
     implementation(libs.google.play.app.update)
 
