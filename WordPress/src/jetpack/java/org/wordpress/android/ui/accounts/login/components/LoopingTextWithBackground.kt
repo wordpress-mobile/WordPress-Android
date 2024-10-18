@@ -16,7 +16,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun LoopingTextWithBackground(
@@ -46,7 +46,7 @@ fun LoopingTextWithBackground(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoopingTextWithBackground() {
-    M3Theme {
+    AppThemeM3 {
         LoopingTextWithBackground()
     }
 }
