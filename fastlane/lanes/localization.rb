@@ -248,14 +248,14 @@ platform :android do
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
       name: 'Gutenberg Native',
-      import_key: 'gutenbergMobileVersion',
+      import_key: 'gutenberg-mobile',
       repository: 'wordpress-mobile/gutenberg-mobile',
       strings_file_path: 'bundle/android/strings.xml',
       source_id: 'gutenberg'
     },
     {
       name: 'Login Library',
-      import_key: 'wordPressLoginVersion',
+      import_key: 'wordpress-login',
       repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
       exclusions: ['default_web_client_id'],
@@ -263,7 +263,7 @@ platform :android do
     },
     {
       name: 'About Library',
-      import_key: 'automatticAboutVersion',
+      import_key: 'automattic-about',
       repository: 'Automattic/about-automattic-android',
       strings_file_path: 'library/src/main/res/values/strings.xml',
       source_id: 'about'
@@ -295,7 +295,7 @@ platform :android do
         import_key: lib[:import_key],
         repository: lib[:repository],
         file_path: lib[:strings_file_path],
-        build_gradle_path: File.join(PROJECT_ROOT_FOLDER, 'build.gradle')
+        build_gradle_path: File.join(PROJECT_ROOT_FOLDER, 'gradle/libs.versions.toml')
       )
 
       if download_path.nil?
