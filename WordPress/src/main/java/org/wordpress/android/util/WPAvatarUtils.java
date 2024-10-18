@@ -22,6 +22,7 @@ public class WPAvatarUtils {
     private WPAvatarUtils() {
         throw new IllegalStateException("Utility class");
     }
+
     public static final DefaultAvatarOption DEFAULT_AVATAR = MysteryPerson.INSTANCE;
 
     /**
@@ -35,7 +36,8 @@ public class WPAvatarUtils {
      * @return the fixed url
      */
     public static String rewriteAvatarUrl(@NonNull final String imageUrl, int avatarSz,
-                                          @Nullable DefaultAvatarOption defaultImage) {
+                                          @Nullable DefaultAvatarOption defaultImage,
+                                          @Nullable String cacheBuster) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -47,10 +49,10 @@ public class WPAvatarUtils {
             try {
                 return new AvatarUrl(new URL(imageUrl),
                         new AvatarQueryOptions.Builder()
-                            .setPreferredSize(avatarSz)
-                            .setDefaultAvatarOption(defaultImage)
-                            .build()
-                        ).url(null).toString();
+                                .setPreferredSize(avatarSz)
+                                .setDefaultAvatarOption(defaultImage)
+                                .build()
+                ).url(cacheBuster).toString();
             } catch (MalformedURLException | IllegalArgumentException e) {
                 return "";
             }
@@ -58,6 +60,16 @@ public class WPAvatarUtils {
     }
 
     public static String rewriteAvatarUrl(@NonNull final String imageUrl, int avatarSz) {
-        return rewriteAvatarUrl(imageUrl, avatarSz, DEFAULT_AVATAR);
+        return rewriteAvatarUrl(imageUrl, avatarSz, DEFAULT_AVATAR, null);
+    }
+
+    public static String rewriteAvatarUrl(@NonNull final String imageUrl, int avatarSz,
+                                          @Nullable DefaultAvatarOption defaultImage) {
+        return rewriteAvatarUrl(imageUrl, avatarSz, defaultImage, null);
+    }
+
+    public static String rewriteAvatarUrl(@NonNull final String imageUrl, int avatarSz,
+                                          @Nullable String cacheBuster) {
+        return rewriteAvatarUrl(imageUrl, avatarSz, DEFAULT_AVATAR, cacheBuster);
     }
 }

@@ -56,8 +56,9 @@ class MeGravatarLoader @Inject constructor(
         }
     }
 
-    fun constructGravatarUrl(rawAvatarUrl: String): String {
+    fun constructGravatarUrl(rawAvatarUrl: String, forceRefresh: Boolean = false): String {
         val avatarSz = resourseProvider.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
-        return WPAvatarUtils.rewriteAvatarUrl(rawAvatarUrl, avatarSz)
+        val cacheBuster = if (forceRefresh) System.currentTimeMillis().toString() else null
+        return WPAvatarUtils.rewriteAvatarUrl(rawAvatarUrl, avatarSz, cacheBuster)
     }
 }

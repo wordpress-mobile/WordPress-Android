@@ -21,8 +21,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.gravatar.quickeditor.GravatarQuickEditor
+import com.gravatar.quickeditor.ui.editor.AuthenticationMethod
+import com.gravatar.quickeditor.ui.editor.AvatarPickerContentLayout
+import com.gravatar.quickeditor.ui.editor.GravatarQuickEditorParams
 import com.gravatar.services.AvatarService
 import com.gravatar.services.GravatarResult
+import com.gravatar.types.Email
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -81,6 +86,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.DomainManagementFeatureConfig
+import org.wordpress.android.util.config.GravatarQuickEditorFeatureConfig
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -131,6 +137,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
 
     @Inject
+    lateinit var gravatarQuickEditorFeatureConfig: GravatarQuickEditorFeatureConfig
+
+    @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
@@ -155,6 +164,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private val shouldShowDomainButton
         get() = BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled() && accountStore.hasAccessToken()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -191,7 +201,21 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
-            showPhotoPickerForGravatar()
+            if (gravatarQuickEditorFeatureConfig.isEnabled()) {
+                GravatarQuickEditor.show(
+                    fragment = this@MeFragment,
+                    gravatarQuickEditorParams = GravatarQuickEditorParams {
+                        email = Email(accountStore.account.email)
+                        avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
+                    },
+                    authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+                    onAvatarSelected = {
+                        loadAvatar(null, true)
+                    },
+                )
+            } else {
+                showPhotoPickerForGravatar()
+            }
         }
         avatarContainer.setOnClickListener(showPickerListener)
         rowMyProfile.setOnClickListener {
@@ -472,9 +496,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         isUpdatingGravatar = isUpdating
     }
 
-    private fun MeFragmentBinding.loadAvatar(injectFilePath: String?) {
+    private fun MeFragmentBinding.loadAvatar(injectFilePath: String?, forceRefresh: Boolean = false) {
         val newAvatarUploaded = !injectFilePath.isNullOrEmpty()
-        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl, forceRefresh)
         meGravatarLoader.load(
             newAvatarUploaded,
             avatarUrl,
@@ -687,7 +711,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 avatarService.uploadCatching(file, accountStore.accessToken.orEmpty())
             when (result) {
                 is GravatarResult.Failure -> {
-                    AnalyticsTracker.track(ME_GRAVATAR_UPLOAD_EXCEPTION, mapOf("error_type" to result.error.javaClass.name))
+                    AnalyticsTracker.track(
+                        ME_GRAVATAR_UPLOAD_EXCEPTION,
+                        mapOf("error_type" to result.error.javaClass.name)
+                    )
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
                 }
 
