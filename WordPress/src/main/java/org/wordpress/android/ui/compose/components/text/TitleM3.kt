@@ -19,7 +19,7 @@ fun TitleM3(
     Text(
         text = text,
         fontSize = fontSize,
-        lineHeight = fontSize * 1.25,
+        lineHeight = fontSize * 1.1,
         fontWeight = FontWeight.Bold,
         modifier = modifier
             .padding(horizontal = 30.dp)
