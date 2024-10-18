@@ -20,7 +20,6 @@ fun MessageM3(
     Text(
         text = text,
         fontSize = 17.sp,
-        style = TextStyle(letterSpacing = (-0.01).sp),
         color = colorResource(R.color.gray_50),
         modifier = modifier
             .padding(horizontal = 30.dp)
