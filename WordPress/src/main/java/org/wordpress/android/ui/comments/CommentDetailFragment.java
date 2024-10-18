@@ -820,7 +820,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
         } else if (comment.getAuthorEmail() != null) {
             avatarUrl = new AvatarUrl(new Email(comment.getAuthorEmail()),
-                    new AvatarQueryOptions(avatarSz, null, null, null)).url().toString();
+                    new AvatarQueryOptions.Builder().setPreferredSize(avatarSz).build()).url(null).toString();
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 

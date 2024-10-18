@@ -46,7 +46,11 @@ public class WPAvatarUtils {
         } else {
             try {
                 return new AvatarUrl(new URL(imageUrl),
-                        new AvatarQueryOptions(avatarSz, defaultImage, null, null)).url().toString();
+                        new AvatarQueryOptions.Builder()
+                            .setPreferredSize(avatarSz)
+                            .setDefaultAvatarOption(defaultImage)
+                            .build()
+                        ).url(null).toString();
             } catch (MalformedURLException | IllegalArgumentException e) {
                 return "";
             }

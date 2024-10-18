@@ -85,7 +85,9 @@ class UnifiedCommentViewHolder(
         } else if (!TextUtils.isEmpty(comment.authorEmail)) {
             AvatarUrl(
                 Email(comment.authorEmail),
-                AvatarQueryOptions(preferredSize = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium))
+                AvatarQueryOptions {
+                    preferredSize = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
+                }
             ).url().toString()
         } else {
             ""
