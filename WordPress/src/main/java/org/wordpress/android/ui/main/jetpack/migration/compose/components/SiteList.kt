@@ -29,8 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -41,7 +39,6 @@ import org.wordpress.android.ui.compose.components.text.SubtitleM3
 import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
@@ -124,7 +121,7 @@ private fun SiteListHeader(uiState: UiState.Content.Welcome): Unit = with(uiStat
 private fun SiteIcon(iconUrl: String) {
     if (iconUrl.isEmpty()) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_site_icon_placeholder_primary_24),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
@@ -170,21 +167,4 @@ private fun SiteAddress(url: String) {
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
-@Composable
-private fun PreviewSiteListItem() {
-    val uiState = SiteListItemUiState(
-        id = 1,
-        name = "Site Name",
-        url = "https://www.example.com",
-        iconUrl = "",
-    )
-    AppThemeM3 {
-        SiteListItem(
-            uiState,
-            isDimmed = false
-        )
-    }
 }
