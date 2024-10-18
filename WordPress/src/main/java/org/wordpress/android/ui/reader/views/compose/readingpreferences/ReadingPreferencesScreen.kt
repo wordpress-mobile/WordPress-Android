@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,6 +36,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -283,27 +283,22 @@ private fun ReadingPreferencesPreviewFeedback(
             end = endIndex,
         )
 
-        addStringAnnotation(
-            tag = "url",
-            annotation = "feedback",
+        addLink(
+            clickable = LinkAnnotation.Clickable(
+                tag = "url",
+                linkInteractionListener = {
+                    onSendFeedbackClick()
+                }
+            ),
             start = startIndex,
             end = endIndex,
         )
     }
 
     val buttonLabel = stringResource(R.string.reader_preferences_screen_preview_text_feedback_label)
-    ClickableText(
+    Text(
         text = annotatedString,
         style = textStyle,
-        onClick = { offset ->
-            annotatedString.getStringAnnotations(tag = "url", start = offset, end = offset)
-                .firstOrNull()
-                ?.let { annotation ->
-                    if (annotation.item == "feedback") {
-                        onSendFeedbackClick()
-                    }
-                }
-        },
         modifier = Modifier.semantics {
             onClick(
                 label = buttonLabel,

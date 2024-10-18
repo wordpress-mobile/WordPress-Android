@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -91,7 +90,7 @@ fun ReaderTagsFeed(uiState: UiState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Loaded(uiState: UiState.Loaded) {
     val pullRefreshState = rememberPullRefreshState(
@@ -138,7 +137,7 @@ private fun Loaded(uiState: UiState.Loaded) {
 
                 Column(
                     modifier = Modifier
-                        .animateItemPlacement()
+                        .animateItem()
                         .fillMaxWidth()
                         .padding(
                             top = Margin.Large.value,
