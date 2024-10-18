@@ -42,4 +42,5 @@ object EditPostActivityConstants{
     const val STATE_KEY_UNDO = "stateKeyUndo"
     const val STATE_KEY_REDO = "stateKeyRedo"
     const val STATE_KEY_IS_VOICE_CONTENT_SET = "stateKeyIsVoiceContentSet"
+    const val STATE_KEY_IS_NEW_GUTENBERG = "stateKeyIsNewGutenberg"
 }

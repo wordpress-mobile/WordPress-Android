@@ -20,6 +20,7 @@ import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void showContentInfo() throws EditorFragmentNotAddedException;
     public abstract Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentNotAddedException;
+    public abstract void onEditorContentChanged(ContentChangeListener listener);
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
