@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.accounts.login.components
 
 import android.content.res.Configuration
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.LocalPosition
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.extensions.isOdd
 
 private const val FIXED_FONT_SIZE = 40
@@ -72,7 +72,7 @@ fun LoopingText(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoopingText() {
-    AppTheme {
+    AppThemeM3 {
         LoopingText()
     }
 }

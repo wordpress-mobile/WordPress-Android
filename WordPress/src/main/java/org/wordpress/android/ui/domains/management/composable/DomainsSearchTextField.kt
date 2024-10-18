@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun DomainsSearchTextField(
@@ -71,7 +71,7 @@ fun DomainsSearchTextField(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, group = "Empty")
 @Composable
 fun PreviewDomainsSearchTextFieldEmpty() {
-    M3Theme {
+    AppThemeM3 {
         DomainsSearchTextField(
             value = "",
             onValueChange = {},
@@ -84,7 +84,7 @@ fun PreviewDomainsSearchTextFieldEmpty() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, group = "Populated")
 @Composable
 fun PreviewDomainsSearchTextFieldPopulated() {
-    M3Theme {
+    AppThemeM3 {
         DomainsSearchTextField(
             value = "Cool domain",
             onValueChange = {},

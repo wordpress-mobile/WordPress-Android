@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun DebugSharedPreferenceFlagsScreen(
@@ -79,7 +79,7 @@ fun DebugFlagRow(
 @Preview
 @Composable
 fun DebugFlagsScreenPreview() {
-    M3Theme {
+    AppThemeM3 {
         DebugSharedPreferenceFlagsScreen(
             flags = mapOf(
                 "EXAMPLE_FEATURE_FLAG" to true,

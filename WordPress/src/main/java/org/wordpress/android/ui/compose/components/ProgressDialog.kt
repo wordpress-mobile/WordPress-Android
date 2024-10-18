@@ -26,7 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun ProgressDialog(progressDialogState: Flow<ProgressDialogState?>) {
@@ -37,7 +37,7 @@ fun ProgressDialog(progressDialogState: Flow<ProgressDialogState?>) {
 
 @Composable
 fun ProgressDialog(progressDialogState: ProgressDialogState) {
-    M3Theme {
+    AppThemeM3 {
         val dialogProps = DialogProperties(
             dismissOnBackPress = progressDialogState.dismissible,
             dismissOnClickOutside = progressDialogState.dismissible,
