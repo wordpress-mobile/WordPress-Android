@@ -1,0 +1,33 @@
+[{
+    "id":1,
+    "country":"US",
+    "state":"GA",
+    "postcode":"31707",
+    "city":"ALBANY",
+    "rate":"10.0000",
+    "name":"Superlong taaaaaaaax nameeeeee",
+    "priority":1,
+    "compound":false,
+    "shipping":true,
+    "order":0,
+    "class":"standard",
+    "postcodes":[
+      "31707"
+    ],
+    "cities":[
+      "ALBANY"
+    ],
+    "_links":{
+      "self":[
+        {
+          "href":"https://testwoomobile.wpcomstaging.com/wp-json/wc/v3/taxes/1"
+        }
+      ],
+      "collection":[
+        {
+          "href":"https://testwoomobile.wpcomstaging.com/wp-json/wc/v3/taxes"
+        }
+      ]
+    }
+  }
+]

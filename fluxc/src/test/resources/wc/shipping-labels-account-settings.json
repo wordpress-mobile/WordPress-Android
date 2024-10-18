@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "storeOptions": {
+    "currency_symbol": "$",
+    "dimension_unit": "in",
+    "weight_unit": "oz",
+    "origin_country": "US"
+  },
+  "formData": {
+    "selected_payment_method_id": 4144354,
+    "enabled": true,
+    "email_receipts": true,
+    "paper_size": "letter"
+  },
+  "formMeta": {
+    "can_manage_payments": true,
+    "can_edit_settings": true,
+    "master_user_name": "John Doe",
+    "master_user_login": "jhon",
+    "master_user_wpcom_login": "jhon",
+    "master_user_email": "jhon@email.com",
+    "payment_methods": [
+      {
+        "payment_method_id": 4144354,
+        "name": "John Doe",
+        "card_type": "visa",
+        "card_digits": "5454",
+        "expiry": "2023-12-31"
+      }
+    ],
+    "warnings": {
+      "payment_methods": false
+    }
+  },
+  "userMeta": {
+    "last_box_id": "small_flat_box"
+  }
+}
