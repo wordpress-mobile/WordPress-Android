@@ -26,8 +26,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ButtonsColumn
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
-import org.wordpress.android.ui.compose.components.text.Subtitle
-import org.wordpress.android.ui.compose.components.text.Title
+import org.wordpress.android.ui.compose.components.text.SubtitleM3
+import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -48,8 +48,8 @@ fun DeleteStep(uiState: UiState.Content.Delete): Unit = with(uiState) {
                 .weight(1f)
         ) {
             ScreenIcon(iconRes = screenIconRes)
-            Title(text = uiStringText(title))
-            Subtitle(text = uiStringText(subtitle))
+            TitleM3(text = uiStringText(title))
+            SubtitleM3(text = uiStringText(subtitle))
 
             Spacer(modifier = Modifier.weight(0.5f))
             Image(

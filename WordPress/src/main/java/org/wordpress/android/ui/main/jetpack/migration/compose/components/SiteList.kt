@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.text.Message
-import org.wordpress.android.ui.compose.components.text.Subtitle
-import org.wordpress.android.ui.compose.components.text.Title
+import org.wordpress.android.ui.compose.components.text.MessageM3
+import org.wordpress.android.ui.compose.components.text.SubtitleM3
+import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
@@ -108,9 +108,9 @@ private fun SiteListHeader(uiState: UiState.Content.Welcome): Unit = with(uiStat
             .dimmed(uiState.isProcessing)
     ) {
         ScreenIcon(iconRes = screenIconRes)
-        Title(text = uiStringText(title))
-        Subtitle(text = uiStringText(subtitle))
-        Message(text = uiStringText(message))
+        TitleM3(text = uiStringText(title))
+        SubtitleM3(text = uiStringText(subtitle))
+        MessageM3(text = uiStringText(message))
     }
 }
 

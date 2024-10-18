@@ -12,9 +12,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.components.ButtonsColumn
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
-import org.wordpress.android.ui.compose.components.text.Message
-import org.wordpress.android.ui.compose.components.text.Subtitle
-import org.wordpress.android.ui.compose.components.text.Title
+import org.wordpress.android.ui.compose.components.text.MessageM3
+import org.wordpress.android.ui.compose.components.text.SubtitleM3
+import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
@@ -38,15 +38,15 @@ fun ErrorStep(uiState: UiState.Error): Unit = with(uiState) {
                 iconRes = screenIconRes,
                 modifier = Modifier.dimmed(isProcessing)
             )
-            Title(
+            TitleM3(
                 text = uiStringText(type.title),
                 modifier = Modifier.dimmed(isProcessing)
             )
-            Subtitle(
+            SubtitleM3(
                 text = uiStringText(type.subtitle),
                 modifier = Modifier.dimmed(isProcessing)
             )
-            Message(
+            MessageM3(
                 text = uiStringText(type.message),
                 modifier = Modifier.dimmed(isProcessing)
             )
