@@ -5,7 +5,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 
 @Composable
@@ -21,4 +23,12 @@ fun Title(
             .padding(horizontal = 30.dp)
             .padding(top = 30.dp)
     )
+}
+
+@Preview
+@Composable
+private fun TitlePreview() {
+    AppTheme {
+        Title(text = "This title should be long enough so the preview wraps to more than one line")
+    }
 }
