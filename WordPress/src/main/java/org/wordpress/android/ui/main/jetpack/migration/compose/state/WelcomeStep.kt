@@ -32,7 +32,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithTopGlassBorder
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
@@ -208,7 +208,7 @@ private val previewUiState = UiState.Content.Welcome(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewWelcomeStep() {
-    AppTheme {
+    AppThemeM3 {
         Box {
             WelcomeStep(previewUiState)
         }
@@ -220,7 +220,7 @@ private fun PreviewWelcomeStep() {
 @Composable
 private fun PreviewWelcomeStepInProgress() {
     val uiState = previewUiState.copy(isProcessing = true)
-    AppTheme {
+    AppThemeM3 {
         Box {
             WelcomeStep(uiState)
         }

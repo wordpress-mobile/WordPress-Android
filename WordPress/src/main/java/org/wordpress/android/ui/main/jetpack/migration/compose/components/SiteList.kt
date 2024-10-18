@@ -12,9 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +55,7 @@ fun SiteList(
         state = listState,
         modifier = modifier
             .conditionalThen(!userScrollEnabled, Modifier.disableUserScroll())
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxHeight()
             .then(blurModifier),
     ) {
@@ -70,7 +70,7 @@ fun SiteList(
                 uiState = site,
                 isDimmed = uiState.isProcessing,
             )
-            Divider(
+            HorizontalDivider(
                 color = colorResource(R.color.gray_10),
                 thickness = 0.5.dp,
                 modifier = Modifier

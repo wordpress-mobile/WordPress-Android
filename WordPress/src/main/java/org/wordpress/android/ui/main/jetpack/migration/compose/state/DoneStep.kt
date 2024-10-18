@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ButtonsColumn
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.text.Subtitle
 import org.wordpress.android.ui.compose.components.text.Title
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
@@ -77,7 +77,7 @@ fun DoneStep(uiState: UiState.Content.Done): Unit = with(uiState) {
             }
         }
         ButtonsColumn {
-            PrimaryButton(
+            PrimaryButtonM3(
                 text = uiStringText(primaryActionButton.text),
                 onClick = primaryActionButton.onClick,
             )
@@ -90,7 +90,7 @@ fun DoneStep(uiState: UiState.Content.Done): Unit = with(uiState) {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewDoneStep() {
-    AppTheme {
+    AppThemeM3 {
         val uiState = UiState.Content.Done(DonePrimaryButton {})
         DoneStep(uiState)
     }
@@ -98,7 +98,7 @@ private fun PreviewDoneStep() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Composable
 private fun PreviewDoneStepNoSites() {
-    AppTheme {
+    AppThemeM3 {
         val uiState = UiState.Content.Done(
             JetpackMigrationViewModel.ActionButton.DoneNoSitesFlowPrimaryButton {}, false)
         DoneStep(uiState)
