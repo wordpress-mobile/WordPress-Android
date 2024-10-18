@@ -13,17 +13,20 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -119,19 +122,32 @@ private fun SiteListHeader(uiState: UiState.Content.Welcome): Unit = with(uiStat
 
 @Composable
 private fun SiteIcon(iconUrl: String) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(iconUrl)
-            .error(R.drawable.ic_site_icon_placeholder_primary_24)
-            .crossfade(true)
-            .build(),
-        contentDescription = stringResource(R.string.blavatar_desc),
-        modifier = Modifier
-            .padding(vertical = 15.dp)
-            .padding(end = 20.dp)
-            .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
-            .clip(RoundedCornerShape(3.dp))
-    )
+    if (iconUrl.isEmpty()) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_user_placeholder_primary_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+                .padding(end = 20.dp)
+                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .clip(RoundedCornerShape(3.dp))
+        )
+    } else {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(iconUrl)
+                .error(R.drawable.ic_site_icon_placeholder_primary_24)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.blavatar_desc),
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+                .padding(end = 20.dp)
+                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .clip(RoundedCornerShape(3.dp))
+        )
+    }
 }
 
 @Composable
