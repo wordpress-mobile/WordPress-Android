@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithTopGlassBorder
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
-import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
@@ -77,12 +77,12 @@ fun WelcomeStep(uiState: UiState.Content.Welcome): Unit = with(uiState) {
                 )
             },
             buttonsColumn = {
-                PrimaryButton(
+                PrimaryButtonM3(
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
                     isInProgress = isProcessing,
                 )
-                SecondaryButton(
+                SecondaryButtonM3(
                     text = uiStringText(secondaryActionButton.text),
                     onClick = secondaryActionButton.onClick,
                     enabled = !isProcessing,
