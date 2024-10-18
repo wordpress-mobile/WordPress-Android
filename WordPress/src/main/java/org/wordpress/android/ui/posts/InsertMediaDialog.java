@@ -130,23 +130,19 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                     GalleryType galleryType;
-                    switch (checkedId) {
-                        case R.id.radio_circles:
-                            galleryType = GalleryType.CIRCLES;
-                            break;
-                        case R.id.radio_slideshow:
-                            galleryType = GalleryType.SLIDESHOW;
-                            break;
-                        case R.id.radio_squares:
-                            galleryType = GalleryType.SQUARES;
-                            break;
-                        case R.id.radio_tiled:
-                            galleryType = GalleryType.TILED;
-                            break;
-                        default:
-                            galleryType = GalleryType.DEFAULT;
-                            break;
+
+                    if (checkedId == R.id.radio_circles) {
+                        galleryType = GalleryType.CIRCLES;
+                    } else if (checkedId == R.id.radio_slideshow) {
+                        galleryType = GalleryType.SLIDESHOW;
+                    } else if (checkedId == R.id.radio_squares) {
+                        galleryType = GalleryType.SQUARES;
+                    } else if (checkedId == R.id.radio_tiled) {
+                        galleryType = GalleryType.SQUARES;
+                    } else {
+                        galleryType = GalleryType.DEFAULT;
                     }
+
                     setGalleryType(galleryType);
                 }
             });
