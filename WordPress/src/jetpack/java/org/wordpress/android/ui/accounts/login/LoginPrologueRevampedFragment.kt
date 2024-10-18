@@ -36,6 +36,7 @@ import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.M3Theme
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 val LocalPosition = compositionLocalOf { 0f }
@@ -51,7 +52,7 @@ class LoginPrologueRevampedFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            M3Theme {
                 PositionProvider(viewModel) {
                     LoginScreenRevamped(
                         onWpComLoginClicked = {
