@@ -2,11 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.content.Context;
 
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -14,6 +9,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.utils.WPComRestClientUtils;
 
 import okhttp3.HttpUrl;
+
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
+
 
 @RunWith(RobolectricTestRunner.class)
 public class BaseWPComRestClientTest {
