@@ -18,12 +18,12 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import dagger.android.support.AndroidSupportInjection;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType.UNKNOWN_USER;
 import static org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType.USER_EXISTS;
-
-import dagger.android.support.AndroidSupportInjection;
 
 public class LoginGoogleFragment extends GoogleFragment {
     private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";

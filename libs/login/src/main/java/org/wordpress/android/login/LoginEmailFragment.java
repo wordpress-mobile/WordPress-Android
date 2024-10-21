@@ -60,9 +60,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.app.Activity.RESULT_OK;
-
 import dagger.android.support.AndroidSupportInjection;
+
+import static android.app.Activity.RESULT_OK;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
