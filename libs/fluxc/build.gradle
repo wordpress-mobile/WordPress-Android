@@ -115,6 +115,8 @@ dependencies {
     testImplementation sharedLibs.mockito.core
     testImplementation sharedLibs.mockito.kotlin
     testImplementation sharedLibs.mockito.inline
+    testImplementation sharedLibs.assertj.core
+    testImplementation sharedLibs.androidx.arch.core.testing
 
     lintChecks sharedLibs.wordpress.lint
 }
