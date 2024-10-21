@@ -315,7 +315,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
     private var isNewGutenbergEditor = false
-    private var isNewGutenbergEditorThemeStyles = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
