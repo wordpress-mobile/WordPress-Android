@@ -86,7 +86,7 @@ public class TextInputDialogFragment extends DialogFragment {
         }
         if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
-            editText.setSelection(0);
+            editText.setSelection(0, initialText.length());
         }
 
         boolean isInputEnabled = args.getBoolean(IS_INPUT_ENABLED);
