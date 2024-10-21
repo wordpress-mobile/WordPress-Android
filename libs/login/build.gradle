@@ -29,6 +29,10 @@ android {
     buildFeatures {
         buildConfig true
     }
+    lint {
+        enable += 'UnknownNullness'
+        disable 'UseTomlInstead'
+    }
 }
 
 ext {

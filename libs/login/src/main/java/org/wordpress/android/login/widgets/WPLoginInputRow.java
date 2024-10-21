@@ -79,10 +79,8 @@ public class WPLoginInputRow extends RelativeLayout {
                     mEditText.setHintTextColor(getResources().getColor(android.R.color.transparent));
 
                     // Passes autofill hints values forward to child views
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        if (isImportantForAutofill()) {
-                            mEditText.setAutofillHints(getAutofillHints());
-                        }
+                    if (isImportantForAutofill()) {
+                        mEditText.setAutofillHints(getAutofillHints());
                     }
                 }
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
