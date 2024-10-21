@@ -1,0 +1,20 @@
+{
+  "id": 22920156,
+  "signature": "Vulnerable.WP.Extension",
+  "first_detected": "2020-06-25T14:03:40.000Z",
+  "description": "The plugin WooCommerce (version 4.1.0) has a known vulnerability",
+  "status": "current",
+  "fixable": {
+    "fixer": "update",
+    "target": "4.2.2"
+  },
+  "extension": {
+    "type": "plugin",
+    "slug": "woocommerce",
+    "name": "WooCommerce",
+    "version": "4.1.0",
+    "isPremium": false
+  }
+}
+
+

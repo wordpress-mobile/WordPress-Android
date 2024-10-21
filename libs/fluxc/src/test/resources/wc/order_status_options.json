@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "pending",
+    "name": "Pending payment",
+    "total": 0
+  },
+  {
+    "slug": "processing",
+    "name": "Processing",
+    "total": 0
+  },
+  {
+    "slug": "on-hold",
+    "name": "On hold",
+    "total": 2
+  },
+  {
+    "slug": "completed",
+    "name": "Completed",
+    "total": 0
+  },
+  {
+    "slug": "cancelled",
+    "name": "Cancelled",
+    "total": 0
+  },
+  {
+    "slug": "refunded",
+    "name": "Refunded",
+    "total": 0
+  },
+  {
+    "slug": "failed",
+    "name": "Failed",
+    "total": 0
+  },
+  {
+    "slug": "gold",
+    "name": "Gold Member",
+    "total": 0
+  }
+]
