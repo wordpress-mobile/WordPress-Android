@@ -17,17 +17,17 @@ import org.wordpress.android.BuildConfig
 private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 
 @Composable
-fun M3Theme(
+fun AppThemeM3(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    M3ThemeWithoutBackground(isDarkTheme) {
+    AppThemeM3WithoutBackground(isDarkTheme) {
         ContentInSurfaceM3(content)
     }
 }
 
 @Composable
-fun M3ThemeWithoutBackground(
+fun AppThemeM3WithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
