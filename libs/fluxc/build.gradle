@@ -3,6 +3,7 @@ plugins {
     alias(sharedLibs.plugins.kotlin.android)
     alias(sharedLibs.plugins.kotlin.parcelize)
     alias(sharedLibs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlinx.kover)
 }
 
 android {

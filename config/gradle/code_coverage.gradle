@@ -67,6 +67,8 @@ dependencies {
             project(":libs:editor"),
             project(":libs:image-editor"),
             project(":libs:processors"),
+            project(":libs:fluxc"),
+            project(":libs:login")
     )
 }
 
