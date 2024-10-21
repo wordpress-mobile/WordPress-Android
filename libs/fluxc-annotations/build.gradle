@@ -1,26 +1,8 @@
 plugins {
     id "java"
-    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-
-    withSourcesJar()
-    withJavadocJar()
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            FluxCAnnotationsPublication(MavenPublication) {
-                from components.java
-
-                groupId "org.wordpress.fluxc"
-                artifactId "fluxc-annotations"
-                // version is set by 'publish-to-s3' plugin
-            }
-        }
-   }
 }

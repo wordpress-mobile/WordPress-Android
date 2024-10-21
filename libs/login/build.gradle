@@ -2,7 +2,6 @@ plugins {
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.kapt"
-    id "com.automattic.android.publish-to-s3"
 }
 
 repositories {
@@ -106,18 +105,4 @@ android.buildTypes.all { buildType ->
                     "${property.value}"
         }
     }
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            LoginPublication(MavenPublication) {
-                from components.release
-
-                groupId "org.wordpress"
-                artifactId "login"
-                // version is set by 'publish-to-s3' plugin
-            }
-        }
-   }
 }

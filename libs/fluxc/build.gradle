@@ -3,7 +3,6 @@ plugins {
     alias(sharedLibs.plugins.kotlin.android)
     alias(sharedLibs.plugins.kotlin.parcelize)
     alias(sharedLibs.plugins.kotlin.kapt)
-    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 android {
@@ -127,18 +126,4 @@ dependencyAnalysis {
             exclude(sharedLibs.eventbus.android.get().module.toString())
         }
     }
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            FluxCPublication(MavenPublication) {
-                from components.release
-
-                groupId "org.wordpress"
-                artifactId "fluxc"
-                // version is set by 'publish-to-s3' plugin
-            }
-        }
-   }
 }
