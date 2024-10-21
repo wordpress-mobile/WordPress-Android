@@ -244,7 +244,7 @@ platform :android do
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
     { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
     { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' },
-    { library: 'Login Library', strings_path: './libs/login/src/main/res/values/strings.xml', source_id: 'module:login' },
+    { library: 'Login Library', strings_path: './libs/login/src/main/res/values/strings.xml', source_id: 'module:login' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
