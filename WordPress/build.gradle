@@ -414,14 +414,7 @@ dependencies {
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation("$gradle.ext.fluxCBinaryPath:${libs.versions.wordpress.fluxc.get()}") {
-        version {
-            strictly libs.versions.wordpress.fluxc.get()
-        }
-        exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils'
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    implementation project(':libs:fluxc')
     implementation("$gradle.ext.wputilsBinaryPath:${libs.wordpress.utils.get().version}") {
         version {
             strictly libs.wordpress.utils.get().version

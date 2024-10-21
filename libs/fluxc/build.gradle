@@ -76,8 +76,8 @@ dependencies {
     kapt sharedLibs.wellsql.processor
 
     // FluxC annotations
-    api fluxcAnnotationsProjectDependency
-    kapt fluxcProcessorProjectDependency
+    api project(":libs:fluxc-annotations")
+    kapt project(":libs:fluxc-processor")
 
     // External libs
     api sharedLibs.eventbus.android
