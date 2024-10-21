@@ -60,6 +60,7 @@ include ':libs:annotations'
 include ':libs:mocks'
 
 include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
+include ':libs:login'
 
 apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_cache.gradle'

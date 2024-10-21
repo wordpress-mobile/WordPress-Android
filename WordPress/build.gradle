@@ -420,10 +420,7 @@ dependencies {
             strictly libs.wordpress.utils.get().version
         }
     }
-    implementation("$gradle.ext.loginFlowBinaryPath:${libs.versions.wordpress.login.get()}") {
-        exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils'
-    }
+    implementation project(":libs:login")
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 
     implementation("$gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")

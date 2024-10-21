@@ -9,27 +9,15 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
-            includeGroup "org.wordpress.fluxc"
-            includeGroup "org.wordpress.wellsql"
             includeGroup "com.gravatar"
         }
     }
     mavenCentral()
     google()
-    jcenter()
     maven { url "https://www.jitpack.io" }
 }
 
 android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlin {
-        jvmToolchain(17)
-    }
-
     namespace "org.wordpress.android.login"
 
     compileSdkVersion rootProject.compileSdkVersion
@@ -41,6 +29,31 @@ android {
     buildFeatures {
         buildConfig true
     }
+}
+
+ext {
+    // libs
+    wordpressLintVersion = '2.1.0'
+    wordpressUtilsVersion = '3.5.0'
+    gravatarSdkVersion = '0.2.0'
+
+    // main
+    androidxAppCompatVersion = '1.6.1'
+    androidxCoreVersion = '1.12.0'
+    androidxConstraintLayoutVersion = '2.0.4'
+    daggerVersion = '2.47'
+    glideVersion = '4.12.0'
+    javaxAnnotationVersion = '10.0-b28'
+    materialVersion = '1.2.1'
+    playServicesAuthVersion = '18.1.0'
+    credentialManagerVersion = '1.2.0'
+
+    // test
+    androidxArchCoreVersion = '2.1.0'
+    assertjVersion = '3.11.1'
+    junitVersion = '4.13.2'
+    mockitoVersion = '2.28.2'
+    robolectricVersion = '4.9'
 }
 
 dependencies {
@@ -58,10 +71,7 @@ dependencies {
 
     api "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
 
-    implementation("org.wordpress:fluxc:$wordpressFluxCVersion") {
-        exclude group: "com.android.support"
-        exclude group: "org.wordpress", module: "utils"
-    }
+    implementation project(":libs:fluxc")
 
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
@@ -88,12 +98,12 @@ dependencies {
 // Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
     Properties gradleProperties = new Properties()
-    File propertiesFile = file("../gradle.properties")
+    File propertiesFile = file("gradle.properties")
     if (propertiesFile.exists()) {
         gradleProperties.load(new FileInputStream(propertiesFile))
     } else {
         // Load defaults
-        gradleProperties.load(new FileInputStream(file("../gradle.properties-example")))
+        gradleProperties.load(new FileInputStream(file("gradle.properties-example")))
     }
     gradleProperties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
