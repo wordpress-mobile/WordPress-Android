@@ -80,13 +80,12 @@ public class TextInputDialogFragment extends DialogFragment {
         if (isMultiline) {
             editText.setSingleLine(false);
             editText.setMaxLines(10);
-            editText.setBackgroundResource(R.drawable.bg_dialog_input);
         } else {
             editText.setSingleLine(true);
         }
         if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
-            editText.setSelection(0, initialText.length());
+            editText.setSelection(0);
         }
 
         boolean isInputEnabled = args.getBoolean(IS_INPUT_ENABLED);
