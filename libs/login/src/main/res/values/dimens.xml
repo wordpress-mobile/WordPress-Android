@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <item name="material_emphasis_low" format="float" type="dimen">0.12</item>
+
+    <dimen name="margin_none">0dp</dimen>
+    <dimen name="margin_dialog">24dp</dimen>
+    <dimen name="margin_extra_extra_small">1dp</dimen>
+    <dimen name="margin_extra_small">2dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_small_medium">6dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_medium_large">10dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_extra_medium_large">24dp</dimen>
+    <dimen name="margin_extra_extra_medium_large">32dp</dimen>
+    <dimen name="margin_extra_extra_large">48dp</dimen>
+
+    <dimen name="avatar_sz_tiny">18dp</dimen>
+    <dimen name="avatar_sz_extra_small">24dp</dimen>
+    <dimen name="avatar_sz_small">32dp</dimen>
+    <dimen name="avatar_sz_medium">38dp</dimen>
+    <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
+    <dimen name="blavatar_sz_small">32dp</dimen>
+    <dimen name="blavatar_sz">40dp</dimen>
+
+    <!-- login -->
+    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
+    <dimen name="promo_indicator_bullet_size">4dp</dimen>
+
+</resources>
