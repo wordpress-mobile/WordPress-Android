@@ -47,7 +47,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MediaUriPager
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun FeedbackFormScreen(
@@ -200,7 +200,7 @@ private fun Screen(
     content: @Composable () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    M3Theme {
+    AppThemeM3 {
         Scaffold(
             topBar = {
                 TopAppBar(

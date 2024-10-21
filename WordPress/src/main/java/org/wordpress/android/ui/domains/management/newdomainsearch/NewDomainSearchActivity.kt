@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.domains.management.newdomainsearch.composable.NewDomainSearchScreen
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            M3Theme {
+            AppThemeM3 {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 NewDomainSearchScreen(
                     uiState = uiState,

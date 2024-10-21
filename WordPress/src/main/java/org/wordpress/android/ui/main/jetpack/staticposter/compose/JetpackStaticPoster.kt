@@ -46,7 +46,7 @@ import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.JpColorPalette
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.jetpack.staticposter.UiState
@@ -164,7 +164,7 @@ fun JetpackStaticPoster(
 )
 @Composable
 private fun PreviewJetpackStaticPoster() {
-    M3Theme {
+    AppThemeM3 {
         val uiState = UiData.STATS.toContentUiState()
         JetpackStaticPoster(uiState)
     }

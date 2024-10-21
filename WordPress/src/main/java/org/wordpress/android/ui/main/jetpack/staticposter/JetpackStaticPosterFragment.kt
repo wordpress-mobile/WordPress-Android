@@ -15,7 +15,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_STATIC_POSTER
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -34,7 +34,7 @@ class JetpackStaticPosterFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            M3Theme {
+            AppThemeM3 {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Content -> JetpackStaticPoster(
