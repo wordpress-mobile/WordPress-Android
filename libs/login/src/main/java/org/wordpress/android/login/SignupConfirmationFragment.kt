@@ -64,6 +64,7 @@ class SignupConfirmationFragment : Fragment(), MenuProvider {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         if (context !is LoginListener) {
+            @Suppress("TooGenericExceptionThrown")
             throw RuntimeException("$context must implement LoginListener")
         }
         mLoginListener = context
