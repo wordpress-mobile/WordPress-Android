@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncherWrapper
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginViewModel.ActionEvent
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginViewModel.UiState
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.compose.WPJetpackIndividualPluginOverlayScreen
@@ -39,7 +39,7 @@ class WPJetpackIndividualPluginFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Loaded -> {

@@ -11,11 +11,11 @@ import org.wordpress.android.BuildConfig
  * [contentColor](https://developer.android.com/jetpack/compose/themes/material#content-color).
  */
 @Composable
-fun AppTheme(
+fun AppThemeM2(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    AppThemeWithoutBackground(isDarkTheme) {
+    AppThemeM2WithoutBackground(isDarkTheme) {
         ContentInSurface(content)
     }
 }
@@ -23,10 +23,10 @@ fun AppTheme(
 /**
  * Use this theme only when the root composable supports
  * [contentColor](https://developer.android.com/jetpack/compose/themes/material#content-color).
- * Otherwise use [AppTheme].
+ * Otherwise use [AppThemeM2].
  */
 @Composable
-fun AppThemeWithoutBackground(
+fun AppThemeM2WithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -46,7 +46,7 @@ fun AppThemeWithoutBackground(
  * More info: https://github.com/wordpress-mobile/gutenberg-mobile/issues/4889
  */
 @Composable
-fun AppThemeEditor(
+fun AppThemeM2Editor(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @Composable
 fun PrivacyBannerScreen(viewModel: PrivacyBannerViewModel) {
@@ -191,7 +191,7 @@ fun PrivacyBannerScreen(
 @Preview(name = "Smaller screen", device = Devices.NEXUS_5)
 @Composable
 private fun PreviewPrivacyBanner() {
-    AppTheme {
+    AppThemeM2 {
         PrivacyBannerScreen(
             state = PrivacyBannerViewModel.UiState(
                 analyticsSwitchEnabled = false,
@@ -206,7 +206,7 @@ private fun PreviewPrivacyBanner() {
 @Preview(name = "With error")
 @Composable
 private fun PreviewError() {
-    AppTheme {
+    AppThemeM2 {
         PrivacyBannerScreen(
             state = PrivacyBannerViewModel.UiState(
                 analyticsSwitchEnabled = false,

@@ -52,7 +52,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.Drawable
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.audio.RecordingUpdate
 import java.util.Locale
 
@@ -382,7 +382,7 @@ private val errorUrlLinkCTA: TextStyle
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewInitializingView() {
-    AppTheme {
+    AppThemeM2 {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.INITIALIZING,
             header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
@@ -404,7 +404,7 @@ fun PreviewInitializingView() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewReadyToRecordView() {
-    AppTheme {
+    AppThemeM2 {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.READY_TO_RECORD,
             header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
@@ -426,7 +426,7 @@ fun PreviewReadyToRecordView() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewNotEligibleToRecordView() {
-    AppTheme {
+    AppThemeM2 {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE,
             header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
@@ -447,7 +447,7 @@ fun PreviewNotEligibleToRecordView() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewRecordingView() {
-    AppTheme {
+    AppThemeM2 {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.RECORDING,
             header = HeaderUIModel(label = R.string.voice_to_content_recording_label, onClose = { }),
@@ -470,7 +470,7 @@ fun PreviewRecordingView() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewProcessingView() {
-    AppTheme {
+    AppThemeM2 {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.PROCESSING,
             header = HeaderUIModel(label = R.string.voice_to_content_processing_label, onClose = { })

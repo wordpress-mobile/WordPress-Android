@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.ui.compose.components.SolidCircle
-import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
+import org.wordpress.android.ui.compose.theme.AppThemeM2WithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
@@ -227,7 +227,7 @@ private fun DomainItemPreview() {
             onClick = {}
         )
     }
-    AppThemeWithoutBackground {
+    AppThemeM2WithoutBackground {
         Column {
             uiStates.forEach { DomainItem(it) }
         }
