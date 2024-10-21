@@ -46,6 +46,7 @@
     <issue id="WeakPrng" severity="warning" />
     <issue id="TapjackingVulnerable" severity="warning" />
     <issue id="InsecurePermissionProtectionLevel" severity="warning" />
+    <issue id="CustomX509TrustManager" severity="warning" />
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
@@ -82,4 +83,8 @@
     <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
     <!--  We rely on more granural checks from WordPress-Lint-Android  -->
     <issue id="UnknownNullness" severity="ignore" />
+
+    <issue id="VectorRaster" severity="warning" />
+    <issue id="IconDensities" severity="warning" />
+    <issue id="KaptUsageInsteadOfKsp" severity="warning" />
 </lint>
