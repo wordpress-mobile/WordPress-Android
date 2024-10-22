@@ -51,7 +51,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -65,7 +65,7 @@ class PersonalizationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val language by viewModel.appLanguage.observeAsState("")
 
                 LocaleAwareComposable(
@@ -351,7 +351,7 @@ fun ShortcutStateRow(
 @Preview
 @Composable
 fun PersonalizationScreenPreview() {
-    AppTheme {
+    AppThemeM2 {
         ShortcutStateRow(
             state = ShortcutState(
                 label = UiString.UiStringRes(R.string.media),

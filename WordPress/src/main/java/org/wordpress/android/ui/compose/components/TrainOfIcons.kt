@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 private const val DEFAULT_ICON_SIZE = 32
 private const val DEFAULT_ICON_BORDER_WIDTH = 2
@@ -114,7 +114,7 @@ fun TrainOfIcons(
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun TrainOfIconsPreview() {
-    AppTheme {
+    AppThemeM2 {
         TrainOfIcons(
             iconModels = listOf(
                 R.drawable.login_prologue_second_asset_three,

@@ -56,7 +56,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -92,7 +92,7 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initObservers()
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
 
                 LocaleAwareComposable(

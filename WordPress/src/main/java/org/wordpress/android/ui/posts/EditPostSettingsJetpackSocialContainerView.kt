@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.AbstractComposeView
-import org.wordpress.android.ui.compose.theme.AppThemeEditor
+import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
@@ -27,7 +27,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        AppThemeEditor {
+        AppThemeM2Editor {
             with(uiState.value) {
                 when (this) {
                     is Loading -> {

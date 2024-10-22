@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -262,7 +262,7 @@ fun JetpackDropdownMenuPreview() {
     )
     var selectedItem by remember { mutableStateOf(menuItems.first() as MenuElementData.Item.Single) }
 
-    AppTheme {
+    AppThemeM2 {
         Box(
             modifier = Modifier
                 .padding(start = 8.dp, top = 8.dp)

@@ -38,7 +38,7 @@ import org.wordpress.android.ui.compose.components.buttons.ButtonSize
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.theme.JpColorPalette
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.SiteWithIndividualJetpackPlugins
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.JPInstallFullPluginAnimation
@@ -179,7 +179,7 @@ private fun getTitle(siteCount: Int): String = if (siteCount > 1) {
 @Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenSingleSiteSinglePluginPreview() {
-    AppTheme {
+    AppThemeM2 {
         WPJetpackIndividualPluginOverlayScreen(
             sites = listOf(
                 SiteWithIndividualJetpackPlugins(
@@ -200,7 +200,7 @@ fun WPJetpackIndividualPluginOverlayScreenSingleSiteSinglePluginPreview() {
 @Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenSingleSiteMultiplePluginsPreview() {
-    AppTheme {
+    AppThemeM2 {
         WPJetpackIndividualPluginOverlayScreen(
             sites = listOf(
                 SiteWithIndividualJetpackPlugins(
@@ -222,7 +222,7 @@ fun WPJetpackIndividualPluginOverlayScreenSingleSiteMultiplePluginsPreview() {
 @Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenMultipleSitesPreview() {
-    AppTheme {
+    AppThemeM2 {
         WPJetpackIndividualPluginOverlayScreen(
             sites = listOf(
                 SiteWithIndividualJetpackPlugins(

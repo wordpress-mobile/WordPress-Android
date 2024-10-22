@@ -29,7 +29,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
@@ -202,7 +202,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             listView.addFooterView(ComposeView(context).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    AppTheme {
+                    AppThemeM2 {
                         AccountClosureUi(viewModel)
                     }
                 }

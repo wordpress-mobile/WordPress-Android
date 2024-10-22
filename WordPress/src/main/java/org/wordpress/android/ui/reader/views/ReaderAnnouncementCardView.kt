@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.AbstractComposeView
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCard
 import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 
@@ -21,7 +21,7 @@ class ReaderAnnouncementCardView @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        AppTheme {
+        AppThemeM2 {
             ReaderAnnouncementCard(
                 items = items.value,
                 onAnnouncementCardDoneClick = { onDoneClickListener.value?.onDoneClick() }

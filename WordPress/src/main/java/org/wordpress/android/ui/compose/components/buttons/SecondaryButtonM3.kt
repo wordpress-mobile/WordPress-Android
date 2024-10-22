@@ -19,7 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @Composable
 fun SecondaryButtonM3(
@@ -67,7 +67,7 @@ fun SecondaryButtonM3(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SecondaryButtonPreview() {
-    AppTheme {
+    AppThemeM2 {
         SecondaryButtonM3(text = "Continue", onClick = {})
     }
 }
@@ -76,7 +76,7 @@ private fun SecondaryButtonPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SecondaryButtonLargePreview() {
-    AppTheme {
+    AppThemeM2 {
         SecondaryButtonM3(text = "Continue", onClick = {}, buttonSize = ButtonSize.LARGE)
     }
 }

@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 private val grayColor @Composable get() = MaterialTheme.colors.onSurface.copy(0.05f)
 private val regularFontSize = 12.sp
@@ -154,7 +154,7 @@ private fun AddressBar(domainText: String) {
 @Preview(widthDp = 900, heightDp = 415, name = "Landscape")
 @Preview(widthDp = 415, heightDp = 900, name = "RTL", locale = "ar")
 private fun SiteExamplePreview() {
-    AppTheme {
+    AppThemeM2 {
         SiteExample()
     }
 }
