@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic.ActionSource
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -59,7 +59,7 @@ fun DynamicDashboardCard(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DynamicDashboardCardPreview() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
@@ -91,7 +91,7 @@ fun DynamicDashboardCardPreview() {
 @Preview
 @Composable
 fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
@@ -120,7 +120,7 @@ fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
 @Preview
 @Composable
 fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
@@ -149,7 +149,7 @@ fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
 @Preview
 @Composable
 fun DynamicDashboardCardWithNoCta() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
@@ -176,7 +176,7 @@ fun DynamicDashboardCardWithNoCta() {
 @Preview
 @Composable
 fun DynamicDashboardWithFeatureImageOnly() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
@@ -196,7 +196,7 @@ fun DynamicDashboardWithFeatureImageOnly() {
 @Preview
 @Composable
 fun DynamicDashboardCardWithTitleAndCompleteRowsPreview() {
-    AppTheme {
+    AppThemeM2 {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",

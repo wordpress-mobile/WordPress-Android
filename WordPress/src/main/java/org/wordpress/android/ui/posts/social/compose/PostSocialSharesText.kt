@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
@@ -41,7 +41,7 @@ fun PostSocialSharesText(
 @Composable
 fun PostSocialSharesTextPreview() {
     val message = "27/30 Social shares remaining in the next 30 days"
-    AppTheme {
+    AppThemeM2 {
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {

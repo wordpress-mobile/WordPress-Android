@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.WPPermissionUtils
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ class BarcodeScanningFragment : Fragment() {
     private fun observeCameraPermissionState(view: ComposeView) {
         viewModel.permissionState.observe(viewLifecycleOwner) { permissionState ->
             view.setContent {
-                AppTheme {
+                AppThemeM2 {
                     BarcodeScannerScreen(
                         codeScanner = codeScanner,
                         permissionState = permissionState,

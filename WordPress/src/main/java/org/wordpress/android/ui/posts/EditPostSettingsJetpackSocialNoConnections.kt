@@ -23,7 +23,7 @@ import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppThemeEditor
+import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
@@ -103,7 +103,7 @@ fun EditPostSettingsJetpackSocialNoConnections(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EditPostSettingsJetpackSocialNoConnectionsPreview() {
-    AppThemeEditor {
+    AppThemeM2Editor {
         EditPostSettingsJetpackSocialNoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             message = "Increase your traffic by auto-sharing your posts with your friends on social media.",

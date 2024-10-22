@@ -6,7 +6,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JpInstallFullPluginCardBinding
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.PluginDescription
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -20,7 +20,7 @@ class JetpackInstallFullPluginCardViewHolder(
 ) {
     fun bind(card: JetpackInstallFullPluginCard) = with(binding) {
         jpInstallFullPluginCardContentComposable.setContent {
-            AppTheme {
+            AppThemeM2 {
                 PluginDescription(
                     siteString = stringResource(R.string.jetpack_full_plugin_install_onboarding_description_this_site),
                     pluginNames = card.pluginNames,

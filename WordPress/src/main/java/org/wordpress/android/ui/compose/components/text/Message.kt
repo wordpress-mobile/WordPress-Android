@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @Composable
 fun Message(
@@ -31,7 +31,7 @@ fun Message(
 @Preview
 @Composable
 private fun MessagePreview() {
-    AppTheme {
+    AppThemeM2 {
         Message(text = "This message should be long enough so the preview wraps to more than one line")
     }
 }

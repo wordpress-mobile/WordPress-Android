@@ -14,7 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.ButtonSize
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 
 @Composable
@@ -47,7 +47,7 @@ fun ErrorState(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewErrorState() {
-    AppTheme {
+    AppThemeM2 {
         val uiState = UiState.Error(
             retryButtonText = R.string.jetpack_plugin_install_error_button_retry,
             contactSupportButtonText = R.string.jetpack_plugin_install_error_button_contact_support,
