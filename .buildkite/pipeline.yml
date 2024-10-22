@@ -107,7 +107,7 @@ steps:
         artifact_paths:
           - "**/build/test-results/merged-test-results.xml"
 
-      - label: "🔬 Unit test FluxC"
+      - label: "🔬 Unit Test FluxC"
         command: ".buildkite/commands/run-unit-tests.sh fluxc"
         plugins:
           - $CI_TOOLKIT
@@ -117,7 +117,7 @@ steps:
         artifact_paths:
           - "**/build/test-results/merged-test-results.xml"
 
-      - label: "🔬 Unit test Login"
+      - label: "🔬 Unit Test Login"
         command: ".buildkite/commands/run-unit-tests.sh login"
         plugins:
           - $CI_TOOLKIT
