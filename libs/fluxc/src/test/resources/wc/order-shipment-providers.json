@@ -1,0 +1,94 @@
+{
+  "Australia": {
+    "Australia Post": "http:\/\/auspost.com.au\/track\/track.html?id=%1$s",
+    "Fastway Couriers": "http:\/\/www.fastway.com.au\/courier-services\/track-your-parcel?l=%1$s"
+  },
+  "Austria": {
+    "post.at": "http:\/\/www.post.at\/sendungsverfolgung.php?pnum1=%1$s",
+    "dhl.at": "http:\/\/www.dhl.at\/content\/at\/de\/express\/sendungsverfolgung.html?brand=DHL&AWB=%1$s",
+    "DPD.at": "https:\/\/tracking.dpd.de\/parcelstatus?locale=de_AT&query=%1$s"
+  },
+  "Brazil": {
+    "Correios": "http:\/\/websro.correios.com.br\/sro_bin\/txect01$.QueryList?P_LINGUA=001&P_TIPO=001&P_COD_UNI=%1$s"
+  },
+  "Belgium": {
+    "bpost": "https:\/\/track.bpost.be\/btr\/web\/#\/search?itemCode=%1$s"
+  },
+  "Canada": {
+    "Canada Post": "http:\/\/www.canadapost.ca\/cpotools\/apps\/track\/personal\/findByTrackNumber?trackingNumber=%1$s"
+  },
+  "Czech Republic": {
+    "PPL.cz": "http:\/\/www.ppl.cz\/main2.aspx?cls=Package&idSearch=%1$s",
+    "\u010cesk\u00e1 po\u0161ta": "https:\/\/www.postaonline.cz\/trackandtrace\/-\/zasilka\/cislo?parcelNumbers=%1$s",
+    "DHL.cz": "http:\/\/www.dhl.cz\/cs\/express\/sledovani_zasilek.html?AWB=%1$s",
+    "DPD.cz": "https:\/\/tracking.dpd.de\/parcelstatus?locale=cs_CZ&query=%1$s"
+  },
+  "Finland": {
+    "Itella": "http:\/\/www.posti.fi\/itemtracking\/posti\/search_by_shipment_id?lang=en&ShipmentId=%1$s"
+  },
+  "France": {
+    "Colissimo": "http:\/\/www.colissimo.fr\/portail_colissimo\/suivre.do?language=fr_FR&colispart=%1$s"
+  },
+  "Germany": {
+    "DHL Intraship (DE)": "http:\/\/nolp.dhl.de\/nextt-online-public\/set_identcodes.do?lang=de&idc=%1$s&rfn=&extendedSearch=true",
+    "Hermes": "https:\/\/tracking.hermesworld.com\/?TrackID=%1$s",
+    "Deutsche Post DHL": "http:\/\/nolp.dhl.de\/nextt-online-public\/set_identcodes.do?lang=de&idc=%1$s",
+    "UPS Germany": "http:\/\/wwwapps.ups.com\/WebTracking\/processInputRequest?sort_by=status&tracknums_displayed=1&TypeOfInquiryNumber=T&loc=de_DE&InquiryNumber1=%1$s",
+    "DPD.de": "https:\/\/tracking.dpd.de\/parcelstatus?query=%1$s&locale=en_DE"
+  },
+  "Ireland": {
+    "DPD.ie": "http:\/\/www2.dpd.ie\/Services\/QuickTrack\/tabid\/222\/ConsignmentID\/%1$s\/Default.aspx",
+    "An Post": "https:\/\/track.anpost.ie\/TrackingResults.aspx?rtt=1&items=%1$s"
+  },
+  "Italy": {
+    "BRT (Bartolini)": "http:\/\/as777.brt.it\/vas\/sped_det_show.hsm?referer=sped_numspe_par.htm&Nspediz=%1$s",
+    "DHL Express": "http:\/\/www.dhl.it\/it\/express\/ricerca.html?AWB=%1$s&brand=DHL"
+  },
+  "India": {
+    "DTDC": "http:\/\/www.dtdc.in\/tracking\/tracking_results.asp?Ttype=awb_no&strCnno=%1$s&TrkType2=awb_no"
+  },
+  "Netherlands": {
+    "PostNL": "https:\/\/mijnpakket.postnl.nl\/Claim?Barcode=%1$s&Postalcode=%2$s&Foreign=False&ShowAnonymousLayover=False&CustomerServiceClaim=False",
+    "DPD.NL": "http:\/\/track.dpdnl.nl\/?parcelnumber=%1$s",
+    "UPS Netherlands": "http:\/\/wwwapps.ups.com\/WebTracking\/processInputRequest?sort_by=status&tracknums_displayed=1&TypeOfInquiryNumber=T&loc=nl_NL&InquiryNumber1=%1$s"
+  },
+  "New Zealand": {
+    "Courier Post": "http:\/\/trackandtrace.courierpost.co.nz\/Search\/%1$s",
+    "NZ Post": "http:\/\/www.nzpost.co.nz\/tools\/tracking?trackid=%1$s",
+    "Fastways": "http:\/\/www.fastway.co.nz\/courier-services\/track-your-parcel?l=%1$s",
+    "PBT Couriers": "http:\/\/www.pbt.com\/nick\/results.cfm?ticketNo=%1$s"
+  },
+  "Romania": {
+    "Fan Courier": "https:\/\/www.fancourier.ro\/awb-tracking\/?xawb=%1$s",
+    "DPD Romania": "https:\/\/tracking.dpd.de\/parcelstatus?query=%1$s&locale=ro_RO",
+    "Urgent Cargus": "https:\/\/app.urgentcargus.ro\/Private\/Tracking.aspx?CodBara=%1$s"
+  },
+  "South African": {
+    "SAPO": "http:\/\/sms.postoffice.co.za\/TrackingParcels\/Parcel.aspx?id=%1$s"
+  },
+  "Sweden": {
+    "PostNord Sverige AB": "http:\/\/www.postnord.se\/sv\/verktyg\/sok\/Sidor\/spara-brev-paket-och-pall.aspx?search=%1$s",
+    "DHL.se": "http:\/\/www.dhl.se\/content\/se\/sv\/express\/godssoekning.shtml?brand=DHL&AWB=%1$s",
+    "Bring.se": "http:\/\/tracking.bring.se\/tracking.html?q=%1$s",
+    "UPS.se": "http:\/\/wwwapps.ups.com\/WebTracking\/track?track=yes&loc=sv_SE&trackNums=%1$s",
+    "DB Schenker": "http:\/\/privpakportal.schenker.nu\/TrackAndTrace\/packagesearch.aspx?packageId=%1$s"
+  },
+  "United Kingdom": {
+    "DHL": "http:\/\/www.dhl.com\/content\/g0\/en\/express\/tracking.shtml?brand=DHL&AWB=%1$s",
+    "DPD.co.uk": "http:\/\/www.dpd.co.uk\/tracking\/trackingSearch.do?search.searchType=0&search.parcelNumber=%1$s",
+    "InterLink": "http:\/\/www.interlinkexpress.com\/apps\/tracking\/?reference=%1$s&postcode=%2$s#results",
+    "ParcelForce": "http:\/\/www.parcelforce.com\/portal\/pw\/track?trackNumber=%1$s",
+    "Royal Mail": "https:\/\/www.royalmail.com\/track-your-item\/?trackNumber=%1$s",
+    "TNT Express (consignment)": "http:\/\/www.tnt.com\/webtracker\/tracking.do?requestType=GEN&searchType=CON&respLang=en&respCountry=GENERIC&sourceID=1&sourceCountry=ww&cons=%1$s&navigation=1&g\nenericSiteIdent=",
+    "TNT Express (reference)": "http:\/\/www.tnt.com\/webtracker\/tracking.do?requestType=GEN&searchType=REF&respLang=en&respCountry=GENERIC&sourceID=1&sourceCountry=ww&cons=%1$s&navigation=1&genericSiteIdent=",
+    "UK Mail": "https:\/\/www.ukmail.com\/manage-my-delivery\/manage-my-delivery?ConsignmentNumber=%1$s"
+  },
+  "United States": {
+    "Fedex": "http:\/\/www.fedex.com\/Tracking?action=track&tracknumbers=%1$s",
+    "FedEx Sameday": "https:\/\/www.fedexsameday.com\/fdx_dotracking_ua.aspx?tracknum=%1$s",
+    "OnTrac": "http:\/\/www.ontrac.com\/trackingdetail.asp?tracking=%1$s",
+    "UPS": "http:\/\/wwwapps.ups.com\/WebTracking\/track?track=yes&trackNums=%1$s",
+    "USPS": "https:\/\/tools.usps.com\/go\/TrackConfirmAction_input?qtc_tLabels1=%1$s",
+    "DHL US": "https:\/\/www.logistics.dhl\/us-en\/home\/tracking\/tracking-ecommerce.html?tracking-id=%1$s"
+  }
+}
