@@ -1,6 +1,6 @@
 # Networking
 
-Module for handling additional network requests that are not part of the main [WordPress-FluxC-Android] project and its data layer.
+Module for handling additional network requests that are not part of the `:libs:fluxc` module (previously [WordPress-FluxC-Android] project) and its data layer.
 
 [WordPress-FluxC-Android]: https://github.com/wordpress-mobile/WordPress-FluxC-Android
 

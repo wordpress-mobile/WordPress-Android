@@ -1,0 +1,30 @@
+{
+  "text": "Comment text",
+  "ranges": [
+    {
+      "url": "https://www.wordpress.com",
+      "indices": [
+        27,
+        39
+      ],
+      "site_id": 123,
+      "section": "post",
+      "intent": "edit",
+      "context": "single",
+      "id": 111
+    },
+    {
+      "url": "https://www.wordpress.com",
+      "indices": [
+        0,
+        7
+      ],
+      "site_id": 123,
+      "section": "comment",
+      "intent": "edit",
+      "context": "single",
+      "id": 17,
+      "root_id": 68
+    }
+  ]
+}

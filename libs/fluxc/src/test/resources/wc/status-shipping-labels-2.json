@@ -1,0 +1,59 @@
+{
+  "labels": [
+    {
+      "label_id": 3,
+      "tracking": "9405500205309038753691",
+      "refundable_amount": 7.65,
+      "created": 1589295659638,
+      "carrier_id": "usps",
+      "service_name": "USPS - Priority Mail",
+      "status": "PURCHASED",
+      "package_name": "Small Flat Rate Box",
+      "product_names": [
+        "Polo",
+        "T-Shirt"
+      ],
+      "product_ids": [
+        10,
+        11
+      ]
+    },
+    {
+      "label_id": 4,
+      "tracking": "9405500205309038753691",
+      "refundable_amount": 7.65,
+      "created": 1589295659638,
+      "carrier_id": "usps",
+      "service_name": "USPS - Priority Mail",
+      "status": "PURCHASED",
+      "package_name": "Small Flat Rate Box",
+      "product_names": [
+        "Polo",
+        "T-Shirt"
+      ],
+      "product_ids": [
+        10,
+        11
+      ]
+    },
+    {
+      "label_id": 5,
+      "tracking": "9405500205309038753691",
+      "refundable_amount": 7.65,
+      "created": 1589295659638,
+      "carrier_id": "usps",
+      "service_name": "USPS - Priority Mail",
+      "status": "PURCHASED",
+      "package_name": "Small Flat Rate Box",
+      "product_names": [
+        "Polo",
+        "T-Shirt"
+      ],
+      "product_ids": [
+        10,
+        11
+      ]
+    }
+  ],
+  "success": true
+}

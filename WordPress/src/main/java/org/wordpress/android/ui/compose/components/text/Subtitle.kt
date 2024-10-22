@@ -5,8 +5,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun Subtitle(
@@ -21,4 +23,12 @@ fun Subtitle(
             .padding(horizontal = 30.dp)
             .padding(top = 20.dp)
     )
+}
+
+@Preview
+@Composable
+private fun SubtitlePreview() {
+    AppTheme {
+        Subtitle(text = "This subtitle should be long enough so the preview wraps to more than one line")
+    }
 }
