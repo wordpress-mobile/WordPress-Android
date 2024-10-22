@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.qrcodeauth.compose.components
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,10 +20,10 @@ fun SecondaryButton(
     Button(
         onClick = onClick,
         enabled = enabled,
-        elevation = ButtonDefaults.elevation(0.dp),
+        elevation = ButtonDefaults.buttonElevation(0.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.background,
-            disabledBackgroundColor = MaterialTheme.colors.background,
+            containerColor = MaterialTheme.colorScheme.background,
+            disabledContainerColor = MaterialTheme.colorScheme.background,
         ),
         modifier = modifier.padding(
             vertical = Margin.Small.value,
