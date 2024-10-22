@@ -1,5 +1,11 @@
 package org.wordpress.android.editor.gutenberg;
 
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
@@ -21,6 +27,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,6 +77,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.gutenberg.GutenbergRequestInterceptor;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.LogExceptionCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergJsException;
@@ -97,6 +107,7 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,9 +115,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
@@ -117,7 +131,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorThemeUpdateListener,
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
-        GutenbergNetworkConnectionListener {
+        GutenbergNetworkConnectionListener,
+        GutenbergRequestInterceptor {
     @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
@@ -291,6 +306,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mGutenbergView.setEditorDidBecomeAvailable(view -> {
                 mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<Object>(), false);
             });
+            mGutenbergView.setRequestInterceptor(this);
 
             Integer postId = (Integer) mSettings.get("postId");
             if (postId != null && postId == 0) {
@@ -1633,6 +1649,50 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
         if (isConnected && hasFailedMediaUploads()) {
             mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
+        }
+    }
+
+    @Nullable @Override
+    public WebResourceResponse modifyRequest(@NonNull WebView view, @NonNull WebResourceRequest request) {
+        Uri url = request.getUrl();
+        String siteURL = (String) (mSettings != null ? mSettings.get("siteURL") : "");
+        String regex = siteURL + "/.*\\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|avi|mkv|mp3|wav|flac)(\\?.*)?$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(url.toString());
+
+        if (siteURL == null || !matcher.matches()) {
+            return null;
+        }
+
+        try {
+            Request okHttpRequest = new Request.Builder()
+                    .url(url.toString())
+                    .headers(Headers.of(request.getRequestHeaders()))
+                    .addHeader("Authorization", mSettings.get("authHeader").toString())
+                    .build();
+
+            OkHttpClient httpClient = new OkHttpClient();
+            Response response = httpClient.newCall(okHttpRequest).execute();
+
+            ResponseBody body = response.body();
+            if (body == null) {
+                return null;
+            }
+
+            okhttp3.MediaType contentType = body.contentType();
+            if (contentType == null) {
+                return null;
+            }
+
+            return new WebResourceResponse(
+                    contentType.toString(),
+                    response.header("content-encoding"),
+                    body.byteStream()
+            );
+        } catch (IOException e) {
+            // We don't need to handle this ourselves, just tell the WebView that
+            // we weren't able to fetch the resource
+            return null;
         }
     }
 }
