@@ -1,9 +1,9 @@
 package org.wordpress.android.fluxc.endpoints;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
+
+import static org.junit.Assert.assertEquals;
 
 public class WPComV2EndpointTest {
     @Test

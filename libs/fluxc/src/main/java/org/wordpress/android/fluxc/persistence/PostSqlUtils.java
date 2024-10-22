@@ -36,9 +36,9 @@ import java.util.ListIterator;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
-
 import dagger.Reusable;
+
+import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
 
 @Reusable
 public class PostSqlUtils {

@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias(sharedLibs.plugins.android.library)
     alias(sharedLibs.plugins.kotlin.android)
     alias(sharedLibs.plugins.kotlin.parcelize)
     alias(sharedLibs.plugins.kotlin.kapt)
-    alias(sharedLibs.plugins.automattic.publishToS3)
+    alias(libs.plugins.kotlinx.kover)
 }
 
 android {
@@ -28,8 +30,8 @@ android {
     }
 
     lint {
-        lintConfig file("${project.rootDir}/config/lint/lint.xml")
         enable += 'UnknownNullness'
+        disable 'UseTomlInstead', 'IgnoreWithoutReason'
     }
 
     testOptions {
@@ -38,6 +40,12 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    compilerOptions {
+        allWarningsAsErrors = false
     }
 }
 
@@ -77,8 +85,8 @@ dependencies {
     kapt sharedLibs.wellsql.processor
 
     // FluxC annotations
-    api fluxcAnnotationsProjectDependency
-    kapt fluxcProcessorProjectDependency
+    api project(":libs:fluxc-annotations")
+    kapt project(":libs:fluxc-processor")
 
     // External libs
     api sharedLibs.eventbus.android
@@ -116,6 +124,8 @@ dependencies {
     testImplementation sharedLibs.mockito.core
     testImplementation sharedLibs.mockito.kotlin
     testImplementation sharedLibs.mockito.inline
+    testImplementation sharedLibs.assertj.core
+    testImplementation sharedLibs.androidx.arch.core.testing
 
     lintChecks sharedLibs.wordpress.lint
 }
@@ -127,18 +137,4 @@ dependencyAnalysis {
             exclude(sharedLibs.eventbus.android.get().module.toString())
         }
     }
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            FluxCPublication(MavenPublication) {
-                from components.release
-
-                groupId "org.wordpress"
-                artifactId "fluxc"
-                // version is set by 'publish-to-s3' plugin
-            }
-        }
-   }
 }

@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -60,9 +59,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.app.Activity.RESULT_OK;
-
 import dagger.android.support.AndroidSupportInjection;
+
+import static android.app.Activity.RESULT_OK;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
@@ -639,12 +638,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showHintPickerDialogIfNeeded() {
         // If autofill is available and enabled, we favor the active autofill service over the hint picker dialog.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final AutofillManager autofillManager = requireContext().getSystemService(AutofillManager.class);
-            if (autofillManager != null && autofillManager.isEnabled()) {
-                AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is enabled. Disabling hint picker dialog.");
-                return;
-            }
+        final AutofillManager autofillManager = requireContext().getSystemService(AutofillManager.class);
+        if (autofillManager != null && autofillManager.isEnabled()) {
+            AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is enabled. Disabling hint picker dialog.");
+            return;
         }
 
         AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is unavailable or disabled. Showing hint picker dialog.");

@@ -5,8 +5,6 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
-import static org.wordpress.android.fluxc.utils.WPComRestClientUtils.getLocaleParamName;
-
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.AcceptHeaderStrategy;
@@ -21,6 +19,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
+
+import static org.wordpress.android.fluxc.utils.WPComRestClientUtils.getLocaleParamName;
 
 public abstract class BaseWPComRestClient {
     private AccessToken mAccessToken;

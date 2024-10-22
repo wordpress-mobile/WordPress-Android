@@ -2,7 +2,6 @@ package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -79,10 +78,8 @@ public class WPLoginInputRow extends RelativeLayout {
                     mEditText.setHintTextColor(getResources().getColor(android.R.color.transparent));
 
                     // Passes autofill hints values forward to child views
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        if (isImportantForAutofill()) {
-                            mEditText.setAutofillHints(getAutofillHints());
-                        }
+                    if (isImportantForAutofill()) {
+                        mEditText.setAutofillHints(getAutofillHints());
                     }
                 }
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {

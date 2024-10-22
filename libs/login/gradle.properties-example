@@ -1,0 +1,17 @@
+# Project-wide Gradle settings.
+
+# Optional: used to autofill username and password fields at login on debug build only
+wp.debug.wpcom_login_email =
+wp.debug.wpcom_login_username =
+wp.debug.wpcom_login_password =
+wp.debug.wpcom_website_url =
+
+# WordPress-Login-Flow-Android properties.
+
+android.useAndroidX=true
+android.enableJetifier=false
+
+android.nonTransitiveRClass=true
+
+# Dependency Analysis Plugin
+dependency.analysis.android.ignored.variants=release
