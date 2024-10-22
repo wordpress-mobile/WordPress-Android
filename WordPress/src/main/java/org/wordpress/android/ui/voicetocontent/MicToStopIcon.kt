@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("DEPRECATION")
@@ -115,7 +115,7 @@ fun MicToStopIcon(model: RecordingPanelUIModel, isRecording: Boolean) {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ExistingLayoutPreview() {
-    AppTheme {
+    AppThemeM2 {
         MicToStopIcon(
             RecordingPanelUIModel(
                 isEligibleForFeature = true,

@@ -12,7 +12,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.extensions.isRtl
 
 @Composable
@@ -38,7 +38,7 @@ fun JPInstallFullPluginAnimation(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewPluginDescriptionMultiplePlugins() {
-    AppTheme {
+    AppThemeM2 {
         JPInstallFullPluginAnimation()
     }
 }

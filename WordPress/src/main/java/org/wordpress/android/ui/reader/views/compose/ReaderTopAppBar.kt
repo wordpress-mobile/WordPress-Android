@@ -37,7 +37,7 @@ import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.JetpackDropdownMenu
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -215,7 +215,7 @@ fun ReaderTopAppBarPreview() {
         )
     }
 
-    AppTheme {
+    AppThemeM2 {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

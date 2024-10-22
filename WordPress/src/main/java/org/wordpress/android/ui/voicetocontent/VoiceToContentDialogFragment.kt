@@ -28,7 +28,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.Dismiss
 import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchEditPost
 import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchExternalBrowser
@@ -48,7 +48,7 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 VoiceToContentScreen(
                     viewModel = viewModel
                 )

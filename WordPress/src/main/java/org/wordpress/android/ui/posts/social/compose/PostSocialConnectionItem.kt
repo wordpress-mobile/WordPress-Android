@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 
@@ -86,7 +86,7 @@ fun PostSocialConnectionItemPreview() {
     )
     var connectionState by remember { mutableStateOf(connection) }
     var disabledState by remember { mutableStateOf(connection.copy(isSharingEnabled = false)) }
-    AppTheme {
+    AppThemeM2 {
         Column {
             // enabled
             PostSocialConnectionItem(

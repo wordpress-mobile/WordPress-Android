@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
+import org.wordpress.android.ui.compose.theme.AppThemeM2WithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
@@ -224,7 +224,7 @@ data class ReaderFilterSelectedItem(
 fun ReaderFilterChipGroupPreview() {
     var selectedItem: ReaderFilterSelectedItem? by rememberSaveable { mutableStateOf(null) }
 
-    AppThemeWithoutBackground {
+    AppThemeM2WithoutBackground {
         ReaderFilterChipGroup(
             modifier = Modifier.padding(Margin.Medium.value),
             selectedItem = selectedItem,

@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
@@ -58,7 +58,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val readerPreferences by viewModel.currentReadingPreferences.collectAsState()
                 val isFeedbackEnabled by viewModel.isFeedbackEnabled.collectAsState()
                 ReadingPreferencesScreen(

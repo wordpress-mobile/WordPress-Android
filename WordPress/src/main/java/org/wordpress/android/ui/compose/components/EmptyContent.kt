@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -106,7 +106,7 @@ fun EmptyContent(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentPreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             title = "Title",
             subtitle = "Subtitle",
@@ -119,7 +119,7 @@ fun EmptyContentPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentImagePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             image = R.drawable.img_illustration_empty_results_216dp,
         )
@@ -130,7 +130,7 @@ fun EmptyContentImagePreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentImageTitlePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             title = "Title",
             image = R.drawable.img_illustration_empty_results_216dp,
@@ -142,7 +142,7 @@ fun EmptyContentImageTitlePreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentImageSubtitlePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             subtitle = "Subtitle",
             image = R.drawable.img_illustration_empty_results_216dp,
@@ -154,7 +154,7 @@ fun EmptyContentImageSubtitlePreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentTitlePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             title = "Title",
         )
@@ -165,7 +165,7 @@ fun EmptyContentTitlePreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentTitleSubtitlePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             title = "Title",
             subtitle = "Subtitle",
@@ -177,7 +177,7 @@ fun EmptyContentTitleSubtitlePreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentSubtitlePreview() {
-    AppTheme {
+    AppThemeM2 {
         EmptyContent(
             subtitle = "Subtitle",
         )

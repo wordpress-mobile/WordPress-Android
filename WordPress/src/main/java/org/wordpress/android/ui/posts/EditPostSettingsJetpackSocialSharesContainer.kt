@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppThemeEditor
+import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.compose.DescriptionText
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
@@ -46,7 +46,7 @@ fun EditPostSettingsJetpackSocialSharesContainer(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EditPostSettingsJetpackSocialSharesContainerPreview() {
-    AppThemeEditor {
+    AppThemeM2Editor {
         EditPostSettingsJetpackSocialSharesContainer(
             postSocialSharingModel = PostSocialSharingModel(
                 title = "Sharing to 2 of 3 accounts",

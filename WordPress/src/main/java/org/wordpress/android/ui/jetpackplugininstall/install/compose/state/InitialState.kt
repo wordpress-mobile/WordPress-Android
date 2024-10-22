@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.ButtonSize
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 
 @Composable
@@ -35,7 +35,7 @@ fun InitialState(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewInitialState() {
-    AppTheme {
+    AppThemeM2 {
         val uiState = UiState.Initial(
             buttonText = R.string.jetpack_plugin_install_initial_button,
         )

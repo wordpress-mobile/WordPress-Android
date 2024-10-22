@@ -26,7 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
+import org.wordpress.android.ui.compose.theme.AppThemeM2WithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -89,7 +89,7 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         binding = ReaderTagFeedFragmentLayoutBinding.bind(view)
 
         binding.composeView.setContent {
-            AppThemeWithoutBackground {
+            AppThemeM2WithoutBackground {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 ReaderTagsFeed(uiState)
             }

@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ContentAlphaProvider
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
@@ -270,7 +270,7 @@ private fun OverlayContentItem(
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PostResolutionOverlayPreview() {
-    AppTheme {
+    AppThemeM2 {
         PostResolutionOverlay(
             uiState = PostResolutionOverlayUiState(
                 titleResId = R.string.dialog_post_conflict_title,

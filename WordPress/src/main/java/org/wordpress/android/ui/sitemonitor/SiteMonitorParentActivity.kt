@@ -53,7 +53,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
@@ -115,7 +115,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             currentSelectItemId = getInitialTab()
         }
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {

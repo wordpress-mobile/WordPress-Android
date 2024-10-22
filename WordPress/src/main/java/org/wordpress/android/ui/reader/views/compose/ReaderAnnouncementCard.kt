@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
@@ -139,7 +139,7 @@ data class ReaderAnnouncementCardItemData(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderTagsFeedPostListItemPreview() {
-    AppTheme {
+    AppThemeM2 {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

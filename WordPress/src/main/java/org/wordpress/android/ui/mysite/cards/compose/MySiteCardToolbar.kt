@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 /**
  * A toolbar for MySite cards written in Compose, that tries to match behavior and positioning of cards written in XML.
@@ -158,7 +158,7 @@ sealed interface MySiteCardToolbarContextMenuItem {
 )
 @Composable
 private fun MySiteCardToolbarPreview() {
-    AppTheme {
+    AppThemeM2 {
         MySiteCardToolbar(
             onContextMenuClick = {},
             contextMenuItems = listOf(
@@ -191,7 +191,7 @@ private fun MySiteCardToolbarPreview() {
 )
 @Composable
 private fun MySiteCardToolbarInCardPreview() {
-    AppTheme {
+    AppThemeM2 {
         UnelevatedCard(
             modifier = Modifier.padding(8.dp)
         ) {
