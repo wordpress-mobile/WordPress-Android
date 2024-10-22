@@ -239,13 +239,13 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 fladle = { id = "com.osacky.fladle", version.ref = "fladle" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-main" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-main" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-main" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
 violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violation-comments" }
