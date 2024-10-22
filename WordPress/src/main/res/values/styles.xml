@@ -1797,6 +1797,20 @@
         <item name="iconTint">@color/jetpack_green_50</item>
     </style>
 
+    <!--MaterialAlertDialogBuilder Styles -->
+    <style name="MaterialAlertDialogButtonCenter">
+        <item name="buttonBarPositiveButtonStyle">@style/MaterialAlertDialogPositiveButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MaterialAlertDialogNegativeButton</item>
+    </style>
+
+    <style name="MaterialAlertDialogPositiveButton"  parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="MaterialAlertDialogNegativeButton"  parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
     <!-- My Site Activity Card  -->
     <style name="MySiteCardItemActivityCardLabel">
         <item name="android:textAlignment">viewStart</item>

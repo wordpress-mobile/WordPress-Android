@@ -1,0 +1,53 @@
+# Project-wide Gradle settings.
+
+# These are the default Gradle properties for WordPress-Android
+# Feel free to tweak them for your machine (e.g. change -Xmx value below)
+org.gradle.jvmargs=-Xmx6g -XX:+HeapDumpOnOutOfMemoryError
+org.gradle.parallel=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+
+# WordPress-Android properties.
+
+android.useAndroidX=true
+android.enableJetifier=false
+
+android.nonTransitiveRClass=true
+android.nonFinalResIds=false
+android.enableR8.fullMode=false
+
+# For more details on what these properties do visit
+# https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md
+
+wp.oauth.app_id = wordpress
+wp.oauth.app_secret = wordpress
+wp.gcm.id = wordpress
+wp.db_secret = wordpress
+wp.app_license_key = wordpress
+wp.zendesk.app_id=wordpress
+wp.zendesk.domain=https://www.google.com/
+wp.zendesk.oauth_client_id=wordpress
+wp.docsbotai.id=wordpress
+wp.reset_db_on_downgrade = false
+wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
+jp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
+wp.tenor.api_key=wordpress
+wp.encrypted_logging_key=z0g+oVkqR4kWNUTxJfTozOZQjfXI7W9f6bD0uMJ5VkA=
+
+# Optional: Needed for the end to end tests
+wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com
+wp.e2e.wp_com_user.password=mocked_password
+wp.e2e.wp_com_user.site_address=e2eflowtestingmobile.wordpress.com
+wp.e2e.wp_com_user.username=e2eflowtestingmobile
+wp.e2e.wp_com_passwordless_user.email=e2eflowtestingmobile+passwordless@example.com
+wp.e2e.self_hosted_user.username=e2eflowtestingmobile
+wp.e2e.self_hosted_user.password=mocked_password
+wp.e2e.self_hosted_user.site_address=127.0.0.1:8080
+
+wp.e2e.signup_email=e2eflowsignuptestingmobile@example.com
+wp.e2e.signup_username=e2eflowsignuptestingmobile
+wp.e2e.signup_display_name=e2eflowsignuptestingmobile
+wp.e2e.signup_password=mocked_password
+
+# Dependency Analysis Plugin
+dependency.analysis.android.ignored.variants=release,wordpressVanillaDebug,wordpressVanillaRelease,wordpressWasabiDebug,wordpressWasabiRelease,wordpressJalapenoRelease,jetpackVanillaDebug,jetpackVanillaRelease,jetpackWasabiDebug,jetpackWasabiRelease,jetpackJalapenoRelease
