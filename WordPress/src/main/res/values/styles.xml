@@ -1801,14 +1801,22 @@
     <style name="MaterialAlertDialogButtonCenter">
         <item name="buttonBarPositiveButtonStyle">@style/MaterialAlertDialogPositiveButton</item>
         <item name="buttonBarNegativeButtonStyle">@style/MaterialAlertDialogNegativeButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/MaterialAlertDialogCancelButton</item>
     </style>
 
     <style name="MaterialAlertDialogPositiveButton"  parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
     </style>
 
     <style name="MaterialAlertDialogNegativeButton"  parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="MaterialAlertDialogCancelButton"  parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left</item>
     </style>
 
     <!-- My Site Activity Card  -->
