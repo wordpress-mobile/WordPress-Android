@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 /**
  * These composables were created for the self-hosted users feature but were written to be reusable
@@ -178,7 +178,7 @@ fun ScreenWithTopBar(
     closeIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {
-    M3Theme {
+    AppThemeM3 {
         Scaffold(
             topBar = {
                 TopAppBar(

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.Initial
@@ -275,7 +275,7 @@ private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.o
 @Preview(name = "Landscape orientation", device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun PurchaseDomainScreenPreview() {
-    M3Theme {
+    AppThemeM3 {
         PurchaseDomainScreen(Initial, {}, {}, {}, {})
     }
 }
@@ -284,7 +284,7 @@ fun PurchaseDomainScreenPreview() {
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PurchaseDomainScreenErrorPreview() {
-    M3Theme {
+    AppThemeM3 {
         PurchaseDomainScreen(UiState.ErrorSubmittingCart, {}, {}, {}, {})
     }
 }
