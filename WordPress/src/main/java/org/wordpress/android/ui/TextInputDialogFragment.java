@@ -77,13 +77,15 @@ public class TextInputDialogFragment extends DialogFragment {
         } else {
             hintView.setVisibility(View.GONE);
         }
-
-        if (!isMultiline) {
-            editText.setMaxLines(1);
+        if (isMultiline) {
+            editText.setSingleLine(false);
+            editText.setMaxLines(10);
+        } else {
+            editText.setSingleLine(true);
         }
         if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
-            editText.setSelection(0, initialText.length());
+            editText.setSelection(0);
         }
 
         boolean isInputEnabled = args.getBoolean(IS_INPUT_ENABLED);
