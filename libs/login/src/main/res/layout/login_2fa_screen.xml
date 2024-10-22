@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label"
+        style="@style/Widget.LoginFlow.TextView.Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:text="@string/enter_verification_code" />
+
+    <org.wordpress.android.login.widgets.WPLoginInputRow
+        android:id="@+id/login_2fa_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/verification_code"
+        android:inputType="numberDecimal" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_security_key_button"
+        style="@style/Widget.LoginFlow.Button.Tertiary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_none"
+        android:paddingStart="@dimen/margin_none"
+        android:text="@string/login_text_security_key" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_otp_button"
+        style="@style/Widget.LoginFlow.Button.Tertiary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_none"
+        android:paddingStart="@dimen/margin_none"
+        tools:text="@string/login_text_otp" />
+</LinearLayout>

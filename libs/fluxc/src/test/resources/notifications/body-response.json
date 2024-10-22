@@ -1,0 +1,57 @@
+{
+  "text": "This site was created by Author",
+  "ranges": [
+    {
+      "email": "user@automattic.com",
+      "url": "https://www.wordpress.com",
+      "id": 111,
+      "site_id": 123,
+      "type": "user",
+      "indices": [
+        0,
+        9
+      ]
+    }
+  ,{
+      "email": "user@automattic.com",
+      "url": "https://www.wordpress.com",
+      "id": 1999,
+      "site_id": 123,
+      "type": "scan",
+      "indices": [
+        10,
+        15
+      ]
+    }
+  ],
+  "media": [
+    {
+      "type": "image",
+      "indices": [
+        0,
+        0
+      ],
+      "height": "256",
+      "width": "256",
+      "url": "https://gravatar.jpg"
+    }
+  ],
+  "actions": {
+    "follow": false
+  },
+  "meta": {
+    "links": {
+      "email": "user@wp.com",
+      "home": "https://user.blog"
+    },
+    "ids": {
+      "user": 1,
+      "site": 2
+    },
+    "titles": {
+      "home": "Title"
+    },
+    "is_mobile_button": true
+  },
+  "type": "user"
+}

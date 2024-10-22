@@ -1,0 +1,26 @@
+{
+  "campaigns": [
+    {
+      "id": "1234",
+      "status": "rejected",
+      "start_time": "2023-06-02T00:00:00.000Z",
+      "duration_days": 10,
+      "total_budget": 100.0,
+      "spent_budget": 0.0,
+      "impressions": 0,
+      "clicks": 0,
+      "site_name": "siteName",
+      "text_snippet": "title",
+      "target_url": "https://example.com",
+      "target_urn": "urn:wpcom:post:199247490:9",
+      "main_image": {
+        "url": "imageUrl",
+        "mime_type": "image/jpeg",
+        "width": 100.0,
+        "height": 100.0
+      }
+    }
+  ],
+  "total_count": 1,
+  "skipped": 0
+}

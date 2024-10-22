@@ -35,6 +35,7 @@
     <issue id="MissingNullAnnotationOnMethodReturnType">
         <ignore path="**/generated/**" />
     </issue>
+    <issue id="VectorRaster" severity="warning" /> <!--    fluxc-->
     <!-- SECURITY -->
     <issue id="TrustAllX509TrustManager">
         <!-- EDITOR -->
@@ -46,6 +47,7 @@
     <issue id="WeakPrng" severity="warning" />
     <issue id="TapjackingVulnerable" severity="warning" />
     <issue id="InsecurePermissionProtectionLevel" severity="warning" />
+    <issue id="CustomX509TrustManager" severity="warning" /> <!--    fluxc-->
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
@@ -59,6 +61,7 @@
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
         <ignore regexp=".*\/values\/strings\.xml$"/>
     </issue>
+    <issue id="KaptUsageInsteadOfKsp" severity="warning" /> <!--    fluxc-->
     <!-- USABILITY -->
     <issue id="IconDipSize">
         <!-- EDITOR -->
@@ -73,6 +76,7 @@
     <issue id="ObsoleteSdkInt">
         <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
+    <issue id="IconDensities" severity="warning" /> <!--    fluxc-->
     <!-- INTEROPERABILITY -->
     <issue id="UnknownNullness" severity="informational">
         <ignore path="**/generated/**" />
@@ -82,4 +86,5 @@
     <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
     <!--  We rely on more granural checks from WordPress-Lint-Android  -->
     <issue id="UnknownNullness" severity="ignore" />
+
 </lint>

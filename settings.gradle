@@ -16,6 +16,35 @@ plugins {
     id "com.gradle.develocity" version "3.18.1"
 }
 
+def catalogVersion = "1.23.1"
+dependencyResolutionManagement {
+    repositories {
+        exclusiveContent {
+            forRepository {
+                maven {
+                    url = uri("https://a8c-libs.s3.amazonaws.com/android")
+                }
+            }
+            filter {
+                includeModule("com.automattic", "dependency-catalog")
+            }
+        }
+    }
+    versionCatalogs {
+        sharedLibs {
+            from("com.automattic:dependency-catalog:$catalogVersion")
+
+            version("androidx-annotation", "1.0.2")
+            version("androidx-appcompat", "1.0.2")
+            version("androidx-constraintlayout", "1.1.3")
+            version("androidx-recyclerview", "1.0.0")
+            version("apache-commons-text", "1.10.0")
+            version("facebook-flipper", "0.51.0")
+            version("facebook-soloader", "0.9.0")
+        }
+    }
+}
+
 rootProject.name = 'WPAndroid'
 
 include ':WordPress'
@@ -28,6 +57,9 @@ include ':libs:processors'
 include ':libs:annotations'
 
 include ':libs:mocks'
+
+include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
+include ':libs:login'
 
 apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_cache.gradle'
