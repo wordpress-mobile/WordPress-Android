@@ -1,0 +1,69 @@
+{
+  "text": "Hello. Attached is the fancy GB file block.\n\nimageDownload",
+  "ranges": [
+    {
+      "type": "div",
+      "indices": [
+        45,
+        58
+      ],
+      "parent": null,
+      "class": "wp-block-file"
+    },
+    {
+      "url": "https://wordpress.org/image.png",
+      "indices": [
+        50,
+        58
+      ],
+      "id": "16",
+      "parent": "13",
+      "type": "a",
+      "class": "wp-block-file__button"
+    },
+    {
+      "url": "https://wordpress.org/image.png",
+      "indices": [
+        45,
+        50
+      ],
+      "id": "wp-block-file--media-5c443d80-5da6",
+      "parent": "13",
+      "type": "a"
+    },
+    {
+      "type": "p",
+      "indices": [
+        0,
+        43
+      ],
+      "id": "10",
+      "parent": null
+    }
+  ],
+  "actions": {
+    "spam-comment": false,
+    "trash-comment": false,
+    "approve-comment": true,
+    "edit-comment": true,
+    "replyto-comment": true,
+    "like-comment": false
+  },
+  "meta": {
+    "ids": {
+      "comment": 437,
+      "user": 121310380,
+      "post": 35,
+      "site": 185525191
+    },
+    "links": {
+      "comment": "https://public-api.wordpress.com/rest/v1/comments/456",
+      "user": "https://public-api.wordpress.com/rest/v1/users/123",
+      "post": "https://public-api.wordpress.com/rest/v1/posts/789",
+      "site": "https://public-api.wordpress.com/rest/v1/sites/000"
+    }
+  },
+  "type": "comment",
+  "nest_level": 0,
+  "edit_comment_link": "https://wordpress.org/comment/1?action=edit"
+}

@@ -107,6 +107,26 @@ steps:
         artifact_paths:
           - "**/build/test-results/merged-test-results.xml"
 
+      - label: "🔬 Unit Test FluxC"
+        command: ".buildkite/commands/run-unit-tests.sh fluxc"
+        plugins:
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR:
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_FLUXC"
+        artifact_paths:
+          - "**/build/test-results/merged-test-results.xml"
+
+      - label: "🔬 Unit Test Login"
+        command: ".buildkite/commands/run-unit-tests.sh login"
+        plugins:
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR:
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_LOGIN"
+        artifact_paths:
+          - "**/build/test-results/merged-test-results.xml"
+
   #################
   # Instrumented (aka UI) Tests
   #################
