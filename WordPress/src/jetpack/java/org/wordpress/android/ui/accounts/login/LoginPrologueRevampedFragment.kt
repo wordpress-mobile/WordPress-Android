@@ -28,14 +28,14 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.login.components.WordpressJetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
+import org.wordpress.android.ui.accounts.login.components.WordpressJetpackLogo
 import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 val LocalPosition = compositionLocalOf { 0f }
@@ -51,7 +51,7 @@ class LoginPrologueRevampedFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM3 {
                 PositionProvider(viewModel) {
                     LoginScreenRevamped(
                         onWpComLoginClicked = {
@@ -149,11 +149,9 @@ private fun LoginScreenRevamped(
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, device = Devices.FOLDABLE)
-@Preview(showBackground = true, device = Devices.TABLET)
 @Composable
 fun PreviewLoginScreenRevamped() {
-    AppTheme {
+    AppThemeM3 {
         LoginScreenRevamped(
             onWpComLoginClicked = {},
             onSiteAddressLoginClicked = {}

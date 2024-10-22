@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
-import org.wordpress.android.ui.compose.theme.M3Theme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -109,7 +109,7 @@ fun DomainListCard(
 fun DomainListCardPreview() {
     val expiry = LocalDate.of(2024,8,15).asLegacyDate()
 
-    M3Theme {
+    AppThemeM3 {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(16.dp),
