@@ -194,6 +194,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ProgressDialog mSavingContentProgressDialog;
     @Nullable private static Map<String, Object> mSettings;
+    OkHttpClient mHttpClient = new OkHttpClient();
 
     public static GutenbergEditorFragment newInstance(Context context,
                                                       boolean isNewPost,
@@ -1669,8 +1670,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     .addHeader("Authorization", mSettings.get("authHeader").toString())
                     .build();
 
-            OkHttpClient httpClient = new OkHttpClient();
-            Response response = httpClient.newCall(okHttpRequest).execute();
+            Response response = mHttpClient.newCall(okHttpRequest).execute();
 
             ResponseBody body = response.body();
             if (body == null) {
