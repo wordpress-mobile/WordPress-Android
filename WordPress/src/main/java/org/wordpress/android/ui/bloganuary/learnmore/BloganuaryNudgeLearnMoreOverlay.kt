@@ -65,7 +65,7 @@ private fun contentIconBackgroundColor(isDarkTheme: Boolean = isSystemInDarkThem
 @Composable
 private fun contentTextEmphasis(isDarkTheme: Boolean = isSystemInDarkTheme()): Float {
     return if (isDarkTheme) {
-        0.7f
+        0.6f
     } else {
         1f
     }
