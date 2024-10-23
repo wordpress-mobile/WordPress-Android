@@ -3,6 +3,7 @@ package org.wordpress.android.ui.bloganuary.learnmore
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,17 +21,16 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,24 +50,27 @@ import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import androidx.compose.material.MaterialTheme as Material2Theme
 
 private val contentIconForegroundColor: Color
     get() = AppColor.White
 
-private val contentIconBackgroundColor: Color
-    @Composable get() = if (Material2Theme.colors.isLight) {
+@Composable
+private fun contentIconBackgroundColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return if (isDarkTheme) {
         AppColor.Black
     } else {
         AppColor.White.copy(alpha = 0.18f)
     }
+}
 
-private val contentTextEmphasis: Float
-    @Composable get() = if (Material2Theme.colors.isLight) {
-        1f
+@Composable
+private fun contentTextEmphasis(isDarkTheme: Boolean = isSystemInDarkTheme()): Float {
+    return if (isDarkTheme) {
+        0.4f // TODO verify this is correct
     } else {
-        ContentAlpha.medium
+        1f
     }
+}
 
 @Composable
 fun BloganuaryNudgeLearnMoreOverlay(
@@ -111,7 +114,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
             ) {
                 Image(
                     painter = painterResource(R.drawable.logo_bloganuary),
-                    colorFilter = ColorFilter.tint(Material2Theme.colors.onSurface),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                     modifier = Modifier.width(180.dp),
                     contentScale = ContentScale.Inside,
                     contentDescription = stringResource(
@@ -148,12 +151,12 @@ fun BloganuaryNudgeLearnMoreOverlay(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall,
-                    color = LocalContentColor.current.copy(alpha = ContentAlpha.medium),
+                    color = LocalContentColor.current.copy(alpha = 0.4f),
                 )
             }
         }
 
-        Divider()
+        HorizontalDivider()
 
         Button(
             onClick = { onActionClick(model.action) },
@@ -163,8 +166,8 @@ fun BloganuaryNudgeLearnMoreOverlay(
             elevation = null,
             contentPadding = PaddingValues(vertical = Margin.Large.value),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Material2Theme.colors.onSurface,
-                contentColor = Material2Theme.colors.surface,
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface,
             ),
         ) {
             Text(stringResource(model.action.textRes))
@@ -211,7 +214,7 @@ private fun OverlayContentItem(
             modifier = Modifier
                 .size(48.dp)
                 .background(
-                    color = contentIconBackgroundColor,
+                    color = contentIconBackgroundColor(),
                     shape = CircleShape,
                 ),
         ) {
@@ -227,7 +230,7 @@ private fun OverlayContentItem(
 
         Spacer(Modifier.width(Margin.ExtraLarge.value))
 
-        ContentAlphaProvider(contentTextEmphasis) {
+        ContentAlphaProvider(contentTextEmphasis()) {
             Text(
                 stringResource(textRes),
                 style = MaterialTheme.typography.titleMedium,
