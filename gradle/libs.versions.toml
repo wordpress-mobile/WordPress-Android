@@ -49,6 +49,7 @@ facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
 fladle = '0.17.5'
+google-autoservice = '1.0-rc4'
 google-dagger = "2.50"
 google-exoplayer = '2.13.3'
 google-flexboxlayout = '3.0.0'
@@ -84,6 +85,7 @@ mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
 sentry = '4.12.0'
 squareup-kotlin-poet = '1.18.1'
+squareup-java-poet = '1.7.0'
 squareup-retrofit = '2.11.0'
 violation-comments = '1.70.0'
 wiremock = '2.26.3'
@@ -177,6 +179,7 @@ facebook-react-android-hermes = { group = "com.facebook.react", name = "hermes-a
 facebook-react-android-main = { group = "com.facebook.react", name = "react-android", version.ref = "facebook-react" }
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
 fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "fastlane-screengrab" }
+google-autoservice = { module = "com.google.auto.service:auto-service", version.ref = "google-autoservice" }
 google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "google-dagger" }
 google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "google-dagger" }
 google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "google-dagger" }
@@ -219,6 +222,7 @@ mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", versio
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
+squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
