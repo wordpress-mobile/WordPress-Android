@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
@@ -49,7 +49,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 JetpackFullPluginInstallOnboardingScreen()
             }
         }

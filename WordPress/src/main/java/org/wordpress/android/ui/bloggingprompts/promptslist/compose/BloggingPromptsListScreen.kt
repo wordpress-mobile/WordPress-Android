@@ -28,7 +28,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPrompt
 import org.wordpress.android.ui.compose.components.EmptyContent
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @Composable
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -125,7 +125,7 @@ private fun NetworkErrorContent() {
 fun BloggingPromptsListScreenPreview(
     @PreviewParameter(provider = BloggingPromptsListScreenPreviewProvider::class) uiState: UiState
 ) {
-    AppTheme {
+    AppThemeM2 {
         BloggingPromptsListScreen(uiState = uiState, onNavigateUp = {}, onItemClick = {})
     }
 }

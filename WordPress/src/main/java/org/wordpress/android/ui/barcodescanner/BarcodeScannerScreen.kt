@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 @Composable
 fun BarcodeScannerScreen(
@@ -116,7 +116,7 @@ private fun AlertDialog(
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DeniedOnceAlertDialog() {
-    AppTheme {
+    AppThemeM2 {
         AlertDialog(
             title = stringResource(id = R.string.barcode_scanning_alert_dialog_title),
             message = stringResource(id = R.string.barcode_scanning_alert_dialog_rationale_message),
@@ -132,7 +132,7 @@ fun DeniedOnceAlertDialog() {
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DeniedPermanentlyAlertDialog() {
-    AppTheme {
+    AppThemeM2 {
         AlertDialog(
             title = stringResource(id = R.string.barcode_scanning_alert_dialog_title),
             message = stringResource(id = R.string.barcode_scanning_alert_dialog_permanently_denied_message),

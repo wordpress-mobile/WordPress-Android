@@ -21,7 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationDomainsScreenBinding
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.ui.accounts.HelpActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.compose.SiteExample
@@ -73,7 +73,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             it.initRecyclerView()
             it.initViewModel()
             it.siteExampleComposeView.setContent {
-                AppTheme {
+                AppThemeM2 {
                     SiteExample()
                 }
             }

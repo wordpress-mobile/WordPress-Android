@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.withBottomSheetElevation
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
@@ -128,7 +128,7 @@ sealed class PrepublishingHomeViewHolder(
                     mutableStateOf(uiState)
                 }
 
-                AppTheme {
+                AppThemeM2 {
                     (state as? SocialUiState.Visible)?.let { visibleState ->
                         when (val internalState = visibleState.state) {
                             is JetpackSocialUiState.Loaded -> {

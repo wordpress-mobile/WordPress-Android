@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 
 private val fontSize = 22.sp
 private val lineHeight = fontSize * 1.3
@@ -66,7 +66,7 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true, heightDp = 200, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginPrologue() {
-    AppTheme {
+    AppThemeM2 {
         Column(
             Modifier
                 .background(color = colorResource(id = R.color.login_prologue_revamped_background))

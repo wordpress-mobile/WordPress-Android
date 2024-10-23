@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
@@ -99,7 +99,7 @@ private fun CardToolbar(
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun BloganuaryNudgeCardPreview() {
-    AppTheme {
+    AppThemeM2 {
         BloganuaryNudgeCard(
             model = BloganuaryNudgeCardModel(
                 UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title_december),

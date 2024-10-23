@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.extensions.fillScreen
 import javax.inject.Inject
 
@@ -61,7 +61,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
         initializeViewModelAndStart()
         return ComposeView(requireContext()).apply {
             setContent {
-                AppTheme {
+                AppThemeM2 {
                     val uiState by viewModel.uiState.observeAsState()
                     PostResolutionOverlay(uiState)
                 }

@@ -25,7 +25,7 @@ import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 import org.wordpress.android.usecase.social.JetpackSocialFlow
@@ -90,7 +90,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PrepublishingHomeSocialNoConnectionsItemPreview() {
-    AppTheme {
+    AppThemeM2 {
         PrepublishingHomeSocialNoConnectionsItem(
             connectionIconModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             onConnectClick = { /*TODO*/ },

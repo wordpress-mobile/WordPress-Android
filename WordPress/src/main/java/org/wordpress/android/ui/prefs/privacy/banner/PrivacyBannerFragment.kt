@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
@@ -34,7 +34,7 @@ class PrivacyBannerFragment : WPBottomSheetDialogFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AppTheme {
+                AppThemeM2 {
                     PrivacyBannerScreen(viewModel)
                 }
             }
