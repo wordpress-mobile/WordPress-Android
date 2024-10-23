@@ -16,7 +16,7 @@ plugins {
     id "com.gradle.develocity" version "3.18.1"
 }
 
-def catalogVersion = "1.23.1"
+def catalogVersion = "36-e65bdb5ba9114674780085602c74396513776134"
 dependencyResolutionManagement {
     repositories {
         exclusiveContent {
