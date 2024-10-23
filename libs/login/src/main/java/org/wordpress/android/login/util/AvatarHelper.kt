@@ -51,8 +51,8 @@ object AvatarHelper {
                     }
 
                     override fun onResourceReady(
-                        drawable: Drawable?,
-                        model: Any?,
+                        drawable: Drawable,
+                        model: Any,
                         target: Target<Drawable?>,
                         dataSource: DataSource,
                         isFirstResource: Boolean
