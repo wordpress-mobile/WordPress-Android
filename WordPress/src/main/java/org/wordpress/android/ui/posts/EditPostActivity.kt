@@ -2458,7 +2458,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 gutenbergPropsBuilder,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
                 isNewGutenbergEditor,
-                settings
+                settings,
+                site.isPrivate || site.isComingSoon,
+                site.isPrivateWPComAtomic
             )
         }
 

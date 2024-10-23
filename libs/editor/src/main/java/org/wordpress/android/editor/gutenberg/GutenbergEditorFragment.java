@@ -195,6 +195,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ProgressDialog mSavingContentProgressDialog;
     @Nullable private static Map<String, Object> mSettings;
+    private static boolean mIsPrivate = false;
+    private static boolean mIsPrivateAtomic = false;
     @NonNull OkHttpClient mHttpClient = new OkHttpClient();
 
     public static GutenbergEditorFragment newInstance(Context context,
@@ -203,7 +205,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
                                                       boolean jetpackFeaturesEnabled,
                                                       boolean newGutenbergEnabled,
-                                                      @Nullable Map<String, Object> settings) {
+                                                      @Nullable Map<String, Object> settings,
+                                                      boolean isPrivate,
+                                                      boolean isPrivateAtomic) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -214,6 +218,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
         mIsNewGutenbergEnabled = newGutenbergEnabled;
         mSettings = settings;
+        mIsPrivate = isPrivate;
+        mIsPrivateAtomic = isPrivateAtomic;
         if (db != null) {
             db.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
             db.addParcel(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
@@ -1656,17 +1662,22 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public WebResourceResponse modifyRequest(@NonNull WebView view, @NonNull WebResourceRequest request) {
         Uri url = request.getUrl();
         String siteURL = (String) (mSettings != null ? mSettings.get("siteURL") : "");
-        String regex = siteURL + "/.*\\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|avi|mkv|mp3|wav|flac)(\\?.*)?$";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        String siteHostedMedia = siteURL + "/.*\\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|avi|mkv|mp3|wav|flac)(\\?.*)?$";
+        Pattern pattern = Pattern.compile(siteHostedMedia, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(url.toString());
 
-        if (siteURL == null || !matcher.matches()) {
+        if (siteURL == null || !mIsPrivate || !matcher.matches()) {
             return null;
+        }
+
+        String proxyUrl = url.toString();
+        if (mIsPrivateAtomic) {
+            proxyUrl = getPrivateResourceProxyUrl(url);
         }
 
         try {
             Request okHttpRequest = new Request.Builder()
-                    .url(url.toString())
+                    .url(proxyUrl)
                     .headers(Headers.of(request.getRequestHeaders()))
                     .addHeader("Authorization", mSettings.get("authHeader").toString())
                     .build();
@@ -1693,5 +1704,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             // we weren't able to fetch the resource
             return null;
         }
+    }
+
+    private static @NonNull String getPrivateResourceProxyUrl(@NonNull Uri url) {
+        Uri newUri = new Uri.Builder()
+                .scheme("https")
+                .authority("public-api.wordpress.com")
+                .appendPath("wpcom")
+                .appendPath("v2")
+                .appendPath("sites")
+                .appendPath(url.getAuthority())
+                .appendPath("atomic-auth-proxy")
+                .appendPath("file")
+                .appendEncodedPath(url.getPath().substring(1)) // Remove leading '/'
+                .build();
+
+        return newUri.toString();
     }
 }
