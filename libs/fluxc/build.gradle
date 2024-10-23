@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(sharedLibs.plugins.android.library)
-    alias(sharedLibs.plugins.kotlin.android)
-    alias(sharedLibs.plugins.kotlin.parcelize)
-    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinx.kover)
 }
 
