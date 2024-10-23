@@ -161,6 +161,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
+        // TODO remove this
+        openBloganuaryNudgeOverlay(true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -725,15 +727,19 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
-            BloganuaryNudgeLearnMoreOverlayFragment
-                .newInstance(action.isPromptsEnabled)
-                .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
+            openBloganuaryNudgeOverlay(action.isPromptsEnabled)
         }
 
         is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(
             requireActivity(),
             action.site
         )
+    }
+
+    private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
+        BloganuaryNudgeLearnMoreOverlayFragment
+            .newInstance(isPromptsEnabled)
+            .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {
