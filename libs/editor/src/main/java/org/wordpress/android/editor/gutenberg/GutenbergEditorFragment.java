@@ -195,7 +195,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ProgressDialog mSavingContentProgressDialog;
     @Nullable private static Map<String, Object> mSettings;
-    OkHttpClient mHttpClient = new OkHttpClient();
+    @NonNull OkHttpClient mHttpClient = new OkHttpClient();
 
     public static GutenbergEditorFragment newInstance(Context context,
                                                       boolean isNewPost,
