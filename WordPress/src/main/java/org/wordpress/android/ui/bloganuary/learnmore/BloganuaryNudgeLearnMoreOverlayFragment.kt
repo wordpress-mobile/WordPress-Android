@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class BloganuaryNudgeLearnMoreOverlayFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AppThemeM2 {
+                AppThemeM3 {
                     BloganuaryNudgeLearnMoreOverlay(
                         model = viewModel.getUiState(isPromptsEnabled),
                         onActionClick = viewModel::onActionClick,
