@@ -150,7 +150,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall,
-                    color = LocalContentColor.current.copy(alpha = 0.4f),
+                    color = LocalContentColor.current.copy(alpha = contentTextEmphasis()),
                 )
             }
         }
