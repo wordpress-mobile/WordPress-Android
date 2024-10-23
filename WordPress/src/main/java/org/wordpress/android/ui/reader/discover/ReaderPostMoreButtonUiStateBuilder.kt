@@ -234,7 +234,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             type = READING_PREFERENCES,
             label = UiStringRes(R.string.reader_menu_reading_preferences),
             labelColor = MaterialR.attr.colorOnSurface,
-            iconRes = R.drawable.ic_reader_preferences,
+            iconRes = R.drawable.ic_reader_preferences_white_24dp,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
         )
