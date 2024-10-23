@@ -81,8 +81,8 @@ dependencies {
     }
 
     // Custom WellSql version
-    api sharedLibs.wellsql
-    kapt sharedLibs.wellsql.processor
+    api libs.wellsql
+    kapt libs.wellsql.processor
 
     // FluxC annotations
     api project(":libs:fluxc-annotations")

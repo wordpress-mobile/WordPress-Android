@@ -88,6 +88,7 @@ squareup-kotlin-poet = '1.18.1'
 squareup-java-poet = '1.7.0'
 squareup-retrofit = '2.11.0'
 violation-comments = '1.70.0'
+wellsql = "2.0.0"
 wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
 wordpress-lint = '2.1.0'
@@ -224,6 +225,8 @@ squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", ve
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
+wellsql = { module = "org.wordpress:wellsql", version.ref = "wellsql" }
+wellsql-processor = { module = "org.wordpress.wellsql:wellsql-processor", version.ref = "wellsql" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
