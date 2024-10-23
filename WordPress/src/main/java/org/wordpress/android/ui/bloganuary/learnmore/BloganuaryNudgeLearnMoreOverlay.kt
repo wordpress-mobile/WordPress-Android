@@ -44,9 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.ContentAlphaProvider
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -57,16 +56,16 @@ private val contentIconForegroundColor: Color
 @Composable
 private fun contentIconBackgroundColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return if (isDarkTheme) {
-        AppColor.Black
-    } else {
         AppColor.White.copy(alpha = 0.18f)
+    } else {
+        AppColor.Black
     }
 }
 
 @Composable
 private fun contentTextEmphasis(isDarkTheme: Boolean = isSystemInDarkTheme()): Float {
     return if (isDarkTheme) {
-        0.4f // TODO verify this is correct
+        0.7f
     } else {
         1f
     }
@@ -230,12 +229,11 @@ private fun OverlayContentItem(
 
         Spacer(Modifier.width(Margin.ExtraLarge.value))
 
-        ContentAlphaProvider(contentTextEmphasis()) {
-            Text(
-                stringResource(textRes),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
+        Text(
+            text = stringResource(textRes),
+            style = MaterialTheme.typography.titleMedium,
+            color = LocalContentColor.current.copy(alpha = contentTextEmphasis()),
+        )
     }
 }
 
@@ -244,7 +242,7 @@ private fun OverlayContentItem(
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BloganuaryNudgeLearnMoreOverlayPreview() {
-    AppThemeM2 {
+    AppThemeM3 {
         BloganuaryNudgeLearnMoreOverlay(
             model = BloganuaryNudgeLearnMoreOverlayUiState(
                 noteText = UiStringRes(
