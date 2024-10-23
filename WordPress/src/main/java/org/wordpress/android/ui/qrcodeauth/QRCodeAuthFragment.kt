@@ -29,7 +29,7 @@ import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion
 import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion.KEY_BARCODE_SCANNING_SCAN_STATUS
 import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
@@ -69,7 +69,7 @@ class QRCodeAuthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppThemeM2 {
+            AppThemeM3 {
                 QRCodeAuthScreen()
             }
         }
