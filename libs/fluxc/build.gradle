@@ -97,7 +97,7 @@ dependencies {
     implementation libs.google.gson
 
     implementation libs.apache.commons.text
-    api sharedLibs.androidx.paging.runtime
+    api libs.androidx.paging.runtime
     implementation sharedLibs.androidx.room.runtime
     kapt sharedLibs.androidx.room.compiler
     implementation sharedLibs.androidx.room.ktx
