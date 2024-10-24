@@ -170,7 +170,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private var isStarted = false
     private var isRelatedPost: Boolean = false
-
     var isFeed: Boolean = false
     var interceptedUri: String? = null
     
