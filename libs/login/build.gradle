@@ -49,7 +49,7 @@ ext {
     daggerVersion = '2.52'
     glideVersion = '4.16.0'
     javaxAnnotationVersion = '10.0-b28'
-    materialVersion = '1.2.1'
+    materialVersion = '1.12.0'
     playServicesAuthVersion = '18.1.0'
     credentialManagerVersion = '1.2.0'
 
