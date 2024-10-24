@@ -2444,6 +2444,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to site.url,
                 "siteApiRoot" to siteApiRoot,
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
@@ -2457,7 +2458,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 gutenbergPropsBuilder,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
                 isNewGutenbergEditor,
-                settings
+                settings,
+                site.isPrivate || site.isComingSoon,
+                site.isPrivateWPComAtomic
             )
         }
 
