@@ -105,7 +105,6 @@ dependencies {
     // Dagger
     implementation libs.google.dagger
     kapt libs.google.dagger.compiler
-    compileOnly sharedLibs.glassfish.javax.annotation
 
     // Coroutines
     implementation sharedLibs.kotlinx.coroutines.core
