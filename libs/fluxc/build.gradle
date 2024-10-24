@@ -93,7 +93,7 @@ dependencies {
     api libs.greenrobot.eventbus.java
     api libs.squareup.okhttp3
     implementation libs.squareup.okhttp3.urlconnection
-    api sharedLibs.volley
+    api libs.android.volley
     implementation sharedLibs.google.gson
 
     implementation sharedLibs.apache.commons.text
