@@ -1331,7 +1331,7 @@ public class ActivityLauncher {
      * Warn A8C users that they can't create Zendesk tickets, returns true if warning shown
      */
     @NonNull
-    private static Boolean warnIfIdentityA8C(@NonNull Context context) {
+    public static Boolean warnIfIdentityA8C(@NonNull Context context) {
         String supportEmail = "nbradbury@automattic.com"; // TODO AppPrefs.getSupportEmail();
         if (supportEmail.contains("@automattic.com")) {
             new MaterialAlertDialogBuilder(context)
