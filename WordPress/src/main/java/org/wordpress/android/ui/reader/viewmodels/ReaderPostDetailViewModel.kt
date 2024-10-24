@@ -167,12 +167,10 @@ class ReaderPostDetailViewModel @Inject constructor(
      * Post which is about to be reblogged after the user selects a target site.
      */
     private var pendingReblogPost: ReaderPost? = null
-
     private var isStarted = false
     private var isRelatedPost: Boolean = false
     var isFeed: Boolean = false
     var interceptedUri: String? = null
-    
     var post: ReaderPost? = null
     val hasPost: Boolean
         get() = post != null
