@@ -63,10 +63,8 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         if (includeReadingPreferences) {
-            menuItems.add(SpacerNoAction())
             menuItems.add(buildReadingPreferences(onButtonClicked))
         }
-        menuItems.add(SpacerNoAction())
         menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
         checkAndAddUserMenuItems(post, menuItems, onButtonClicked)
@@ -234,7 +232,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             type = READING_PREFERENCES,
             label = UiStringRes(R.string.reader_menu_reading_preferences),
             labelColor = MaterialR.attr.colorOnSurface,
-            iconRes = R.drawable.ic_reader_preferences_white_24dp,
+            iconRes = R.drawable.ic_reader_preferences,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
         )

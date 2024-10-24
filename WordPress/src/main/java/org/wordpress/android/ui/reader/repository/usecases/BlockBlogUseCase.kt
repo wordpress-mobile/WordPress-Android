@@ -30,16 +30,17 @@ class BlockBlogUseCase @Inject constructor(
         blogId: Long,
         feedId: Long
     ) = flow {
+        performAction(blogId, feedId)
         // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
-        if (continuation == null) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NoNetwork)
-            } else {
-                performAction(blogId, feedId)
-            }
-        } else {
-            emit(AlreadyRunning)
-        }
+//        if (continuation == null) {
+//            if (!networkUtilsWrapper.isNetworkAvailable()) {
+//                emit(NoNetwork)
+//            } else {
+//                performAction(blogId, feedId)
+//            }
+//        } else {
+//            emit(AlreadyRunning)
+//        }
     }
 
     private suspend fun FlowCollector<BlockSiteState>.performAction(
@@ -55,13 +56,13 @@ class BlockBlogUseCase @Inject constructor(
         val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId, feedId)
         emit(SiteBlockedInLocalDb(blockedBlogData))
 
-        val succeeded = blockBlogAndWaitForResult(blockedBlogData)
-
-        if (succeeded) {
-            emit(Success)
-        } else {
-            emit(RequestFailed)
-        }
+//        val succeeded = blockBlogAndWaitForResult(blockedBlogData)
+//
+//        if (succeeded) {
+//            emit(Success)
+//        } else {
+//            emit(RequestFailed)
+//        }
     }
 
     private suspend fun blockBlogAndWaitForResult(blockedBlogResult: BlockedBlogResult): Boolean {

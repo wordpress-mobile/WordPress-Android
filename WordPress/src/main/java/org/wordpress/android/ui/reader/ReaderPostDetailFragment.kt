@@ -164,6 +164,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
+
 @AndroidEntryPoint
 @Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
@@ -595,6 +596,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             // Do nothing
         }
 
+        viewModel.postBlocked.observe(viewLifecycleOwner) { postBlocked ->
+            modifyMoreMenu(postBlocked)
+        }
+
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar(binding) }
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { it.handleNavigationEvent() }
@@ -980,6 +985,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     bookmarksSavedLocallyDialog = it
                     it.show()
                 }
+        }
+    }
+
+    private fun modifyMoreMenu(
+        postBlocked: Boolean
+    ){
+        val moreMenu:MenuItem? = toolBar.menu.findItem(R.id.menu_more)
+        if (postBlocked){
+            moreMenu?.setIcon(R.drawable.ic_undo_white_24dp)
+        }
+        else{
+            moreMenu?.setIcon(R.drawable.ic_ellipsis_vertical_white_24dp)
         }
     }
 
