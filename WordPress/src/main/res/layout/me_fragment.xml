@@ -259,7 +259,7 @@
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_help" />
+                    android:text="@string/me_btn_help_and_support" />
 
             </LinearLayout>
 

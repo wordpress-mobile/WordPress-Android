@@ -1142,7 +1142,7 @@
     <string name="feedback_form_attachment_already_added">Attachment already added</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
-    <string name="feedback_form_note">If you need support, please get in touch using the \"Help\" screen</string>
+    <string name="feedback_form_note">If you need support, please get in touch using the &quot;Help &amp; Support&quot; screen</string>
     <string name="media_pager_remove_item_content_description">Remove item %1$d</string>
 
     <!-- activity log -->
@@ -2575,7 +2575,7 @@
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
-    <string name="me_btn_help">Help</string>
+    <string name="me_btn_help_and_support">Help &amp; Support</string>
     <string name="me_btn_feedback">Send feedback</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_about">About WordPress</string>
