@@ -45,7 +45,7 @@ ext {
     // main
     androidxAppCompatVersion = '1.6.1'
     androidxCoreVersion = '1.12.0'
-    androidxConstraintLayoutVersion = '2.0.4'
+    androidxConstraintLayoutVersion = '2.1.4'
     daggerVersion = '2.52'
     glideVersion = '4.16.0'
     javaxAnnotationVersion = '10.0-b28'
