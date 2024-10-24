@@ -169,9 +169,7 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun launchSupportWidget() {
-        if (ActivityLauncher.warnIfIdentityA8C(this)) {
-            return
-        }
+        ActivityLauncher.warnIfIdentityA8C(this)
         val intent = SupportWebViewActivity.createIntent(
             this,
             originFromExtras,
@@ -182,9 +180,7 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun createNewZendeskTicket() {
-        if (ActivityLauncher.warnIfIdentityA8C(this)) {
-            return
-        }
+        ActivityLauncher.warnIfIdentityA8C(this)
         zendeskHelper.createNewTicket(
             this,
             originFromExtras,
@@ -199,6 +195,7 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun showZendeskTickets() {
+        ActivityLauncher.warnIfIdentityA8C(this)
         zendeskHelper.showAllTickets(
             this,
             originFromExtras,

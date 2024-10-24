@@ -1313,9 +1313,7 @@ public class ActivityLauncher {
     }
 
     public static void viewFeedbackForm(@NonNull Context context) {
-        if (warnIfIdentityA8C(context)) {
-            return;
-        }
+        warnIfIdentityA8C(context);
         // TODO verify tracks event with iOS
         AnalyticsTracker.track(Stat.FEEDBACK_FORM_OPENED);
         Intent intent = new Intent(context, FeedbackFormActivity.class);
@@ -1328,10 +1326,10 @@ public class ActivityLauncher {
     }
 
     /**
-     * Warn A8C users that they can't create Zendesk tickets, returns true if warning shown
+     * Warn A8C users that they can't create Zendesk tickets
      */
     @NonNull
-    public static Boolean warnIfIdentityA8C(@NonNull Context context) {
+    public static void warnIfIdentityA8C(@NonNull Context context) {
         String supportEmail = "nbradbury@automattic.com"; // TODO AppPrefs.getSupportEmail();
         if (supportEmail.contains("@automattic.com")) {
             new MaterialAlertDialogBuilder(context)
@@ -1341,9 +1339,7 @@ public class ActivityLauncher {
                         dialog.dismiss();
                     })
                     .show();
-            return true;
         }
-        return false;
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
