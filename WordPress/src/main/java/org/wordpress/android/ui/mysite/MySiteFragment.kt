@@ -161,8 +161,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
-        // TODO remove this
-        openBloganuaryNudgeOverlay(true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
