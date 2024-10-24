@@ -107,7 +107,7 @@ private fun MessageSection(
         focusRequester.requestFocus()
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .padding(
                 vertical = V_PADDING.dp,
@@ -130,6 +130,13 @@ private fun MessageSection(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
                 .focusRequester(focusRequester),
+        )
+        Text(
+            text = stringResource(id = R.string.feedback_form_note),
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .padding(top = V_PADDING.dp)
+
         )
     }
 }
