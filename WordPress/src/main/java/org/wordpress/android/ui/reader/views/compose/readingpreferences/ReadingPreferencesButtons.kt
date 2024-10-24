@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.toComposeFontFamily
@@ -183,7 +183,7 @@ fun ReadingPreferencesFontFamilyButton(
 @Preview
 @Composable
 fun ReadingPreferencesThemeButtonPreview() {
-    AppTheme {
+    AppThemeM2 {
         var selectedItem: ReaderReadingPreferences.Theme? by remember { mutableStateOf(null) }
 
         Row(
@@ -203,7 +203,7 @@ fun ReadingPreferencesThemeButtonPreview() {
 @Preview
 @Composable
 fun ReadingPreferencesFontFamilyButtonPreview() {
-    AppTheme {
+    AppThemeM2 {
         var selectedItem: ReaderReadingPreferences.FontFamily? by remember { mutableStateOf(null) }
 
         Row(

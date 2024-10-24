@@ -57,7 +57,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
@@ -399,7 +399,7 @@ fun PostTextContent(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderTagsFeedPostListItemPreview() {
-    AppTheme {
+    AppThemeM2 {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

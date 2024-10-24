@@ -1,10 +1,8 @@
-gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
 gradle.ext.gutenbergKitBinaryPath = "org.wordpress.gutenbergkit:android"
 gradle.ext.includedBuildGutenbergKitPath = null
-gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
 gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
 gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
@@ -27,15 +25,6 @@ if (localBuilds.exists()) {
     Note that `project` dependencies are resolved in the context of the included build.
     https://docs.gradle.org/current/javadoc/org/gradle/api/initialization/ConfigurableIncludedBuild.html#dependencySubstitution-org.gradle.api.Action-
     */
-
-    if (ext.has("localFluxCPath")) {
-        includeBuild(ext.localFluxCPath) {
-            dependencySubstitution {
-                println "Substituting fluxc with the local build"
-                substitute module("$gradle.ext.fluxCBinaryPath") using project(':fluxc')
-            }
-        }
-    }
 
     if (ext.has("localWPUtilsPath")) {
         includeBuild(ext.localWPUtilsPath) {
@@ -62,15 +51,6 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting GutenbergKit with the local build"
                 substitute module("$gradle.ext.gutenbergKitBinaryPath") using project(':Gutenberg')
-            }
-        }
-    }
-
-    if (ext.has("localLoginFlowPath")) {
-        includeBuild(ext.localLoginFlowPath) {
-            dependencySubstitution {
-                println "Substituting login-flow with the local build"
-                substitute module("$gradle.ext.loginFlowBinaryPath") using project(':WordPressLoginFlow')
             }
         }
     }

@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.kotlin.serialization).apply(false)
     alias(libs.plugins.ksp).apply(false)
+    alias(libs.plugins.kapt).apply(false)
 }
 
 ext {
@@ -59,6 +60,13 @@ allprojects {
                 includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
+            }
+        }
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android"
+            content {
+                includeGroup "org.wordpress"
+                includeGroup "org.wordpress.wellsql"
             }
         }
     }

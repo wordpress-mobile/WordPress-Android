@@ -1,0 +1,123 @@
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    alias(libs.plugins.kotlinx.kover)
+}
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "com.gravatar"
+        }
+    }
+    mavenCentral()
+    google()
+    maven { url "https://www.jitpack.io" }
+}
+
+android {
+    namespace "org.wordpress.android.login"
+
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    lint {
+        enable += 'UnknownNullness'
+        disable 'UseTomlInstead'
+    }
+}
+
+ext {
+    // libs
+    wordpressLintVersion = '2.1.0'
+    wordpressUtilsVersion = '3.5.0'
+    gravatarSdkVersion = '0.2.0'
+
+    // main
+    androidxAppCompatVersion = '1.6.1'
+    androidxCoreVersion = '1.12.0'
+    androidxConstraintLayoutVersion = '2.1.4'
+    daggerVersion = '2.52'
+    glideVersion = '4.16.0'
+    javaxAnnotationVersion = '10.0-b28'
+    materialVersion = '1.12.0'
+    playServicesAuthVersion = '18.1.0'
+    credentialManagerVersion = '1.2.0'
+
+    // test
+    androidxArchCoreVersion = '2.1.0'
+    assertjVersion = '3.26.3'
+    junitVersion = '4.13.2'
+    mockitoVersion = '2.28.2'
+    robolectricVersion = '4.9'
+}
+
+dependencies {
+    implementation ("org.wordpress:utils:$wordpressUtilsVersion") {
+        exclude group: "com.android.volley"
+    }
+    implementation ("com.gravatar:gravatar:$gravatarSdkVersion")
+
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+
+    implementation "androidx.core:core:$androidxCoreVersion"
+
+    api "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
+
+    implementation project(":libs:fluxc")
+
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    implementation "androidx.credentials:credentials:$credentialManagerVersion"
+    implementation "androidx.credentials:credentials-play-services-auth:$credentialManagerVersion"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.glassfish:javax.annotation:$javaxAnnotationVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    lintChecks "org.wordpress:lint:$wordpressLintVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "androidx.arch.core:core-testing:$androidxArchCoreVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+}
+
+// Add properties named "wp.xxx" to our BuildConfig
+android.buildTypes.all { buildType ->
+    Properties gradleProperties = new Properties()
+    File propertiesFile = file("gradle.properties")
+    if (propertiesFile.exists()) {
+        gradleProperties.load(new FileInputStream(propertiesFile))
+    } else {
+        // Load defaults
+        gradleProperties.load(new FileInputStream(file("gradle.properties-example")))
+    }
+    gradleProperties.any { property ->
+        if (property.key.toLowerCase().startsWith("wp.")) {
+            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+        if (property.key.toLowerCase().startsWith("wp.res.")) {
+            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
+                    "${property.value}"
+        }
+    }
+}

@@ -21,7 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPAvatarUtils
 
@@ -92,7 +92,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
     override fun Content() {
         if (avatarsState.value.isEmpty()) return
 
-        AppTheme {
+        AppThemeM2 {
             TrainOfIcons(
                 iconModels = avatarModels(),
                 iconSize = iconSizeState.value.dp,

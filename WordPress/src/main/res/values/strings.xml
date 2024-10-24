@@ -398,8 +398,8 @@
     <string name="dialog_confirm_autosave_body_first_part">You recently made changes to this post but didn\'t save them. Choose a version to load:\n\n</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">You recently made changes to this page but didn\'t save them. Choose a version to load:\n\n</string>
     <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %1$s\n\nFrom another device\nSaved on %2$s\n</string>
-    <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
-    <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
+    <string name="dialog_confirm_autosave_restore_button">From another device</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">From this app</string>
 
     <!-- post confirm copy local post dialog -->
     <string name="dialog_confirm_copy_local_title">Post sync conflict</string>

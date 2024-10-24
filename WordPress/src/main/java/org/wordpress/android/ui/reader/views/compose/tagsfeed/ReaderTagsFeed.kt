@@ -60,7 +60,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ErrorType
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.PostList
@@ -533,7 +533,7 @@ data class TagsFeedPostItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderTagsFeedLoaded() {
-    AppTheme {
+    AppThemeM2 {
         val postListLoaded = PostList.Loaded(
             listOf(
                 TagsFeedPostItem(
@@ -651,7 +651,7 @@ fun ReaderTagsFeedLoaded() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderTagsFeedLoading() {
-    AppTheme {
+    AppThemeM2 {
         ReaderTagsFeed(
             uiState = UiState.Loading
         )
@@ -662,7 +662,7 @@ fun ReaderTagsFeedLoading() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderTagsFeedEmpty() {
-    AppTheme {
+    AppThemeM2 {
         ReaderTagsFeed(
             uiState = UiState.Empty(
                 onOpenTagsListClick = {},

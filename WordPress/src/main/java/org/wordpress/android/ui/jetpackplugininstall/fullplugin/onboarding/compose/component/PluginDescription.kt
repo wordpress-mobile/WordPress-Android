@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import com.google.android.material.R as MaterialR
 
 @Composable
@@ -101,7 +101,7 @@ private data class PluginDescriptionTextPart(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewPluginDescriptionOnePlugin() {
-    AppTheme {
+    AppThemeM2 {
         PluginDescription(
             siteString = "wordpress.com",
             pluginNames = listOf("Jetpack Search"),
@@ -114,7 +114,7 @@ private fun PreviewPluginDescriptionOnePlugin() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewPluginDescriptionMultiplePlugins() {
-    AppTheme {
+    AppThemeM2 {
         PluginDescription(
             siteString = "wordpress.com",
             pluginNames = listOf("Jetpack Search", "Jetpack Protect"),
@@ -127,7 +127,7 @@ private fun PreviewPluginDescriptionMultiplePlugins() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewPluginDescriptionOnePluginConcise() {
-    AppTheme {
+    AppThemeM2 {
         PluginDescription(
             siteString = "This site",
             pluginNames = listOf("Jetpack Search"),
@@ -141,7 +141,7 @@ private fun PreviewPluginDescriptionOnePluginConcise() {
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewPluginDescriptionMultiplePluginsConcise() {
-    AppTheme {
+    AppThemeM2 {
         PluginDescription(
             siteString = "This site",
             pluginNames = listOf("Jetpack Search", "Jetpack Protect"),

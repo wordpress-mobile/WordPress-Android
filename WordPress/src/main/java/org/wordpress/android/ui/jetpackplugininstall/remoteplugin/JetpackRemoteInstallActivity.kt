@@ -19,7 +19,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 import org.wordpress.android.ui.jetpackplugininstall.install.compose.JetpackPluginInstallScreen
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
@@ -38,7 +38,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val uiState by viewModel.liveViewState.observeAsState()
                 JetpackPluginInstallScreen(
                     uiState = uiState ?: UiState.Initial(R.string.jetpack_plugin_install_initial_button),

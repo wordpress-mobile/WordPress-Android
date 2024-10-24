@@ -54,7 +54,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.isLightTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
@@ -87,7 +87,7 @@ class CampaignListingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val campaigns by viewModel.uiState.observeAsState()
                 CampaignListingPage(campaigns ?: CampaignListingUiState.Loading)
             }
@@ -266,7 +266,7 @@ fun CampaignListingError(error: CampaignListingUiState.Error) {
 @Preview
 @Composable
 fun CampaignListingErrorPreview() {
-    AppTheme {
+    AppThemeM2 {
         CampaignListingError(CampaignListingUiState.Error(
             title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
             description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),

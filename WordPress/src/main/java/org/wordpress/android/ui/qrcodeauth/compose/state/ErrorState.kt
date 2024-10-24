@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
@@ -44,7 +44,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error): Unit = with(uiState) {
                 .wrapContentSize()
         )
         Title(text = uiStringText(title))
-        Subtitle(text = uiStringText(subtitle), color = MaterialTheme.colors.error)
+        Subtitle(text = uiStringText(subtitle), color = MaterialTheme.colorScheme.error)
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 PrimaryButton(
@@ -69,7 +69,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error): Unit = with(uiState) {
 @Preview(showBackground = true)
 @Composable
 private fun ErrorStatePreview() {
-    AppTheme {
+    AppThemeM3 {
         val state = QRCodeAuthUiState.Error.InvalidData(
             primaryActionButton = ErrorPrimaryActionButton {},
             secondaryActionButton = ErrorSecondaryActionButton {},

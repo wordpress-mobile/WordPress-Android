@@ -8,18 +8,13 @@ in the project and substitute the binary dependency with the local one.
 
 Once this file is updated Gradle will need to re-configure the project. (sync)
 
-Please note that some included builds may be slow to compile. Specifically, as of Sep 25, 2020,
-making a change to FluxC can take around 2 minutes to build. This is something that'll hopefully
-get better with some build improvements, but in the meantime it might be best to prefer the
-binary build if you're not working on a specific library.
+Please note that some included builds may be slow to compile.
 */
 ext {
     //localAboutAutomatticPath = "../about-automattic-android"
-    //localFluxCPath = "../WordPress-FluxC-Android"
     //localWPUtilsPath = "../WordPress-Utils-Android"
     //localGutenbergMobilePath = "../gutenberg-mobile"
     //localGutenbergKitPath = "../GutenbergKit"
-    //localLoginFlowPath = "../WordPress-Login-Flow-Android"
     //localAztecAndroidPath = "../AztecEditor-Android"
     //localGravatarAndroidPath = "../Gravatar-SDK-Android"
 }
