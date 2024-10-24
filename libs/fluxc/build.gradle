@@ -107,8 +107,8 @@ dependencies {
     kapt libs.google.dagger.compiler
 
     // Coroutines
-    implementation sharedLibs.kotlinx.coroutines.core
-    implementation sharedLibs.kotlinx.coroutines.android
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
 
     // Encrypted Logging
     api "com.goterl:lazysodium-android:5.0.2@aar"
