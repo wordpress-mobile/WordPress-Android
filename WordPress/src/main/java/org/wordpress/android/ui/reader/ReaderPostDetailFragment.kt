@@ -164,7 +164,6 @@ import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
-
 @AndroidEntryPoint
 @Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
