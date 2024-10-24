@@ -160,17 +160,17 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _reloadFragment = MutableLiveData<Event<Unit>>()
     val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
 
+    private val _postBlocked = MutableLiveData<Boolean>(false)
+    val postBlocked: LiveData<Boolean> = _postBlocked
+
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
     private var pendingReblogPost: ReaderPost? = null
-
     private var isStarted = false
     private var isRelatedPost: Boolean = false
-
     var isFeed: Boolean = false
     var interceptedUri: String? = null
-
     var post: ReaderPost? = null
     val hasPost: Boolean
         get() = post != null
@@ -301,6 +301,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
                 _updateLikesState.value = state
             }
+        }
+
+        readerPostCardActionsHandler.initUpdateBlockedStateFunction { state ->
+            _postBlocked.postValue(state)
         }
     }
 
@@ -459,6 +463,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
 
                 _uiState.value = it.copy(moreMenuItems = moreMenuItems)
+            }?: run{
+                if (_postBlocked.value == true) {
+                    readerPostCardActionsHandler.handleUndoClicked()
+                }
             }
         }
     }

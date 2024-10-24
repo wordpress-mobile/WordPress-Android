@@ -63,10 +63,8 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         if (includeReadingPreferences) {
-            menuItems.add(SpacerNoAction())
             menuItems.add(buildReadingPreferences(onButtonClicked))
         }
-        menuItems.add(SpacerNoAction())
         menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
         checkAndAddUserMenuItems(post, menuItems, onButtonClicked)

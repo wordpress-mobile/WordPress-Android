@@ -18,6 +18,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
@@ -103,6 +104,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
+
+    private lateinit var blockedBlogResult: BlockedBlogResult
+
+    private lateinit var blockedBlogSource: String
+
+    private lateinit var updateBlockedStateFunction:(Boolean)->Unit
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -400,6 +407,18 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(ShowReadingPreferences))
     }
 
+    fun handleUndoClicked(){
+       coroutineScope.launch {
+           undoBlockBlogUseCase.undoBlockBlog(blockedBlogResult, blockedBlogSource)
+           _refreshPosts.postValue(Event(Unit))
+           updateBlockedStateFunction(false)
+       }
+    }
+
+    fun initUpdateBlockedStateFunction(func: (Boolean)->Unit){
+        updateBlockedStateFunction = func
+    }
+
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
         feedId: Long,
@@ -408,7 +427,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
+                    blockedBlogSource = source
+                    blockedBlogResult = it.blockedBlogData
                     _refreshPosts.postValue(Event(Unit))
+                    updateBlockedStateFunction(true)
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
@@ -418,6 +440,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     coroutineScope.launch {
                                         undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
                                         _refreshPosts.postValue(Event(Unit))
+                                        updateBlockedStateFunction(false)
                                     }
                                 })
                         )
