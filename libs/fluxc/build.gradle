@@ -98,9 +98,9 @@ dependencies {
 
     implementation libs.apache.commons.text
     api libs.androidx.paging.runtime
-    implementation sharedLibs.androidx.room.runtime
-    kapt sharedLibs.androidx.room.compiler
-    implementation sharedLibs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    kapt libs.androidx.room.compiler
+    implementation libs.androidx.room.ktx
 
     // Dagger
     implementation sharedLibs.google.dagger
