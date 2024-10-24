@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -206,15 +205,15 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_share:
-                shareSite();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.menu_share) {
+            shareSite();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
