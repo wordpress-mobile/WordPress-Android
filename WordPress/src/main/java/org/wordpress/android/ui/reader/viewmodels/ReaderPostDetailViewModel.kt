@@ -48,7 +48,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
@@ -174,9 +173,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     var isFeed: Boolean = false
     var interceptedUri: String? = null
-
-    private var blockedBlogResult : BlockedBlogResult? = null
-
+    
     var post: ReaderPost? = null
     val hasPost: Boolean
         get() = post != null
