@@ -95,6 +95,7 @@ import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
@@ -127,6 +128,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -1311,6 +1313,7 @@ public class ActivityLauncher {
     }
 
     public static void viewFeedbackForm(@NonNull Context context) {
+        warnIfIdentityA8C(context);
         // TODO verify tracks event with iOS
         AnalyticsTracker.track(Stat.FEEDBACK_FORM_OPENED);
         Intent intent = new Intent(context, FeedbackFormActivity.class);
@@ -1320,6 +1323,17 @@ public class ActivityLauncher {
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
         viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+    }
+
+    /**
+     * Warn A8C users that they can't create Zendesk tickets
+     */
+    @NonNull
+    public static void warnIfIdentityA8C(@NonNull Context context) {
+        String supportEmail = AppPrefs.getSupportEmail();
+        if (supportEmail.contains("@automattic.com") || supportEmail.contains("@a8c.com")) {
+            ToastUtils.showToast(context, R.string.support_warn_if_user_a8c, Duration.LONG);
+        }
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
