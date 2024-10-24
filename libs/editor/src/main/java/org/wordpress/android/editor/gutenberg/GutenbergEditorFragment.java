@@ -1659,7 +1659,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Nullable @Override
-    public WebResourceResponse modifyRequest(@NonNull WebView view, @NonNull WebResourceRequest request) {
+    public WebResourceResponse modifyRequest(@NonNull WebResourceRequest request) {
         Uri url = request.getUrl();
         String siteURL = (String) (mSettings != null ? mSettings.get("siteURL") : "");
         String siteHostedMedia = siteURL + "/.*\\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|avi|mkv|mp3|wav|flac)(\\?.*)?$";
