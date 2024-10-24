@@ -192,8 +192,10 @@ facebook-react-android-main = { group = "com.facebook.react", name = "react-andr
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebook-shimmer" }
 fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "fastlane-screengrab" }
 google-autoservice = { module = "com.google.auto.service:auto-service", version.ref = "google-autoservice" }
+google-dagger = { module = "com.google.dagger:dagger", version.ref = "google-dagger" }
 google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "google-dagger" }
 google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "google-dagger" }
+google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
 google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "google-dagger" }
 google-dagger-hilt-android-main = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
 google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "google-dagger" }

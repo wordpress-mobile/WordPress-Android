@@ -103,8 +103,8 @@ dependencies {
     implementation libs.androidx.room.ktx
 
     // Dagger
-    implementation sharedLibs.google.dagger
-    kapt sharedLibs.google.dagger.compiler
+    implementation libs.google.dagger
+    kapt libs.google.dagger.compiler
     compileOnly sharedLibs.glassfish.javax.annotation
 
     // Coroutines
