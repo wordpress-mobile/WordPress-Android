@@ -132,7 +132,7 @@ dependencyAnalysis {
     issues {
         onUnusedDependencies {
             // This dependency is actually needed otherwise the app will crash with a runtime exception.
-            exclude(sharedLibs.eventbus.android.get().module.toString())
+            exclude(libs.greenrobot.eventbus.main.get().module.toString())
         }
     }
 }
