@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.wordpress.android.R
 
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
@@ -76,7 +77,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = MaterialAlertDialogBuilder(requireActivity())
+        val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.MaterialAlertDialogButtonCenter)
         builder.setMessage(mMessage)
             .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                 dismissedByPositiveButton = true

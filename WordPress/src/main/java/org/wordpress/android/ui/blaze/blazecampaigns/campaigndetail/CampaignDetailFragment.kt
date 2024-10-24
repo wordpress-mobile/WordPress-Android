@@ -32,7 +32,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeActionEvent
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.util.extensions.getSerializableCompat
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -69,7 +69,7 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 CampaignDetailPage(
                     navigationUp = requireActivity().onBackPressedDispatcher::onBackPressed
                 )

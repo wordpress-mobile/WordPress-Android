@@ -1,0 +1,140 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    alias(sharedLibs.plugins.android.library)
+    alias(sharedLibs.plugins.kotlin.android)
+    alias(sharedLibs.plugins.kotlin.parcelize)
+    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlinx.kover)
+}
+
+android {
+    useLibrary 'org.apache.http.legacy'
+
+    namespace "org.wordpress.android.fluxc"
+
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    lint {
+        enable += 'UnknownNullness'
+        disable 'UseTomlInstead', 'IgnoreWithoutReason'
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    compilerOptions {
+        allWarningsAsErrors = false
+    }
+}
+
+android.buildTypes.all { buildType ->
+    // Load gradle properties and add them to BuildConfig
+    Properties gradleProperties = new Properties()
+    File propertiesFile = file("gradle.properties")
+    if (propertiesFile.exists()) {
+        gradleProperties.load(new FileInputStream(propertiesFile))
+    } else {
+        // Load defaults
+        gradleProperties.load(new FileInputStream(file("gradle.properties-example")))
+    }
+    gradleProperties.any { property ->
+        if (property.value.equals("true") || property.value.equals("false")) {
+            buildType.buildConfigField "boolean", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
+                    "Boolean.parseBoolean(\"${property.value}\")"
+        } else {
+            buildType.buildConfigField "String", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+    }
+}
+
+dependencies {
+    implementation sharedLibs.androidx.exifinterface
+    implementation sharedLibs.androidx.security.crypto
+
+    implementation(sharedLibs.wordpress.utils) {
+        // Using official volley package
+        exclude group: "com.mcxiaoke.volley"
+        exclude group: "com.android.support"
+    }
+
+    // Custom WellSql version
+    api sharedLibs.wellsql
+    kapt sharedLibs.wellsql.processor
+
+    // FluxC annotations
+    api project(":libs:fluxc-annotations")
+    kapt project(":libs:fluxc-processor")
+
+    // External libs
+    api sharedLibs.eventbus.android
+    api sharedLibs.eventbus.java
+    api sharedLibs.squareup.okhttp3
+    implementation sharedLibs.squareup.okhttp3.urlconnection
+    api sharedLibs.volley
+    implementation sharedLibs.google.gson
+
+    implementation sharedLibs.apache.commons.text
+    api sharedLibs.androidx.paging.runtime
+    implementation sharedLibs.androidx.room.runtime
+    kapt sharedLibs.androidx.room.compiler
+    implementation sharedLibs.androidx.room.ktx
+
+    // Dagger
+    implementation sharedLibs.google.dagger
+    kapt sharedLibs.google.dagger.compiler
+    compileOnly sharedLibs.glassfish.javax.annotation
+
+    // Coroutines
+    implementation sharedLibs.kotlinx.coroutines.core
+    implementation sharedLibs.kotlinx.coroutines.android
+
+    // Encrypted Logging
+    api "com.goterl:lazysodium-android:5.0.2@aar"
+    api "net.java.dev.jna:jna:5.15.0@aar"
+
+    // Unit tests
+    testImplementation sharedLibs.junit
+    testImplementation sharedLibs.kotlin.test.junit
+    testImplementation sharedLibs.kotlinx.coroutines.test
+    testImplementation sharedLibs.androidx.test.core
+    testImplementation sharedLibs.robolectric
+    testImplementation sharedLibs.mockito.core
+    testImplementation sharedLibs.mockito.kotlin
+    testImplementation sharedLibs.mockito.inline
+    testImplementation sharedLibs.assertj.core
+    testImplementation sharedLibs.androidx.arch.core.testing
+
+    lintChecks sharedLibs.wordpress.lint
+}
+
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            // This dependency is actually needed otherwise the app will crash with a runtime exception.
+            exclude(sharedLibs.eventbus.android.get().module.toString())
+        }
+    }
+}

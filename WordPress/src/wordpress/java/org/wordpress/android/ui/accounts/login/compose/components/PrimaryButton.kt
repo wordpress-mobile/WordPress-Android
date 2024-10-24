@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
@@ -63,7 +63,7 @@ fun PrimaryButton(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewPrimaryButton() {
-    AppTheme {
+    AppThemeM2 {
         PrimaryButton("Button", onClick = {})
     }
 }

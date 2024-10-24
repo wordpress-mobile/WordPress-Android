@@ -1,0 +1,19 @@
+{
+	"state": "idle",
+	"threats": [],
+	"has_cloud": false,
+	"credentials": [
+		{
+			"still_valid": true,
+			"type": "managed",
+			"role": "main"
+		}
+	],
+	"most_recent": {
+		"is_initial": false,
+		"timestamp": "2020-11-16T06:23:26+00:00",
+		"duration": 12,
+		"progress": 100,
+		"error": false
+	}
+}

@@ -44,7 +44,7 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppThemeEditor
+import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.ActionEvent
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.UiState
@@ -61,7 +61,7 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
         )
         observeActionEvents()
         setContent {
-            AppThemeEditor {
+            AppThemeM2Editor {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Loaded -> {

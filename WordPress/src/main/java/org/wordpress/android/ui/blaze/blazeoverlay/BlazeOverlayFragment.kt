@@ -64,7 +64,7 @@ import org.wordpress.android.ui.compose.components.buttons.ImageButton
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.utils.UiString
@@ -96,7 +96,7 @@ class BlazeOverlayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val postModel by viewModel.promoteUiState.observeAsState(BlazeUiState.PromoteScreen.Site)
                 BlazeOverlayScreen(postModel)
             }
@@ -361,7 +361,7 @@ class BlazeOverlayFragment : Fragment() {
     @Preview
     @Composable
     private fun PreviewBlazeOverlayScreenPostFlow() {
-        AppTheme {
+        AppThemeM2 {
             BlazeOverlayScreen(
                 content = BlazeUiState.PromoteScreen.PromotePost(
                     PostUIModel(
@@ -381,7 +381,7 @@ class BlazeOverlayFragment : Fragment() {
     @Preview
     @Composable
     private fun PreviewBlazeOverlayScreenSiteFlow() {
-        AppTheme {
+        AppThemeM2 {
             BlazeOverlayScreen(BlazeUiState.PromoteScreen.Site)
         }
     }

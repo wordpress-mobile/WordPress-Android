@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.extensions.setContent
 
@@ -24,7 +24,7 @@ class BloggingPromptsListActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 BloggingPromptsListScreen(
                     uiState,

@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun TopLinearGradient(modifier: Modifier = Modifier) {
@@ -29,7 +29,7 @@ fun TopLinearGradient(modifier: Modifier = Modifier) {
 @Preview(device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewTopLinearGradient() {
-    AppTheme {
+    AppThemeM3 {
         TopLinearGradient()
     }
 }

@@ -45,7 +45,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
@@ -62,7 +62,7 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            AppTheme {
+            AppThemeM2 {
                 SiteCreationPlansPage(
                     navigationUp = requireActivity().onBackPressedDispatcher::onBackPressed
                 )

@@ -29,7 +29,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
@@ -145,7 +145,7 @@ data class PostSocialSharingModel(
 @Preview(name = "RTL", locale = "ar")
 @Composable
 private fun PostSocialSharingItemPreview() {
-    AppTheme {
+    AppThemeM2 {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

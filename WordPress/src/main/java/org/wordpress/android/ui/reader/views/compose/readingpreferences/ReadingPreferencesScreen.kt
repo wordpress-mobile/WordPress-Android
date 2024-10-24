@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.toComposeFontFamily
@@ -334,7 +334,7 @@ private fun getTitleTextStyle(
 @Preview
 @Composable
 private fun ReadingPreferencesScreenPreview() {
-    AppTheme {
+    AppThemeM2 {
         var readingPreferences by remember { mutableStateOf(ReaderReadingPreferences()) }
 
         ReadingPreferencesScreen(

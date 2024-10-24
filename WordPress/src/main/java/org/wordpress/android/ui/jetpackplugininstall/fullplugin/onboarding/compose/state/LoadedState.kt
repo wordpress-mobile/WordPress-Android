@@ -25,7 +25,7 @@ import org.wordpress.android.ui.compose.components.ButtonsColumn
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.components.text.Title
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.JPInstallFullPluginAnimation
@@ -113,7 +113,7 @@ fun LoadedState(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewLoadedState() {
-    AppTheme {
+    AppThemeM2 {
         val uiState = UiState.Loaded(
             siteUrl = "wordpress.com",
             pluginNames = listOf("Jetpack Search"),

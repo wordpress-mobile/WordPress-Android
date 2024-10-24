@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeM2
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
@@ -87,7 +87,7 @@ private fun CardToolbar(
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun WpSotw2023NudgeCardPreview() {
-    AppTheme {
+    AppThemeM2 {
         WpSotw2023NudgeCard(
             model = WpSotw2023NudgeCardModel(
                 title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
