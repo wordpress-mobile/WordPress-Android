@@ -71,7 +71,7 @@ fun FeedbackFormScreen(
         )
         MediaUriPager(
             mediaUris = attachments.value.map { it.uri },
-            onButtonClick =  { uri -> onRemoveMediaClick(uri) },
+            onButtonClick = { uri -> onRemoveMediaClick(uri) },
             modifier = Modifier
                 .padding(
                     vertical = V_PADDING.dp,
@@ -134,6 +134,7 @@ private fun MessageSection(
         Text(
             text = stringResource(id = R.string.feedback_form_note),
             style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .padding(top = V_PADDING.dp)
 
