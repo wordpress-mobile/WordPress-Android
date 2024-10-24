@@ -91,8 +91,8 @@ dependencies {
     // External libs
     api libs.greenrobot.eventbus.main
     api libs.greenrobot.eventbus.java
-    api sharedLibs.squareup.okhttp3
-    implementation sharedLibs.squareup.okhttp3.urlconnection
+    api libs.squareup.okhttp3
+    implementation libs.squareup.okhttp3.urlconnection
     api sharedLibs.volley
     implementation sharedLibs.google.gson
 

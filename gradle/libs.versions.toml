@@ -88,6 +88,7 @@ photoview = '2.3.0'
 sentry = '4.12.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-java-poet = '1.7.0'
+squareup-okhttp3 = "4.9.0"
 squareup-retrofit = '2.11.0'
 violation-comments = '1.70.0'
 wellsql = "2.0.0"
@@ -228,6 +229,8 @@ photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref =
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }
+squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "squareup-okhttp3" }
+squareup-okhttp3-urlconnection = { module = "com.squareup.okhttp3:okhttp-urlconnection", version.ref = "squareup-okhttp3" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
 wellsql = { module = "org.wordpress:wellsql", version.ref = "wellsql" }
 wellsql-processor = { module = "org.wordpress.wellsql:wellsql-processor", version.ref = "wellsql" }
