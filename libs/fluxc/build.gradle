@@ -74,7 +74,7 @@ dependencies {
     implementation libs.androidx.exifinterface
     implementation libs.androidx.security.crypto
 
-    implementation(sharedLibs.wordpress.utils) {
+    implementation(libs.wordpress.utils) {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
