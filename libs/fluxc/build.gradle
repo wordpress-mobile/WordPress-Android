@@ -125,7 +125,7 @@ dependencies {
     testImplementation libs.assertj.core
     testImplementation libs.androidx.arch.core.testing
 
-    lintChecks sharedLibs.wordpress.lint
+    lintChecks libs.wordpress.lint
 }
 
 dependencyAnalysis {
