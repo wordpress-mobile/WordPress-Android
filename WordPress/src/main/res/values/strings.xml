@@ -112,7 +112,6 @@
     <string name="free">Free</string>
     <string name="dismiss">Dismiss</string>
     <string name="sending">Sending</string>
-    <string name="warning">Warning</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -1144,7 +1143,7 @@
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
     <string name="feedback_form_note">If you need support, please get in touch using the \"Help &amp; Support\" screen</string>
-    <string name="support_warn_if_user_a8c">Automattic email account detected. Please login with a non-Automattic email to submit or view support tickets.</string>
+    <string name="support_warn_if_user_a8c">Automattic email accounts can\'t submit or view support tickets</string>
     <string name="media_pager_remove_item_content_description">Remove item %1$d</string>
 
     <!-- activity log -->
