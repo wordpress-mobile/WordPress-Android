@@ -72,7 +72,7 @@ android.buildTypes.all { buildType ->
 
 dependencies {
     implementation libs.androidx.exifinterface
-    implementation sharedLibs.androidx.security.crypto
+    implementation libs.androidx.security.crypto
 
     implementation(sharedLibs.wordpress.utils) {
         // Using official volley package
