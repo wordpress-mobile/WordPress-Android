@@ -16,6 +16,8 @@ import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -1311,6 +1313,9 @@ public class ActivityLauncher {
     }
 
     public static void viewFeedbackForm(@NonNull Context context) {
+        if (warnIfIdentityA8C(context)) {
+            return;
+        }
         // TODO verify tracks event with iOS
         AnalyticsTracker.track(Stat.FEEDBACK_FORM_OPENED);
         Intent intent = new Intent(context, FeedbackFormActivity.class);
@@ -1320,6 +1325,25 @@ public class ActivityLauncher {
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
         viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+    }
+
+    /**
+     * Warn A8C users that they can't create Zendesk tickets, returns true if warning shown
+     */
+    @NonNull
+    private static Boolean warnIfIdentityA8C(@NonNull Context context) {
+        String supportEmail = "nbradbury@automattic.com"; // TODO AppPrefs.getSupportEmail();
+        if (supportEmail.contains("@automattic.com")) {
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.support_warn_if_user_a8c)
+                    .setPositiveButton(R.string.close, (dialog, id) -> {
+                        dialog.dismiss();
+                    })
+                    .show();
+            return true;
+        }
+        return false;
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
