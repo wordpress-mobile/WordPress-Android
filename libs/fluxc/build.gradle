@@ -71,7 +71,7 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation sharedLibs.androidx.exifinterface
+    implementation libs.androidx.exifinterface
     implementation sharedLibs.androidx.security.crypto
 
     implementation(sharedLibs.wordpress.utils) {

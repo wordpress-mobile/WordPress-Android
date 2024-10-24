@@ -17,6 +17,7 @@ androidx-compose-material3 = '1.2.1'
 androidx-constraintlayout-main = '2.1.4'
 androidx-constraintlayout-compose = '1.0.1'
 androidx-core = '1.13.1'
+androidx-exifinterface = "1.0.0"
 androidx-fragment = '1.8.4'
 androidx-lifecycle = '2.8.5'
 androidx-navigation = '2.7.7'
@@ -134,6 +135,7 @@ androidx-camera-view = { group = "androidx.camera", name = "camera-view", versio
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "androidx-cardview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-core-main = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "androidx-exifinterface" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 androidx-fragment-main = { group = "androidx.fragment", name = "fragment", version.ref = "androidx-fragment" }
 androidx-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "androidx-lifecycle" }
