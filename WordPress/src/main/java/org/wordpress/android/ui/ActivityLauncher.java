@@ -1331,7 +1331,7 @@ public class ActivityLauncher {
     @NonNull
     public static void warnIfIdentityA8C(@NonNull Context context) {
         String supportEmail = "nbradbury@automattic.com"; // TODO AppPrefs.getSupportEmail();
-        if (supportEmail.contains("@automattic.com")) {
+        if (supportEmail.contains("@automattic.com") || supportEmail.contains("@a8c.com")) {
             new MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.support_warn_if_user_a8c)
