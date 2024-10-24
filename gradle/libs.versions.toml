@@ -28,6 +28,7 @@ androidx-recyclerview = '1.3.2'
 androidx-room = "2.6.1"
 androidx-security-crypto = "1.0.0"
 androidx-swiperefreshlayout = '1.1.0'
+androidx-test-core = "1.4.0"
 androidx-test-espresso = '3.4.0'
 androidx-test-ext = '1.2.1'
 androidx-test-main = '1.5.0'
@@ -87,6 +88,7 @@ mockito-android = '5.14.2'
 mockito-kotlin = '4.1.0'
 mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
+robolectric = "4.11"
 sentry = '4.12.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-java-poet = '1.7.0'
@@ -162,6 +164,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-security-crypto" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 androidx-test-espresso-accessibility = { group = "androidx.test.espresso", name = "espresso-accessibility", version.ref = "androidx-test-espresso" }
 androidx-test-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "androidx-test-espresso" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
@@ -231,9 +234,11 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito-android" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-android" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
 squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }

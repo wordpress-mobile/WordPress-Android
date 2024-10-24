@@ -115,16 +115,15 @@ dependencies {
     api "net.java.dev.jna:jna:5.5.0@aar"
 
     // Unit tests
-    testImplementation sharedLibs.junit
-    testImplementation sharedLibs.kotlin.test.junit
-    testImplementation sharedLibs.kotlinx.coroutines.test
-    testImplementation sharedLibs.androidx.test.core
-    testImplementation sharedLibs.robolectric
-    testImplementation sharedLibs.mockito.core
-    testImplementation sharedLibs.mockito.kotlin
-    testImplementation sharedLibs.mockito.inline
-    testImplementation sharedLibs.assertj.core
-    testImplementation sharedLibs.androidx.arch.core.testing
+    testImplementation libs.junit
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.test.core
+    testImplementation libs.robolectric
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.assertj.core
+    testImplementation libs.androidx.arch.core.testing
 
     lintChecks sharedLibs.wordpress.lint
 }
