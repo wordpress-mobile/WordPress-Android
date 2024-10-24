@@ -96,7 +96,7 @@ dependencies {
     api libs.android.volley
     implementation libs.google.gson
 
-    implementation sharedLibs.apache.commons.text
+    implementation libs.apache.commons.text
     api sharedLibs.androidx.paging.runtime
     implementation sharedLibs.androidx.room.runtime
     kapt sharedLibs.androidx.room.compiler
