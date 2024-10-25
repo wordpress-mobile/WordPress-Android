@@ -112,7 +112,7 @@ dependencies {
     implementation sharedLibs.kotlinx.coroutines.android
 
     // Encrypted Logging
-    api "com.goterl:lazysodium-android:5.0.2@aar"
+    api "com.goterl:lazysodium-android:5.1.0@aar"
     api "net.java.dev.jna:jna:5.15.0@aar"
 
     // Unit tests
