@@ -104,7 +104,7 @@ wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
 wordpress-utils = '3.14.0'
 yalantis-ucrop = '2.2.9'
-zendesk = '5.1.2'
+zendesk = '5.3.1'
 
 [libraries]
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
