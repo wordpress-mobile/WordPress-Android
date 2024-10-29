@@ -9,7 +9,7 @@ java {
 
 dependencies {
     implementation project(':libs:fluxc-annotations')
-    implementation sharedLibs.google.autoService
-    annotationProcessor sharedLibs.google.autoService
-    implementation sharedLibs.squareup.javapoet
+    implementation libs.google.autoservice
+    annotationProcessor libs.google.autoservice
+    implementation libs.squareup.java.poet
 }

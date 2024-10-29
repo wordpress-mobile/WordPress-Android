@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(sharedLibs.plugins.android.library)
-    alias(sharedLibs.plugins.kotlin.android)
-    alias(sharedLibs.plugins.kotlin.parcelize)
-    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinx.kover)
 }
 
@@ -71,70 +71,68 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation sharedLibs.androidx.exifinterface
-    implementation sharedLibs.androidx.security.crypto
+    implementation libs.androidx.exifinterface
+    implementation libs.androidx.security.crypto
 
-    implementation(sharedLibs.wordpress.utils) {
+    implementation(libs.wordpress.utils) {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
     }
 
     // Custom WellSql version
-    api sharedLibs.wellsql
-    kapt sharedLibs.wellsql.processor
+    api libs.wellsql
+    kapt libs.wellsql.processor
 
     // FluxC annotations
     api project(":libs:fluxc-annotations")
     kapt project(":libs:fluxc-processor")
 
     // External libs
-    api sharedLibs.eventbus.android
-    api sharedLibs.eventbus.java
-    api sharedLibs.squareup.okhttp3
-    implementation sharedLibs.squareup.okhttp3.urlconnection
-    api sharedLibs.volley
-    implementation sharedLibs.google.gson
+    api libs.greenrobot.eventbus.main
+    api libs.greenrobot.eventbus.java
+    api libs.squareup.okhttp3
+    implementation libs.squareup.okhttp3.urlconnection
+    api libs.android.volley
+    implementation libs.google.gson
 
-    implementation sharedLibs.apache.commons.text
-    api sharedLibs.androidx.paging.runtime
-    implementation sharedLibs.androidx.room.runtime
-    kapt sharedLibs.androidx.room.compiler
-    implementation sharedLibs.androidx.room.ktx
+    implementation libs.apache.commons.text
+    api libs.androidx.paging.runtime
+    implementation libs.androidx.room.runtime
+    kapt libs.androidx.room.compiler
+    implementation libs.androidx.room.ktx
 
     // Dagger
-    implementation sharedLibs.google.dagger
-    kapt sharedLibs.google.dagger.compiler
-    compileOnly sharedLibs.glassfish.javax.annotation
+    implementation libs.google.dagger
+    kapt libs.google.dagger.compiler
 
     // Coroutines
-    implementation sharedLibs.kotlinx.coroutines.core
-    implementation sharedLibs.kotlinx.coroutines.android
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
 
     // Encrypted Logging
     api "com.goterl:lazysodium-android:5.0.2@aar"
     api "net.java.dev.jna:jna:5.15.0@aar"
 
     // Unit tests
-    testImplementation sharedLibs.junit
-    testImplementation sharedLibs.kotlin.test.junit
-    testImplementation sharedLibs.kotlinx.coroutines.test
-    testImplementation sharedLibs.androidx.test.core
-    testImplementation sharedLibs.robolectric
-    testImplementation sharedLibs.mockito.core
-    testImplementation sharedLibs.mockito.kotlin
-    testImplementation sharedLibs.mockito.inline
-    testImplementation sharedLibs.assertj.core
-    testImplementation sharedLibs.androidx.arch.core.testing
+    testImplementation libs.junit
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.test.core
+    testImplementation libs.robolectric
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.assertj.core
+    testImplementation libs.androidx.arch.core.testing
 
-    lintChecks sharedLibs.wordpress.lint
+    lintChecks libs.wordpress.lint
 }
 
 dependencyAnalysis {
     issues {
         onUnusedDependencies {
             // This dependency is actually needed otherwise the app will crash with a runtime exception.
-            exclude(sharedLibs.eventbus.android.get().module.toString())
+            exclude(libs.greenrobot.eventbus.main.get().module.toString())
         }
     }
 }
