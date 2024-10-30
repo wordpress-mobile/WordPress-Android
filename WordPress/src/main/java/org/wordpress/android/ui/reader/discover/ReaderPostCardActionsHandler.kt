@@ -428,7 +428,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                         _snackbarEvents.postValue(
                                             Event(
                                                 SnackbarMessageHolder(
-                                                    UiStringRes(R.string.reader_toast_success_UNDO)
+                                                    UiStringRes(R.string.reader_toast_success_undo)
                                                 )
                                             )
                                         )
