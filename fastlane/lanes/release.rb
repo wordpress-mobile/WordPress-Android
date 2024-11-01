@@ -563,12 +563,11 @@ platform :android do
     buildkite_annotate(style: 'info', context: 'trigger-release-build', message: message) if is_ci
   end
 
-  def create_backmerge_pr
-    version = current_release_version
-
+  def create_backmerge_pr(source_branch: "release/#{current_release_version}", target_branch: nil)
     pr_url = create_release_backmerge_pull_request(
       repository: GHHELPER_REPO,
-      source_branch: "release/#{version}",
+      source_branch: source_branch,
+      target_branches: Array(target_branch),
       labels: ['Releases'],
       milestone_title: next_release_version
     )
@@ -578,8 +577,8 @@ platform :android do
 
       #{e.message}
 
-      If this is not the first time you are running the release task, the backmerge PR for the version `#{version}` might have already been previously created.
-      Please close any previous backmerge PR for `#{version}`, delete the previous merge branch, then run the release task again.
+      If this is not the first time you are running the release task, the backmerge PR for the version `#{current_release_version}` might have already been previously created.
+      Please close any previous backmerge PR for `#{current_release_version}`, delete the previous merge branch, then run the release task again.
     MESSAGE
 
     buildkite_annotate(style: 'error', context: 'error-creating-backmerge', message: error_message) if is_ci
