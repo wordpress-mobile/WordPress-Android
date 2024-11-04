@@ -51,10 +51,13 @@ sealed class DebugSettingsItemViewHolder(
             }
 
             UiItem.FeatureFlag.State.UNKNOWN -> {
+                // features in development are always unknown until the user taps on them
                 if (item.type == DebugSettingsType.FEATURES_IN_DEVELOPMENT) {
                     featureEnabled.isVisible = true
+                    featureEnabled.isChecked = (item as? UiItem.FeatureFlag.LocalFeatureFlag)?.enabled == true
                     unknownIcon.isVisible = false
                 } else {
+                    featureEnabled.isVisible = false
                     unknownIcon.isVisible = true
                 }
             }
