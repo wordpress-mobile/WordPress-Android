@@ -27,14 +27,20 @@ sealed class UiItem(open val type: DebugSettingsType) {
             toggleAction: ToggleAction,
             debugSettingsType: DebugSettingsType
         ) : this(
-            title,
-            when (enabled) {
+            title = title,
+            state = when (enabled) {
                 true -> State.ENABLED
                 false -> State.DISABLED
-                null -> State.UNKNOWN
+                null -> {
+                    if (debugSettingsType == DebugSettingsType.FEATURES_IN_DEVELOPMENT) {
+                        State.ENABLED
+                    } else {
+                        State.UNKNOWN
+                    }
+                }
             },
-            toggleAction,
-            debugSettingsType
+            toggleAction = toggleAction,
+            type = debugSettingsType
         )
 
         enum class State { ENABLED, DISABLED, UNKNOWN }
