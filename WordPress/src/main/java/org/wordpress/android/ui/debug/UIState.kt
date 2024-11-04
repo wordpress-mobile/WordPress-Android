@@ -31,13 +31,7 @@ sealed class UiItem(open val type: DebugSettingsType) {
             state = when (enabled) {
                 true -> State.ENABLED
                 false -> State.DISABLED
-                null -> {
-                    if (debugSettingsType == DebugSettingsType.FEATURES_IN_DEVELOPMENT) {
-                        State.ENABLED
-                    } else {
-                        State.UNKNOWN
-                    }
-                }
+                null -> State.UNKNOWN
             },
             toggleAction = toggleAction,
             type = debugSettingsType
