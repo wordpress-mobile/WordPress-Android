@@ -60,6 +60,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.SelfHostedLoginFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
@@ -517,8 +518,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void loginViaSiteAddress() {
-        LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
-        slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
+        System.out.println("Logging in via site address");
+//        LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
+        SelfHostedLoginFragment fragment = new SelfHostedLoginFragment();
+        slideInFragment(fragment, true, SelfHostedLoginFragment.TAG);
     }
 
     @Override

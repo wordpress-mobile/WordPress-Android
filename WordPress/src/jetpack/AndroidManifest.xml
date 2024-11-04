@@ -36,6 +36,8 @@
                 <data android:host="notifications" />
                 <data android:host="home" />
                 <data android:host="media" />
+                <data android:host="authorize-success" />
+                <data android:host="authorize-failure" />
             </intent-filter>
         </activity>
 
