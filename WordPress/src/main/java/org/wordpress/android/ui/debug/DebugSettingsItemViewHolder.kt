@@ -37,22 +37,26 @@ sealed class DebugSettingsItemViewHolder(
 
     fun DebugSettingsFeatureBinding.showFeatureFlag(item: UiItem.FeatureFlag) {
         featureTitle.text = item.title
-        featureEnabled.visibility = View.GONE
-        unknownIcon.visibility = View.GONE
-        featureEnabled.setOnCheckedChangeListener(null)
         when (item.state) {
             UiItem.FeatureFlag.State.ENABLED -> {
-                featureEnabled.visibility = View.VISIBLE
+                featureEnabled.isVisible = true
                 featureEnabled.isChecked = true
+                unknownIcon.isVisible = false
             }
 
             UiItem.FeatureFlag.State.DISABLED -> {
-                featureEnabled.visibility = View.VISIBLE
+                featureEnabled.isVisible = true
                 featureEnabled.isChecked = false
+                unknownIcon.isVisible = false
             }
 
             UiItem.FeatureFlag.State.UNKNOWN -> {
-                unknownIcon.visibility = View.VISIBLE
+                if (item.type == DebugSettingsType.FEATURES_IN_DEVELOPMENT) {
+                    featureEnabled.isVisible = true
+                    unknownIcon.isVisible = false
+                } else {
+                    unknownIcon.isVisible = true
+                }
             }
         }
         featureEnabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
@@ -66,9 +70,9 @@ sealed class DebugSettingsItemViewHolder(
         R.layout.debug_settings_remote_field
     ) {
         fun bind(item: UiItem.Field) = with(DebugSettingsRemoteFieldBinding.bind(itemView)) {
-            remoteFieldKey.setText(item.remoteFieldKey)
-            remoteFieldValue.setText(item.remoteFieldValue)
-            remoteFieldSource.setText(item.remoteFieldSource)
+            remoteFieldKey.text = item.remoteFieldKey
+            remoteFieldValue.text = item.remoteFieldValue
+            remoteFieldSource.text = item.remoteFieldSource
         }
     }
 }
