@@ -56,7 +56,7 @@ class LoginPrologueRevampedFragment : Fragment() {
                     LoginScreenRevamped(
                         onWpComLoginClicked = {
                             viewModel.onWpComLoginClicked()
-                            loginPrologueListener.showEmailLoginScreen()
+                            loginPrologueListener.showEmailLoginScreen(this.context)
                         },
                         onSiteAddressLoginClicked = {
                             viewModel.onSiteAddressLoginClicked()

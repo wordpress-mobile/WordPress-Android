@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,8 +59,10 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
@@ -130,6 +133,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private LoginMode mLoginMode;
     private LoginViewModel mViewModel;
+    @Inject protected WPcomLoginHelper mLoginHelper;
 
     @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
@@ -143,6 +147,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Attempt Login if this activity was created in response to a user confirming login
+        mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+
+        if (mLoginHelper.isLoggedIn()) {
+            this.loggedInAndFinish(new ArrayList<Integer>(), true);
+            return;
+        }
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 
@@ -452,8 +464,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     // LoginPrologueListener implementation methods
 
     @Override
-    public void showEmailLoginScreen() {
-        checkSmartLockPasswordAndStartLogin();
+    public void showEmailLoginScreen(@NonNull Context context) {
+        Intent loginWithWPcom = new Intent(Intent.ACTION_VIEW, mLoginHelper.loginUri());
+        mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.START);
+        context.startActivity(loginWithWPcom);
     }
 
     @Override

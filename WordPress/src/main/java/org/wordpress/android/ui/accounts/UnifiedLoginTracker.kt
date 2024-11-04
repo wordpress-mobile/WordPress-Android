@@ -126,6 +126,7 @@ class UnifiedLoginTracker
     enum class Flow(val value: String) {
         PROLOGUE("prologue"),
         WORDPRESS_COM("wordpress_com"),
+        WORDPRESS_COM_WEB("wordpress_com_web"),
         GOOGLE_LOGIN("google_login"),
         SMART_LOCK_LOGIN("smart_lock_login"),
         LOGIN_MAGIC_LINK("login_magic_link"),

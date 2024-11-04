@@ -113,7 +113,18 @@
         <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme.TransparentSystemBars"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="wpcom-authorize"
+                    android:scheme="${magicLinkScheme}" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
