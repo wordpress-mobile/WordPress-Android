@@ -465,9 +465,13 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void showEmailLoginScreen(@NonNull Context context) {
-        Intent loginWithWPcom = new Intent(Intent.ACTION_VIEW, mLoginHelper.loginUri());
-        mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.START);
-        context.startActivity(loginWithWPcom);
+        CustomTabsIntent intent = new CustomTabsIntent.Builder()
+                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+                .setStartAnimations(this, R.anim.activity_slide_up_from_bottom, R.anim.activity_slide_up_from_bottom)
+                .setExitAnimations(this, R.anim.activity_slide_out_to_bottom, R.anim.activity_slide_out_to_bottom)
+                .setUrlBarHidingEnabled(true)
+                .build();
+        intent.launchUrl(this, mLoginHelper.loginUri());
     }
 
     @Override
