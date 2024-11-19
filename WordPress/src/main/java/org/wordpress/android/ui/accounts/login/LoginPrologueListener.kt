@@ -4,6 +4,6 @@ import android.content.Context
 
 interface LoginPrologueListener {
     // Login Prologue callbacks
-    fun showEmailLoginScreen(context: Context)
+    fun showWPcomLoginScreen(context: Context)
     fun loginViaSiteAddress()
 }

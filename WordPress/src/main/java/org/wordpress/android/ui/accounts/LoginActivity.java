@@ -463,8 +463,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     // LoginPrologueListener implementation methods
 
-    @Override
-    public void showEmailLoginScreen(@NonNull Context context) {
+    public void showWPcomLoginScreen(@NonNull Context context) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
+        mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
+
         CustomTabsIntent intent = new CustomTabsIntent.Builder()
                 .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
                 .setStartAnimations(this, R.anim.activity_slide_up_from_bottom, R.anim.activity_slide_up_from_bottom)

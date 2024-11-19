@@ -11,7 +11,7 @@ sealed class LoginNavigationEvents {
     data class SelectSite(val localId: Int) : LoginNavigationEvents()
     object CreateNewSite : LoginNavigationEvents()
     object CloseWithResultOk : LoginNavigationEvents()
-    object ShowEmailLoginScreen : LoginNavigationEvents()
+    object showWPcomLoginScreen : LoginNavigationEvents()
     object ShowLoginViaSiteAddressScreen : LoginNavigationEvents()
     object ShowJetpackIndividualPluginOverlay : LoginNavigationEvents()
 }
