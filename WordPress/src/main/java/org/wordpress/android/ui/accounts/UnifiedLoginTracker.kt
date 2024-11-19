@@ -148,7 +148,8 @@ class UnifiedLoginTracker
         SHOW_EMAIL_HINTS("show_email_hints"),
         PASSWORD_CHALLENGE("password_challenge"),
         NOT_A_JETPACK_SITE("not_a_jetpack_site"),
-        NO_JETPACK_SITES("no_jetpack_sites")
+        NO_JETPACK_SITES("no_jetpack_sites"),
+        WPCOM_WEB_START("wpcom_web_start")
     }
 
     enum class Click(val value: String) {

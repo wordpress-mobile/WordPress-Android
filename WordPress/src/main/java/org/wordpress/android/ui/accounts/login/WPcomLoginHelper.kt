@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.util.config.AppConfig
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -15,7 +16,8 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    private val appConfig: AppConfig
+    private val appConfig: AppConfig,
+    private val unifiedLoginTracker: UnifiedLoginTracker
 ) {
     private val context: CoroutineContext = Dispatchers.IO
 
