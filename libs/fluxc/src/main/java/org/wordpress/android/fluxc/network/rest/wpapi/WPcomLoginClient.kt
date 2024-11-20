@@ -31,7 +31,7 @@ class WPcomLoginClient @Inject constructor(
             .build()
     }
 
-    suspend fun exchangeAuthCodeForToken(code: String, redirectUri: String): Result<String> {
+    suspend fun exchangeAuthCodeForToken(code: String): Result<String> {
         val tokenUrl = Uri.Builder()
             .scheme("https")
             .authority("public-api.wordpress.com")
@@ -43,7 +43,7 @@ class WPcomLoginClient @Inject constructor(
 
         mutableMapOf(
             "client_id" to appSecrets.appId,
-            "redirect_uri" to redirectUri,
+            "redirect_uri" to appSecrets.redirectUri,
             "client_secret" to appSecrets.appSecret,
             "code" to code,
             "grant_type" to "authorization_code",

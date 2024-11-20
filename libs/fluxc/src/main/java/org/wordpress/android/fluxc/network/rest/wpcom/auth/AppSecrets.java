@@ -1,19 +1,27 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
-public class AppSecrets {
-    private final String mAppId;
-    private final String mAppSecret;
+import androidx.annotation.NonNull;
 
-    public AppSecrets(String appId, String appSecret) {
+public class AppSecrets {
+    @NonNull private final String mAppId;
+    @NonNull private final String mAppSecret;
+    @NonNull private final String mRedirectUri;
+
+    public AppSecrets(@NonNull String appId, @NonNull String appSecret, @NonNull String redirectUri) {
         mAppId = appId;
         mAppSecret = appSecret;
+        mRedirectUri = redirectUri;
     }
 
-    public String getAppId() {
+    public @NonNull String getAppId() {
         return mAppId;
     }
 
-    public String getAppSecret() {
+    public @NonNull String getAppSecret() {
         return mAppSecret;
+    }
+
+    public @NonNull String getRedirectUri() {
+        return mRedirectUri;
     }
 }

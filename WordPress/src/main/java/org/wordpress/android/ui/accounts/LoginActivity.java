@@ -472,7 +472,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 .setStartAnimations(this, R.anim.activity_slide_up_from_bottom, R.anim.activity_slide_up_from_bottom)
                 .setExitAnimations(this, R.anim.activity_slide_out_to_bottom, R.anim.activity_slide_out_to_bottom)
                 .setUrlBarHidingEnabled(true)
+                .setInstantAppsEnabled(false)
+                .setShowTitle(false)
                 .build();
+
         intent.launchUrl(this, mLoginHelper.loginUri());
     }
 

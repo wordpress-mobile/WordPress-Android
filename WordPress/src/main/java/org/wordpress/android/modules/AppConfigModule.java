@@ -1,7 +1,9 @@
 package org.wordpress.android.modules;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Base64;
+import androidx.annotation.NonNull;
 
 import com.goterl.lazysodium.utils.Key;
 
@@ -19,12 +21,13 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
+
 @InstallIn(SingletonComponent.class)
 @Module
 public class AppConfigModule {
-    @Provides
+    @NonNull @Provides
     public AppSecrets provideAppSecrets() {
-        return new AppSecrets(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET);
+        return new AppSecrets(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.OAUTH_REDIRECT_URI);
     }
 
     @Singleton
