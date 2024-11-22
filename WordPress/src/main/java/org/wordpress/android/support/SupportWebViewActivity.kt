@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -145,6 +146,11 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             .addPathHandler("/assets/", AssetsPathHandler(this))
             .addPathHandler("/res/", ResourcesPathHandler(this))
             .build()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mWebView.settings.setAlgorithmicDarkeningAllowed(true)
+        }
+
         mWebView.webViewClient = SupportWebViewClient(this, assetLoader)
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
