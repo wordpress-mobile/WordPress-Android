@@ -469,8 +469,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         CustomTabsIntent intent = new CustomTabsIntent.Builder()
                 .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-                .setStartAnimations(this, R.anim.activity_slide_up_from_bottom, R.anim.activity_slide_up_from_bottom)
-                .setExitAnimations(this, R.anim.activity_slide_out_to_bottom, R.anim.activity_slide_out_to_bottom)
+                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
+                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
                 .setUrlBarHidingEnabled(true)
                 .setInstantAppsEnabled(false)
                 .setShowTitle(false)
