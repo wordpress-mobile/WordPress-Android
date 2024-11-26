@@ -2,6 +2,7 @@ package org.wordpress.android.ui.blaze.blazepromote
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -218,9 +219,16 @@ class BlazePromoteWebViewFragment : Fragment(), OnBlazeWebViewClientListener,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                     scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-                    settings.userAgentString = model.userAgent
-                    settings.javaScriptEnabled = model.enableJavascript
-                    settings.domStorageEnabled = model.enableDomStorage
+
+                    with(settings) {
+                        userAgentString = model.userAgent
+                        javaScriptEnabled = model.enableJavascript
+                        domStorageEnabled = model.enableDomStorage
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            setAlgorithmicDarkeningAllowed(true)
+                        }
+                    }
+
                     webViewClient = BlazeWebViewClient(this@BlazePromoteWebViewFragment)
                     chromeClient = WPWebChromeClientWithFileChooser(
                         activity,

@@ -37,9 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,6 +65,7 @@ fun FeedbackFormScreen(
     onCloseClick: (context: Context) -> Unit,
     onChooseMediaClick: () -> Unit,
     onRemoveMediaClick: (uri: Uri) -> Unit,
+    onSupportClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val message = messageText?.value ?: ""
@@ -68,6 +75,7 @@ fun FeedbackFormScreen(
             onMessageChanged = {
                 onMessageChanged(it)
             },
+            onSupportClick = onSupportClick
         )
         MediaUriPager(
             mediaUris = attachments.value.map { it.uri },
@@ -101,7 +109,18 @@ fun FeedbackFormScreen(
 private fun MessageSection(
     messageText: String?,
     onMessageChanged: (String) -> Unit,
+    onSupportClick: () -> Unit
 ) {
+    val linkText = stringResource(id = R.string.feedback_form_note_link)
+    val linkAnnotation = LinkAnnotation.Url(
+        url = "support",
+        styles = TextLinkStyles(
+            style = SpanStyle(color = colorResource(id = R.color.primary))
+        )
+    ) {
+        onSupportClick()
+    }
+
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -114,6 +133,17 @@ private fun MessageSection(
                 horizontal = H_PADDING.dp
             )
     ) {
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.feedback_form_note_text))
+                withLink(
+                    linkAnnotation
+                ) {
+                    append(linkText)
+                }
+            },
+            modifier = Modifier.padding(bottom = V_PADDING.dp)
+        )
         OutlinedTextField(
             value = messageText ?: "",
             placeholder = {
@@ -129,15 +159,8 @@ private fun MessageSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
-                .focusRequester(focusRequester),
-        )
-        Text(
-            text = stringResource(id = R.string.feedback_form_note),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
+                .focusRequester(focusRequester)
                 .padding(top = V_PADDING.dp)
-
         )
     }
 }
@@ -276,7 +299,8 @@ private fun FeedbackFormScreenPreview() {
         onSubmitClick = {},
         onCloseClick = {},
         onChooseMediaClick = {},
-        onRemoveMediaClick = {}
+        onRemoveMediaClick = {},
+        onSupportClick = {},
     )
 }
 

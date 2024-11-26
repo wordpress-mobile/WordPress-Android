@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailFragment
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingFragment
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 
 const val ARG_EXTRA_BLAZE_CAMPAIGN_PAGE = "blaze_campaign_page"
@@ -14,16 +15,30 @@ const val ARG_EXTRA_BLAZE_CAMPAIGN_PAGE = "blaze_campaign_page"
 @AndroidEntryPoint
 class BlazeCampaignParentActivity : LocaleAwareActivity() {
     private val viewModel: CampaignViewModel by viewModels()
+    private var campaignPage: BlazeCampaignPage? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        campaignPage =
+            savedInstanceState?.getParcelableCompat(ARG_EXTRA_BLAZE_CAMPAIGN_PAGE) ?: intent.getParcelableExtraCompat(
+                ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
+            )
+
         setContentView(R.layout.activity_blaze_campaign)
-        viewModel.start(getCampaignUiPage())
+        viewModel.start(campaignPage)
         observe()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(ARG_EXTRA_BLAZE_CAMPAIGN_PAGE, campaignPage)
     }
 
     private fun observe() {
         viewModel.uiState.observe(this) { uiState ->
+            campaignPage = uiState
+
             when (uiState) {
                 is BlazeCampaignPage.CampaignListingPage -> {
                     supportFragmentManager.beginTransaction()
@@ -44,9 +59,5 @@ class BlazeCampaignParentActivity : LocaleAwareActivity() {
                 else -> {}
             }
         }
-    }
-
-    private fun getCampaignUiPage(): BlazeCampaignPage? {
-        return intent.getParcelableExtraCompat(ARG_EXTRA_BLAZE_CAMPAIGN_PAGE)
     }
 }

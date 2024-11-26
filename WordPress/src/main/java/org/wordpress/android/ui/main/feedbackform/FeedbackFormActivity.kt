@@ -43,7 +43,11 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                         },
                         onRemoveMediaClick = {
                             viewModel.onRemoveMediaClick(it)
-                        }
+                        },
+                        onSupportClick = {
+                            // This will return to the Help screen, where the user can see the contact support link
+                            finish()
+                        },
                     )
                 }
             }

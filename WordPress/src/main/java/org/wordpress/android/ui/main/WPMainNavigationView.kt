@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -10,6 +9,7 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -22,8 +22,6 @@ import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.navigation.NavigationBarItemView
-import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
@@ -61,7 +59,6 @@ import com.google.android.material.R as MaterialR
  * insert our own custom views so we have more control over their appearance
  */
 @AndroidEntryPoint
-@SuppressLint("RestrictedApi") // https://github.com/wordpress-mobile/WordPress-Android/issues/21079
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -79,8 +76,8 @@ class WPMainNavigationView @JvmOverloads constructor(
     )
     private lateinit var navigationBarView: NavigationBarView
 
-    val disabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
-    val enabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(1f) })
+    private val disabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
+    private val enabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(1f) })
 
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
@@ -119,30 +116,33 @@ class WPMainNavigationView @JvmOverloads constructor(
         assignNavigationListeners(true)
         disableShiftMode()
 
-        // overlay each item with our custom view
-        val menuView = navigationBarView.getChildAt(0) as NavigationBarMenuView
+        // This is a restricted NavigationBarMenuView
+        val menuView = navigationBarView.getChildAt(0) as ViewGroup
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
+        // overlay each item with our custom view
         for (i in 0 until navigationBarView.menu.size()) {
-            val itemView = menuView.getChildAt(i) as NavigationBarItemView
-            val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
+            // This is a restricted NavigationBarItemView
+            (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
+                val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
 
-            val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
-            val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
-            txtLabel.text = getTitleForPosition(i)
-            customView.contentDescription = getContentDescriptionForPosition(i)
-            imgIcon.setImageResource(getDrawableResForPosition(i))
-            if (i == getPosition(READER)) {
-                customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
-            }
-            if (i == getPosition(NOTIFS)) {
-                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
-            }
+                val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
+                val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
+                txtLabel.text = getTitleForPosition(i)
+                customView.contentDescription = getContentDescriptionForPosition(i)
+                imgIcon.setImageResource(getDrawableResForPosition(i))
+                if (i == getPosition(READER)) {
+                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+                }
+                if (i == getPosition(NOTIFS)) {
+                    customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
+                }
 
-            if (i == getPosition(ME)) {
-                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+                if (i == getPosition(ME)) {
+                    loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+                }
+                itemView.addView(customView)
             }
-            itemView.addView(customView)
         }
 
         if(getMainPageIndex() != getPosition(ME)) {
@@ -380,16 +380,14 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
-    private fun getItemView(position: Int): NavigationBarItemView? {
+    private fun getItemView(position: Int): View? {
         if (isValidPosition(position)) {
-            val menuView = navigationBarView.getChildAt(0) as NavigationBarMenuView
-            return menuView.getChildAt(position) as NavigationBarItemView
+            // This is a restricted NavigationBarMenuView
+            val menuView = navigationBarView.getChildAt(0) as? ViewGroup
+            // This is a restricted NavigationBarItemView
+            return menuView?.getChildAt(position)
         }
         return null
-    }
-
-    fun showReaderBadge(showBadge: Boolean) {
-        showBadge(getPosition(READER), showBadge)
     }
 
     fun showNoteBadge(showBadge: Boolean) {
@@ -441,7 +439,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
 
-        internal fun getFragment(position: Int): Fragment? {
+        fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
                 val currentFragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
                 return currentFragment?.let {
@@ -472,7 +470,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
         }
 
-        internal fun getFragmentIfExists(position: Int): Fragment? {
+        fun getFragmentIfExists(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
                 fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
             }

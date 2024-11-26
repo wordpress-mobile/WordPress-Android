@@ -106,14 +106,19 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         holder.mTxtService.setText(service.getLabel());
         final PublicizeServiceIcon icon = PublicizeServiceIcon.fromServiceId(service.getId());
         if (icon != null) {
-            holder.mImgIcon.setVisibility(View.VISIBLE);
             mImageManager.load(holder.mImgIcon, icon.getIconResId());
         } else {
-            holder.mImgIcon.setVisibility(View.INVISIBLE);
+            holder.mImgIcon.setImageResource(R.drawable.ic_social_generic);
         }
+
         if (connections.size() > 0) {
-            holder.mTxtUser.setText(connections.getUserDisplayNames());
-            holder.mTxtUser.setVisibility(View.VISIBLE);
+            String userNames = connections.getUserDisplayNames();
+            if (userNames.isEmpty()) {
+                holder.mTxtUser.setVisibility(View.GONE);
+            } else {
+                holder.mTxtUser.setText(connections.getUserDisplayNames());
+                holder.mTxtUser.setVisibility(View.VISIBLE);
+            }
             holder.mImgIcon.clearColorFilter();
             holder.mImgIcon.setImageAlpha(255);
         } else {
@@ -200,6 +205,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             return !(mTmpServices.isSameAs(mServices) && mTmpConnections.isSameAs(mConnections));
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
