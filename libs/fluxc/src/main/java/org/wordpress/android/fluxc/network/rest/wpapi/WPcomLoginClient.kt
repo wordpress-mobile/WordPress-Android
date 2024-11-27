@@ -63,7 +63,7 @@ class WPcomLoginClient @Inject constructor(
             } else {
                 val json = response.body?.string() ?: return@withContext Result.failure(WPcomLoginError.InvalidResponse)
                 val gson = Gson().fromJson(json, WPcomAuthorizationCodeResponse::class.java)
-                Result.success(gson.access_token)
+                Result.success(gson.accessToken)
             }
         }
     }
