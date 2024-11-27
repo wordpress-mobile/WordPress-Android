@@ -1,7 +1,6 @@
 package org.wordpress.android.modules;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Base64;
 import androidx.annotation.NonNull;
 

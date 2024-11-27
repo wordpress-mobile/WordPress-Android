@@ -151,6 +151,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         // Attempt Login if this activity was created in response to a user confirming login
         mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
 
+        // Start preloading the WordPress.com login page if needed – this avoids visual hitches
+        // when displaying that screen
+        mLoginHelper.bindCustomTabsService(this);
+
         if (mLoginHelper.isLoggedIn()) {
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
@@ -476,7 +480,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 .setShowTitle(false)
                 .build();
 
-        intent.launchUrl(this, mLoginHelper.loginUri());
+        intent.launchUrl(this, mLoginHelper.getWpcomLoginUri());
     }
 
     @Override

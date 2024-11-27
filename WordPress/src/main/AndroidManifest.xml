@@ -1166,6 +1166,9 @@
         <intent>
             <action android:name="android.intent.action.MAIN" />
         </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
         <!-- required for Android 11 (API level 30) or higher -->
         <package android:name="com.jetpack.android" />
     </queries>
