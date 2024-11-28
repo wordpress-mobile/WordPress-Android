@@ -2,6 +2,7 @@ package org.wordpress.android.modules;
 
 import android.content.Context;
 import android.util.Base64;
+
 import androidx.annotation.NonNull;
 
 import com.goterl.lazysodium.utils.Key;
@@ -26,7 +27,7 @@ import dagger.hilt.components.SingletonComponent;
 public class AppConfigModule {
     @NonNull @Provides
     public AppSecrets provideAppSecrets() {
-        return new AppSecrets(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.OAUTH_REDIRECT_URI);
+        return new AppSecrets(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.WPCOM_REDIRECT_URI);
     }
 
     @Singleton
