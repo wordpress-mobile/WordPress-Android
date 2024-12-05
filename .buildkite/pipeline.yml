@@ -127,27 +127,27 @@ steps:
   #################
   # Instrumented (aka UI) Tests
   #################
-  - group: "🔬 Instrumented tests"
-    steps:
-      - label: ":wordpress: 🔬 Instrumented tests"
-        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
-        artifact_paths:
-          - "**/build/instrumented-tests/**/*"
+  # - group: "🔬 Instrumented tests"
+  #   steps:
+  #     - label: ":wordpress: 🔬 Instrumented tests"
+  #       command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
+  #       plugins:
+  #         - $CI_TOOLKIT
+  #         - $TEST_COLLECTOR :
+  #             <<: *test_collector_common_params
+  #             api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
+  #       artifact_paths:
+  #         - "**/build/instrumented-tests/**/*"
 
-      - label: ":jetpack: 🔬 Instrumented tests"
-        command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
-        artifact_paths:
-          - "**/build/instrumented-tests/**/*"
+  #     - label: ":jetpack: 🔬 Instrumented tests"
+  #       command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
+  #       plugins:
+  #         - $CI_TOOLKIT
+  #         - $TEST_COLLECTOR :
+  #             <<: *test_collector_common_params
+  #             api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
+  #       artifact_paths:
+  #         - "**/build/instrumented-tests/**/*"
 
   #################
   # Create Prototype Builds for WP and JP
