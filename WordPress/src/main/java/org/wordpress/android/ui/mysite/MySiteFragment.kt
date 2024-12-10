@@ -86,6 +86,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
+import java.io.Serializable
 import javax.inject.Inject
 
 @Suppress("LargeClass")
@@ -211,8 +212,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     override fun onConfirm(result: Bundle?) {
         val task = result?.getSerializableCompat(
             QuickStartFullScreenDialogFragment.RESULT_TASK
-        ) as? QuickStartStore.QuickStartTask
-        task?.let { viewModel.onQuickStartTaskCardClick(it) }
+        ) as? Serializable
+        (task as? QuickStartStore.QuickStartTask)?.let { viewModel.onQuickStartTaskCardClick(it) }
     }
 
     override fun onDismiss() {
