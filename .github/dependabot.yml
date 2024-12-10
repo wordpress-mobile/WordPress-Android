@@ -9,6 +9,14 @@ updates:
       - "bot: dependencies update"
     reviewers:
       - "wordpress-mobile/android-developers"
+    groups:
+      kotlin-ksp:
+        applies-to: version-updates
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "com.google.devtools.ksp*"
+        exclude-patterns:
+          - "org.jetbrains.kotlinx*"
     ignore:
       # The Android Gradle Plugin is a dependency that needs to be in sync with other
       # in-house libraries due to compatibility with composite build.
