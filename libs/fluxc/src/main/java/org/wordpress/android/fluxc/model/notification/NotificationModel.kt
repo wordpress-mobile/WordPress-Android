@@ -62,7 +62,7 @@ data class NotificationModel(
                 return if (type.isEmpty()) {
                     NONE
                 } else {
-                    reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
+                    reverseMap[type.uppercase(Locale.US)] ?: UNKNOWN
                 }
             }
         }

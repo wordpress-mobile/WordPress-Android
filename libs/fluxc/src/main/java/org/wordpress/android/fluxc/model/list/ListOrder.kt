@@ -7,7 +7,7 @@ enum class ListOrder(val value: String) {
     DESC("DESC");
     companion object {
         fun fromValue(value: String): ListOrder? {
-            return values().firstOrNull { it.value.toLowerCase(Locale.ROOT) == value.toLowerCase(Locale.ROOT) }
+            return values().firstOrNull { it.value.lowercase(Locale.ROOT) == value.lowercase(Locale.ROOT) }
         }
     }
 }
