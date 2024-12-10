@@ -22,7 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.FullScreenDialogFragment
@@ -213,7 +213,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val task = result?.getSerializableCompat(
             QuickStartFullScreenDialogFragment.RESULT_TASK
         ) as? Serializable
-        (task as? QuickStartStore.QuickStartTask)?.let { viewModel.onQuickStartTaskCardClick(it) }
+        (task as? QuickStartTask)?.let { viewModel.onQuickStartTaskCardClick(it) }
     }
 
     override fun onDismiss() {
