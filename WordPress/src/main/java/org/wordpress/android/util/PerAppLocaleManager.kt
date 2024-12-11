@@ -77,31 +77,25 @@ class PerAppLocaleManager @Inject constructor(
      * Previously the app locale was stored in SharedPreferences, so here we migrate to AndroidX per-app language prefs
      */
     fun performMigrationIfNecessary() {
-        if (isPerAppLanguagePrefsEnabled()) {
-            if (isApplicationLocaleEmpty()) {
-                val prefKey = LocaleManager.getLocalePrefKeyString()
-                val previousLanguage = appPrefsWrapper.getPrefString(prefKey, "")
-                if (previousLanguage?.isNotEmpty() == true) {
-                    appLogWrapper.d(
-                        AppLog.T.SETTINGS,
-                        "PerAppLocaleManager: performing migration to AndroidX per-app language prefs"
-                    )
-                    setCurrentLocaleByLanguageCode(previousLanguage)
-                } else {
-                    appLogWrapper.d(
-                        AppLog.T.SETTINGS,
-                        "PerAppLocaleManager: setting default locale"
-                    )
-                    setCurrentLocaleByLanguageCode(Locale.getDefault().language)
-                }
+        if (isApplicationLocaleEmpty()) {
+            val prefKey = LocaleManager.getLocalePrefKeyString()
+            val previousLanguage = appPrefsWrapper.getPrefString(prefKey, "")
+            if (previousLanguage?.isNotEmpty() == true) {
+                appLogWrapper.d(
+                    AppLog.T.SETTINGS,
+                    "PerAppLocaleManager: performing migration to AndroidX per-app language prefs"
+                )
+                setCurrentLocaleByLanguageCode(previousLanguage)
             } else {
-                checkAndUpdateOldLanguagePrefKey()
+                appLogWrapper.d(
+                    AppLog.T.SETTINGS,
+                    "PerAppLocaleManager: setting default locale"
+                )
+                setCurrentLocaleByLanguageCode(Locale.getDefault().language)
             }
+        } else {
+            checkAndUpdateOldLanguagePrefKey()
         }
-    }
-
-    fun isPerAppLanguagePrefsEnabled(): Boolean {
-        return appPrefsWrapper.getManualFeatureConfig(EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY)
     }
 
     /**
@@ -118,7 +112,21 @@ class PerAppLocaleManager @Inject constructor(
         }
     }
 
-    companion object {
-        const val EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY = "experimental_per_app_language_prefs"
-    }
+    /**
+     * TODO - this was previously done in settings
+    fun onLanguageChanged() {
+        // Track language change on Analytics because we have both the device language and app selected language
+        // data in Tracks metadata.
+        val properties: MutableMap<String, Any?> = HashMap()
+        properties["app_locale"] = Locale.getDefault()
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties)
+
+
+        // Language is now part of metadata, so we need to refresh them
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore)
+
+
+        // update Reader tags as they need be localized
+        ReaderUpdateServiceStarter.startService(getContext(), EnumSet.of(UpdateTask.TAGS))
+    }*/
 }

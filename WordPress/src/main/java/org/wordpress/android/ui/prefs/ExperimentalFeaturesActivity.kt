@@ -47,7 +47,6 @@ import javax.inject.Inject
 val experimentalFeatures = listOf(
     Feature(key = "experimental_block_editor"),
     Feature(key = "experimental_block_editor_theme_styles"),
-    Feature(key = PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY)
 )
 
 data class Feature(
@@ -74,18 +73,6 @@ class FeatureViewModel @Inject constructor(
             currentStates.toMutableMap().apply {
                 this[key] = Feature(enabled, key)
                 AppPrefs.setManualFeatureConfig(enabled, key)
-            }
-        }
-
-        featureToggled(key, enabled)
-    }
-
-    private fun featureToggled(key: String, enabled: Boolean) {
-        if (key == PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY) {
-            if (enabled) {
-                perAppLocaleManager.performMigrationIfNecessary()
-            } else {
-                perAppLocaleManager.resetApplicationLocale()
             }
         }
     }
