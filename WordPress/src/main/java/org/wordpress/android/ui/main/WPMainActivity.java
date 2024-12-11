@@ -80,7 +80,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
@@ -202,7 +202,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 @AndroidEntryPoint
-public class WPMainActivity extends LocaleAwareActivity implements
+public class WPMainActivity extends AppCompatActivity implements
         OnPageListener,
         BottomNavController,
         BasicDialogPositiveClickInterface,

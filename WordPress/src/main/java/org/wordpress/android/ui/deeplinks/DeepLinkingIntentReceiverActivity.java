@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
@@ -40,7 +40,7 @@ import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 @AndroidEntryPoint
-public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
+public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;

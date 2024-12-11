@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends LocaleAwareActivity {
+public class BlogPreferencesActivity extends AppCompatActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     private SiteModel mSite;

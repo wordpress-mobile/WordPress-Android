@@ -16,7 +16,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_SITE_CREATION
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
@@ -71,7 +71,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class SiteCreationActivity : LocaleAwareActivity(),
+class SiteCreationActivity : AppCompatActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,

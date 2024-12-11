@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -52,7 +52,7 @@ import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_P
  * {@link org.wordpress.android.ui.mediapicker.MediaPickerActivity}
  */
 @Deprecated
-public class PhotoPickerActivity extends LocaleAwareActivity
+public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";

@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 /**
  * Full screen video player for the reader
  */
-public class ReaderVideoViewerActivity extends LocaleAwareActivity {
+public class ReaderVideoViewerActivity extends AppCompatActivity {
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;

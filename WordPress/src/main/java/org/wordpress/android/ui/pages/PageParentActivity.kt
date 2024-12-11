@@ -2,9 +2,9 @@ package org.wordpress.android.ui.pages
 
 import android.os.Bundle
 import org.wordpress.android.databinding.PagesParentActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 
-class PageParentActivity : LocaleAwareActivity() {
+class PageParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = PagesParentActivityBinding.inflate(layoutInflater)

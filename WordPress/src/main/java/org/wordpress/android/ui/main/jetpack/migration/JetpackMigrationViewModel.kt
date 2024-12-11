@@ -240,7 +240,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
 
         // We need to manually apply the app language for the Compose UI since the host JetpackMigrationActivity
-        // does not inherit from LocaleAwareActivity on purpose, in order to avoid possible issues
+        // does not inherit from AppCompatActivity on purpose, in order to avoid possible issues
         // when the Ui mode (dark/light) and the language are manually set by the user.
         emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
 

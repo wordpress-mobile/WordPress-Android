@@ -8,11 +8,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 
 @AndroidEntryPoint
-class FeedbackFormActivity : LocaleAwareActivity() {
+class FeedbackFormActivity : AppCompatActivity() {
     private val viewModel by viewModels<FeedbackFormViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -41,7 +41,7 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
@@ -68,7 +68,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StockMediaPickerActivity extends LocaleAwareActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 

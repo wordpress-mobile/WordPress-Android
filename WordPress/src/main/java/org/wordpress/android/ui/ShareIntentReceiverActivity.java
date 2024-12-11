@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -43,7 +44,7 @@ import javax.inject.Inject;
  * Moreover it lists what actions the user can perform and redirects the user to the activity,
  * along with the content passed in the intent.
  */
-public class ShareIntentReceiverActivity extends LocaleAwareActivity implements ShareIntentFragmentListener {
+public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";

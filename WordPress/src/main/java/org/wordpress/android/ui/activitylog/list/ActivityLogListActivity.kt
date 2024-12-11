@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
+class ActivityLogListActivity : AppCompatActivity(), ScrollableViewInitializedListener {
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
