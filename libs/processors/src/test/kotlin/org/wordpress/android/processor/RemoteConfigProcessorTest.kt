@@ -2,8 +2,7 @@ package org.wordpress.android.processor
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspWithCompilation
-import com.tschuchort.compiletesting.symbolProcessorProviders
+import com.tschuchort.compiletesting.configureKsp
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.utils.addToStdlib.UnsafeCastFunction
@@ -119,10 +118,14 @@ class RemoteConfigProcessorTest {
 
     private fun compile(src: List<SourceFile>) = KotlinCompilation().apply {
         sources = src + fakeAppConfig
-        symbolProcessorProviders = listOf(RemoteConfigProcessorProvider())
-        kspWithCompilation = true
         inheritClassPath = true
+        verbose = true
         messageOutputStream = System.out
+        configureKsp(useKsp2 = false) {
+            symbolProcessorProviders += RemoteConfigProcessorProvider()
+            withCompilation = true
+            languageVersion = "1.9"
+        }
     }.compile()
 
     // Fake AppConfig is needed, as it's a class that is expected to be present in the classpath. Originally, this class
