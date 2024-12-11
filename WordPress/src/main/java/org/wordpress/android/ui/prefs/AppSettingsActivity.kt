@@ -1,19 +1,27 @@
 package org.wordpress.android.ui.prefs
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.AppSettingsActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.util.PerAppLocaleManager
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppSettingsActivity : AppCompatActivity() {
+    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
     private lateinit var binding: AppSettingsActivityBinding
+    private var currrentLanguageCode: String = ""
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        currrentLanguageCode = perAppLocaleManager.getCurrentLocaleLanguageCode()
+
         binding = AppSettingsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
@@ -45,6 +53,18 @@ class AppSettingsActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * The system app settings language picker shown in [AppSettingsFragment] doesn't tell us when
+     * the user has changed the language so we detect it here
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val languageCode = newConfig.locales[0].language
+        if (languageCode != currrentLanguageCode) {
+            currrentLanguageCode = languageCode
+            perAppLocaleManager.onLanguageChanged(this, languageCode)
+        }
+    }
     companion object {
         const val EXTRA_SHOW_PRIVACY_SETTINGS = "extra_show_privacy_settings"
         const val EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR =

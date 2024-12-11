@@ -200,7 +200,7 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.AppSettingsActivity"
-            android:configChanges="locale|orientation|screenSize"
+            android:configChanges="locale|orientation|screenSize|layoutDirection"
             android:label="@string/me_btn_app_settings"
             android:theme="@style/WordPress.NoActionBar" />
         <activity

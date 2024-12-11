@@ -57,7 +57,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -624,9 +623,13 @@ public class AppSettingsFragment extends PreferenceFragment
         }
     }
 
+    /**
+     * Called when a language is selected from LocalePickerBottomSheet - note that it
+     * is not called when a language is selected from the system app settings
+     */
     @Override
     public void onLocaleSelected(@NonNull String languageCode) {
-        mPerAppLocaleManager.setCurrentLocaleByLanguageCode(languageCode);
+        mPerAppLocaleManager.onLanguageChanged(getContext(), languageCode);
     }
 
     private void handleOpenLinksInJetpack(Boolean newValue) {
