@@ -127,10 +127,13 @@ class PerAppLocaleManager @Inject constructor(
 
     /**
      * Called when the user chooses a new language from LocalePickerBottomSheet
-     * TODO: detect when language is changed from app settings dialog
+     * or from the system app settings dialog
      */
     fun onLanguageChanged(context: Context, languageCode: String) {
-        setCurrentLocaleByLanguageCode(languageCode)
+        // only change the language if it's different from the current one
+        if (languageCode.equals(getCurrentLocaleLanguageCode()).not()) {
+            setCurrentLocaleByLanguageCode(languageCode)
+        }
 
         // Track language change on Analytics because we have both the device language
         // and app selected language data in Tracks metadata.
