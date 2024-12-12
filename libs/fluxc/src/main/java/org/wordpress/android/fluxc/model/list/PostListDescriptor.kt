@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.model.list.ListOrder.DESC
 import org.wordpress.android.fluxc.model.list.PostListOrderBy.DATE
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.DEFAULT_POST_STATUS_LIST
-import java.util.Locale
 
 sealed class PostListDescriptor(
     val site: SiteModel,
@@ -105,7 +104,7 @@ enum class PostListOrderBy(val value: String) {
 
     companion object {
         fun fromValue(value: String): PostListOrderBy? {
-            return values().firstOrNull { it.value.lowercase(Locale.ROOT) == value.lowercase(Locale.ROOT) }
+            return values().firstOrNull { it.value.lowercase() == value.lowercase() }
         }
     }
 }

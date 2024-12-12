@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.Date
-import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -74,7 +73,7 @@ class NotificationStore @Inject constructor(
 
         companion object {
             private val reverseMap = values().associateBy(DeviceRegistrationErrorType::name)
-            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: GENERIC_ERROR
+            fun fromString(type: String) = reverseMap[type.uppercase()] ?: GENERIC_ERROR
         }
     }
 
@@ -147,7 +146,7 @@ class NotificationStore @Inject constructor(
 
         companion object {
             private val reverseMap = values().associateBy(NotificationErrorType::name)
-            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: GENERIC_ERROR
+            fun fromString(type: String) = reverseMap[type.uppercase()] ?: GENERIC_ERROR
         }
     }
 

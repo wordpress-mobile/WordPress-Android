@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
@@ -83,8 +82,7 @@ class PageStore @Inject constructor(
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> =
             coroutineEngine.withDefaultContext(AppLog.T.POSTS, this, "search") {
                 getPagesFromDb(site).filter {
-                    it.title.lowercase(Locale.ROOT)
-                            .contains(searchQuery.lowercase(Locale.ROOT))
+                    it.title.lowercase().contains(searchQuery.lowercase())
                 }
             }
 

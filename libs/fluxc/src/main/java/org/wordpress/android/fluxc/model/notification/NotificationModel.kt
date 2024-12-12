@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.model.notification
 
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMeta
-import java.util.Locale
 
 data class NotificationModel(
     val noteId: Int = 0,
@@ -45,7 +44,7 @@ data class NotificationModel(
         companion object {
             private val reverseMap = values().associateBy(
                     Kind::name)
-            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: UNKNOWN
+            fun fromString(type: String) = reverseMap[type.uppercase()] ?: UNKNOWN
         }
     }
 
@@ -62,7 +61,7 @@ data class NotificationModel(
                 return if (type.isEmpty()) {
                     NONE
                 } else {
-                    reverseMap[type.uppercase(Locale.US)] ?: UNKNOWN
+                    reverseMap[type.uppercase()] ?: UNKNOWN
                 }
             }
         }

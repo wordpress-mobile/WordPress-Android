@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
-import java.util.Locale
 
 internal class BooleanTypeAdapter : JsonDeserializer<Boolean?> {
     @Suppress("VariableNaming") private val TRUE_STRINGS: Set<String> = HashSet(listOf("true", "1", "yes"))
@@ -17,9 +16,7 @@ internal class BooleanTypeAdapter : JsonDeserializer<Boolean?> {
             jsonPrimitive.isBoolean -> jsonPrimitive.asBoolean
             jsonPrimitive.isNumber -> jsonPrimitive.asNumber.toInt() == 1
             jsonPrimitive.isString -> TRUE_STRINGS.contains(
-                jsonPrimitive.asString.lowercase(
-                    Locale.getDefault()
-                )
+                jsonPrimitive.asString.lowercase()
             )
             else -> false
         }
