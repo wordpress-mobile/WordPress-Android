@@ -173,7 +173,6 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         if (data.flags.isNotEmpty()) {
-            emitLanguageRefreshIfNeeded(extractLanguageFromFlagsMap(data.flags))
             _refreshAppTheme.value = Unit
         }
 
@@ -187,11 +186,6 @@ class JetpackMigrationViewModel @Inject constructor(
                 onHelpClicked(source = HelpButtonSource.Welcome)
             },
         )
-    }
-
-    private fun extractLanguageFromFlagsMap(userPrefs: Map<String, Any?>): String {
-        val languageKey = localeManagerWrapper.getLocalePrefKeyString()
-        return userPrefs[languageKey] as? String ?: ""
     }
 
     private fun emitLanguageRefreshIfNeeded(languageCode: String) {

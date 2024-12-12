@@ -10,7 +10,6 @@ class JetpackMigrationLanguageUtil @Inject constructor(
     fun applyLanguage(languageCode: String) {
         if (languageCode.isEmpty()) return
 
-        LocaleManager.setNewLocale(WordPress.getContext(), languageCode)
         WordPress.updateContextLocale()
         contextProvider.refreshContext()
     }

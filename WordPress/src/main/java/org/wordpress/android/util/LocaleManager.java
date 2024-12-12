@@ -2,14 +2,12 @@ package org.wordpress.android.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.preference.PreferenceManager;
 
 import org.wordpress.android.R;
 
@@ -30,11 +28,6 @@ import kotlin.Triple;
  */
 public class LocaleManager {
     /**
-     * Key used for saving the language selection to shared preferences.
-     */
-    private static final String LANGUAGE_KEY = "language-pref";
-
-    /**
      * Pattern to split a language string (to parse the language and region values).
      */
     private static Pattern languageSplitter = Pattern.compile("_");
@@ -49,21 +42,6 @@ public class LocaleManager {
     }
 
     /**
-     * Change the active locale to the language provided. Save the updated language
-     * settings to sharedPreferences.
-     *
-     * @param context  The current context
-     * @param language The 2-letter language code (example "en") to switch to
-     */
-    public static void setNewLocale(Context context, String language) {
-        if (isSameLanguage(language)) {
-            return;
-        }
-        saveLanguageToPref(context, language);
-        updateResources(context, language);
-    }
-
-    /**
      * Compare the language for the current context with another language.
      *
      * @param language The language to compare
@@ -75,14 +53,13 @@ public class LocaleManager {
     }
 
     /**
-     * If the user has selected a language other than the device default, return that
-     * language code, else just return the device default language code.
+     * Previously the app stored the language code in shared preferences, but now we use
+     * per-app language preferences so just return the device default language code.
      *
-     * @return The 2-letter language code (example "en")
+     * TODO remove this routine
      */
     public static String getLanguage(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(LANGUAGE_KEY, LanguageUtils.getCurrentDeviceLanguageCode());
+        return LanguageUtils.getCurrentDeviceLanguageCode();
     }
 
     /**
@@ -112,20 +89,6 @@ public class LocaleManager {
             langID = deviceLanguageCode;
         }
         return langID;
-    }
-
-    /**
-     * Save the updated language to SharedPreferences.
-     * Use commit() instead of apply() to ensure the language preference is saved instantly
-     * as the app may be restarted immediately.
-     *
-     * @param context  The current context
-     * @param language The 2-letter language code (example "en")
-     */
-    @SuppressLint("ApplySharedPref")
-    private static void saveLanguageToPref(Context context, String language) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().putString(LANGUAGE_KEY, language).commit();
     }
 
     /**
@@ -261,9 +224,5 @@ public class LocaleManager {
             return displayLanguage + " (" + displayCountry + ")";
         }
         return displayLanguage;
-    }
-
-    public static String getLocalePrefKeyString() {
-        return LANGUAGE_KEY;
     }
 }

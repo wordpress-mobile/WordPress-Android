@@ -460,10 +460,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         return AppPrefs.prefs().getString(key, defValue)
     }
 
-    fun setPrefString(key: String, value: String) {
-        AppPrefs.prefs().edit().putString(key, value).apply()
-    }
-
     fun getDebugBooleanPref(key: String, default: Boolean = false) =
         buildConfigWrapper.isDebug() && AppPrefs.getRawBoolean({ key }, default)
 
@@ -485,6 +481,14 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setStringSet(prefKey: PrefKey, set: Set<String>?) {
         AppPrefs.putStringSet(prefKey, set)
+    }
+
+    fun removePref(key: String) {
+        AppPrefs.prefs().edit().remove(key).apply()
+    }
+
+    fun setPrefString(key: String, value: String) {
+        AppPrefs.prefs().edit().putString(key, value).apply()
     }
 
     var savedPrivacyBannerSettings: Boolean

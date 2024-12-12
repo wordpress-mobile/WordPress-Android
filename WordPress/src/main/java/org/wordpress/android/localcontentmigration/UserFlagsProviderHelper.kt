@@ -73,6 +73,5 @@ class UserFlagsProviderHelper @Inject constructor(
         contextProvider.getContext().getString(R.string.pref_key_app_theme),
         contextProvider.getContext().getString(R.string.pref_key_initial_screen),
         contextProvider.getContext().getString(R.string.pref_key_send_crash),
-        localeManagerWrapper.getLocalePrefKeyString()
     )
 }
