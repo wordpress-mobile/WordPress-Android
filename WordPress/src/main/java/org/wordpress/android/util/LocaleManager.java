@@ -42,6 +42,14 @@ public class LocaleManager {
     }
 
     /**
+     * Previously the app stored the language code in shared preferences, but now we use
+     * per-app language preferences so just return the device default language code.
+     */
+    public static String getLanguage() {
+        return LanguageUtils.getCurrentDeviceLanguageCode();
+    }
+
+    /**
      * Compare the language for the current context with another language.
      *
      * @param language The language to compare
@@ -79,14 +87,6 @@ public class LocaleManager {
             langID = deviceLanguageCode;
         }
         return langID;
-    }
-
-    /**
-     * Previously the app stored the language code in shared preferences, but now we use
-     * per-app language preferences so just return the device default language code.
-     */
-    public static String getLanguage() {
-        return LanguageUtils.getCurrentDeviceLanguageCode();
     }
 
     /**
