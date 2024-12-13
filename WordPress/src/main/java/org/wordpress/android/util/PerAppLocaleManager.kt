@@ -114,14 +114,17 @@ class PerAppLocaleManager @Inject constructor(
         // before we switched to per-app language preferences
         private const val OLD_LANGUAGE_PREF_KEY: String = "language-pref"
 
-        fun getLanguageCode(): String {
+        private fun getLocale(): Locale {
             val appLocales = AppCompatDelegate.getApplicationLocales()
-            val locale = if (appLocales.isEmpty or (appLocales == LocaleListCompat.getEmptyLocaleList())) {
+            return if (appLocales.isEmpty or (appLocales == LocaleListCompat.getEmptyLocaleList())) {
                 Locale.getDefault()
             } else {
                 appLocales[0] ?: Locale.getDefault()
             }
-            return locale.language
         }
+
+        fun getLanguageCode() = getLocale().language
+
+        fun getLanguageDisplayName() = getLocale().displayName
     }
 }
