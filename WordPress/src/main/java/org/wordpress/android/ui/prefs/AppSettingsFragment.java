@@ -78,7 +78,6 @@ public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
-    private ListPreference mInitialScreenPreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
