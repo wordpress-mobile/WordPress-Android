@@ -49,24 +49,6 @@ public class LocaleManager {
     }
 
     /**
-     * Apply locale to the provided configuration.
-     *
-     * @param context current context used to access Shared Preferences.
-     * @param configuration configuration that the locale should be applied to.
-     */
-    @SuppressLint("AppBundleLocaleChanges")
-    public static Configuration updatedConfigLocale(Context context, Configuration configuration) {
-        Locale locale = languageLocale(getLanguage(context));
-        Locale.setDefault(locale);
-
-        // NOTE: Earlier versions of Android require both of these to be set, otherwise
-        // RTL may not be implemented properly.
-        configuration.setLocale(locale);
-
-        return configuration;
-    }
-
-    /**
      * Change the active locale to the language provided. Save the updated language
      * settings to sharedPreferences.
      *
