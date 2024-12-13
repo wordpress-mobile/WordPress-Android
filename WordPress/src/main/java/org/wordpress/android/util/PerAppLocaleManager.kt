@@ -125,6 +125,6 @@ class PerAppLocaleManager @Inject constructor(
 
         fun getLanguageCode(): String = getLocale().language
 
-        fun getLanguageDisplayName() = getLocale().displayName
+        fun getLanguageDisplayName(): String = getLocale().displayName
     }
 }
