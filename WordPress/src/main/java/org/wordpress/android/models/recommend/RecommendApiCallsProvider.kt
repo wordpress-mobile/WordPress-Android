@@ -38,7 +38,7 @@ class RecommendApiCallsProvider @Inject constructor(
             logErrorAndTrack(source, "getRecommendTemplate > No Network available")
             cont.resume(Failure(contextProvider.getContext().getString(R.string.no_network_message)))
         } else {
-            val language = localeManagerWrapper.getLanguageCode()
+            val language = localeManagerWrapper.getLanguage()
             val endPointPath = "/mobile/share-app-link?app=$appName&locale=$language"
 
             val listener = Listener { jsonObject ->

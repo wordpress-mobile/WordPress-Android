@@ -38,7 +38,7 @@ public class LocaleManager {
      * @param context The current context.
      */
     public static Context setLocale(Context context) {
-        return updateResources(context, getLanguageCode());
+        return updateResources(context, getLanguage(context));
     }
 
     /**
@@ -55,9 +55,11 @@ public class LocaleManager {
     /**
      * Previously the app stored the language code in shared preferences, but now we use
      * per-app language preferences so just return the device default language code.
+     *
+     * TODO remove this routine
      */
-    public static String getLanguageCode() {
-        return Locale.getDefault().getLanguage();
+    public static String getLanguage(Context context) {
+        return LanguageUtils.getCurrentDeviceLanguageCode();
     }
 
     /**

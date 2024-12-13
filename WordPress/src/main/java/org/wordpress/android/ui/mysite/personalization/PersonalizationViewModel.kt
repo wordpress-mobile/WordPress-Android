@@ -32,7 +32,7 @@ class PersonalizationViewModel @Inject constructor(
     val appLanguage = _appLanguage as LiveData<String>
 
     init {
-        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguageCode())
+        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
         shortcutsPersonalizationViewModelSlice.initialize(viewModelScope)
         dashboardCardPersonalizationViewModelSlice.initialize(viewModelScope)
     }

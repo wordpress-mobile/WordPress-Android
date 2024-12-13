@@ -2571,7 +2571,7 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
          get() {
             val postType = if (isPage) "page" else "post"
             val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = LocaleManager.getLanguageCode()
+            val languageString = LocaleManager.getLanguage(this@EditPostActivity)
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based

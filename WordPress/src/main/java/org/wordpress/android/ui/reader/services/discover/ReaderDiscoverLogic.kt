@@ -120,7 +120,7 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            params["_locale"] = localeManagerWrapper.getLanguageCode()
+            params["_locale"] = localeManagerWrapper.getLanguage()
             val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
                 "read/streams/discover"
             } else {

@@ -72,7 +72,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenReturn("")
-        whenever(localeManagerWrapper.getLanguageCode()).thenReturn("")
+        whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
             mainDispatcher = testDispatcher(),
             dispatcher = dispatcher,
@@ -114,7 +114,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should emit event to refresh the language when delete wp app screen is shown and language is not applied`() {
         val language = "it"
-        whenever(localeManagerWrapper.getLanguageCode()).thenReturn(language)
+        whenever(localeManagerWrapper.getLanguage()).thenReturn(language)
         whenever(localeManagerWrapper.isSameLanguage(language)).thenReturn(false)
 
         classToTest.initPleaseDeleteWordPressAppScreenUi()

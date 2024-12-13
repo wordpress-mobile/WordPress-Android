@@ -75,7 +75,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         val now = dateTimeUtilsWrapper.getInstantNow()
         val isDateEligible = now.isAfter(eventTime)
 
-        val currentLanguage = localeManagerWrapper.getLanguageCode()
+        val currentLanguage = localeManagerWrapper.getLanguage()
         val isLanguageEligible = currentLanguage.startsWith(TARGET_LANGUAGE, ignoreCase = true)
 
         return featureConfig.isEnabled() &&

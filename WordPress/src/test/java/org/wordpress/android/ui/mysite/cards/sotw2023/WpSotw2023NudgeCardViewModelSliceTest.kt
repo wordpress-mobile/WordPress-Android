@@ -165,7 +165,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
             val date = if (isDateAfterEvent) "2023-12-12T00:00:01Z" else "2021-12-11T00:00:00Z"
             whenever(dateTimeUtilsWrapper.getInstantNow()).thenReturn(Instant.parse(date))
             val language = if (isLanguageEnglish) "en_US" else "fr_FR"
-            whenever(localeManagerWrapper.getLanguageCode()).thenReturn(language)
+            whenever(localeManagerWrapper.getLanguage()).thenReturn(language)
         }
     }
 
