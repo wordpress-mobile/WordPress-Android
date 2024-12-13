@@ -76,8 +76,6 @@ import static org.wordpress.android.ui.prefs.AppSettingsActivity.EXTRA_SHOW_PRIV
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
-    public static final int LANGUAGE_CHANGED = 1000;
-
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
     private ListPreference mInitialScreenPreference;
