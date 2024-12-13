@@ -72,7 +72,7 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(contextProvider.getContext()).thenReturn(context)
         whenever(restClientProvider.getRestClientUtilsV2()).thenReturn(restClientUtils)
-        whenever(localeManagerWrapper.getLanguage()).thenReturn("en")
+        whenever(localeManagerWrapper.getLanguageCode()).thenReturn("en")
         whenever(jsonObject.optString("name")).thenReturn("wordpress")
 
         listenerCaptor = argumentCaptor()

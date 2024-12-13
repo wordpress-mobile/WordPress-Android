@@ -93,7 +93,7 @@ class ReaderPostRepository @Inject constructor(
             sb.append("&before=").append(UrlUtils.urlEncode(beforeDate))
         }
         sb.append("&meta=site,likes")
-        sb.append("&lang=").append(localeManagerWrapper.getLanguage())
+        sb.append("&lang=").append(localeManagerWrapper.getLanguageCode())
 
         val listener = RestRequest.Listener { jsonObject: JSONObject? ->
             // remember when this tag was updated if newer posts were requested

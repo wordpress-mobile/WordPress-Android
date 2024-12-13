@@ -38,7 +38,7 @@ public class ReaderSearchLogic {
                       + "&number=" + ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST
                       + "&offset=" + offset
                       + "&meta=site,likes"
-                      + "&lang=" + mLocaleManagerWrapper.getLanguage();
+                      + "&lang=" + mLocaleManagerWrapper.getLanguageCode();
 
         RestRequest.Listener listener = jsonObject -> {
             if (jsonObject != null) {

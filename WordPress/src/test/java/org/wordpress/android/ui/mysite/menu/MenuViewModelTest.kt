@@ -56,7 +56,7 @@ class MenuViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        whenever(localeManagerWrapper.getLanguage()).thenReturn("")
+        whenever(localeManagerWrapper.getLanguageCode()).thenReturn("")
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initJetpackCapabilities(scanPurchased = false, backupPurchased = false)
 

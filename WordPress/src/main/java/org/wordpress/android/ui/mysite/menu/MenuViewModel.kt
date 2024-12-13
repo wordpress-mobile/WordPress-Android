@@ -79,7 +79,7 @@ class MenuViewModel @Inject constructor(
     private var isStarted = false
 
     init {
-        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
+        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguageCode())
     }
 
     fun start(quickStartEvent: QuickStartEvent? = null) {
