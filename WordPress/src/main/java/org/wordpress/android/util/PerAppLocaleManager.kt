@@ -32,29 +32,6 @@ class PerAppLocaleManager @Inject constructor(
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
 ) {
-    private fun getCurrentLocale(): Locale {
-        return if (isApplicationLocaleEmpty()) {
-            Locale.getDefault()
-        } else {
-            getApplicationLocaleList()[0] ?: Locale.getDefault()
-        }
-    }
-
-    fun getCurrentLocaleDisplayName(): String = getCurrentLocale().displayName
-
-    private fun getCurrentLocaleLanguageCode(): String = getCurrentLocale().language
-
-    /**
-     * Important: this should only be called after Activity.onCreate()
-     * https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate#getApplicationLocales()
-     */
-    private fun getApplicationLocaleList() = AppCompatDelegate.getApplicationLocales()
-
-    private fun isApplicationLocaleEmpty(): Boolean {
-        val locales = getApplicationLocaleList()
-        return (locales.isEmpty || locales == LocaleListCompat.getEmptyLocaleList())
-    }
-
     /**
      * This can be helpful during development to reset the app locale back to the default
      */
@@ -75,22 +52,14 @@ class PerAppLocaleManager @Inject constructor(
      * that the per-app language is set to the same language.
      */
     fun performMigrationIfNecessary() {
-        if (isApplicationLocaleEmpty()) {
-            val previousLanguage = appPrefsWrapper.getPrefString(OLD_LANGUAGE_PREF_KEY, "")
-            if (previousLanguage?.isNotEmpty() == true) {
-                appLogWrapper.d(
-                    AppLog.T.SETTINGS,
-                    "PerAppLocaleManager: performing migration to AndroidX per-app language prefs"
-                )
-                setCurrentLocaleByLanguageCode(previousLanguage)
-                appPrefsWrapper.removePref(OLD_LANGUAGE_PREF_KEY)
-            } else {
-                appLogWrapper.d(
-                    AppLog.T.SETTINGS,
-                    "PerAppLocaleManager: setting default locale"
-                )
-                setCurrentLocaleByLanguageCode(Locale.getDefault().language)
-            }
+        val previousLanguage = appPrefsWrapper.getPrefString(OLD_LANGUAGE_PREF_KEY, "")
+        if (previousLanguage?.isNotEmpty() == true) {
+            appLogWrapper.d(
+                AppLog.T.SETTINGS,
+                "PerAppLocaleManager: performing migration to AndroidX per-app language prefs"
+            )
+            setCurrentLocaleByLanguageCode(previousLanguage)
+            appPrefsWrapper.removePref(OLD_LANGUAGE_PREF_KEY)
         }
     }
 
@@ -118,7 +87,7 @@ class PerAppLocaleManager @Inject constructor(
         }
 
         // Only update if the language is different
-        if (languageCode != getCurrentLocaleLanguageCode()) {
+        if (languageCode != getLanguageCode()) {
             setCurrentLocaleByLanguageCode(languageCode)
         }
 
@@ -131,7 +100,6 @@ class PerAppLocaleManager @Inject constructor(
         // Language is now part of metadata, so we need to refresh them
         AnalyticsUtils.refreshMetadata(accountStore, siteStore)
 
-
         // When language changed we need to reset the shared prefs reader tag since if we have it stored
         // it's fields can be in a different language and we can get odd behaviors since we will generally fail
         // to get the ReaderTag.equals method recognize the equality based on the ReaderTag.getLabel method.
@@ -142,7 +110,18 @@ class PerAppLocaleManager @Inject constructor(
     }
 
     companion object {
-         // Key previously used for saving the language selection to shared preferences.
+        // Key previously used for saving the language selection to shared preferences.
+        // before we switched to per-app language preferences
         private const val OLD_LANGUAGE_PREF_KEY: String = "language-pref"
+
+        fun getLanguageCode(): String {
+            val appLocales = AppCompatDelegate.getApplicationLocales()
+            val locale = if (appLocales.isEmpty or (appLocales == LocaleListCompat.getEmptyLocaleList())) {
+                Locale.getDefault()
+            } else {
+                appLocales[0] ?: Locale.getDefault()
+            }
+            return locale.language
+        }
     }
 }

@@ -31,11 +31,11 @@ public class LocaleManager {
     private static Pattern languageSplitter = Pattern.compile("_");
 
     /**
-     * Previously the app stored the language code in shared preferences, but now we use
-     * per-app language preferences so just return the device default language code.
+     * Previously the app stored the language code in shared preferences, but now
+     * we use per-app language preferences
      */
     public static String getLanguage() {
-        return LanguageUtils.getCurrentDeviceLanguageCode();
+        return PerAppLocaleManager.Companion.getLanguageCode();
     }
 
     /**
