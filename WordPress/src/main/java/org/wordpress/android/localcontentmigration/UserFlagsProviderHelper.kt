@@ -8,14 +8,12 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFl
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     contextProvider: ContextProvider,
-    localeManagerWrapper: LocaleManagerWrapper
 ) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
         UserFlagsData(
