@@ -32,7 +32,7 @@ public class LocaleManager {
     /**
      * Key used for saving the language selection to shared preferences.
      */
-    private static final String LANGUAGE_KEY = "language-pref";
+    private static final String LANGUAGE_KEY = PerAppLocaleManager.OLD_LANGUAGE_PREF_KEY;
 
     /**
      * Pattern to split a language string (to parse the language and region values).

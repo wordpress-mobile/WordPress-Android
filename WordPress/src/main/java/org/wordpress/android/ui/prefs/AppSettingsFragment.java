@@ -248,7 +248,7 @@ public class AppSettingsFragment extends PreferenceFragment
         mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
         mLanguagePreference.setOnPreferenceClickListener(this);
-        mLanguagePreference.setSummary(mPerAppLocaleManager.getCurrentLocaleDisplayName());
+        mLanguagePreference.setSummary(PerAppLocaleManager.Companion.getLanguageDisplayName());
 
         return view;
     }

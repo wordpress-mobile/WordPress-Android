@@ -464,6 +464,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         AppPrefs.prefs().edit().putString(key, value).apply()
     }
 
+    fun removePref(key: String) {
+        AppPrefs.prefs().edit().remove(key).apply()
+    }
+
     fun getDebugBooleanPref(key: String, default: Boolean = false) =
         buildConfigWrapper.isDebug() && AppPrefs.getRawBoolean({ key }, default)
 
