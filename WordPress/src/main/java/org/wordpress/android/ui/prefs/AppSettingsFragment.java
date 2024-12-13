@@ -57,7 +57,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -100,7 +99,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject LocaleProvider mLocaleProvider;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -596,7 +594,7 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAppLocalePickerClick() {
-        // if  the device is on API 33+, take the user to the system app settings to change the language
+        // if the device is on API 33+, take the user to the system app settings to change the language
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             mPerAppLocaleManager.openAppLanguageSettings(getContext());
             return true;

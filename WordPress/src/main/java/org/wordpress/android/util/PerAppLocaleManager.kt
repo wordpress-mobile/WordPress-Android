@@ -42,7 +42,7 @@ class PerAppLocaleManager @Inject constructor(
 
     fun getCurrentLocaleDisplayName(): String = getCurrentLocale().displayName
 
-    fun getCurrentLocaleLanguageCode(): String = getCurrentLocale().language
+    private fun getCurrentLocaleLanguageCode(): String = getCurrentLocale().language
 
     /**
      * Important: this should only be called after Activity.onCreate()
@@ -118,7 +118,7 @@ class PerAppLocaleManager @Inject constructor(
         }
 
         // Only update if the language is different
-        if ((languageCode != getCurrentLocaleLanguageCode())) {
+        if (languageCode != getCurrentLocaleLanguageCode()) {
             setCurrentLocaleByLanguageCode(languageCode)
         }
 
