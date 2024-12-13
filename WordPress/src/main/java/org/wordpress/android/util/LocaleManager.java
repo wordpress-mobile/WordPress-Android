@@ -1,9 +1,7 @@
 package org.wordpress.android.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -31,15 +29,6 @@ public class LocaleManager {
      * Pattern to split a language string (to parse the language and region values).
      */
     private static Pattern languageSplitter = Pattern.compile("_");
-
-    /**
-     * Activate the locale associated with the provided context.
-     *
-     * @param context The current context.
-     */
-    public static Context setLocale(Context context) {
-        return updateResources(context, getLanguage());
-    }
 
     /**
      * Previously the app stored the language code in shared preferences, but now we use
@@ -87,29 +76,6 @@ public class LocaleManager {
             langID = deviceLanguageCode;
         }
         return langID;
-    }
-
-    /**
-     * Update resources for the current session.
-     *
-     * @param context  The current active context
-     * @param language The 2-letter language code (example "en")
-     * @return The modified context containing the updated localized resources
-     */
-    @SuppressLint("AppBundleLocaleChanges")
-    private static Context updateResources(Context context, String language) {
-        Locale locale = languageLocale(language);
-        Locale.setDefault(locale);
-
-        Resources res = context.getResources();
-        Configuration config = new Configuration(res.getConfiguration());
-
-        // NOTE: Earlier versions of Android require both of these to be set, otherwise
-        // RTL may not be implemented properly.
-        config.setLocale(locale);
-        context = context.createConfigurationContext(config);
-
-        return context;
     }
 
     /**

@@ -97,7 +97,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.ProfilingUtils
@@ -1095,7 +1094,7 @@ class AppInitializer @Inject constructor(
                 check(context != null) { "Context must be initialized before calling updateContextLocale" }
                 return@run context
             }
-            this.context = LocaleManager.setLocale(context)
+            this.context = context
         }
     }
 }

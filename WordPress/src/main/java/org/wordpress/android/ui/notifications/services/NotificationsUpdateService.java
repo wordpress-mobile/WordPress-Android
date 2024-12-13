@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -13,11 +12,6 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 
 public class NotificationsUpdateService extends Service implements NotificationsUpdateLogic.ServiceCompletionListener {
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     public IBinder onBind(Intent intent) {

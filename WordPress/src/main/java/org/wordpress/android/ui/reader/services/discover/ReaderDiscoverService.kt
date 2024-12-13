@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.services.discover
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,7 +13,6 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,10 +37,6 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
 
     override fun onBind(intent: Intent): IBinder? {
         return null
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
     override fun onCreate() {
