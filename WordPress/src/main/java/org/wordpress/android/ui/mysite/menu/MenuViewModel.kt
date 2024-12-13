@@ -36,7 +36,6 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -264,10 +263,6 @@ class MenuViewModel @Inject constructor(
                 _refreshAppLanguage.value = languageCode
             }
         }
-    }
-
-    fun setAppLanguage(locale: Locale) {
-        // TODO remove this
     }
 
     override fun onCleared() {

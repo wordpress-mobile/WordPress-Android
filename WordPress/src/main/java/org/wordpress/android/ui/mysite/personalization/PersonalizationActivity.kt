@@ -33,6 +33,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -54,11 +55,9 @@ import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.LocaleManager
 
 @AndroidEntryPoint
 class PersonalizationActivity : AppCompatActivity() {
@@ -68,11 +67,7 @@ class PersonalizationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppThemeM3 {
-                val language by viewModel.appLanguage.observeAsState("")
-
-                LocaleAwareComposable(
-                    locale = LocaleManager.languageLocale(language),
-                ) {
+                CompositionLocalProvider{
                     viewModel.start()
                     PersonalizationScreen()
                 }
