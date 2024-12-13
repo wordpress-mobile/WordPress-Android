@@ -42,7 +42,7 @@ public class NotificationsUpdateJobService extends JobService
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update job service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(this), this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(), this);
     }
 
     @Override

@@ -11,7 +11,7 @@ class LocaleManagerWrapper
     fun getLocale(): Locale = Locale.getDefault()
     fun getTimeZone(): TimeZone = TimeZone.getDefault()
     fun getCurrentCalendar(): Calendar = Calendar.getInstance(getLocale())
-    fun getLanguage(): String = LocaleManager.getLanguage(context)
+    fun getLanguage(): String = LocaleManager.getLanguage()
     fun isSameLanguage(language: String): Boolean = LocaleManager.isSameLanguage(language)
     fun setLocale(context: Context): Context = LocaleManager.setLocale(context)
 }
