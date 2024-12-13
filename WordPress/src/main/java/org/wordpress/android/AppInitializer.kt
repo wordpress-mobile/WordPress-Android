@@ -950,8 +950,7 @@ class AppInitializer @Inject constructor(
      */
     private inner class MemoryAndConfigChangeMonitor : ComponentCallbacks2 {
         override fun onConfigurationChanged(newConfig: Configuration) {
-            // Make sure the in-app locale is correct
-            perAppLocaleManager.checkAndUpdateOldLanguagePrefKey()
+            // Do nothing
         }
 
         override fun onLowMemory() {
