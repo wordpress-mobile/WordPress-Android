@@ -7,6 +7,6 @@ agents:
 steps:
   - label: "dependency cache"
     command: |
-      echo "--- 💾 Caching"
+      echo "--- 💾 Download and Cache Dependencies"
       .buildkite/commands/cache-dependencies.sh
     plugins: [$CI_TOOLKIT]
