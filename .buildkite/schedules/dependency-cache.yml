@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+agents:
+  queue: "android"
+
+steps:
+  - label: "dependency cache"
+    command: |
+      echo "--- 💾 Caching"
+      .buildkite/commands/cache-dependencies.sh
+    plugins: [$CI_TOOLKIT]
