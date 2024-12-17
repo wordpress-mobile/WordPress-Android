@@ -10,20 +10,26 @@ bundle exec fastlane run configure_apply
 
 echo "--- 🛠 Download Mobile App Dependencies [Assemble Jetpack App]"
 ./gradlew assembleJetpackJalapenoDebug
+echo ""
 
 echo "--- 🧹 Download Lint Dependencies [Lint Jetpack App]"
 ./gradlew lintJetpackJalapenoDebug
+echo ""
 
 echo "--- 🧹 Download Detekt Dependencies [Run Detekt]"
 ./gradlew detekt
+echo ""
 
 echo "--- 🧹 Download Checkstyle Dependencies [Run Checkstyle]"
 ./gradlew checkstyle
+echo ""
 
 echo "--- 🧪 Download Unit Test Dependencies [Assemble Unit Tests]"
 ./gradlew assembleJetpackJalapenoDebugUnitTest libs:processors:testClasses libs:image-editor:assembleDebugUnitTest libs:fluxc:assembleDebugUnitTest libs:login:assembleDebugUnitTest
+echo ""
 
 echo "--- 🧪 Download Android Test Dependencies [Assemble Android Tests]"
 ./gradlew assembleJetpackJalapenoDebugAndroidTest
+echo ""
 
 save_gradle_dependency_cache
