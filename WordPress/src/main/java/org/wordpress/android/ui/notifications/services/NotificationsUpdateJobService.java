@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications.services;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.Context;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
@@ -13,11 +12,6 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 public class NotificationsUpdateJobService extends JobService
         implements NotificationsUpdateLogic.ServiceCompletionListener {
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -42,7 +36,7 @@ public class NotificationsUpdateJobService extends JobService
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update job service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(this), this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(), this);
     }
 
     @Override

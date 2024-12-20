@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentsDetailsActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 
-class UnifiedCommentsDetailsActivity : LocaleAwareActivity() {
+class UnifiedCommentsDetailsActivity : AppCompatActivity() {
     private var binding: UnifiedCommentsDetailsActivityBinding? = null
     private lateinit var pagerAdapter: UnifiedCommentsDetailPagerAdapter
 

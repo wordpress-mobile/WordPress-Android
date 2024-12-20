@@ -532,7 +532,7 @@ public class NotificationsProcessingService extends Service {
             }
 
             HashMap<String, String> params = new HashMap<>();
-            params.put("locale", LocaleManager.getLanguage(mContext));
+            params.put("locale", LocaleManager.getLanguage());
             WordPress.getRestClientUtils().getNotification(params, noteId, listener, errorListener);
         }
 

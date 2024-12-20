@@ -12,7 +12,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
@@ -28,7 +28,7 @@ const val POST_TITLE = "POST_TITLE"
 const val POST_URL = "POST_URL"
 
 @AndroidEntryPoint
-class StatsDetailActivity : LocaleAwareActivity() {
+class StatsDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = StatsDetailActivityBinding.inflate(layoutInflater)

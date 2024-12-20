@@ -123,7 +123,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChang
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.isShowing
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary
@@ -263,7 +263,7 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @Suppress("LargeClass")
-class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
@@ -2571,7 +2571,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
          get() {
             val postType = if (isPage) "page" else "post"
             val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = LocaleManager.getLanguage(this@EditPostActivity)
+            val languageString = LocaleManager.getLanguage()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based

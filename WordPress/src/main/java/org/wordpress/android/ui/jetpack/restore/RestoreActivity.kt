@@ -3,10 +3,10 @@ package org.wordpress.android.ui.jetpack.restore
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.databinding.RestoreActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.R as AndroidR
 
-class RestoreActivity : LocaleAwareActivity() {
+class RestoreActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(RestoreActivityBinding.inflate(layoutInflater)) {

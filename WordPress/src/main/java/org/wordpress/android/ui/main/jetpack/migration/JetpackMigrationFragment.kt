@@ -10,9 +10,9 @@ import androidx.activity.addCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.JETPACK_MIGRATION_HELP
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
@@ -45,7 +44,6 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.Notificatio
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -65,12 +63,7 @@ class JetpackMigrationFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppThemeM3 {
-                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
-
-                LocaleAwareComposable(
-                    locale = LocaleManager.languageLocale(userLanguage),
-                    onLocaleChange = viewModel::setAppLanguage
-                ) {
+                CompositionLocalProvider {
                     JetpackMigrationScreen()
                 }
             }

@@ -34,11 +34,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +59,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -69,7 +68,6 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
@@ -96,12 +94,7 @@ class MenuActivity : AppCompatActivity() {
         initObservers()
         setContent {
             AppThemeM3 {
-                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
-
-                LocaleAwareComposable(
-                    locale = LocaleManager.languageLocale(userLanguage),
-                    onLocaleChange = viewModel::setAppLanguage
-                ) {
+                CompositionLocalProvider {
                     viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
                     MenuScreen(
                         onBackPressed = onBackPressedDispatcher::onBackPressed

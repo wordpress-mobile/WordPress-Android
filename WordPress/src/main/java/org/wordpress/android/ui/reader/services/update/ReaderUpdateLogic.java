@@ -64,7 +64,7 @@ public class ReaderUpdateLogic {
     public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
         app.component().inject(this);
-        mLanguage = LocaleManager.getLanguage(app);
+        mLanguage = LocaleManager.getLanguage();
         mContext = context;
     }
 

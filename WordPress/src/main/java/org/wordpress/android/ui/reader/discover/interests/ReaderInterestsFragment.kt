@@ -109,7 +109,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
 
         viewModel.start(
-            LocaleManager.getLanguage(WordPress.getContext()),
+            LocaleManager.getLanguage(),
             parentViewModel,
             entryPoint
         )

@@ -97,7 +97,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.PerAppLocaleManager
@@ -950,13 +949,7 @@ class AppInitializer @Inject constructor(
      */
     private inner class MemoryAndConfigChangeMonitor : ComponentCallbacks2 {
         override fun onConfigurationChanged(newConfig: Configuration) {
-            // If per-app locale is enabled make sure the in-app locale is correct,
-            // otherwise reapply in-app locale on configuration change
-            if (perAppLocaleManager.isPerAppLanguagePrefsEnabled()) {
-                perAppLocaleManager.checkAndUpdateOldLanguagePrefKey()
-            } else {
-                LocaleManager.setLocale(context)
-            }
+            // Do nothing
         }
 
         override fun onLowMemory() {
@@ -1090,22 +1083,6 @@ class AppInitializer @Inject constructor(
                 bitmapCache = BitmapLruCache(cacheSize)
             }
             return bitmapCache as BitmapLruCache
-        }
-
-        /**
-         * Update locale of the static context when language is changed.
-         *
-         * When calling this method the application context **must** be already initialized.
-         * This is already the case in `Activity`, `Fragment` or `View`.
-         *
-         * When called from other places (E.g. a `TestRule`) we should provide it in the [appContext] parameter.
-         */
-        fun updateContextLocale(appContext: Context? = null) {
-            val context = appContext ?: run {
-                check(context != null) { "Context must be initialized before calling updateContextLocale" }
-                return@run context
-            }
-            this.context = LocaleManager.setLocale(context)
         }
     }
 }

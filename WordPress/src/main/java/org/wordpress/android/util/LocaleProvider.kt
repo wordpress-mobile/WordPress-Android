@@ -13,7 +13,7 @@ class LocaleProvider @Inject constructor() {
     }
 
     fun createSortedLocalizedLanguageDisplayStrings(
-        availableLocales: Array<String>,
+        availableLocales: Array<CharSequence>,
         targetLocale: Locale
     ): Triple<Array<String>, Array<String>, Array<String>>? {
         return LocaleManager.createSortedLanguageDisplayStrings(availableLocales, targetLocale)

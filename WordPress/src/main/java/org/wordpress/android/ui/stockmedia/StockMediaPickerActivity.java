@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
@@ -41,7 +42,6 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
@@ -56,8 +56,8 @@ import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -68,7 +68,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StockMediaPickerActivity extends LocaleAwareActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 

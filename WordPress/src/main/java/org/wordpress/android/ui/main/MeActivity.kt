@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class MeActivity : LocaleAwareActivity() {
+class MeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.me_activity)
