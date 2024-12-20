@@ -39,6 +39,7 @@ steps:
 
       - label: "🕵️ checkstyle"
         command: |
+          .buildkite/commands/restore-cache.sh
           ./gradlew checkstyle
         plugins: [$CI_TOOLKIT]
         artifact_paths:
@@ -46,19 +47,24 @@ steps:
 
       - label: "🕵️ detekt"
         command: |
+          .buildkite/commands/restore-cache.sh
           ./gradlew detekt
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
       - label: "🕵️ Lint WordPress"
-        command: ".buildkite/commands/lint.sh wordpress"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/lint.sh wordpress"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
       - label: "🕵️ Lint Jetpack"
-        command: ".buildkite/commands/lint.sh jetpack"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/lint.sh jetpack"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
@@ -75,7 +81,9 @@ steps:
   - group: "🔬 Unit Tests"
     steps:
       - label: "🔬 Unit Test WordPress"
-        command: ".buildkite/commands/run-unit-tests.sh wordpress"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/run-unit-tests.sh wordpress"
         plugins:
           - $CI_TOOLKIT
           - $TEST_COLLECTOR :
@@ -85,7 +93,9 @@ steps:
           - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test Processors"
-        command: ".buildkite/commands/run-unit-tests.sh processors"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/run-unit-tests.sh processors"
         plugins:
           - $CI_TOOLKIT
           - $TEST_COLLECTOR :
@@ -95,7 +105,9 @@ steps:
           - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test Image Editor"
-        command: ".buildkite/commands/run-unit-tests.sh image-editor"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/run-unit-tests.sh image-editor"
         plugins:
           - $CI_TOOLKIT
           - $TEST_COLLECTOR :
@@ -105,7 +117,9 @@ steps:
           - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test FluxC"
-        command: ".buildkite/commands/run-unit-tests.sh fluxc"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/run-unit-tests.sh fluxc"
         plugins:
           - $CI_TOOLKIT
           - $TEST_COLLECTOR:
@@ -115,7 +129,9 @@ steps:
           - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test Login"
-        command: ".buildkite/commands/run-unit-tests.sh login"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/run-unit-tests.sh login"
         plugins:
           - $CI_TOOLKIT
           - $TEST_COLLECTOR:
@@ -130,7 +146,9 @@ steps:
   # - group: "🔬 Instrumented tests"
   #   steps:
   #     - label: ":wordpress: 🔬 Instrumented tests"
-  #       command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
+  #       command: |
+  #         .buildkite/commands/restore-cache.sh
+  #         ".buildkite/commands/run-instrumented-tests.sh wordpress"
   #       plugins:
   #         - $CI_TOOLKIT
   #         - $TEST_COLLECTOR :
@@ -140,7 +158,9 @@ steps:
   #         - "**/build/instrumented-tests/**/*"
 
   #     - label: ":jetpack: 🔬 Instrumented tests"
-  #       command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
+  #       command: |
+  #         .buildkite/commands/restore-cache.sh
+  #         ".buildkite/commands/run-instrumented-tests.sh jetpack"
   #       plugins:
   #         - $CI_TOOLKIT
   #         - $TEST_COLLECTOR :
@@ -155,11 +175,15 @@ steps:
   - group: "📲 Prototype Builds"
     steps:
       - label: ":wordpress: :android: Prototype Build"
-        command: ".buildkite/commands/prototype-build.sh wordpress"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
 
       - label: ":jetpack: :android: Prototype Build"
-        command: ".buildkite/commands/prototype-build.sh jetpack"
+        command: |
+          .buildkite/commands/restore-cache.sh
+          ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
