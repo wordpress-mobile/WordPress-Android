@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-09 16:54:09+0000
+Translation-Revision-Date: 2024-12-19 09:54:11+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">تفضيلات اللغات التجريبية لكل تطبيق</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">عنصر نائب</string>
     <string name="personalization_screen_shortcuts_accessibility_label">تبديل اختصار %s</string>
     <string name="personalization_screen_card_accessibility_label">تبديل بطاقة %s</string>

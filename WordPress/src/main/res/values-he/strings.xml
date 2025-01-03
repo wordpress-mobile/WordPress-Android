@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-08-29 15:54:09+0000
+Translation-Revision-Date: 2024-12-18 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">העדפות שפה ניסיוניות לפי אפליקציה</string>
     <string name="media_pager_remove_item_content_description">להסיר את הפריט ⁦%1$d⁩</string>
     <string name="feedback_form_add_attachments">להוסיף קבצים מצורפים</string>
     <string name="feedback_form_unable_to_create_tempfile">לא ניתן ליצור קובץ זמני</string>
