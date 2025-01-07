@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -40,7 +41,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
@@ -117,7 +117,7 @@ import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 @AndroidEntryPoint
-public class ReaderPostPagerActivity extends LocaleAwareActivity {
+public class ReaderPostPagerActivity extends AppCompatActivity {
     /**
      * Type of URL intercepted
      */

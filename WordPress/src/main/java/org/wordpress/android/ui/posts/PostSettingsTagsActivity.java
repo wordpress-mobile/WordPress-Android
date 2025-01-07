@@ -8,17 +8,17 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
-public class PostSettingsTagsActivity extends LocaleAwareActivity implements TagsSelectedListener {
+public class PostSettingsTagsActivity extends AppCompatActivity implements TagsSelectedListener {
     public static final String KEY_TAGS = "KEY_TAGS";
     public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;

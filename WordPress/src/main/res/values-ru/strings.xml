@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-11 09:54:12+0000
+Translation-Revision-Date: 2024-12-18 15:54:10+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Экспериментальные языковые настройки для приложений в отдельности</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">заполнитель</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Включить ярлык %s</string>
     <string name="personalization_screen_card_accessibility_label">Включить карточку %s</string>

@@ -6,10 +6,10 @@ import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.AppSettingsActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 
 @AndroidEntryPoint
-class AppSettingsActivity : LocaleAwareActivity() {
+class AppSettingsActivity : AppCompatActivity() {
     private lateinit var binding: AppSettingsActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {

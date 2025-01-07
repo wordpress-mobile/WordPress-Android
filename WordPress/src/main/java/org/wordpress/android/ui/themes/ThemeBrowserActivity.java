@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
@@ -38,7 +39,6 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -60,7 +60,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback,
+public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback,
         ScrollableViewInitializedListener {
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";

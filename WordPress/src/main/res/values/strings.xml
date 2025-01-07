@@ -963,7 +963,6 @@
     <string name="experimental_features_screen_title">Experimental Features</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
-    <string name="experimental_per_app_language_prefs">Experimental per-app language preferences</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>

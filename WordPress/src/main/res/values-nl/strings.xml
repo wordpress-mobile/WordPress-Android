@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-05 15:44:37+0000
+Translation-Revision-Date: 2024-12-16 17:11:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Experimentele taal voorkeuren per app</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">plaatshouder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Toggle %s snelkoppeling</string>
     <string name="personalization_screen_card_accessibility_label">Toggle %s kaart</string>

@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenPlans.PlanDetails
@@ -26,7 +26,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
+class DomainRegistrationActivity : AppCompatActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
         CTA_DOMAIN_CREDIT_REDEMPTION,

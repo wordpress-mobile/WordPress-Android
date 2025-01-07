@@ -44,7 +44,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
@@ -97,6 +97,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject QuickStartTracker mQuickStartTracker;
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -532,7 +533,7 @@ public class NotificationsProcessingService extends Service {
             }
 
             HashMap<String, String> params = new HashMap<>();
-            params.put("locale", LocaleManager.getLanguage(mContext));
+            params.put("locale", mPerAppLocaleManager.getCurrentLocaleLanguageCode());
             WordPress.getRestClientUtils().getNotification(params, noteId, listener, errorListener);
         }
 

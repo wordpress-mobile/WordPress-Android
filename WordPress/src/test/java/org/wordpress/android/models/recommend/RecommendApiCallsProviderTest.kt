@@ -23,8 +23,8 @@ import org.wordpress.android.R
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.networking.RestClientUtils
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.RestClientProvider
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -51,7 +51,7 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
     lateinit var restClientUtils: RestClientUtils
 
     @Mock
-    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Mock
     lateinit var jsonObject: JSONObject
@@ -67,12 +67,12 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
             analyticsUtilsWrapper,
             networkUtilsWrapper,
             restClientProvider,
-            localeManagerWrapper
+            perAppLocaleManager
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(contextProvider.getContext()).thenReturn(context)
         whenever(restClientProvider.getRestClientUtilsV2()).thenReturn(restClientUtils)
-        whenever(localeManagerWrapper.getLanguage()).thenReturn("en")
+        whenever(perAppLocaleManager.getCurrentLocaleLanguageCode()).thenReturn("en")
         whenever(jsonObject.optString("name")).thenReturn("wordpress")
 
         listenerCaptor = argumentCaptor()

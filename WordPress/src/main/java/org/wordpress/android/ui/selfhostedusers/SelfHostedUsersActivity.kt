@@ -9,13 +9,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
-class SelfHostedUsersActivity : LocaleAwareActivity() {
+class SelfHostedUsersActivity : AppCompatActivity() {
     private val viewModel by viewModels<SelfHostedUsersViewModel>()
     private var site: SiteModel? = null
 

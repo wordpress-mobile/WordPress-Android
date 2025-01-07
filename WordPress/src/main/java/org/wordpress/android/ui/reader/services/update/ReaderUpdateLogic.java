@@ -29,7 +29,7 @@ import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.PerAppLocaleManager;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -60,11 +60,12 @@ public class ReaderUpdateLogic {
 
     @Inject AccountStore mAccountStore;
     @Inject TagUpdateClientUtilsProvider mClientUtilsProvider;
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
         app.component().inject(this);
-        mLanguage = LocaleManager.getLanguage(app);
+        mLanguage = mPerAppLocaleManager.getCurrentLocaleLanguageCode();
         mContext = context;
     }
 

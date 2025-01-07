@@ -5,7 +5,7 @@ import android.app.job.JobService;
 
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManagerWrapper;
+import org.wordpress.android.util.PerAppLocaleManager;
 
 import javax.inject.Inject;
 
@@ -22,7 +22,7 @@ import static org.wordpress.android.ui.reader.services.search.ReaderSearchServic
 public class ReaderSearchJobService extends JobService implements ServiceCompletionListener {
     private ReaderSearchLogic mReaderSearchLogic;
 
-    @Inject LocaleManagerWrapper mLocaleManagerWrapper;
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     @Override public boolean onStartJob(JobParameters params) {
         if (params.getExtras() != null && params.getExtras().getString(ARG_QUERY) != null) {
@@ -42,7 +42,7 @@ public class ReaderSearchJobService extends JobService implements ServiceComplet
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderSearchLogic = new ReaderSearchLogic(this, mLocaleManagerWrapper);
+        mReaderSearchLogic = new ReaderSearchLogic(this, mPerAppLocaleManager);
         AppLog.i(AppLog.T.READER, "reader search job service > created");
     }
 

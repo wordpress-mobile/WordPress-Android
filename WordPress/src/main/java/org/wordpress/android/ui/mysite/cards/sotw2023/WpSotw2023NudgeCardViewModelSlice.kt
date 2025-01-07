@@ -12,7 +12,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.time.Instant
@@ -22,7 +22,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private val featureConfig: WpSotw2023NudgeFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val perAppLocaleManager: PerAppLocaleManager,
     private val tracker: WpSotw2023NudgeCardAnalyticsTracker,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -75,7 +75,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         val now = dateTimeUtilsWrapper.getInstantNow()
         val isDateEligible = now.isAfter(eventTime)
 
-        val currentLanguage = localeManagerWrapper.getLanguage()
+        val currentLanguage = perAppLocaleManager.getCurrentLocaleLanguageCode()
         val isLanguageEligible = currentLanguage.startsWith(TARGET_LANGUAGE, ignoreCase = true)
 
         return featureConfig.isEnabled() &&

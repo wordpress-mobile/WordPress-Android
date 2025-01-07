@@ -123,7 +123,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChang
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.isShowing
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary
@@ -215,10 +215,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
@@ -263,7 +262,7 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @Suppress("LargeClass")
-class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
@@ -364,7 +363,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Inject lateinit var editorMedia: EditorMedia
 
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
@@ -2571,7 +2570,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
          get() {
             val postType = if (isPage) "page" else "post"
             val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = LocaleManager.getLanguage(this@EditPostActivity)
+            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based

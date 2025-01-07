@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-10 09:54:11+0000
+Translation-Revision-Date: 2024-12-26 01:37:03+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">앱 별 실험적 언어 설정</string>
+    <string name="default_web_client_id" a8c-src-lib="module:login">플레이스홀더</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s 단축키 설정/해제</string>
     <string name="personalization_screen_card_accessibility_label">%s 카드 설정/해제</string>
+    <string name="user_avatar_content_description">사용자 %s의 아바타</string>
     <string name="user_row_content_description">사용자 %s에 대한 상세 정보 표시</string>
     <string name="biographical_info_empty">제공된 정보 없음</string>
     <string name="biographical_info">개인 정보</string>
     <string name="about_the_user">사용자에 대하여</string>
+    <string name="website">웹사이트</string>
     <string name="contact_info">연락처</string>
     <string name="nickname">닉네임</string>
+    <string name="name">이름</string>
+    <string name="no_users">사용자 없음</string>
+    <string name="user">사용자</string>
+    <string name="users">사용자</string>
     <string name="me_btn_help_and_support">도움말 및 지원</string>
     <string name="me_btn_experimental_features">실험적 기능</string>
+    <string name="more_content_description_plans">요금제 더 보기</string>
+    <string name="more_content_description_recent_activity">최근 활동 더 보기</string>
+    <string name="more_content_description_pages">페이지 더 보기</string>
     <string name="more_content_description_posts">글 더 보기</string>
     <string name="more_content_description_quick_start">퀵 스타트 더 보기</string>
+    <string name="more_content_description_today_stats">오늘의 통계 더 보기</string>
+    <string name="more_content_description_blogging_prompts">프롬프트 더 보기</string>
+    <string name="more_content_description_promote_blaze">Blaze 더 보기</string>
     <string name="reader_toast_success_undo">블로그 차단 해제됨</string>
     <string name="feedback_form_note_link">지원팀에 문의\" 화면을 사용해 주세요.</string>
     <string name="feedback_form_note_text">이 양식은 지원 양식이 아니므로 당사에서 답변해 드릴 수 없습니다. 지원이 필요하시면 \"</string>
@@ -25,6 +39,10 @@ Language: ko_KR
     <string name="experimental_block_editor">실험용 블록 에디터</string>
     <string name="experimental_features_screen_title">실험적 기능</string>
     <string name="back">뒤로</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">이 앱에서</string>
+    <string name="dialog_confirm_autosave_restore_button">다른 기기에서</string>
+    <string name="item_selected">선택됨</string>
+    <string name="send_feedback">피드백 보내기</string>
     <string name="media_pager_remove_item_content_description">항목 %1$d 제거</string>
     <string name="feedback_form_add_attachments">첨부 파일 추가</string>
     <string name="feedback_form_unable_to_create_tempfile">임시 파일 삭제 불가</string>

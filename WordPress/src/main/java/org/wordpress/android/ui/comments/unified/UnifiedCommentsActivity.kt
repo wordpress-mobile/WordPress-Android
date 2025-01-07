@@ -13,7 +13,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
 import org.wordpress.android.databinding.UnifiedCommentActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentFilter.APPROVED
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
-class UnifiedCommentsActivity : LocaleAwareActivity() {
+class UnifiedCommentsActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

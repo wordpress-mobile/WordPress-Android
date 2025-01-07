@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,7 +39,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
@@ -71,7 +71,7 @@ import javax.inject.Inject;
  * activity which shows the user's subscriptions - includes
  * followed tags and followed blogs
  */
-public class ReaderSubsActivity extends LocaleAwareActivity
+public class ReaderSubsActivity extends AppCompatActivity
         implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private EditText mEditAdd;
     private FloatingActionButton mFabButton;

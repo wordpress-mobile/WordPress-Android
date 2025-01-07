@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,14 +39,11 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.extensions.setContent
-import javax.inject.Inject
 
 val experimentalFeatures = listOf(
     Feature(key = "experimental_block_editor"),
     Feature(key = "experimental_block_editor_theme_styles"),
-    Feature(key = PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY)
 )
 
 data class Feature(
@@ -55,10 +51,7 @@ data class Feature(
     val key: String,
 )
 
-@HiltViewModel
-class FeatureViewModel @Inject constructor(
-    private val perAppLocaleManager: PerAppLocaleManager
-) : ViewModel() {
+class FeatureViewModel : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<String, Feature>>(emptyMap())
     val switchStates: StateFlow<Map<String, Feature>> = _switchStates.asStateFlow()
 
@@ -74,18 +67,6 @@ class FeatureViewModel @Inject constructor(
             currentStates.toMutableMap().apply {
                 this[key] = Feature(enabled, key)
                 AppPrefs.setManualFeatureConfig(enabled, key)
-            }
-        }
-
-        featureToggled(key, enabled)
-    }
-
-    private fun featureToggled(key: String, enabled: Boolean) {
-        if (key == PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY) {
-            if (enabled) {
-                perAppLocaleManager.performMigrationIfNecessary()
-            } else {
-                perAppLocaleManager.resetApplicationLocale()
             }
         }
     }

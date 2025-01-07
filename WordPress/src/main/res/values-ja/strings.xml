@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-08-29 09:54:07+0000
+Translation-Revision-Date: 2024-12-18 10:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">アプリ別言語設定 (試験用)</string>
+    <string name="default_web_client_id" a8c-src-lib="module:login">プレースホルダー</string>
+    <string name="personalization_screen_shortcuts_accessibility_label">%s ショートカットを切り替え</string>
+    <string name="personalization_screen_card_accessibility_label">%s カードを切り替え</string>
+    <string name="user_avatar_content_description">ユーザー %s のアバター</string>
+    <string name="user_row_content_description">ユーザー %s の詳細を表示</string>
+    <string name="biographical_info_empty">記載なし</string>
+    <string name="biographical_info">プロフィール情報</string>
+    <string name="about_the_user">ユーザーについて</string>
+    <string name="website">サイト</string>
+    <string name="contact_info">連絡先情報</string>
+    <string name="nickname">ニックネーム</string>
+    <string name="name">名前</string>
+    <string name="no_users">ユーザーなし</string>
+    <string name="user">ユーザー</string>
+    <string name="users">ユーザー</string>
+    <string name="me_btn_help_and_support">ヘルプとサポート</string>
+    <string name="me_btn_experimental_features">試験用の機能</string>
+    <string name="more_content_description_plans">プランをさらに表示</string>
+    <string name="more_content_description_recent_activity">最近のアクティビティをさらに表示</string>
+    <string name="more_content_description_pages">ページをさらに表示</string>
+    <string name="more_content_description_posts">投稿をさらに表示</string>
+    <string name="more_content_description_quick_start">クイックスタートをさらに表示</string>
+    <string name="more_content_description_today_stats">今日の統計情報をさらに表示</string>
+    <string name="more_content_description_blogging_prompts">プロンプトをさらに表示</string>
+    <string name="more_content_description_promote_blaze">Blaze をさらに表示</string>
+    <string name="reader_toast_success_undo">ブログのブロックが解除されました</string>
+    <string name="feedback_form_note_link">「サポートに連絡」画面です。</string>
+    <string name="feedback_form_note_text">これはサポートフォームではなく、当社からは返信できないことにご注意ください。 サポートが必要な場合は、次を使用してください:</string>
+    <string name="experimental_block_editor_theme_styles">試験用のブロックエディターのスタイル</string>
+    <string name="experimental_block_editor">試験用のブロックエディター</string>
+    <string name="experimental_features_screen_title">試験用の機能</string>
+    <string name="back">戻る</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">このアプリから</string>
+    <string name="dialog_confirm_autosave_restore_button">別の端末から</string>
+    <string name="item_selected">選択済み</string>
     <string name="media_pager_remove_item_content_description">アイテム%1$dを削除</string>
     <string name="feedback_form_add_attachments">添付ファイルを追加</string>
     <string name="feedback_form_unable_to_create_tempfile">一時ファイルを作成できません</string>

@@ -8,7 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
@@ -21,7 +21,7 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PostSignupInterstitialActivity : LocaleAwareActivity() {
+class PostSignupInterstitialActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostSignupInterstitialViewModel

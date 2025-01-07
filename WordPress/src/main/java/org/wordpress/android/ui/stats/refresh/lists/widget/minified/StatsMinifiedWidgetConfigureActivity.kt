@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.StatsMinifiedWidgetConfigureActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class StatsMinifiedWidgetConfigureActivity : LocaleAwareActivity() {
+class StatsMinifiedWidgetConfigureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(StatsMinifiedWidgetConfigureActivityBinding.inflate(layoutInflater)) {

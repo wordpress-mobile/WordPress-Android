@@ -22,7 +22,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.UrlUtils
 import java.util.Locale
 import javax.inject.Inject
@@ -32,7 +32,7 @@ import kotlin.coroutines.resumeWithException
 
 @Reusable
 class ReaderPostRepository @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val perAppLocaleManager: PerAppLocaleManager,
     private val localSource: ReaderPostLocalSource,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -93,7 +93,7 @@ class ReaderPostRepository @Inject constructor(
             sb.append("&before=").append(UrlUtils.urlEncode(beforeDate))
         }
         sb.append("&meta=site,likes")
-        sb.append("&lang=").append(localeManagerWrapper.getLanguage())
+        sb.append("&lang=").append(perAppLocaleManager.getCurrentLocaleLanguageCode())
 
         val listener = RestRequest.Listener { jsonObject: JSONObject? ->
             // remember when this tag was updated if newer posts were requested

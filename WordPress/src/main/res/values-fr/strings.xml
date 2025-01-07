@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-10 11:54:10+0000
+Translation-Revision-Date: 2024-12-18 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Préférences linguistiques par application – expérimental</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">texte indicatif</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
