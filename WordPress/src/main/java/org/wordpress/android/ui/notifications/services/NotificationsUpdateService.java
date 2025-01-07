@@ -6,12 +6,19 @@ import android.os.IBinder;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.PerAppLocaleManager;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
+@AndroidEntryPoint
 public class NotificationsUpdateService extends Service implements NotificationsUpdateLogic.ServiceCompletionListener {
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
+
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -22,7 +29,10 @@ public class NotificationsUpdateService extends Service implements Notifications
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(), this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(
+                mPerAppLocaleManager.getCurrentLocaleLanguageCode(),
+                this
+        );
     }
 
     @Override

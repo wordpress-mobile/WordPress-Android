@@ -31,6 +31,19 @@ class PerAppLocaleManager @Inject constructor(
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
 ) {
+    private fun getCurrentLocale(): Locale {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        return if (locales.isEmpty || locales == LocaleListCompat.getEmptyLocaleList()) {
+            Locale.getDefault()
+        } else {
+            locales[0] ?: Locale.getDefault()
+        }
+    }
+
+    fun getCurrentLocaleDisplayName(): String = getCurrentLocale().displayName
+
+    fun getCurrentLocaleLanguageCode(): String = getCurrentLocale().language
+
     private fun setCurrentLocaleByLanguageCode(languageCode: String) {
         // We shouldn't have to replace "_" with "-" but this is in order to work with our existing language picker
         // on pre-Android 13 devices
@@ -107,18 +120,5 @@ class PerAppLocaleManager @Inject constructor(
     companion object {
         // Key previously used for saving the language selection to shared preferences
         private const val OLD_LOCALE_PREF_KEY_STRING: String = "language-pref"
-
-        private fun getCurrentLocale(): Locale {
-            val locales = AppCompatDelegate.getApplicationLocales()
-            return if (locales.isEmpty || locales == LocaleListCompat.getEmptyLocaleList()) {
-                Locale.getDefault()
-            } else {
-                locales[0] ?: Locale.getDefault()
-            }
-        }
-
-        fun getCurrentLocaleDisplayName(): String = getCurrentLocale().displayName
-
-        fun getCurrentLocaleLanguageCode(): String = getCurrentLocale().language
     }
 }

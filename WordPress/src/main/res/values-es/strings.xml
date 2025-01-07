@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-06 12:06:18+0000
+Translation-Revision-Date: 2024-12-17 06:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Preferencias de idioma por aplicación (Experimental)</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">marcador de posición</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Alternar atajo de %s</string>
     <string name="personalization_screen_card_accessibility_label">Alternar tarjeta de %s</string>

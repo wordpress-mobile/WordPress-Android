@@ -5,13 +5,20 @@ import android.app.job.JobService;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.PerAppLocaleManager;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
+@AndroidEntryPoint
 public class NotificationsUpdateJobService extends JobService
         implements NotificationsUpdateLogic.ServiceCompletionListener {
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
+
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -36,7 +43,10 @@ public class NotificationsUpdateJobService extends JobService
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update job service > created");
-        mNotificationsUpdateLogic = new NotificationsUpdateLogic(LocaleManager.getLanguage(), this);
+        mNotificationsUpdateLogic = new NotificationsUpdateLogic(
+                mPerAppLocaleManager.getCurrentLocaleLanguageCode(),
+                this
+        );
     }
 
     @Override

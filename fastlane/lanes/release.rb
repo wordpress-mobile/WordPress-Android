@@ -331,7 +331,13 @@ platform :android do
     end
   end
 
-  # This lane publishes a release on GitHub and creates a PR to backmerge the current release branch into the next release/ branch
+  # This lane publishes the current release on GitHub and deletes the release branch.
+  #
+  # Note: We deliberately don't create backmerge PRs in this lane, unlike other apps.
+  # This is because:
+  # - Backmerge PRs can be problematic when the repo uses squash-merge
+  # - Release branch changes should already be in the default branch at this point
+  # For last-minute changes (e.g. due to app rejections), please create eventual backmerge PRs manually.
   #
   # @param [Boolean] skip_confirm (default: false) If set, will skip the confirmation prompt before running the rest of the lane
   #
@@ -343,16 +349,12 @@ platform :android do
     ensure_git_branch(branch: '^release/')
 
     version_number = current_release_version
-
     current_branch = "release/#{version_number}"
-    next_release_branch = "release/#{next_release_version}"
 
     UI.important <<~PROMPT
       Publish the #{version_number} release. This will:
       - Publish the existing draft `#{version_number}` release on GitHub
       - Which will also have GitHub create the associated git tag, pointing to the tip of the branch
-      - If the release branch for the next version `#{next_release_branch}` already exists, backmerge `#{current_branch}` into it
-      - If needed, backmerge `#{current_branch}` back into `#{DEFAULT_BRANCH}`
       - Delete the `#{current_branch}` branch
     PROMPT
     UI.user_error!("Terminating as requested. Don't forget to run the remainder of this automation manually.") unless skip_confirm || UI.confirm('Do you want to continue?')
@@ -364,11 +366,7 @@ platform :android do
       name: version_number
     )
 
-    create_backmerge_pr
-
-    # At this point, an intermediate branch has been created by creating a backmerge PR to a hotfix or the next version release branch.
-    # This allows us to safely delete the `release/*` branch.
-    # Note that if a hotfix or new release branches haven't been created, the backmerge PR won't be created as well.
+    # The `publish_github_release` call should also create a tag, allowing us to safely delete the `release/*` branch.
     delete_remote_git_branch!(current_branch)
   end
 

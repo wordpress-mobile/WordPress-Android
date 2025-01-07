@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-10 12:54:09+0000
+Translation-Revision-Date: 2024-12-18 13:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">實驗版個別應用程式語言偏好設定</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">預留位置</string>
     <string name="personalization_screen_shortcuts_accessibility_label">切換「%s」捷徑</string>
     <string name="personalization_screen_card_accessibility_label">切換「%s」卡片</string>

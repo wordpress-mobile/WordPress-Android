@@ -215,10 +215,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
@@ -364,7 +363,7 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
 
     @Inject lateinit var editorMedia: EditorMedia
 
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
@@ -2571,7 +2570,7 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
          get() {
             val postType = if (isPage) "page" else "post"
             val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = LocaleManager.getLanguage()
+            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based

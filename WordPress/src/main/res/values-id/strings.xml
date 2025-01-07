@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-10 09:54:10+0000
+Translation-Revision-Date: 2024-12-23 15:35:47+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Preferensi bahasa per aplikasi eksperimental</string>
+    <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Tombol pintasan %s</string>
     <string name="personalization_screen_card_accessibility_label">Tombol kartu %s</string>
     <string name="user_avatar_content_description">Avatar untuk pengguna %s</string>
@@ -40,6 +42,7 @@ Language: id
     <string name="dialog_confirm_autosave_dont_restore_button">Dari aplikasi ini</string>
     <string name="dialog_confirm_autosave_restore_button">Dari perangkat lain</string>
     <string name="item_selected">Dipilih</string>
+    <string name="send_feedback">Beri masukan</string>
     <string name="media_pager_remove_item_content_description">Hapus item %1$d</string>
     <string name="feedback_form_add_attachments">Tambah lampiran</string>
     <string name="feedback_form_unable_to_create_tempfile">Tidak dapat membuat file sementara</string>

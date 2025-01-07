@@ -13,7 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenExternalUrl
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
 import java.time.Instant
 
@@ -29,7 +29,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     @Mock
-    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Mock
     lateinit var tracker: WpSotw2023NudgeCardAnalyticsTracker
@@ -44,7 +44,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
             featureConfig,
             appPrefsWrapper,
             dateTimeUtilsWrapper,
-            localeManagerWrapper,
+            perAppLocaleManager,
             tracker,
         )
         viewModelSlice.initialize(testScope())
@@ -165,7 +165,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
             val date = if (isDateAfterEvent) "2023-12-12T00:00:01Z" else "2021-12-11T00:00:00Z"
             whenever(dateTimeUtilsWrapper.getInstantNow()).thenReturn(Instant.parse(date))
             val language = if (isLanguageEnglish) "en_US" else "fr_FR"
-            whenever(localeManagerWrapper.getLanguage()).thenReturn(language)
+            whenever(perAppLocaleManager.getCurrentLocaleLanguageCode()).thenReturn(language)
         }
     }
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-09 13:54:10+0000
+Translation-Revision-Date: 2024-12-19 09:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Uygulama için deneysel dil tercihleri</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s kısayolu aç/kapat</string>
     <string name="personalization_screen_card_accessibility_label">%s kartı aç/kapat</string>
