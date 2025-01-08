@@ -4972,4 +4972,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
+
+    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
 </resources>
