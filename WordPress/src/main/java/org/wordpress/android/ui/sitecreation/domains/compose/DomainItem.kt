@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.domains.compose
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,7 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                     indication = ripple(color = HighlightBgColor),
                     onClick = onClick::invoke,
                 )
+                .focusable(enabled = true)
                 .then(if (cost is Cost.Paid) {
                     Modifier.padding(top = Margin.ExtraLarge.value)
                 } else {
