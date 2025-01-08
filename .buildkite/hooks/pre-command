@@ -6,4 +6,4 @@
 set -e
 
 echo "--- 💾 Restore Cache"
-#restore_gradle_dependency_cache || true
+restore_gradle_dependency_cache || true
