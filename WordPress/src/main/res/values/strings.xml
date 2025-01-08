@@ -3054,6 +3054,7 @@
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
+    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
 
     <!-- Editor -->
     <string name="discard">Discard</string>
@@ -4972,6 +4973,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
-
-    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
 </resources>
