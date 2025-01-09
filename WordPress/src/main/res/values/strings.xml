@@ -3054,6 +3054,7 @@
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
+    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
 
     <!-- Editor -->
     <string name="discard">Discard</string>

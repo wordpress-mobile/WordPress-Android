@@ -479,10 +479,13 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
         site: SiteModel, isNewPost: Boolean
     ) {
         if (postEditorAnalyticsSession == null) {
+            val editor = when {
+                showGutenbergEditor && isGutenbergKitEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
+                showGutenbergEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG
+                else -> PostEditorAnalyticsSession.Editor.CLASSIC
+            }
             postEditorAnalyticsSession = PostEditorAnalyticsSession(
-                if (showGutenbergEditor) PostEditorAnalyticsSession.Editor.GUTENBERG
-                else PostEditorAnalyticsSession.Editor.CLASSIC,
-                post, site, isNewPost, analyticsTrackerWrapper
+                editor, post, site, isNewPost, analyticsTrackerWrapper
             )
         }
     }
