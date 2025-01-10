@@ -1414,11 +1414,11 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
         if (undoItem != null) {
             undoItem.setEnabled(menuHasUndo)
-            undoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            undoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (redoItem != null) {
             redoItem.setEnabled(menuHasRedo)
-            redoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            redoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
@@ -2514,6 +2514,12 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
                         editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
                             override fun onContentChanged(title: String, content: String) {
                                 storePostViewModel.savePostWithDelay()
+                            }
+                        })
+                        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
+                            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                                onToggleUndo(!hasUndo)
+                                onToggleRedo(!hasRedo)
                             }
                         })
                         editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {

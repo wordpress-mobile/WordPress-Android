@@ -44,6 +44,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
+import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
@@ -79,6 +80,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     private final LiveTextWatcher mTextWatcher = new LiveTextWatcher();
     @Nullable private ContentChangeListener mContentChangeListener = null;
+    @Nullable private HistoryChangeListener mHistoryChangeListener = null;
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
 
     private boolean mEditorDidMount;
@@ -135,6 +137,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             return null;
         });
         mGutenbergView.setContentChangeListener(mContentChangeListener);
+        mGutenbergView.setHistoryChangeListener(mHistoryChangeListener);
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
@@ -364,6 +367,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mContentChangeListener = listener;
     }
 
+    public void onEditorHistoryChanged(@NonNull HistoryChangeListener listener) {
+        mHistoryChangeListener = listener;
+    }
+
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
         mOpenMediaLibraryListener = listener;
     }
@@ -462,6 +469,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mContentChangeListener = null;
+            mHistoryChangeListener = null;
         }
         super.onDestroy();
     }
@@ -521,11 +529,11 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override public void onUndoPressed() {
-        // Currently unsupported
+        mGutenbergView.undo();
     }
 
     @Override public void onRedoPressed() {
-        // Currently unsupported
+        mGutenbergView.redo();
     }
 
     @Override
