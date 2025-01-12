@@ -159,6 +159,7 @@ public class AppPrefs {
         // Selected Reader feed ID for persisting user preferred feed
         READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
         MANUAL_FEATURE_CONFIG,
+        EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
@@ -1307,6 +1308,18 @@ public class AppPrefs {
 
     @NonNull private static String getManualFeatureConfigKey(String featureKey) {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
+    }
+
+    public static void setExperimentalFeatureConfig(boolean isEnabled, @NonNull String featureKey) {
+        prefs().edit().putBoolean(getExperimentalFeatureConfigKey(featureKey), isEnabled).apply();
+    }
+
+    public static boolean getExperimentalFeatureConfig(@NonNull String featureKey) {
+        return prefs().getBoolean(getExperimentalFeatureConfigKey(featureKey), false);
+    }
+
+    @NonNull private static String getExperimentalFeatureConfigKey(@NonNull String featureKey) {
+        return DeletablePrefKey.EXPERIMENTAL_FEATURE_CONFIG.name() + featureKey;
     }
 
     public static void incrementPublishedPostCount() {
