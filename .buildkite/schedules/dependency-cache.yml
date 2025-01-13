@@ -2,7 +2,7 @@
 ---
 
 agents:
-  queue: "android-staging"
+  queue: "android"
 
 steps:
   - label: "dependency cache"
