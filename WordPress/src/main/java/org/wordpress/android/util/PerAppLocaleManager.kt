@@ -101,7 +101,7 @@ class PerAppLocaleManager @Inject constructor(
     }
 
     fun isPerAppLanguagePrefsEnabled(): Boolean {
-        return appPrefsWrapper.getManualFeatureConfig(EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY)
+        return appPrefsWrapper.getExperimentalFeatureConfig(EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY)
     }
 
     /**

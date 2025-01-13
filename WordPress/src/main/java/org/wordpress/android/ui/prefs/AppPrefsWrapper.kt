@@ -193,6 +193,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
+    fun getExperimentalFeatureConfig(featureKey: String): Boolean {
+        return AppPrefs.getExperimentalFeatureConfig(featureKey)
+    }
+
     fun incrementPublishedPostCount() {
         AppPrefs.incrementPublishedPostCount()
     }
