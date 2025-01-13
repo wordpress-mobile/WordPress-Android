@@ -727,14 +727,10 @@
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_terabytes">%s TB</string>
 
-    <!-- Speed up your site -->
-    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen.</string>
-
     <!-- Site accelerator -->
     <string name="site_settings_site_accelerator">Site Accelerator</string>
     <string name="site_settings_site_accelerator_on">On</string>
     <string name="site_settings_site_accelerator_off">Off</string>
-    <string name="site_settings_lazy_load_images">Lazy load images</string>
     <string name="site_settings_faster_images">Faster images</string>
     <string name="site_settings_faster_static_files">Faster static files</string>
     <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimize your images and static files (like CSS and JavaScript).</string>
