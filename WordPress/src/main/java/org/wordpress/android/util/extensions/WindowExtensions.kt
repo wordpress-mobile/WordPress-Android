@@ -81,11 +81,22 @@ fun Window.setWindowStatusBarColor(color: Int) {
     }
 }
 
+@Suppress("DEPRECATION")
 fun Window.setWindowNavigationBarColor(color: Int) {
-    val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
-
-    navigationBarColor = color
-    windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+        decorView.setOnApplyWindowInsetsListener { view, insets ->
+            view.setBackgroundColor(color)
+            // Adjust padding to avoid overlap
+            val navBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
+            view.setPadding(0, navBarInsets.top, 0, 0)
+            insets
+        }
+    } else {
+        // For Android 14 and below
+        val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
+        navigationBarColor = color
+        windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    }
 }
 
 private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
