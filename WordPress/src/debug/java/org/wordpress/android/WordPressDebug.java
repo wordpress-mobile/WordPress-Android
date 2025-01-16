@@ -1,6 +1,8 @@
 package org.wordpress.android;
 
+import android.os.Build;
 import android.os.StrictMode;
+import android.os.StrictMode.VmPolicy;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,14 +36,16 @@ public class WordPressDebug extends WordPressApp {
                                            .penaltyFlashScreen()
                                            .build());
 
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder()
                                        .detectActivityLeaks()
                                        .detectLeakedSqlLiteObjects()
                                        .detectLeakedClosableObjects()
                                        .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
-                                       .penaltyLog()
-                                       .build());
-
+                                       .penaltyLog();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            builder.detectNonSdkApiUsage();
+        }
+        StrictMode.setVmPolicy(builder.build());
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 }
