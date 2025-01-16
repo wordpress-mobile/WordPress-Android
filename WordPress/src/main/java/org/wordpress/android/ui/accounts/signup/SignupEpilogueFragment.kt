@@ -671,7 +671,9 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
                         if (newAvatarUploaded && resource is BitmapDrawable) {
                             var bitmap = resource.bitmap
                             // create a copy since the original bitmap may by automatically recycled
-                            bitmap = bitmap.copy(bitmap.config, true)
+                            bitmap.config?.let { config ->
+                                bitmap = bitmap.copy(config, true)
+                            }
                             getBitmapCache().put((avatarUrl), bitmap)
                         }
                     }
