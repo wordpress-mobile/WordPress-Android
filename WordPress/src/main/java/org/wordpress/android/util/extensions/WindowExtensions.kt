@@ -1,10 +1,12 @@
 package org.wordpress.android.util.extensions
 
+import android.os.Build
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
+import android.view.WindowInsets
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -57,22 +59,33 @@ fun Window.showFullScreen() {
     }
 }
 
+@Suppress("DEPRECATION")
 fun Window.setWindowStatusBarColor(color: Int) {
-    val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+        decorView.setOnApplyWindowInsetsListener { view, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
+            view.setBackgroundColor(color)
+            // Adjust padding to avoid overlap
+            view.setPadding(0, statusBarInsets.top, 0, 0)
+            insets
+        }
+    } else {
+        // For Android 14 and below
+        statusBarColor = color
+        val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
+        windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
 
-    // TODO statusBarColor = color
-    // TODO windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
-
-    // we need to set the light navigation appearance here because, for some reason, changing the status bar also
-    // changes the navigation bar appearance but this method is supposed to only change the status bar
-    // TODO windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+        // we need to set the light navigation appearance here because, for some reason, changing the status bar also
+        // changes the navigation bar appearance but this method is supposed to only change the status bar
+        windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    }
 }
 
 fun Window.setWindowNavigationBarColor(color: Int) {
     val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
 
-    // TODO navigationBarColor = color
-    // TODO windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    navigationBarColor = color
+    windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
 }
 
 private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
