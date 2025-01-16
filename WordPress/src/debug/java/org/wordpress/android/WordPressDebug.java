@@ -15,7 +15,7 @@ public class WordPressDebug extends WordPressApp {
     public void onCreate() {
         super.onCreate();
 
-        // enableStrictMode()
+        enableStrictMode();
     }
 
     /**
