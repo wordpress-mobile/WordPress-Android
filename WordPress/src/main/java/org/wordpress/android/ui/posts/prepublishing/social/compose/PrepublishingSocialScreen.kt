@@ -3,11 +3,11 @@ package org.wordpress.android.ui.posts.prepublishing.social.compose
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.EditPostJetpackSocialConnectionsContainer
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
@@ -20,7 +20,7 @@ fun PrepublishingSocialScreen(
     modifier: Modifier = Modifier,
 ): Unit = with(state) {
     Column(modifier) {
-        Divider()
+        HorizontalDivider()
 
         EditPostJetpackSocialConnectionsContainer(
             jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
@@ -34,11 +34,11 @@ fun PrepublishingSocialScreen(
             DescriptionText(
                 text = socialSharingModel.description,
                 isLowOnShares = socialSharingModel.isLowOnShares,
-                baseTextStyle = MaterialTheme.typography.subtitle1,
+                baseTextStyle = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(Margin.ExtraLarge.value),
             )
 
-            PrimaryButton(
+            PrimaryButtonM3(
                 text = state.subscribeButtonLabel,
                 onClick = { state.onSubscribeClick(JetpackSocialFlow.PRE_PUBLISHING) },
                 padding = PaddingValues(horizontal = Margin.ExtraLarge.value)

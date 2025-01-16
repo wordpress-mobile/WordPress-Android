@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.camera.core.Preview as CameraPreview
 
@@ -99,7 +99,7 @@ class DummyCodeScanner : CodeScanner {
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun BarcodeScannerScreenPreview() {
-    AppThemeM2 {
+    AppThemeM3 {
         BarcodeScanner(codeScanner = DummyCodeScanner(), onScannedResult = object : CodeScannerCallback {
             override fun run(status: CodeScannerStatus?) {
                 // no-ops

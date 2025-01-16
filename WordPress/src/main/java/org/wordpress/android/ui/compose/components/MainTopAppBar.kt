@@ -2,17 +2,19 @@ package org.wordpress.android.ui.compose.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -22,8 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeM2
-import org.wordpress.android.ui.compose.utils.withFullContentAlpha
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 typealias NavigationIcon = @Composable () -> Unit
 
@@ -55,15 +56,7 @@ object NavigationIcons {
  *
  * Extra info and workarounds regarding [TopAppBar]:
  *
- * [TopAppBar] from Material internally provide a different [LocalContentAlpha] according to low vs high
- * contrast use cases. This forces the navigation icon, title, and actions "Composables" to use that alpha.
- * In addition to that, most people use the default phone settings, which is considered LOW CONTRAST, making
- * the provided alpha be smaller than 1f, which makes the components mentioned above have some transparency, which
- * is not aligned with our Design Specs.
- *
- * This Composable works around that by setting LocalContentAlpha in the appropriate parts of the code using the helper
- * [withFullContentAlpha] function, which provides a full alpha to the [LocalContentAlpha] Composition Local.
- *
+ * [TopAppBar] from Material 3
  * @param title The title String to be shown in the top bar.
  * @param modifier The [Modifier] to be applied to this TopAppBar.
  * @param navigationIcon The composable to be used as navigation icon, preferably one of the default options from
@@ -73,6 +66,7 @@ object NavigationIcons {
  * @param onNavigationIconClick The lambda to be invoked when the navigation icon is pressed.
  * @param actions The actions displayed at the end of the TopAppBar. This should typically be IconButtons
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
     title: String?,
@@ -80,22 +74,23 @@ fun MainTopAppBar(
     navigationIcon: NavigationIcon? = null,
     onNavigationIconClick: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    backgroundColor: Color = MaterialTheme.colors.surface,
-    contentColor: Color = MaterialTheme.colors.onSurface,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
     elevation: Dp = 0.dp,
 ) {
     TopAppBar(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        elevation = elevation,
-        title = title?.let {
-            withFullContentAlpha {
-                Text(title)
-            }
-        } ?: { },
-        navigationIcon = navigationIcon?.let {
-            withFullContentAlpha {
+        modifier = modifier.then(
+            Modifier.shadow(
+                elevation = elevation,
+            )
+        ),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+            titleContentColor = contentColor,
+        ),
+        title = { Text(text = title ?: "") },
+        navigationIcon = {
+            navigationIcon?.let {
                 IconButton(onClick = onNavigationIconClick) {
                     navigationIcon()
                 }
@@ -109,7 +104,7 @@ fun MainTopAppBar(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainTopAppBarPreview() {
-    AppThemeM2 {
+    AppThemeM3 {
         MainTopAppBar(
             title = "Preview",
             navigationIcon = NavigationIcons.BackIcon,

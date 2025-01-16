@@ -5,7 +5,7 @@ import android.os.Build.VERSION_CODES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,9 +43,9 @@ fun ColumnWithTopGlassBorder(
     Column(
         modifier = Modifier.background(backgroundColor), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Divider(
-            color = borderColor,
+        HorizontalDivider(
             thickness = borderThickness,
+            color = borderColor
         )
         content()
     }

@@ -10,7 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,8 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeM2
-import org.wordpress.android.ui.compose.utils.withBottomSheetElevation
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
@@ -128,13 +127,13 @@ sealed class PrepublishingHomeViewHolder(
                     mutableStateOf(uiState)
                 }
 
-                AppThemeM2 {
+                AppThemeM3 {
                     (state as? SocialUiState.Visible)?.let { visibleState ->
                         when (val internalState = visibleState.state) {
                             is JetpackSocialUiState.Loaded -> {
                                 PostSocialSharingItem(
                                     model = internalState.socialSharingModel,
-                                    backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                                    backgroundColor = MaterialTheme.colorScheme.surface,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable(
@@ -152,7 +151,7 @@ sealed class PrepublishingHomeViewHolder(
                                         internalState.onConnectProfilesClick(JetpackSocialFlow.PRE_PUBLISHING)
                                      },
                                     onDismissClick = { internalState.onNotNowClick(JetpackSocialFlow.PRE_PUBLISHING) },
-                                    backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                                    backgroundColor = MaterialTheme.colorScheme.surface,
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }
