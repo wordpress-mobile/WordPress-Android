@@ -167,8 +167,8 @@ class WidgetUtils
         listIntent.data = Uri.parse(
             listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
-        views.setRemoteAdapter(R.id.widget_content, listIntent)
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
+        // TODO views.setRemoteAdapter(R.id.widget_content, listIntent)
+        // TODO appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

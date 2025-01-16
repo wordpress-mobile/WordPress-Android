@@ -55,7 +55,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
-        window.navigationBarColor = getColor(R.color.docsbot_chat_container)
+        // TODO window.navigationBarColor = getColor(R.color.docsbot_chat_container)
 
         // Prevent AppBar scrolling away
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

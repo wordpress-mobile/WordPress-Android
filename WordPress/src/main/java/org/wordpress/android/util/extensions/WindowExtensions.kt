@@ -60,19 +60,19 @@ fun Window.showFullScreen() {
 fun Window.setWindowStatusBarColor(color: Int) {
     val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
 
-    statusBarColor = color
-    windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
+    // TODO statusBarColor = color
+    // TODO windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
 
     // we need to set the light navigation appearance here because, for some reason, changing the status bar also
     // changes the navigation bar appearance but this method is supposed to only change the status bar
-    windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    // TODO windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
 }
 
 fun Window.setWindowNavigationBarColor(color: Int) {
     val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
 
-    navigationBarColor = color
-    windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
+    // TODO navigationBarColor = color
+    // TODO windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
 }
 
 private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
