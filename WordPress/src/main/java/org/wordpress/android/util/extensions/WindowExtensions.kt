@@ -1,8 +1,6 @@
 package org.wordpress.android.util.extensions
 
 import android.os.Build
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
@@ -53,15 +51,9 @@ fun Window.setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
 }
 
 @Suppress("DEPRECATION")
-fun Window.showFullScreen() {
-    decorView.systemUiVisibility = decorView.systemUiVisibility.let {
-        it or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
-    }
-}
-
-@Suppress("DEPRECATION")
 fun Window.setWindowStatusBarColor(color: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        // Android 15+
         decorView.setOnApplyWindowInsetsListener { view, insets ->
             val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
             view.setBackgroundColor(color)
@@ -70,7 +62,7 @@ fun Window.setWindowStatusBarColor(color: Int) {
             insets
         }
     } else {
-        // For Android 14 and below
+        // Android 14-
         statusBarColor = color
         val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
         windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
@@ -83,7 +75,8 @@ fun Window.setWindowStatusBarColor(color: Int) {
 
 @Suppress("DEPRECATION")
 fun Window.setWindowNavigationBarColor(color: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        // Android 15+
         decorView.setOnApplyWindowInsetsListener { view, insets ->
             view.setBackgroundColor(color)
             // Adjust padding to avoid overlap
@@ -92,7 +85,7 @@ fun Window.setWindowNavigationBarColor(color: Int) {
             insets
         }
     } else {
-        // For Android 14 and below
+        // Android 14-
         val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
         navigationBarColor = color
         windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
