@@ -29,8 +29,8 @@ public class WordPressDebug extends WordPressApp {
         }
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                                           // TODO .detectDiskReads()
-                                           // TODO .detectDiskWrites()
+                                           .detectDiskReads()
+                                           .detectDiskWrites()
                                            .detectNetwork()
                                            .penaltyLog()
                                            .penaltyFlashScreen()
