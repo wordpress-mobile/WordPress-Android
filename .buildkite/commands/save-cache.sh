@@ -20,7 +20,7 @@ echo "--- 🧹 Download Lint Dependencies [Lint Jetpack App]"
 ./gradlew lintJetpackJalapenoDebug
 echo ""
 
-# .buildkite/commands/run-unit-tests.sh
+# .buildkite/commands/run-unit-tests.sh -> ./gradlew $test_suite
 # -> test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
 # -> test_suite=":libs:processors:test :libs:processors:koverXmlReport"
 # -> test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
