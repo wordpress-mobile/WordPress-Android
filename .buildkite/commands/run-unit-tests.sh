@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+.buildkite/commands/restore-cache.sh
+
 echo "--- 🧪 Testing"
 set +e
 if [ "$1" == "wordpress" ]; then
