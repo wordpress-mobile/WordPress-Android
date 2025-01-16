@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.accounts.HelpActivity
 
 @AndroidEntryPoint
 class FeedbackFormActivity : AppCompatActivity() {
@@ -17,6 +18,9 @@ class FeedbackFormActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val feedbackPrefix = intent.getStringExtra(EXTRA_FEEDBACK_PREFIX)
+        viewModel.feedbackPrefix = feedbackPrefix
 
         setContentView(
             ComposeView(this).apply {
@@ -45,13 +49,19 @@ class FeedbackFormActivity : AppCompatActivity() {
                             viewModel.onRemoveMediaClick(it)
                         },
                         onSupportClick = {
-                            // This will return to the Help screen, where the user can see the contact support link
-                            finish()
+                            navigateToHelpScreen()
                         },
                     )
                 }
             }
         )
+    }
+
+    private fun navigateToHelpScreen() {
+        val intent = Intent(this, HelpActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
     @Deprecated("Deprecated in Java")
@@ -63,5 +73,9 @@ class FeedbackFormActivity : AppCompatActivity() {
                 viewModel.onPhotoPickerResult(this, it)
             }
         }
+    }
+
+    companion object {
+        const val EXTRA_FEEDBACK_PREFIX = "extra_feedback_prefix"
     }
 }

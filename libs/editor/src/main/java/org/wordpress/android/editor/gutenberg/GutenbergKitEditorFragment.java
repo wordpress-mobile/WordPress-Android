@@ -306,6 +306,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mHtmlModeEnabled = !mHtmlModeEnabled;
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
+        mGutenbergView.setTextEditorEnabled(mHtmlModeEnabled);
     }
 
     @Override
