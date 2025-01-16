@@ -239,9 +239,9 @@ class CommentSqlUtilsTest {
         val remoteComments = generateCommentModels(50, ALL)
 
         // exclude first 3 comments
-        remoteComments.removeFirst()
-        remoteComments.removeFirst()
-        remoteComments.removeFirst()
+        remoteComments.removeAt(0)
+        remoteComments.removeAt(0)
+        remoteComments.removeAt(0)
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
