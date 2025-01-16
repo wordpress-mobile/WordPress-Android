@@ -179,9 +179,9 @@ class CommentSqlUtilsTest {
         val commentsInDb = generateCommentModels(60, ALL)
         val remoteComments = generateCommentModels(30, ALL)
 
-        remoteComments.removeLast()
-        remoteComments.removeLast()
-        remoteComments.removeLast()
+        remoteComments.removeAt(remoteComments.lastIndex)
+        remoteComments.removeAt(remoteComments.lastIndex)
+        remoteComments.removeAt(remoteComments.lastIndex)
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
