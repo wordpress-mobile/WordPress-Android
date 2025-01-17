@@ -9,8 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import org.wordpress.android.util.ColorUtils
-import android.R as AndroidR
-import com.google.android.material.R as MaterialR
 
 @Suppress("DEPRECATION")
 fun Window.setLightStatusBar(showInLightMode: Boolean) {
@@ -37,9 +35,9 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
         }
         if (applyDefaultColors) {
             navigationBarColor = if (showInLightMode) {
-                context.getColorFromAttribute(MaterialR.attr.colorSurface)
+                context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface)
             } else {
-                ContextCompat.getColor(context, AndroidR.color.black)
+                ContextCompat.getColor(context, android.R.color.black)
             }
         }
     }
