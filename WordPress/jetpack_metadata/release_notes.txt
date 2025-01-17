@@ -1,2 +1,4 @@
-
-
+This update:
+- Fixes a rare crash when registering a domain.
+- Fixes a bunch of under-the-hood things that should make the app more reliable.
+- Uses a web-based approach for WordPress.com login. This should be more reliable for most users, but please contact support if you have any trouble!
