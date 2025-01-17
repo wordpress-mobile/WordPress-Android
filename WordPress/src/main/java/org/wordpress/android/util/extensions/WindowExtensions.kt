@@ -1,47 +1,11 @@
 package org.wordpress.android.util.extensions
 
 import android.os.Build
-import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
 import android.view.WindowInsets
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import org.wordpress.android.util.ColorUtils
-
-@Suppress("DEPRECATION")
-fun Window.setLightStatusBar(showInLightMode: Boolean) {
-    if (isLightTheme()) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility.let {
-            if (showInLightMode) {
-                it or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            } else {
-                it and SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            }
-        }
-    }
-}
-
-@Suppress("DEPRECATION")
-fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: Boolean = false) {
-    if (isLightTheme()) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility.let {
-            if (showInLightMode) {
-                it or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            } else {
-                it and SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-            }
-        }
-        if (applyDefaultColors) {
-            navigationBarColor = if (showInLightMode) {
-                context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface)
-            } else {
-                ContextCompat.getColor(context, android.R.color.black)
-            }
-        }
-    }
-}
 
 fun Window.setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
     val decorFitsSystemWindows = !isEnabled
@@ -89,5 +53,3 @@ fun Window.setWindowNavigationBarColor(color: Int) {
         windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
     }
 }
-
-private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
