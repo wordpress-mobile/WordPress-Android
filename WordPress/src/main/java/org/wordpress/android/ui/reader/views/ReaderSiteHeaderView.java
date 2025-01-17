@@ -22,7 +22,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.PhotonUtils.Quality;
@@ -32,6 +31,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -213,8 +213,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private void loadFollowCount(ReaderBlog blogInfo, TextView txtFollowCount) {
         final CompactDecimalFormat compactDecimalFormat =
-                CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
-                        CompactDecimalFormat.CompactStyle.SHORT);
+                CompactDecimalFormat.getInstance(
+                        Locale.getDefault(),
+                        CompactDecimalFormat.CompactStyle.SHORT
+                );
 
         final int followersStringRes;
         if (blogInfo.numSubscribers == 1) {
@@ -231,7 +233,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
             formattedNumberSubscribers = NumberFormat.getInstance().format(blogInfo.numSubscribers);
         }
         txtFollowCount.setText(String.format(
-                LocaleManager.getSafeLocale(getContext()),
                 getContext().getString(followersStringRes), formattedNumberSubscribers)
         );
     }

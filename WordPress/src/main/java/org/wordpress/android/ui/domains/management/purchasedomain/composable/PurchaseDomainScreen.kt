@@ -62,8 +62,6 @@ fun PurchaseDomainScreen(
                 navigationIcon = NavigationIcons.BackIcon,
                 elevation = elevation.value,
                 onNavigationIconClick = onBackPressed,
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
         content = {

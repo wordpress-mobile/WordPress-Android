@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
@@ -30,7 +30,7 @@ import android.R as AndroidR
  * An activity that shows when user tries to open Stats without Jetpack connected.
  * It offers a link to the Jetpack connection flow.
  */
-class StatsConnectJetpackActivity : LocaleAwareActivity() {
+class StatsConnectJetpackActivity : AppCompatActivity() {
     private var mIsJetpackConnectStarted = false
 
     @Inject

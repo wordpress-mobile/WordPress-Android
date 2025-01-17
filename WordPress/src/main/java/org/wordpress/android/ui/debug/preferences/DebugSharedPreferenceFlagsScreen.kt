@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +31,6 @@ fun DebugSharedPreferenceFlagsScreen(
                 title = stringResource(R.string.debug_settings_debug_flags_screen),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackTapped,
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
     ) { paddingValues ->

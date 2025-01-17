@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,19 +36,13 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.extensions.setContent
-import javax.inject.Inject
 
 enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
     EXPERIMENTAL_BLOCK_EDITOR("experimental_block_editor", R.string.experimental_block_editor),
     EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
         "experimental_block_editor_theme_styles",
         R.string.experimental_block_editor_theme_styles
-    ),
-    EXPERIMENTAL_PER_APP_LOCAL_MANAGER(
-        PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY,
-        R.string.experimental_per_app_language_prefs
     );
 
     fun isEnabled() : Boolean {
@@ -61,10 +54,7 @@ enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
     }
 }
 
-@HiltViewModel
-class FeatureViewModel @Inject constructor(
-    private val perAppLocaleManager: PerAppLocaleManager
-) : ViewModel() {
+class FeatureViewModel : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<ExperimentalFeature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
 
@@ -80,18 +70,6 @@ class FeatureViewModel @Inject constructor(
             currentStates.toMutableMap().apply {
                 this[feature] = enabled
                 feature.setEnabled(enabled)
-            }
-        }
-
-        featureToggled(feature.prefKey, enabled)
-    }
-
-    private fun featureToggled(key: String, enabled: Boolean) {
-        if (key == PerAppLocaleManager.EXPERIMENTAL_PER_APP_LANGUAGE_PREF_KEY) {
-            if (enabled) {
-                perAppLocaleManager.performMigrationIfNecessary()
-            } else {
-                perAppLocaleManager.resetApplicationLocale()
             }
         }
     }

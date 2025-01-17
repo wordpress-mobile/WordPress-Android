@@ -114,7 +114,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/margin_extra_large"
                         android:layout_marginStart="@dimen/margin_extra_large"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/min_touch_target_sz"
                         android:text="@string/manage"
                         android:textAppearance="?attr/textAppearanceSubtitle1" />
                 </LinearLayout>

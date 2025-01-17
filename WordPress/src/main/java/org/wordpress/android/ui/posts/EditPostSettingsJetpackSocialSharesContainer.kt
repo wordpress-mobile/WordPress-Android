@@ -3,14 +3,14 @@ package org.wordpress.android.ui.posts
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
+import org.wordpress.android.ui.compose.theme.AppThemeM3Editor
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.compose.DescriptionText
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
@@ -25,14 +25,14 @@ fun EditPostSettingsJetpackSocialSharesContainer(
     DescriptionText(
         text = postSocialSharingModel.description,
         isLowOnShares = postSocialSharingModel.isLowOnShares,
-        baseTextStyle = MaterialTheme.typography.body2
+        baseTextStyle = MaterialTheme.typography.bodyMedium
             .copy(color = AppColor.Gray30),
         modifier = Modifier.padding(
             vertical = Margin.ExtraLarge.value,
             horizontal = Margin.ExtraLarge.value,
         )
     )
-    PrimaryButton(
+    PrimaryButtonM3(
         text = subscribeButtonLabel,
         onClick = onSubscribeClick,
         fillMaxWidth = false,
@@ -46,7 +46,7 @@ fun EditPostSettingsJetpackSocialSharesContainer(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EditPostSettingsJetpackSocialSharesContainerPreview() {
-    AppThemeM2Editor {
+    AppThemeM3Editor {
         EditPostSettingsJetpackSocialSharesContainer(
             postSocialSharingModel = PostSocialSharingModel(
                 title = "Sharing to 2 of 3 accounts",

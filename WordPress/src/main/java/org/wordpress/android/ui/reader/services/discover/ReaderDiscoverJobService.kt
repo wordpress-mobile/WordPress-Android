@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.services.discover
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.content.Context
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +11,6 @@ import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -30,10 +28,6 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
 
     override val coroutineContext: CoroutineContext
         get() = ioDispatcher + job
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
-    }
 
     override fun onStartJob(params: JobParameters): Boolean {
         AppLog.i(READER, "reader discover job service > started")

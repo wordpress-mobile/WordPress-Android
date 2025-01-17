@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
@@ -25,7 +26,7 @@ import javax.inject.Inject;
 /**
  * Basic activity for displaying a WebView.
  */
-public abstract class WebViewActivity extends LocaleAwareActivity {
+public abstract class WebViewActivity extends AppCompatActivity {
     /**
      * Primary webview used to display content.
      */

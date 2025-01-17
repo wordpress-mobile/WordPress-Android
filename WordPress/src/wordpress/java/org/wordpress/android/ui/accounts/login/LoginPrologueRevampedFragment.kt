@@ -32,7 +32,7 @@ import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.compose.TestTags
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 class LoginPrologueRevampedFragment : Fragment() {
@@ -44,7 +44,7 @@ class LoginPrologueRevampedFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            AppThemeM2 {
+            AppThemeM3 {
                 LoginScreenRevamped(
                     onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
                     onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
@@ -123,7 +123,7 @@ fun LoginScreenRevamped(
 @Preview(showBackground = true, device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginScreenRevamped() {
-    AppThemeM2 {
+    AppThemeM3 {
         LoginScreenRevamped(onWpComLoginClicked = {}, onSiteAddressLoginClicked = {})
     }
 }

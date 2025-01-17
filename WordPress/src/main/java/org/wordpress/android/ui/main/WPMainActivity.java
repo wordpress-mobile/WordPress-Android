@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
@@ -80,7 +81,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
@@ -126,7 +126,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
@@ -154,6 +153,7 @@ import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
@@ -202,7 +202,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 @AndroidEntryPoint
-public class WPMainActivity extends LocaleAwareActivity implements
+public class WPMainActivity extends AppCompatActivity implements
         OnPageListener,
         BottomNavController,
         BasicDialogPositiveClickInterface,

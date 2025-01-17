@@ -260,12 +260,6 @@
         </PreferenceScreen>
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_lazy_load_images"
-            android:key="@string/pref_key_lazy_load_images"
-            android:summary="@string/site_settings_lazy_load_images_summary"
-            android:title="@string/site_settings_lazy_load_images" />
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_ad_free_video_hosting"
             android:key="@string/pref_key_ad_free_video_hosting"
             android:title="@string/site_settings_ad_free_video_hosting" />
@@ -306,11 +300,6 @@
 
                 </PreferenceScreen>
 
-                <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_lazy_load_images_nested"
-                    android:key="@string/pref_key_lazy_load_images_nested"
-                    android:summary="@string/site_settings_lazy_load_images_summary"
-                    android:title="@string/site_settings_lazy_load_images" />
             </PreferenceCategory>
 
             <PreferenceCategory

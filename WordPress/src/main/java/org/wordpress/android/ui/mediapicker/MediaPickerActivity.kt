@@ -15,7 +15,7 @@ import org.wordpress.android.databinding.PhotoPickerActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.PHOTO_PICKER
@@ -55,7 +55,7 @@ import java.io.File
 import javax.inject.Inject
 import android.R as AndroidR
 
-class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
+class MediaPickerActivity : AppCompatActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
     private lateinit var mediaPickerSetup: MediaPickerSetup
 

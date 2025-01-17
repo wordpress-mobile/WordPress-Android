@@ -35,7 +35,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
-import org.wordpress.android.ui.LocaleAwareActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -50,7 +50,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class HelpActivity : LocaleAwareActivity() {
+class HelpActivity : AppCompatActivity() {
     @Inject
     lateinit var accountStore: AccountStore
 

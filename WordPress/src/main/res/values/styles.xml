@@ -1807,16 +1807,19 @@
     <style name="MaterialAlertDialogPositiveButton"  parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_gravity">left</item>
         <item name="android:gravity">left</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="MaterialAlertDialogNegativeButton"  parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_gravity">left</item>
         <item name="android:gravity">left</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="MaterialAlertDialogCancelButton"  parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_gravity">left</item>
         <item name="android:gravity">left</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <!-- My Site Activity Card  -->

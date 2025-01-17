@@ -58,8 +58,6 @@ fun NewDomainSearchScreen(
                 title = stringResource(id = R.string.new_domain_search_screen_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackPressed,
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
         content = {
