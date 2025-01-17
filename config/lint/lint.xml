@@ -78,8 +78,6 @@
     </issue>
     <issue id="IconDensities" severity="warning" /> <!--    fluxc-->
     <!-- INTEROPERABILITY -->
-    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/21065 -->
-    <issue id="UsingMaterialAndMaterial3Libraries" severity="error" />
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/pull/21430 -->
     <issue id="ObsoleteLintCustomCheck" severity="warning" />
 </lint>

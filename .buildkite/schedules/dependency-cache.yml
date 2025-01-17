@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+agents:
+  queue: "android"
+
+steps:
+  - label: "dependency cache"
+    command: |
+      echo "--- 💾 Download and Cache Dependencies"
+      .buildkite/commands/save-cache.sh
+    plugins: [$CI_TOOLKIT]
+
+notify:
+  - slack:
+      channels:
+        - "#android-core-notifs"
+      message: "The dependency cache has been updated."
+    if: build.state == "passed"
+  - slack:
+      channels:
+        - "#android-core-notifs"
+      message: "Failure to update the dependency cache."
+    if: build.state == "failed"

@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+.buildkite/commands/restore-cache.sh
+
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
