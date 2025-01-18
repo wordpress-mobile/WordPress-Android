@@ -4,6 +4,7 @@
 -----
 * [**] Send feedback from within the experimental editor "more" options menu. [#21586]
 * [**] Support accessing the code editor within the experimental editor. [#21582]
+* [**] Add button for dismissing the keyboard within the experimental editor. [#21602]
 
 25.6
 -----
