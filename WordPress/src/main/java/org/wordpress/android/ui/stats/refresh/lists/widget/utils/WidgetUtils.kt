@@ -144,7 +144,7 @@ class WidgetUtils
         )
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "DEPRECATION")
     fun showList(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,
@@ -167,8 +167,8 @@ class WidgetUtils
         listIntent.data = Uri.parse(
             listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
-        // TODO views.setRemoteAdapter(R.id.widget_content, listIntent)
-        // TODO appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
+        views.setRemoteAdapter(R.id.widget_content, listIntent)
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
