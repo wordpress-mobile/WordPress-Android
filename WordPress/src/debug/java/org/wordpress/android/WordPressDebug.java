@@ -14,7 +14,7 @@ public class WordPressDebug extends WordPressApp {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        // TODO we'll want to comment this out before merging the Android 15 feature branch
         enableStrictMode();
     }
 
