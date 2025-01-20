@@ -11,7 +11,7 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class MeActivity : AppCompatActivity() {
+class MeActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.me_activity)

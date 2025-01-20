@@ -20,7 +20,6 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
@@ -202,7 +201,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
  * Main activity which hosts sites, reader, me and notifications pages
  */
 @AndroidEntryPoint
-public class WPMainActivity extends AppCompatActivity implements
+public class WPMainActivity extends BaseAppCompatActivity implements
         OnPageListener,
         BottomNavController,
         BasicDialogPositiveClickInterface,
