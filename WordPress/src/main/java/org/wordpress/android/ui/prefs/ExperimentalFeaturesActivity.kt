@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.prefs
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -26,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
@@ -41,32 +38,38 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.extensions.setContent
 
-val experimentalFeatures = listOf(
-    Feature(key = "experimental_block_editor"),
-    Feature(key = "experimental_block_editor_theme_styles"),
-)
+enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
+    EXPERIMENTAL_BLOCK_EDITOR("experimental_block_editor", R.string.experimental_block_editor),
+    EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
+        "experimental_block_editor_theme_styles",
+        R.string.experimental_block_editor_theme_styles
+    );
 
-data class Feature(
-    val enabled: Boolean = false,
-    val key: String,
-)
+    fun isEnabled() : Boolean {
+        return AppPrefs.getExperimentalFeatureConfig(prefKey)
+    }
+
+    fun setEnabled(isEnabled: Boolean) {
+        AppPrefs.setExperimentalFeatureConfig(isEnabled, prefKey)
+    }
+}
 
 class FeatureViewModel : ViewModel() {
-    private val _switchStates = MutableStateFlow<Map<String, Feature>>(emptyMap())
-    val switchStates: StateFlow<Map<String, Feature>> = _switchStates.asStateFlow()
+    private val _switchStates = MutableStateFlow<Map<ExperimentalFeature, Boolean>>(emptyMap())
+    val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
 
     init {
-        val initialStates = experimentalFeatures.associate { item ->
-            item.key to Feature(AppPrefs.getManualFeatureConfig(item.key), item.key)
+        val initialStates = ExperimentalFeature.entries.associate { feature ->
+            feature to feature.isEnabled()
         }
         _switchStates.value = initialStates
     }
 
-    fun onFeatureToggled(key: String, enabled: Boolean) {
+    fun onFeatureToggled(feature: ExperimentalFeature, enabled: Boolean) {
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
-                this[key] = Feature(enabled, key)
-                AppPrefs.setManualFeatureConfig(enabled, key)
+                this[feature] = enabled
+                feature.setEnabled(enabled)
             }
         }
     }
@@ -96,8 +99,8 @@ class ExperimentalFeaturesActivity : AppCompatActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExperimentalFeaturesScreen(
-    features: Map<String, Feature>,
-    onFeatureToggled: (key: String, enabled: Boolean) -> Unit,
+    features: Map<ExperimentalFeature, Boolean>,
+    onFeatureToggled: (feature: ExperimentalFeature, enabled: Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -119,16 +122,10 @@ fun ExperimentalFeaturesScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Column {
-                features.forEach { (key, feature) ->
-                    val context = LocalContext.current
-                    val label = remember(key) {
-                        context.getStringResourceByName(key)
-                    }
-
+                features.forEach { (feature, enabled) ->
                     FeatureToggle(
-                        key = key,
-                        label = label,
-                        enabled = feature.enabled,
+                        feature = feature,
+                        enabled = enabled,
                         onChange = onFeatureToggled,
                     )
                 }
@@ -137,27 +134,20 @@ fun ExperimentalFeaturesScreen(
     }
 }
 
-@SuppressLint("DiscouragedApi")
-fun Context.getStringResourceByName(name: String): String {
-    val resourceId = resources.getIdentifier(name, "string", packageName)
-    return if (resourceId != 0) getString(resourceId) else name
-}
-
 @Composable
 fun FeatureToggle(
-    key: String,
-    label: String,
+    feature: ExperimentalFeature,
     enabled: Boolean,
-    onChange: (String, Boolean) -> Unit,
+    onChange: (ExperimentalFeature, Boolean) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable { onChange(key, !enabled) }
+            .clickable { onChange(feature, !enabled) }
             .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.MediumLarge.value)
     ) {
         Text(
-            text = label,
+            text = stringResource(feature.labelResId),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
@@ -167,7 +157,7 @@ fun FeatureToggle(
         Switch(
             checked = enabled,
             onCheckedChange = { newValue ->
-                onChange(key, newValue)
+                onChange(feature, newValue)
             },
         )
     }
@@ -179,8 +169,8 @@ fun FeatureToggle(
 fun ExperimentalFeaturesScreenPreview() {
     AppThemeM3 {
         val featuresStatusAlternated = remember {
-            experimentalFeatures.mapIndexed { index, feature ->
-                feature.key to feature.copy(enabled = index % 2 == 0)
+            ExperimentalFeature.entries.toTypedArray().mapIndexed { index, feature ->
+                feature to (index % 2 == 0)
             }.toMap()
         }
 

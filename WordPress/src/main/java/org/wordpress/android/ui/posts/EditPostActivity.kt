@@ -192,6 +192,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.ExperimentalFeature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -234,8 +235,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitThemeStylesFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
@@ -409,8 +408,9 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var gutenbergKitFeatureConfig: GutenbergKitFeatureConfig
-    @Inject lateinit var gutenbergKitThemeStylesConfig: GutenbergKitThemeStylesFeatureConfig
+    private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
+    private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
+        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
