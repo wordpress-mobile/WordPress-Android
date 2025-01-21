@@ -11,8 +11,7 @@ import org.wordpress.android.util.AppLog
 class WordPressDebug : WordPressApp() {
     override fun onCreate() {
         super.onCreate()
-        // TODO comment this out before merging the Android 15 feature branch
-        enableStrictMode()
+        // enableStrictMode()
     }
 
     /**
