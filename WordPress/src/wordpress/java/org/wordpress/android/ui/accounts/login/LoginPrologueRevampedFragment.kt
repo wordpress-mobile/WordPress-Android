@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
