@@ -40,7 +40,7 @@ class NewDomainSearchActivity : BaseAppCompatActivity() {
         observeActions()
     }
 
-    override fun shouldUseEdgeToEdge() = false
+    override fun shouldEnforceEdgeToEdge() = false
 
     private fun observeActions() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)

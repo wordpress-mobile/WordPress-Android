@@ -18,7 +18,7 @@ class DesignSystemActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldUseEdgeToEdge() = false
+    override fun shouldEnforceEdgeToEdge() = false
 
     @Preview(name = "Light Mode")
     @Preview(

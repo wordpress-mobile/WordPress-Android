@@ -2,7 +2,6 @@ package org.wordpress.android.ui.debug.preferences
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,5 +27,5 @@ class DebugSharedPreferenceFlagsActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldUseEdgeToEdge() = false
+    override fun shouldEnforceEdgeToEdge() = false
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View.generateViewId
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.commit
@@ -45,5 +44,5 @@ class JetpackStaticPosterActivity : BaseAppCompatActivity() {
         )
     }
 
-    override fun shouldUseEdgeToEdge() = false
+    override fun shouldEnforceEdgeToEdge() = false
 }

@@ -95,7 +95,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldUseEdgeToEdge() = false
+    override fun shouldEnforceEdgeToEdge() = false
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

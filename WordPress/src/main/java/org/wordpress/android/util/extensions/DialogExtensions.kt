@@ -27,7 +27,6 @@ fun Dialog.setStatusBarAsSurfaceColor() {
     window?.setWindowStatusBarColor(statusBarColor)
 }
 
-
 fun BottomSheetDialog.fillScreen(isDraggable: Boolean = false) {
     setOnShowListener {
         val bottomSheet: FrameLayout = findViewById(
