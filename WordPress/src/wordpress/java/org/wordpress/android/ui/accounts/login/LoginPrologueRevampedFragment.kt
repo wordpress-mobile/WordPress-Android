@@ -33,7 +33,6 @@ import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButto
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
@@ -61,13 +60,23 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.setEdgeToEdgeContentDisplay(true)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            setEdgeToEdgeContentDisplay(true)
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.setEdgeToEdgeContentDisplay(false)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            setEdgeToEdgeContentDisplay(false)
+        }
     }
+
+    private fun setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
+        val decorFitsSystemWindows = !isEnabled
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, decorFitsSystemWindows)
+    }
+
 
     companion object {
         const val TAG = "login_prologue_revamped_fragment_tag"
