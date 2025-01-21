@@ -37,7 +37,8 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
     /**
      * Defaults to enforcing edge-to-edge on Android 15+, but descendants can override this to return
-     * false for cases such as Compose-based activities where edge-to-edge is automatically supported
+     * false for cases such as Compose-based activities where edge-to-edge is automatically supported,
+     * or full-screen activities where we don't want to alter the window insets
      */
     open fun shouldEnforceEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
 }
