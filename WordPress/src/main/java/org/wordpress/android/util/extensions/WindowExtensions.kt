@@ -12,44 +12,48 @@ fun Window.setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
     WindowCompat.setDecorFitsSystemWindows(this, decorFitsSystemWindows)
 }
 
-@Suppress("DEPRECATION")
 fun Window.setWindowStatusBarColor(color: Int) {
+    setWindowBarColor(color, InsetsType.STATUS_BAR)
+}
+
+fun Window.setWindowNavigationBarColor(color: Int) {
+    setWindowBarColor(color, InsetsType.NAVIGATION_BAR)
+}
+
+/**
+ * Sets the status bar or navigation bar color
+ * TODO Setting both the status bar color and navigation bar color causes the insets to be set twice
+ */
+@Suppress("DEPRECATION")
+private fun Window.setWindowBarColor(color: Int, insetsType: InsetsType) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
         // Android 15+
         decorView.setOnApplyWindowInsetsListener { view, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
             view.setBackgroundColor(color)
+            val barInsets = insets.getInsets(
+                when (insetsType) {
+                    InsetsType.STATUS_BAR -> WindowInsets.Type.statusBars()
+                    InsetsType.NAVIGATION_BAR -> WindowInsets.Type.navigationBars()
+                }
+            )
             // Adjust padding to avoid overlap
-            view.setPadding(0, statusBarInsets.top, 0, 0)
+            view.setPadding(0, barInsets.top, 0, 0)
             insets
         }
     } else {
-        // Android 14-
-        statusBarColor = color
+        when(insetsType) {
+            InsetsType.STATUS_BAR -> statusBarColor = color
+            InsetsType.NAVIGATION_BAR -> navigationBarColor = color
+        }
         val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
-        windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
-
-        // we need to set the light navigation appearance here because, for some reason, changing the status bar also
-        // changes the navigation bar appearance but this method is supposed to only change the status bar
+        if (insetsType == InsetsType.STATUS_BAR) {
+            windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
+        }
         windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
     }
 }
 
-@Suppress("DEPRECATION")
-fun Window.setWindowNavigationBarColor(color: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-        // Android 15+
-        decorView.setOnApplyWindowInsetsListener { view, insets ->
-            view.setBackgroundColor(color)
-            // Adjust padding to avoid overlap
-            val navBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
-            view.setPadding(0, navBarInsets.top, 0, 0)
-            insets
-        }
-    } else {
-        // Android 14-
-        val windowInsetsController = WindowInsetsControllerCompat(this, decorView)
-        navigationBarColor = color
-        windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
-    }
+private enum class InsetsType {
+    STATUS_BAR,
+    NAVIGATION_BAR
 }
