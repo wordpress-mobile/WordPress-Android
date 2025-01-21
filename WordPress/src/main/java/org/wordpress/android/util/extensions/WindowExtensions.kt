@@ -3,14 +3,8 @@ package org.wordpress.android.util.extensions
 import android.os.Build
 import android.view.Window
 import android.view.WindowInsets
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import org.wordpress.android.util.ColorUtils
-
-fun Window.setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
-    val decorFitsSystemWindows = !isEnabled
-    WindowCompat.setDecorFitsSystemWindows(this, decorFitsSystemWindows)
-}
 
 fun Window.setWindowStatusBarColor(color: Int) {
     setWindowBarColor(color, InsetsType.STATUS_BAR)
