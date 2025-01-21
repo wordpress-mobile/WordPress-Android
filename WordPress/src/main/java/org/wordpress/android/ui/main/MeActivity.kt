@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
 import android.R as AndroidR
