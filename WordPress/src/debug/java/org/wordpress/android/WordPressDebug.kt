@@ -45,6 +45,9 @@ class WordPressDebug : WordPressApp() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         detectNonSdkApiUsage()
                     }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        detectUnsafeIntentLaunch()
+                    }
                 }
                 .build()
         )
