@@ -15,7 +15,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (shouldEnforceEdgeToEdge()) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldEnforceEdgeToEdge()) {
             enforceEdgeToEdge()
         }
     }
@@ -29,8 +29,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
             // Adjust system bars padding to avoid overlap
             val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
-            val navBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
-            view.setPadding(0, statusBarInsets.top, 0, navBarInsets.bottom)
+            view.setPadding(0, statusBarInsets.top, 0, 0)
 
             insets
         }
