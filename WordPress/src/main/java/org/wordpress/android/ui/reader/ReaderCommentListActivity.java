@@ -20,7 +20,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,6 +58,7 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -106,7 +106,7 @@ import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 @AndroidEntryPoint
-public class ReaderCommentListActivity extends AppCompatActivity implements OnConfirmListener,
+public class ReaderCommentListActivity extends BaseAppCompatActivity implements OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";

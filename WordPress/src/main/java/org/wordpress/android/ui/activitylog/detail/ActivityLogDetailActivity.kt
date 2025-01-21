@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.ActivityLogDetailActivityBinding
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class ActivityLogDetailActivity : AppCompatActivity() {
+class ActivityLogDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

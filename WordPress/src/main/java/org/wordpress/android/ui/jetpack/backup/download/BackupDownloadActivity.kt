@@ -3,10 +3,10 @@ package org.wordpress.android.ui.jetpack.backup.download
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.databinding.BackupDownloadActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class BackupDownloadActivity : AppCompatActivity() {
+class BackupDownloadActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(BackupDownloadActivityBinding.inflate(layoutInflater)) {

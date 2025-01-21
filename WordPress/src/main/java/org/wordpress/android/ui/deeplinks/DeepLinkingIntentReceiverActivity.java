@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
@@ -17,6 +16,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
@@ -40,7 +40,7 @@ import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 @AndroidEntryPoint
-public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
+public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
     @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;

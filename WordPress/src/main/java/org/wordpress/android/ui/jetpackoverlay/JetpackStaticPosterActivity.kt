@@ -10,11 +10,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class JetpackStaticPosterActivity : AppCompatActivity() {
+class JetpackStaticPosterActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,4 +44,6 @@ class JetpackStaticPosterActivity : AppCompatActivity() {
             }
         )
     }
+
+    override fun shouldUseEdgeToEdge() = false
 }

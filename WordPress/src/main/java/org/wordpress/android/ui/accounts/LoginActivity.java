@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -62,6 +61,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -95,7 +95,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 @AndroidEntryPoint
-public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+public class LoginActivity extends BaseAppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";

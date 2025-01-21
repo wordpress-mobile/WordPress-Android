@@ -15,11 +15,11 @@ import org.wordpress.android.databinding.PhotoPickerActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.PHOTO_PICKER
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
@@ -55,7 +55,7 @@ import java.io.File
 import javax.inject.Inject
 import android.R as AndroidR
 
-class MediaPickerActivity : AppCompatActivity(), MediaPickerListener {
+class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
     private lateinit var mediaPickerSetup: MediaPickerSetup
 

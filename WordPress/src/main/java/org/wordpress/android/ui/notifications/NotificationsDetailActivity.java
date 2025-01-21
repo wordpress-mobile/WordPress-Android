@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -43,6 +42,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -86,7 +86,7 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 
 @AndroidEntryPoint
 @SuppressWarnings("deprecation")
-public class NotificationsDetailActivity extends AppCompatActivity implements
+public class NotificationsDetailActivity extends BaseAppCompatActivity implements
         CommentActions.OnNoteCommentActionListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     private static final String ARG_TITLE = "activityTitle";

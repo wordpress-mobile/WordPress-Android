@@ -32,12 +32,12 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -70,7 +70,7 @@ const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
-class PostsListActivity : AppCompatActivity(),
+class PostsListActivity : BaseAppCompatActivity(),
     EditPostActivityHook,
     PrepublishingBottomSheetListener,
     BasicDialogPositiveClickInterface,

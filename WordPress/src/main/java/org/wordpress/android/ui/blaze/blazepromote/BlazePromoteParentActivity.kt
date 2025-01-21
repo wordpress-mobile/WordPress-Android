@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -20,7 +20,7 @@ const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 const val ARG_BLAZE_SHOULD_SHOW_OVERLAY = "blaze_flow_should_show_overlay"
 
 @AndroidEntryPoint
-class BlazePromoteParentActivity : AppCompatActivity() {
+class BlazePromoteParentActivity : BaseAppCompatActivity() {
     private val viewModel: BlazeViewModel by viewModels()
     private var shouldShowOverlay = false
     private var source: BlazeFlowSource = BlazeFlowSource.DASHBOARD_CARD

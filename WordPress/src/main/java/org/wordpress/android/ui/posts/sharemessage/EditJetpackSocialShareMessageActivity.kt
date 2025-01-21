@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,12 +45,13 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3Editor
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.ActionEvent
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.UiState
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
+class EditJetpackSocialShareMessageActivity : BaseAppCompatActivity() {
     private val viewModel: EditJetpackSocialShareMessageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +75,8 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun shouldUseEdgeToEdge() = false
 
     @Composable
     private fun Loaded(state: UiState.Loaded) {

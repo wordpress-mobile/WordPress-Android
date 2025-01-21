@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.SiteSettingsCategoriesListActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class CategoriesListActivity : AppCompatActivity() {
+class CategoriesListActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(SiteSettingsCategoriesListActivityBinding.inflate(layoutInflater)) {

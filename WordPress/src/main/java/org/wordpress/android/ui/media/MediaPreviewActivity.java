@@ -31,6 +31,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
+public class MediaPreviewActivity extends BaseAppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_OR_URL_LIST = "id_list";
     private static final String ARG_PREVIEW_TYPE = "preview_type";
 

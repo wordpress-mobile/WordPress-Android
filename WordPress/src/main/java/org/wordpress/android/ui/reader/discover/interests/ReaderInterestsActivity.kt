@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderInterestsActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class ReaderInterestsActivity : AppCompatActivity() {
+class ReaderInterestsActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

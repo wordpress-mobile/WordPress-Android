@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
 import org.wordpress.android.ui.ActivityId
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -43,7 +42,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChooseSiteActivity : AppCompatActivity() {
+class ChooseSiteActivity : BaseAppCompatActivity() {
     private val viewModel: SiteViewModel by viewModels()
     private val adapter = ChooseSiteAdapter()
     private val mode by lazy { SitePickerMode.valueOf(intent.getStringExtra(KEY_SITE_PICKER_MODE)!!) }

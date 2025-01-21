@@ -12,8 +12,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityLauncher
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -22,7 +22,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class StatsActivity : AppCompatActivity() {
+class StatsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
 

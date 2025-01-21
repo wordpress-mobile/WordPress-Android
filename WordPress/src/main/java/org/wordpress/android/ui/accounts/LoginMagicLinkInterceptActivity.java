@@ -5,10 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint;
  * or signup based on deep link scheme, host, and parameters.
  */
 @AndroidEntryPoint
-public class LoginMagicLinkInterceptActivity extends AppCompatActivity {
+public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
     private static final String PARAMETER_FLOW = "flow";
     private static final String PARAMETER_FLOW_JETPACK = "jetpack";
     private static final String PARAMETER_SOURCE = "source";

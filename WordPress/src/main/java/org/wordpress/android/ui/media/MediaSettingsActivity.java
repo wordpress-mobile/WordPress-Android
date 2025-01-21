@@ -46,7 +46,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
@@ -73,6 +72,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AniUtils;
@@ -109,7 +109,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
-public class MediaSettingsActivity extends AppCompatActivity
+public class MediaSettingsActivity extends BaseAppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";

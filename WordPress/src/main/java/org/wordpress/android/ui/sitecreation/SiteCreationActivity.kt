@@ -16,7 +16,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_SITE_CREATION
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -71,7 +71,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class SiteCreationActivity : AppCompatActivity(),
+class SiteCreationActivity : BaseAppCompatActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,

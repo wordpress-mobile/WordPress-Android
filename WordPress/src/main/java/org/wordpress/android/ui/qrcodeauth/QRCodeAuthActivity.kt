@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.QrcodeauthActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 @AndroidEntryPoint
-class QRCodeAuthActivity : AppCompatActivity() {
+class QRCodeAuthActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

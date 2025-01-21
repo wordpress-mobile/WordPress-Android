@@ -17,7 +17,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SuggestUsersActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
@@ -29,7 +29,7 @@ import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
-class SuggestionActivity : AppCompatActivity() {
+class SuggestionActivity : BaseAppCompatActivity() {
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
 

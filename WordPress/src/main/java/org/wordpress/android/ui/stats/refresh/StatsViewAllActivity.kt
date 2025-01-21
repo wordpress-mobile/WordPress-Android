@@ -10,13 +10,13 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsViewAllActivityBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class StatsViewAllActivity : AppCompatActivity() {
+class StatsViewAllActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -10,9 +10,15 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        if (shouldUseEdgeToEdge()) {
             val statusBarColor = getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
             window.setWindowStatusBarColor(statusBarColor)
         }
     }
+
+    /**
+     * Descendants can override this to return false if they don't want to use edge-to-edge - this should
+     * be set to false for Compose-based activities since Compose automatically handles edge-to-edge
+     */
+    open fun shouldUseEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
 }

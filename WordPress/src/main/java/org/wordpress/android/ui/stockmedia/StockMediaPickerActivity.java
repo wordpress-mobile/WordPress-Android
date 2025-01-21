@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
@@ -43,6 +42,7 @@ import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayl
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
@@ -68,7 +68,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 

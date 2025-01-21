@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.StatsAllTimeWidgetConfigureActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class StatsAllTimeWidgetConfigureActivity : AppCompatActivity() {
+class StatsAllTimeWidgetConfigureActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(StatsAllTimeWidgetConfigureActivityBinding.inflate(layoutInflater)) {

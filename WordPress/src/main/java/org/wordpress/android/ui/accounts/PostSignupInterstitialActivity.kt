@@ -8,8 +8,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
@@ -21,7 +21,7 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PostSignupInterstitialActivity : AppCompatActivity() {
+class PostSignupInterstitialActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostSignupInterstitialViewModel

@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
@@ -35,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.util.SiteUtils;
@@ -45,7 +45,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class AddQuickPressShortcutActivity extends AppCompatActivity {
+public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
     public String[] blogNames;
     public int[] siteIds;
     public String[] blogUrls;

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
 
@@ -20,6 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentListener;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -44,7 +44,7 @@ import javax.inject.Inject;
  * Moreover it lists what actions the user can perform and redirects the user to the activity,
  * along with the content passed in the intent.
  */
-public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
+public class ShareIntentReceiverActivity extends BaseAppCompatActivity implements ShareIntentFragmentListener {
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";

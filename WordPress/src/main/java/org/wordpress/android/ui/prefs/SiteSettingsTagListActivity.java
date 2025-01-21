@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,6 +43,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -60,7 +60,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class SiteSettingsTagListActivity extends AppCompatActivity
+public class SiteSettingsTagListActivity extends BaseAppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
         SiteSettingsTagDetailFragment.OnTagDetailListener {
     @Inject Dispatcher mDispatcher;

@@ -6,10 +6,10 @@ import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.AppSettingsActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 @AndroidEntryPoint
-class AppSettingsActivity : AppCompatActivity() {
+class AppSettingsActivity : BaseAppCompatActivity() {
     private lateinit var binding: AppSettingsActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {

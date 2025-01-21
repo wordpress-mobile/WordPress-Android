@@ -2,11 +2,11 @@ package org.wordpress.android.ui.jetpack.scan.details
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.databinding.ThreatDetailsActivityBinding
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class ThreatDetailsActivity : AppCompatActivity() {
+class ThreatDetailsActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(ThreatDetailsActivityBinding.inflate(layoutInflater)) {

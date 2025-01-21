@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
 enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
@@ -76,7 +76,7 @@ class FeatureViewModel : ViewModel() {
 }
 
 @AndroidEntryPoint
-class ExperimentalFeaturesActivity : AppCompatActivity() {
+class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
     private val viewModel: FeatureViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +94,8 @@ class ExperimentalFeaturesActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun shouldUseEdgeToEdge() = false
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

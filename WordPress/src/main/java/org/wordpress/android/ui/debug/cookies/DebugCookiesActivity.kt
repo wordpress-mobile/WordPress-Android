@@ -3,10 +3,10 @@ package org.wordpress.android.ui.debug.cookies
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.databinding.DebugCookiesActivityBinding
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class DebugCookiesActivity : AppCompatActivity() {
+class DebugCookiesActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(DebugCookiesActivityBinding.inflate(layoutInflater).root)

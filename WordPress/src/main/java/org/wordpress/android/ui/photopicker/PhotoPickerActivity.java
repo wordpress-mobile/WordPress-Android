@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,6 +24,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
@@ -52,7 +52,7 @@ import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_P
  * {@link org.wordpress.android.ui.mediapicker.MediaPickerActivity}
  */
 @Deprecated
-public class PhotoPickerActivity extends AppCompatActivity
+public class PhotoPickerActivity extends BaseAppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";

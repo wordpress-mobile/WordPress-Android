@@ -8,12 +8,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 @AndroidEntryPoint
-class FeedbackFormActivity : AppCompatActivity() {
+class FeedbackFormActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<FeedbackFormViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +56,8 @@ class FeedbackFormActivity : AppCompatActivity() {
             }
         )
     }
+
+    override fun shouldUseEdgeToEdge() = false
 
     private fun navigateToHelpScreen() {
         val intent = Intent(this, HelpActivity::class.java)

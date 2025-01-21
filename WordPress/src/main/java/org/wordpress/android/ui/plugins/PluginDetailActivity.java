@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -67,6 +66,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.util.AniUtils;
@@ -103,7 +103,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
-public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener,
+public class PluginDetailActivity extends BaseAppCompatActivity implements OnDomainRegistrationRequestedListener,
         BasicDialogPositiveClickInterface {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";

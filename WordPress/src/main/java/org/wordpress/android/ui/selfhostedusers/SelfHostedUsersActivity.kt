@@ -9,13 +9,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
-class SelfHostedUsersActivity : AppCompatActivity() {
+class SelfHostedUsersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SelfHostedUsersViewModel>()
     private var site: SiteModel? = null
 
@@ -59,6 +59,8 @@ class SelfHostedUsersActivity : AppCompatActivity() {
             }
         )
     }
+
+    override fun shouldUseEdgeToEdge() = false
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

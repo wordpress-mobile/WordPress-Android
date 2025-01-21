@@ -123,7 +123,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChang
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.isShowing
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary
@@ -134,6 +133,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -261,7 +261,7 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @Suppress("LargeClass")
-class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,

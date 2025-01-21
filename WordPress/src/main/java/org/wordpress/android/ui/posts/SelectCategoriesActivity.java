@@ -14,7 +14,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,6 +34,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded;
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -52,7 +52,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class SelectCategoriesActivity extends AppCompatActivity {
+public class SelectCategoriesActivity extends BaseAppCompatActivity {
     public static final String KEY_SELECTED_CATEGORY_IDS = "KEY_SELECTED_CATEGORY_IDS";
 
     private ListView mListView;

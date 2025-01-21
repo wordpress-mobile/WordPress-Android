@@ -3,15 +3,15 @@ package org.wordpress.android.ui.main.jetpack.migration
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityJetpackMigrationBinding
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 
 @AndroidEntryPoint
-class JetpackMigrationActivity : AppCompatActivity() {
+class JetpackMigrationActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

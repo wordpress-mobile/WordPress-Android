@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
@@ -35,7 +35,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpilogueListener {
+public class LoginEpilogueActivity extends BaseAppCompatActivity implements LoginEpilogueListener {
     public static final String EXTRA_DO_LOGIN_UPDATE = "EXTRA_DO_LOGIN_UPDATE";
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
