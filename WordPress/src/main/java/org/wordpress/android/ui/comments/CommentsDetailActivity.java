@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +32,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.comments.unified.CommentConstants;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -55,7 +55,7 @@ import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENT
 @Deprecated
 @AndroidEntryPoint
 @SuppressWarnings({"deprecation", "DeprecatedIsStillUsed"})
-public class CommentsDetailActivity extends AppCompatActivity
+public class CommentsDetailActivity extends BaseAppCompatActivity
         implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
