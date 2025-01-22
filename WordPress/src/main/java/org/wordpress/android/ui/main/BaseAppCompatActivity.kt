@@ -84,7 +84,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         /**
          * List of activities to exclude from setting the top and bottom offset
          */
-        private val EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES = listOf(
+        private val EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES = hashSetOf(
             "BloggingPromptsListActivity",
             "DebugSharedPreferenceFlagsActivity",
             "DesignSystemActivity",
@@ -106,7 +106,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         /**
          * List of activities to exclude from setting just the top offset
          */
-        private val EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES = listOf(
+        private val EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES = hashSetOf(
             "MediaSettingsActivity",
             "PagesActivity",
             "PostsListActivity",
@@ -116,7 +116,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         /**
          * List of activities to exclude from setting just the bottom offset
          */
-        private val EXCLUDE_FROM_BOTTOM_OFFSET_ACTIVITY_NAMES = listOf(
+        private val EXCLUDE_FROM_BOTTOM_OFFSET_ACTIVITY_NAMES = hashSetOf(
             "WPMainActivity",
         )
     }
