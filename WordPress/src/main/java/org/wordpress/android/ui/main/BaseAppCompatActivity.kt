@@ -2,9 +2,11 @@ package org.wordpress.android.ui.main
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.R
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
 /**
@@ -25,14 +27,25 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
             // set the system bars color
             val systemBarColor = getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
-            view.setBackgroundColor(systemBarColor)
+            // view.setBackgroundColor(systemBarColor)
+
+            // base the top offset on the system bar inset
+            val topOffset = insets.getInsets(WindowInsets.Type.statusBars()).top
+
+            // base the bottom offset on the navigation bar inset, but use a zero offset if the activity contains
+            // the main BottomNavigationView
+            val bottomOffset = if (findViewById<View>(R.id.main_navigation_bar_view) != null) {
+                0
+            } else {
+                insets.getInsets(WindowInsets.Type.navigationBars()).bottom
+            }
 
             // Adjust system bars padding to avoid overlap
             view.setPadding(
                 0,
-                getTopOffset(insets),
+                topOffset,
                 0,
-                getBottomOffset(insets)
+                bottomOffset
             )
 
             insets
@@ -45,10 +58,4 @@ open class BaseAppCompatActivity : AppCompatActivity() {
      * or full-screen activities where we don't want to alter the window insets.
      */
     open fun shouldAdjustContentForEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    open fun getTopOffset(insets: WindowInsets) = insets.getInsets(WindowInsets.Type.statusBars()).top
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    open fun getBottomOffset(insets: WindowInsets) = insets.getInsets(WindowInsets.Type.navigationBars()).bottom
 }
