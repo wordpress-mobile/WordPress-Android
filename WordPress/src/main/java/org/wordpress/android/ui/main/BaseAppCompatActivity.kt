@@ -21,50 +21,46 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun adjustContentForEdgeToEdge() {
-        window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-            // do nothing if neither offset is being set
-            if (shouldAdjustTopAndBottomOffsetForEdgeToEdge().not()) {
-                return@setOnApplyWindowInsetsListener insets
+        if (shouldAdjustAnyOffsets()) {
+            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+                // base the top offset on the system bar inset
+                val topOffset = if (shouldAdjustTopOffset()) {
+                    insets.getInsets(WindowInsets.Type.statusBars()).top
+                } else {
+                    0
+                }
+
+                // base the bottom offset on the navigation bar inset, but use a zero offset for the main activity
+                // to accommodate the main BottomNavigationView
+                val bottomOffset = if (shouldAdjustBottomOffset()) {
+                    insets.getInsets(WindowInsets.Type.navigationBars()).bottom
+                } else {
+                    0
+                }
+
+                // Adjust system bars padding to avoid overlap
+                view.setPadding(
+                    0,
+                    topOffset,
+                    0,
+                    bottomOffset
+                )
+
+                insets
             }
-
-            // base the top offset on the system bar inset
-            val topOffset = if (shouldAdjustTopOffsetForEdgeToEdge()) {
-                insets.getInsets(WindowInsets.Type.statusBars()).top
-            } else {
-                0
-            }
-
-            // base the bottom offset on the navigation bar inset, but use a zero offset for the main activity
-            // to accommodate the main BottomNavigationView
-            val bottomOffset = if (shouldAdjustBottomOffsetForEdgeToEdge()) {
-                insets.getInsets(WindowInsets.Type.navigationBars()).bottom
-            } else {
-                0
-            }
-
-            // Adjust system bars padding to avoid overlap
-            view.setPadding(
-                0,
-                topOffset,
-                0,
-                bottomOffset
-            )
-
-            insets
         }
     }
 
     private fun getActivityName() = this.localClassName.substringAfterLast(".")
 
-    private fun shouldAdjustTopAndBottomOffsetForEdgeToEdge(): Boolean {
-        val activityName = getActivityName()
-        if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName)) {
-            return false
+    private fun shouldAdjustAnyOffsets(): Boolean {
+        if (shouldAdjustTopOffset() or shouldAdjustBottomOffset()) {
+            return true
         }
-        return true
+        return false
     }
 
-    private fun shouldAdjustTopOffsetForEdgeToEdge(): Boolean {
+    private fun shouldAdjustTopOffset(): Boolean {
         val activityName = getActivityName()
         if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName) or
             EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES.contains(activityName)
@@ -74,7 +70,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         return true
     }
 
-    private fun shouldAdjustBottomOffsetForEdgeToEdge(): Boolean {
+    private fun shouldAdjustBottomOffset(): Boolean {
         val activityName = getActivityName()
         if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName) or
             EXCLUDE_FROM_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName)
@@ -111,6 +107,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
          * List of activities to exclude from setting just the top offset
          */
         private val EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES = listOf(
+            "MediaSettingsActivity",
             "PagesActivity",
             "PostsListActivity",
             "StatsActivity",
