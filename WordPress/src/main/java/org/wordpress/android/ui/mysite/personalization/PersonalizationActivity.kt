@@ -81,7 +81,7 @@ class PersonalizationActivity : BaseAppCompatActivity() {
         viewModel.onSelectedSiteMissing.observe(this) { finish() }
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable

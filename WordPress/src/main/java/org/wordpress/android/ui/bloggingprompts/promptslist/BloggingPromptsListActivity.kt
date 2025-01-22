@@ -36,7 +36,7 @@ class BloggingPromptsListActivity : BaseAppCompatActivity() {
         observeActions()
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     /**
      * Since we're declaring that this Activity handles orientation changes by itself in the

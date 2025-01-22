@@ -104,7 +104,7 @@ class MenuActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -27,5 +27,5 @@ class DebugSharedPreferenceFlagsActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 }

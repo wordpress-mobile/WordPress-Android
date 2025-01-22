@@ -60,7 +60,7 @@ class SelfHostedUsersActivity : BaseAppCompatActivity() {
         )
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

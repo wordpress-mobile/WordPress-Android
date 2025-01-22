@@ -61,7 +61,7 @@ class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     private fun initViewModel(savedInstanceState: Bundle?) {
         val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))

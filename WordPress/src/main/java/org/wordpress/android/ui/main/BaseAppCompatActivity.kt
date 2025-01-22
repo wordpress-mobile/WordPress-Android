@@ -15,26 +15,24 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldEnforceEdgeToEdge()) {
-            enforceEdgeToEdge()
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldAdjustSystemBarsForEdgeToEdge()) {
+            adjustSystemBarsForEdgeToEdge()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun enforceEdgeToEdge() {
+    private fun adjustSystemBarsForEdgeToEdge() {
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
             // set the system bars color
             val systemBarColor = getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
             view.setBackgroundColor(systemBarColor)
 
             // Adjust system bars padding to avoid overlap
-            val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
-            val navigationBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
             view.setPadding(
                 0,
-                statusBarInsets.top,
+                getTopOffset(insets),
                 0,
-                navigationBarInsets.bottom
+                getBottomOffset(insets)
             )
 
             insets
@@ -42,9 +40,15 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     }
 
     /**
-     * Defaults to enforcing edge-to-edge on Android 15+, but descendants can override this to return
-     * false for cases such as Compose-based activities where edge-to-edge is automatically supported,
-     * or full-screen activities where we don't want to alter the window insets
+     * Defaults to enforcing system bar padding for edge-to-edge on Android 15+ - descendants can override this and
+     * return false for cases such as Compose-based activities where edge-to-edge is automatically supported,
+     * or full-screen activities where we don't want to alter the window insets.
      */
-    open fun shouldEnforceEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    open fun shouldAdjustSystemBarsForEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    open fun getTopOffset(insets: WindowInsets) = insets.getInsets(WindowInsets.Type.statusBars()).top
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    open fun getBottomOffset(insets: WindowInsets) = insets.getInsets(WindowInsets.Type.navigationBars()).bottom
 }

@@ -42,7 +42,7 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
         observeActionEvents()
     }
 
-    override fun shouldEnforceEdgeToEdge() = false
+    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
 
     @Suppress("OVERRIDE_DEPRECATION","MissingSuperCall")
     override fun onBackPressed() {
