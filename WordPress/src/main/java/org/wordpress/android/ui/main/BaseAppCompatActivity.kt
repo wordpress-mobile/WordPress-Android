@@ -7,7 +7,6 @@ import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
-import org.wordpress.android.util.extensions.getColorFromAttribute
 
 /**
  * Base class for all activities - initially created to support Android 15's edge-to-edge, but can be extended
@@ -25,10 +24,6 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     private fun adjustContentForEdgeToEdge() {
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-            // set the system bars color
-            val systemBarColor = getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
-            // view.setBackgroundColor(systemBarColor)
-
             // base the top offset on the system bar inset
             val topOffset = insets.getInsets(WindowInsets.Type.statusBars()).top
 
