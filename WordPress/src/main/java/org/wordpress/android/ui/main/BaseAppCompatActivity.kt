@@ -15,13 +15,13 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldAdjustSystemBarsForEdgeToEdge()) {
-            adjustSystemBarsForEdgeToEdge()
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldAdjustContentForEdgeToEdge()) {
+            adjustContentForEdgeToEdge()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun adjustSystemBarsForEdgeToEdge() {
+    private fun adjustContentForEdgeToEdge() {
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
             // set the system bars color
             val systemBarColor = getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
@@ -44,7 +44,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
      * return false for cases such as Compose-based activities where edge-to-edge is automatically supported,
      * or full-screen activities where we don't want to alter the window insets.
      */
-    open fun shouldAdjustSystemBarsForEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    open fun shouldAdjustContentForEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
 
     @RequiresApi(Build.VERSION_CODES.R)
     open fun getTopOffset(insets: WindowInsets) = insets.getInsets(WindowInsets.Type.statusBars()).top

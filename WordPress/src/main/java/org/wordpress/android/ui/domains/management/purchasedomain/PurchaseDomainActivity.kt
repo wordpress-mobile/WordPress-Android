@@ -78,7 +78,7 @@ class PurchaseDomainActivity : BaseAppCompatActivity() {
         observeActions()
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 
     private fun observeActions() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)

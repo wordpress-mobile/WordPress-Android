@@ -39,7 +39,7 @@ class DomainManagementActivity : BaseAppCompatActivity() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 
     private fun handleActionEvents(actionEvent: ActionEvent) {
         when (actionEvent) {

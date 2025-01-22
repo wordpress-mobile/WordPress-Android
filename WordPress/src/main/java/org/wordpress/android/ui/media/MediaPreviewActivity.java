@@ -220,7 +220,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
     }
 
     @Override
-    public boolean shouldAdjustSystemBarsForEdgeToEdge() {
+    public boolean shouldAdjustContentForEdgeToEdge() {
         return false;
     }
 

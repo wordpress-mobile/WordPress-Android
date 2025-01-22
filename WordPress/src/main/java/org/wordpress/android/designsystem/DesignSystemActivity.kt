@@ -18,7 +18,7 @@ class DesignSystemActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 
     @Preview(name = "Light Mode")
     @Preview(

@@ -76,7 +76,7 @@ class EditJetpackSocialShareMessageActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 
     @Composable
     private fun Loaded(state: UiState.Loaded) {

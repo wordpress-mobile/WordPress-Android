@@ -57,7 +57,7 @@ class FeedbackFormActivity : BaseAppCompatActivity() {
         )
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 
     private fun navigateToHelpScreen() {
         val intent = Intent(this, HelpActivity::class.java)

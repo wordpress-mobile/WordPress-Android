@@ -95,7 +95,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldAdjustSystemBarsForEdgeToEdge() = false
+    override fun shouldAdjustContentForEdgeToEdge() = false
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
