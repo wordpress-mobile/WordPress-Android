@@ -2,11 +2,9 @@ package org.wordpress.android.ui.main
 
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import org.wordpress.android.R
 
 /**
  * Base class for all activities - initially created to support Android 15's edge-to-edge, but can be extended
@@ -27,9 +25,9 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             // base the top offset on the system bar inset
             val topOffset = insets.getInsets(WindowInsets.Type.statusBars()).top
 
-            // base the bottom offset on the navigation bar inset, but use a zero offset if the activity contains
-            // the main BottomNavigationView
-            val bottomOffset = if (findViewById<View>(R.id.main_navigation_bar_view) != null) {
+            // base the bottom offset on the navigation bar inset, but use a zero offset for the main activity
+            // to accommodate the main BottomNavigationView
+            val bottomOffset = if (this is WPMainActivity) {
                 0
             } else {
                 insets.getInsets(WindowInsets.Type.navigationBars()).bottom
