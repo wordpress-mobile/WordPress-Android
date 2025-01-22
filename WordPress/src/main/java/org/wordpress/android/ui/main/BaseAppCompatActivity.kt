@@ -29,7 +29,13 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
             // Adjust system bars padding to avoid overlap
             val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
-            view.setPadding(0, statusBarInsets.top, 0, 0)
+            val navigationBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
+            view.setPadding(
+                0,
+                statusBarInsets.top,
+                0,
+                navigationBarInsets.bottom
+            )
 
             insets
         }
