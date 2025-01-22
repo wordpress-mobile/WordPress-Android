@@ -7,14 +7,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Base class for all activities - initially created to support Android 15's edge-to-edge, but can be extended
- * in the future to handle other situations
+ * Base class for all activities - initially created to handle insets for Android 15's edge-to-edge support,
+ * but can be extended in the future to handle other situations
  */
 open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             applyInsetOffsets()
         }
     }
