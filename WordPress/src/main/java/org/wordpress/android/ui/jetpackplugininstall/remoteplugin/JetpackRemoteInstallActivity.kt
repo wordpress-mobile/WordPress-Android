@@ -61,8 +61,6 @@ class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     private fun initViewModel(savedInstanceState: Bundle?) {
         val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
         val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))

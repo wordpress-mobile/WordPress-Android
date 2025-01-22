@@ -60,8 +60,6 @@ class SelfHostedUsersActivity : BaseAppCompatActivity() {
         )
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)

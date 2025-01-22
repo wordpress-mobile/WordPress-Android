@@ -39,8 +39,6 @@ class DomainManagementActivity : BaseAppCompatActivity() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     private fun handleActionEvents(actionEvent: ActionEvent) {
         when (actionEvent) {
             is ActionEvent.DomainTapped -> {

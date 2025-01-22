@@ -57,8 +57,6 @@ class FeedbackFormActivity : BaseAppCompatActivity() {
         )
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     private fun navigateToHelpScreen() {
         val intent = Intent(this, HelpActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -14,7 +14,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) && shouldAdjustContentForEdgeToEdge()) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)) {
             adjustContentForEdgeToEdge()
         }
     }
@@ -22,15 +22,24 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     private fun adjustContentForEdgeToEdge() {
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+            // do nothing if neither offset is being set
+            if (shouldAdjustTopAndBottomOffsetForEdgeToEdge().not()) {
+                return@setOnApplyWindowInsetsListener insets
+            }
+
             // base the top offset on the system bar inset
-            val topOffset = insets.getInsets(WindowInsets.Type.statusBars()).top
+            val topOffset = if (shouldAdjustTopOffsetForEdgeToEdge()) {
+                insets.getInsets(WindowInsets.Type.statusBars()).top
+            } else {
+                0
+            }
 
             // base the bottom offset on the navigation bar inset, but use a zero offset for the main activity
             // to accommodate the main BottomNavigationView
-            val bottomOffset = if (this is WPMainActivity) {
-                0
-            } else {
+            val bottomOffset = if (shouldAdjustBottomOffsetForEdgeToEdge()) {
                 insets.getInsets(WindowInsets.Type.navigationBars()).bottom
+            } else {
+                0
             }
 
             // Adjust system bars padding to avoid overlap
@@ -45,10 +54,73 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Defaults to enforcing system bar padding for edge-to-edge on Android 15+ - descendants can override this and
-     * return false for cases such as Compose-based activities where edge-to-edge is automatically supported,
-     * or full-screen activities where we don't want to alter the window insets.
-     */
-    open fun shouldAdjustContentForEdgeToEdge() = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    private fun getActivityName() = this.localClassName.substringAfterLast(".")
+
+    private fun shouldAdjustTopAndBottomOffsetForEdgeToEdge(): Boolean {
+        val activityName = getActivityName()
+        if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName)) {
+            return false
+        }
+        return true
+    }
+
+    private fun shouldAdjustTopOffsetForEdgeToEdge(): Boolean {
+        val activityName = getActivityName()
+        if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName) or
+            EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES.contains(activityName)
+        ) {
+            return false
+        }
+        return true
+    }
+
+    private fun shouldAdjustBottomOffsetForEdgeToEdge(): Boolean {
+        val activityName = getActivityName()
+        if (EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName) or
+            EXCLUDE_FROM_BOTTOM_OFFSET_ACTIVITY_NAMES.contains(activityName)
+        ) {
+            return false
+        }
+        return true
+    }
+
+    companion object {
+        /**
+         * List of activities to exclude from setting the top and bottom offset
+         */
+        private val EXCLUDE_FROM_TOP_AND_BOTTOM_OFFSET_ACTIVITY_NAMES = listOf(
+            "BloggingPromptsListActivity",
+            "DebugSharedPreferenceFlagsActivity",
+            "DesignSystemActivity",
+            "DomainManagementActivity",
+            "EditJetpackSocialShareMessageActivity",
+            "ExperimentalFeaturesActivity",
+            "JetpackStaticPosterActivity",
+            "JetpackFullPluginInstallActivity",
+            "JetpackRemoteInstallActivity",
+            "FeedbackFormActivity",
+            "MediaPreviewActivity",
+            "MenuActivity",
+            "NewDomainSearchActivity",
+            "PersonalizationActivity",
+            "PurchaseDomainActivity",
+            "SelfHostedUsersActivity",
+        )
+
+        /**
+         * List of activities to exclude from setting just the top offset
+         */
+        private val EXCLUDE_FROM_TOP_OFFSET_ACTIVITY_NAMES = listOf(
+            "PagesActivity",
+            "PostsListActivity",
+            "StatsActivity",
+        )
+
+        /**
+         * List of activities to exclude from setting just the bottom offset
+         */
+        private val EXCLUDE_FROM_BOTTOM_OFFSET_ACTIVITY_NAMES = listOf(
+            "WPMainActivity",
+        )
+    }
 }

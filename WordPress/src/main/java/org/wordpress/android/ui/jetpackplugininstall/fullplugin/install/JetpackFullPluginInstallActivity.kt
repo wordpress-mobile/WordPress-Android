@@ -42,8 +42,6 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
         observeActionEvents()
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     @Suppress("OVERRIDE_DEPRECATION","MissingSuperCall")
     override fun onBackPressed() {
         if (!viewModel.uiState.value.showCloseButton) return

@@ -43,6 +43,4 @@ class JetpackStaticPosterActivity : BaseAppCompatActivity() {
             }
         )
     }
-
-    override fun shouldAdjustContentForEdgeToEdge() = false
 }

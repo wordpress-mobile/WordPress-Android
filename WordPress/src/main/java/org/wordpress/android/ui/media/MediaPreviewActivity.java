@@ -220,11 +220,6 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
     }
 
     @Override
-    public boolean shouldAdjustContentForEdgeToEdge() {
-        return false;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();

@@ -81,8 +81,6 @@ class PersonalizationActivity : BaseAppCompatActivity() {
         viewModel.onSelectedSiteMissing.observe(this) { finish() }
     }
 
-    override fun shouldAdjustContentForEdgeToEdge() = false
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun PersonalizationScreen(modifier: Modifier = Modifier) {
