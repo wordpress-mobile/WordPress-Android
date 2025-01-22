@@ -66,27 +66,30 @@ open class BaseAppCompatActivity : AppCompatActivity() {
      */
     private val excludedActivities: HashMap<String, ActivityOffsets> = hashMapOf(
         // apply neither top nor bottom offset
+        "BlazeCampaignParentActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "BloggingPromptsListActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "DebugSharedPreferenceFlagsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "DesignSystemActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "DomainManagementActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "EditJetpackSocialShareMessageActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "ExperimentalFeaturesActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        "JetpackStaticPosterActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "FeedbackFormActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "JetpackFullPluginInstallActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "JetpackRemoteInstallActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        "FeedbackFormActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "JetpackStaticPosterActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "MediaPreviewActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "MenuActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "NewDomainSearchActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "PersonalizationActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "PurchaseDomainActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "SelfHostedUsersActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+
         // apply bottom offset only
         "MediaSettingsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
         "PagesActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
         "PostsListActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
         "StatsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
+
         // apply top offset only
         "WPMainActivity" to ActivityOffsets(applyTopOffset = true, applyBottomOffset = false),
     )
