@@ -83,6 +83,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         "PersonalizationActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "PurchaseDomainActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         "SelfHostedUsersActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "SiteMonitorParentActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
 
         // apply bottom offset only
         "MediaSettingsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
