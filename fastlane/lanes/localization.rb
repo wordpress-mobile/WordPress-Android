@@ -165,71 +165,86 @@ platform :android do
   # Downloads the translated metadata (release notes, app store strings, title, etc.)
   # from GlotPress, and updates the local `.txt` files with them.
   #
-  # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
-  # @option [String] version The `versionName` of the app, used to extract the release notes from the right GlotPress key. Defaults to current `versionName`.
-  # @option [Boolean] skip_release_notes If set to true, will not download release notes. Defaults to `false`. This can be useful when all you want to download
-  #         is screenshots translations and metadata not linked to a specific version (in which case the `version` parameters is optional).
-  # @option [Boolean] skip_commit If set to true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
-  # @option [Boolean] skip_git_push If set to true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
+  # @param [Symbol|String] app The app to download metadata for. If nil, downloads for both WordPress and Jetpack
+  # @param [String] version The `versionName` of the app, used to extract release notes from GlotPress.
+  #                         Defaults to current `versionName`. Only required if skip_release_notes is false
+  # @param [Boolean] skip_release_notes Whether to skip downloading release notes. Default false
+  # @param [Boolean] skip_commit If true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
+  # @param [Boolean] skip_git_push If true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
   #
-  desc 'Downloads translated metadata from GlotPress'
-  lane :download_metadata_strings do |options|
-    skip_release_notes = options.fetch(:skip_release_notes, false)
-    version = skip_release_notes ? nil : options.fetch(:version, current_release_version)
-
-    skip_commit = options.fetch(:skip_commit, false)
-    skip_git_push = options.fetch(:skip_git_push, false)
+  # @return [void]
+  #
+  lane :download_metadata_strings do |app: nil, version: current_release_version, skip_release_notes: false, skip_commit: false, skip_git_push: false|
+    version = nil if skip_release_notes
 
     # If no `app:` is specified, call this for both WordPress and Jetpack
-    app_param = options[:app]
-    apps = if app_param.nil?
+    apps = if app.nil?
              %i[wordpress jetpack]
            else
-             Array(app_param.to_s.downcase.to_sym)
+             Array(app.to_s.downcase.to_sym)
            end
 
-    apps.each do |app|
-      app_values = APP_SPECIFIC_VALUES[app]
+    apps.each do |current_app|
+      app_values = APP_SPECIFIC_VALUES[current_app]
       metadata_source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
+      metadata_download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
+      locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[current_app]
 
       files = {
         play_store_app_title: { desc: 'title.txt', max_size: 30 },
         play_store_promo: { desc: 'short_description.txt', max_size: 80 },
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
+
       unless skip_release_notes
         version_suffix = version.split('.').join
-        files["release_note_#{version_suffix}"] = { desc: 'changelogs/default.txt', max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
+
+        source_notes_file = File.join(metadata_source_dir, 'release_notes.txt')
+        if !File.exist?(source_notes_file) || File.read(source_notes_file).strip.empty?
+          # Clear release notes if the source file is empty
+          all_app_locales = locales + [%w[en en-US]]
+          all_app_locales.each_value do |google_play_locale|
+            changelog_dir = File.join(metadata_download_path, google_play_locale, 'changelogs')
+            FileUtils.mkdir_p(changelog_dir)
+            File.write(File.join(changelog_dir, 'default.txt'), '')
+          end
+        else
+          # Make sure to also download the release notes translations as the source file (release_notes.txt) is not empty
+          files["release_note_#{version_suffix}"] = {
+            desc: 'changelogs/default.txt',
+            max_size: 500,
+            alternate_key: "release_note_short_#{version_suffix}"
+          }
+        end
       end
+
       # Add key mappings for `screenshots_*` files too
       Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
         key = "play_store_#{File.basename(f, '.txt')}"
         files[key] = { desc: f }
       end
 
-      download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
-      locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[app]
       UI.header("Downloading metadata translations for #{app_values[:display_name]}")
       gp_downloadmetadata(
         project_url: app_values[:glotpress_metadata_project],
         target_files: files,
         locales: locales,
-        download_path: download_path
+        download_path: metadata_download_path
       )
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
       # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
       files.each do |key, h|
         source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
-        FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
+        FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(metadata_download_path, 'en-US', h[:desc]))
       end
 
       next if skip_commit
 
-      git_add(path: download_path)
+      git_add(path: metadata_download_path)
       message = "Update #{app_values[:display_name]} metadata translations"
       message += " for #{version}" unless version.nil?
-      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
+      git_commit(path: metadata_download_path, message: message, allow_nothing_to_commit: true)
     end
     push_to_git_remote unless skip_commit || skip_git_push
   end

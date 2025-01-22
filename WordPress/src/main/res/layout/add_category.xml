@@ -44,6 +44,8 @@
             android:id="@+id/parent_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="-4dp"
+            android:layout_marginEnd="-4dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
             tools:listitem="@layout/wp_simple_list_item_1" />
 
@@ -54,8 +56,6 @@
             style="@style/WordPress.PrepubPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
             android:enabled="false"

@@ -144,7 +144,7 @@ class WidgetUtils
         )
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "DEPRECATION")
     fun showList(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,

@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private val fontSize = 22.sp
 private val lineHeight = fontSize * 1.3
@@ -54,7 +54,7 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
             fontSize = fontSize,
             lineHeight = lineHeight,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .width(234.dp)
                 .padding(top = 25.dp),
@@ -66,7 +66,7 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true, heightDp = 200, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginPrologue() {
-    AppThemeM2 {
+    AppThemeM3 {
         Column(
             Modifier
                 .background(color = colorResource(id = R.color.login_prologue_revamped_background))

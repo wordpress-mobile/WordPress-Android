@@ -2,7 +2,8 @@
 
 25.7
 -----
-
+* [**] Send feedback from within the experimental editor "more" options menu. [#21586]
+* [**] Support accessing the code editor within the experimental editor. [#21582]
 
 25.6
 -----

@@ -192,6 +192,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.ExperimentalFeature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -234,8 +235,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitThemeStylesFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
@@ -409,8 +408,9 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var gutenbergKitFeatureConfig: GutenbergKitFeatureConfig
-    @Inject lateinit var gutenbergKitThemeStylesConfig: GutenbergKitThemeStylesFeatureConfig
+    private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
+    private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
+        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -1412,13 +1412,15 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
         val historyMenuItem = menu.findItem(R.id.menu_history)
         val settingsMenuItem = menu.findItem(R.id.menu_post_settings)
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
+        val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
+
         if (undoItem != null) {
             undoItem.setEnabled(menuHasUndo)
-            undoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            undoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (redoItem != null) {
             redoItem.setEnabled(menuHasRedo)
-            redoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            redoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
@@ -1426,10 +1428,7 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
         }
         previewMenuItem?.setVisible(showMenuItems)
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(
-                (((editorFragment is AztecEditorFragment)
-                        || (editorFragment is GutenbergEditorFragment))) && showMenuItems
-            )
+            viewHtmlModeMenuItem.isVisible = showMenuItems
             viewHtmlModeMenuItem.setTitle(
                 if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
         }
@@ -1496,6 +1495,11 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
                 helpMenuItem.setVisible(false)
             }
         }
+
+        if (sendFeedbackItem != null) {
+            sendFeedbackItem.isVisible = editorFragment is GutenbergKitEditorFragment
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -1645,6 +1649,8 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
                     analyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, siteModel)
                     (editorFragment as GutenbergEditorFragment).showEditorHelp()
                 }
+            } else if (itemId == R.id.menu_editor_send_feedback) {
+                ActivityLauncher.viewFeedbackForm(this@EditPostActivity, "Editor")
             } else if (itemId == R.id.menu_undo_action) {
                 if (editorFragment is GutenbergEditorFragment) {
                     (editorFragment as GutenbergEditorFragment).onUndoPressed()
@@ -2514,6 +2520,12 @@ class EditPostActivity : AppCompatActivity(), EditorFragmentActivity, EditorImag
                         editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
                             override fun onContentChanged(title: String, content: String) {
                                 storePostViewModel.savePostWithDelay()
+                            }
+                        })
+                        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
+                            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                                onToggleUndo(!hasUndo)
+                                onToggleRedo(!hasRedo)
                             }
                         })
                         editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {

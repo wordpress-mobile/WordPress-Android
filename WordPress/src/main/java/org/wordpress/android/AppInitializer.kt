@@ -952,6 +952,7 @@ class AppInitializer @Inject constructor(
             // Do nothing
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onLowMemory() {
             // Do nothing
         }
