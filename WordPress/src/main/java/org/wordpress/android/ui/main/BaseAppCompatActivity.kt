@@ -22,7 +22,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     private fun applyInsetOffsets() {
         val activityName = this.localClassName.substringAfterLast(".")
-        val excludedActivity = excludedActivities.find { it.activityName == activityName }
+        val excludedActivity = excludedActivities[activityName]
         val applyTopOffset = excludedActivity?.applyTopOffset ?: true
         val applyBottomOffset = excludedActivity?.applyBottomOffset ?: true
 
@@ -35,8 +35,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
                     0
                 }
 
-                // base the bottom offset on the navigation bar inset, but use a zero offset for the main activity
-                // to accommodate the main BottomNavigationView
+                // base the bottom offset on the navigation bar inset
                 val bottomOffset = if (applyBottomOffset) {
                     insets.getInsets(WindowInsets.Type.navigationBars()).bottom
                 } else {
@@ -56,40 +55,39 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         }
     }
 
-    private class ExcludedActivity(
-        var activityName: String,
+    private class ActivityOffsets(
         var applyTopOffset: Boolean,
         var applyBottomOffset: Boolean,
     )
 
     /**
-     * Activities that are excluded from the edge-to-edge top offset, bottom offset, or both - activities not listed
-     * here will have both offsets applied
+     * Activities that are excluded from the edge-to-edge top offset, bottom offset, or both. Activities not listed
+     * here will have both offsets applied.
      */
-    private val excludedActivities = hashSetOf(
+    private val excludedActivities: HashMap<String, ActivityOffsets> = hashMapOf(
         // apply neither top nor bottom offset
-        ExcludedActivity("BloggingPromptsListActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("DebugSharedPreferenceFlagsActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("DesignSystemActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("DomainManagementActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("EditJetpackSocialShareMessageActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("ExperimentalFeaturesActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("JetpackStaticPosterActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("JetpackFullPluginInstallActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("JetpackRemoteInstallActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("FeedbackFormActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("MediaPreviewActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("MenuActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("NewDomainSearchActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("PersonalizationActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("PurchaseDomainActivity", applyTopOffset = false, applyBottomOffset = false),
-        ExcludedActivity("SelfHostedUsersActivity", applyTopOffset = false, applyBottomOffset = false),
+        "BloggingPromptsListActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "DebugSharedPreferenceFlagsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "DesignSystemActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "DomainManagementActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "EditJetpackSocialShareMessageActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "ExperimentalFeaturesActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "JetpackStaticPosterActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "JetpackFullPluginInstallActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "JetpackRemoteInstallActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "FeedbackFormActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "MediaPreviewActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "MenuActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "NewDomainSearchActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "PersonalizationActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "PurchaseDomainActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        "SelfHostedUsersActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
         // apply bottom offset only
-        ExcludedActivity("MediaSettingsActivity", applyTopOffset = false, applyBottomOffset = true),
-        ExcludedActivity("PagesActivity", applyTopOffset = false, applyBottomOffset = true),
-        ExcludedActivity("PostsListActivity", applyTopOffset = false, applyBottomOffset = true),
-        ExcludedActivity("StatsActivity", applyTopOffset = false, applyBottomOffset = true),
+        "MediaSettingsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
+        "PagesActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
+        "PostsListActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
+        "StatsActivity" to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
         // apply top offset only
-        ExcludedActivity("WPMainActivity", applyTopOffset = true, applyBottomOffset = false),
+        "WPMainActivity" to ActivityOffsets(applyTopOffset = true, applyBottomOffset = false),
     )
 }
