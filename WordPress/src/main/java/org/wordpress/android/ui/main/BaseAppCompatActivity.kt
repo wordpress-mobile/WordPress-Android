@@ -14,6 +14,8 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // When both compileSdkVersion and targetSdkVersion are 35+, the OS defaults to
+        // using edge-to-edge. We need to adjust for this by applying insets as needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             applyInsetOffsets()
         }
