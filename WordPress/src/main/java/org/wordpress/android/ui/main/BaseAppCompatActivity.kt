@@ -62,7 +62,9 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
     /**
      * Activities that are excluded from the edge-to-edge top offset, bottom offset, or both. Activities not listed
-     * here will have both offsets applied.
+     * here will have both offsets applied. Note that many of these excluded activities are Compose-based because
+     * Compose automatically adjusts for edge-to-edge insets. We may want to revisit this approach as more
+     * Compose-based activities are added to the project.
      */
     private val excludedActivities: HashMap<String, ActivityOffsets> = hashMapOf(
         // apply neither top nor bottom offset
