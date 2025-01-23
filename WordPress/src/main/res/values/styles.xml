@@ -293,6 +293,7 @@
 
     <style name="WordPress.Media.Preview" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>"
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
