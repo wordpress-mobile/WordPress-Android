@@ -458,6 +458,7 @@ public final class AnalyticsTracker {
         LOGIN_SOCIAL_2FA_NEEDED,
         LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING,
         LOGIN_SOCIAL_ERROR_UNKNOWN_USER,
+        LOGIN_WPCOM_WEBVIEW,
         LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE,
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2

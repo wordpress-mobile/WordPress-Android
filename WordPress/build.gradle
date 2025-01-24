@@ -209,6 +209,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
+            buildConfigField "String", "WPCOM_REDIRECT_URI", '"wordpress://wpcom-authorize"'
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -229,6 +230,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
+            buildConfigField "String", "WPCOM_REDIRECT_URI", '"jetpack://wpcom-authorize"'
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
@@ -442,6 +444,8 @@ dependencies {
     implementation(libs.google.mlkit.barcode.scanning.common)
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.barcode.scanning.main)
+
+    implementation(libs.androidx.browser)
 
     // CameraX
     implementation(libs.androidx.camera.camera2)

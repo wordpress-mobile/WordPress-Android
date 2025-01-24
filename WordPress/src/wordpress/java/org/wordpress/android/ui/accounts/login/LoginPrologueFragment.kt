@@ -56,7 +56,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
             continueWithWpcomButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
-                loginPrologueListener.showEmailLoginScreen()
+                loginPrologueListener.showWPcomLoginScreen(view.context)
             }
 
             enterYourSiteAddressButton.setOnClickListener {

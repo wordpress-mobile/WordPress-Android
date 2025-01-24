@@ -9,6 +9,7 @@ androidx-activity = '1.9.3'
 androidx-annotation = '1.9.1'
 androidx-appcompat = '1.7.0'
 androidx-arch-core = '2.2.0'
+androidx-browser = '1.5.0'
 androidx-camera = '1.4.1'
 androidx-cardview = '1.0.0'
 androidx-compose-bom = '2024.12.01'
@@ -120,6 +121,7 @@ androidx-annotation = { group = "androidx.annotation", name = "annotation", vers
 androidx-appcompat-main = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidx-appcompat" }
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidx-arch-core" }
+androidx-browser = { group="androidx.browser", "name" = "browser", version.ref = "androidx-browser" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "androidx-camera" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camera" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidx-camera" }

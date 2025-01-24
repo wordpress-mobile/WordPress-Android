@@ -1325,6 +1325,12 @@ public class AccountStore extends Store {
         return mAccessToken.get();
     }
 
+    // Ths is the preferred way to authenticate a WordPress.com or Jetpack user in the app
+    public void updateAccessToken(@NonNull String token) {
+        mAccessToken.set(token);
+        emitChange(new OnAuthenticationChanged());
+    }
+
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
         emitChange(new OnAuthenticationChanged());
