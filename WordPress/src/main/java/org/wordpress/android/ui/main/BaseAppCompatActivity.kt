@@ -2,9 +2,9 @@ package org.wordpress.android.ui.main
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
 
 /**
  * Base class for all activities - initially created to handle insets for Android 15's edge-to-edge support,
@@ -30,26 +30,18 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
         if (applyTopOffset || applyBottomOffset) {
             window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-                // base the top offset on the system bar inset
-                val topOffset = if (applyTopOffset) {
-                    insets.getInsets(WindowInsets.Type.statusBars()).top
-                } else {
-                    0
-                }
-
-                // base the bottom offset on the navigation bar inset
-                val bottomOffset = if (applyBottomOffset) {
-                    insets.getInsets(WindowInsets.Type.navigationBars()).bottom
-                } else {
-                    0
-                }
+                // Notice we're using systemBars rather than statusBar and accounting for the display cutouts
+                val innerPadding = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                            or WindowInsetsCompat.Type.displayCutout()
+                )
 
                 // Adjust system bars padding to avoid overlap
                 view.setPadding(
-                    0,
-                    topOffset,
-                    0,
-                    bottomOffset
+                    innerPadding.left,
+                    if (applyTopOffset) innerPadding.top else 0,
+                    innerPadding.right,
+                    if (applyBottomOffset) innerPadding.bottom else 0
                 )
 
                 insets
