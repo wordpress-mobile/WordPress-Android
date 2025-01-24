@@ -84,32 +84,101 @@ open class BaseAppCompatActivity : AppCompatActivity() {
      */
     private val excludedActivities: HashMap<String, ActivityOffsets> = hashMapOf(
         // apply neither top nor bottom offset
-        BlazeCampaignParentActivity::class.java.name  to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        BloggingPromptsListActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        DebugSharedPreferenceFlagsActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        DesignSystemActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        DomainManagementActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        EditJetpackSocialShareMessageActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        ExperimentalFeaturesActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        FeedbackFormActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        JetpackFullPluginInstallActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        JetpackRemoteInstallActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        JetpackStaticPosterActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        MediaPreviewActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        MenuActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        NewDomainSearchActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        PersonalizationActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        PurchaseDomainActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        SelfHostedUsersActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
-        SiteMonitorParentActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = false),
+        BlazeCampaignParentActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        BloggingPromptsListActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        DebugSharedPreferenceFlagsActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        DesignSystemActivity::class.java.name to ActivityOffsets
+            (applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        DomainManagementActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        EditJetpackSocialShareMessageActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        ExperimentalFeaturesActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        FeedbackFormActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        JetpackFullPluginInstallActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        JetpackRemoteInstallActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        JetpackStaticPosterActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        MediaPreviewActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        MenuActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        NewDomainSearchActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        PersonalizationActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        PurchaseDomainActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        SelfHostedUsersActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        SiteMonitorParentActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
 
         // apply bottom offset only
-        MediaSettingsActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
-        PagesActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
-        PostsListActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
-        StatsActivity::class.java.name to ActivityOffsets(applyTopOffset = false, applyBottomOffset = true),
+        MediaSettingsActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = true
+        ),
+        PagesActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = true
+        ),
+        PostsListActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = true
+        ),
+        StatsActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = true
+        ),
 
         // apply top offset only
-        WPMainActivity::class.java.name to ActivityOffsets(applyTopOffset = true, applyBottomOffset = false),
+        WPMainActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = true,
+            applyBottomOffset = false
+        ),
     )
 }
