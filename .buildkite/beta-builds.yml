@@ -5,7 +5,7 @@
 # only used for beta builds
 
 agents:
-  queue: "android"
+  queue: "android-staging"
 
 steps:
   #################
