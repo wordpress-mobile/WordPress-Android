@@ -488,6 +488,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         params.behavior = HideBottomViewOnScrollBehavior<View>()
                     }
                 layoutFooterBinding.root.isInvisible = true
+
+                // on SDK 35+ we want to move the footer icons up to avoid covering the navigation bar icons
+                // unless the navigation bar is hidden by gesture navigation
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                    layoutFooterBinding.root.findViewById<View>(R.id.reader_detail_footer_button_container)?.let { container ->
+                        container.setOnApplyWindowInsetsListener { _, insets ->
+                            val navigationBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                            val isNavigationBarVisible = navigationBarInsets.bottom > 0
+                            if (isNavigationBarVisible) {
+                                val mediumMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
+                                (container.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
+                                    mediumMargin + navigationBarInsets.bottom
+                            }
+                            insets
+                        }
+                    }
+                }
             }
         }.also { stub ->
             stub.inflate()
