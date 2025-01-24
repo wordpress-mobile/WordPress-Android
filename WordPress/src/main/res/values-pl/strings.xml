@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-06 06:02:44+0000
+Translation-Revision-Date: 2025-01-06 14:18:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: pl
@@ -24,6 +24,14 @@ Language: pl
     <string name="me_btn_help_and_support">Pomoc i wsparcie</string>
     <string name="me_btn_experimental_features">Funkcje eksperymentalne</string>
     <string name="more_content_description_plans">Zaplanuj więcej</string>
+    <string name="back">Cofnij</string>
+    <string name="feedback_form_add_attachments">Dodaj załączniki</string>
+    <string name="feedback_form_title">Uwagi</string>
+    <string name="submit">Prześlij</string>
+    <string name="close">Zamknij</string>
+    <string name="sending">Wysyłanie</string>
+    <string name="voice_to_content_error_label">Błąd</string>
+    <string name="voice_to_content_processing">Przetwarzanie</string>
     <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij, aby edytować</string>
     <string name="voice_to_content_permissions_required_msg">Aby nagrywać dźwięk, aplikacja potrzebuje pozwolenia na dostęp do mikrofonu. Wcześniej odmówiono. Włącz uprawnienia mikrofonu w ustawieniach aplikacji, aby nagrywać.</string>
     <string name="voice_to_content_permissions_required_title">Wymagana zgoda na nagrywanie dźwięku</string>
@@ -54,6 +62,13 @@ Language: pl
     <string name="stats_subscribers_marker_view_singular">Subskrybent</string>
     <string name="stats_view_subscriber_growth">Wzrost liczby subskrybentów</string>
     <string name="role_subscriber">Subskrybent</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Wieczór</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_system">Domyślny</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">wyślij uwagi</string>
+    <string name="gravatar_info_sync_done_button">Gotowe</string>
+    <string name="site_monitoring_tab_title_php_logs">Dzienniki PHP</string>
     <string name="stats_traffic">Ruch</string>
     <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rozmiar liter, %1$s</string>
     <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Plik nie jest obsługiwany jako plik mediów.</string>

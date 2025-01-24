@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-06 00:31:14+0000
+Translation-Revision-Date: 2025-01-24 13:53:33+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: pt_BR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Preferências de idioma por aplicativo experimentais</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">espaço reservado</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Atalho para Alternar %s</string>
     <string name="personalization_screen_card_accessibility_label">Cartão para Alternar %s</string>
@@ -41,10 +42,22 @@ Language: pt_BR
     <string name="dialog_confirm_autosave_dont_restore_button">Deste aplicativo</string>
     <string name="dialog_confirm_autosave_restore_button">De outro dispositivo</string>
     <string name="item_selected">Selecionado</string>
+    <string name="send_feedback">Enviar sugestões</string>
+    <string name="media_pager_remove_item_content_description">Remova o item %1$d</string>
     <string name="feedback_form_add_attachments">Adicionar anexos</string>
+    <string name="feedback_form_unable_to_create_tempfile">Não foi possível criar um arquivo temporário</string>
     <string name="feedback_form_attachment_already_added">Anexo já adicionado</string>
     <string name="feedback_form_attachment_too_large">Anexos devem ter até 32 MB</string>
+    <string name="feedback_form_unsupported_attachment">Este tipo de arquivo não é compatível</string>
+    <string name="feedback_form_max_attachments_reached">O número máximo de anexos foi atingido</string>
+    <string name="feedback_form_failure">Não foi possível enviar seu comentário</string>
+    <string name="feedback_form_success">Obrigado por enviar seu comentário!</string>
+    <string name="feedback_form_discard">Descartar seu comentário?</string>
+    <string name="feedback_form_message_hint">Seu comentário ou sugestão é muito valioso!</string>
+    <string name="feedback_form_title">Sugestões e comentários</string>
+    <string name="submit">Enviar</string>
     <string name="close">Fechar</string>
+    <string name="sending">Enviando</string>
     <string name="voice_to_content_generic_error">A postagem de áudio não está disponível no momento. Tente novamente mais tarde.</string>
     <string name="voice_to_content_done_label">Concluído</string>
     <string name="voice_to_content_upgrade">Faça upgrade para ter mais solicitações</string>
@@ -131,14 +144,53 @@ Language: pt_BR
     <string name="dialog_post_autosave_body">Há alterações não salvas neste post feitas em outro dispositivo. Selecione a versão do post que você quer manter.</string>
     <string name="dialog_post_autosave_title">Salvamento automático disponível</string>
     <string name="dialog_post_conflict_another_device">Outro dispositivo</string>
+    <string name="dialog_post_conflict_current_device">Dispositivo atual</string>
+    <string name="dialog_post_conflict_body_for_page">A página foi modificada em outro dispositivo. Selecione a versão da página que você quer manter.</string>
+    <string name="dialog_post_conflict_body">O post foi modificado em outro dispositivo. Selecione a versão do post que você quer manter.</string>
+    <string name="dialog_post_conflict_title">Resolver conflito</string>
+    <string name="reader_preferences_font_size_extra_large">Extragrande</string>
+    <string name="reader_preferences_font_size_large">Grande</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_small">Pequena</string>
+    <string name="reader_preferences_font_size_extra_small">Extrapequena</string>
+    <string name="reader_preferences_screen_font_size_label">Tamanho da fonte</string>
+    <string name="reader_preferences_screen_font_family_label">Tipo de letra</string>
     <string name="reader_preferences_screen_theme_label">Esquema de cores</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">envie seu comentário</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Limpar cor selecionada</string>
+    <string name="reader_no_followed_tags_text_title">Nenhuma tag seguida</string>
+    <string name="reader_toast_err_tag_already_following">Você já está seguindo essa tag</string>
+    <string name="reader_menu_reading_preferences">Preferências de leitura</string>
+    <string name="reader_page_followed_tags_text_title">Tags seguidas</string>
     <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Noite</string>
+    <string name="reader_preferences_theme_sepia">Sépia</string>
+    <string name="reader_preferences_theme_soft">Suave</string>
+    <string name="reader_preferences_theme_system">Padrão</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">envie seu comentário</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Esta é uma nova funcionalidade que ainda está em desenvolvimento. Ajude-nos a melhorá-la: %s.</string>
     <string name="reader_preferences_screen_preview_text">Escolha as cores, fontes e tamanhos. Visualize suas seleções aqui, e leia os posts com o seu estilo depois de finalizar.</string>
+    <string name="reader_preferences_screen_preview_title">Preferências de leitura</string>
+    <string name="reader_filter_empty_tags_action_follow">Seguir uma tag</string>
+    <string name="button_read">Lido</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Você poderá copiar o texto do post caso o seu conteúdo seja afetado. Copie os detalhes do erro para depurar e compartilhá-los com o suporte.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">O editor encontrou um erro inesperado</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque aqui para copiar o texto do post</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque aqui para copiar os detalhes do erro</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copiar o texto do post</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copiar os detalhes do erro</string>
     <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Botão para copiar o texto do post</string>
     <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Botão para copiar os detalhes do erro</string>
+    <string name="editor_updating_content_failed">Não foi possível atualizar o conteúdo</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legenda do vídeo. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legenda do vídeo. Em branco</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editar vídeo</string>
     <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">A reprodução automática pode causar problemas de usabilidade para alguns usuários.</string>
+    <string name="notifications_action_mark_all_as_read">Marcar todas como lidas</string>
+    <string name="notifications_unread_content_description">Não lidas</string>
     <string name="qrcode_media_deeplink_error">Site não encontrado. Verifique se você está conectado à conta correta.</string>
     <string name="gravatar_info_sync_done_button">Concluir</string>
     <string name="gravatar_info_sync_message">Pode levar um tempo para sincronizar as atualizações do seu perfil no Gravatar.</string>
@@ -193,9 +245,11 @@ Language: pt_BR
     <string name="reader_dropdown_menu_subscriptions">Assinaturas</string>
     <string name="reader_dropdown_menu_discover">Descobrir</string>
     <string name="reader_search_content_description">Pesquisar</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir tags</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs para assinar</string>
     <string name="reader_filter_empty_tags_action_suggested">Tags sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar um blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Siga uma tag para ver aqui os melhores posts relacionados a ela.</string>
     <string name="reader_filter_empty_tags_list_title">Nenhuma tag</string>
     <string name="reader_filter_empty_blogs_list_text">Assine blogs em Descobrir e você verá suas postagens mais recentes aqui. Ou procure por um blog que você já goste.</string>
     <string name="reader_filter_empty_blogs_list_title">Nenhuma assinatura de blog</string>
@@ -259,64 +313,184 @@ Language: pt_BR
     <string name="new_domain_search_screen_title">Pesquisar um domínio</string>
     <string name="purchase_domain_screen_error_button_title">OK</string>
     <string name="purchase_domain_screen_error_subtitle">Algo deu errado ao adicionar o domínio ao carrinho. Verifique se você está online e tente novamente.</string>
+    <string name="purchase_domain_screen_error_title">Erro</string>
     <string name="domain_management_site_domains_button">Todos</string>
+    <string name="domain_management_error_title">Não foi possível recuperar seus domínios</string>
+    <string name="site_domain_title">Domínio do site</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">Do &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Editado</string>
+    <string name="post_list_toggle_author_filter">Filtrar por autor</string>
     <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloco \'%s\' foi convertido em blocos</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Uma alternativa é converter o conteúdo para blocos.</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Atalhos inativos</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">Atalhos ativos</string>
+    <string name="personalization_screen_shortcuts_tab_title">Atalhos</string>
     <string name="personalization_screen_cards_tab_title">Cartões</string>
     <string name="purchase_domain_screen_discount_notice">* Todos os planos anuais pagos incluem um domínio gratuito por um ano.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Escolher site</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Use com um site que você já tenha iniciado.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Site existente no WordPress.com</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Obter domínio</string>
     <string name="purchase_domain_screen_new_domain_card_description">Adicione um site depois.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Apenas comprar um domínio</string>
+    <string name="purchase_domain_screen_description">Não se preocupe, você poderá adicionar facilmente um site depois.</string>
     <string name="purchase_domain_screen_header_double_line">Escolha como\nusar seu domínio</string>
     <string name="purchase_domain_screen_header_single_line">Escolha como usar seu domínio</string>
+    <string name="purchase_domain_screen_title">Comprar domínio</string>
+    <string name="domain_management_empty_find_domain">Encontrar um domínio</string>
+    <string name="domain_management_empty_subtitle">Toque abaixo para encontrar o domínio perfeito para você.</string>
+    <string name="domain_management_empty_title">Você não tem nenhum domínio</string>
     <string name="domain_management_error_subtitle">Verifique se você está online e atualize a página.</string>
+    <string name="domain_management_open_domain_details">Abrir detalhes do domínio</string>
+    <string name="domain_management_search_your_domains">Pesquise em seus domínios</string>
+    <string name="domain_management_purchase_a_domain">Comprar um domínio</string>
     <string name="domain_management_my_domains_title">Todos os domínios</string>
+    <string name="domain_management_expires">Expira em %1$s</string>
     <string name="account_and_settings">Conta e configurações</string>
+    <string name="site_creation_plans_selection_title">Selecionar um plano</string>
+    <string name="site_creation_domain_free_with_annual_plan">Gratuito no primeiro ano com planos anuais pagos</string>
     <string name="reader_secondary_bookmarked">Salvo</string>
     <string name="reader_secondary_bookmark">Salvar</string>
     <string name="reader_discover_recommended_header_new">Você pode gostar</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar bloco</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque aqui para mostrar mais detalhes.</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Padrões sincronizados</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloco bem aninhado</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocos aninhados em mais de %d níveis podem não ser renderizados de maneira adequada no editor para dispositivos móveis. Por isso, recomendamos desagrupar o bloco ou editá-lo usando o editor da Web para nivelar o conteúdo.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Não é possível renderizar o bloco porque ele está profundamente aninhado. Toque aqui para ver mais detalhes.</string>
+    <string name="pages_no_site_something_went_wrong">Opa! Ocorreu um erro. Tente novamente mais tarde.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Acessar a web</string>
+    <string name="my_site_dashboard_no_cards_message_description">Toque no botão Personalizar para mostrar mais cartões.</string>
     <string name="my_site_dashboard_no_cards_message_title">Todos os cartões estão ocultos</string>
+    <string name="personalization_screen_next_steps_card_description">Aprenda a aproveitar ao máximo o seu site com o aplicativo.</string>
+    <string name="personalization_screen_activity_log_card_description">Ações recentes realizadas no seu site.</string>
+    <string name="personalization_screen_pages_card_description">Visão geral das páginas do seu site.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Ideias diárias para seus posts.</string>
     <string name="personalization_screen_blogging_prompts_card_title">Sugestões de publicação</string>
+    <string name="personalization_screen_blaze_card_description">Promova um post e veja as campanhas atuais.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Seus próximos posts agendados.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Posts agendados</string>
+    <string name="personalization_screen_draft_posts_card_description">Seus posts em rascunho recentes.</string>
+    <string name="personalization_screen_draft_posts_card_title">Posts em rascunho</string>
+    <string name="personalization_screen_stats_card_description">Visualizações, visitantes e curtidas</string>
     <string name="personalization_screen_tab_cards_footer_cards">Os cartões podem mostrar um conteúdo diferente dependendo do que está acontecendo com seu site</string>
     <string name="personalization_screen_tab_cards_description">Adicionar ou ocultar cartões</string>
     <string name="personalization_screen_title"> Personalizar a aba Início</string>
+    <string name="personalize_card_content_description">Toque para personalizar a aba Início</string>
+    <string name="personalize_card_text">Personalize a aba Início</string>
     <string name="partial_media_access_prompt_change_settings">Alterar configurações</string>
+    <string name="partial_media_access_prompt_select_more">Selecionar mais</string>
+    <string name="partial_media_access_prompt_text">Somente fotos e vídeos para os quais você concedeu acesso estão disponíveis.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Ver todas as campanhas</string>
     <string name="dashboard_activity_card_menu_all_activity">Todas as atividades</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Todas as páginas</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Escolha um arquivo</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Adicionar imagem ou vídeo</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Ver todos os posts agendados</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Ver todos os rascunhos</string>
+    <string name="my_site_todays_stats_menu_view_stats">Ver estatísticas</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Ocultar isso</string>
+    <string name="contact_support_first_message_hint">Se eu não puder tirar suas dúvidas, abrirei um tíquete de suporte junto à nossa equipe.</string>
+    <string name="contact_support_first_message_hi">Olá, sou a assistente de IA do Jetpack.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Acesse este bloco Paywall no seu navegador para visualizar configurações avançadas.</string>
     <string name="contact_support_bot_ticket_comment_answer">Resposta:</string>
+    <string name="contact_support_bot_ticket_comment_question">Pergunta:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transcrição do Jetpack Mobile Bot:</string>
+    <string name="contact_support_bot_ticket_error">Erro ao enviar um tíquete de suporte</string>
+    <string name="contact_support_bot_ticket_message">Tíquete criado</string>
+    <string name="contact_support_bot_ticket_loading">Criando um tíquete de suporte…</string>
+    <string name="contact_support_question_six">Como posso usar meu domínio personalizado no aplicativo?</string>
+    <string name="contact_support_question_five">Esqueci minhas credenciais de acesso</string>
+    <string name="contact_support_question_four">Por que não consigo acessar?</string>
+    <string name="contact_support_question_three">Não consigo enviar de fotos ou vídeos</string>
+    <string name="contact_support_question_two">Socorro! Meu site está fora do ar!</string>
+    <string name="contact_support_question_one">Qual é o endereço do meu site?</string>
+    <string name="contact_support_suggestions">Não sabe o que perguntar?</string>
     <string name="contact_support_get_support">Falar com o suporte</string>
+    <string name="contact_support_first_message">Como podemos ajudar?</string>
+    <string name="contact_support_input_placeholder">Envie uma mensagem…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Apagar</string>
     <string name="jetpack_social_social_shares_remaining">%1$d compartilhamentos restantes</string>
     <string name="missing_splits_dialog_button">FECHAR</string>
+    <string name="missing_splits_dialog_message">Estão faltando componentes obrigatórios no app do WordPress. É necessário reinstalá-lo pela Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Falha na instalação</string>
+    <string name="campaign_detail_error_title">Ocorreu um erro</string>
+    <string name="campaign_listing_page_error_title">Ocorreu um erro</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Ocorreu um erro. Não foi possível colher campanhas</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Conectar contas</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Compartilhamento nas redes sociais</string>
+    <string name="prepublishing_nudges_social_action">Compartilhamento nas redes sociais</string>
+    <string name="sharing">Redes sociais</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Compartilhado em %1$d contas</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Compartilhado em %1$d de %2$d contas</string>
+    <string name="jetpack_social_social_shares_title_single_account">Compartilhado em %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Não compartilhado em redes sociais</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personalize a mensagem que quer compartilhar. Caso não adicione nenhum texto próprio, usaremos o título do post como mensagem.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizar a mensagem</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Agora não</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Conectar contas</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inserir bloco de vídeo</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inserir bloco de imagem</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inserir bloco de galeria</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inserir bloco de áudio</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Criar</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Você não criou nenhuma campanha ainda. Clique em \"Criar\" para começar.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Você não tem campanhas</string>
     <string name="blaze_campaign_details_page_title">Detalhes da campanha</string>
     <string name="blaze_campaigns_page_title">Campanhas Blaze</string>
     <string name="budget_campaign_stats">Orçamento</string>
     <string name="clicks_campaign_stats">Cliques</string>
+    <string name="impressions_campaign_stats">Impressões</string>
+    <string name="campaign_status_scheduled">AGENDADA</string>
+    <string name="campaign_status_in_moderation">EM MODERAÇÃO</string>
     <string name="campaign_status_canceled">CANCELADA</string>
+    <string name="campaign_status_rejected">REJEITADA</string>
     <string name="campaign_status_completed">CONCLUÍDA</string>
     <string name="campaign_status_active">ATIVA</string>
+    <string name="blaze_campaigns_card_footer_label">Criar campanha</string>
     <string name="blaze_campaigns_card_title">Campanha Blaze</string>
+    <string name="promote_blaze_flow_error">Não foi possível carregar o fluxo de promoção do Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Compartilhe seus posts automaticamente com amigos nas redes sociais para aumentar o tráfego.</string>
     <string name="menu_close_editor">Fechar editor</string>
+    <string name="menu_redo_context">Refazer última alteração</string>
+    <string name="menu_undo_context">Desfazer última alteração</string>
     <string name="jetpack_social_social_shares_remaining_one">1 compartilhamento restante</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Assine para compartilhar mais</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Compartilhe seus posts automaticamente com amigos nas redes sociais para aumentar o tráfego.</string>
+    <string name="post_settings_jetpack_social_header">Compartilhamento nas redes sociais</string>
     <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s desvinculado</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ainda não é possível editar padrões sincronizados no %s para iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ainda não é possível editar padrões sincronizados no %s para Android</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reutilizável</string>
+    <string name="privacy_banner_error_save">Ocorreu um erro ao salvar as opções de privacidade.</string>
+    <string name="privacy_banner_save">Salvar</string>
+    <string name="privacy_banner_settings">Configurações</string>
     <string name="privacy_banner_analytics_description">Dê permissão para otimizarmos o desempenho com a coleta de dados sobre a interação dos usuários com nossos aplicativos móveis.</string>
     <string name="privacy_banner_analytics">Análises</string>
+    <string name="privacy_banner_title">Gerenciar privacidade</string>
+    <string name="privacy_banner_description">Sua privacidade é absolutamente importante para nós e sempre será. Nós utilizamos, armazenamos e processamos seus dados pessoais para aprimorar nosso aplicativo (e a sua experiência) de várias formas. Em algumas delas, o uso dos seus dados é essencial para manter tudo funcionando. Para outros usos, você pode ajustar em Configurações.</string>
+    <string name="tabbar_accessibility_label_me">Meu perfil. Gerencie os detalhes do seu perfil.</string>
+    <string name="social_item_message_title">Mensagem</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloco desagrupado</string>
     <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloco agrupado</string>
+    <string name="dashboard_card_plans_checkout_success_info">Pode levar até 30 minutos para o domínio começar a funcionar corretamente.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Seu novo domínio &lt;b&gt;%s&lt;/b&gt; está sendo configurado.</string>
     <string name="dashboard_card_plans_checkout_success_title">Tudo pronto!</string>
+    <string name="dashboard_card_plans_sub_title">Obtenha um domínio gratuito no primeiro ano, remova anúncios em seu site e aumente seu armazenamento.</string>
+    <string name="dashboard_card_plans_title">Domínio gratuito ao adquirir o plano anual</string>
+    <string name="virtual_homepage_learn_more">Aprenda mais sobre modelos</string>
+    <string name="virtual_homepage_subtitle">Sua página inicial está usando um modelo de tema e será aberta no editor da web.</string>
+    <string name="virtual_homepage_title">Página inicial</string>
     <string name="account_closure_dialog_success_message">Conta encerrada.</string>
     <string name="account_closure_dialog_error_unknown">Ocorreu um erro ao encerrar a conta.</string>
+    <string name="account_closure_dialog_error_active_memberships">Não é possível encerrar essa conta de usuário enquanto existir compras ativas.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Não é possível encerrar essa conta de usuário enquanto houver assinaturas ativas.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Não é possível encerrar a conta de usuário pois ela possui estornos não resolvidos.</string>
+    <string name="account_closure_dialog_error_atomic_site">Não é possível encerrar a conta de usuário agora porque existem compras ativas. Entre em contato com nossa equipe de suporte para concluir a exclusão da conta.</string>
+    <string name="account_closure_dialog_error_unauthorized">Sem autorização para encerrar a conta.</string>
+    <string name="account_closure_dialog_error_title">Não foi possível encerrar a conta automaticamente!</string>
     <string name="account_closure_dialog_title">Confirmar encerramento da conta…</string>
+    <string name="account_closure_dialog_message">Para confirmar, digite novamente seu nome de usuário antes de encerrar.</string>
     <string name="close_account">Encerrar conta</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Saiba mais</string>
     <string name="sharing_twitter_deprecation_notice_description">O autocompartilhamento do Twitter não está mais disponível devido a uma mudança nos termos e preços do Twitter.</string>
@@ -482,6 +656,7 @@ Language: pt_BR
     <string name="stats_timeframe_last_seven_days">Últimos 7 dias</string>
     <string name="weeks_quantity_other">%d semanas</string>
     <string name="weeks_quantity_one">1 semana</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Do &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Lembre-me depois</string>
     <string name="jetpack_feature_card_content_phase_three">As estatísticas, o Leitor, as notificações e outras funcionalidades em breve irão para o aplicativo móvel do Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Mudar para o aplicativo do Jetpack</string>
@@ -825,6 +1000,7 @@ Language: pt_BR
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Configurações da galeria em mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">Navega para a tela de escolha de layout</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Estilo de galeria</string>
+    <string name="sharing_connect_via_web_warning_message">Você pode conectar sua conta %s ao WordPress.com. Depois que terminar, retorne ao aplicativo para alterar as configurações de redes sociais.</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ícone do aplicativo</string>
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ícone de fundo</string>
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Logo da Automattic</string>
@@ -1089,12 +1265,14 @@ Language: pt_BR
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Configurações de largura</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rel do link</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Configurações de coluna</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sem descrição</string>
     <string name="user_profile_untitled_site">(Sem título)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Informação de perfil do usuário no final da página</string>
     <string name="likes_list_screen_title">Lista de likes %s</string>
     <string name="gutenberg_native_two" tools:ignore="UnusedResources">Dois</string>
     <string name="gutenberg_native_three" tools:ignore="UnusedResources">Três</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sem título</string>
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">Ícone do %s</string>
     <string name="gutenberg_native_mention" tools:ignore="UnusedResources">Menção</string>
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NOVO</string>
@@ -1452,6 +1630,7 @@ Language: pt_BR
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
     <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="module:login">Prosseguir com as informações salvas</string>
     <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Encontre o e-mail conectado</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Tente seguir mais tags para melhorar a pesquisa</string>
     <string name="reader_discover_no_posts_title">Nenhum post recente</string>
     <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
     <string name="scan">Examinar</string>
@@ -1502,6 +1681,7 @@ Language: pt_BR
     <string name="photo_picker_wordpress_media_library">Escolher da biblioteca de mídias do WordPress</string>
     <string name="reader_label_toolbar_back">Voltar</string>
     <string name="reader_discover_empty_button_text">Comece agora</string>
+    <string name="reader_discover_empty_subtitle_follow">Siga tags para descobrir novos blogs</string>
     <string name="reader_post_details_header_by_author_name">Por</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referenciador não pode ser marcado como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -2342,6 +2522,7 @@ Language: pt_BR
     <string name="page_status_change_error">Houve um problema ao mudar o status da página</string>
     <string name="page_delete_error">Houve um problema ao excluir a página</string>
     <string name="set_parent">Configurar ascendente</string>
+    <string name="dismiss">Dispensar</string>
     <string name="quick_start_focus_point_description">toque aqui</string>
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar.</string>
@@ -2349,6 +2530,7 @@ Language: pt_BR
     <string name="quick_start_dialog_view_site_title">Veja seu site</string>
     <string name="quick_start_dialog_view_site_message">Visualize seu site e veja como será ele apresentado aos seus visitantes.</string>
     <string name="quick_start_dialog_share_site_title">Compartilhar seu site</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Toque em %1$s Redes sociais %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Toque em %1$s Conexões %2$s para adicionar suas contas em redes sociais</string>
     <string name="quick_start_dialog_share_site_message">Conectar suas contas em redes sociais para compartilhar novos posts automaticamente.</string>
     <string name="quick_start_dialog_publish_post_title">Publique um post</string>
@@ -2566,6 +2748,8 @@ Language: pt_BR
     <string name="permissions_denied_message">Parece que você desabilitou permissões necessárias para este recurso.&lt;br/&gt;&lt;br/&gt;Para alterar isso, edite suas permissões e tenha certeza de que &lt;strong&gt;%s&lt;/strong&gt; está habilitado.</string>
     <string name="permissions_denied_title">Permissões</string>
     <string name="plugin_caption_featured">Em destaque</string>
+    <string name="sharing_disabled_description">Não é possível acessar as opções de compartilhamento em redes sociais porque o módulo do Jetpack Social está desativado.</string>
+    <string name="sharing_disabled">Módulo Social desativado</string>
     <string name="version_with_name_param">Versão %s</string>
     <string name="notification_sound_has_invalid_path">O som escolhido não tem um caminho válido. Escolha outro.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -2953,6 +3137,7 @@ Language: pt_BR
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>
     <string name="tabbar_accessibility_label_my_site">Meu site. Veja e gerencie seu site, incluindo estatísticas.</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Não agora</string>
     <string name="media_error_internal_server_error">Erro no upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
     <string name="media_downloading">Salvando mídia neste dispositivo</string>

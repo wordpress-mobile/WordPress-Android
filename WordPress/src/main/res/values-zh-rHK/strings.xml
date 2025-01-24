@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 13:54:09+0000
+Translation-Revision-Date: 2025-01-15 00:22:43+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
@@ -2417,8 +2417,8 @@ Language: zh_TW
     <string name="stats_clicks_link_label">連結</string>
     <string name="stats_clicks">點擊率</string>
     <string name="stats_referrer_views_label">瀏覽數</string>
-    <string name="stats_referrer_label">推薦連結</string>
-    <string name="stats_referrers">推薦連結</string>
+    <string name="stats_referrer_label">參照連結網址</string>
+    <string name="stats_referrers">參照連結網址</string>
     <string name="stats_posts_and_pages">文章與網頁</string>
     <string name="stats_insights_path">路徑</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
@@ -3761,7 +3761,7 @@ Language: zh_TW
     <string name="stats_timeframe_days">天</string>
     <string name="stats_timeframe_yesterday">昨天</string>
     <string name="stats_timeframe_today">今天</string>
-    <string name="stats_view_referrers">來源網址</string>
+    <string name="stats_view_referrers">參照連結網址</string>
     <string name="stats_view_tags_and_categories">標籤與分類</string>
     <string name="stats_view_clicks">點擊率</string>
     <string name="stats">統計</string>

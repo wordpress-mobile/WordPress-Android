@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 16:54:09+0000
+Translation-Revision-Date: 2025-01-05 07:27:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
@@ -18,7 +18,12 @@ Language: fr
     <string name="website">Site Web</string>
     <string name="contact_info">Informations de contact</string>
     <string name="nickname">Pseudonyme</string>
+    <string name="name">Nom</string>
     <string name="no_users">Aucun utilisateur</string>
+    <string name="user">Compte</string>
+    <string name="users">Comptes</string>
+    <string name="me_btn_help_and_support">Aide et assistance</string>
+    <string name="me_btn_experimental_features">Fonctionnalités expérimentales</string>
     <string name="more_content_description_plans">En savoir plus sur les Plans</string>
     <string name="more_content_description_recent_activity">En savoir plus sur l’Activité récente</string>
     <string name="more_content_description_pages">En savoir plus sur les Pages</string>
@@ -32,8 +37,12 @@ Language: fr
     <string name="feedback_form_note_text">Veuillez noter qu’il ne s’agit pas d’un formulaire d’assistance et que nous ne pourrons pas répondre. Si vous avez besoin d’assistance, veuillez utiliser notre \"</string>
     <string name="experimental_block_editor_theme_styles">Styles de l’éditeur de blocs expérimentaux</string>
     <string name="experimental_block_editor">Éditeur de blocs expérimentaux</string>
+    <string name="experimental_features_screen_title">Fonctionnalités expérimentales</string>
+    <string name="back">Retour</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Depuis cette application</string>
     <string name="dialog_confirm_autosave_restore_button">Depuis un autre appareil</string>
+    <string name="item_selected">Sélectionné</string>
+    <string name="send_feedback">Envoyer des commentaires</string>
     <string name="media_pager_remove_item_content_description">Supprimer l’élément %1$d</string>
     <string name="feedback_form_add_attachments">Ajouter des pièces jointes</string>
     <string name="feedback_form_unable_to_create_tempfile">Impossible de créer un fichier temporaire</string>
@@ -271,6 +280,8 @@ Language: fr
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Pendant le mois de janvier, vous recevrez des invites à bloguer de Bloganuary, notre défi commun pour ancrer l’habitude de bloguer à l’occasion de la nouvelle année.</string>
+    <string name="bloganuary_dashboard_nudge_title_december">C’est bientôt Bloganuary !</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de l’éditeur web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sinon, vous pouvez aplatir le contenu en dégroupant le bloc.</string>
@@ -360,6 +371,7 @@ Language: fr
     <string name="personalization_screen_draft_posts_card_title">Brouillons d’articles</string>
     <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
     <string name="personalization_screen_tab_cards_footer_cards">Le contenu des cartes peut varier en fonction de l’activité sur votre site</string>
+    <string name="personalization_screen_tab_cards_description">Ajouter ou masquer des cartes</string>
     <string name="personalization_screen_title"> Personnaliser l’onglet Accueil</string>
     <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
     <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
@@ -455,6 +467,7 @@ Language: fr
     <string name="privacy_banner_title">Gérer la confidentialité</string>
     <string name="privacy_banner_description">Nous accordons depuis toujours une énorme importance au respect de votre privée. Nous utilisons, stockons et traitons vos données personnelles pour optimiser notre application (et votre expérience) de diverses manières. Certains usages de vos données sont indispensables au bon fonctionnement de l’application, tandis que d’autres peuvent être personnalisés dans vos Réglages.</string>
     <string name="tabbar_accessibility_label_me">Me. Gérer les détails de votre profil.</string>
+    <string name="social_item_message_title">Message</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloc dissocié</string>
     <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloc groupé</string>
     <string name="dashboard_card_plans_checkout_success_info">Un délai de 30 minutes peut être nécessaire pour que votre domaine soit opérationnel.</string>
@@ -816,6 +829,7 @@ Language: fr
     <string name="me_btn_scan_login_code">Scanner le code de connexion</string>
     <string name="stats_insights_likes_guide_card">⭐️ Votre dernier article %1$s a recueilli%2$s mentions « J’aime ».</string>
     <string name="stats_most_popular_percent_views_empty">Pas assez d’activité. Revenez lorsque votre site aura plus de visiteurs !</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% du total des abonné·e·s</string>
     <string name="stats_value_percent"> %1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copier le lien</string>
     <string name="quick_start_completed_tour_title">Félicitations ! Vous connaissez le chemin&lt;br/&gt;</string>
@@ -1248,6 +1262,7 @@ Language: fr
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Réglages de largeur</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Attribut « Rel » du lien</string>
     <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Réglages de la colonne</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pas de description</string>
     <string name="user_profile_untitled_site">(Sans titre)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Profil utilisateur : information sur la feuille du bas</string>
@@ -1921,6 +1936,7 @@ Language: fr
     <string name="app_theme_light">Claire</string>
     <string name="app_theme">Apparence</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Vous avez récemment apporté des modifications à cette page, mais ne les avez pas enregistrées. Choisissez une version à charger :\n\n</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Message d’avertissement</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Afficher le contenu de l’article</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">N’afficher que l’extrait</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Lier à</string>
@@ -2881,7 +2897,7 @@ Language: fr
     <string name="my_site_btn_plugins">Extensions</string>
     <string name="media_edit_link_hint">Ouvrir le lien dans une nouvelle fenêtre/onglet</string>
     <string name="media_edit_link_text">Lien vers</string>
-    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Une erreur est survenue.</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Une erreur s’est produite.</string>
     <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Veuillez fournir un code d\'authentification pour continuer. </string>
     <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Veuillez confirmer deux fois votre mot de passe pour continuer.</string>
     <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="module:login">Connexion stoppée</string>
@@ -3173,6 +3189,7 @@ Language: fr
     <string name="error_all_media_upload_canceled">Tous les téléversements de médias ont été annulés à cause d’une erreur inconnue. Veuillez essayer à nouveau le téléversement.</string>
     <string name="error_unknown_post_type">Format d\'article inconnu</string>
     <string name="submit_for_review">Envoyer</string>
+    <string name="title_subscriber">Abonné·e</string>
     <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">Un site dupliqué a été détecté.</string>
     <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ce site existe déjà dans l’app. Vous ne pouvez pas l’ajouter.</string>
     <string name="already_logged_in_wpcom">Vous êtes déjà connecté à votre compte WordPress.com. Vous ne pouvez pas ajouter un site WordPress.com lié à un autre compte.</string>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-09 19:44:31+0000
+Translation-Revision-Date: 2025-01-21 10:21:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sq_AL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="experimental_per_app_language_prefs">Parapëlqime eksperimentale gjuhe me bazë aplikacionin</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">vendmbajtëse</string>
+    <string name="personalization_screen_shortcuts_accessibility_label">Shfaq/fshih shkurtoren %s</string>
+    <string name="personalization_screen_card_accessibility_label">Shfaq/fshih kartën %s</string>
     <string name="user_avatar_content_description">Avatar për përdoruesin %s</string>
     <string name="user_row_content_description">Shfaq hollësi për përdoruesin %s</string>
     <string name="biographical_info_empty">S’është dhënë gjë</string>
@@ -3781,7 +3784,7 @@ Language: sq_AL
     <string name="themes">Tema</string>
     <string name="discard">Hidhe Tej</string>
     <string name="manage">Administroni</string>
-    <string name="more_notifications">dhe%d të tjera.</string>
+    <string name="more_notifications">dhe %d të tjera.</string>
     <string name="new_notifications">%d njoftime të reja</string>
     <string name="note_reply_successful">Përgjigja u botua</string>
     <string name="sign_in">Hyni</string>

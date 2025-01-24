@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-16 17:11:23+0000
+Translation-Revision-Date: 2025-01-13 21:32:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
@@ -1013,20 +1013,20 @@ Language: nl
     <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Day One</string>
     <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Broncode</string>
     <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Privacybeleid</string>
-    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Servicevoorwaarden</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Dienstvoorwaarden</string>
     <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Werken vanaf elke locatie</string>
     <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Werk met ons samen</string>
-    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic-familie</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic familie</string>
     <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Juridisch en meer</string>
     <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
     <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
-    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Beoordeel ons</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Waardeer ons</string>
     <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Deel met vrienden</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">Je kunt dit blok openen met de webversie van de editor.</string>
     <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Open de beveiligingsinstellingen van Jetpack</string>
     <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Opmerking: je moet WordPress.com login toestaan om dit blok te kunnen bewerken in de mobiele editor.</string>
     <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Opmerking: lay-out kan verschillen tussen thema\'s en schermgrootten</string>
-    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Adresinstellingen</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Adres instellingen</string>
     <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">MEDIA TOEVOEGEN</string>
     <string name="my_site_error_card_subtitle">We kunnen de gegevens van je site momenteel niet laden.</string>
     <string name="my_site_error_card_title">Niet alle gegevens zijn geladen</string>
@@ -1045,8 +1045,8 @@ Language: nl
     <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">Meer ondersteuning opties</string>
     <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Krijg ondersteuning</string>
     <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Lettertype grootte</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">Twee keer tikken om een lettertype grootte te selecteren</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">Twee keer tikken om een standaard lettertype grootte te selecteren</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">Twee keer tikken om een lettertypegrootte te selecteren</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">Twee keer tikken om een standaard lettertypegrootte te selecteren</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">Neem contact op met ondersteuning</string>
     <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Volg conversatie</string>
@@ -1117,7 +1117,7 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">Twee keer tikken om insluit opties te zien.</string>
     <string name="quick_start_list_create_site_message">Site gemaakt! Rond nog een taak af.</string>
     <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">Regelafstand</string>
-    <string name="domains_free_plan_get_your_domain_title">Krijg je domein</string>
+    <string name="domains_free_plan_get_your_domain_title">Verkrijg je domein</string>
     <string name="recommend_app_generic_get_template_error">Onbekende fout bij het ophalen van aanbevolen app template</string>
     <string name="recommend_app_bad_format_response">Ongeldige reactie ontvangen</string>
     <string name="recommend_app_null_response">Geen reactie ontvangen</string>
@@ -1144,8 +1144,8 @@ Language: nl
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">Om een blok te verwijderen, selecteer je het blok en klik je op de drie stippen rechts onderaan het blok om de instellingen te zien. Kies van daaruit de optie om het blok te verwijderen.</string>
     <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">Sommige blokken hebben extra instellingen. Tik op het instellingen icoon rechts onderaan het blok om meer opties te zien.</string>
     <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s blok, nieuw beschikbaar</string>
-    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Rich tekst bewerking</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Als je eenmaal vertrouwd bent geraakt met de namen van de verschillende blokken, kun je een blok toevoegen door een voorwaartse schuine streep te typen, gevolgd door de bloknaam - bijvoorbeeld, /afbeelding of /heading.</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Rich Text bewerking</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Als je eenmaal vertrouwd bent geraakt met de namen van de verschillende blokken, kun je een blok toevoegen door een voorwaartse schuine streep te typen, gevolgd door de bloknaam - bijvoorbeeld, /afbeelding of /koptekst.</string>
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">Laat je inhoud opvallen door afbeeldingen, gifs, video\'s, en ingesloten media aan je pagina\'s toe te voegen.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Probeer het door een paar blokken toe te voegen aan je bericht of pagina!</string>
     <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Sluit media in</string>
@@ -1153,7 +1153,7 @@ Language: nl
     <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">Bouw lay-outs</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Rangschik je inhoud in kolommen, voeg Call To Action knoppen toe, en overlap afbeeldingen met tekst.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Voeg op elk moment een nieuw blok toe, door te tikken op het + icoon in de toolbar links onderaan.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
@@ -1211,7 +1211,7 @@ Language: nl
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Als alternatief, kan je deze blokken ook losmaken en afzonderlijk bewerken door op \'Patronen losmaken\' te tikken.</string>
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
-    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je referenties voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
     <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Instellen als uitgelichte afbeelding</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Verwijder als uitgelichte afbeelding</string>
     <string name="fab_add_category_desc">Maak categorie</string>
@@ -1248,7 +1248,7 @@ Language: nl
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Linktekst toevoegen</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Afbeelding of video toevoegen</string>
     <string name="error_media_path_is_directory">Het opgegeven pad is een folder in plaats van een mediabestand</string>
-    <string name="error_media_could_not_find_media_in_path">Kan mediabestand niet vinden in pad</string>
+    <string name="error_media_could_not_find_media_in_path">Kon mediabestand niet vinden in pad</string>
     <string name="error_media_unexpected_empty_media_file_path">Onverwacht leeg bestandspad voor media</string>
     <string name="error_media_file_type_not_allowed">Dit bestandstype is niet toegestaan</string>
     <string name="error_media_unexpected_null_value">Media was leeg</string>
@@ -1317,7 +1317,7 @@ Language: nl
     <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Buitenkant</string>
     <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">Geen aangepaste plaatshouder set</string>
     <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Binnen</string>
-    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Verberg zoek heading</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Verberg zoek koptekst</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Twee keer tikken om de plaatshouder tekst te bewerken</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Twee keer tikken om de labeltekst te bewerken</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Twee keer tikken om de knoptekst te bewerken</string>
@@ -1478,15 +1478,15 @@ Language: nl
     <string name="reader_error_changing_seen_status_of_unsupported_post">Kan status gezien voor dit bericht niet wisselen</string>
     <string name="reader_marked_post_as_unseen">Bericht gemarkeerd als ongezien</string>
     <string name="reader_marked_post_as_seen">Bericht gemarkeerd als gezien</string>
-    <string name="threat_fix_all_status_error_message">Fout bij verkrijgen van de oplossingstatus. Neem contact op met ondersteuning.</string>
+    <string name="threat_fix_all_status_error_message">Fout bij het verkrijgen van de oplossing status. Neem contact op met ondersteuning.</string>
     <string name="threat_fix_all_status_success_message_singular">Bedreiging is met succes opgelost.</string>
-    <string name="threat_fix_all_error_message">Fout bij oplossen van bedreigingen. Neem contact op met ondersteuning.</string>
+    <string name="threat_fix_all_error_message">Fout bij het oplossen van bedreigingen. Neem contact op met ondersteuning.</string>
     <string name="threat_fix_all_confirmation_message_singular">Bevestig dat je één actieve bedreiging wil oplossen.</string>
     <string name="threat_fix_all_warning_title">Alle bedreigingen oplossen</string>
     <string name="threat_ignore_error_message">Fout bij negeren van de bedreiging, Neem contact op met ondersteuning.</string>
     <string name="threat_ignore_success_message">Bedreiging genegeerd.</string>
     <string name="threat_ignore_warning">Je moet een bedreigings probleem niet negeren, tenzij je zeker weet dat deze niet gevaarlijk is. Als je ervoor kiest om deze bedreiging te negeren, blijft deze aanwezig op je site: &lt;b&gt;%s&lt;/b&gt;.</string>
-    <string name="threat_fix_error_message">Fout bij oplossen van de bedreiging. Neem contact op met ondersteuning.</string>
+    <string name="threat_fix_error_message">Fout bij het oplossen van de bedreiging. Neem contact op met ondersteuning.</string>
     <string name="threat_item_sub_header_status_ignored">Bedreiging genegeerd</string>
     <string name="threat_item_sub_header_status_fixed_on">Bedreiging opgelost op %s</string>
     <string name="threat_fixing">Bezig met bedreiging oplossen</string>
@@ -1497,7 +1497,7 @@ Language: nl
     <string name="scan_scanning_title">Bestanden scannen</string>
     <string name="scan_preparing_to_scan_title">Voorbereiden om te scannen</string>
     <string name="scan_history_menu_title">Geschiedenis</string>
-    <string name="scan_history">Scangeschiedenis</string>
+    <string name="scan_history">Scan geschiedenis</string>
     <string name="backup_active_filter_empty_subtitle">Probeer het met aanpassen van je datumbereik</string>
     <string name="backup_active_filter_empty_title">Geen overeenkomende back-ups gevonden</string>
     <string name="backup_empty_subtitle">Je eerste back-up verschijnt hier binnen 24 uur en je ontvangt een bericht zodra de back-up is afgerond</string>
@@ -1541,7 +1541,7 @@ Language: nl
     <string name="threat_fix_fixable_update">Jetpack Scan zal updaten naar een nieuwere versie (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan verwijdert het betreffende bestand of de folder.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan vervangt het betreffende bestand of de folder.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan deze bedreiging niet automatisch herstellen\n        We raden aan om de bedreiging handmatig op te lossen: zorg ervoor dat WordPress, je thema en al je plugins up-to-date zijn, en verwijder de aanstootgevende code, het thema of de plugin van je site.\n \n\n        Als je meer hulp nodig hebt om deze bedreiging op te lossen, raden we &lt;b&gt;Codeable&lt;/b&gt;, een vertrouwde freelancer marktplaats van zeer goed gescreende WordPress experts aan.\n        Ze hebben een selecte groep beveiligingsexperts aangewezen om bij deze projecten te helpen. De prijzen variëren van $70–120/uur, en je kan een gratis schatting krijgen zonder verplichting om in te huren.\n    </string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan deze bedreiging niet automatisch herstellen\n        We raden aan om de bedreiging handmatig op te lossen: zorg ervoor dat WordPress, je thema en al je plugins up-to-date zijn, en verwijder de aanstootgevende code, het thema of de plugin van je site.\n \n\n        Als je meer hulp nodig hebt om deze bedreiging op te lossen, raden we &lt;b&gt;Codeable&lt;/b&gt;, een vertrouwde freelancer marktplaats van zeer goed gescreende WordPress experts aan.\n        Ze hebben een selecte groep beveiligingsexperts aangewezen om bij deze projecten te helpen. De prijzen variëren van $70–120/uur, en je kunt een gratis schatting krijgen zonder verplichting om in te huren.\n    </string>
     <string name="threat_fix_current_not_fixable_header">Bedreiging aan het oplossen</string>
     <string name="threat_fix_fixed_header">Hoe heeft Jetpack het opgelost?</string>
     <string name="threat_fix_default_header">Hoe lossen we het op?</string>
@@ -1558,7 +1558,7 @@ Language: nl
     <string name="threat_item_header_vulnerable_plugin">Kwetsbare plugin: %1$s (versie %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kwaadaardig codepatroon</string>
     <string name="threat_item_header_database_threat">Database %s bedreigingen</string>
-    <string name="threat_item_header_infected_core_file">%s: geinfecteerd core bestand</string>
+    <string name="threat_item_header_infected_core_file">%s: geïnfecteerd core bestand</string>
     <string name="threat_item_header_threat_found">Bedreiging gevonden</string>
     <string name="threats_fix_all">Alles oplossen</string>
     <string name="scan_in_few_seconds">een paar seconden geleden</string>
@@ -1572,14 +1572,14 @@ Language: nl
     <string name="scan_now">Nu scannen</string>
     <string name="scan_state_icon">Scanstatus icoon</string>
     <string name="backup">Back-up</string>
-    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activiteittype filter (%s types geselecteerd)</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activiteit type filter (%s types geselecteerd)</string>
     <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (%2$s items weergegeven)</string>
-    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activiteittype filter</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activiteit type filter</string>
     <string name="activity_log_activity_type_empty_subtitle">Geen activiteiten waargenomen in het geselecteerde datumbereik.</string>
     <string name="activity_log_activity_type_empty_title">Geen activiteiten beschikbaar</string>
-    <string name="activity_log_activity_type_error_subtitle">Controleer je internet verbinding en probeer het opnieuw.</string>
+    <string name="activity_log_activity_type_error_subtitle">Controleer je internetverbinding en probeer het opnieuw.</string>
     <string name="activity_log_activity_type_error_title">Geen verbinding</string>
-    <string name="activity_log_activity_type_filter_active_label">Activiteittype (%s)</string>
+    <string name="activity_log_activity_type_filter_active_label">Activiteit type (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">Datumbereik filter</string>
     <string name="activity_log_active_filter_empty_subtitle">Pas je filters voor datumbereik of activiteitstype aan</string>
     <string name="activity_log_active_filter_empty_title">Geen overeenkomende gebeurtenissen gevonden</string>
@@ -1606,18 +1606,18 @@ Language: nl
     <string name="dialog_confirm_copy_local_title">Synchronisatie conflict bericht</string>
     <string name="button_copy">Dupliceer</string>
     <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">Bestandsnaam</string>
-    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">Bestand blok-instellingen</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">Bestand blok instellingen</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Uploaden van bestanden mislukt.\nTik voor opties.</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Opslaan van bestanden mislukt.\nTik voor opties.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Opslaan van bestanden mislukt.\nTikken voor opties.</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Bewerk bestand</string>
-    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Kopieer bestands URL</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Kopieer bestand URL</string>
     <string name="new_site_creation_domain_header_title">Kies een domein</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Conversatie wordt gevolgd per e-mail</string>
     <string name="reader_btn_follow_comments">Volg conversatie per e-mail</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Kon niet uitschrijven van reacties voor dit bericht</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Kon niet abonneren op reacties voor dit bericht</string>
-    <string name="reader_follow_comments_get_status_error">Fout bij het ophalen van de abonneringstatus voor bericht</string>
+    <string name="reader_follow_comments_get_status_error">Fout bij het ophalen van de abonnering status voor bericht</string>
     <string name="reader_follow_comments_bad_format_response">Ongeldige reactie ontvangen</string>
     <string name="reader_follow_comments_null_response">Geen antwoord ontvangen</string>
     <string name="activity_log_activity_type_filter_clear">Wissen</string>
@@ -1625,10 +1625,10 @@ Language: nl
     <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal opnieuw te maken.</string>
     <string name="label_done_button">Klaar</string>
     <string name="hpp_choose_error">Er is een fout opgetreden bij het selecteren van het thema.</string>
-    <string name="hpp_retry_error">Controleer je internet verbinding en probeer het opnieuw.</string>
-    <string name="hpp_error_subtitle">Tik op opnieuw proberen wanneer je weer online bent.</string>
+    <string name="hpp_retry_error">Controleer je internetverbinding en probeer het opnieuw.</string>
+    <string name="hpp_error_subtitle">Tikken op opnieuw proberen wanneer je weer online bent.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
-    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ga verder met winkel-referenties</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ga verder met winkel referenties</string>
     <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Vind je verbonden e-mail</string>
     <string name="reader_discover_no_posts_follow_subtitle">Probeer meer tags te volgen om de zoekopdracht te verbreden</string>
     <string name="reader_discover_no_posts_title">Geen recente berichten</string>
@@ -1636,13 +1636,13 @@ Language: nl
     <string name="scan">Scan</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; antwoordde op je bericht</string>
     <string name="login_prologue_third_subtitle_two">Je ontving &lt;b&gt;50 vind-ik-leuks&lt;/b&gt; op je site vandaag</string>
-    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked je bericht</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; vond je bericht leuk</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrolbaar blokmenu gesloten.</string>
     <string name="hpp_choose_button">Kies</string>
-    <string name="mlp_network_error_subtitle">Tik op opnieuw proberen wanneer je opnieuw online bent of maak een lege pagina met de knop hieronder.</string>
+    <string name="mlp_network_error_subtitle">Tikken op opnieuw proberen wanneer je opnieuw online bent of maak een lege pagina met de knop hieronder.</string>
     <string name="mlp_network_error_title">Lay-outs niet beschikbaar indien offline</string>
-    <string name="mlp_error_subtitle">Tik op opnieuw proberen of maak een lege pagina met de knop hieronder.</string>
+    <string name="mlp_error_subtitle">Tikken op opnieuw proberen of maak een lege pagina met de knop hieronder.</string>
     <string name="mlp_error_title">Lay-outs niet beschikbaar vanwege een fout</string>
     <string name="prepublishing_nudges_add_category_button">Categorie toevoegen</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Nieuwe categorie toevoegen</string>
@@ -1651,7 +1651,7 @@ Language: nl
     <string name="prepublishing_nudges_categories_action">Categorieën</string>
     <string name="login_prologue_fifth_caption_three">Museums in Londen</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
-    <string name="login_prologue_fifth_caption_one">Mijn toptien café\'s</string>
+    <string name="login_prologue_fifth_caption_one">Mijn top tien cafés</string>
     <string name="login_prologue_fifth_tag_six">Politiek</string>
     <string name="login_prologue_fifth_tag_five">Muziek</string>
     <string name="login_prologue_fifth_tag_four">Tuinieren</string>
@@ -1662,7 +1662,7 @@ Language: nl
     <string name="login_prologue_fifth_subtitle_two">Webnieuws</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Ik ben zo geïnspireerd door fotograaf Cameron Karsten. Ik ga deze technieken zeker proberen bij mijn volgende</string>
-    <string name="login_prologue_second_subtitle_one">Raak geinspireerd</string>
+    <string name="login_prologue_second_subtitle_one">Inspiratie opdoen</string>
     <string name="login_prologue_title_fifth">Volg je favoriete sites en ontdek nieuwe blogs.</string>
     <string name="login_prologue_title_fourth">Bekijk hoe je publiek groeit met in-dept analytics.</string>
     <string name="login_prologue_title_third">Bekijk reacties en berichten in real time.</string>
@@ -1715,7 +1715,7 @@ Language: nl
     <string name="reader_discover_interests_header">Je zult ook leuk vinden</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Verberg</string>
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video bijschrift. Leeg</string>
-    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Werkt de titel bij.</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updatet de titel.</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Plak het blok na</string>
     <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Paginatitel. %s</string>
     <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Paginatitel. Leeg</string>
@@ -1728,11 +1728,11 @@ Language: nl
     <string name="mlp_choose_layout_subtitle">Ga aan de slag door te kiezen uit een breed scala aan vooraf gemaakte pagina lay-outs. Of begin gewoon met een lege pagina.</string>
     <string name="mlp_choose_layout_title">Kies een lay-out</string>
     <string name="prepublishing_nudges_story_title_hint">Geef je verhaal een titel</string>
-    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tik op %1$s Maken. %2$s Selecteer vervolgens &lt;b&gt;Blog bericht&lt;/b&gt;</string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tik op %1$s Maken. %2$s Selecteer vervolgens &lt;b&gt;Blogbericht&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Kies van welk apparaat</string>
     <string name="my_site_bottom_sheet_add_story">Verhaal plaatsen</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Voor het bewerken van site iconen op door jezelf gehoste WordPress sites is de Jetpack plugin vereist.</string>
-    <string name="reader_toast_err_page_jump_not_found">Kan de gekoppelde pagina niet vinden</string>
+    <string name="reader_toast_err_page_jump_not_found">Kan de gekoppelde pagina sprong niet vinden</string>
     <string name="error_media_quota_exceeded_toast">Kan bestand niet uploaden.\nOpslag quota was overschreden.</string>
     <string name="error_media_quota_exceeded">Opslag quota overschreden</string>
     <string name="pick_file">Bestand toevoegen</string>
@@ -1745,8 +1745,8 @@ Language: nl
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Blok verwijderd</string>
     <string name="enter_your_site_address">Voer je bestaande site adres in</string>
     <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Inschrijfbevestiging</string>
-    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">Als je doorgaat met Google en nog geen WordPress.com account hebt, maakt je een account aan en gaat je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
-    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">Als je doorgaat, ga je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">Als je doorgaat met Google en nog geen WordPress.com account hebt, maakt je een account aan en ga je akkoord met onze %1$sDienstvoorwaarden%2$s.</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">Door door te gaan, stem je in met onze %1$sDienstvoorwaarden%2$s.</string>
     <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">We gebruiken dit e-mailadres om je nieuwe WordPress.com account aan te maken.</string>
     <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">We hebben je een link gestuurd om je nieuwe WordPress.com account aan te maken. Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
     <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer je accountgegevens in voor %1$s.</string>
@@ -1758,7 +1758,7 @@ Language: nl
     <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com hebt ontvangen.</string>
     <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">We e-mailen je een link waarmee je direct kan inloggen, geen wachtwoord nodig.</string>
     <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-mail controleren</string>
-    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="module:login">Begin</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ga aan de slag</string>
     <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer je e-mailadres in om in te loggen of maak een WordPress.com account aan.</string>
     <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Of typ je wachtwoord</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="module:login">Account aanmaken</string>
@@ -1766,29 +1766,29 @@ Language: nl
     <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Stel je wachtwoord opnieuw in</string>
     <string name="reader_error_request_failed_title">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="quick_start_list_update_site_title_title">Bekijk je site titel</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tik &lt;b&gt;%1$s&lt;/b&gt; om een nieuwe titel in te stellen</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tikken &lt;b&gt;%1$s&lt;/b&gt; om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s blok opties</string>
     <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Verwijder blok</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Blok dupliceren</string>
-    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Blok copieren</string>
-    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Blok gecopieerd</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Kopieer blok</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Blok gekopieerd</string>
     <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Blok geplakt</string>
     <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Blok gedupliceerd</string>
     <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Blok geknipt</string>
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Blok gekopieerd</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
-    <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
+    <string name="my_site_title_changer_dialog_hint">De site titel wordt getoond in de titelbalk van een webbrowser en wordt getoond in de header van de meeste thema\'s.</string>
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in een browser</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigeert naar het vorige inhoudsblad</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigeert naar het vorige inhoud blad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigeert naar aanpassen van het verloop</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigeert naar de aangepaste kleurkiezer</string>
-    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Verloop type</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradiënt type</string>
     <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Ga terug</string>
     <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Twee keer tikken om de optie te selecteren</string>
-    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Pas de verloop aan</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Pas gradiënt aan</string>
     <string name="pages_list_author">Pagina auteur</string>
     <string name="error_media_thumbnail_not_loaded">De media thumbnail kon niet geladen worden</string>
     <string name="menu_content_info">Inhoudstructuur</string>
@@ -1797,7 +1797,7 @@ Language: nl
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Negeren</string>
     <string name="prepublishing_nudges_home_tags_not_set">Niet ingesteld</string>
     <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publicatie datum</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publicatiedatum</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tags toevoegen</string>
     <string name="prepublishing_nudges_back_button">Terug</string>
     <string name="prepublishing_nudges_home_save_button">Nu opslaan</string>
@@ -1819,7 +1819,7 @@ Language: nl
     <string name="publish_date">Publicatiedatum</string>
     <string name="ccpa_privacy_notice_read">Lees CCPA privacy bericht</string>
     <string name="ccpa_privacy_notice_caption">De Californische Consumer Privacy Act (\"CCPA\") vereist dat je ons de Californische inwonenden aanlevert met enige toegevoegde informatie over de categorieën van de persoonlijke informatie die we verzamelen en delen, daar waar we persoonlijke informatie krijgen, en waarom we het gebruiken.</string>
-    <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
+    <string name="ccpa_privacy_notice_header">Privacy bericht voor gebruikers in Californië</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="update_now">Update nu</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -1902,7 +1902,7 @@ Language: nl
     <string name="weekday_tuesday">Dinsdag</string>
     <string name="weekday_monday">Maandag</string>
     <string name="weekday_sunday">Zondag</string>
-    <string name="media_accessing_failed">Openen van content van privésite mislukt. Sommige media zijn mogelijk niet beschikbaar</string>
+    <string name="media_accessing_failed">Openen van inhoud van privésite mislukt. Sommige media zijn mogelijk niet beschikbaar</string>
     <string name="media_accessing_progress">Content van privésite wordt geopend</string>
     <string name="error_failed_to_crop_and_save_image">Afbeelding bijsnijden en opslaan mislukt. Probeer opnieuw.</string>
     <string name="failed_to_load_image_tap_to_retry">Afbeelding laden mislukt.\nTik om het opnieuw te proberen.</string>
@@ -1933,23 +1933,23 @@ Language: nl
     <string name="editor_page_saved_locally_failed_media">De pagina bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="editor_page_saved_locally">Pagina opgeslagen op apparaat</string>
     <string name="editor_page_saved_online">Pagina online opgeslagen</string>
-    <string name="quickpress_shortcut_activity_label">Selecteer blog voor snelkoppeling naar QuickPress</string>
+    <string name="quickpress_shortcut_activity_label">Selecteer blog voor QuickPress snelkoppeling</string>
     <string name="app_theme_default">Ingesteld door energiebesparing</string>
     <string name="app_theme_dark">Donker</string>
     <string name="app_theme_light">Licht</string>
     <string name="app_theme">Weergave</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Je hebt onlangs wijzigingen aangebracht aan deze pagina, maar deze niet opgeslagen. Kies een versie om te laden:\n\n</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Waarschuwing bericht</string>
-    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Berichtcontent weergeven</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Toon berichtinhoud</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link naar</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link instellingen</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Lengte samenvatting (woorden)</string>
-    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Omslagmedia bewerken</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Bewerk de omslagafbeelding media</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">AANPASSEN</string>
     <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">Knop URL-link</string>
     <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">Randradius</string>
-    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Paragraafblok toevoegen</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Paragraaf blok toevoegen</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
     <string name="post_list_tab_scheduled_posts">Gepland</string>
@@ -1965,11 +1965,11 @@ Language: nl
     <string name="stats_insights_management_posts_and_pages">Berichten en pagina\'s</string>
     <string name="stats_insights_management_general">Algemeen</string>
     <string name="stats_management_screen_title">Nieuwe kaart toevoegen</string>
-    <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
+    <string name="stats_management_add_new_stats_card">Nieuwe statistieken kaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
     <string name="reader_bottom_sheet_select_content_description">Selecteer een tag of blog, pop-up venster</string>
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
-    <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Login op WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Log in op WordPress.com om de laatste berichten te bekijken van tags waarop je geabonneerd bent</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Login op WordPress.com om de nieuwste berichten van blogs waarop je geabonneerd bent te zien</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Huidig blok vervangen</string>
@@ -1988,7 +1988,7 @@ Language: nl
     <string name="stats_posting_activity_end_description">Je hebt alle statistieken voor deze periode gezien.\n Door nogmaals te tikken, begin je opnieuw.</string>
     <string name="stats_posting_activity_empty_description">Er zijn geen statistieken in deze periode.</string>
     <string name="stats_posting_activity_label_content_description">Plaatsing activiteiten voor %1$s</string>
-    <string name="stats_posting_activity_content_description">De dagen met %1$s weergaven voor %2$s zijn: %2$s %3$s.Tik voor meer informatie.</string>
+    <string name="stats_posting_activity_content_description">De dagen met %1$s weergaven voor %2$s zijn: %2$s %3$s.Tikken voor meer informatie.</string>
     <string name="stats_posting_activity_action">door alle statistieken voor deze periode bladeren</string>
     <string name="stats_box_type_very_high">zeer hoog</string>
     <string name="stats_box_type_high">hoog</string>
@@ -2001,7 +2001,7 @@ Language: nl
     <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
     <string name="content_description_person_building_website">Persoon die de site gebouwd heeft</string>
     <string name="post_signup_interstitial_not_right_now">Niet nu</string>
-    <string name="post_signup_interstitial_subtitle">Wat je ook wilt creëren of delen, wij helpen je erbij.</string>
+    <string name="post_signup_interstitial_subtitle">Wat je ook wil creëren of delen, wij helpen je erbij.</string>
     <string name="post_signup_interstitial_title">Welkom bij WordPress</string>
     <string name="stock_media_picker_list_content_description">Fotobibliotheek</string>
     <string name="photo_picker_image_thumbnail_unselected">Afbeelding gedeselecteerd</string>
@@ -2018,32 +2018,32 @@ Language: nl
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site vanwege een probleem met het &lt;b&gt;SSL-certificaat&lt;/b&gt;. Neem contact op met je host om dit probleem te verhelpen.</string>
-    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b&gt;HTTP-authenticatie is vereist&lt;/b&gt;. Neem contact op met je host om dit probleem te verhelpen.</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="module:login">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b&gt;HTTP authenticatie is vereist&lt;/b&gt;. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="module:login">We konden geen toegang krijgen tot het &lt;b&gt;XMLRPC-bestand&lt;/b&gt; op je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b&gt;%1$s&lt;/b&gt;) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
-    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Inloggen met je site-referenties voor %1$s.</string>
-    <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login met je site referenties voor %1$s</string>
+    <string name="my_site_bottom_sheet_add_page">Sitepagina</string>
     <string name="reader_my_likes_display_name">Vind-ik-leuks</string>
     <string name="reader_discover_display_name">Ontdek</string>
     <string name="reader_save_for_later_display_name">Opgeslagen</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
-    <string name="suffix_1_000_000_000">%s mld.</string>
-    <string name="suffix_1_000_000">%s mln.</string>
+    <string name="suffix_1_000_000_000">%s mld</string>
+    <string name="suffix_1_000_000">%s mln</string>
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">We kunnen de berichten momenteel niet openen. Probeer het later opnieuw</string>
     <string name="site_cannot_be_loaded">We kunnen op dit moment geen gegevens voor je site laden. Probeer het later opnieuw</string>
-    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress-mediabibliotheek</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress mediabibliotheek</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Niet-ondersteund</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Groep opheffen</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tik om toetsenbord te verbergen</string>
-    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tik hier om help te tonen</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Hier tikken om hulp weer te geven</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Maak een video</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Maak een foto of video</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Maak een foto</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Begin met schrijven …</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s-blok. Dit blok bevat ongeldige inhoud</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s blok. Leeg</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Blok knippen</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Probleem bij het openen van de video</string>
@@ -2078,7 +2078,7 @@ Language: nl
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Huidige waarde is %s</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Kiezen op apparaat</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">Er is een onbekende fout opgetreden. Probeer het nog eens.</string>
-    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt. tekst</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt-tekst</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video toevoegen</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">URL toevoegen</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Alt tekst toevoegen</string>
@@ -2089,7 +2089,7 @@ Language: nl
     <string name="notifications_tab_dialog_switch_desc">Meldingen</string>
     <string name="main_switch_default_title_off">Uit</string>
     <string name="main_switch_default_title_on">Aan</string>
-    <string name="notifications_tab_dialog_main_off_message">Als je Meldingen voor deze site uitschakelt, wordt de weergave van meldingen op het tab Meldingen voor deze site uitgeschakeld. Je kunt afstemmen welk soort melding je ziet nadat je Meldingen voor deze site hebt ingeschakeld.</string>
+    <string name="notifications_tab_dialog_main_off_message">Als je meldingen voor deze site uitschakelt, wordt de weergave van meldingen op de tab Meldingen voor deze site uitgeschakeld. Je kunt afstemmen welk soort melding je ziet nadat je meldingen voor deze site hebt ingeschakeld.</string>
     <string name="notifications_tab_dialog_main_off_title">Om meldingen op de tab Meldingen voor deze site te zien, schakel Meldingen voor deze site in.</string>
     <string name="notifications_tab_dialog_main_hint_off">Schakel de weergave van meldingen in op de tab Meldingen voor deze site</string>
     <string name="notifications_tab_dialog_main_hint_on">Schakel de weergave van meldingen op de tab Meldingen voor deze site uit</string>
@@ -2136,10 +2136,10 @@ Language: nl
     <string name="settings_username_changer_toast_content">Je nieuwe gebruikersnaam is %1$s</string>
     <string name="settings_username_changer_progress_dialog">Gebruikersnaam wordt opgeslagen…</string>
     <string name="settings_username_changer_confirm_dialog_positive_action">Gebruikersnaam wijzigen</string>
-    <string name="settings_username_changer_confirm_dialog_content">Je wijzigt je gebruikersnaam naar %1$s%2$s%3$s. Als je je gebruikersnaam wijzigt, heeft dat ook invloed op je Gravatar-profiel en de Intense Debate-profieladressen. Bevestig je nieuwe gebruikersnaam om door te gaan.</string>
+    <string name="settings_username_changer_confirm_dialog_content">Je verandert je gebruikersnaam in %1$s%2$s%3$s. Het wijzigen van je gebruikersnaam heeft ook invloed op je Gravatar profiel en Intense Debate profieladressen. Bevestig je nieuwe gebruikersnaam om door te gaan.</string>
     <string name="settings_username_changer_confirm_dialog_title">Voorzichtig!</string>
     <string name="settings_username_changer_header">Je staat op het punt om je huidige gebruikersnaam, %1$s%2$s%3$s, te wijzigen. Je kunt deze wijziging niet meer terugdraaien.</string>
-    <string name="site_settings_jetpack_performance_settings_hint">Bekijk je instellingen van Jetpack-prestaties en wijzig ze</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Bekijk je instellingen van Jetpack prestaties en wijzig ze</string>
     <string name="site_settings_performance_and_speed">Prestaties en snelheid</string>
     <string name="site_settings_more">Meer</string>
     <string name="site_settings_improved_search_summary">Vervang de standaard zoekfunctie van WordPress door een verbeterde zoekfunctie</string>
@@ -2157,8 +2157,8 @@ Language: nl
     <string name="site_settings_performance">Prestatie</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Bestand</string>
-    <string name="stats_file_downloads">Bestandsdownloads</string>
-    <string name="stats_data_not_recorded_for_period">De statistieken voor bestandsdownloads zijn niet geregistreerd vóór 28 juni 2019.</string>
+    <string name="stats_file_downloads">Bestand downloads</string>
+    <string name="stats_data_not_recorded_for_period">De statistieken voor bestand downloads zijn niet geregistreerd vóór 28 juni 2019.</string>
     <string name="stats_site_negative_utc">Tijdzone site (UTC - %s)</string>
     <string name="stats_site_positive_utc">Tijdzone site (UTC + %s)</string>
     <string name="stats_site_neutral_utc">Tijdzone site (UTC)</string>
@@ -2200,7 +2200,7 @@ Language: nl
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Uitvouwen</string>
     <string name="description_collapse">Invouwen</string>
-    <string name="my_site_verify_your_email_without_email">Je e-mail verifiëren: er zijn instructies naar je e-mailadres verzonden.</string>
+    <string name="my_site_verify_your_email_without_email">Je e-mail verifiëren: er zijn instructies naar je e-mailadres verzonden</string>
     <string name="my_site_verify_your_email">Je e-mail verifiëren: er zijn instructies naar %s verzonden</string>
     <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">Annuleren</string>
     <string name="link_dialog_button_ok" tools:ignore="UnusedResources">OK</string>
@@ -2209,7 +2209,7 @@ Language: nl
     <string name="link_dialog_title" tools:ignore="UnusedResources">Link invoegen</string>
     <string name="post_settings_retry_featured_image">Upload opnieuw proberen</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Media worden geüpload.\nTik voor opties.</string>
-    <string name="link_open_new_window">Open koppeling in een nieuw venster/tab</string>
+    <string name="link_open_new_window">Open link in een nieuw venster/tab</string>
     <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
     <string name="post_list_search_nothing_found">Geen berichten voldoen aan je zoekopdracht</string>
     <string name="post_list_search_prompt">Berichten zoeken</string>
@@ -2218,7 +2218,7 @@ Language: nl
     <string name="my_site_custom_domain_name">Alle jaarlijkse abonnementen van WordPress.com zijn inclusief aangepaste domeinnaam. Registreer nu je gratis domein.</string>
     <string name="stats_widget_minified_name">In een oogopslag</string>
     <string name="stats_widget_today_insights_name">Vandaag</string>
-    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_all_time_insights_name">Aller tijden</string>
     <string name="stats_widget_weekly_views_name">Bezichtigingen deze week</string>
     <string name="stats_widget_log_in_message">Meld je aan bij de WordPress app om een widget toe te voegen.</string>
     <string name="stats_widget_error_no_network">Geen netwerk beschikbaar</string>
@@ -2231,17 +2231,17 @@ Language: nl
     <string name="stats_widget_color">Kleur</string>
     <string name="stats_widget_site_caption">Selecteer je site</string>
     <string name="stats_widget_site">Site</string>
-    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_all_time_title">Aller tijden</string>
     <string name="stats_widget_views_title">Bezichtingen deze week</string>
     <string name="stats_widget_add">Widget toevoegen</string>
     <string name="plugin_fetching_error_after_at">Het duurt langer dan normaal om de details van plugins te vernieuwen. Controleer later opnieuw.</string>
     <string name="plugin_install_site_ineligible_default_error">Als je zojuist een domeinnaam hebt geregistreerd, wacht je even tot we klaar zijn met het instellen en het opnieuw proberen.\n\nZo niet, dan ziet het eruit alsof er iets fout is gegaan en is de plugin functie mogelijk niet beschikbaar voor deze site.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
-    <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
+    <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze %1$svoorwaarden en condities%2$s</string>
     <string name="error_network_connection">Controleer je netwerkverbinding en probeer het nogmaals.</string>
     <string name="error_browser_no_network">Deze pagina kan momenteel niet geladen worden.</string>
-    <string name="error_disabled_apis">Instellingen ophalen mislukt: Sommige API\'s zijn niet beschikbaar voor deze combinatie van een OAuth app-ID en account.</string>
-    <string name="jetpack_connection_terms_and_conditions">Door Jetpack te installeren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
+    <string name="error_disabled_apis">Instellingen ophalen mislukt: Sommige API\'s zijn niet beschikbaar voor deze combinatie van een OAuth app ID en account.</string>
+    <string name="jetpack_connection_terms_and_conditions">Door Jetpack in te stellen, stem je in met onze %1$svoorwaarden en condities%2$s</string>
     <string name="site_settings_disconnected_toast">Geen verbinding. Bewerken is uitgeschakeld.</string>
     <string name="site_settings_update_password_message">Om de app opnieuw te koppelen aan je zelf-gehoste site, voer je hier het nieuwe wachtwoord van de site in.</string>
     <string name="site_settings_password_updated">Wachtwoord geüpdatet</string>
@@ -2259,7 +2259,7 @@ Language: nl
     <string name="domain_contact_information_country_code_hint">Landcode</string>
     <string name="domain_contact_information_phone_number_hint">Telefoonnummer</string>
     <string name="domain_contact_information_organization_hint">Organisatie (optioneel)</string>
-    <string name="domain_contact_information_description">Om je op weg te helpen, hebben je contactgegevens van WordPress.com\n alvast ingevuld. Controleer of dit de juiste gegevens zijn die je voor dit domein wilt gebruiken.</string>
+    <string name="domain_contact_information_description">Voor je gemak hebben we je WordPress.com contactinformatie vooraf ingevuld. Controleer of het de juiste informatie is die je wil gebruiken voor dit domein.</string>
     <string name="domain_contact_information_title">Contactgegevens domein</string>
     <string name="domain_privacy_option_off_title">Openbaar registreren</string>
     <string name="domain_privacy_option_on_title">Privé registreren met privacybescherming</string>
@@ -2269,7 +2269,7 @@ Language: nl
     <string name="stats_management_new">Nieuw</string>
     <string name="stats_management_dismiss_insights_news_card">Negeren</string>
     <string name="stats_management_try_it_now">Probeer het nu</string>
-    <string name="stats_management_news_card_message">Kies welke statistieken je wilt bekijken en richt je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken te personaliseren.</string>
+    <string name="stats_management_news_card_message">Kies welke statistieken je wil zien en concentreer je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken aan te passen.</string>
     <string name="stats_manage_your_stats">Je statistieken beheren</string>
     <string name="history_fetching_revisions">Revisies worden opgehaald…</string>
     <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Invoegen van media mislukt.\nTik voor opties.</string>
@@ -2282,13 +2282,13 @@ Language: nl
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
     <string name="domain_suggestions_fetch_error">Domein suggesties konden niet geladen worden</string>
-    <string name="domain_suggestions_search_hint">Type een trefwoord voor meer ideeën</string>
+    <string name="domain_suggestions_search_hint">Type een keyword voor meer ideeën</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
     <string name="stats_menu_move_down">Omlaag verplaatsen</string>
     <string name="stats_menu_move_up">Omhoog verplaatsen</string>
-    <string name="stats_item_settings">Iteminstellingen voor statistieken</string>
+    <string name="stats_item_settings">Statistieken item instellingen</string>
     <string name="post_moving_to_draft">Bericht wordt naar concept verplaatst</string>
     <string name="post_restoring">Bericht wordt hersteld</string>
     <string name="post_restored">Bericht hersteld</string>
@@ -2303,7 +2303,7 @@ Language: nl
     <string name="posts_scheduled_empty">Je hebt geen geplande berichten</string>
     <string name="posts_published_empty">Je hebt nog geen berichten gepubliceerd</string>
     <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in met je gebruikersnaam en wachtwoord.</string>
-    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in met je WordPress.com-gebruikersnaam in plaats van met je e-mailadres.</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login met je WordPress.com gebruikersnaam in plaats van met je e-mailadres.</string>
     <string name="stats_insights_average_words">Gemiddeld aantal woorden per bericht</string>
     <string name="stats_insights_total_words">Totaalaantal woorden</string>
     <string name="stats_insights_average_likes">Gemiddeld aantal vind-ik-leuk per bericht</string>
@@ -2313,9 +2313,9 @@ Language: nl
     <string name="stats_insights_posts">Berichten</string>
     <string name="stats_insights_year">Jaar</string>
     <string name="stats_insights_this_year_site_stats">Dit jaar</string>
-    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">De site op dit adres is geen WordPress-site. Om er verbinding mee te kunnen maken, moet de site gebruikmaken van WordPress.</string>
-    <string name="plugin_check_domain_credit_error">Fout bij het controleren van beschikbaar domeinkrediet</string>
-    <string name="plugin_check_domain_credits_progress_dialog_message">Domeinkrediet wordt gecontroleerd</string>
+    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">De site op dit adres is geen WordPress site. Om er verbinding mee te kunnen maken, moet de site gebruikmaken van WordPress.</string>
+    <string name="plugin_check_domain_credit_error">Fout bij het controleren van beschikbare domein credits</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Domein credits worden gecontroleerd</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Domein registreren</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Om plugins te installeren, moet er een aangepast domein aan je site zijn gekoppeld.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Plugin installeren</string>
@@ -2325,7 +2325,7 @@ Language: nl
     <string name="published_on">Gepubliceerd op: %s</string>
     <string name="scheduled_for">Gepland voor: %s</string>
     <string name="stats_detail_recent_weeks">Afgelopen weken</string>
-    <string name="stats_detail_average_views_per_day">Gem. Weergaven per dag</string>
+    <string name="stats_detail_average_views_per_day">Gem. weergaven per dag</string>
     <string name="stats_months_and_years_views_label">Weergaven</string>
     <string name="stats_months_and_years_period_label">Periode</string>
     <string name="stats_detail_months_and_years">Maanden en jaren</string>
@@ -2343,7 +2343,7 @@ Language: nl
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site nog niet geladen</string>
     <string name="stats_more_posts">Meer berichten</string>
     <string name="stats_fewer_posts">Minder berichten</string>
-    <string name="new_site_creation_preview_back_pressed_warning">Je kan je voortgang verliezen. Weet je zeker dat je wilt afsluiten?</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Je kan je voortgang verliezen. Weet je zeker dat je wil afsluiten?</string>
     <string name="plans_loading_error_with_cache_button">Abonnementen toch weergeven</string>
     <string name="plans_loading_error_with_cache_subtitle">Je hebt een internetverbinding nodig om abonnementen te bekijken, dus kunnen de gegevens verouderd zijn.</string>
     <string name="plans_loading_error_no_cache_subtitle">Je hebt een internetverbinding nodig om abonnementen te bekijken.</string>
@@ -2379,7 +2379,7 @@ Language: nl
     <string name="new_site_creation_site_preview_content_description">Toont site voorbeeld</string>
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Het lijkt er op dat je op een trage verbinding zit. Als je je nieuwe site niet in de lijst ziet, ververs dan je scherm.</string>
-    <string name="cancel_new_site_wizard_content_description">Annuleer  site aanmaak wizard</string>
+    <string name="cancel_new_site_wizard_content_description">Annuleer site aanmaak wizard</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We maken je nieuwe site</string>
     <string name="notification_new_site_creation_failed">Er was een probleem</string>
     <string name="notification_new_site_creation_title">Maak een site</string>
@@ -2393,10 +2393,10 @@ Language: nl
     <string name="new_site_creation_screen_title_step_count">%1$d van %2$d</string>
     <string name="new_site_creation_screen_title_general">Maak een site</string>
     <string name="suggestions_updated_content_description">Suggesties geüpdatet</string>
-    <string name="site_picker_failed_selecting_added_site">Kan de nieuw toegevoegde zelf-gehoste site niet selecteren .</string>
+    <string name="site_picker_failed_selecting_added_site">Kon de nieuw toegevoegde zelf-gehoste site niet selecteren.</string>
     <string name="local_post_is_conflicted">Versie conflict</string>
     <string name="preference_crash_reports_summary">Sta automatische vastloper rapporten toe om ons te helpen de prestaties van de app te verbeteren.</string>
-    <string name="preference_crash_reports">Crash-rapporten</string>
+    <string name="preference_crash_reports">Crash rapporten</string>
     <string name="snackbar_conflict_undo">Ongedaan maken</string>
     <string name="snackbar_conflict_web_version_discarded">Webversie genegeerd</string>
     <string name="snackbar_conflict_local_version_discarded">Lokale versie genegeerd</string>
@@ -2410,7 +2410,7 @@ Language: nl
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
     <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">Geen media die overeenkomen met je zoekopdracht</string>
-    <string name="gif_picker_initial_empty_text">Zoeken om GIF\'s te vinden die je aan  je mediabibliotheek kunt toevoegen !</string>
+    <string name="gif_picker_initial_empty_text">Zoeken om GIF\'s te vinden die je aan je mediabibliotheek kunt toevoegen!</string>
     <string name="stats_author_views_label">Weergaven</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>
@@ -2419,7 +2419,7 @@ Language: nl
     <string name="stats_search_terms">Zoektermen</string>
     <string name="stats_videos_views_label">Keer bekeken</string>
     <string name="stats_videos_title_label">Titel</string>
-    <string name="stats_videos">Videos</string>
+    <string name="stats_videos">Video\'s</string>
     <string name="stats_country_views_label">Keer bekeken</string>
     <string name="stats_country_label">Land</string>
     <string name="stats_countries">Landen</string>
@@ -2439,10 +2439,10 @@ Language: nl
     <string name="stats_insights_view_more">Meer weergeven</string>
     <string name="stats_insights_share_post">Deel bericht</string>
     <string name="stats_insights_create_post">Maak bericht</string>
-    <string name="stats_insights_latest_post_message">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan …</string>
+    <string name="stats_insights_latest_post_message">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Het is %1$s sinds %2$s is gepubliceerd. Krijg de bal aan het rollen en verhoog het bekijken van je berichten door het delen van je berichten:</string>
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
-    <string name="stats_insights_all_time_stats">All-time</string>
+    <string name="stats_insights_all_time_stats">Aller tijden</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_service_label">Dienst</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
@@ -2463,7 +2463,7 @@ Language: nl
     <string name="stats_no_data_yet">Nog geen gegevens</string>
     <string name="menu_debug">Debug-menu</string>
     <string name="change_password_dialog_message">Wachtwoord wordt gewijzigd …</string>
-    <string name="change_password_dialog_hint">Je wachtwoord moet tenminste zes tekens bevatten. Als je het wachtwoord sterker wilt maken, gebruik dan hoofdletters en kleine letters, cijfers en symbolen zoals ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_dialog_hint">Je wachtwoord moet tenminste zes karakters bevatten. Als je het wachtwoord sterker wil maken, gebruik dan hoofdletters en kleine letters, cijfers en symbolen zoals! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Wachtwoord gewijzigd</string>
     <string name="change_password">Wachtwoord wijzigen</string>
     <string name="support_identity_input_dialog_name_label">Naam</string>
@@ -2493,21 +2493,21 @@ Language: nl
     <string name="pages_pending">Beoordeling in behandeling</string>
     <string name="pages_empty_trashed">Je hebt geen verwijderde pagina\'s</string>
     <string name="pages_empty_scheduled">Je hebt geen geplande pagina\'s</string>
-    <string name="pages_empty_drafts">Je hebt geen concept-pagina\'s</string>
+    <string name="pages_empty_drafts">Je hebt geen conceptpagina\'s</string>
     <string name="pages_empty_published">Je hebt nog geen pagina\'s gepubliceerd</string>
     <string name="pages_search_suggestion">Pagina\'s zoeken</string>
     <string name="pages_empty_search_result">Er komen geen pagina\'s overeen met je zoekopdracht</string>
     <string name="pages_delete_permanently">Permanent verwijderen</string>
     <string name="pages_move_to_trash">Verplaatsen naar prullenbak</string>
     <string name="pages_move_to_draft">Verplaatsen naar concept</string>
-    <string name="pages_set_parent">Instellen als bovenliggend item</string>
+    <string name="pages_set_parent">Instellen als hoofd item</string>
     <string name="pages_view">Weergeven</string>
     <string name="pages_trashed" tools:ignore="UnusedResources">Verwijderd</string>
     <string name="pages_scheduled" tools:ignore="UnusedResources">Gepland</string>
     <string name="pages_drafts" tools:ignore="UnusedResources">Concepten</string>
     <string name="pages_published" tools:ignore="UnusedResources">Gepubliceerd</string>
     <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="module:login">We hebben te vaak geprobeerd om een sms-verificatiecode te versturen. Even geduld en vraag er over een minuut nog een aan.</string>
-    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er is geen WordPress.com-account gekoppeld aan dit Google-account.</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er is geen WordPress.com account dat overeenkomt met dit Google account.</string>
     <string name="site_picker_remove_site_empty">Er komen geen sites overeen met je zoekopdracht</string>
     <string name="reader_no_followed_blogs_search_title">Er komen geen blogs overeen met je zoekopdracht</string>
     <string name="page_parent_changed">Bovenliggend item van pagina gewijzigd</string>
@@ -2517,11 +2517,11 @@ Language: nl
     <string name="page_moved_to_trash">Pagina is verwijderd</string>
     <string name="page_moved_to_draft">Pagina is verplaatst naar concepten</string>
     <string name="top_level">Bovenste niveau</string>
-    <string name="page_delete_dialog_message">Weet je zeker dat je de pagina %s wilt verwijderen?</string>
-    <string name="page_parent_change_error">Er is een probleem opgetreden bij het wijzigen van het bovenliggende item van de pagina</string>
+    <string name="page_delete_dialog_message">Weet je zeker dat je de pagina %s wil verwijderen?</string>
+    <string name="page_parent_change_error">Er was een probleem bij het wijzigen van het hoofd van de pagina</string>
     <string name="page_status_change_error">Er is een probleem opgetreden bij het wijzigen van de paginastatus</string>
     <string name="page_delete_error">Er is een probleem opgetreden bij het verwijderen van de pagina</string>
-    <string name="set_parent">Instellen als bovenliggend item</string>
+    <string name="set_parent">Instellen als hoofditem</string>
     <string name="dismiss">Afwijzen</string>
     <string name="quick_start_focus_point_description">tik hier</string>
     <string name="quick_start_list_create_site_title">Je site maken</string>
@@ -2532,7 +2532,7 @@ Language: nl
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tik op %1$s Social %2$s om door te gaan</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tik op %1$s Verbindingen %2$s om je socialmedia-accounts toe te voegen</string>
-    <string name="quick_start_dialog_share_site_message">Koppel je site aan je social media-accounts en je site zal nieuwe berichten automatisch delen.</string>
+    <string name="quick_start_dialog_share_site_message">Koppel je site aan je sociale media accounts en je site zal nieuwe berichten automatisch delen.</string>
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
     <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
@@ -2543,10 +2543,10 @@ Language: nl
     <string name="content_description_more">Meer</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
     <string name="reader_empty_subscribed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
-    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login op het WordPress.com account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
-    <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress-site te gebruiken.</string>
+    <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack plugin om statistieken voor je WordPress site te gebruiken.</string>
     <string name="themes_empty_list">Er komen geen thema\'s overeen met je zoekopdracht</string>
     <string name="reader_label_post_search_explainer">Waar ben je naar op zoek?</string>
     <string name="site_settings_tags_empty_title_search">Er komen geen tags overeen met je zoekopdracht</string>
@@ -2563,22 +2563,22 @@ Language: nl
     <string name="reader_no_followed_blogs_button_discover">Ontdek blogs</string>
     <string name="notifications_empty_likes">Nog geen vind-ik-leuks</string>
     <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>
-    <string name="activity_log_empty_subtitle">Wanneer je wijzigingen aan je site aanbrengt, kun je hier je activiteitengeschiedenis bekijken.</string>
+    <string name="activity_log_empty_subtitle">Wanneer je wijzigingen aan je site aanbrengt, kun je hier je activiteitengeschiedenis bekijken</string>
     <string name="activity_log_empty_title">Nog geen activiteit</string>
     <string name="posts_empty_list_button">Een bericht maken</string>
     <string name="pages_empty_list_button">Een pagina aanmaken</string>
     <string name="media_empty_upload_media">Media uploaden</string>
     <string name="media_empty_list">Je hebt geen media</string>
-    <string name="reader_gallery_images_desc">afbeeldinggalerij</string>
+    <string name="reader_gallery_images_desc">afbeeldingsgalerij</string>
     <string name="blavatar_desc">site icoon</string>
     <string name="theme_image_desc">thema-afbeelding</string>
-    <string name="featured_image_desc">aanbevolen afbeelding</string>
+    <string name="featured_image_desc">uitgelichte afbeelding</string>
     <string name="button_discard">Negeren</string>
     <string name="reader_avatar_desc">profielafbeelding</string>
     <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Voer je e-mailadres in</string>
-    <string name="support_identity_input_dialog_enter_email_and_name">Voer je e-mailadres en naam in om door te gaan.</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">Voer je e-mailadres en naam in om door te gaan</string>
     <string name="support_push_notification_message">Nieuw bericht van \'Help en ondersteuning\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Niet ingesteld</string>
@@ -2631,25 +2631,25 @@ Language: nl
     <string name="activity_log_icon">Activiteiten icoon</string>
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
-    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere tracking-tools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
+    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgings gereedschap, waaronder een aantal van derden. Bekijk meer informatie over deze gereedschappen en hoe je ze kunt beheren.</string>
     <string name="third_party_policy_learn_more_header">Beleid van derden</string>
-    <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons onze producten te verbeteren, marketing relevanter te maken en de WordPress.com-ervaring op je af te stemmen. Je vindt hierover meer informatie in ons privacybeleid.</string>
+    <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
     <string name="privacy_policy_learn_more_header">Privacybeleid</string>
-    <string name="cookie_policy_learn_more_caption">Deel informatie met onze analysetool over hoe je services gebruikt terwijl je bent ingelogd op je WordPress.com-account.</string>
+    <string name="cookie_policy_learn_more_caption">Deel informatie met onze analysetool over je gebruik van diensten terwijl je bent ingelogd op je WordPress.com account.</string>
     <string name="cookie_policy_learn_more_header">Cookiebeleid</string>
     <string name="preference_privacy_settings">Privacyinstellingen</string>
     <string name="preference_collect_information">Gegevens verzamelen</string>
     <string name="post_submitted">Bericht geplaatst</string>
-    <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin-functie moet de site in goede staat zijn.</string>
-    <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin-functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
-    <string name="plugin_install_site_ineligible_non_admin_user">Voor deze plugin-functie zijn beheerdersrechten vereist.</string>
-    <string name="plugin_install_site_ineligible_no_vip_sites">Deze plugin kan niet op VIP-sites geïnstalleerd worden.</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin functie moet de site in goede staat zijn.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Voor deze plugin functie zijn beheerdersrechten vereist.</string>
+    <string name="plugin_install_site_ineligible_no_vip_sites">Deze plugin kan niet op VIP sites geïnstalleerd worden.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">Deze plugin kan niet geïnstalleerd worden vanwege begrenzingen van de schijfruimte.</string>
-    <string name="plugin_install_site_ineligible_email_unverified">Voor deze plugin-functie moet een e-mailadres geverifieerd zijn.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Voor deze plugin functie moet een e-mailadres geverifieerd zijn.</string>
     <string name="plugin_install_site_ineligible_site_private">Deze plugin functie vereist dat de site openbaar is.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Deze plugin functie vereist een business abonnement.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Deze plugin functie vereist een aangepast domein.</string>
-    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">We zijn de laatste instellingen aan het doen — bijna klaar…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Het installeren van de eerste plugin op je site kan maximaal een minuut duren. Terwijl dit gebeurt, kun je geen wijzigingen aan je site aanbrengen.</string>
@@ -2667,7 +2667,7 @@ Language: nl
     <string name="content_description_person_reading_device_notification">Persoon leesapparaat met meldingen</string>
     <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
     <string name="comment_title">%1$s op %2$s</string>
-    <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
+    <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wil verwijderen?</string>
     <string name="notification_channel_important_title" tools:ignore="UnusedResources">Belangrijk</string>
     <string name="notification_channel_general_title" tools:ignore="UnusedResources">Algemeen</string>
     <string name="photo_picker_use_photo">Gebruik deze foto</string>
@@ -2689,15 +2689,15 @@ Language: nl
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
     <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
-    <string name="plugin_detail_logo_desc">plugin-logo</string>
-    <string name="plugin_detail_banner_desc">plugin-banner</string>
+    <string name="plugin_detail_logo_desc">plugin logo</string>
+    <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>
     <string name="photo_picker_camera_desc">camera openen</string>
     <string name="photo_picker_device_desc">kiezen uit apparaat</string>
-    <string name="people_invite_role_info_desc">rolgegevens</string>
+    <string name="people_invite_role_info_desc">rol informatie</string>
     <string name="media_settings_play">afspelen</string>
-    <string name="media_settings_image_preview_desc">voorbeeldweergave afbeelding</string>
-    <string name="media_preview_desc">voorbeeld bekijken</string>
+    <string name="media_settings_image_preview_desc">afbeelding voorbeeld</string>
+    <string name="media_preview_desc">voorbeeld</string>
     <string name="media_preview_audio_desc">audio</string>
     <string name="media_grid_item_play_video_desc">video afspelen</string>
     <string name="media_grid_item_trash_desc">prullenbak</string>
@@ -2792,17 +2792,17 @@ Language: nl
     <string name="username_changer_hint">Type om meer suggesties te krijgen</string>
     <string name="username_changer_header">Je huidige gebruikersnaam is %1$s%2$s%3$s. Met een paar uitzonderingen, zullen anderen alleen je display naam zien, %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">Geen gebruikersnamen worden voorgesteld vanuit %1$s%2$s%3$s. Gebruik alstublieft meer letters of cijfers om een suggestie te krijgen. </string>
-    <string name="username_changer_error_generic">Een fout heeft zich voorgedaan tijdens het ophalen van gebruikersnaam suggesties</string>
+    <string name="username_changer_error_generic">Een fout heeft zich voorgedaan tijdens het ophalen van gebruikersnaam suggesties.</string>
     <string name="username_changer_dismiss_message">Verandering van gebruikersnaam negeren?</string>
     <string name="username_changer_dismiss_button_positive">Negeren</string>
     <string name="username_changer_action">Opslaan</string>
-    <string name="content_description_add_avatar">Voeg avatar toe </string>
+    <string name="content_description_add_avatar">Voeg avatar toe</string>
     <string name="signup_user_exists">E-mailadres bestaat al op WordPress.com\nDoorgaan met inloggen. </string>
     <string name="signup_updating_account">Account aan het updaten…</string>
     <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-mail versturen</string>
     <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="module:login">Opnieuw proberen</string>
     <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sluit</string>
-    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er waren problemen met het versturen van de e-mail. Je kan het nu nog een keer proberen of sluiten en het later nog een keer proberen. </string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er was enige moeite met het verzenden van de e-mail. Je kunt nu opnieuw proberen of sluiten en later opnieuw proberen.</string>
     <string name="signup_epilogue_hint_username">Gebruikersnaam</string>
     <string name="signup_epilogue_hint_password_detail">Je kunt altijd inloggen met de link zoals je die net hebt gebruikt maar je kunt ook een wachtwoord instellen als dat je voorkeur heeft.</string>
     <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
@@ -2811,7 +2811,7 @@ Language: nl
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
     <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van je account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
     <string name="signup_epilogue_error_avatar">Er waren problemen met het uploaden van je avatar.</string>
-    <string name="plugin_needs_update">Update nodig </string>
+    <string name="plugin_needs_update">Vereist updaten</string>
     <string name="plugin_caption_search">Zoek plugins</string>
     <string name="plugin_caption_new">Nieuw</string>
     <string name="plugin_caption_popular">Populair</string>
@@ -2880,8 +2880,8 @@ Language: nl
     <string name="plugin_external_link_icon_content_description">Externe link</string>
     <string name="plugin_icon_content_description">Plugin icoon</string>
     <string name="plugin_home_page">Plugin homepage</string>
-    <string name="wordpress_dot_org_plugin_page">Pluginpagina WordPress.org</string>
-    <string name="plugin_remove_dialog_message">Weet je zeker dat je %1$s wilt verwijderen uit %2$s?\n\nHierdoor wordt de plugin gedeactiveerd en worden alle bijbehorende bestanden en gegevens verwijderd.</string>
+    <string name="wordpress_dot_org_plugin_page">WordPress.org plugin pagina</string>
+    <string name="plugin_remove_dialog_message">Weet je zeker dat je %1$s wil verwijderen uit %2$s?\n\nHierdoor wordt de plugin gedeactiveerd en worden alle bijbehorende bestanden en gegevens verwijderd.</string>
     <string name="plugin_remove_dialog_title">Plugin verwijderen</string>
     <string name="plugin_remove_progress_dialog_message">%s wordt verwijderd …</string>
     <string name="plugin_disable_progress_dialog_message">%s wordt uitgeschakeld …</string>
@@ -2898,17 +2898,17 @@ Language: nl
     <string name="plugin_active">Actief</string>
     <string name="plugins">Plugins</string>
     <string name="my_site_btn_plugins">Plugins</string>
-    <string name="media_edit_link_hint">Open link in een nieuw venster/tabblad</string>
+    <string name="media_edit_link_hint">Open link in een nieuw venster/tab</string>
     <string name="media_edit_link_text">Link naar</string>
     <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er is een fout opgetreden.</string>
     <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer een authenticatiecode in om door te gaan.</string>
     <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Controleer je wachtwoord om door te gaan.</string>
-    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="module:login">Inloggen gestopt</string>
-    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Wacht even tijdens het inloggen.</string>
-    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Bezig met inloggen…</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login gestopt</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Wacht terwijl je inlogt.</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login bezig…</string>
     <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Tik om door te gaan.</string>
     <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ingelogd!</string>
-    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="module:login">Inloggen via Google kon niet worden gestart.</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login via Google kon niet worden gestart.</string>
     <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer een wachtwoord in</string>
     <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="module:login">SMS mij een andere code in plaats daarvan</string>
     <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="module:login">We hebben een sms gestuurd naar het telefoonnummer dat eindigt op %s. Voer de verificatiecode in de sms in.</string>
@@ -2920,27 +2920,27 @@ Language: nl
     <string name="media_files_uploaded_write_post">Bericht schrijven</string>
     <string name="media_all_files_uploaded_successfully">%d bestanden geüpload</string>
     <string name="media_files_uploaded_successfully">, %d geüpload</string>
-    <string name="media_file_uploaded">1 bestand geüpload </string>
-    <string name="media_file_not_uploaded">1 bestand niet geüpload </string>
-    <string name="media_files_uploaded">%d bestanden geupload</string>
+    <string name="media_file_uploaded">1 bestand geüpload</string>
+    <string name="media_file_not_uploaded">1 bestand niet geüpload</string>
+    <string name="media_files_uploaded">%d bestanden geüpload</string>
     <string name="media_files_not_uploaded">%d bestanden niet geüpload</string>
     <string name="remove_image_from_post">Uit bericht verwijderen</string>
     <string name="confirm_remove_media_image">Deze afbeelding verwijderen uit het bericht?</string>
     <string name="media_edit_customize_card_caption">Aanpassen</string>
-    <string name="media_edit_file_details_card_caption">Bestanddetails</string>
+    <string name="media_edit_file_details_card_caption">Bestand details</string>
     <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">\nMisschien een ander account proberen?</string>
     <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">Er kon geen verbinding worden gemaakt met het Google-account.</string>
     <string name="login_error_button">Sluit</string>
-    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="module:login">Om door te gaan met dit Google-account moet je eerst het wachtwoord van WordPress.com opgeven. Je hoeft dit slechts één keer in te vullen.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="module:login">Om door te gaan met dit Google account, geef het bijbehorende WordPress.com wachtwoord op. Dit zal slechts één keer worden gevraagd.</string>
     <string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>
     <string name="post_settings_choose_featured_image">Uitgelichte afbeelding kiezen</string>
     <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in op WordPress.com om inhoud te delen.</string>
-    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer het adres van je WordPress-site in waarmee je de inhoud wilt delen.</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer het adres van je WordPress site in waarmee je de inhoud wil delen.</string>
     <string name="jetpack_disconnect_error_toast">Fout bij loskoppelen van site</string>
     <string name="jetpack_disconnect_success_toast">Site losgekoppeld</string>
     <string name="jetpack_disconnect_confirm">Loskoppelen</string>
-    <string name="jetpack_disconnect_confirmation_message">Weet je zeker dat je Jetpack wilt loskoppelen van de site?</string>
+    <string name="jetpack_disconnect_confirmation_message">Weet je zeker dat je Jetpack wil loskoppelen van de site?</string>
     <string name="jetpack_disconnect_pref_title">\"Loskoppelen van WordPress.com\"</string>
     <string name="site_settings_jetpack_allowlist_description">Je kunt een IP-adres (of een reeks adressen) markeren als \"Altijd toegestaan\", waardoor wordt voorkomen dat ze ooit door Jetpack worden geblokkeerd. IPv4 en IPv6 zijn acceptabel. Om een bereik op te geven, voer je de lage waarde en de hoge waarde in, gescheiden door een streepje. Voorbeeld: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Twee-staps verificatie vereisen</string>
@@ -2948,7 +2948,7 @@ Language: nl
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com login toestaan</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
     <string name="jetpack_prevent_brute_force_title">Kwaadaardige inlogpogingen blokkeren</string>
-    <string name="jetpack_prevent_brute_force_category_title">Bescherming tegen brute force-aanvallen</string>
+    <string name="jetpack_prevent_brute_force_category_title">Bescherming tegen brute force aanvallen</string>
     <string name="jetpack_send_wp_notifications_title">Pushmeldingen verzenden</string>
     <string name="jetpack_send_email_notifications_title">Meldingen per e-mail verzenden</string>
     <string name="jetpack_monitor_uptime_title">Monitor de uptime van je site</string>
@@ -2969,14 +2969,14 @@ Language: nl
     <string name="fab_content_description_preview">Voorbeeld bekijken</string>
     <string name="media_edit_upload_date_caption">Uploaddatum</string>
     <string name="media_edit_duration_caption">Duur</string>
-    <string name="media_edit_video_dimensions_caption">Video-afmetingen</string>
+    <string name="media_edit_video_dimensions_caption">Video afmetingen</string>
     <string name="media_edit_image_dimensions_caption">Afbeeldingsafmetingen</string>
     <string name="media_edit_filetype_caption">Bestandstype</string>
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_alttext_text">Alt. tekst</string>
+    <string name="media_edit_alttext_text">Alt-tekst</string>
     <string name="connect_site">Verbind een site</string>
-    <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
+    <string name="notification_settings_item_sights_and_sounds_blink_light">Licht laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Kies geluid</string>
     <string name="notification_settings_category_sights_and_sounds">Beeld en geluid</string>
@@ -2986,7 +2986,7 @@ Language: nl
     <string name="notification_settings_category_other">Andere</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Al mijn sites</string>
     <string name="notification_settings_category_your_sites">Je sites</string>
-    <string name="notification_settings_main_off_message">Als je Melding instellingen uitschakelt, worden alle meldingen van deze app uitgeschakeld, ongeacht het type. Je kunt afstemmen welk soort melding je ontvangt nadat je Melding instellingen hebt ingeschakeld.</string>
+    <string name="notification_settings_main_off_message">Als je melding instellingen uitschakelt, worden alle meldingen van deze app uitgeschakeld, ongeacht het type. Je kunt afstemmen welk soort melding je ontvangt nadat je melding instellingen hebt ingeschakeld.</string>
     <string name="notification_settings_main_off_title">Om meldingen op dit apparaat te ontvangen, schakel de melding instelling in.</string>
     <string name="notification_settings_main_hint_off">Meldingen inschakelen</string>
     <string name="notification_settings_main_hint_on">Meldingen uitschakelen</string>
@@ -3019,36 +3019,36 @@ Language: nl
     <string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
     <string name="login_epilogue_mysites_other">Mijn sites</string>
     <string name="login_epilogue_mysites_one">Mijn site</string>
-    <string name="login_email_client_not_found">Detectie van mailclient-app mislukt</string>
+    <string name="login_email_client_not_found">Kan je e-mailclient app niet detecteren</string>
     <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer een verificatiecode in</string>
     <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer een gebruikersnaam in</string>
-    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in op WordPress.com om dit bericht te bekijken.</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login op WordPress.com om dit bericht te bekijken.</string>
     <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Fout bij het toevoegen van site. Foutcode: %s</string>
-    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Controleren van site-adres</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Controleren van site adres</string>
     <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="module:login">Meer hulp nodig?</string>
     <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="module:login">Het adres van je site wordt aan de bovenzijde van je scherm weergegeven wanneer je je site in Chrome bekijkt.</string>
-    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Wat is mijn site-adres?</string>
-    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Site-adres</string>
-    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Vul het adres van de WordPress site in die je wilt verbinden.</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Wat is mijn site adres?</string>
+    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Site adres</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer het adres van de WordPress site in die je wil verbinden.</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Doorgaan</string>
     <string name="connect_more">Verbind een andere site</string>
     <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer je WordPress.com wachtwoord in.</string>
-    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-mail voor inloggen aangevraagd</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-mail voor login aangevraagd</string>
     <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
     <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">Verificatiecode via sms aanvragen.</string>
-    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sms  mij een code in plaats daarvan</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">SMS mij een code in plaats daarvan</string>
     <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Bijna klaar! Voer de verificatiecode voor WordPress.com uit je Authenticator-app in.</string>
     <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="module:login">Open e-mail</string>
     <string name="next">Volgende</string>
-    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">Login bij WordPress.com met een e-mailadres om al je WordPress sites te beheren.</string>
     <string name="me_profile_photo">Profielfoto</string>
     <string name="error_media_parse_error">Onverwachte reactie van server</string>
-    <string name="upload_finished_toast">Kan de upload niet stoppen, omdat deze al voltooid is</string>
+    <string name="upload_finished_toast">Kan de upload niet stoppen, omdat deze al afgerond is</string>
     <string name="post_title">Titel</string>
     <string name="menu_redo">Opnieuw doen</string>
     <string name="menu_undo">Ongedaan maken</string>
-    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Excuses! Functie nog niet geïmplementeerd :(</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Excuses! Functie nog niet geïmplementeerd:(</string>
     <string name="error_media_small">Media te klein om weer te geven</string>
     <string name="editor_dropped_unsupported_files">Waarschuwing: niet alle versleepte items worden ondersteund!</string>
     <string name="editor_dropped_title_images_not_allowed">Afbeeldingen naar de titel slepen is niet toegestaan</string>
@@ -3060,7 +3060,7 @@ Language: nl
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
     <string name="post_status_publish_post">Publiceren</string>
     <string name="now">Nu</string>
-    <string name="post_settings_password_dialog_hint">Alleen personen met dit wachtwoord kunnen dit bericht bekijken.</string>
+    <string name="post_settings_password_dialog_hint">Alleen personen met dit wachtwoord kunnen dit bericht bekijken</string>
     <string name="post_settings_excerpt_dialog_hint">Samenvattingen zijn optionele, handgemaakte overzichten van je content.</string>
     <string name="post_settings_slug_dialog_hint">De \'slug\' is de URL-vriendelijke versie van de berichttitel.</string>
     <string name="post_settings_post_format">Berichtformat</string>
@@ -3101,7 +3101,7 @@ Language: nl
     <string name="photo_picker_soft_ask_allow">Toestaan</string>
     <string name="photo_picker_soft_ask_label">%s heeft rechten nodig om toegang te krijgen tot je foto\'s </string>
     <string name="sharing_twitter_message">Dit wordt opgenomen in tweets als mensen delen met behulp van de Twitter-knop</string>
-    <string name="sharing_label_message">De tekst van het deelknoppenlabel wijzigen. Deze tekst verschijnt niet totdat je tenminste één deelknop hebt toegevoegd.</string>
+    <string name="sharing_label_message">Wijzig de tekst van het label van de deelknoppen. Deze tekst verschijnt niet totdat je ten minste één deelknop toevoegt.</string>
     <string name="connecting_account">Verbinden met account</string>
     <string name="cannot_connect_account_error">De %s verbinding kon niet tot stand worden gebracht omdat er geen account geselecteerd is.</string>
     <string name="connected">Verbonden</string>
@@ -3116,15 +3116,15 @@ Language: nl
     <string name="sharing_comment_likes">Reactie vind-ik-leuks</string>
     <string name="button_style">Knopstijl</string>
     <string name="label">Label</string>
-    <string name="sharing_buttons">Deel-knoppen</string>
+    <string name="sharing_buttons">Deel knoppen</string>
     <string name="site_settings_like">Vind-ik-leuk knop tonen</string>
-    <string name="site_settings_reblog">Rebloggen-knop tonen</string>
+    <string name="site_settings_reblog">Rebloggen knop weergeven</string>
     <string name="site_settings_reblog_and_like_header">Rebloggen &amp; leuk vinden</string>
     <string name="official_buttons_display">Officiële knoppen</string>
     <string name="text_only_display">Alleen tekst</string>
     <string name="icon_only_display">Alleen icoon</string>
     <string name="icon_and_text_display">Icoon &amp; tekst</string>
-    <string name="connection_chooser_message">Selecteer het account dat je wilt verifiëren. Je berichten worden automatisch gedeeld op het geselecteerde account.</string>
+    <string name="connection_chooser_message">Selecteer het account dat je wil verifiëren. Je berichten worden automatisch gedeeld op het geselecteerde account.</string>
     <string name="connecting_social_network">Verbinden met %s</string>
     <string name="dlg_confirm_publicize_disconnect">Verbinding verbreken met %s?</string>
     <string name="share_btn_connect_another_account">Verbinden met een ander account</string>
@@ -3133,7 +3133,7 @@ Language: nl
     <string name="share_btn_connect">Verbinden</string>
     <string name="connection_service_description">Maak verbinding om je blogberichten automatisch te delen met %s.</string>
     <string name="connected_accounts_label">Verbonden accounts</string>
-    <string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
+    <string name="connections_description">Koppel je favoriete sociale media diensten om nieuwe berichten automatisch met vrienden te delen.</string>
     <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
@@ -3252,21 +3252,21 @@ Language: nl
     <string name="alignment_left">Link</string>
     <string name="alignment_none">Geen</string>
     <string name="site_settings_list_editor_action_mode_title">Geselecteerd %1$d</string>
-    <string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
+    <string name="error_fetch_users_list">Site gebruikers ophalen mislukt</string>
     <string name="people_fetching">Gebruikers ophalen…</string>
     <string name="people_dropdown_item_viewers">Lezers</string>
     <string name="people_dropdown_item_team">Team</string>
-    <string name="invite_message_usernames_limit">Nodig tot wel 10 e-mailadressen en/of WordPress.com-gebruikersnamen uit. Naar degenen die een gebruikersnaam nodig hebben, worden instructies gestuurd over hoe ze er een aanmaken.</string>
+    <string name="invite_message_usernames_limit">Nodig tot wel 10 e-mailadressen en/of WordPress.com gebruikersnamen uit. Naar degenen die een gebruikersnaam nodig hebben, worden instructies verzonden over hoe ze er een aanmaken.</string>
     <string name="viewer_remove_confirmation_message">Als je deze lezer verwijdert, kan hij of zij deze site niet bezoeken.\n\nWil je deze lezer toch verwijderen?</string>
     <string name="subscriber_remove_confirmation_message">Als deze wordt verwijderd, ontvangt deze abonnee geen meldingen meer over deze site, tenzij ze zich opnieuw abonneren.\n\nWil je deze abonnee nog steeds verwijderen?</string>
     <string name="follower_subscribed_since">Sinds %1$s</string>
     <string name="error_remove_viewer">Lezer verwijderen mislukt</string>
     <string name="editor_failed_uploads_switch_html">Enkele media konden niet worden geüpload. Je kunt niet overschakelen naar HTML.\n in deze staat. Alle mislukte uploads verwijderen en doorgaan?</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Miniatuurweergave afbeelding</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Afbeelding thumbnail</string>
     <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Visual Editor</string>
     <string name="image_width">Breedte</string>
     <string name="image_link_to">Link naar</string>
-    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alt. tekst</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alt-tekst</string>
     <string name="image_caption">Bijschrift</string>
     <string name="image_settings_save_toast">Wijzigingen opgeslagen</string>
     <string name="image_settings_dismiss_dialog_title">Niet-opgeslagen wijzigingen verwijderen?</string>
@@ -3275,11 +3275,11 @@ Language: nl
     <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
     <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Kan media niet direct invoeren in HTML. Schakel terug naar de visuele modus.</string>
     <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Galerij wordt geüpload …</string>
-    <string name="tap_to_try_again">Tik om het opnieuw te proberen!</string>
+    <string name="tap_to_try_again">Tikken om het opnieuw te proberen!</string>
     <string name="invite_sent">Uitnodiging verzonden</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
-    <string name="invite_error_some_failed">Uitnodiging verzonden, maar fout(en) opgetreden.</string>
-    <string name="invite_error_sending">Fout opgetreden bij verzenden van uitnodiging.</string>
+    <string name="invite_error_some_failed">Uitnodiging verzonden, maar fout(en) opgetreden!</string>
+    <string name="invite_error_sending">Fout opgetreden bij verzenden van uitnodiging!</string>
     <string name="invite_error_invalid_usernames_multiple">Kan niet verzenden: ongeldige gebruikersnamen of e-mailadressen</string>
     <string name="invite_error_invalid_usernames_one">Kan niet verzenden: een gebruikersnaam of e-mailadres is ongeldig</string>
     <string name="invite_error_no_usernames">Voeg minstens één gebruikersnaam toe</string>
@@ -3290,27 +3290,27 @@ Language: nl
     <string name="my_site_header_external">Extern</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
-    <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal.</string>
+    <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal</string>
     <string name="reader_hint_post_search">Zoek op WordPress</string>
     <string name="reader_title_related_post_detail">Gerelateerd bericht</string>
     <string name="preview_screen_links_disabled">Links uitgeschakeld op voorbeeldscherm</string>
     <string name="send">Verzenden</string>
     <string name="person_removed">%1$s is verwijderd</string>
-    <string name="user_remove_confirmation_message">Als je %1$s verwijdert, kan die gebruiker deze site niet meer openen. Alle content die door %1$s is gemaakt, blijft echter op de site staan.\n\nWil je deze gebruiker toch verwijderen?</string>
+    <string name="user_remove_confirmation_message">Als je %1$s verwijdert, kan die gebruiker deze site niet meer openen. Alle inhoud die door %1$s is gemaakt, blijft echter op de site staan.\n\nWil je deze gebruiker toch verwijderen?</string>
     <string name="person_remove_confirmation_title">Verwijder %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Mensen</string>
     <string name="reader_empty_blogs_posts_in_custom_list">De blogs in deze lijst hebben recent niets geplaatst</string>
     <string name="error_remove_user">Gebruiker verwijderen mislukt</string>
     <string name="error_update_role">Gebruikersrol updaten mislukt</string>
-    <string name="error_fetch_viewers_list">Site-gebruikers ophalen mislukt</string>
+    <string name="error_fetch_viewers_list">Kon site kijkers niet ophalen</string>
     <string name="error_updating_gravatar">Fout bij het updaten van je Gravatar</string>
     <string name="error_refreshing_gravatar">Fout bij het opnieuw laden van je Gravatar</string>
     <string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
     <string name="error_cropping_image">Fout bij het bijsnijden van de afbeelding</string>
     <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-mail wordt gecontroleerd</string>
     <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
-    <string name="logging_in">Inloggen</string>
+    <string name="logging_in">Bezig met inloggen</string>
     <string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
     <string name="capture_or_pick_photo">Neem of selecteer foto</string>
     <string name="plans">Plans</string>
@@ -3334,18 +3334,18 @@ Language: nl
     <string name="confirm_delete_site_prompt">Voer %1$s in het onderstaande veld in om dit te bevestigen. Je site wordt dan voorgoed verwijderd.</string>
     <string name="confirm_delete_site">Site verwijderen bevestigen</string>
     <string name="contact_support">Contact opnemen met ondersteuning</string>
-    <string name="start_over_text">Als je een site wilt, maar niet de berichten en pagina\'s die je nu hebt, kan ons ondersteuningsteam je berichten, pagina\'s, media en reacties voor je verwijderen.\n\nHiermee blijft je site en URL actief maar kan je van vooraf aan beginnen met het maken van content. Neem contact met ons op als je je huidige content wilt verwijderen.</string>
+    <string name="start_over_text">Als je een site wil, maar niet de berichten en pagina\'s die je nu hebt, kan ons ondersteuningsteam je berichten, pagina\'s, media en reacties voor je verwijderen.\n\nHiermee blijft je site en URL actief maar kan je van vooraf aan beginnen met het maken van content. Neem contact met ons op als je je huidige inhoud wil verwijderen.</string>
     <string name="let_us_help">Laat ons je helpen</string>
     <string name="site_settings_start_over_hint">Begin opnieuw met je site</string>
     <string name="start_over">Begin opnieuw</string>
-    <string name="me_btn_app_settings">App-instellingen</string>
+    <string name="me_btn_app_settings">App instellingen</string>
     <string name="editor_remove_failed_uploads">Mislukte uploads verwijderen</string>
     <string name="site_settings_advanced_header">Geavanceerd</string>
     <string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
     <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
     <string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
     <string name="button_skip">Overslaan</string>
-    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kon geen verbinding maken. Vereiste XML-RPC-methoden ontbreken op de server.</string>
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kon geen verbinding maken. Vereiste XML-RPC methoden ontbreken op de server.</string>
     <string name="alignment_center">Midden</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -3395,7 +3395,7 @@ Language: nl
     <string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
     <string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>
     <string name="mnu_comment_delete_permanently">Verwijderen</string>
-    <string name="mnu_comment_untrash">Herstellen</string>
+    <string name="mnu_comment_untrash">Terugzetten</string>
     <string name="comment_deleted_permanently">Reactie verwijderd</string>
     <string name="comments_empty_list_filtered_spam">Geen spamreacties</string>
     <string name="comment_status_all">Alle</string>
@@ -3424,15 +3424,15 @@ Language: nl
     <string name="first_name">Voornaam</string>
     <string name="my_profile">Mijn profiel</string>
     <string name="cd_related_post_preview_image">Voorbeeldafbeelding van gerelateerd bericht bekijken</string>
-    <string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
-    <string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
+    <string name="error_post_remote_site_settings">Kan site informatie niet opslaan</string>
+    <string name="error_fetch_remote_site_settings">Kan site informatie niet ophalen</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatisch afsluiten</string>
     <string name="site_settings_close_after_dialog_description">Sluit reacties op artikelen automatisch af.</string>
     <string name="site_settings_paging_dialog_description">Deel reacties in threads op in meerdere pagina\'s.</string>
     <string name="site_settings_paging_dialog_header">Reacties per pagina</string>
     <string name="site_settings_close_after_dialog_title">Reacties afsluiten</string>
     <string name="site_settings_denylist_description">Als een reactie een van deze woorden in de inhoud, naam, URL, e-mail of IP bevat, wordt deze als spam gemarkeerd. Je kunt gedeeltelijke woorden invoeren, dus \"press\" komt overeen met \"WordPress\".</string>
-    <string name="site_settings_hold_for_moderation_description">Wanneer een reactie een van deze woorden bevat in de inhoud, naam, URL, het e-mailadres of IP-adres, wordt hij in de wachtrij voor moderatie gezet. Ook delen van woorden worden gevonden, dus \"press\" levert ook \"WordPress\" op als resultaat.</string>
+    <string name="site_settings_hold_for_moderation_description">Wanneer een reactie een van deze woorden bevat in de inhoud, naam, URL, het e-mailadres of IP-adres, wordt hij in de wachtrij voor moderatie gezet. Ook delen van woorden worden gevonden, dus \"press\" levert ook \"WordPress\" op als resultaat</string>
     <string name="site_settings_list_editor_input_hint">Voer een woord of zinsdeel in</string>
     <string name="site_settings_list_editor_no_items_text">Geen items</string>
     <string name="site_settings_learn_more_caption">Je kunt deze instellingen ongedaan maken voor individuele berichten.</string>
@@ -3459,9 +3459,9 @@ Language: nl
     <string name="site_settings_receive_pingbacks_hint">Link meldingen van andere blogs toestaan</string>
     <string name="site_settings_send_pingbacks_hint">Probeer een melding te maken op alle blogs waaraan het artikel is gekoppeld</string>
     <string name="site_settings_allow_comments_hint">Toestaan dat lezers reacties plaatsen</string>
-    <string name="site_settings_discussion_hint">Geef discussie-instellingen van je site weer en wijzig ze</string>
-    <string name="site_settings_more_hint">Geef alle beschikbare discussie-instellingen weer</string>
-    <string name="site_settings_related_posts_hint">Toon of verberg alle gerelateerde berichten in de reader</string>
+    <string name="site_settings_discussion_hint">De discussie instellingen van je sites bekijken en wijzigen</string>
+    <string name="site_settings_more_hint">Alle beschikbare discussie instellingen bekijken</string>
+    <string name="site_settings_related_posts_hint">Gerelateerde berichten weergeven of verbergen in reader</string>
     <string name="site_settings_image_width_hint">De afmeting van afbeeldingen in berichten wijzigen naar deze breedte</string>
     <string name="site_settings_format_hint">Stelt een nieuw bericht format in</string>
     <string name="site_settings_category_hint">Stelt een nieuwe berichtcategorie in</string>
@@ -3490,7 +3490,7 @@ Language: nl
     <string name="site_settings_receive_pingbacks_title">Pingbacks ontvangen</string>
     <string name="site_settings_send_pingbacks_title">Pingbacks verzenden</string>
     <string name="site_settings_allow_comments_title">Reacties toestaan</string>
-    <string name="site_settings_default_format_title">Standaard indeling</string>
+    <string name="site_settings_default_format_title">Standaard format</string>
     <string name="site_settings_default_category_title">Standaard categorie</string>
     <string name="site_settings_address_title">Adres</string>
     <string name="site_settings_tagline_title">Slogan</string>
@@ -3535,7 +3535,7 @@ Language: nl
     <string name="post_updated">Bericht geüpdatet</string>
     <string name="page_published">Pagina gepubliceerd</string>
     <string name="post_published">Bericht gepubliceerd</string>
-    <string name="theme_no_search_result_found">Helaas, geen thema\'s gevonden.</string>
+    <string name="theme_no_search_result_found">Geen thema\'s gevonden.</string>
     <string name="reader_label_gap_marker">Meer berichten laden</string>
     <string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
     <string name="search_sites">Zoek sites</string>
@@ -3556,7 +3556,7 @@ Language: nl
     <string name="reader_short_like_count_multi">%s vind-ik-leuks</string>
     <string name="reader_short_like_count_one">1 vind-ik-leuk</string>
     <string name="reader_short_like_count_none">Vind-ik-leuk</string>
-    <string name="reader_title_post_detail">Reader-bericht</string>
+    <string name="reader_title_post_detail">Reader bericht</string>
     <string name="notifications_push_summary">Instellingen voor meldingen die op je apparaat verschijnen.</string>
     <string name="notifications_email_summary">Instellingen voor meldingen die worden verstuurd naar het e-mailadres dat bij je account hoort.</string>
     <string name="notifications_tab_summary">Instellingen voor meldingen die verschijnen in de tab Meldingen.</string>
@@ -3568,7 +3568,7 @@ Language: nl
     <string name="email">E-mail</string>
     <string name="notifications_tab">Meldingen tab</string>
     <string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
-    <string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
+    <string name="stats_insights_latest_post_summary">Samenvatting nieuwste bericht</string>
     <string name="connectionbar_no_connection">Geen verbinding</string>
     <string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
     <string name="button_trash">Prullenbak</string>
@@ -3587,7 +3587,7 @@ Language: nl
     <string name="stats_insights">Inzichten</string>
     <string name="me_disconnect_from_wordpress_com">Uitloggen van WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Inloggen op WordPress.com</string>
-    <string name="me_btn_login_logout">Inloggen/uitloggen</string>
+    <string name="me_btn_login_logout">Login/uitloggen</string>
     <string name="account_settings">Account instellingen</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="site_picker_create_wpcom">WordPress.com site maken</string>
@@ -3607,7 +3607,7 @@ Language: nl
     <string name="deselect_all">Alles deselecteren</string>
     <string name="select_all">Alles selecteren</string>
     <string name="hide">Verbergen</string>
-    <string name="show">Tonen</string>
+    <string name="show">Weergeven</string>
     <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log opnieuw in om door te gaan.</string>
     <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ongeldige verificatiecode</string>
     <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Verificatiecode</string>
@@ -3662,7 +3662,7 @@ Language: nl
     <string name="help_and_support">Help &amp; ondersteuning</string>
     <string name="mnu_comment_liked">Leuk gevonden</string>
     <string name="comment">Reactie</string>
-    <string name="comment_trashed">Reactie verwijderd</string>
+    <string name="comment_trashed">Reactie naar prullenbak verplaatst</string>
     <string name="comment_reply_to_user">Antwoord op %s</string>
     <string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
     <string name="signing_out">Uitloggen…</string>
@@ -3671,13 +3671,13 @@ Language: nl
     <string name="update_verb">Update</string>
     <string name="reader_hint_add_tag_or_url_follow">Voer een URL of tag in om te volgen</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
-    <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
-    <string name="help">Help</string>
+    <string name="ssl_certificate_error">Ongeldig SSL certificaat</string>
+    <string name="help">Hulp</string>
     <string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
     <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Voer een geldig e-mailadres in</string>
     <string name="invalid_email_message">Je e-mailadres is niet geldig</string>
     <string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
-    <string name="error_load_comment">Kan de reactie niet laden</string>
+    <string name="error_load_comment">Kon de reactie niet laden</string>
     <string name="error_edit_comment">Er heeft zich een fout voorgedaan tijdens het bewerken van de reactie</string>
     <string name="error_moderate_comment">Er heeft zich een fout voorgedaan tijdens het modereren</string>
     <string name="error_generic">Er heeft zich een fout voorgedaan</string>
@@ -3691,15 +3691,15 @@ Language: nl
     <string name="adding_cat_success">Categorie succesvol toegevoegd</string>
     <string name="adding_cat_failed">Toevoegen van categorie mislukt</string>
     <string name="mnu_comment_unspam">Geen spam</string>
-    <string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
-    <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
-    <string name="gallery_error">Media-item kan niet worden opgehaald</string>
+    <string name="theme_fetch_failed">Het ophalen van thema\'s is mislukt</string>
+    <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van deze blog</string>
+    <string name="gallery_error">Media-item kon niet worden opgehaald</string>
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
     <string name="reader_toast_err_removing_tag">Deze tag kan niet worden verwijderd</string>
     <string name="reader_toast_err_adding_tag">Deze tag kan niet worden toegevoegd</string>
     <string name="reader_title_applog">Applicatie log</string>
     <string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
-    <string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
+    <string name="error_blog_hidden">Deze blog is verborgen en kan niet worden geladen. Schakel de blog in instellingen in en probeer het opnieuw.</string>
     <string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Afbeeldingsinstellingen</string>
@@ -3719,10 +3719,10 @@ Language: nl
     <string name="dlg_confirm_trash_comments">Verplaatsen naar de prullenbak?</string>
     <string name="mnu_comment_trash">Prullenbak</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="mnu_comment_unapprove">Afkeuren</string>
+    <string name="mnu_comment_unapprove">Weigeren</string>
     <string name="mnu_comment_approve">Goedkeuren</string>
     <string name="edit_comment">Reactie bewerken</string>
-    <string name="comment_status_trash">Weggegooid</string>
+    <string name="comment_status_trash">Naar prullenbak verplaatst</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_unapproved">In afwachting</string>
     <string name="comment_status_approved">Goedgekeurd</string>
@@ -3744,12 +3744,12 @@ Language: nl
     <string name="connection_error">Verbindingsfout</string>
     <string name="select_categories">Categorieën selecteren</string>
     <string name="share_link">Deel link</string>
-    <string name="reader_empty_posts_in_tag_updating">Berichten ophalen…</string>
+    <string name="reader_empty_posts_in_tag_updating">Berichten aan het ophalen…</string>
     <string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>
     <string name="reader_likes_multi">%,d mensen vinden dit leuk</string>
     <string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
     <string name="comment_spammed">Reactie als spam gemarkeerd</string>
-    <string name="comment_unapproved">Reactie niet aanvaard</string>
+    <string name="comment_unapproved">Reactie geweigerd</string>
     <string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
     <string name="pick_video">Selecteer video</string>
@@ -3765,7 +3765,7 @@ Language: nl
     <string name="reader_label_removed_tag">%s verwijderd</string>
     <string name="reader_label_added_tag">%s toegevoegd</string>
     <string name="reader_hint_comment_on_comment">Beantwoord reactie…</string>
-    <string name="reader_btn_follow">Volg</string>
+    <string name="reader_btn_follow">Volgen</string>
     <string name="reader_btn_share">Delen</string>
     <string name="reader_view_reblog">Rebloggen</string>
     <string name="reader_untitled_post">(Zonder titel)</string>
@@ -3780,7 +3780,7 @@ Language: nl
     <string name="stats_view_tags_and_categories">Tags &amp; categorieën</string>
     <string name="stats_view_clicks">Kliks</string>
     <string name="stats">Statistieken</string>
-    <string name="share_action">Deel</string>
+    <string name="share_action">Delen</string>
     <string name="theme_activate_button">Activeren</string>
     <string name="media_edit_failure">Updaten is mislukt</string>
     <string name="media_edit_description_text">Beschrijving</string>
@@ -3796,7 +3796,7 @@ Language: nl
     <string name="more_notifications">en nog %d meer.</string>
     <string name="new_notifications">%d nieuwe meldingen</string>
     <string name="note_reply_successful">Reactie gepubliceerd</string>
-    <string name="sign_in">Inloggen</string>
+    <string name="sign_in">Login</string>
     <string name="loading">Aan het laden…</string>
     <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP wachtwoord</string>
     <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP gebruikersnaam</string>
@@ -3806,7 +3806,7 @@ Language: nl
     <string name="username">Gebruikersnaam</string>
     <string name="password">Wachtwoord</string>
     <string name="reader">Reader</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Plaats afbeelding in bericht</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Afbeelding opnemen in berichtinhoud</string>
     <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gebruiken als uitgelichte afbeelding</string>
     <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Breedte</string>
     <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bijschrift (optioneel)</string>
@@ -3814,16 +3814,16 @@ Language: nl
     <string name="posts">Berichten</string>
     <string name="anonymous">Anoniem</string>
     <string name="no_network_title">Geen netwerk beschikbaar</string>
-    <string name="done">Klaar</string>
-    <string name="ok">Ok</string>
+    <string name="done">klaar</string>
+    <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploaden …</string>
     <string name="image_alignment">Uitlijning</string>
     <string name="refresh">Vernieuw</string>
     <string name="untitled">Zonder titel</string>
     <string name="edit">Bewerken</string>
-    <string name="immediately">Direct</string>
-    <string name="quickpress_add_alert_title">Geef een snelkoppelingsnaam</string>
+    <string name="immediately">Onmiddellijk</string>
+    <string name="quickpress_add_alert_title">Stel een snelkoppeling naam in</string>
     <string name="settings">Instellingen</string>
     <string name="quickpress_add_error">Snelkoppeling naam kan niet leeg zijn</string>
     <string name="pages_private">Privé</string>
