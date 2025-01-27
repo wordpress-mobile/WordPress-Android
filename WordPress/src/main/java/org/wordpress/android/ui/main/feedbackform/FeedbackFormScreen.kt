@@ -49,6 +49,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MediaUriPager
 import org.wordpress.android.ui.compose.components.ProgressDialog
@@ -111,7 +112,11 @@ private fun MessageSection(
     onMessageChanged: (String) -> Unit,
     onSupportClick: () -> Unit
 ) {
-    val linkText = stringResource(id = R.string.feedback_form_note_link)
+    val linkText = if (BuildConfig.IS_JETPACK_APP) {
+        stringResource(id = R.string.feedback_form_note_link_jetpack)
+    } else {
+        stringResource(id = R.string.feedback_form_note_link_wordpress)
+    }
     val linkAnnotation = LinkAnnotation.Url(
         url = "support",
         styles = TextLinkStyles(
