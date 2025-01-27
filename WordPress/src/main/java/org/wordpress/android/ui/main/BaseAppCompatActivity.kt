@@ -38,14 +38,16 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // When both compileSdkVersion and targetSdkVersion are 35+, the OS defaults to
         // using edge-to-edge. We need to adjust for this by applying insets as needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        val targetSdkVersion = applicationContext.applicationInfo.targetSdkVersion
+        if ((targetSdkVersion >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
+        ) {
             applyInsetOffsets()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun applyInsetOffsets() {
-        // val activityName = this.localClassName.substringAfterLast(".")
         val excludedActivity = excludedActivities[this.localClassName]
         val applyTopOffset = excludedActivity?.applyTopOffset ?: true
         val applyBottomOffset = excludedActivity?.applyBottomOffset ?: true
