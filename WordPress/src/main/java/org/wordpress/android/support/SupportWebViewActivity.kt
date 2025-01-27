@@ -27,7 +27,6 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.setWindowStatusBarColor
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.UUID
 import javax.inject.Inject
@@ -56,7 +55,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
-        window.setWindowStatusBarColor(getColor(R.color.docsbot_chat_container))
 
         // Prevent AppBar scrolling away
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
