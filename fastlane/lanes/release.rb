@@ -173,6 +173,7 @@ platform :android do
 
     update_frozen_strings_for_translation
     download_translations
+    download_metadata_strings(version: current_release_version)
 
     # Bump the release version and build code
     UI.message 'Bumping beta version and build code...'
