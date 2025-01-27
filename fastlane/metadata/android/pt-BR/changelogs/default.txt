@@ -1,0 +1,5 @@
+25.6:
+Este update:
+- Corrige um erro raro que ocorria quando se estava registrando um domínio;
+- Corrige várias coisinhas nos bastidores que devem tornar o app mais confiável;
+- Usa uma abordagem baseada na Web para fazer acesso ao WordPress.com. Isso deve oferecer mais confiabilidade para a maioria dos usuários, mas fique à vontade para entrar em contato com o suporte se tiver algum problema!

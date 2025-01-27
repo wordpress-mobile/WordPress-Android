@@ -1,5 +1,5 @@
-25.5:
-Die Bugfixes in diesem Monat:
-- Bugs mit dem dunklen Modus wurden behoben
-- Der experimentelle Editor ist nun auch auf Android verfügbar ‒ probiere ihn aus! Wir freuen uns über dein Feedback.
-- Anmeldung bei WordPress.com wurde angepasst: Lange Zeit war es Benutzern nicht möglich, sich mit einem Passkey anzumelden. Dieses Problem ist nun behoben.
+25.6:
+Im Rahmen dieses Update profitierst du von folgenden Verbesserungen:
+- Es wurde ein seltener Fehler bei der Domainregistrierung behoben.
+- Es wurden einige Kleinigkeiten behoben, was die Zuverlässigkeit der App verbessern sollte.
+- Für die Anmeldung auf WordPress.com wird ab sofort ein webbasierter Ansatz verwendet. Benutzer sollten dank diesem Update von einem zuverlässigeren Erlebnis profitieren. Solltest du Probleme haben, setze dich bitte mit dem Support in Verbindung!

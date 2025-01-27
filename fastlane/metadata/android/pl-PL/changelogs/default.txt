@@ -1,5 +1,5 @@
-25.5:
-W tym miesiącu:
-- Naprawiliśmy kilka błędów trybu ciemnego
-- Wprowadziliśmy eksperymentalny edytor na Androida - wypróbuj go i daj nam znać, co myślisz!
-- Dostosowaliśmy sposób logowania użytkowników do WordPress.com - naprawiono długotrwały problem, w którym nie można było się zalogować, jeśli używany był klucz dostępu.
+25.6:
+Aktualizacja:
+- Naprawiono rzadką awarię podczas rejestracji domeny.
+- Naprawiono kilka drobnych błędów, które powinny zwiększyć niezawodność aplikacji.
+- Wykorzystuje internetowe logowanie do WordPress.com. Powinno być bardziej niezawodne dla większości użytkowników, ale skontaktuj się z pomocą techniczną, jeśli masz jakiekolwiek problemy!

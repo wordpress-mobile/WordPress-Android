@@ -1,4 +1,5 @@
-25.5: Deze maand hebben we: 
-- Opgelost: enkele Dark Mode bugs 
-- We hebben de experimentele editor naar Android gebracht – probeer het eens en laat ons weten wat je ervan vindt! 
-- Aangepast hoe gebruikers inloggen op WordPress.com – dit lost een langdurig probleem op waarbij je niet kon inloggen als je een Passkey gebruikte.
+25.6:  
+Deze update:  
+- Oplost een zeldzame crash bij het registreren van een domein.  
+- Oplost een aantal onder-de-motorkap dingen die de app betrouwbaarder zouden moeten maken.  
+- Gebruikt een web-gebaseerde aanpak voor WordPress.com login. Dit zou betrouwbaarder moeten zijn voor de meeste gebruikers, maar neem contact met ons op als je problemen hebt!
