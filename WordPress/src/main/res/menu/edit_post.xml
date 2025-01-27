@@ -71,5 +71,10 @@
             android:title="@string/help_and_support" >
         </item>
 
+        <item
+            android:id="@+id/menu_editor_send_feedback"
+            android:title="@string/send_feedback" >
+        </item>
+
     </group>
 </menu>

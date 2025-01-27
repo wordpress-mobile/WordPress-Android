@@ -45,7 +45,7 @@ import org.wordpress.android.designsystem.heading1
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.JpColorPalette
+import org.wordpress.android.ui.compose.theme.jpColorPalette
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
@@ -127,7 +127,7 @@ fun JetpackStaticPoster(
                 stringResource(R.string.wp_jp_static_poster_button_primary),
                 onPrimaryClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = JpColorPalette().primary,
+                    containerColor = jpColorPalette().primary,
                     contentColor = AppColor.White,
                 ),
                 padding = PaddingValues(bottom = 15.dp),
@@ -138,7 +138,7 @@ fun JetpackStaticPoster(
                 onSecondaryClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    contentColor = JpColorPalette().primary,
+                    contentColor = jpColorPalette().primary,
                 ),
                 padding = PaddingValues(0.dp),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp),

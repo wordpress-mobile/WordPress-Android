@@ -69,7 +69,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String SERVE_STATIC_FILES_FROM_OUR_SERVERS = "photon-cdn";
-    private static final String LAZY_LOAD_IMAGES = "lazy-images";
     private static final String SHARING_MODULE = "sharedaddy";
 
     private static final String AD_FREE_VIDEO_HOSTING_MODULE = "videopress";
@@ -135,7 +134,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
             if (supportsJetpackSiteAcceleratorSettings(mSite)) {
                 pushServeImagesFromOurServersModuleSettings();
                 pushServeStaticFilesFromOurServersModuleSettings();
-                pushLazyLoadModule();
             }
             pushImprovedSearchModule();
             pushAdFreeVideoHostingModule();
@@ -347,9 +345,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
                                     case SERVE_STATIC_FILES_FROM_OUR_SERVERS:
                                         mRemoteJpSettings.serveStaticFilesFromOurServers = isActive;
                                         break;
-                                    case LAZY_LOAD_IMAGES:
-                                        mRemoteJpSettings.lazyLoadImages = isActive;
-                                        break;
                                     case SHARING_MODULE:
                                         mRemoteJpSettings.sharingEnabled = isActive;
                                         break;
@@ -364,7 +359,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
                             mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
                             mJpSettings.serveStaticFilesFromOurServers =
                                     mRemoteJpSettings.serveStaticFilesFromOurServers;
-                            mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
                             mJpSettings.sharingEnabled = mRemoteJpSettings.sharingEnabled;
                             mJpSettings.improvedSearch = mRemoteJpSettings.improvedSearch;
                             mJpSettings.adFreeVideoHosting = mRemoteJpSettings.adFreeVideoHosting;
@@ -540,31 +534,6 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
     }
 
-    private void pushLazyLoadModule() {
-        ++mSaveRequestCount;
-        // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
-        if (mJpSettings.lazyLoadImages != mRemoteJpSettings.lazyLoadImages) {
-            final boolean fallbackValue = mRemoteJpSettings.lazyLoadImages;
-            mRemoteJpSettings.lazyLoadImages = mJpSettings.lazyLoadImages;
-            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
-                    mSite.getSiteId(), LAZY_LOAD_IMAGES, mJpSettings.lazyLoadImages, new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Jetpack module updated - Lazy load images");
-                            onSaveResponseReceived(null);
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            mRemoteJpSettings.lazyLoadImages = fallbackValue;
-                            error.printStackTrace();
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Lazy load images: " + error);
-                            onSaveResponseReceived(error);
-                        }
-                    });
-        }
-    }
-
     private void pushImprovedSearchModule() {
         ++mSaveRequestCount;
         // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
@@ -700,7 +669,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         String remoteGmtOffset = settingsObject.optString(GMT_OFFSET_KEY, "");
         // UTC-7 comes back as gmt_offset: -7, UTC+7 as just gmt_offset: 7 without the +, hence adding prefix
         String remoteGmtTimezone = remoteGmtOffset.startsWith("-") ? "UTC" + remoteGmtOffset : "UTC+" + remoteGmtOffset;
-        
+
         mRemoteSettings.timezone = !TextUtils.isEmpty(remoteTimezone) ? remoteTimezone : remoteGmtTimezone;
 
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);

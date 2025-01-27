@@ -12,11 +12,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 
 import javax.inject.Inject;
 
-public class MyProfileActivity extends LocaleAwareActivity {
+public class MyProfileActivity extends BaseAppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
 

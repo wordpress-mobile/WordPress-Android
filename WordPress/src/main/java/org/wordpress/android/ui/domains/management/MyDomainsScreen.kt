@@ -71,8 +71,6 @@ fun MyDomainsScreen(
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
     ) { paddingValues ->

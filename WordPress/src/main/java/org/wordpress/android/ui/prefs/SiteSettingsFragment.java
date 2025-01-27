@@ -278,10 +278,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMatchEmailPref;
     private WPSwitchPreference mJpUseTwoFactorPref;
 
-    // Speed up settings
-    private WPSwitchPreference mLazyLoadImages;
-    private WPSwitchPreference mLazyLoadImagesNested;
-
     // Jetpack media settings
     private WPSwitchPreference mAdFreeVideoHosting;
     private WPSwitchPreference mAdFreeVideoHostingNested;
@@ -720,8 +716,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpUseTwoFactorPref) {
             mJpUseTwoFactorPref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
-        } else if (preference == mLazyLoadImages || preference == mLazyLoadImagesNested) {
-            setLazyLoadImagesChecked((Boolean) newValue);
         } else if (preference == mAdFreeVideoHosting || preference == mAdFreeVideoHostingNested) {
             setAdFreeHostingChecked((Boolean) newValue);
         } else if (preference == mImprovedSearch) {
@@ -1044,9 +1038,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) getChangePref(R.string.pref_key_serve_static_files_from_our_servers);
         mServeStaticFilesFromOurServersNested =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_serve_static_files_from_our_servers_nested);
-
-        mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
-        mLazyLoadImagesNested = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images_nested);
 
         mAdFreeVideoHosting = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting);
         mAdFreeVideoHostingNested = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting_nested);
@@ -1499,7 +1490,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
-        setLazyLoadImagesChecked(mSiteSettings.isLazyLoadImagesEnabled());
         setAdFreeHostingChecked(mSiteSettings.isAdFreeHostingEnabled());
         boolean checked = mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled();
         mImprovedSearch.setChecked(checked);
@@ -1558,12 +1548,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setSiteAcceleratorChecked(boolean checked) {
         mSiteAccelerator.setChecked(checked);
         mSiteAcceleratorNested.setChecked(checked);
-    }
-
-    private void setLazyLoadImagesChecked(boolean checked) {
-        mSiteSettings.enableLazyLoadImages(checked);
-        mLazyLoadImages.setChecked(checked);
-        mLazyLoadImagesNested.setChecked(checked);
     }
 
     private void setAdFreeHostingChecked(boolean checked) {

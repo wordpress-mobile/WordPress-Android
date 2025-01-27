@@ -10,10 +10,6 @@ class GravatarQuickEditorFeatureConfig @Inject constructor(appConfig: AppConfig)
     BuildConfig.GRAVATAR_QUICK_EDITOR,
     GRAVATAR_QUICK_EDITOR_REMOTE_FIELD
 ) {
-    override fun isEnabled(): Boolean {
-        return super.isEnabled() && BuildConfig.GRAVATAR_QUICK_EDITOR
-    }
-
     companion object {
         const val GRAVATAR_QUICK_EDITOR_REMOTE_FIELD = "gravatar_quick_editor"
     }

@@ -13,13 +13,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
 import org.wordpress.android.databinding.UnifiedCommentActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentFilter.APPROVED
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
 import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
-class UnifiedCommentsActivity : LocaleAwareActivity() {
+class UnifiedCommentsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

@@ -828,7 +828,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val context = activity ?: return
         val options = UCrop.Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            options.setStatusBarColor(com.google.android.material.R.attr.colorSurface)
+        } else {
+            options.setStatusBarColor(com.google.android.material.R.attr.colorOnSurface)
+        }
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
         options.setToolbarWidgetColor(context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)

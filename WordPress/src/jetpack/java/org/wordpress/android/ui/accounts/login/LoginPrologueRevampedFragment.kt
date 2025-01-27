@@ -36,7 +36,6 @@ import org.wordpress.android.ui.accounts.login.components.WordpressJetpackLogo
 import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 val LocalPosition = compositionLocalOf { 0f }
 
@@ -72,16 +71,6 @@ class LoginPrologueRevampedFragment : Fragment() {
         super.onAttach(context)
         check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().window.setEdgeToEdgeContentDisplay(true)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        requireActivity().window.setEdgeToEdgeContentDisplay(false)
     }
 
     companion object {

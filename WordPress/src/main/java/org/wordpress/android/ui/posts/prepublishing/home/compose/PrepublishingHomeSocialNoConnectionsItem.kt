@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 import org.wordpress.android.usecase.social.JetpackSocialFlow
@@ -36,7 +36,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
     onConnectClick: (JetpackSocialFlow) -> Unit,
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.surface
+    backgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     Column(
         modifier = Modifier
@@ -52,7 +52,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
 
         Text(
             text = stringResource(R.string.prepublishing_nudges_social_new_connection_text),
-            style = MaterialTheme.typography.subtitle1.copy(color = AppColor.Gray30),
+            style = MaterialTheme.typography.titleMedium.copy(color = AppColor.Gray30),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -63,7 +63,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SecondaryButton(
+            SecondaryButtonM3(
                 text = stringResource(R.string.prepublishing_nudges_social_new_connection_cta),
                 onClick = { onConnectClick(JetpackSocialFlow.PRE_PUBLISHING) },
                 padding = PaddingValues(0.dp),
@@ -75,7 +75,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
             // min spacing between buttons
             Spacer(Modifier.width(Margin.Medium.value))
 
-            SecondaryButton(
+            SecondaryButtonM3(
                 text = stringResource(R.string.button_not_now),
                 onClick = onDismissClick,
                 padding = PaddingValues(0.dp),
@@ -90,7 +90,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PrepublishingHomeSocialNoConnectionsItemPreview() {
-    AppThemeM2 {
+    AppThemeM3 {
         PrepublishingHomeSocialNoConnectionsItem(
             connectionIconModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             onConnectClick = { /*TODO*/ },

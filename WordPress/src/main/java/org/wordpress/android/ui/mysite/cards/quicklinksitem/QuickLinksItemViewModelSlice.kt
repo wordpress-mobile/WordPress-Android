@@ -231,7 +231,9 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                     this@QuickLinksItemViewModelSlice::onMoreClick
                 )
             )
-            quickLinkItems.removeLast()
+            if (quickLinkItems.isNotEmpty()) {
+                quickLinkItems.removeAt(quickLinkItems.lastIndex)
+            }
             quickLinkItems.add(lastItem)
             quickLinks.copy(quickLinkItems = quickLinkItems, showMoreFocusPoint = true)
         } else {

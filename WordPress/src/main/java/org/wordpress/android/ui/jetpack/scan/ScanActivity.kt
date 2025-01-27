@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -14,6 +13,7 @@ import org.wordpress.android.databinding.ScanActivityBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -22,7 +22,7 @@ import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
+class ScanActivity : BaseAppCompatActivity(), ScrollableViewInitializedListener {
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 

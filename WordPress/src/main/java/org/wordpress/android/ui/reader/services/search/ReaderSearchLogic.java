@@ -14,7 +14,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManagerWrapper;
+import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.UrlUtils;
 
 import static org.wordpress.android.ui.reader.utils.ReaderUtils.getTagForSearchQuery;
@@ -22,13 +22,13 @@ import static org.wordpress.android.ui.reader.utils.ReaderUtils.getTagForSearchQ
 public class ReaderSearchLogic {
     private final ServiceCompletionListener mCompletionListener;
 
-    private final LocaleManagerWrapper mLocaleManagerWrapper;
+    private final PerAppLocaleManager mPerAppLocaleManager;
     private Object mListenerCompanion;
 
     public ReaderSearchLogic(@NonNull final ServiceCompletionListener listener,
-                             final @NonNull LocaleManagerWrapper localeManagerWrapper) {
+                             final @NonNull PerAppLocaleManager perAppLocaleManager) {
         mCompletionListener = listener;
-        mLocaleManagerWrapper = localeManagerWrapper;
+        mPerAppLocaleManager = perAppLocaleManager;
     }
 
     public void startSearch(@NonNull final String query, final int offset, Object companion) {
@@ -38,7 +38,7 @@ public class ReaderSearchLogic {
                       + "&number=" + ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST
                       + "&offset=" + offset
                       + "&meta=site,likes"
-                      + "&lang=" + mLocaleManagerWrapper.getLanguage();
+                      + "&lang=" + mPerAppLocaleManager.getCurrentLocaleLanguageCode();
 
         RestRequest.Listener listener = jsonObject -> {
             if (jsonObject != null) {

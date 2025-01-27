@@ -123,7 +123,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChang
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.isShowing
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary
@@ -134,6 +133,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -216,10 +216,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
@@ -262,7 +261,7 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @Suppress("LargeClass")
-class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
@@ -363,7 +362,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Inject lateinit var editorMedia: EditorMedia
 
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
@@ -480,10 +479,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         site: SiteModel, isNewPost: Boolean
     ) {
         if (postEditorAnalyticsSession == null) {
+            val editor = when {
+                showGutenbergEditor && isGutenbergKitEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
+                showGutenbergEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG
+                else -> PostEditorAnalyticsSession.Editor.CLASSIC
+            }
             postEditorAnalyticsSession = PostEditorAnalyticsSession(
-                if (showGutenbergEditor) PostEditorAnalyticsSession.Editor.GUTENBERG
-                else PostEditorAnalyticsSession.Editor.CLASSIC,
-                post, site, isNewPost, analyticsTrackerWrapper
+                editor, post, site, isNewPost, analyticsTrackerWrapper
             )
         }
     }
@@ -1410,13 +1412,15 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val historyMenuItem = menu.findItem(R.id.menu_history)
         val settingsMenuItem = menu.findItem(R.id.menu_post_settings)
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
+        val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
+
         if (undoItem != null) {
             undoItem.setEnabled(menuHasUndo)
-            undoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            undoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (redoItem != null) {
             redoItem.setEnabled(menuHasRedo)
-            redoItem.setVisible(!htmlModeMenuStateOn && !isGutenbergKitEditor)
+            redoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
@@ -1424,10 +1428,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         previewMenuItem?.setVisible(showMenuItems)
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(
-                (((editorFragment is AztecEditorFragment)
-                        || (editorFragment is GutenbergEditorFragment))) && showMenuItems
-            )
+            viewHtmlModeMenuItem.isVisible = showMenuItems
             viewHtmlModeMenuItem.setTitle(
                 if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
         }
@@ -1494,6 +1495,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 helpMenuItem.setVisible(false)
             }
         }
+
+        if (sendFeedbackItem != null) {
+            sendFeedbackItem.isVisible = editorFragment is GutenbergKitEditorFragment
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -1643,6 +1649,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     analyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, siteModel)
                     (editorFragment as GutenbergEditorFragment).showEditorHelp()
                 }
+            } else if (itemId == R.id.menu_editor_send_feedback) {
+                ActivityLauncher.viewFeedbackForm(this@EditPostActivity, "Editor")
             } else if (itemId == R.id.menu_undo_action) {
                 if (editorFragment is GutenbergEditorFragment) {
                     (editorFragment as GutenbergEditorFragment).onUndoPressed()
@@ -2514,6 +2522,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                                 storePostViewModel.savePostWithDelay()
                             }
                         })
+                        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
+                            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                                onToggleUndo(!hasUndo)
+                                onToggleRedo(!hasRedo)
+                            }
+                        })
                         editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
                             override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
                                 editorPhotoPicker?.allowMultipleSelection = config.multiple
@@ -2571,7 +2585,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
          get() {
             val postType = if (isPage) "page" else "post"
             val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = LocaleManager.getLanguage(this@EditPostActivity)
+            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based

@@ -34,8 +34,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
@@ -55,7 +55,7 @@ import dagger.hilt.android.AndroidEntryPoint;
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 @AndroidEntryPoint
-public class ReaderPostListActivity extends LocaleAwareActivity {
+public class ReaderPostListActivity extends BaseAppCompatActivity {
     private String mSource;
     private ReaderPostListType mPostListType;
     private long mSiteId;

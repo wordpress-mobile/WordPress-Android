@@ -44,7 +44,7 @@ import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.theme.JpColorPalette
+import org.wordpress.android.ui.compose.theme.jpColorPalette
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.SiteWithIndividualJetpackPlugins
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.JPInstallFullPluginAnimation
 
@@ -152,7 +152,7 @@ fun WPJetpackIndividualPluginOverlayScreen(
                     buttonSize = ButtonSize.LARGE,
                     padding = PaddingValues(0.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = JpColorPalette().primary,
+                        containerColor = jpColorPalette().primary,
                         contentColor = AppColor.White,
                     ),
                 )
@@ -163,7 +163,7 @@ fun WPJetpackIndividualPluginOverlayScreen(
                     padding = PaddingValues(0.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
-                        contentColor = JpColorPalette().primary,
+                        contentColor = jpColorPalette().primary,
                     ),
                 )
             }

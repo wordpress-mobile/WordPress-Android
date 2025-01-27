@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.launch
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
@@ -22,11 +21,12 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSitePlans
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.OpenDomainManagement
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.SitePickerContract
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PurchaseDomainActivity : AppCompatActivity() {
+class PurchaseDomainActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: PurchaseDomainViewModel.Factory
 

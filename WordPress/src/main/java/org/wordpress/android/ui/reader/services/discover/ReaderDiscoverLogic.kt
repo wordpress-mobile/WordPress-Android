@@ -46,7 +46,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.config.ReaderDiscoverNewEndpointFeatureConfig
 import javax.inject.Inject
 
@@ -60,7 +60,7 @@ class ReaderDiscoverLogic @Inject constructor(
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val readerDiscoverNewEndpointFeatureConfig: ReaderDiscoverNewEndpointFeatureConfig,
-    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val perAppLocaleManager: PerAppLocaleManager,
 ) {
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -120,7 +120,7 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            params["_locale"] = localeManagerWrapper.getLanguage()
+            params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
                 "read/streams/discover"
             } else {

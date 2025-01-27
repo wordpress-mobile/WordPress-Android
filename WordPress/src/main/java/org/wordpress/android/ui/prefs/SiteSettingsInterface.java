@@ -701,14 +701,6 @@ public abstract class SiteSettingsInterface {
         return mJpSettings.serveStaticFilesFromOurServers;
     }
 
-    void enableLazyLoadImages(boolean enabled) {
-        mJpSettings.lazyLoadImages = enabled;
-    }
-
-    boolean isLazyLoadImagesEnabled() {
-        return mJpSettings.lazyLoadImages;
-    }
-
     void enableAdFreeHosting(boolean enabled) {
         mJpSettings.adFreeVideoHosting = enabled;
     }

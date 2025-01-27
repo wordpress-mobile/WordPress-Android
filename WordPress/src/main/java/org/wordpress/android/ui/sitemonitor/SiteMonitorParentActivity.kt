@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,12 +57,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @SuppressLint("SetJavaScriptEnabled")
 @AndroidEntryPoint
-class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.SiteMonitorWebViewClientListener {
+class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewClient.SiteMonitorWebViewClientListener {
     @Inject
     lateinit var siteMonitorUtils: SiteMonitorUtils
 

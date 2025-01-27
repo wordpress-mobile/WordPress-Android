@@ -20,7 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED
 import org.wordpress.android.modules.APPLICATION_SCOPE
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsSettingsStatusChanged
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener
 import org.wordpress.android.ui.prefs.notifications.usecase.UpdateNotificationSettingsUseCase
@@ -29,7 +29,7 @@ import javax.inject.Named
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
+class NotificationsSettingsActivity : BaseAppCompatActivity(), MainSwitchToolbarListener {
     @Inject
     lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
 

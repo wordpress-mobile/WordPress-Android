@@ -4,11 +4,11 @@ import android.os.Bundle
 import org.wordpress.android.databinding.PlansActivityBinding
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.FullScreenDialogFragment
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.plans.PlansListFragment.PlansListInterface
 import org.wordpress.android.util.StringUtils
 
-class PlansActivity : LocaleAwareActivity(), PlansListInterface {
+class PlansActivity : BaseAppCompatActivity(), PlansListInterface {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(PlansActivityBinding.inflate(layoutInflater)) {

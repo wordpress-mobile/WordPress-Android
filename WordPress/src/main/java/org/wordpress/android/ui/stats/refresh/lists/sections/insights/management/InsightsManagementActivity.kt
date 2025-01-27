@@ -5,11 +5,11 @@ import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.InsightsManagementActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class InsightsManagementActivity : LocaleAwareActivity() {
+class InsightsManagementActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(InsightsManagementActivityBinding.inflate(layoutInflater)) {

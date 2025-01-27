@@ -12,8 +12,8 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.RestClientProvider
 import org.wordpress.android.util.VolleyUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
@@ -28,7 +28,7 @@ class RecommendApiCallsProvider @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val restClientProvider: RestClientProvider,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val perAppLocaleManager: PerAppLocaleManager
 ) {
     suspend fun getRecommendTemplate(
         appName: String,
@@ -38,7 +38,7 @@ class RecommendApiCallsProvider @Inject constructor(
             logErrorAndTrack(source, "getRecommendTemplate > No Network available")
             cont.resume(Failure(contextProvider.getContext().getString(R.string.no_network_message)))
         } else {
-            val language = localeManagerWrapper.getLanguage()
+            val language = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val endPointPath = "/mobile/share-app-link?app=$appName&locale=$language"
 
             val listener = Listener { jsonObject ->

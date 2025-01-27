@@ -49,9 +49,7 @@ public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final RuleChain LOCALE_TEST_RULES = RuleChain
             // Run fastlane's official LocaleTestRule (which switches device language + sets up screengrab) first
-            .outerRule(new LocaleTestRule())
-            // Run our own rule (which handles our in-app locale switching logic) second
-            .around(new WPLocaleTestRule());
+            .outerRule(new LocaleTestRule());
 
     // Note: running this as a static @ClassRule as part of the above RuleChain doesn't seem to work
     // (apparently that would make those run too early?), but running it as @Rule does fix the issue.

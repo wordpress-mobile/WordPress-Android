@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnUserRolesChanged;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -44,7 +44,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PeopleManagementActivity extends LocaleAwareActivity
+public class PeopleManagementActivity extends BaseAppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";

@@ -15,7 +15,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -25,7 +25,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 /*
  * displays a list of users who like a specific reader post
  */
-public class ReaderUserListActivity extends LocaleAwareActivity {
+public class ReaderUserListActivity extends BaseAppCompatActivity {
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
     private AppBarLayout mAppBarLayout;
