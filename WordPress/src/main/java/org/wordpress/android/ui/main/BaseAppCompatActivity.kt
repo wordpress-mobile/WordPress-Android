@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.support.SupportWebViewActivity
@@ -54,7 +55,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         val applyBottomOffset = excludedActivity?.applyBottomOffset ?: true
 
         if (applyTopOffset || applyBottomOffset) {
-            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+            ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, insets ->
                 // Notice we're using systemBars rather than statusBar and accounting for the display cutouts
                 val innerPadding = insets.getInsets(
                     WindowInsetsCompat.Type.systemBars()
