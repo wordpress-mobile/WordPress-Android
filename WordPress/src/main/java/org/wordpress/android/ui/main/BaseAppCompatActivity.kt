@@ -55,13 +55,11 @@ open class BaseAppCompatActivity : AppCompatActivity() {
 
         if (applyTopOffset || applyBottomOffset) {
             ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, insets ->
-                // Notice we're using systemBars rather than statusBar and accounting for the display cutouts
                 val innerPadding = insets.getInsets(
                     WindowInsetsCompat.Type.systemBars()
                             or WindowInsetsCompat.Type.displayCutout()
                 )
 
-                // Adjust system bars padding to avoid overlap
                 view.setPadding(
                     innerPadding.left,
                     if (applyTopOffset) innerPadding.top else 0,
@@ -100,7 +98,8 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             applyBottomOffset = false
         ),
         DesignSystemActivity::class.java.name to ActivityOffsets
-            (applyTopOffset = false,
+            (
+            applyTopOffset = false,
             applyBottomOffset = false
         ),
         DomainManagementActivity::class.java.name to ActivityOffsets(
