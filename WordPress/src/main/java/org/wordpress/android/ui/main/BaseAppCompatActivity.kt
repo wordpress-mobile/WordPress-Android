@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsCompat
 import org.wordpress.android.designsystem.DesignSystemActivity
+import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity
@@ -173,6 +174,10 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             applyBottomOffset = true
         ),
         StatsActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = true
+        ),
+        SupportWebViewActivity::class.java.name to ActivityOffsets(
             applyTopOffset = false,
             applyBottomOffset = true
         ),
