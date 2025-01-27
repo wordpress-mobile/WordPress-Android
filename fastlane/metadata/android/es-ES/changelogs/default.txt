@@ -1,5 +1,5 @@
-25.5:
-Este mes, hemos:
-- corregido algunos fallos del modo oscuro
-- llevado el editor experimental a Android: ¡pruébalo y dinos qué te parece!
-- ajustado la forma en que los usuarios inician sesión en WordPress.com: esto soluciona un problema antiguo por el que no se podía iniciar sesión si se utilizaba una clave de acceso.
+25.6
+:Esta actualización
+:- Corrige un error poco frecuente al registrar un dominio.
+- Corrige varios aspectos de funcionamiento que mejoran la fiabilidad de la aplicación.
+- Utiliza un sistema basado en web para acceder a WordPress.com. Debería ser más fiable para la mayoría de los usuarios, pero si tienes problemas, ponte en contacto con el servicio de asistencia.
