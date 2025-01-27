@@ -57,6 +57,9 @@ class FeedbackFormActivity : BaseAppCompatActivity() {
         )
     }
 
+    /**
+     * Displays the when the user taps to contact support in the JP app, or community forums in the WP app
+     */
     private fun navigateToHelpScreen() {
         val intent = Intent(this, HelpActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
