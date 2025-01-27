@@ -180,7 +180,7 @@
 
         <activity
             android:name=".support.SupportWebViewActivity"
-            android:theme="@style/WordPress.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
 
         <!-- empty title -->
 

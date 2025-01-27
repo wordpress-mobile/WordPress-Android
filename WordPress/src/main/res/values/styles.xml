@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight">
         <!-- Material theme -->
@@ -289,6 +289,10 @@
     <style name="WordPress.NoActionBar" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="WordPress.NoActionBar.NoEdgeToEdge" parent="WordPress.NoActionBar">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
     <style name="WordPress.Media.Preview" parent="Theme.MaterialComponents.DayNight.NoActionBar">
