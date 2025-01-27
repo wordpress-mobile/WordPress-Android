@@ -1,6 +1,5 @@
-25.5:
-Questo mese abbiamo:
-- Sistemato le icone che non funzionavano dei social media in Jetpack Social
-- Sistemato alcuni bug relativi alla Dark Mode
-- Lanciato l'editor in versione trial su Android: provalo e facci sapere cosa ne pensi!
-- Sistemato la modalità di accesso a WordPress.com per risolvere un problema di lunga data relativo all'impossibilità di effettuare l'accesso con un Passkey.
+25.6:
+Questo aggiornamento:
+- Risolve un raro crash durante la registrazione di un dominio.
+- Risolve una serie di problemi che dovrebbero rendere l'app più affidabile.
+- Utilizza un approccio basato sul web per il login a WordPress.com. In questo modo dovrebbe essere più affidabile per la maggior parte degli utenti, ma ti invitiamo a contattare l'assistenza in caso di problemi.

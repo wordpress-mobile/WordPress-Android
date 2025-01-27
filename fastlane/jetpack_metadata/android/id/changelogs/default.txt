@@ -1,6 +1,5 @@
-25.5:
-Bulan ini, kami telah:
-- Memperbaiki ikon media sosial yang terganggu di Jetpack Social
-- Memperbaiki sejumlah bug Mode Gelap
-- Menerapkan editor eksperimental di Android – cobalah dan sampaikan pendapat Anda!
-- Menyesuaikan cara pengguna login ke WordPress.com – ini adalah solusi untuk masalah lama yang mempersulit Anda login jika menggunakan Passkey.
+25.6:
+Pembaruan kali ini:
+- Perbaikan crash yang jarang terjadi saat mendaftarkan domain.
+- Perbaikan internal yang menjadikan aplikasi lebih andal.
+- Penggunaan pendekatan berbasis web untuk login WordPress.com. Aplikasi ini diharapkan jadi lebih andal bagi sebagian besar pengguna. Harap hubungi dukungan jika Anda mengalami masalah!
