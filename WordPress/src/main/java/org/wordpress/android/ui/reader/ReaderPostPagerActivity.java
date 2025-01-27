@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
@@ -51,6 +50,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -117,7 +117,7 @@ import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 @AndroidEntryPoint
-public class ReaderPostPagerActivity extends LocaleAwareActivity {
+public class ReaderPostPagerActivity extends BaseAppCompatActivity {
     /**
      * Type of URL intercepted
      */

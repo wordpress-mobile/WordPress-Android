@@ -61,6 +61,8 @@ class FeedbackFormViewModel @Inject constructor(
     private val _progressDialogState = MutableStateFlow<ProgressDialogState?>(null)
     val progressDialogState = _progressDialogState.asStateFlow()
 
+    var feedbackPrefix: String? = null
+
     fun updateMessageText(message: String) {
         if (message != _messageText.value) {
             _messageText.value = message
@@ -138,12 +140,13 @@ class FeedbackFormViewModel @Inject constructor(
         attachmentTokens: List<String> = emptyList()
     ) {
         showProgressDialog(R.string.sending)
+        val descriptionPrefix = feedbackPrefix?.let { "[$it] " } ?: ""
         zendeskHelper.createRequest(
             context = context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
             selectedSite = selectedSiteRepository.getSelectedSite(),
             extraTags = listOf("in_app_feedback"),
-            requestDescription = _messageText.value,
+            requestDescription = descriptionPrefix + _messageText.value,
             attachmentTokens = attachmentTokens,
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
@@ -303,4 +306,3 @@ class FeedbackFormViewModel @Inject constructor(
         private const val MAX_ATTACHMENTS = 5
     }
 }
-

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.personalization
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -56,12 +55,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
 
 @AndroidEntryPoint
-class PersonalizationActivity : AppCompatActivity() {
+class PersonalizationActivity : BaseAppCompatActivity() {
     private val viewModel: PersonalizationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

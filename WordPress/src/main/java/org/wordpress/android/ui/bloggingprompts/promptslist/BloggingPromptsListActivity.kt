@@ -11,14 +11,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class BloggingPromptsListActivity : LocaleAwareActivity() {
+class BloggingPromptsListActivity : BaseAppCompatActivity() {
     private val viewModel: BloggingPromptsListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

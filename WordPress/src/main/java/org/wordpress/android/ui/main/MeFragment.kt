@@ -71,6 +71,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -201,20 +202,36 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
-            if (gravatarQuickEditorFeatureConfig.isEnabled()) {
-                GravatarQuickEditor.show(
-                    fragment = this@MeFragment,
-                    gravatarQuickEditorParams = GravatarQuickEditorParams {
-                        email = Email(accountStore.account.email)
-                        avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
-                    },
-                    authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
-                    onAvatarSelected = {
-                        loadAvatar(null, true)
-                    },
-                )
+            if (accountStore.account.emailVerified) {
+                if (gravatarQuickEditorFeatureConfig.isEnabled()) {
+                    GravatarQuickEditor.show(
+                        fragment = this@MeFragment,
+                        gravatarQuickEditorParams = GravatarQuickEditorParams {
+                            email = Email(accountStore.account.email)
+                            avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
+                        },
+                        authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+                        onAvatarSelected = {
+                            loadAvatar(null, true)
+                        },
+                    )
+                } else {
+                    showPhotoPickerForGravatar()
+                }
             } else {
-                showPhotoPickerForGravatar()
+                view?.let { view ->
+                    sequencer.enqueue(
+                        SnackbarItem(
+                            Info(
+                                view,
+                                UiString.UiStringRes(R.string.avatar_update_email_unverified),
+                                Snackbar.LENGTH_LONG
+                            ),
+                            null,
+                            null
+                        )
+                    )
+                }
             }
         }
         avatarContainer.setOnClickListener(showPickerListener)
@@ -539,7 +556,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     if (newAvatarSelected && resource is BitmapDrawable) {
                         var bitmap = resource.bitmap
                         // create a copy since the original bitmap may by automatically recycled
-                        bitmap = bitmap.copy(bitmap.config, true)
+                        bitmap.config?.let { config ->
+                            bitmap = bitmap.copy(config, true)
+                        }
                         WordPress.getBitmapCache().put(
                             avatarUrl,
                             bitmap

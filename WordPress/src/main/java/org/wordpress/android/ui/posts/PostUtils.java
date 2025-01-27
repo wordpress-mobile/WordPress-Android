@@ -29,7 +29,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -489,9 +488,9 @@ public class PostUtils {
         String secondPart =
                 String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
+                                DateTimeUtils.timestampFromIso8601Millis(lastModified)),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
+                                DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
         return firstPart + secondPart;
     }
 
@@ -505,24 +504,20 @@ public class PostUtils {
         String secondPart =
                 String.format(context.getString(R.string.dialog_confirm_autosave_body_second_part),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
+                                DateTimeUtils.timestampFromIso8601Millis(lastModified)),
                         getFormattedDateForLastModified(
-                                context, DateTimeUtils.timestampFromIso8601Millis(post.getAutoSaveModified())));
+                                DateTimeUtils.timestampFromIso8601Millis(post.getAutoSaveModified())));
         return new UiStringText(firstPart + secondPart);
     }
 
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
-    public static String getFormattedDateForLastModified(Context context, long timeSinceLastModified) {
+    public static String getFormattedDateForLastModified(long timeSinceLastModified) {
         Date date = new Date(timeSinceLastModified);
 
-        DateFormat dateFormat = DateFormat.getDateInstance(
-                DateFormat.MEDIUM,
-                LocaleManager.getSafeLocale(context));
-        DateFormat timeFormat = DateFormat.getTimeInstance(
-                DateFormat.SHORT,
-                LocaleManager.getSafeLocale(context));
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
         dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
         timeFormat.setTimeZone(Calendar.getInstance().getTimeZone());

@@ -29,8 +29,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.util.JetpackBrandingUtils;
@@ -48,7 +48,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PublicizeListActivity extends LocaleAwareActivity
+public class PublicizeListActivity extends BaseAppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,

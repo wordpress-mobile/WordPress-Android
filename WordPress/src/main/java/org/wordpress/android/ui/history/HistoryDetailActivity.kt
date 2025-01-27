@@ -6,12 +6,12 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.HistoryDetailActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
 
-class HistoryDetailActivity : LocaleAwareActivity() {
+class HistoryDetailActivity : BaseAppCompatActivity() {
     companion object {
         const val KEY_HISTORY_DETAIL_FRAGMENT = "history_detail_fragment"
     }

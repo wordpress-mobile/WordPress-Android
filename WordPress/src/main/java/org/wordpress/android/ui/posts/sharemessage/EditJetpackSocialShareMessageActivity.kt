@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,14 +43,15 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppThemeM2Editor
+import org.wordpress.android.ui.compose.theme.AppThemeM3Editor
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.ActionEvent
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageViewModel.UiState
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
+class EditJetpackSocialShareMessageActivity : BaseAppCompatActivity() {
     private val viewModel: EditJetpackSocialShareMessageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,7 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
         )
         observeActionEvents()
         setContent {
-            AppThemeM2Editor {
+            AppThemeM3Editor {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Loaded -> {
@@ -136,9 +136,9 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                             shareTextFieldValue = newValue
                             viewModel.updateShareMessage(newValue.text)
                         },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = MaterialTheme.colors.onSurface,
-                            disabledTextColor = MaterialTheme.colors.onSurface
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            disabledTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         trailingIcon = {
                             IconButton(
@@ -160,8 +160,8 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                     )
                     Text(
                         text = state.customizeMessageDescription,
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     LaunchedEffect(Unit) {
                         // Without a delay the soft keyboard is not shown

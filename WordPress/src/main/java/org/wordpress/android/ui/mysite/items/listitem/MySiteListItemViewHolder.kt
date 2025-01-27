@@ -73,7 +73,9 @@ class MySiteListItemViewHolder(
                         if (resource is BitmapDrawable) {
                             var bitmap = resource.bitmap
                             // create a copy since the original bitmap may by automatically recycled
-                            bitmap = bitmap.copy(bitmap.config, true)
+                            bitmap.config?.let { config ->
+                                bitmap = bitmap.copy(config, true)
+                            }
                             WordPress.getBitmapCache().put(
                                 avatarUrl,
                                 bitmap

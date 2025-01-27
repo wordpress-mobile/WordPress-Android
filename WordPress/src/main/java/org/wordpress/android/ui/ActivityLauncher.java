@@ -1318,8 +1318,13 @@ public class ActivityLauncher {
     }
 
     public static void viewFeedbackForm(@NonNull Context context) {
+        viewFeedbackForm(context, null);
+    }
+
+    public static void viewFeedbackForm(@NonNull Context context, @Nullable String feedbackPrefix) {
         AnalyticsTracker.track(Stat.APP_REVIEWS_FEEDBACK_SCREEN_OPENED);
         Intent intent = new Intent(context, FeedbackFormActivity.class);
+        intent.putExtra(FeedbackFormActivity.EXTRA_FEEDBACK_PREFIX, feedbackPrefix);
         context.startActivity(intent);
     }
 

@@ -21,7 +21,8 @@
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29" />
+        android:maxSdkVersion="29"
+        tools:replace="android:maxSdkVersion" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />

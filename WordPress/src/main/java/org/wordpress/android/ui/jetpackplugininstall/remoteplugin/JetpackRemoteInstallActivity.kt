@@ -15,7 +15,6 @@ import org.wordpress.android.login.LoginMode
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.LoginActivity
@@ -26,13 +25,14 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONTACT_SUPPORT
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class JetpackRemoteInstallActivity : LocaleAwareActivity() {
+class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
     private val viewModel: JetpackRemoteInstallViewModel by viewModels()
 
     public override fun onCreate(savedInstanceState: Bundle?) {

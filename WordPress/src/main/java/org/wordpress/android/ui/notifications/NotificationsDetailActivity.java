@@ -36,13 +36,13 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -86,7 +86,7 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 
 @AndroidEntryPoint
 @SuppressWarnings("deprecation")
-public class NotificationsDetailActivity extends LocaleAwareActivity implements
+public class NotificationsDetailActivity extends BaseAppCompatActivity implements
         CommentActions.OnNoteCommentActionListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     private static final String ARG_TITLE = "activityTitle";

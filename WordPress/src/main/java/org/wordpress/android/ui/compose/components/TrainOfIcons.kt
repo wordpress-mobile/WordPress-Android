@@ -5,7 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private const val DEFAULT_ICON_SIZE = 32
 private const val DEFAULT_ICON_BORDER_WIDTH = 2
@@ -57,7 +57,7 @@ fun TrainOfIcons(
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
     iconBorderWidth: Dp = DEFAULT_ICON_BORDER_WIDTH.dp,
-    iconBorderColor: Color = MaterialTheme.colors.surface,
+    iconBorderColor: Color = MaterialTheme.colorScheme.surface,
     placeholderPainter: Painter = ColorPainter(colorResource(R.color.placeholder)),
 ) {
     if (iconModels.isEmpty()) {
@@ -114,7 +114,7 @@ fun TrainOfIcons(
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun TrainOfIconsPreview() {
-    AppThemeM2 {
+    AppThemeM3 {
         TrainOfIcons(
             iconModels = listOf(
                 R.drawable.login_prologue_second_asset_three,

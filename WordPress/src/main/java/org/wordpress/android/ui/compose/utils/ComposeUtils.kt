@@ -2,29 +2,15 @@ package org.wordpress.android.ui.compose.utils
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import org.wordpress.android.ui.compose.components.ContentAlphaProvider
 import org.wordpress.android.util.extensions.isRtl
 import org.wordpress.android.util.extensions.primaryLocale
 import java.util.Locale
-
-/**
- * Utility function that returns a Composable function that wraps the [content] inside a [ContentAlphaProvider]
- * setting the [LocalContentAlpha] to 1f. Useful for using with some Material Composables that override that alpha
- * Composition Local in a hard-coded fashion (e.g.: TopAppBar). This should not need to be used very often.
- */
-fun withFullContentAlpha(content: @Composable () -> Unit): @Composable () -> Unit = {
-    ContentAlphaProvider(
-        1f,
-        content = content
-    )
-}
 
 /**
  * Utility function that wraps the [content] inside a [CompositionLocalProvider] overriding the [LocalContext]
@@ -72,4 +58,4 @@ fun LocaleAwareComposable(
  * @return true if the current theme is light
  */
 @Composable
-fun isLightTheme(): Boolean = MaterialTheme.colors.isLight
+fun isLightTheme(): Boolean = isSystemInDarkTheme().not()

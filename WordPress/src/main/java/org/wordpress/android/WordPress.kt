@@ -1,7 +1,6 @@
 package org.wordpress.android
 
 import android.app.Application
-import android.content.Context
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
@@ -58,12 +57,6 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory {
 
         @JvmStatic
         fun getContext() = AppInitializer.context!!
-
-        @JvmStatic
-        @JvmOverloads
-        fun updateContextLocale(appContext: Context? = null) {
-            AppInitializer.updateContextLocale(appContext)
-        }
 
         @JvmStatic
         fun getRestClientUtils() = AppInitializer.restClientUtils

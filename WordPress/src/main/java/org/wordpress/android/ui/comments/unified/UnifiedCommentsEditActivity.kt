@@ -7,11 +7,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentsEditActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
-class UnifiedCommentsEditActivity : LocaleAwareActivity() {
+class UnifiedCommentsEditActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -6,7 +6,7 @@ import android.os.IBinder;
 
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManagerWrapper;
+import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.StringUtils;
 
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class ReaderSearchService extends Service implements ServiceCompletionLis
 
     private ReaderSearchLogic mReaderSearchLogic;
 
-    @Inject LocaleManagerWrapper mLocaleManagerWrapper;
+    @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,7 +34,7 @@ public class ReaderSearchService extends Service implements ServiceCompletionLis
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderSearchLogic = new ReaderSearchLogic(this, mLocaleManagerWrapper);
+        mReaderSearchLogic = new ReaderSearchLogic(this, mPerAppLocaleManager);
         AppLog.i(AppLog.T.READER, "reader search service > created");
     }
 

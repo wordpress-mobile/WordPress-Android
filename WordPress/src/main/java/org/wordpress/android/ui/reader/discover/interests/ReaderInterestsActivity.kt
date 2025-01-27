@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderInterestsActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class ReaderInterestsActivity : LocaleAwareActivity() {
+class ReaderInterestsActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

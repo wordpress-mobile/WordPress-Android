@@ -5,13 +5,13 @@ import com.automattic.about.model.AboutConfigProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.Dismiss
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.OpenBlog
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
+class UnifiedAboutActivity : BaseAppCompatActivity(), AboutConfigProvider {
     @Inject
     lateinit var viewModel: UnifiedAboutViewModel
 

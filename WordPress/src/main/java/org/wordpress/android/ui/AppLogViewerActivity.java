@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -35,7 +36,7 @@ import static java.lang.String.format;
 /**
  * views the activity log (see utils/AppLog.java)
  */
-public class AppLogViewerActivity extends LocaleAwareActivity {
+public class AppLogViewerActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
@@ -39,7 +40,7 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * <p>
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
-public class JetpackConnectionResultActivity extends LocaleAwareActivity {
+public class JetpackConnectionResultActivity extends BaseAppCompatActivity {
     private static final String ALREADY_CONNECTED = "already-connected";
     private static final String REASON_PARAM = "reason";
     private static final String SOURCE_PARAM = "source";

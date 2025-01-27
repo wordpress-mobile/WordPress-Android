@@ -46,6 +46,23 @@ fun AppThemeM3WithoutBackground(
     }
 }
 
+/**
+ * This theme should *only* be used in the context of the Editor (e.g. Post Settings).
+ * More info: https://github.com/wordpress-mobile/gutenberg-mobile/issues/4889
+ */
+@Composable
+fun AppThemeM3Editor(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    content: @Composable () -> Unit
+) {
+    androidx.compose.material3.MaterialTheme(
+        colorScheme = getColorScheme(isDarkTheme = isDarkTheme, isJetpackApp = isJetpackApp),
+        content = content
+    )
+}
+
+
 // Provide color schemes
 
 @Suppress("SameParameterValue")

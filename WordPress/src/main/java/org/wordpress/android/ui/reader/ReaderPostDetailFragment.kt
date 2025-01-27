@@ -488,6 +488,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         params.behavior = HideBottomViewOnScrollBehavior<View>()
                     }
                 layoutFooterBinding.root.isInvisible = true
+
+                // on SDK 35+ edge-to-edge is enabled so we want to avoid covering the navigation bar icons by
+                // taking the nav bar height into account (nav height will be 0 when gesture nav is enabled)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                    layoutFooterBinding.root.findViewById<View>(R.id.reader_detail_footer_button_container)
+                        ?.let { footerContainer ->
+                            footerContainer.setOnApplyWindowInsetsListener { _, insets ->
+                                val navigationBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                                val addedMargin = resources.getDimensionPixelSize(R.dimen.margin_small)
+                                (footerContainer.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
+                                    addedMargin + navigationBarInsets.bottom
+                                insets
+                            }
+                        }
+                }
             }
         }.also { stub ->
             stub.inflate()

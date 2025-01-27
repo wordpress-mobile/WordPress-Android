@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
-import org.wordpress.android.ui.compose.theme.AppThemeM2
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 
@@ -52,15 +51,15 @@ fun PostSocialConnectionItem(
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             colorFilter = ColorFilter.colorMatrix(saturationMatrix),
-            alpha = if (enabled) 1f else ContentAlpha.disabled,
+            alpha = if (enabled) 1f else 0.38f,
             modifier = Modifier.size(28.dp),
         )
         Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
         Text(
             text = connection.externalName,
-            style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.onSurface
-                .copy(alpha = if (enabled) ContentAlpha.high else ContentAlpha.disabled),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
+                .copy(alpha = if (enabled) 1f else 0.38f),
         )
         Spacer(modifier = Modifier.weight(1f))
         WPSwitch(
@@ -86,7 +85,7 @@ fun PostSocialConnectionItemPreview() {
     )
     var connectionState by remember { mutableStateOf(connection) }
     var disabledState by remember { mutableStateOf(connection.copy(isSharingEnabled = false)) }
-    AppThemeM2 {
+    AppThemeM3 {
         Column {
             // enabled
             PostSocialConnectionItem(
@@ -94,7 +93,7 @@ fun PostSocialConnectionItemPreview() {
                 onSharingChange = { connectionState = connectionState.copy(isSharingEnabled = it) },
             )
 
-            Divider()
+            HorizontalDivider()
 
             // disabled
             PostSocialConnectionItem(

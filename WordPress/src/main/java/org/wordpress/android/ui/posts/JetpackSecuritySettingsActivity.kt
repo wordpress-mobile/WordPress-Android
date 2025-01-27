@@ -3,12 +3,12 @@ package org.wordpress.android.ui.posts
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
 
-class JetpackSecuritySettingsActivity : AppCompatActivity() {
+class JetpackSecuritySettingsActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(FragmentJetpackSecuritySettingsBinding.inflate(layoutInflater)) {

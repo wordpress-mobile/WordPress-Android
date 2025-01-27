@@ -5,13 +5,13 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.EngagedPeopleListActivityBinding
-import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 import android.R as AndroidR
 
-class EngagedPeopleListActivity : LocaleAwareActivity() {
+class EngagedPeopleListActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
