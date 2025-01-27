@@ -1,6 +1,5 @@
-25.5:
-Neste mês, nós:
-- Corrigimos ícones de rede social corrompidos no Jetpack Social
-- Corrigimos alguns bugs no modo escuro
-- Trouxemos o editor experimental para o Android (experimente e diga o que você acha!)
-- Ajustamos o login no WordPress.com para corrigir um problema de longa data que impedia o login se você estivesse usando uma chave de acesso
+25.6:
+Esta atualização:
+- Corrige uma falha rara ao registrar um domínio.
+- Corrige um monte de coisas ocultas para tornar o aplicativo mais confiável.
+- Usa uma abordagem baseada na web para fazer login no WordPress.com. Isso deve oferecer mais confiabilidade para a maioria dos usuários, mas entre em contato com o suporte se tiver algum problema!

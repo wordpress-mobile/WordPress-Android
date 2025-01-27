@@ -1,6 +1,5 @@
-25.5:
-Deze maand hebben we:
-- defecte socialemediapictogrammen gerepareerd in Jetpack Social
-- een aantal bugs in de donkere modus verholpen
-- de experimentele editor toegankelijk gemaakt voor Android: probeer hem eens en laat ons weten wat je ervan vindt!
-- aangepast hoe gebruikers bij WordPress.com inloggen: hiermee hebben we een langdurig probleem opgelost waarbij je niet in kon loggen als je een passkey had gebruikt.
+25.6:
+Deze update:
+- lost een zeldzame crash op bij het registreren van een domein.
+- lost een aantal kwesties achter-de-schermen op waardoor de app betrouwbaarder moet zijn.
+- gebruikt een webgebaseerde aanpak voor inloggen bij WordPress.com. Dit zou betrouwbaarder moeten zijn voor de meeste gebruikers, maar neem contact op met de ondersteuning als je problemen ervaart!
