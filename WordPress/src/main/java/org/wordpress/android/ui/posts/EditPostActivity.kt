@@ -43,6 +43,7 @@ import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
+import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -251,6 +252,7 @@ import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
+import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.MediaType
 import java.io.File
@@ -2538,6 +2540,36 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                                     else -> emptyList()
                                 }
                                 openMediaLibrary(mediaType, initialSelection)
+                            }
+                        })
+                        editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
+                            override fun onLogJsException(exception: GutenbergJsException) {
+                                val stackTraceElements = exception.stackTrace.map { stackTrace ->
+                                    JsExceptionStackTraceElement(
+                                        stackTrace.fileName,
+                                        stackTrace.lineNumber,
+                                        stackTrace.colNumber,
+                                        stackTrace.function
+                                    )
+                                }
+
+                                val jsException = JsException(
+                                    exception.type,
+                                    exception.message,
+                                    stackTraceElements,
+                                    exception.context,
+                                    exception.tags,
+                                    exception.isHandled,
+                                    exception.handledBy
+                                )
+
+                                val callback = object : JsExceptionCallback {
+                                    override fun onReportSent(success: Boolean) {
+                                        // Do nothing
+                                    }
+                                }
+
+                                onLogJsException(jsException, callback)
                             }
                         })
                     } else {

@@ -67,6 +67,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
+import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.LogExceptionCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
@@ -1264,6 +1265,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
+    }
+
+    public void onLogJsException(@NonNull LogJsExceptionListener listener) {
     }
 
     @Override
