@@ -70,7 +70,7 @@ platform :android do
     push_to_git_remote(tags: false)
 
     copy_branch_protection(
-      repository: GHHELPER_REPO,
+      repository: GITHUB_REPO,
       from_branch: DEFAULT_BRANCH,
       to_branch: "release/#{new_version}"
     )
@@ -78,7 +78,7 @@ platform :android do
     begin
       # Move PRs to next milestone
       moved_prs = update_assigned_milestone(
-        repository: GHHELPER_REPO,
+        repository: GITHUB_REPO,
         from_milestone: new_version,
         to_milestone: next_release_version,
         comment: "Version `#{new_version}` has now entered code-freeze, so the milestone of this PR has been updated to `#{next_release_version}`."
@@ -86,7 +86,7 @@ platform :android do
 
       # Add ❄️ marker to milestone title to indicate we entered code-freeze
       set_milestone_frozen_marker(
-        repository: GHHELPER_REPO,
+        repository: GITHUB_REPO,
         milestone: new_version
       )
     rescue StandardError => e
@@ -102,7 +102,7 @@ platform :android do
                        "👍 No open PR were targeting `#{new_version}` at the time of code-freeze"
                      else
                        "#{moved_prs.count} PRs targeting `#{new_version}` were still open and thus moved to `#{next_release_version}`:\n" \
-                         + moved_prs.map { |pr_num| "[##{pr_num}](https://github.com/#{GHHELPER_REPO}/pull/#{pr_num})" }.join(', ')
+                         + moved_prs.map { |pr_num| "[##{pr_num}](https://github.com/#{GITHUB_REPO}/pull/#{pr_num})" }.join(', ')
                      end
 
     buildkite_annotate(style: moved_prs.empty? ? 'success' : 'warning', context: 'start-code-freeze', message: moved_prs_info) if is_ci
@@ -266,7 +266,7 @@ platform :android do
     # Close hotfix milestone
     begin
       close_milestone(
-        repository: GHHELPER_REPO,
+        repository: GITHUB_REPO,
         milestone: current_release_version
       )
     rescue StandardError => e
@@ -313,17 +313,17 @@ platform :android do
 
     create_backmerge_pr
 
-    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
+    remove_branch_protection(repository: GITHUB_REPO, branch: release_branch)
 
     # Close milestone
     begin
       set_milestone_frozen_marker(
-        repository: GHHELPER_REPO,
+        repository: GITHUB_REPO,
         milestone: version_name,
         freeze: false
       )
       close_milestone(
-        repository: GHHELPER_REPO,
+        repository: GITHUB_REPO,
         milestone: version_name
       )
     rescue StandardError => e
@@ -475,7 +475,7 @@ platform :android do
     File.write(tmp_file, unified_notes)
 
     create_github_release(
-      repository: GHHELPER_REPO,
+      repository: GITHUB_REPO,
       version: release_title,
       release_notes_file_path: tmp_file,
       prerelease: set_prerelease_flag,
@@ -575,7 +575,7 @@ platform :android do
 
   def create_backmerge_pr(source_branch: "release/#{current_release_version}", target_branch: nil)
     pr_url = create_release_backmerge_pull_request(
-      repository: GHHELPER_REPO,
+      repository: GITHUB_REPO,
       source_branch: source_branch,
       target_branches: Array(target_branch),
       labels: ['Releases'],
