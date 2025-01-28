@@ -565,6 +565,7 @@ platform :android do
         buildkite_pipeline: 'wordpress-android',
         branch: branch,
         pipeline_file: pipeline_file,
+        environment: environment,
         message: message
       )
 
