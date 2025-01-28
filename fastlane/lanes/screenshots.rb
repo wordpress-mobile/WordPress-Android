@@ -141,7 +141,7 @@ platform :android do
     end
     app = get_app_name_option!(options)
 
-    download_metadata_strings(app: app, skip_release_notes: true, skip_git_push: true) unless options.fetch(:skip_download_strings, false)
+    download_metadata_strings(app: app, skip_release_notes: true) unless options.fetch(:skip_download_strings, false)
 
     # Define intermediate folders
     raw_screenshots_dir = screenshots_dir(app: app, subfolder: 'raw')
