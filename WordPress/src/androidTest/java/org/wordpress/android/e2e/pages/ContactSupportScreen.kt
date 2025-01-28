@@ -6,7 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.support.WPSupportUtils
-import com.zendesk.sdk.R as ZendeskR
+import zendesk.support.R as ZendeskR
 
 class ContactSupportScreen {
     // Actions:
