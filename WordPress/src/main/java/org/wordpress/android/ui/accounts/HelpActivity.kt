@@ -122,10 +122,6 @@ class HelpActivity : BaseAppCompatActivity() {
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
-            feedbackButton.setOnClickListener {
-                ActivityLauncher.viewFeedbackForm(this@HelpActivity)
-            }
-
             if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
                 configureForJetpackMigrationHelp()
             }
