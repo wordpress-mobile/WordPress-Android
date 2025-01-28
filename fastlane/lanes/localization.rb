@@ -170,7 +170,6 @@ platform :android do
   #                         Defaults to current `versionName`. Only required if skip_release_notes is false
   # @param [Boolean] skip_release_notes Whether to skip downloading release notes. Default false
   # @param [Boolean] skip_commit If true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
-  # @param [Boolean] skip_git_push If true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
   #
   # @return [void]
   #
