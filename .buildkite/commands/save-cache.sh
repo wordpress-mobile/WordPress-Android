@@ -3,7 +3,7 @@
 set -euo pipefail
 
 echo "--- 📦 Download Dependencies"
-./gradlew downloadDependencies androidDependencies
+./gradlew downloadDependencies
 echo ""
 
 echo "--- 💾 Save Cache"
