@@ -727,14 +727,10 @@
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_terabytes">%s TB</string>
 
-    <!-- Speed up your site -->
-    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen.</string>
-
     <!-- Site accelerator -->
     <string name="site_settings_site_accelerator">Site Accelerator</string>
     <string name="site_settings_site_accelerator_on">On</string>
     <string name="site_settings_site_accelerator_off">Off</string>
-    <string name="site_settings_lazy_load_images">Lazy load images</string>
     <string name="site_settings_faster_images">Faster images</string>
     <string name="site_settings_faster_static_files">Faster static files</string>
     <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimize your images and static files (like CSS and JavaScript).</string>
@@ -963,7 +959,6 @@
     <string name="experimental_features_screen_title">Experimental Features</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
-    <string name="experimental_per_app_language_prefs">Experimental per-app language preferences</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -1149,8 +1144,9 @@
     <string name="feedback_form_attachment_already_added">Attachment already added</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
-    <string name="feedback_form_note_text">Please note this is not a support form, and we will not be able to reply. If you need support, please use our "</string>
-    <string name="feedback_form_note_link">Contact Support screen.</string>
+    <string name="feedback_form_note_text">Please note this is not a support form, and we will not be able to reply. If you need assistance, please use our "</string>
+    <string name="feedback_form_note_link_jetpack">Contact Support screen.</string>
+    <string name="feedback_form_note_link_wordpress">community forums.</string>
     <string name="media_pager_remove_item_content_description">Remove item %1$d</string>
 
     <!-- activity log -->
@@ -3055,6 +3051,7 @@
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
+    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
 
     <!-- Editor -->
     <string name="discard">Discard</string>
@@ -3734,7 +3731,7 @@
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
-    <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
+    <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
