@@ -45,6 +45,7 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
+import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
@@ -82,6 +83,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private ContentChangeListener mContentChangeListener = null;
     @Nullable private HistoryChangeListener mHistoryChangeListener = null;
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
+    @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
     private boolean mEditorDidMount;
 
@@ -139,6 +141,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mGutenbergView.setContentChangeListener(mContentChangeListener);
         mGutenbergView.setHistoryChangeListener(mHistoryChangeListener);
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
+        mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
         });
@@ -374,6 +377,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
         mOpenMediaLibraryListener = listener;
+    }
+
+    public void onLogJsException(@NonNull LogJsExceptionListener listener) {
+        mOnLogJsExceptionListener = listener;
     }
 
     @Override

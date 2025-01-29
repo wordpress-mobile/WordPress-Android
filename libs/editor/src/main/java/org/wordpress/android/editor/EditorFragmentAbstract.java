@@ -22,6 +22,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
+import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void onEditorContentChanged(ContentChangeListener listener);
     public abstract void onEditorHistoryChanged(HistoryChangeListener listener);
     public abstract void onOpenMediaLibrary(OpenMediaLibraryListener listener);
+    public abstract void onLogJsException(LogJsExceptionListener listener);
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);

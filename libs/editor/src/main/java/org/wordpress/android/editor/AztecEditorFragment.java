@@ -108,6 +108,7 @@ import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
+import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.xml.sax.Attributes;
 
@@ -716,6 +717,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void onOpenMediaLibrary(@Nullable OpenMediaLibraryListener listener) {
+    }
+
+    @Override public void onLogJsException(@NonNull LogJsExceptionListener listener) {
     }
 
     @Override
