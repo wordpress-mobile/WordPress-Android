@@ -89,13 +89,14 @@ data class BlockEditorSettings(
 
     private fun JsonElement.removeFontFamilies(): JsonElement {
         if (isJsonObject && asJsonObject.has("typography")) {
-            val featuresObject = asJsonObject
-            val typography = featuresObject.get("typography")
-            if (typography.isJsonObject) {
-                val typographyObject = typography.asJsonObject
-                if (typographyObject.has("fontFamilies")) {
-                    typographyObject.remove("fontFamilies")
-                    return featuresObject
+            asJsonObject?.let { featuresObject ->
+                val typography = featuresObject.get("typography")
+                if (typography.isJsonObject) {
+                    val typographyObject = typography.asJsonObject
+                    if (typographyObject.has("fontFamilies")) {
+                        typographyObject.remove("fontFamilies")
+                        return featuresObject
+                    }
                 }
             }
         }
