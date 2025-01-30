@@ -12,6 +12,15 @@ steps:
     plugins: [$CI_TOOLKIT]
     artifact_paths:
       - "build/reports/dependency-analysis/build-health-report.*"
-    notify:
-      - slack: "#android-core-notifs"
-        if: build.state == "failed"
+
+notify:
+  - slack:
+      channels:
+        - "#android-core-notifs"
+      message: "Dependency analysis succeeded."
+    if: build.state == "passed"
+  - slack:
+      channels:
+        - "#android-core-notifs"
+      message: "Dependency analysis failed."
+    if: build.state == "failed"
