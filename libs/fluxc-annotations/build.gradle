@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id "java"
+    alias(libs.plugins.dependency.analysis)
 }
 
 java {
