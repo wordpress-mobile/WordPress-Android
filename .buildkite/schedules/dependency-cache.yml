@@ -5,10 +5,8 @@ agents:
   queue: "android"
 
 steps:
-  - label: "dependency cache"
-    command: |
-      echo "--- 💾 Download and Cache Dependencies"
-      .buildkite/commands/save-cache.sh
+  - label: "💾 Download and Cache Dependencies"
+    command: .buildkite/commands/save-cache.sh
     plugins: [$CI_TOOLKIT]
 
 notify:
