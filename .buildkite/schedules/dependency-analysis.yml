@@ -7,6 +7,7 @@ agents:
 steps:
   - label: "dependency analysis"
     command: |
+      .buildkite/commands/restore-cache.sh
       echo "--- 📊 Analyzing"
       ./gradlew buildHealth
     plugins: [$CI_TOOLKIT]
