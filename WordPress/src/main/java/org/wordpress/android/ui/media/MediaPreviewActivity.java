@@ -247,12 +247,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
 
     private void delayedFinish() {
         ToastUtils.showToast(this, R.string.error_media_not_found);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 1500);
+        new Handler().postDelayed(this::finish, 1500);
     }
 
     /*
@@ -360,7 +355,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
             public void onPageSelected(int position) {
                 switch (getPreviewType()) {
                     case MULTI_MEDIA_IDS:
-                        mMediaId = Integer.valueOf(mMediaIdOrUrlList.get(position));
+                        mMediaId = Integer.parseInt(mMediaIdOrUrlList.get(position));
                         // fire event so settings activity shows the same media as this activity (user may have swiped)
                         EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
                         break;
@@ -394,7 +389,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
             MediaPreviewFragment fragment;
             switch (getPreviewType()) {
                 case MULTI_MEDIA_IDS:
-                    int id = Integer.valueOf(mMediaIdOrUrlList.get(position));
+                    int id = Integer.parseInt(mMediaIdOrUrlList.get(position));
                     MediaModel media = mMediaStore.getMediaWithLocalId(id);
                     // make sure we autoplay the initial item (relevant only for audio/video)
                     boolean autoPlay;
