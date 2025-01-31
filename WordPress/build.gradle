@@ -209,9 +209,9 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
-            buildConfigField "String", "WPCOM_REDIRECT_URI", '"wordpress://wpcom-authorize"'
+            buildConfigField "String", "WPCOM_REDIRECT_URI", '"https://wordpress.com"'
 
-            manifestPlaceholders = [magicLinkScheme:"wordpress"]
+            manifestPlaceholders = [magicLinkScheme:"https"]
         }
 
         jetpack {
@@ -230,9 +230,9 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
-            buildConfigField "String", "WPCOM_REDIRECT_URI", '"jetpack://wpcom-authorize"'
+            buildConfigField "String", "WPCOM_REDIRECT_URI", '"https://wordpress.com"'
 
-            manifestPlaceholders = [magicLinkScheme:"jetpack"]
+            manifestPlaceholders = [magicLinkScheme:"https"]
 
             // Limit string resources to Mag16 only for Jetpack
             // Note 1: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
