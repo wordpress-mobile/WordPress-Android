@@ -2,6 +2,8 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -10,6 +12,7 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -194,6 +198,16 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        // on SDK 35+ move the toolbar down and make it transparent to account for edge-to-edge display
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.VANILLA_ICE_CREAM) {
+            int transparentColor = ContextCompat.getColor(this, android.R.color.transparent);
+            mToolbar.setBackgroundColor(transparentColor);
+            MarginLayoutParams marginLayoutParams = (MarginLayoutParams) mToolbar.getLayoutParams();
+            marginLayoutParams.topMargin =
+                    marginLayoutParams.topMargin + getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        }
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
