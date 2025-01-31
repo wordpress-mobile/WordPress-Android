@@ -63,7 +63,6 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
     private int mMediaId;
     private String mContentUri;
 
-    private int mLastPosition;
     private PreviewType mPreviewType;
 
     // note that mSite may be null
@@ -355,7 +354,6 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
         }
 
         mViewPager.setCurrentItem(initialPos);
-        mLastPosition = initialPos;
 
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -370,7 +368,6 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
                         mContentUri = mMediaIdOrUrlList.get(position);
                         break;
                 }
-                mLastPosition = position;
                 showToolbar();
             }
         });
