@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
@@ -127,6 +128,11 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() != null) {
             mSettings = (Map<String, Object>) getArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS);
+        }
+
+        // request dependency injection. Do this after setting min/max dimensions
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
