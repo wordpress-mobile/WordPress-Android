@@ -221,7 +221,6 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.ExperimentalFeaturesActivity"
-            android:configChanges="locale|orientation|screenSize"
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
