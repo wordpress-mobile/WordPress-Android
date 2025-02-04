@@ -269,6 +269,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
