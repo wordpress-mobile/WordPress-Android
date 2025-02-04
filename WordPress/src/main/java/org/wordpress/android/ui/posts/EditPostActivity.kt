@@ -1973,7 +1973,25 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun initializeEditorFragment() {
-        if (editorFragment is AztecEditorFragment) {
+        if (editorFragment is GutenbergKitEditorFragment) {
+            editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
+                override fun onContentChanged(title: String, content: String) {
+                    storePostViewModel.savePostWithDelay()
+                }
+            })
+            editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
+                override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
+                    editorPhotoPicker?.allowMultipleSelection = config.multiple
+                    val mediaType = mapAllowedTypesToMediaBrowserType(config.allowedTypes, config.multiple)
+                    val initialSelection = when (val value = config.value) {
+                        is GutenbergView.Value.Single -> listOf(value.value)
+                        is GutenbergView.Value.Multiple -> value.toList()
+                        else -> emptyList()
+                    }
+                    openMediaLibrary(mediaType, initialSelection)
+                }
+            })
+        } else if (editorFragment is AztecEditorFragment) {
             val aztecEditorFragment = editorFragment as AztecEditorFragment
             aztecEditorFragment.setEditorImageSettingsListener(this@EditPostActivity)
             aztecEditorFragment.setMediaToolbarButtonClickListener(editorPhotoPicker)
@@ -2508,25 +2526,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
-                    if (isGutenbergKitEditor) {
-                        editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
-                            override fun onContentChanged(title: String, content: String) {
-                                storePostViewModel.savePostWithDelay()
-                            }
-                        })
-                        editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-                            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                                editorPhotoPicker?.allowMultipleSelection = config.multiple
-                                val mediaType = mapAllowedTypesToMediaBrowserType(config.allowedTypes, config.multiple)
-                                val initialSelection = when (val value = config.value) {
-                                    is GutenbergView.Value.Single -> listOf(value.value)
-                                    is GutenbergView.Value.Multiple -> value.toList()
-                                    else -> emptyList()
-                                }
-                                openMediaLibrary(mediaType, initialSelection)
-                            }
-                        })
-                    } else {
+                    // Refactor GutenbergKit to rely upon this observer rather than its custom implementation
+                    if (editorFragment !is GutenbergKitEditorFragment) {
                         editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
                             storePostViewModel.savePostWithDelay()
                         }
