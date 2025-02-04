@@ -4,9 +4,12 @@
 -----
 
 
+25.6.1
+-----
+* [*] Fix experimental editor crash when changing the device orienation. [#21658]
+
 25.6
 -----
-
 
 25.5
 -----
