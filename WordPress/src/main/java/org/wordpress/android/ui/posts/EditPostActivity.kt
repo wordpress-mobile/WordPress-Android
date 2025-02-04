@@ -2526,7 +2526,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
-                    // TODO: Refactor GutenbergKit to rely upon this observer rather than its custom implementation
+                    // Refactor GutenbergKit to rely upon this observer rather than its custom implementation
                     if (editorFragment !is GutenbergKitEditorFragment) {
                         editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
                             storePostViewModel.savePostWithDelay()
