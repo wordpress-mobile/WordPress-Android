@@ -106,7 +106,6 @@ import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
-import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -708,9 +707,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentNotAddedException {
         return new Pair<>(getTitle(), getContent(originalContent));
-    }
-
-    @Override public void onEditorContentChanged(@Nullable ContentChangeListener listener) {
     }
 
     @Override public void onEditorHistoryChanged(@Nullable HistoryChangeListener listener) {

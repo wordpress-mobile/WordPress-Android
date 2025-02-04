@@ -65,7 +65,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.gutenberg.GutenbergView.ContentChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -1256,9 +1255,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         });
-    }
-
-    public void onEditorContentChanged(@NonNull ContentChangeListener listener) {
     }
 
     public void onEditorHistoryChanged(@NonNull HistoryChangeListener listener) {
