@@ -10,6 +10,7 @@
 -----
 * [**] Send feedback from within the experimental editor "more" options menu. [#21586]
 * [**] Support accessing the code editor within the experimental editor. [#21582]
+* [*] Fix experimental editor crash when changing the device orienation. [#21657]
 
 25.6
 -----
