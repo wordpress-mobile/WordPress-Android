@@ -5,7 +5,7 @@ agents:
   queue: "android"
 
 steps:
-  - label: "🛠 Assemble with CC [No Build Cache + With Restore]"
+  - label: "🛠 Assemble with CC [With Restore]"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -15,11 +15,11 @@ steps:
 
       .buildkite/commands/restore-cache.sh
 
-      echo "--- 🛠 Build with CC [No Build Cache + With Restore]"
-      ./gradlew assembleJetpackJalapenoDebug --no-build-cache
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug
     plugins: [ $CI_TOOLKIT ]
 
-  - label: "🛠 Assemble without CC [No Build Cache + With Restore]"
+  - label: "🛠 Assemble without CC [With Restore]"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -29,6 +29,6 @@ steps:
 
       .buildkite/commands/restore-cache.sh
 
-      echo "--- 🛠 Build without CC [No Build Cache + With Restore]"
-      ./gradlew assembleJetpackJalapenoDebug --no-build-cache --no-configuration-cache
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
     plugins: [ $CI_TOOLKIT ]
