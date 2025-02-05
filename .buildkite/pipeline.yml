@@ -5,7 +5,7 @@ agents:
   queue: "android"
 
 steps:
-  - label: "🛠 Assemble with CC [No Build Cache]"
+  - label: "🛠 Assemble with CC"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -13,11 +13,11 @@ steps:
       echo "--- :closed_lock_with_key: Installing Secrets"
       bundle exec fastlane run configure_apply
 
-      echo "--- 🛠 Build with CC [No Build Cache]"
-      ./gradlew assembleJetpackJalapenoDebug --no-build-cache
+      echo "--- 🛠 Build with CC"
+      ./gradlew assembleJetpackJalapenoDebug
     plugins: [ $CI_TOOLKIT ]
 
-  - label: "🛠 Assemble without CC [No Build Cache]"
+  - label: "🛠 Assemble without CC"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -25,6 +25,6 @@ steps:
       echo "--- :closed_lock_with_key: Installing Secrets"
       bundle exec fastlane run configure_apply
 
-      echo "--- 🛠 Build without CC [No Build Cache]"
-      ./gradlew assembleJetpackJalapenoDebug --no-build-cache --no-configuration-cache
+      echo "--- 🛠 Build without CC"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
     plugins: [ $CI_TOOLKIT ]
