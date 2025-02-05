@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -168,6 +169,14 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         );
 
         return mGutenbergView;
+    }
+
+    @Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mGutenbergView != null) {
+            mGutenbergView.invalidate();
+        }
     }
 
     @Override
