@@ -4027,8 +4027,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ConnectionChangeEvent) {
-        if (editorFragment !is GutenbergNetworkConnectionListener) return
-        (editorFragment as GutenbergEditorFragment).onConnectionStatusChange(event.isConnected)
+        (editorFragment as? GutenbergNetworkConnectionListener)?.onConnectionStatusChange(event.isConnected)
     }
 
     private fun refreshEditorTheme() {
