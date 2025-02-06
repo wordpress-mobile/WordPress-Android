@@ -5,7 +5,7 @@ agents:
   queue: "android"
 
 steps:
-  - label: "🛠 Assemble with CC [With Restore]"
+  - label: "1 (JP) - 🛠 Assemble with CC [With Restore]"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -19,7 +19,135 @@ steps:
       ./gradlew assembleJetpackJalapenoDebug
     plugins: [ $CI_TOOLKIT ]
 
-  - label: "🛠 Assemble without CC [With Restore]"
+  - label: "2 (JP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "3 (JP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "4 (JP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "5 (JP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "1 (WP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "2 (WP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "3 (WP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "4 (WP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "5 (WP) - 🛠 Assemble with CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build with CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug
+    plugins: [ $CI_TOOLKIT ]
+
+    # ----------------------------------------------------------------------------------------------
+
+  - label: "1 (JP) - 🛠 Assemble without CC [With Restore]"
     command: |
       echo "--- :rubygems: Setting up Gems"
       install_gems
@@ -31,4 +159,130 @@ steps:
 
       echo "--- 🛠 Build without CC [With Restore]"
       ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "2 (JP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "3 (JP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "4 (JP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "5 (JP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleJetpackJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "1 (WP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "2 (WP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "3 (WP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "4 (WP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug --no-configuration-cache
+    plugins: [ $CI_TOOLKIT ]
+
+  - label: "5 (WP) - 🛠 Assemble without CC [With Restore]"
+    command: |
+      echo "--- :rubygems: Setting up Gems"
+      install_gems
+
+      echo "--- :closed_lock_with_key: Installing Secrets"
+      bundle exec fastlane run configure_apply
+
+      .buildkite/commands/restore-cache.sh
+
+      echo "--- 🛠 Build without CC [With Restore]"
+      ./gradlew assembleWordpressJalapenoDebug --no-configuration-cache
     plugins: [ $CI_TOOLKIT ]
