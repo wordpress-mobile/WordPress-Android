@@ -4,6 +4,7 @@
 -----
 * [*] Fix unselectable group blocks in the experimental editor [https://github.com/wordpress-mobile/GutenbergKit/pull/68]
 * [*] Prevent resetting content in the experimental editor when the device orientation changes [#21662]
+* [*] Fix an interiment experimental editor crash while saving changes [#21673]
 
 25.7
 -----
