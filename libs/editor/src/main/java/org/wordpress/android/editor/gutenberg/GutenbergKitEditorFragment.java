@@ -331,9 +331,9 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
-        mGutenbergView.getTitleAndContent(new TitleAndContentCallback() {
+        mGutenbergView.getTitleAndContent(originalContent, new TitleAndContentCallback() {
             @Override
-            public void onResult(@Nullable String title, @NonNull String content) {
+            public void onResult(@NonNull CharSequence title, @NonNull CharSequence content) {
                 result[0] = new Pair<>(title, content);
                 latch.countDown();
             }
