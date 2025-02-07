@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
@@ -483,16 +484,19 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
             return
         }
+
         // we only want to show user details for WordPress.com users
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
+            val email = defaultAccount.email
+            val avatarUrl = meGravatarLoader.constructGravatarUrl(email)
             meDisplayName.visibility = View.VISIBLE
             meUsername.visibility = View.VISIBLE
             cardAvatar.visibility = View.VISIBLE
             rowMyProfile.visibility = View.VISIBLE
             myProfileDivider.visibility = View.VISIBLE
             accountSettingsDivider.visibility = View.VISIBLE
-            loadAvatar(null)
+            loadAvatar(avatarUrl)
             meUsername.text = getString(R.string.at_username, defaultAccount.userName)
             meLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com)
             meDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
@@ -516,7 +520,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun MeFragmentBinding.loadAvatar(injectFilePath: String?, forceRefresh: Boolean = false) {
         val newAvatarUploaded = !injectFilePath.isNullOrEmpty()
-        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.email)
         val newAvatarSelected = newAvatarUploaded || forceRefresh
         meGravatarLoader.load(
             newAvatarSelected,
@@ -526,6 +530,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             AVATAR_WITHOUT_BACKGROUND,
             object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: Exception?, model: Any?) {
+                    Log.e("Gravatar", "Failed to load image: ${e?.message}")
                     val appLogMessage = "onLoadFailed while loading Gravatar image!"
                     if (e == null) {
                         AppLog.e(
