@@ -35,7 +35,7 @@ steps:
           echo "--- :closed_lock_with_key: Installing Secrets"
           bundle exec fastlane run configure_apply
 
-          ./buildkite/commands/restore-cache.sh
+          .buildkite/commands/restore-cache.sh
 
           echo "--- :android: Building without configuration cache"
           ./gradlew assembleJetpackWasabiDebug --no-configuration-cache
@@ -49,7 +49,7 @@ steps:
           echo "--- :closed_lock_with_key: Installing Secrets"
           bundle exec fastlane run configure_apply
 
-          ./buildkite/commands/restore-cache.sh
+          .buildkite/commands/restore-cache.sh
 
           echo "--- :android: Building without configuration cache"
           ./gradlew assembleJetpackWasabiDebug
