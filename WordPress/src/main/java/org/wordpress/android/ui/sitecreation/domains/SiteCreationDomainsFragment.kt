@@ -198,13 +198,17 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         }
 
         private fun showKeyboard() {
-            searchInput.requestFocus()
-            /**
-             * This workaround handles the case where the SiteCreationDomainsFragment appears after the
-             * DesignPreviewFragment dismisses and the keyboard fails to appear
-             */
-            showKeyboardHandler.postDelayed({ ActivityUtils.showKeyboard(searchInput) }, SHOW_KEYBOARD_DELAY)
-        }
+            if (searchInput.requestFocus()) {
+                /**
+                 * This workaround handles the case where the SiteCreationDomainsFragment appears after the
+                 * DesignPreviewFragment dismisses and the keyboard fails to appear
+                 */
+                showKeyboardHandler.postDelayed(
+                    { ActivityUtils.showKeyboard(searchInput) },
+                    SHOW_KEYBOARD_DELAY
+                )
+            }
+            }
     }
 
     companion object {
