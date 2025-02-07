@@ -35,8 +35,10 @@ steps:
           echo "--- :closed_lock_with_key: Installing Secrets"
           bundle exec fastlane run configure_apply
 
+          ./buildkite/commands/restore-cache.sh
+
           echo "--- :android: Building without configuration cache"
-          ./gradlew assembleJetpackWasabiDebug --no-configuration-cache --no-build-cache
+          ./gradlew assembleJetpackWasabiDebug --no-configuration-cache
         plugins: [$CI_TOOLKIT]
 
       - label: ":wordpress: :android: CC Build"
@@ -47,6 +49,8 @@ steps:
           echo "--- :closed_lock_with_key: Installing Secrets"
           bundle exec fastlane run configure_apply
 
+          ./buildkite/commands/restore-cache.sh
+
           echo "--- :android: Building without configuration cache"
-          ./gradlew assembleJetpackWasabiDebug --no-build-cache
+          ./gradlew assembleJetpackWasabiDebug
         plugins: [$CI_TOOLKIT]
