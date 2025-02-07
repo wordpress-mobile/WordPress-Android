@@ -192,18 +192,18 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             uiHelpers.updateVisibility(progressBar, uiState.showProgress)
             uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
             uiHelpers.updateVisibility(divider, uiState.showDivider)
-            showKeyboard(uiState.showKeyboard)
+            if (uiState.showKeyboard) {
+                showKeyboard()
+            }
         }
 
-        private fun showKeyboard(shouldShow: Boolean) {
-            if (shouldShow) {
-                searchInput.requestFocus()
-                /**
-                 * This workaround handles the case where the SiteCreationDomainsFragment appears after the
-                 * DesignPreviewFragment dismisses and the keyboard fails to appear
-                 */
-                showKeyboardHandler.postDelayed({ ActivityUtils.showKeyboard(searchInput) }, SHOW_KEYBOARD_DELAY)
-            }
+        private fun showKeyboard() {
+            searchInput.requestFocus()
+            /**
+             * This workaround handles the case where the SiteCreationDomainsFragment appears after the
+             * DesignPreviewFragment dismisses and the keyboard fails to appear
+             */
+            showKeyboardHandler.postDelayed({ ActivityUtils.showKeyboard(searchInput) }, SHOW_KEYBOARD_DELAY)
         }
     }
 
