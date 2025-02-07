@@ -188,7 +188,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             uiHelpers.updateVisibility(progressBar, uiState.showProgress)
             uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
             uiHelpers.updateVisibility(divider, uiState.showDivider)
-            if (uiState.showKeyboard) {
+            if (uiState.focusSearch) {
                 searchInput.requestFocus()
             }
         }

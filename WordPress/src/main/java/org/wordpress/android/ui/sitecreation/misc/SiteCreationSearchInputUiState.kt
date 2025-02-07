@@ -7,5 +7,5 @@ data class SiteCreationSearchInputUiState(
     val showProgress: Boolean,
     val showClearButton: Boolean,
     val showDivider: Boolean,
-    val showKeyboard: Boolean
+    val focusSearch: Boolean
 )
