@@ -204,11 +204,13 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                  * DesignPreviewFragment dismisses and the keyboard fails to appear
                  */
                 showKeyboardHandler.postDelayed(
-                    { ActivityUtils.showKeyboard(searchInput) },
+                    {
+                        ActivityUtils.showKeyboard(searchInput)
+                    },
                     SHOW_KEYBOARD_DELAY
                 )
             }
-            }
+        }
     }
 
     companion object {
