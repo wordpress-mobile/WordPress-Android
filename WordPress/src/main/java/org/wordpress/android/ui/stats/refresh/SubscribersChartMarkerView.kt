@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BlurMaskFilter
 import android.graphics.BlurMaskFilter.Blur.NORMAL
@@ -46,6 +47,7 @@ class SubscribersChartMarkerView @Inject constructor(
         val yValue = dataSet.values[index].y
 
         val count = yValue.toLong()
+        @SuppressLint("SetTextI18n")
         countView.text = count.toString()
         val label = if (count > 1) {
             R.string.stats_subscribers_marker_view_plural

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
+import android.annotation.SuppressLint
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -50,6 +51,7 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
                         editItem.actionView?.findViewById<TextView>(R.id.customize_icon_count)?.let { editItemBadge ->
                             if (editItemUiModel.isCounterBadgeVisible) {
                                 editItemBadge.visibility = View.VISIBLE
+                                @SuppressLint("SetTextI18n")
                                 editItemBadge.text = editItemUiModel.counterBadgeValue.toString()
                             } else {
                                 editItemBadge.visibility = View.GONE
