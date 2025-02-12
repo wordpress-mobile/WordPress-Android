@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.util.PackageUtils
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException", "MemberNameEqualsClassName")
 class UserAgent(appContext: Context, appName: String) {
     var userAgent: String
 
