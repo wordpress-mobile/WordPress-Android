@@ -5,10 +5,8 @@ import android.webkit.WebSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.util.PackageUtils
 
-@SuppressWarnings("SwallowedException", "TooGenericExceptionCaught")
 class UserAgent(appContext: Context, appName: String) {
     var userAgent: String
 
@@ -20,22 +18,16 @@ class UserAgent(appContext: Context, appName: String) {
         // then get the default user agent on a separate thread - this can cause an ANR on the main thread
         // see: https://github.com/wordpress-mobile/WordPress-Android/issues/21679#issuecomment-2654510229
         CoroutineScope(Dispatchers.Default).launch {
-            getDefaultUserAgent(appContext)?.let {
-                userAgent = "$it $appWithVersion"
-            }
-        }
-    }
-
-    private suspend fun getDefaultUserAgent(appContext: Context): String? {
-        withContext(Dispatchers.IO) {
             try {
-                return@withContext WebSettings.getDefaultUserAgent(appContext)
+                val defaultUserAgent = WebSettings.getDefaultUserAgent(appContext)
+                if (defaultUserAgent.isNotEmpty()) {
+                    userAgent = "$defaultUserAgent $appWithVersion"
+                }
             } catch (e: RuntimeException) {
                 // `getDefaultUserAgent()` can throw an Exception
                 // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
             }
         }
-        return null
     }
 
     override fun toString(): String = userAgent
