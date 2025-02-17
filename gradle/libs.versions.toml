@@ -105,7 +105,7 @@ wordpress-lint = '2.1.0'
 wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-50f703a7f677084157d02f05d4d477d7eaf960b1'
 wordpress-utils = '3.14.0'
-automattic-ucrop = '2.2.10'
+automattic-ucrop = '2.2.11'
 zendesk = '5.4.0'
 
 [libraries]
