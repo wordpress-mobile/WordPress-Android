@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
+import javax.inject.Singleton
 
+@Singleton
 @Suppress("MemberNameEqualsClassName")
 class UserAgent @JvmOverloads constructor(
     private val appContext: Context?,
