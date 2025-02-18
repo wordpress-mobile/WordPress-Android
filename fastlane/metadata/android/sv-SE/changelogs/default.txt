@@ -1,5 +1,0 @@
-25.6:
-Den här uppdateringen:
-- Åtgärdar en sällsynt krasch som kunde uppstå vid registrering av en domän.
-- Åtgärdar en rad saker under huven som bör göra appen mer tillförlitlig.
-- Använder en webbaserad metod för WordPress.com-inloggning. Detta bör öka tillförlitligheten för de flesta användare, men kontakta supporten om du stöter på problem.

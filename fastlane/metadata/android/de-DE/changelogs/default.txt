@@ -1,5 +1,0 @@
-25.6:
-Im Rahmen dieses Update profitierst du von folgenden Verbesserungen:
-- Es wurde ein seltener Fehler bei der Domainregistrierung behoben.
-- Es wurden einige Kleinigkeiten behoben, was die Zuverlässigkeit der App verbessern sollte.
-- Für die Anmeldung auf WordPress.com wird ab sofort ein webbasierter Ansatz verwendet. Benutzer sollten dank diesem Update von einem zuverlässigeren Erlebnis profitieren. Solltest du Probleme haben, setze dich bitte mit dem Support in Verbindung!

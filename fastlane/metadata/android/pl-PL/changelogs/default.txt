@@ -1,5 +1,0 @@
-25.6:
-Aktualizacja:
-- Naprawiono rzadką awarię podczas rejestracji domeny.
-- Naprawiono kilka drobnych błędów, które powinny zwiększyć niezawodność aplikacji.
-- Wykorzystuje internetowe logowanie do WordPress.com. Powinno być bardziej niezawodne dla większości użytkowników, ale skontaktuj się z pomocą techniczną, jeśli masz jakiekolwiek problemy!

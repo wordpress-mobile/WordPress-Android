@@ -1,5 +1,0 @@
-25.6:
-Pembaruan kali ini:
-- Perbaikan crash yang jarang terjadi saat mendaftarkan domain.
-- Perbaikan internal yang menjadikan aplikasi lebih andal.
-- Penggunaan pendekatan berbasis web untuk login WordPress.com. Aplikasi ini diharapkan jadi lebih andal bagi sebagian besar pengguna. Harap hubungi dukungan jika Anda mengalami masalah!

@@ -1,5 +1,0 @@
-25.6 :
-Mises à jour :
-- Correction d’un plantage rare survenant lors de l’enregistrement d’un domaine.
-- Quelques réparations sous le capot qui devraient rendre l’application plus fiable.
-- Utilisation d’une approche Web pour la connexion à WordPress.com. Cette méthode devrait être plus fiable pour la plupart des utilisateurs, mais n’hésitez pas à contacter l’assistance si vous rencontrez des difficultés !
