@@ -1,3 +1,3 @@
-* [**] Send feedback from within the experimental editor "more" options menu. [#21586]
-* [**] Support accessing the code editor within the experimental editor. [#21582]
-
+Just two fixes to the experimental block editor this time:
+1. You can send feedback about the editor while you're using it.
+2. We fixed a bug where the code view didn't work properly
