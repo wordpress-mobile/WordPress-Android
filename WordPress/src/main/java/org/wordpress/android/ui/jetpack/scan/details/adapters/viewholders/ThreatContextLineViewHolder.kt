@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders
 
+import android.annotation.SuppressLint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -28,6 +29,7 @@ class ThreatContextLineViewHolder(
     private fun updateLineNumber(itemState: ThreatContextLineItemState) {
         with(binding.lineNumber) {
             setBackgroundColor(ContextCompat.getColor(itemView.context, itemState.lineNumberBackgroundColorRes))
+            @SuppressLint("SetTextI18n")
             text = itemState.line.lineNumber.toString()
         }
     }

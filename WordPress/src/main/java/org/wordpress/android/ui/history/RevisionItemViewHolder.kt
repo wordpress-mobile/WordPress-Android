@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.history
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -46,6 +47,7 @@ class RevisionItemViewHolder(
             diffLayout.visibility = View.VISIBLE
 
             if (boundRevision.totalAdditions > 0) {
+                @SuppressLint("SetTextI18n")
                 diffAdditions.text = boundRevision.totalAdditions.toString()
                 diffAdditions.visibility = View.VISIBLE
             } else {
@@ -53,6 +55,7 @@ class RevisionItemViewHolder(
             }
 
             if (boundRevision.totalDeletions > 0) {
+                @SuppressLint("SetTextI18n")
                 diffDeletions.text = boundRevision.totalDeletions.toString()
                 diffDeletions.visibility = View.VISIBLE
             } else {
