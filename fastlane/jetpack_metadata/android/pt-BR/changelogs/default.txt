@@ -1,5 +1,0 @@
-25.6:
-Esta atualização:
-- Corrige uma falha rara ao registrar um domínio.
-- Corrige um monte de coisas ocultas para tornar o aplicativo mais confiável.
-- Usa uma abordagem baseada na web para fazer login no WordPress.com. Isso deve oferecer mais confiabilidade para a maioria dos usuários, mas entre em contato com o suporte se tiver algum problema!
