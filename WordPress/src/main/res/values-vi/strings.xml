@@ -1004,7 +1004,6 @@ Language: vi_VN
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Hủy bỏ</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Lưu Nháp</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Không thể sửa những bài trong thùng rác. Hãy thay đổi trạng thái thành \"Nháp\" để sửa.</string>
-    <string name="prepublishing_tags_description">Thẻ giúp độc giả biết bài nói về điều gì.</string>
     <string name="prepublishing_nudges_publish_action">Ngày đăng</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Ngày đăng</string>
     <string name="reader_btn_done">Xong</string>
@@ -1336,7 +1335,6 @@ Language: vi_VN
     <string name="site_settings_site_accelerator_off">Tắt</string>
     <string name="site_settings_site_accelerator_on">Bật</string>
     <string name="site_settings_site_accelerator">Tăng tốc độ tải trang</string>
-    <string name="site_settings_lazy_load_images_summary">Cải thiện tốc độ tải trang của bạn bằng cách chỉ hiện ảnh xuất hiện trên màn hình.</string>
     <string name="site_settings_performance">Hiệu suất</string>
     <string name="stats_file_downloads_value_label">Lượt tải</string>
     <string name="stats_file_downloads_title_label">Tập tin</string>
@@ -1994,7 +1992,6 @@ Language: vi_VN
     <string name="my_site_create_new_site">Tạo trang công ty, tạp chí hoặc blog cá nhân mới. Hay kết nối với một trang WordPress đã tồn tại.</string>
     <string name="my_site_add_new_site">Thêm blog mới</string>
     <string name="notifications_jetpack_connection_setup_info">Để nhận thông báo hữu ích từ WordPress trên thiết bị, bạn cần phải cài đặt plugin Jetpack. Bạn có muốn cài không?</string>
-    <string name="site_settings_lazy_load_images">Chỉ tải ảnh cần xem (lazy load)</string>
     <string name="stats_jetpack_connection_setup">Cài Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Chuyển đổi văn bản</string>
     <string name="plugin_info_your_version">Phiên bản WordPress của bạn</string>

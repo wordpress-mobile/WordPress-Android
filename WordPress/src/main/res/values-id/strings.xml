@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-23 15:35:47+0000
+Translation-Revision-Date: 2025-01-31 14:42:25+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Preferensi bahasa per aplikasi eksperimental</string>
+    <string name="avatar_update_email_unverified">Untuk memperbarui avatar, alamat email Anda harus diverifikasi terlebih dahulu.</string>
+    <string name="feedback_form_note_link_wordpress">forum komunitas.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Tombol pintasan %s</string>
     <string name="personalization_screen_card_accessibility_label">Tombol kartu %s</string>
@@ -33,8 +34,8 @@ Language: id
     <string name="more_content_description_blogging_prompts">Prompt selengkapnya</string>
     <string name="more_content_description_promote_blaze">Blaze selengkapnya</string>
     <string name="reader_toast_success_undo">Blokir blog dibuka</string>
-    <string name="feedback_form_note_link">Layar Hubungi Dukungan.</string>
-    <string name="feedback_form_note_text">Ingat bahwa ini bukan formulir dukungan dan kami tidak dapat membalas. Jika perlu dukungan, gunakan \"</string>
+    <string name="feedback_form_note_link_jetpack">Layar Hubungi Dukungan.</string>
+    <string name="feedback_form_note_text">Mohon diingat bahwa ini bukan formulir dukungan dan kami tidak dapat membalas. Jika perlu bantuan, gunakan \"</string>
     <string name="experimental_block_editor_theme_styles">Gaya editor blok eksperimental</string>
     <string name="experimental_block_editor">Editor blok eksperimental</string>
     <string name="experimental_features_screen_title">Fitur Eksperimental</string>
@@ -1796,7 +1797,7 @@ Language: id
     <string name="me">Saya</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
-    <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
+    <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Tanggal Publikasi</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tambahkan Tag</string>
     <string name="prepublishing_nudges_back_button">Kembali</string>
@@ -2153,7 +2154,6 @@ Language: id
     <string name="site_settings_site_accelerator_off">Nonaktif</string>
     <string name="site_settings_site_accelerator_on">Aktif</string>
     <string name="site_settings_site_accelerator">Akselerator Situs</string>
-    <string name="site_settings_lazy_load_images_summary">Menyempurnakan kecepatan situs Anda dengan hanya memuat gambar yang terlihat pada layar.</string>
     <string name="site_settings_performance">Performa</string>
     <string name="stats_file_downloads_value_label">Unduhan</string>
     <string name="stats_file_downloads_title_label">File</string>
@@ -2826,7 +2826,6 @@ Language: id
     <string name="my_site_add_new_site">Tambah situs baru</string>
     <string name="my_site_create_new_site">Buat situs baru untuk bisnis, majalah, atau blog personal Anda; atau hubungkan akun WordPress yang sudah ada.</string>
     <string name="notifications_jetpack_connection_setup_info">Untuk mendapatkan pemberitahuan yang bermanfaat di perangkat dari situs WordPress, Anda perlu menginstal plugin Jetpack. Apakah Anda ingin menyiapkan Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Gambar Lazy load</string>
     <string name="stats_jetpack_connection_setup">Menginstal Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Teks pengalih</string>
     <string name="plugin_info_your_version">Versi WordPress Anda</string>

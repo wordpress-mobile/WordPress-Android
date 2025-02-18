@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 21:54:09+0000
+Translation-Revision-Date: 2025-02-12 09:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Preferenze lingua per app sperimentali</string>
+    <string name="avatar_update_email_unverified">Per aggiornare il tuo avatar devi prima verificare il tuo indirizzo e-mail.</string>
+    <string name="feedback_form_note_link_wordpress">i forum della community.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">segnaposto</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Attiva/disattiva %s scorciatoia</string>
     <string name="personalization_screen_card_accessibility_label">Attiva/disattiva %s scheda</string>
@@ -32,8 +33,7 @@ Language: it
     <string name="more_content_description_blogging_prompts">Leggi tutto sui prompt</string>
     <string name="more_content_description_promote_blaze">Diffondi altro</string>
     <string name="reader_toast_success_undo">Blog sbloccato</string>
-    <string name="feedback_form_note_link">Schermata Contatta il supporto.</string>
-    <string name="feedback_form_note_text">Questo non è un modulo di supporto e non potremmo risponderti. Se ti serve assistenza, utilizza il nostro \"</string>
+    <string name="feedback_form_note_text">Questo non è un modulo di supporto e non potremo risponderti. Se hai bisogno di assistenza utilizza \"</string>
     <string name="experimental_block_editor_theme_styles">Stili editor a blocchi sperimentale</string>
     <string name="experimental_block_editor">Editor a blocchi sperimentale</string>
     <string name="experimental_features_screen_title">Funzionalità sperimentali</string>
@@ -1789,7 +1789,7 @@ Language: it
     <string name="me">Io</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Chiudi</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nessuna impostazione</string>
-    <string name="prepublishing_tags_description">I tag aiutano a dire al lettore di cosa parla un articolo.</string>
+    <string name="prepublishing_tags_description">I tag aiutano a comunicare ai lettori di cosa parla un articolo</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data di pubblicazione</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Aggiungi tag</string>
     <string name="prepublishing_nudges_back_button">Indietro</string>
@@ -2144,7 +2144,6 @@ Language: it
     <string name="site_settings_site_accelerator_off">Disattivo</string>
     <string name="site_settings_site_accelerator_on">Attivo</string>
     <string name="site_settings_site_accelerator">Acceleratore del sito</string>
-    <string name="site_settings_lazy_load_images_summary">Migliora la velocità del tuo sito caricando solamente le immagini visibili sullo schermo.</string>
     <string name="site_settings_performance">Prestazioni</string>
     <string name="stats_file_downloads_value_label">Download</string>
     <string name="stats_file_downloads_title_label">File</string>
@@ -2817,7 +2816,6 @@ Language: it
     <string name="my_site_add_new_site">Aggiungi nuovo sito</string>
     <string name="my_site_create_new_site">Crea un nuovo sito per la tua azienda, rivista o blog personale; in alternativa, connetti un sito WordPress esistente.</string>
     <string name="notifications_jetpack_connection_setup_info">Per ricevere le utili notifiche dal tuo sito WordPress sul tuo dispositivo, sarà necessario installare il plugin di Jetpack. Desideri configurare Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Immagini a caricamento lento</string>
     <string name="stats_jetpack_connection_setup">Installa Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Attiva/Disattiva testo</string>
     <string name="plugin_info_your_version">La tua versione di WordPress</string>

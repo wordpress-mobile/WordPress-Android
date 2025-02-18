@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-21 10:21:17+0000
+Translation-Revision-Date: 2025-01-30 10:25:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sq_AL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Parapëlqime eksperimentale gjuhe me bazë aplikacionin</string>
+    <string name="avatar_update_email_unverified">Që të përditësoni avatarin tuaj, lypset të verifikohet adresa juaj email së pari.</string>
+    <string name="feedback_form_note_link_wordpress">forume bashkësie.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">vendmbajtëse</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Shfaq/fshih shkurtoren %s</string>
     <string name="personalization_screen_card_accessibility_label">Shfaq/fshih kartën %s</string>
@@ -32,7 +33,7 @@ Language: sq_AL
     <string name="more_content_description_today_stats">Më tepër “Statistika të sotme”</string>
     <string name="more_content_description_blogging_prompts">Më tepër hapa</string>
     <string name="reader_toast_success_undo">Blogu u zhbllokua</string>
-    <string name="feedback_form_note_link">Skenë “Lidhuni Me Asistencën”</string>
+    <string name="feedback_form_note_link_jetpack">Skenë “Lidhuni Me Asistencën”</string>
     <string name="feedback_form_note_text">Ju lutemi, mbani parasysh se ky s’është forum asistence dhe s’do të jemi në gjendje të përgjigjemi. Nëse ju duhet asistencë, ju lutemi, përdorni</string>
     <string name="experimental_block_editor_theme_styles">Stile eksperimentale përpunuesi me blloqe</string>
     <string name="experimental_block_editor">Përpunues eksperimental me blloqe</string>
@@ -1787,7 +1788,7 @@ Language: sq_AL
     <string name="me">Unë</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Hidhe tej</string>
     <string name="prepublishing_nudges_home_tags_not_set">E pacaktuar</string>
-    <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim.</string>
+    <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datë Botimi</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Shtoni Etiketa</string>
     <string name="prepublishing_nudges_back_button">Mbrapsht</string>
@@ -2144,7 +2145,6 @@ Language: sq_AL
     <string name="site_settings_site_accelerator_off">Off</string>
     <string name="site_settings_site_accelerator_on">On</string>
     <string name="site_settings_site_accelerator">Përshpejtues Sajti</string>
-    <string name="site_settings_lazy_load_images_summary">Përmirësoni shpejtësinë e sajtit tuaj përmes ngarkimit vetëm të figurave që duken në ekran në atë kohë.</string>
     <string name="site_settings_performance">Punim</string>
     <string name="stats_file_downloads_value_label">Shkarkime</string>
     <string name="stats_file_downloads_title_label">Kartelë</string>
@@ -2817,7 +2817,6 @@ Language: sq_AL
     <string name="my_site_add_new_site">Shtoni sajt të ri</string>
     <string name="my_site_create_new_site">Krijoni një sajt të ri për biznesin tuaj, revistë, ose blog personal; ose lidhni një instalim WordPress ekzistues.</string>
     <string name="notifications_jetpack_connection_setup_info">Që të merrni në pajisjen tuaj njoftime të dobishme nga sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack. Do të donit të rregullohej Jetpack-u?</string>
-    <string name="site_settings_lazy_load_images">\"Lazy-load\" figura</string>
     <string name="stats_jetpack_connection_setup">Instalo Jetpack-un</string>
     <string name="plugin_chevron_icon_content_description">Shfaq/fshih tekstin</string>
     <string name="plugin_info_your_version">Versioni Juaj i WordPress-it</string>

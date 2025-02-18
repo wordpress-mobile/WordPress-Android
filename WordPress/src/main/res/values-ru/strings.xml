@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 15:54:10+0000
+Translation-Revision-Date: 2025-02-04 14:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Экспериментальные языковые настройки для приложений в отдельности</string>
+    <string name="avatar_update_email_unverified">Чтобы обновить аватар, необходимо подтвердить адрес электронной почты.</string>
+    <string name="feedback_form_note_link_wordpress">форумы сообщества.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">заполнитель</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Включить ярлык %s</string>
     <string name="personalization_screen_card_accessibility_label">Включить карточку %s</string>
@@ -33,8 +34,8 @@ Language: ru
     <string name="more_content_description_blogging_prompts">Другие подсказки</string>
     <string name="more_content_description_promote_blaze">Другое: Blaze</string>
     <string name="reader_toast_success_undo">Блог разблокирован</string>
-    <string name="feedback_form_note_link">Экран «Обратиться в службу поддержки»</string>
-    <string name="feedback_form_note_text">Обратите внимание, что это не форма обращения в службу поддержки и мы не сможем вам ответить. Если вам требуется поддержка, воспользуйтесь \"</string>
+    <string name="feedback_form_note_link_jetpack">«Обратиться в службу поддержки».</string>
+    <string name="feedback_form_note_text">Обратите внимание: это не форма обращения в службу поддержки и мы не сможем вам ответить. Если вам требуется помощь, воспользуйтесь экраном</string>
     <string name="experimental_block_editor_theme_styles">Экспериментальные стили редактора блоков</string>
     <string name="experimental_block_editor">Экспериментальная версия редактора блоков</string>
     <string name="experimental_features_screen_title">Экспериментальные функции</string>
@@ -1795,7 +1796,7 @@ Language: ru
     <string name="me">Мой профиль</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Закрыть</string>
     <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
-    <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
+    <string name="prepublishing_tags_description">Теги помогают читателям понять, о чём говорится в записи</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Дата публикации</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
     <string name="prepublishing_nudges_back_button">Назад</string>
@@ -2152,7 +2153,6 @@ Language: ru
     <string name="site_settings_site_accelerator_off">Выкл.</string>
     <string name="site_settings_site_accelerator_on">Вкл.</string>
     <string name="site_settings_site_accelerator">Ускоритель сайта</string>
-    <string name="site_settings_lazy_load_images_summary">Загрузка изображений в момент появления на экране поможет ускорить работу сайта.</string>
     <string name="site_settings_performance">Производительность</string>
     <string name="stats_file_downloads_value_label">Загрузки</string>
     <string name="stats_file_downloads_title_label">Файл</string>
@@ -2825,7 +2825,6 @@ Language: ru
     <string name="my_site_add_new_site">Добавить новый сайт</string>
     <string name="my_site_create_new_site">Создайте новый сайт для бизнеса, журнал или персональный блог; или подключите имеющуюся установку WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">Для получения полезных уведомлений на ваше устройство с сайта вам требуется плагин Jetpack. Хотите установить Jetpack?</string>
-    <string name="site_settings_lazy_load_images">\"Ленивая загрузка\" изображений</string>
     <string name="stats_jetpack_connection_setup">Установить Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Включить/Выключить текст</string>
     <string name="plugin_info_your_version">Ваша версия WordPress</string>

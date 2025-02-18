@@ -461,7 +461,6 @@ Language: sk
     <string name="my_site_add_new_site">Pridať novú webovú stránku</string>
     <string name="my_site_create_new_site">Vytvorte novú webovú stránku pre vašu firmu, magazín alebo osobný blog, alebo pripojte existujúcu WordPress inštaláciu.</string>
     <string name="notifications_jetpack_connection_setup_info">Ak chcete získať užitočné upozornenia vo vašom zariadení z webovej stránky WordPress, musíte nainštalovať plugin Jetpack. Chcete nastaviť Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Pomalé načítavanie obrázkov</string>
     <string name="stats_jetpack_connection_setup">Nainštalovať Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Prepnúť text</string>
     <string name="plugin_info_your_version">Vaša WordPress verzia</string>

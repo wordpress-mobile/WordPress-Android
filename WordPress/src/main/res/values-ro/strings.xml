@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-16 17:30:19+0000
+Translation-Revision-Date: 2025-02-14 07:53:59+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Preferințe experimentale pentru limbă per aplicație</string>
+    <string name="avatar_update_email_unverified">Pentru a-ți actualiza avatarul, mai întâi trebuie să-ți confirmi adresa de email.</string>
+    <string name="feedback_form_note_link_wordpress">forumuri pentru comunitate.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">substituent</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Comută la scurtătura %s</string>
     <string name="personalization_screen_card_accessibility_label">Comută la cartușul %s</string>
@@ -33,8 +34,8 @@ Language: ro
     <string name="more_content_description_blogging_prompts">Mai multe îndemnuri</string>
     <string name="more_content_description_promote_blaze">Mai multe despre Blaze</string>
     <string name="reader_toast_success_undo">Blog deblocat</string>
-    <string name="feedback_form_note_link">Ecran Contactează suportul</string>
-    <string name="feedback_form_note_text">Te rog să reții că acesta nu este un formular pentru suport și nu îți vom putea răspunde. Dacă ai nevoie de suport, te rog să folosești „</string>
+    <string name="feedback_form_note_link_jetpack">Ecran Contactează suportul.</string>
+    <string name="feedback_form_note_text">Te rog să reții că acesta nu este un formular pentru suport și nu îți vom putea răspunde. Dacă ai nevoie de asistență, te rog să folosești „</string>
     <string name="experimental_block_editor_theme_styles">Stiluri pentru editorul de blocuri experimental</string>
     <string name="experimental_block_editor">Editor de blocuri experimental</string>
     <string name="experimental_features_screen_title">Funcționalități experimentale</string>
@@ -1796,7 +1797,7 @@ Language: ro
     <string name="me">Eu</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Refuză</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nesetat</string>
-    <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul.</string>
+    <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publicării</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Adaugă etichete</string>
     <string name="prepublishing_nudges_back_button">Înapoi</string>
@@ -2153,7 +2154,6 @@ Language: ro
     <string name="site_settings_site_accelerator_off">Oprit</string>
     <string name="site_settings_site_accelerator_on">Pornit</string>
     <string name="site_settings_site_accelerator">Accelerator de site-uri</string>
-    <string name="site_settings_lazy_load_images_summary">Îți îmbunătățește viteza site-ului prin încărcarea imaginilor numai când trebuie să apară pe ecran.</string>
     <string name="site_settings_performance">Performanță</string>
     <string name="stats_file_downloads_value_label">Descărcări</string>
     <string name="stats_file_downloads_title_label">Fișier</string>
@@ -2826,7 +2826,6 @@ Language: ro
     <string name="my_site_add_new_site">Adaugă site nou</string>
     <string name="my_site_create_new_site">Creează un site nou pentru afacerea, revista ta sau blogul personal; sau conectează o instalare WordPress existentă.</string>
     <string name="notifications_jetpack_connection_setup_info">Pentru a primi notificări utile pe dispozitivul tău de la site-ul propriu WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Imagini încărcate lent</string>
     <string name="stats_jetpack_connection_setup">Instalează Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Comută textul</string>
     <string name="plugin_info_your_version">Versiunea ta WordPress</string>
@@ -3786,7 +3785,7 @@ Language: ro
     <string name="media_edit_description_text">Descriere</string>
     <string name="media_edit_caption_text">Text asociat</string>
     <string name="media_edit_title_text">Titlu</string>
-    <string name="media_gallery_type_slideshow">Carusel</string>
+    <string name="media_gallery_type_slideshow">Prezentare</string>
     <string name="media_gallery_type_circles">Cercuri</string>
     <string name="media_gallery_type_tiled">Placată</string>
     <string name="media_gallery_type_squares">Pătrate</string>

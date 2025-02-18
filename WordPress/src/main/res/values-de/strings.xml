@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-21 23:54:46+0000
+Translation-Revision-Date: 2025-02-01 16:19:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Experimentelle App-spezifische Spracheinstellungen</string>
+    <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
+    <string name="feedback_form_note_link_wordpress">Community-Foren.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">Platzhalter</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s-Tastaturkürzel umschalten</string>
     <string name="personalization_screen_card_accessibility_label">%s-Karte umschalten</string>
@@ -16,7 +17,7 @@ Language: de
     <string name="biographical_info">Biographische Angaben</string>
     <string name="about_the_user">Über den Benutzer</string>
     <string name="website">Website</string>
-    <string name="contact_info">Kontaktinformationen</string>
+    <string name="contact_info">Kontaktinfo</string>
     <string name="nickname">Spitzname</string>
     <string name="name">Name</string>
     <string name="no_users">Keine Benutzer</string>
@@ -33,7 +34,7 @@ Language: de
     <string name="more_content_description_blogging_prompts">Schreibanregungen ‒ mehr</string>
     <string name="more_content_description_promote_blaze">Blaze ‒ mehr</string>
     <string name="reader_toast_success_undo">Blockierung des Blogs aufgehoben</string>
-    <string name="feedback_form_note_link">Bildschirm „Support kontaktieren“.</string>
+    <string name="feedback_form_note_link_jetpack">Bildschirm „Support kontaktieren“.</string>
     <string name="feedback_form_note_text">Bitte beachte, dass dies kein Supportformular ist. Wir können daher auf deine Anfrage nicht antworten. Wenn du Hilfe benötigst, nutze bitte unseren</string>
     <string name="experimental_block_editor_theme_styles">Stile für den experimentellen Block-Editor</string>
     <string name="experimental_block_editor">Experimenteller Block-Editor</string>
@@ -761,7 +762,7 @@ Language: de
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Führe ein Tarif-Upgrade durch, um Video-Cover zu verwenden</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Führe ein Tarif-Upgrade durch, um Audiodateien hochzuladen</string>
     <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Von Jetpack unterstützt</string>
-    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungültige URL.</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Die URL ist ungültig.</string>
     <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Verlauf</string>
     <string name="wp_jetpack_continue_to_notifications">Weiter zu Benachrichtigungen</string>
     <string name="wp_jetpack_continue_to_stats">Weiter zu Statistiken</string>
@@ -894,7 +895,7 @@ Language: de
     <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Beitragsbild ersetzen</string>
     <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Es ist bereits ein Beitragsbild eingestellt. Möchtest du es mit einem neuen Bild ersetzen?</string>
     <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Aktuelles Beitragsbild ersetzen?</string>
-    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Schließen</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Verwerfen</string>
     <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Für neue Beiträge wird der klassische Editor bald nicht mehr verfügbar sein. Das betrifft jedoch nicht die Bearbeitung bestehender Beiträge oder Seiten. Du kannst den Block-Editor bereits jetzt in den Website-Einstellungen aktivieren.</string>
     <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">Probiere den neuen Block-Editor aus</string>
     <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%s-Block bearbeiten</string>
@@ -2153,7 +2154,6 @@ Language: de
     <string name="site_settings_site_accelerator_off">Aus</string>
     <string name="site_settings_site_accelerator_on">Ein</string>
     <string name="site_settings_site_accelerator">Website-Beschleuniger</string>
-    <string name="site_settings_lazy_load_images_summary">Verbessere die Ladezeit deiner Website, indem du nur die auf dem Bildschirm sichtbaren Bilder lädst.</string>
     <string name="site_settings_performance">Performance</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Datei</string>
@@ -2826,7 +2826,6 @@ Language: de
     <string name="my_site_add_new_site">Neue Website hinzufügen</string>
     <string name="my_site_create_new_site">Erstelle eine neue Website für dein Geschäft, dein Magazin oder deinen persönlichen Blog oder verbinde eine vorhandene WordPress-Installation.</string>
     <string name="notifications_jetpack_connection_setup_info">Wenn du hilfreiche Benachrichtigungen deiner WordPress-Website auf deinem Gerät erhalten möchtest, musst du das Jetpack-Plugin installieren. Möchtest du Jetpack einrichten?</string>
-    <string name="site_settings_lazy_load_images">Verzögertes Laden von Bildern</string>
     <string name="stats_jetpack_connection_setup">Jetpack installieren</string>
     <string name="plugin_chevron_icon_content_description">Text umschalten</string>
     <string name="plugin_info_your_version">Deine WordPress Version</string>

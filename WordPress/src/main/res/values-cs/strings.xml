@@ -1278,7 +1278,6 @@ Language: cs_CZ
     <string name="prepublishing_nudges_home_header_publishing_to">Publikování do</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Přidat štítky</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datum publikování</string>
-    <string name="prepublishing_tags_description">Štítky pomáhají čtenářům říct, o čem je příspěvek.</string>
     <string name="post_status_post_published">Publikováno</string>
     <string name="post_status_post_trashed">Smazáno</string>
     <string name="post_status_post_scheduled">Naplánováno</string>
@@ -1614,7 +1613,6 @@ Language: cs_CZ
     <string name="site_settings_improved_search">Vylepšené vyhledávání</string>
     <string name="site_settings_improved_search_summary">Nahraďte integrované vyhledávání WordPress vylepšeným vyhledáváním</string>
     <string name="site_settings_performance">Výkon</string>
-    <string name="site_settings_lazy_load_images_summary">Zvyšte rychlost svého webu pouze načítáním obrázků viditelných na obrazovce.</string>
     <string name="site_settings_site_accelerator">Akcelerátor stránek</string>
     <string name="site_settings_site_accelerator_on">Zapnout</string>
     <string name="stats_file_downloads_value_label">Stahování</string>
@@ -2281,7 +2279,6 @@ Language: cs_CZ
     <string name="my_site_create_new_site">Vytvořte nový web pro svůj podnik, časopis nebo osobní blog; nebo připojite existující stránky běžící na WordPress.</string>
     <string name="site_settings_like_header">To se mi líbí</string>
     <string name="notifications_jetpack_connection_setup_info">Chcete-li získat užitečná oznámení v zařízení z vašeho webu WordPress, musíte nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Postupné načítání obrázků \"Lazy-load\"</string>
     <string name="stats_jetpack_connection_setup">Instalovat Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Přepnout text</string>
     <string name="plugin_info_your_version">Verze WordPressu</string>

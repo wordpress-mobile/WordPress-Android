@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 10:54:10+0000
+Translation-Revision-Date: 2025-02-04 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">アプリ別言語設定 (試験用)</string>
+    <string name="avatar_update_email_unverified">アバターを更新するには、まずメールアドレスを確認する必要があります。</string>
+    <string name="feedback_form_note_link_wordpress">コミュニティフォーラム。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">プレースホルダー</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s ショートカットを切り替え</string>
     <string name="personalization_screen_card_accessibility_label">%s カードを切り替え</string>
@@ -33,8 +34,7 @@ Language: ja_JP
     <string name="more_content_description_blogging_prompts">プロンプトをさらに表示</string>
     <string name="more_content_description_promote_blaze">Blaze をさらに表示</string>
     <string name="reader_toast_success_undo">ブログのブロックが解除されました</string>
-    <string name="feedback_form_note_link">「サポートに連絡」画面です。</string>
-    <string name="feedback_form_note_text">これはサポートフォームではなく、当社からは返信できないことにご注意ください。 サポートが必要な場合は、次を使用してください:</string>
+    <string name="feedback_form_note_text">これはサポートフォームではなく、当社からは返信できないことにご注意ください。 サポートが必要な場合は、次をご使用ください:</string>
     <string name="experimental_block_editor_theme_styles">試験用のブロックエディターのスタイル</string>
     <string name="experimental_block_editor">試験用のブロックエディター</string>
     <string name="experimental_features_screen_title">試験用の機能</string>
@@ -363,6 +363,7 @@ Language: ja_JP
     <string name="personalization_screen_draft_posts_card_description">最新の投稿の下書き。</string>
     <string name="personalization_screen_draft_posts_card_title">投稿を下書きする</string>
     <string name="personalization_screen_stats_card_description">表示数、訪問者数、いいねの数</string>
+    <string name="personalization_screen_tab_cards_description">カードを追加または非表示</string>
     <string name="personalization_screen_title">ホームタブをパーソナライズする</string>
     <string name="personalize_card_content_description">タップしてホームタブをパーソナライズします</string>
     <string name="personalize_card_text">ホームタブをパーソナライズ</string>
@@ -1783,7 +1784,7 @@ Language: ja_JP
     <string name="me">自分</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">非表示</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
-    <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
+    <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます</string>
     <string name="prepublishing_nudges_toolbar_title_publish">公開日</string>
     <string name="prepublishing_nudges_toolbar_title_tags">タグを追加</string>
     <string name="prepublishing_nudges_back_button">戻る</string>
@@ -2140,7 +2141,6 @@ Language: ja_JP
     <string name="site_settings_site_accelerator_off">オフ</string>
     <string name="site_settings_site_accelerator_on">オン</string>
     <string name="site_settings_site_accelerator">サイトアクセラレーター</string>
-    <string name="site_settings_lazy_load_images_summary">画面に表示できる画像だけを読み込んで、サイトを高速化します。</string>
     <string name="site_settings_performance">パフォーマンス</string>
     <string name="stats_file_downloads_value_label">ダウンロード</string>
     <string name="stats_file_downloads_title_label">ファイル</string>
@@ -2813,7 +2813,6 @@ Language: ja_JP
     <string name="my_site_add_new_site">新規サイトを追加</string>
     <string name="my_site_create_new_site">ビジネス、マガジン、個人ブログ用の新しいサイトを作成するか、既存の WordPress インストール環境を関連付けてください。</string>
     <string name="notifications_jetpack_connection_setup_info">WordPress サイトから役立つ通知を端末で取得するには、Jetpack プラグインをインストールする必要があります。Jetpack を設定しますか ?</string>
-    <string name="site_settings_lazy_load_images">画像の遅延読み込み</string>
     <string name="stats_jetpack_connection_setup">Jetpack をインストール</string>
     <string name="plugin_chevron_icon_content_description">テキストを切り替え</string>
     <string name="plugin_info_your_version">お使いの WordPress バージョン</string>
