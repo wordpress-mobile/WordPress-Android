@@ -1119,7 +1119,6 @@ Language: pl
     <string name="me">Ja</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Odrzuć</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
-    <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
     <string name="prepublishing_nudges_home_save_button">Zapisz teraz</string>
     <string name="prepublishing_nudges_home_submit_button">Prześlij teraz</string>
@@ -1475,7 +1474,6 @@ Language: pl
     <string name="site_settings_site_accelerator_off">Wyłączono</string>
     <string name="site_settings_site_accelerator_on">Włączone</string>
     <string name="site_settings_site_accelerator">Przyspieszacz witryny</string>
-    <string name="site_settings_lazy_load_images_summary">Zwiększ szybkość swojej witryny wczytując jedynie obrazki widoczne na ekranie.</string>
     <string name="site_settings_performance">Wydajność</string>
     <string name="stats_file_downloads_value_label">Pobrania</string>
     <string name="stats_file_downloads_title_label">Plik</string>
@@ -2148,7 +2146,6 @@ Language: pl
     <string name="site_settings_like_header">Lubię</string>
     <string name="plugin_see_all">Zobaczy wszystko</string>
     <string name="notifications_jetpack_connection_setup_info">Aby uzyskać pomocne powiadomienia na swoim urządzeniu ze swojej WordPressowej witryny, będziesz musiał zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
-    <string name="site_settings_lazy_load_images">Leniwe ładowanie obrazków</string>
     <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>

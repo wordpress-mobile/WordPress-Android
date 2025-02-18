@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-03 17:31:17+0000
+Translation-Revision-Date: 2025-02-07 11:58:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
@@ -1760,7 +1760,6 @@ Language: gl_ES
     <string name="error_media_thumbnail_not_loaded">A miniatura do medio non se puido cargar</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Rexeitar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Non establecido</string>
-    <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Engadir etiquetas</string>
     <string name="prepublishing_nudges_back_button">Volver</string>
     <string name="prepublishing_nudges_home_save_button">Gardar agora</string>
@@ -1773,6 +1772,7 @@ Language: gl_ES
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data de publicación</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">As entradas na papeleira non se poden editar. Desexas cambiar o estado desta entrada a «borrador» para poder traballar nela?</string>
+    <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada</string>
     <string name="publish_date">Data de publicación</string>
     <string name="post_status_post_scheduled">Programado</string>
     <string name="post_status_post_trashed">Na papeleira</string>
@@ -2118,7 +2118,6 @@ Language: gl_ES
     <string name="site_settings_site_accelerator_on">Activados</string>
     <string name="site_settings_performance">Rendemento</string>
     <string name="site_settings_site_accelerator">Acelerador de sitios</string>
-    <string name="site_settings_lazy_load_images_summary">Mellora a velocidade do teu sitio ao cargar só as imaxes visibles na pantalla.</string>
     <string name="stats_file_downloads_value_label">Descargas</string>
     <string name="stats_file_downloads_title_label">Arquivo</string>
     <string name="stats_file_downloads">Descargas de arquivos</string>
@@ -2789,7 +2788,6 @@ Language: gl_ES
     <string name="plugin_search_error">Non se puideron buscar plugins</string>
     <string name="plugin_installed_successfully">%s instalado correctamente</string>
     <string name="my_site_create_new_site">Crea un novo sitio para o teu negocio, revista ou blog personal; ou conecta cunha instalación de WordPress existente.</string>
-    <string name="site_settings_lazy_load_images">Carga diferida de imaxes</string>
     <string name="notifications_jetpack_connection_setup_info">Para obter avisos útiles no teu dispositivo desde o teu sitio WordPress terás que instalar o plugin Jetpack. Gustaríache configurar Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Instala Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>

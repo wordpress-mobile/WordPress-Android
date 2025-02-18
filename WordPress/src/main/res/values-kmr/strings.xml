@@ -249,7 +249,6 @@ Language: ku_TR
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Vegerîne Reşnîvîsê</string>
     <string name="prepublishing_nudges_tags_action">Etîket</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Şandiyên ketine jêbirdankê nayên sererastkirin. Ji bo tu karibî li ser wê bixebitî em rewşa şandiyê bikin \"reşnivîs\"?</string>
-    <string name="prepublishing_tags_description">Etîket di derbarê mijara şandiyan de ji xwîneran re dibin alîkar.</string>
     <string name="prepublishing_nudges_home_submit_button">Aniha Bişîne</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Etîketan tevlî bike</string>
     <string name="reader_btn_done">Qediya</string>
@@ -559,7 +558,6 @@ Language: ku_TR
     <string name="site_settings_site_accelerator_on">Vekirî</string>
     <string name="site_settings_performance">Performans</string>
     <string name="site_settings_site_accelerator">Lezkera Malperê</string>
-    <string name="site_settings_lazy_load_images_summary">Tenê wêneyên li ser ekranê dixuyin bar bike û leza malperê xwe zêde bike.</string>
     <string name="stats_file_downloads_value_label">Daxistin</string>
     <string name="stats_site_neutral_utc">Navçedema malperê (UTC)</string>
     <string name="stats_site_positive_utc">Navçedema malperê (UTC + %s)</string>
@@ -1198,7 +1196,6 @@ Language: ku_TR
     <string name="my_site_add_new_site">Malpera nû tevlî bike</string>
     <string name="my_site_create_new_site">Ji bo karsazî, kovar an jî bologeke şexsî malpereke nû biafirîne; an jî li sazkirineke WordPressê ya heyî girêde.</string>
     <string name="notifications_jetpack_connection_setup_info">Ji bo danezanên kêrhatî ji malpera te ya WordPressê bên cîhaza te, divê tu pêveka Jetpackê saz bikî. Tu dixwazî Jetpackê saz bikî?</string>
-    <string name="site_settings_lazy_load_images">Wêneyên dereng hatine barkirin</string>
     <string name="stats_jetpack_connection_setup">Jetpack\'ê saz bike</string>
     <string name="plugin_chevron_icon_content_description">Nivîsê biguherîne</string>
     <string name="plugin_info_your_version">Guhertoya WordPress\'a Te</string>

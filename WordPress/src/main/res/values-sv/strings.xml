@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 13:54:09+0000
+Translation-Revision-Date: 2025-02-11 13:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Experimentella språkinställningar per app</string>
+    <string name="avatar_update_email_unverified">För att uppdatera din profilbild måste du först verifiera din e-postadress.</string>
+    <string name="feedback_form_note_link_wordpress">community-forum.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">platshållare</string>
     <string name="user_avatar_content_description">Profilbild för användare %s</string>
     <string name="user_row_content_description">Visa detaljer för användare %s</string>
@@ -21,6 +22,8 @@ Language: sv_SE
     <string name="users">Användare</string>
     <string name="me_btn_help_and_support">Hjälp och support</string>
     <string name="me_btn_experimental_features">Experimentella funktioner</string>
+    <string name="feedback_form_note_link_jetpack">Skärmen Kontakta supporten.</string>
+    <string name="feedback_form_note_text">Observera att detta inte är ett supportformulär och att vi inte kommer att kunna svara. Om du behöver hjälp, använd våra \"</string>
     <string name="experimental_features_screen_title">Experimentella funktioner</string>
     <string name="back">Tillbaka</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Från denna app</string>
@@ -1780,7 +1783,7 @@ Language: sv_SE
     <string name="me">Jag</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Avfärda</string>
     <string name="prepublishing_nudges_home_tags_not_set">Inte inställd</string>
-    <string name="prepublishing_tags_description">Etiketter hjälper till att berätta för läsarna vad ett inlägg handlar om.</string>
+    <string name="prepublishing_tags_description">Etiketter hjälper till att berätta för läsarna vad ett inlägg handlar om</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publiceringsdatum</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Lägg till etiketter</string>
     <string name="prepublishing_nudges_back_button">Tillbaka</string>
@@ -2137,7 +2140,6 @@ Language: sv_SE
     <string name="site_settings_site_accelerator_off">Av</string>
     <string name="site_settings_site_accelerator_on">På</string>
     <string name="site_settings_site_accelerator">Webbplatsaccelerator</string>
-    <string name="site_settings_lazy_load_images_summary">Förbättra din webbplats hastighet genom att bara läsa in bilder när de syns på skärmen.</string>
     <string name="site_settings_performance">Prestanda</string>
     <string name="stats_file_downloads_value_label">Nedladdningar</string>
     <string name="stats_file_downloads_title_label">Fil</string>
@@ -2810,7 +2812,6 @@ Language: sv_SE
     <string name="my_site_add_new_site">Lägg till ny webbplats</string>
     <string name="my_site_create_new_site">Skapa en ny webbplats för ditt företag, tidskrift eller personliga blogg; eller anslut en befintlig installation av WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">För att få hjälpsamma aviseringar till din telefon från din WordPress-webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Uppskjuten inläsning av bilder (lazy-load)</string>
     <string name="stats_jetpack_connection_setup">Installera Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Text på/av</string>
     <string name="plugin_info_your_version">Din WordPress-version</string>

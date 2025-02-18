@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-05 07:27:11+0000
+Translation-Revision-Date: 2025-02-06 14:09:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Préférences linguistiques par application – expérimental</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">texte indicatif</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
@@ -33,8 +32,7 @@ Language: fr
     <string name="more_content_description_blogging_prompts">En savoir plus sur les Invites</string>
     <string name="more_content_description_promote_blaze">En savoir plus sur Blaze</string>
     <string name="reader_toast_success_undo">Blog déverrouillé</string>
-    <string name="feedback_form_note_link">Écran Contacter l’assistance.</string>
-    <string name="feedback_form_note_text">Veuillez noter qu’il ne s’agit pas d’un formulaire d’assistance et que nous ne pourrons pas répondre. Si vous avez besoin d’assistance, veuillez utiliser notre \"</string>
+    <string name="feedback_form_note_text">Veuillez noter qu’il ne s’agit pas d’un formulaire d’assistance et que nous ne pourrons pas répondre. Si vous avez besoin d\'aide, veuillez utiliser notre \"</string>
     <string name="experimental_block_editor_theme_styles">Styles de l’éditeur de blocs expérimentaux</string>
     <string name="experimental_block_editor">Éditeur de blocs expérimentaux</string>
     <string name="experimental_features_screen_title">Fonctionnalités expérimentales</string>
@@ -1793,7 +1791,7 @@ Language: fr
     <string name="me">Moi</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Ignorer</string>
     <string name="prepublishing_nudges_home_tags_not_set">Non défini</string>
-    <string name="prepublishing_tags_description">Les étiquettes indiquent aux lecteurs de quoi traite l’article.</string>
+    <string name="prepublishing_tags_description">Les étiquettes indiquent aux lecteurs de quoi traite l’article</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Date de publication</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Ajouter des étiquettes</string>
     <string name="prepublishing_nudges_back_button">Retour</string>
@@ -2150,7 +2148,6 @@ Language: fr
     <string name="site_settings_site_accelerator_off">Désactivé</string>
     <string name="site_settings_site_accelerator_on">Activé</string>
     <string name="site_settings_site_accelerator">Accélérateur de site</string>
-    <string name="site_settings_lazy_load_images_summary">Optimisez la vitesse de votre site en ne chargeant que les images visibles à l\'écran.</string>
     <string name="site_settings_performance">Performances</string>
     <string name="stats_file_downloads_value_label">Téléchargements</string>
     <string name="stats_file_downloads_title_label">Fichier</string>
@@ -2495,7 +2492,7 @@ Language: fr
     <string name="pages_search_suggestion">Rechercher dans les pages</string>
     <string name="pages_empty_search_result">Aucune page ne correspond à votre recherche</string>
     <string name="pages_delete_permanently">Supprimer définitivement</string>
-    <string name="pages_move_to_trash">Mettre dans la Corbeille</string>
+    <string name="pages_move_to_trash">Déplacer dans la corbeille</string>
     <string name="pages_move_to_draft">Passer en brouillon</string>
     <string name="pages_set_parent">Configurer le parent</string>
     <string name="pages_view">Afficher</string>
@@ -2823,7 +2820,6 @@ Language: fr
     <string name="my_site_add_new_site">Ajouter un nouveau site</string>
     <string name="my_site_create_new_site">Créer un nouveau site pour votre entreprise, magazine ou blog personnel, ou connectez un site WordPress existant.</string>
     <string name="notifications_jetpack_connection_setup_info">Pour obtenir des notifications utiles sur votre appareil à partir de votre site WordPress, vous devrez installer l\'extension Jetpack. Souhaitez-vous configurer Jetpack ?</string>
-    <string name="site_settings_lazy_load_images">Images au chargement différé</string>
     <string name="stats_jetpack_connection_setup">Configurer Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Inverser le texte</string>
     <string name="plugin_info_your_version">Votre version de WordPress</string>

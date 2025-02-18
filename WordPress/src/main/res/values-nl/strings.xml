@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-13 21:32:56+0000
+Translation-Revision-Date: 2025-01-28 23:07:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Experimentele taal voorkeuren per app</string>
+    <string name="avatar_update_email_unverified">Om je avatar te updaten, moet je eerst je e-mailadres verifiëren.</string>
+    <string name="feedback_form_note_link_wordpress">community forums</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">plaatshouder</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Toggle %s snelkoppeling</string>
     <string name="personalization_screen_card_accessibility_label">Toggle %s kaart</string>
@@ -33,7 +34,7 @@ Language: nl
     <string name="more_content_description_blogging_prompts">Meer prompts</string>
     <string name="more_content_description_promote_blaze">Meer vuur</string>
     <string name="reader_toast_success_undo">Blog gedeblokkeerd</string>
-    <string name="feedback_form_note_link">Contact ondersteuning scherm.</string>
+    <string name="feedback_form_note_link_jetpack">Contact ondersteuning scherm.</string>
     <string name="feedback_form_note_text">Let op dit is geen ondersteuningsformulier, en we kunnen niet antwoorden. Als je ondersteuning nodig hebt, gebruik dan onze \"</string>
     <string name="experimental_block_editor_theme_styles">Experimentele blok-editor stijlen</string>
     <string name="experimental_block_editor">Experimentele blok-editor</string>
@@ -2153,7 +2154,6 @@ Language: nl
     <string name="site_settings_site_accelerator_off">Uit</string>
     <string name="site_settings_site_accelerator_on">Aan</string>
     <string name="site_settings_site_accelerator">Siteversneller</string>
-    <string name="site_settings_lazy_load_images_summary">Versnel je site door alleen afbeeldingen te laden die zichtbaar zijn op het scherm.</string>
     <string name="site_settings_performance">Prestatie</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Bestand</string>
@@ -2826,7 +2826,6 @@ Language: nl
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor je bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie.</string>
     <string name="notifications_jetpack_connection_setup_info">Om nuttige meldingen van je WordPress site op je apparaat te krijgen, moet je de Jetpack plugin installeren. Wil je Jetpack installeren?</string>
-    <string name="site_settings_lazy_load_images">Lazy-load afbeeldingen</string>
     <string name="stats_jetpack_connection_setup">Jetpack installeren</string>
     <string name="plugin_chevron_icon_content_description">Toggle tekst</string>
     <string name="plugin_info_your_version">Je WordPress versie</string>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-19 09:54:11+0000
+Translation-Revision-Date: 2025-02-03 15:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">تفضيلات اللغات التجريبية لكل تطبيق</string>
+    <string name="avatar_update_email_unverified">لتحديث صورتك الرمزية، يتعين عليك التحقق من عنوان بريدك الإلكتروني أولاً.</string>
+    <string name="feedback_form_note_link_wordpress">المنتديات المجتمعية.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">عنصر نائب</string>
     <string name="personalization_screen_shortcuts_accessibility_label">تبديل اختصار %s</string>
     <string name="personalization_screen_card_accessibility_label">تبديل بطاقة %s</string>
@@ -32,8 +33,6 @@ Language: ar
     <string name="more_content_description_blogging_prompts">موجّهات أكثر</string>
     <string name="more_content_description_promote_blaze">Blaze أكثر</string>
     <string name="reader_toast_success_undo">تم إلغاء حظر التدوينة</string>
-    <string name="feedback_form_note_link">شاشة الاتصال بالدعم.</string>
-    <string name="feedback_form_note_text">يرجى ملاحظة أن هذا ليس نموذج دعم، ولن نتمكن من الرد. إذا كنت بحاجة إلى الدعم، فيرجى استخدام الدعم لدينا</string>
     <string name="experimental_block_editor_theme_styles">أنماط محرر المكوِّن التجريبي</string>
     <string name="experimental_block_editor">محرر المكوِّن التجريبي</string>
     <string name="experimental_features_screen_title">الميزات التجريبية</string>
@@ -41,6 +40,7 @@ Language: ar
     <string name="dialog_confirm_autosave_dont_restore_button">من هذا التطبيق</string>
     <string name="dialog_confirm_autosave_restore_button">من جهاز آخر</string>
     <string name="item_selected">محدد</string>
+    <string name="feedback_form_note_text">يرجى ملاحظة أن هذا ليس نموذج دعم، ولن نتمكن من الرد. إذا كنت تحتاج مساعدة، فيرجى استخدام \"</string>
     <string name="media_pager_remove_item_content_description">إزالة العنصر ⁦%1$d⁩</string>
     <string name="feedback_form_add_attachments">إضافة مرفقات</string>
     <string name="feedback_form_unable_to_create_tempfile">يتعذر إنشاء ملف مؤقت</string>
@@ -1800,13 +1800,13 @@ Language: ar
     <string name="prepublishing_nudges_publish_action">تاريخ النشر</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">إلغاء</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">نقل إلى المسودة</string>
-    <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">إضافة وسوم</string>
     <string name="prepublishing_nudges_home_save_button">حفظ الآن</string>
     <string name="prepublishing_nudges_home_submit_button">إرسال الآن</string>
     <string name="prepublishing_nudges_tags_action">وسوم</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">يتعذر تحرير المقالات التي تمت إضافتها إلى سلة المهملات. هل ترغب في تغيير حالة هذه المقالة إلى \"مسودة\" حتى تتمكن من العمل عليها؟</string>
     <string name="prepublishing_nudges_toolbar_title_publish">تاريخ النشر</string>
+    <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله التدوينة</string>
     <string name="publish_date">تاريخ النشر</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">هل تريد نقل المقالة إلى المسودات؟</string>
     <string name="reader_btn_done">انتهى</string>
@@ -2152,7 +2152,6 @@ Language: ar
     <string name="site_settings_performance">الأداء</string>
     <string name="site_settings_site_accelerator_on">مفعل</string>
     <string name="site_settings_site_accelerator">مُسرِّع الموقع</string>
-    <string name="site_settings_lazy_load_images_summary">حسِّن سرعة موقعك من خلال تحميل الصور المرئية فقط على الشاشة.</string>
     <string name="stats_file_downloads_value_label">التنزيلات</string>
     <string name="stats_file_downloads_title_label">ملف</string>
     <string name="stats_file_downloads">تنزيلات الملفات</string>
@@ -2824,7 +2823,6 @@ Language: ar
     <string name="plugin_needs_update">بحاجة إلى تحديث</string>
     <string name="my_site_create_new_site">أنشئ موقعًا جديدًا لأعمالك أو مجلتك أو مدونتك الشخصية؛ أو اتصل بموقع ووردبريس الموجود.</string>
     <string name="notifications_jetpack_connection_setup_info">للحصول على إشعارات مساعدة على جهازك من موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack. هل ترغب في إعداد Jetpack؟</string>
-    <string name="site_settings_lazy_load_images">صور \"بطيئة التحميل\"</string>
     <string name="stats_jetpack_connection_setup">تثبيت Jetpack</string>
     <string name="plugin_chevron_icon_content_description">التبديل بين النصوص</string>
     <string name="plugin_info_your_version">إصدار ووردبريس الخاص بك</string>

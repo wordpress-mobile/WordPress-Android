@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-26 01:37:03+0000
+Translation-Revision-Date: 2025-02-04 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">앱 별 실험적 언어 설정</string>
+    <string name="avatar_update_email_unverified">아바타를 업데이트하려면 먼저 이메일 주소를 확인해야 합니다.</string>
+    <string name="feedback_form_note_link_wordpress">커뮤니티 포럼\"을 사용해 주세요.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">플레이스홀더</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s 단축키 설정/해제</string>
     <string name="personalization_screen_card_accessibility_label">%s 카드 설정/해제</string>
@@ -33,8 +34,7 @@ Language: ko_KR
     <string name="more_content_description_blogging_prompts">프롬프트 더 보기</string>
     <string name="more_content_description_promote_blaze">Blaze 더 보기</string>
     <string name="reader_toast_success_undo">블로그 차단 해제됨</string>
-    <string name="feedback_form_note_link">지원팀에 문의\" 화면을 사용해 주세요.</string>
-    <string name="feedback_form_note_text">이 양식은 지원 양식이 아니므로 당사에서 답변해 드릴 수 없습니다. 지원이 필요하시면 \"</string>
+    <string name="feedback_form_note_text">이 양식은 지원 양식이 아니므로 당사에서 답변해 드릴 수 없습니다. 도움이 필요하신 경우 \"</string>
     <string name="experimental_block_editor_theme_styles">실험용 블록 에디터 스타일</string>
     <string name="experimental_block_editor">실험용 블록 에디터</string>
     <string name="experimental_features_screen_title">실험적 기능</string>
@@ -1796,7 +1796,6 @@ Language: ko_KR
     <string name="me">나</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">해제</string>
     <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
-    <string name="prepublishing_tags_description">태그는 독자들에게 이 글이 무엇에 관한 글인지 말하도록 돕습니다.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">발행일</string>
     <string name="prepublishing_nudges_toolbar_title_tags">태그 추가하기</string>
     <string name="prepublishing_nudges_back_button">뒤로</string>
@@ -2153,7 +2152,6 @@ Language: ko_KR
     <string name="site_settings_site_accelerator_off">끔</string>
     <string name="site_settings_site_accelerator_on">켬</string>
     <string name="site_settings_site_accelerator">사이트 가속기</string>
-    <string name="site_settings_lazy_load_images_summary">화면에 보이는 이미지만 로드하여 사이트 속도를 개선하세요.</string>
     <string name="site_settings_performance">성능</string>
     <string name="stats_file_downloads_value_label">다운로드</string>
     <string name="stats_file_downloads_title_label">파일</string>
@@ -2826,7 +2824,6 @@ Language: ko_KR
     <string name="my_site_add_new_site">새 사이트 추가</string>
     <string name="my_site_create_new_site">비즈니스, 잡지 또는 개인 블로그를 위한 새 사이트를 만들거나 기존 워드프레스 설치에 연결하세요.</string>
     <string name="notifications_jetpack_connection_setup_info">워드프레스 사이트로부터 장치에 유용한 알림을 가져오려면 젯팩 플러그인을 설치해야 합니다. 젯팩을 설치하시겠어요?</string>
-    <string name="site_settings_lazy_load_images">이미지 \"느리게 로드\"</string>
     <string name="stats_jetpack_connection_setup">젯팩 설정</string>
     <string name="plugin_chevron_icon_content_description">텍스트 토글</string>
     <string name="plugin_info_your_version">현재 워드프레스 버전</string>
