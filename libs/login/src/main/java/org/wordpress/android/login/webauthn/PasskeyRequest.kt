@@ -1,5 +1,6 @@
 package org.wordpress.android.login.webauthn
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.CancellationSignal
 import android.util.Log
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
+@SuppressLint("CredentialManagerMisuse")
 class PasskeyRequest private constructor(
     context: Context,
     requestData: PasskeyRequestData,
