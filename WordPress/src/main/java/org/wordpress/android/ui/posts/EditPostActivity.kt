@@ -2528,6 +2528,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to site.url,
                 "siteApiRoot" to siteApiRoot,
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
@@ -2553,7 +2554,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
+                settings,
+                site.isPrivate || site.isComingSoon,
+                site.isPrivateWPComAtomic
             )
         }
 

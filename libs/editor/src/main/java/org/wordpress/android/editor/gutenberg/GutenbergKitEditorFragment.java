@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +46,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.gutenberg.GutenbergRequestInterceptor;
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
@@ -53,11 +56,24 @@ import org.wordpress.gutenberg.GutenbergWebViewPool;
 import org.wordpress.gutenberg.EditorConfiguration;
 import org.wordpress.gutenberg.WebViewGlobal;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static org.wordpress.gutenberg.Media.createMediaUsingMimeType;
 
@@ -67,7 +83,8 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         EditorThemeUpdateListener,
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
-        GutenbergNetworkConnectionListener {
+        GutenbergNetworkConnectionListener,
+        GutenbergRequestInterceptor {
     @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
@@ -93,12 +110,17 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     private View mRootView;
 
     @Nullable private static Map<String, Object> mSettings;
+    private static boolean mIsPrivate = false;
+    private static boolean mIsPrivateAtomic = false;
+    @NonNull OkHttpClient mHttpClient = new OkHttpClient();
 
     public static GutenbergKitEditorFragment newInstance(Context context,
             boolean isNewPost,
             @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
             boolean jetpackFeaturesEnabled,
-            @Nullable Map<String, Object> settings) {
+            @Nullable Map<String, Object> settings,
+            boolean isPrivate,
+            boolean isPrivateAtomic) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -107,6 +129,8 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
         mSettings = settings;
+        mIsPrivate = isPrivate;
+        mIsPrivateAtomic = isPrivateAtomic;
         if (db != null) {
             db.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
         }
@@ -166,6 +190,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
             setEditorProgressBarVisibility(false);
         });
+        mGutenbergView.setRequestInterceptor(this);
 
         return mRootView;
     }
@@ -607,5 +632,102 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    @Override
+    public boolean canIntercept(@NonNull WebResourceRequest request) {
+        Uri url = request.getUrl();
+
+        return mIsPrivate && isSiteHostedMediaFile(url.toString());
+    }
+
+    boolean isSiteHostedMediaFile(@NonNull String urlString) {
+        String siteURL = (String) (mSettings != null ? mSettings.get("siteURL") : "");
+        Set<String> mediaExtensions = new HashSet<>(Arrays.asList(
+                "jpg", "jpeg", "png", "gif", "bmp", "webp",
+                "mp4", "mov", "avi", "mkv",
+                "mp3", "wav", "flac"
+        ));
+
+        try {
+            URL url = new URL(urlString);
+            URL siteUrlObj = new URL(siteURL);
+
+            // Check if the URL is from the same host as the site URL
+            if (!url.getHost().equalsIgnoreCase(siteUrlObj.getHost())) {
+                return false;
+            }
+
+            // Extract the file name and extension
+            String path = url.getPath();
+            int lastDotIndex = path.lastIndexOf('.');
+            if (lastDotIndex == -1) {
+                return false;
+            }
+
+            String extension = path.substring(lastDotIndex + 1).toLowerCase(Locale.ROOT);
+
+            // Check if the extension is in the list of media extensions
+            return mediaExtensions.contains(extension);
+        } catch (MalformedURLException e) {
+            // Handle invalid URLs
+            return false;
+        }
+    }
+
+    @Nullable @Override
+    public WebResourceResponse handleRequest(@NonNull WebResourceRequest request) {
+        Uri url = request.getUrl();
+
+        String proxyUrl = url.toString();
+        if (mIsPrivateAtomic) {
+            proxyUrl = getPrivateResourceProxyUrl(url);
+        }
+
+        try {
+            Request okHttpRequest = new Request.Builder()
+                    .url(proxyUrl)
+                    .headers(Headers.of(request.getRequestHeaders()))
+                    .addHeader("Authorization", mSettings.get("authHeader").toString())
+                    .build();
+
+            Response response = mHttpClient.newCall(okHttpRequest).execute();
+
+            ResponseBody body = response.body();
+            if (body == null) {
+                return null;
+            }
+
+            okhttp3.MediaType contentType = body.contentType();
+            if (contentType == null) {
+                return null;
+            }
+
+            return new WebResourceResponse(
+                    contentType.toString(),
+                    response.header("content-encoding"),
+                    body.byteStream()
+            );
+        } catch (IOException e) {
+            // We don't need to handle this ourselves, just tell the WebView that
+            // we weren't able to fetch the resource
+            return null;
+        }
+    }
+
+    private static @NonNull String getPrivateResourceProxyUrl(@NonNull Uri url) {
+        Uri newUri = new Uri.Builder()
+                .scheme("https")
+                .authority("public-api.wordpress.com")
+                .appendPath("wpcom")
+                .appendPath("v2")
+                .appendPath("sites")
+                .appendPath(url.getAuthority())
+                .appendPath("atomic-auth-proxy")
+                .appendPath("file")
+                .appendEncodedPath(url.getPath().substring(1)) // Remove leading '/'
+                .build();
+
+        return newUri.toString();
     }
 }
