@@ -62,6 +62,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -72,6 +73,7 @@ import java.util.concurrent.CountDownLatch;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -109,7 +111,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable
     private View mRootView;
 
-    @Nullable private static Map<String, Object> mSettings;
+    @NonNull private static Map<String, Object> mSettings = Collections.emptyMap();
     private static boolean mIsPrivate = false;
     private static boolean mIsPrivateAtomic = false;
     @NonNull OkHttpClient mHttpClient = new OkHttpClient();
@@ -118,7 +120,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             boolean isNewPost,
             @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
             boolean jetpackFeaturesEnabled,
-            @Nullable Map<String, Object> settings,
+            @NonNull Map<String, Object> settings,
             boolean isPrivate,
             boolean isPrivateAtomic) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
@@ -642,7 +644,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     boolean isSiteHostedMediaFile(@NonNull String urlString) {
-        String siteURL = (String) (mSettings != null ? mSettings.get("siteURL") : "");
+        String siteURL = (String) mSettings.get("siteURL");
         Set<String> mediaExtensions = new HashSet<>(Arrays.asList(
                 "jpg", "jpeg", "png", "gif", "bmp", "webp",
                 "mp4", "mov", "avi", "mkv",
@@ -684,15 +686,19 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             proxyUrl = getPrivateResourceProxyUrl(url);
         }
 
+        String authHeader = (String) mSettings.get("authHeader");
+        if (authHeader == null) {
+            return null;
+        }
+
         try {
-            Request okHttpRequest = new Request.Builder()
+            Request okHttpRequest = new Builder()
                     .url(proxyUrl)
                     .headers(Headers.of(request.getRequestHeaders()))
-                    .addHeader("Authorization", mSettings.get("authHeader").toString())
+                    .addHeader("Authorization", authHeader)
                     .build();
 
             Response response = mHttpClient.newCall(okHttpRequest).execute();
-
             ResponseBody body = response.body();
             if (body == null) {
                 return null;
@@ -716,6 +722,11 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     private static @NonNull String getPrivateResourceProxyUrl(@NonNull Uri url) {
+        String path = url.getPath();
+        if (path != null && path.startsWith("/")) {
+            path = path.substring(1); // Remove leading '/'
+        }
+
         Uri newUri = new Uri.Builder()
                 .scheme("https")
                 .authority("public-api.wordpress.com")
@@ -725,7 +736,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .appendPath(url.getAuthority())
                 .appendPath("atomic-auth-proxy")
                 .appendPath("file")
-                .appendEncodedPath(url.getPath().substring(1)) // Remove leading '/'
+                .appendEncodedPath(path)
                 .build();
 
         return newUri.toString();
