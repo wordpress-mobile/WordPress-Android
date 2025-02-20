@@ -1413,7 +1413,6 @@ Language: lv
     <string name="prepublishing_nudges_back_button">Atpakaļ</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Pievienojiet birkas</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicēšanas datums</string>
-    <string name="prepublishing_tags_description">Birkas palīdz lasītājiem pastāstīt, par ko ir ziņa.</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Atkritnē ievietotās ziņas nevar rediģēt. Vai vēlaties mainīt šīs ziņas statusu uz \"melnraksts\", lai jūs varētu strādāt pie tās?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Pārvietot uz melnrakstu</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Atcelt</string>
@@ -1762,7 +1761,6 @@ Language: lv
     <string name="site_settings_performance">Veiktspēja</string>
     <string name="site_settings_site_accelerator">Vietnes paātrinātājs</string>
     <string name="site_settings_site_accelerator_on">Ieslēgts</string>
-    <string name="site_settings_lazy_load_images_summary">Uzlabojiet savas vietnes ātrumu, ielādējot tikai ekrānā redzamos attēlus.</string>
     <string name="stats_file_downloads_value_label">Lejupielādes</string>
     <string name="stats_site_neutral_utc">Vietnes laika josla (UTC)</string>
     <string name="stats_site_positive_utc">Vietnes laika josla (UTC + %s)</string>
@@ -2433,7 +2431,6 @@ Language: lv
     <string name="plugin_caption_new">Jauns</string>
     <string name="plugin_caption_search">Meklēt spraudņus</string>
     <string name="plugin_needs_update">Nepieciešams atjaunināt</string>
-    <string name="site_settings_lazy_load_images">Aizkavēta attēlu ielāde</string>
     <string name="notifications_jetpack_connection_setup_info">Lai saņemtu noderīgus paziņojumus savā ierīcē no savas WordPress vietnes, jums jāinstalē spraudnis Jetpack. Vai vēlaties iestatīt Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Instalēt Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Pārslēgt tekstu</string>

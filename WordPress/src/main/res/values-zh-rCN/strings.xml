@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 09:54:10+0000
+Translation-Revision-Date: 2025-02-04 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">每个应用程序的语言首选项（试用版）</string>
+    <string name="avatar_update_email_unverified">要更新您的头像，请先验证您的电子邮件地址。</string>
+    <string name="feedback_form_note_link_wordpress">社区论坛。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">占位符</string>
     <string name="personalization_screen_shortcuts_accessibility_label">切换 %s 快捷键</string>
     <string name="personalization_screen_card_accessibility_label">切换 %s 卡片</string>
@@ -33,8 +34,7 @@ Language: zh_CN
     <string name="more_content_description_blogging_prompts">更多提示</string>
     <string name="more_content_description_promote_blaze">更多 Blaze</string>
     <string name="reader_toast_success_undo">博客已解封</string>
-    <string name="feedback_form_note_link">“联系支持人员”界面。</string>
-    <string name="feedback_form_note_text">请注意，这并非支持表单，我们将无法回复。 如果您需要支持，请使用我们的“</string>
+    <string name="feedback_form_note_text">请注意，这并非支持表单，我们将无法回复。 如果您需要帮助，请使用我们的“</string>
     <string name="experimental_block_editor_theme_styles">实验性区块编辑器样式</string>
     <string name="experimental_block_editor">实验性区块编辑器</string>
     <string name="experimental_features_screen_title">实验性功能</string>
@@ -1796,7 +1796,7 @@ Language: zh_CN
     <string name="me">我</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">忽略</string>
     <string name="prepublishing_nudges_home_tags_not_set">未设置</string>
-    <string name="prepublishing_tags_description">标签有助于读者了解文章内容。</string>
+    <string name="prepublishing_tags_description">标签有助于读者了解文章内容</string>
     <string name="prepublishing_nudges_toolbar_title_publish">发布日期</string>
     <string name="prepublishing_nudges_toolbar_title_tags">添加标签</string>
     <string name="prepublishing_nudges_back_button">返回</string>
@@ -2153,7 +2153,6 @@ Language: zh_CN
     <string name="site_settings_site_accelerator_off">关</string>
     <string name="site_settings_site_accelerator_on">开</string>
     <string name="site_settings_site_accelerator">站点加速器</string>
-    <string name="site_settings_lazy_load_images_summary">通过仅加载在屏幕上可见的图像提高站点加载速度。</string>
     <string name="site_settings_performance">性能</string>
     <string name="stats_file_downloads_value_label">下载</string>
     <string name="stats_file_downloads_title_label">文件</string>
@@ -2826,7 +2825,6 @@ Language: zh_CN
     <string name="my_site_add_new_site">添加新站点</string>
     <string name="my_site_create_new_site">为您的业务、杂志或个人博客创建新站点；或连接现有的 WordPress 站点。</string>
     <string name="notifications_jetpack_connection_setup_info">要在您的设备上接收来自 WordPress 站点的有用通知，您需要安装 Jetpack 插件。是否希望设置 Jetpack？</string>
-    <string name="site_settings_lazy_load_images">延迟加载图片</string>
     <string name="stats_jetpack_connection_setup">安装 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切换文本</string>
     <string name="plugin_info_your_version">您的 WordPress 版本</string>

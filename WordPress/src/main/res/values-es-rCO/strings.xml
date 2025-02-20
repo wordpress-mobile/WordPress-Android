@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-17 19:09:48+0000
+Translation-Revision-Date: 2025-01-28 22:46:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es_CO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Preferencias de idioma por aplicación (Experimental)</string>
+    <string name="avatar_update_email_unverified">Para actualizar su avatar, primero debes verificar tu dirección de correo electrónico.</string>
+    <string name="feedback_form_note_link_wordpress">foros de la comunidad</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">marcador de posición</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Alternar atajo de %s</string>
     <string name="personalization_screen_card_accessibility_label">Alternar tarjeta de %s</string>
@@ -33,8 +34,8 @@ Language: es_CO
     <string name="more_content_description_blogging_prompts">Más sobre las indicaciones</string>
     <string name="more_content_description_promote_blaze">Más sobre Blaze</string>
     <string name="reader_toast_success_undo">Blog desbloqueado</string>
-    <string name="feedback_form_note_link">Pantalla de contacto con soporte</string>
-    <string name="feedback_form_note_text">Por favor, te en cuenta que esto no es un foro de soporte, y de que no podemos responder. Si necesitas soporte usa nuestro «</string>
+    <string name="feedback_form_note_link_jetpack">Pantalla de contacto con soporte</string>
+    <string name="feedback_form_note_text">Ten en cuenta que este no es un formulario de soporte y no podremos responder. Si necesitas ayuda, usa nuestro \"</string>
     <string name="experimental_block_editor_theme_styles">Estilos experimentales del editor de bloques</string>
     <string name="experimental_block_editor">Editor de bloques experimental</string>
     <string name="experimental_features_screen_title">Características experimentales</string>
@@ -1796,7 +1797,7 @@ Language: es_CO
     <string name="me">Yo</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Descartar</string>
     <string name="prepublishing_nudges_home_tags_not_set">No establecido</string>
-    <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada.</string>
+    <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Fecha de publicación</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Añadir etiquetas</string>
     <string name="prepublishing_nudges_back_button">Volver</string>
@@ -2153,7 +2154,6 @@ Language: es_CO
     <string name="site_settings_site_accelerator_off">Desactivado</string>
     <string name="site_settings_site_accelerator_on">Activado</string>
     <string name="site_settings_site_accelerator">Acelerador de sitios</string>
-    <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio al cargar solo las imágenes visibles en la pantalla.</string>
     <string name="site_settings_performance">Rendimiento</string>
     <string name="stats_file_downloads_value_label">Descargas</string>
     <string name="stats_file_downloads_title_label">Archivo</string>
@@ -2826,7 +2826,6 @@ Language: es_CO
     <string name="my_site_add_new_site">Añadir nuevo sitio</string>
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta con una instalación de WordPress existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para obtener avisos útiles en tu dispositivo desde tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Carga diferida de imágenes</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Tu versión de WordPress</string>

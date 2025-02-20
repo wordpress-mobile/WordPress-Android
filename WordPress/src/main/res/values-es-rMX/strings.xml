@@ -290,7 +290,6 @@ Language: es_MX
     <string name="me">Yo</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Descartar</string>
     <string name="prepublishing_nudges_home_tags_not_set">No establecido</string>
-    <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Añadir etiquetas</string>
     <string name="prepublishing_nudges_back_button">Volver</string>
     <string name="prepublishing_nudges_home_save_button">Guardar ahora</string>
@@ -624,7 +623,6 @@ Language: es_MX
     <string name="site_settings_ad_free_video_hosting">Alojamiento de Video Sin Anuncios</string>
     <string name="site_settings_improved_search">Búsqueda mejorada</string>
     <string name="site_settings_site_accelerator_on">Activado</string>
-    <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio al cargar solo las imágenes visibles en la pantalla.</string>
     <string name="site_settings_performance">Rendimiento</string>
     <string name="site_settings_site_accelerator">Acelerador de sitios</string>
     <string name="stats_file_downloads_value_label">Descargas</string>
@@ -1266,7 +1264,6 @@ Language: es_MX
     <string name="my_site_add_new_site">Añadir nuevo sitio</string>
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta con una instalación de WordPress existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para obtener avisos útiles en tu dispositivo desde tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Carga diferida de imágenes</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Tu versión de WordPress</string>

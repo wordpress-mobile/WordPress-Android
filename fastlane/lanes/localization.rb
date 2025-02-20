@@ -170,11 +170,10 @@ platform :android do
   #                         Defaults to current `versionName`. Only required if skip_release_notes is false
   # @param [Boolean] skip_release_notes Whether to skip downloading release notes. Default false
   # @param [Boolean] skip_commit If true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
-  # @param [Boolean] skip_git_push If true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
   #
   # @return [void]
   #
-  lane :download_metadata_strings do |app: nil, version: current_release_version, skip_release_notes: false, skip_commit: false, skip_git_push: false|
+  lane :download_metadata_strings do |app: nil, version: current_release_version, skip_release_notes: false, skip_commit: false|
     version = nil if skip_release_notes
 
     # If no `app:` is specified, call this for both WordPress and Jetpack
@@ -246,7 +245,6 @@ platform :android do
       message += " for #{version}" unless version.nil?
       git_commit(path: metadata_download_path, message: message, allow_nothing_to_commit: true)
     end
-    push_to_git_remote unless skip_commit || skip_git_push
   end
 
   ########################################################################

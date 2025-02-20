@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 16:54:09+0000
+Translation-Revision-Date: 2025-02-04 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">העדפות שפה ניסיוניות לפי אפליקציה</string>
+    <string name="avatar_update_email_unverified">כדי לעדכן את צלמית המשתמש, עליך לאמת את כתובת האימייל שלך תחילה.</string>
+    <string name="feedback_form_note_link_wordpress">בפורומים של הקהילה.</string>
+    <string name="feedback_form_note_link_jetpack">המסך \'לפנות לתמיכה\'.</string>
+    <string name="feedback_form_note_text">לתשומת ליבך, הטופס הנוכחי לא מיועד לתמיכה ולא תהיה לנו אפשרות להגיב. אם דרושה לך עזרה, ניתן להיעזר</string>
     <string name="media_pager_remove_item_content_description">להסיר את הפריט ⁦%1$d⁩</string>
     <string name="feedback_form_add_attachments">להוסיף קבצים מצורפים</string>
     <string name="feedback_form_unable_to_create_tempfile">לא ניתן ליצור קובץ זמני</string>
@@ -1752,7 +1755,7 @@ Language: he_IL
     <string name="me">אני</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">ביטול</string>
     <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
-    <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
+    <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט</string>
     <string name="prepublishing_nudges_toolbar_title_publish">תאריך פרסום</string>
     <string name="prepublishing_nudges_toolbar_title_tags">להוסיף תגיות</string>
     <string name="prepublishing_nudges_back_button">חזרה</string>
@@ -2107,7 +2110,6 @@ Language: he_IL
     <string name="site_settings_site_accelerator_off">מופסק</string>
     <string name="site_settings_site_accelerator_on">מופעל</string>
     <string name="site_settings_site_accelerator">מאיץ האתרים</string>
-    <string name="site_settings_lazy_load_images_summary">שיפור המהירות באתר שלך על ידי טעינה של התמונות הנראות על המסך בלבד.</string>
     <string name="site_settings_performance">ביצועים</string>
     <string name="stats_file_downloads_value_label">הורדות</string>
     <string name="stats_file_downloads_title_label">קובץ</string>
@@ -2780,7 +2782,6 @@ Language: he_IL
     <string name="my_site_add_new_site">הוספת אתר חדש</string>
     <string name="my_site_create_new_site">יצירה של אתר חדש לעסק שלך, מגזין, או בלוג אישי; או חיבור אתר WordPress קיים.</string>
     <string name="notifications_jetpack_connection_setup_info">כדי לקבל הודעות מועילות למכשיר מהאתר שלך ב-WordPress, עליך להתקין את התוסף של Jetpack. רוצה להתקין את Jetpack?</string>
-    <string name="site_settings_lazy_load_images">טעינה עצלה של תמונות</string>
     <string name="stats_jetpack_connection_setup">התקנת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>

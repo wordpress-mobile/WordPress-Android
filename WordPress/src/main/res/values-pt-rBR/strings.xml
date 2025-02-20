@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-24 13:53:33+0000
+Translation-Revision-Date: 2025-02-10 13:34:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: pt_BR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Preferências de idioma por aplicativo experimentais</string>
+    <string name="avatar_update_email_unverified">Para atualizar o seu avatar, você precisa confirmar o seu endereço de e-mail primeiro.</string>
+    <string name="feedback_form_note_link_wordpress">fóruns da comunidade.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">espaço reservado</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Atalho para Alternar %s</string>
     <string name="personalization_screen_card_accessibility_label">Cartão para Alternar %s</string>
@@ -33,8 +34,8 @@ Language: pt_BR
     <string name="more_content_description_blogging_prompts">Texto \"mais\" para prompts</string>
     <string name="more_content_description_promote_blaze">Texto \"mais\" para Blaze</string>
     <string name="reader_toast_success_undo">Blog desbloqueado</string>
-    <string name="feedback_form_note_link">Tela de contato com o suporte</string>
-    <string name="feedback_form_note_text">Note que este não é um formulário de suporte e nós poderemos respondê-lo. Se você precisar de suporte, use nosso \"</string>
+    <string name="feedback_form_note_link_jetpack">Tela de contato com o suporte.</string>
+    <string name="feedback_form_note_text">Note que este não é um formulário de suporte e nós não poderemos respondê-lo. Se você precisar de ajuda, use nosso \"</string>
     <string name="experimental_block_editor_theme_styles">Estilos do editor de blocos experimental</string>
     <string name="experimental_block_editor">Editor de blocos experimental</string>
     <string name="experimental_features_screen_title">Recursos experimentais</string>
@@ -1796,7 +1797,7 @@ Language: pt_BR
     <string name="me">Meus</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dispensar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
-    <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
+    <string name="prepublishing_tags_description">As tags ajudam os leitores a conhecerem o assunto do post.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data de publicação</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Adicionar tags</string>
     <string name="prepublishing_nudges_back_button">Voltar</string>
@@ -2153,7 +2154,6 @@ Language: pt_BR
     <string name="site_settings_site_accelerator_off">Desligado</string>
     <string name="site_settings_site_accelerator_on">Ligado</string>
     <string name="site_settings_site_accelerator">Acelerador de site</string>
-    <string name="site_settings_lazy_load_images_summary">Aumente a velocidade de seu site ao carregar as imagens apenas quando forem exibidas na tela.</string>
     <string name="site_settings_performance">Desempenho</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_file_downloads_title_label">Arquivo</string>
@@ -2826,7 +2826,6 @@ Language: pt_BR
     <string name="my_site_add_new_site">Adicionar site</string>
     <string name="my_site_create_new_site">Crie um novo site para seu negócio, revista, blog pessoal ou conecte-se a uma instalação WordPress já existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para receber úteis notificações do seu site WordPress no seu dispositivo, é necessário instalar o plugin Jetpack. Você gostaria de configurar o Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Carregamento assíncrono de imagens</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Versão do seu WordPress</string>

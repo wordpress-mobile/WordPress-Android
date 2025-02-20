@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-19 09:54:11+0000
+Translation-Revision-Date: 2025-02-06 10:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="experimental_per_app_language_prefs">Uygulama için deneysel dil tercihleri</string>
+    <string name="avatar_update_email_unverified">Avatarınızı güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
+    <string name="feedback_form_note_link_wordpress">topluluk forumları.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>
     <string name="personalization_screen_shortcuts_accessibility_label">%s kısayolu aç/kapat</string>
     <string name="personalization_screen_card_accessibility_label">%s kartı aç/kapat</string>
@@ -33,8 +34,7 @@ Language: tr
     <string name="more_content_description_blogging_prompts">İstemler daha fazla</string>
     <string name="more_content_description_promote_blaze">Blaze daha fazla</string>
     <string name="reader_toast_success_undo">Blogun engeli kaldırıldı</string>
-    <string name="feedback_form_note_link">Desteğe Başvurun ekranı.</string>
-    <string name="feedback_form_note_text">Bunun bir destek formu olmadığını ve yanıt veremeyeceğimizi lütfen unutmayın. Desteğe ihtiyacınız varsa lütfen şunu kullanın:</string>
+    <string name="feedback_form_note_text">Bunun bir destek formu olmadığını ve yanıt veremeyeceğimizi lütfen unutmayın. Desteğe ihtiyacınız olursa lütfen şunu kullanın: \"</string>
     <string name="experimental_block_editor_theme_styles">Deneysel blok düzenleyici stilleri</string>
     <string name="experimental_block_editor">Deneysel blok düzenleyici</string>
     <string name="experimental_features_screen_title">Deneysel Özellikler</string>
@@ -1795,7 +1795,7 @@ Language: tr
     <string name="me">Ben</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Kapat</string>
     <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
-    <string name="prepublishing_tags_description">Etiketler, okuyuculara bir yazının ne hakkında olduğunu söylemeye yardımcı olur.</string>
+    <string name="prepublishing_tags_description">Etiketler, okuyucuların bir gönderinin ne hakkında olduğunu anlamasına yardımcı olur</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Yayınlanma tarihi</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Etiketleri ekle</string>
     <string name="prepublishing_nudges_back_button">Geri</string>
@@ -2152,7 +2152,6 @@ Language: tr
     <string name="site_settings_site_accelerator_off">Kapalı</string>
     <string name="site_settings_site_accelerator_on">Açık</string>
     <string name="site_settings_site_accelerator">Site hızlandırıcı</string>
-    <string name="site_settings_lazy_load_images_summary">Yalnızca ekranda görünen görselleri yükleyerek sitenizin hızını artırın.</string>
     <string name="site_settings_performance">Performans</string>
     <string name="stats_file_downloads_value_label">İndirmeler</string>
     <string name="stats_file_downloads_title_label">Dosya</string>
@@ -2825,7 +2824,6 @@ Language: tr
     <string name="my_site_add_new_site">Yeni bir site ekle</string>
     <string name="my_site_create_new_site">İşiniz, derginiz ya da kişisel blogunuz için bir site oluşturun ya da var olan bir WordPress kurulumuna bağlanın.</string>
     <string name="notifications_jetpack_connection_setup_info">Aygıtınıza WordPress sitesinden faydalı bildirimler almak için, Jetpack eklentisini kurmalısınız. Jetpack kurmak ister misiniz?</string>
-    <string name="site_settings_lazy_load_images">\"Geç yüklenen\" görseller</string>
     <string name="stats_jetpack_connection_setup">Jetpack kur</string>
     <string name="plugin_chevron_icon_content_description">Değiştir metni</string>
     <string name="plugin_info_your_version">WordPress sürümünüz</string>

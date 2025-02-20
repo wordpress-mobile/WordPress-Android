@@ -433,7 +433,6 @@ Language: nb_NO
     <string name="me">Meg</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Avfei</string>
     <string name="prepublishing_nudges_home_tags_not_set">Ikke bestemt</string>
-    <string name="prepublishing_tags_description">Stikkord hjelper leserne vit hva innlegg er om.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publiseringsdato</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Legg til stikkord</string>
     <string name="prepublishing_nudges_back_button">Tilbake</string>
@@ -744,7 +743,6 @@ Language: nb_NO
     <string name="site_settings_site_accelerator_off">Av</string>
     <string name="site_settings_site_accelerator_on">På</string>
     <string name="site_settings_site_accelerator">Nettstedsaksellerator</string>
-    <string name="site_settings_lazy_load_images_summary">Forbedre farten på ditt nettsted ved bare å laste bilder som er synlige på skjermen.</string>
     <string name="site_settings_performance">Ytelse</string>
     <string name="stats_file_downloads_value_label">Nedlastinger</string>
     <string name="stats_file_downloads_title_label">Fil</string>
@@ -1382,7 +1380,6 @@ Language: nb_NO
     <string name="my_site_add_new_site">Legg til nytt nettsted</string>
     <string name="my_site_create_new_site">Lag et nytt nettsted for din virksomhet, magasin eller personlig blogg, eller koble til en eksisterende installasjon av WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">For å få nyttige varsler fra ditt nettsted på din enhet trenger du å installere utvidelsen Jetpack. Ønsker du å sette opp Jetpack?</string>
-    <string name="site_settings_lazy_load_images">Sen lasting av bilder</string>
     <string name="stats_jetpack_connection_setup">Installer Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Veksle tekst</string>
     <string name="plugin_info_your_version">Din WordPress-versjon</string>

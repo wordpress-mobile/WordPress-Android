@@ -1,5 +1,0 @@
-25.6:
-Deze update:
-- lost een zeldzame crash op bij het registreren van een domein.
-- lost een aantal kwesties achter-de-schermen op waardoor de app betrouwbaarder moet zijn.
-- gebruikt een webgebaseerde aanpak voor inloggen bij WordPress.com. Dit zou betrouwbaarder moeten zijn voor de meeste gebruikers, maar neem contact op met de ondersteuning als je problemen ervaart!
