@@ -13,7 +13,7 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.develocity" version "3.19.1"
+    id "com.gradle.develocity" version "3.19.2"
 }
 
 gradle.ext.isCi = System.getenv('CI')?.toBoolean() ?: false
