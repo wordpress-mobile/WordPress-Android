@@ -1,0 +1,3 @@
+25.7: slechts twee oplossingen voor de experimentele blok-editor deze keer:
+1. je kunt feedback over de editor verzenden terwijl je het gebruikt. 
+2. we hebben een bug opgelost waarbij de code weergave niet goed werkte
