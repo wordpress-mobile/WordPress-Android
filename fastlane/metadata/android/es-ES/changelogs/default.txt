@@ -1,0 +1,4 @@
+25.7:
+Solo dos correcciones en el editor de bloques experimental esta vez:
+1. Puedes enviar comentarios sobre el editor mientras lo usas.
+2. Hemos corregido un fallo por el que la vista de código no funcionaba adecuadamente.
