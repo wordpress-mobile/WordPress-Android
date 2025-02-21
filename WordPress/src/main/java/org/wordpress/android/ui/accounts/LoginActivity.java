@@ -156,7 +156,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         // when displaying that screen
         mLoginHelper.bindCustomTabsService(this);
 
-        if (mLoginHelper.isLoggedIn()) {
+        // go no further if the user is already logged in and this is the login screen shown at startup
+        //      FULL = WPAndroid
+        //      JETPACK_LOGIN_ONLY = JPAndroid
+        LoginMode loginMode = getLoginMode();
+        if ((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY)) {
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }
@@ -173,7 +177,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
             mLoginAnalyticsListener.trackLoginAccessed();
 
-            switch (getLoginMode()) {
+            switch (loginMode) {
                 case FULL:
                 case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
