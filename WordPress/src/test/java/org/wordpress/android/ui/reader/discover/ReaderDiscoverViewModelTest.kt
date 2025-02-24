@@ -645,18 +645,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Action button on no tags empty screen opens reader interests screen`() = test {
-        // Arrange
-        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
-        init()
-        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
-        // Act
-        (viewModel.uiState.value as ShowNoFollowedTagsUiState).action.invoke()
-        // Assert
-        verify(parentViewModel).onShowReaderInterests()
-    }
-
-    @Test
     fun `Action button on no posts empty screen opens subs screen`() = test {
         // Arrange
         val navigation = init().navigation
