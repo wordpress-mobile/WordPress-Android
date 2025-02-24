@@ -141,7 +141,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             readerUtilsWrapper,
             readerTracker,
             displayUtilsWrapper,
-            getFollowedTagsUseCase,
             mReaderAnnouncementHelper,
             testDispatcher(),
             testDispatcher()
