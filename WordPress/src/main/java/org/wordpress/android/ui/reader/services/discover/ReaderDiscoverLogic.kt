@@ -21,6 +21,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
@@ -86,8 +87,15 @@ class ReaderDiscoverLogic @Inject constructor(
     private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
         coroutineScope?.launch {
             val params = HashMap<String, String>()
-            params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
             params["tag_recs_per_card"] = RECOMMENDED_TAGS_COUNT
+
+            // default to requesting the dailyprompt and wordpress tags if the user isn't following any tags,
+            // otherwise pass no tags and let the backend supply the user's followed tags. note that we
+            // filter out the dailyprompt tag since new users have that tag followed by default.
+            val userTags = getFollowedTagsUseCase.get()
+            if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
+                params["tags"] = "$BLOGGING_PROMPT_TAG,wordpress"
+            }
 
             when (taskType) {
                 REQUEST_FIRST_PAGE -> {

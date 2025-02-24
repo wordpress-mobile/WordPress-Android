@@ -145,14 +145,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         // listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
-                // since new users have the dailyprompt tag followed by default, we need to ignore them when
-                // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
-                /* val userTags = getFollowedTagsUseCase.get()
-                if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
-                    _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
-                        parentViewModel.onShowReaderInterests()
-                    }
-                } */
                 if (posts != null && posts.cards.isNotEmpty()) {
                     val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
                         listOf(
