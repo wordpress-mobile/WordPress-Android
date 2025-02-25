@@ -946,13 +946,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?,
         binding: ReaderFragmentPostDetailBinding
     ) {
-        val featuredImage = binding.appbarWithCollapsingToolbarLayout.featuredImage
-        featuredImage.setVisible(state != null)
+        val featuredImageView = binding.appbarWithCollapsingToolbarLayout.featuredImage
+        featuredImageView.setVisible(state != null)
         state?.let {
-            featuredImage.layoutParams.height = it.height
+            featuredImageView.layoutParams.height = it.height
             it.url?.let { url ->
-                imageManager.load(featuredImage, PHOTO, url, CENTER_CROP)
-                featuredImage.setOnClickListener {
+                imageManager.load(featuredImageView, PHOTO, url, CENTER_CROP)
+                featuredImageView.setOnClickListener {
                     viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
                 }
             }
