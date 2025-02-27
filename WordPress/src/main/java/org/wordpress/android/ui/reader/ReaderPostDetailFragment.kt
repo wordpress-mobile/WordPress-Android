@@ -493,12 +493,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                     layoutFooterBinding.root.findViewById<View>(R.id.reader_detail_footer_button_container)
                         ?.let { footerContainer ->
-                            footerContainer.setOnApplyWindowInsetsListener { _, insets ->
+                            ViewCompat.setOnApplyWindowInsetsListener(footerContainer) { _, insets ->
                                 val navigationBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
                                 val addedMargin = resources.getDimensionPixelSize(R.dimen.margin_small)
                                 (footerContainer.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
                                     addedMargin + navigationBarInsets.bottom
-                                insets
+                                WindowInsetsCompat.CONSUMED
                             }
                         }
                 }
