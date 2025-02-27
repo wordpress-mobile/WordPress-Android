@@ -34,7 +34,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // adjust for Android 15+ edge-to-edge this by applying insets as needed
+        // apply insets for Android 15+ edge-to-edge
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
             excludedActivities.contains(this.localClassName).not()
         ) {
