@@ -498,7 +498,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                                 val addedMargin = resources.getDimensionPixelSize(R.dimen.margin_small)
                                 (footerContainer.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
                                     addedMargin + navigationBarInsets.bottom
-                                WindowInsetsCompat.CONSUMED
+                                insets
                             }
                         }
                 }
