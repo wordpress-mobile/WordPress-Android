@@ -68,7 +68,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
                     if (applyBottomOffset) innerPadding.bottom else 0
                 )
 
-                insets
+                WindowInsetsCompat.CONSUMED
             }
         }
     }

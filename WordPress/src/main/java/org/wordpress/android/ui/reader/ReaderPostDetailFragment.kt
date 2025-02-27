@@ -403,7 +403,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
@@ -412,11 +411,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
         ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
-            val insetTop = insets.systemWindowInsetTop
+            val insetTop = insets.getInsets(WindowInsetsCompat. Type. systemBars()).top
             if (insetTop > 0) {
                 toolBar.setPadding(0, insetTop, 0, 0)
             }
-            insets.consumeSystemWindowInsets()
+            WindowInsetsCompat.CONSUMED
         }
 
         // Fixes viewpager not displaying menu items for first fragment
