@@ -181,11 +181,5 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             applyTopOffset = false,
             applyBottomOffset = true
         ),
-
-        // apply top offset only
-        WPMainActivity::class.java.name to ActivityOffsets(
-            applyTopOffset = true,
-            applyBottomOffset = false
-        ),
     )
 }
