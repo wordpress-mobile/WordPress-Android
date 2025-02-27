@@ -38,12 +38,8 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // When both compileSdkVersion and targetSdkVersion are 35+, the OS defaults to
-        // using edge-to-edge. We need to adjust for this by applying insets as needed.
-        val targetSdkVersion = applicationContext.applicationInfo.targetSdkVersion
-        if ((targetSdkVersion >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
-        ) {
+        // adjust for Android 15+ edge-to-edge this by applying insets as needed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             applyInsetOffsets()
         }
     }
@@ -162,24 +158,6 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         SupportWebViewActivity::class.java.name to ActivityOffsets(
             applyTopOffset = false,
             applyBottomOffset = false
-        ),
-
-        // apply bottom offset only
-        MediaSettingsActivity::class.java.name to ActivityOffsets(
-            applyTopOffset = false,
-            applyBottomOffset = true
-        ),
-        PagesActivity::class.java.name to ActivityOffsets(
-            applyTopOffset = false,
-            applyBottomOffset = true
-        ),
-        PostsListActivity::class.java.name to ActivityOffsets(
-            applyTopOffset = false,
-            applyBottomOffset = true
-        ),
-        StatsActivity::class.java.name to ActivityOffsets(
-            applyTopOffset = false,
-            applyBottomOffset = true
         ),
     )
 }
