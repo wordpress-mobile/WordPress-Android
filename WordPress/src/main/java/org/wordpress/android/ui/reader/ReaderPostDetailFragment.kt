@@ -403,7 +403,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
@@ -412,11 +411,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
         ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
-            val insetTop = insets.systemWindowInsetTop
+            val insetTop = insets.getInsets(WindowInsetsCompat. Type. systemBars()).top
             if (insetTop > 0) {
                 toolBar.setPadding(0, insetTop, 0, 0)
             }
-            insets.consumeSystemWindowInsets()
+            WindowInsetsCompat.CONSUMED
         }
 
         // Fixes viewpager not displaying menu items for first fragment
@@ -488,21 +487,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         params.behavior = HideBottomViewOnScrollBehavior<View>()
                     }
                 layoutFooterBinding.root.isInvisible = true
-
-                // on SDK 35+ edge-to-edge is enabled so we want to avoid covering the navigation bar icons by
-                // taking the nav bar height into account (nav height will be 0 when gesture nav is enabled)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                    layoutFooterBinding.root.findViewById<View>(R.id.reader_detail_footer_button_container)
-                        ?.let { footerContainer ->
-                            footerContainer.setOnApplyWindowInsetsListener { _, insets ->
-                                val navigationBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-                                val addedMargin = resources.getDimensionPixelSize(R.dimen.margin_small)
-                                (footerContainer.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                                    addedMargin + navigationBarInsets.bottom
-                                insets
-                            }
-                        }
-                }
             }
         }.also { stub ->
             stub.inflate()
