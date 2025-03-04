@@ -16,7 +16,6 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommende
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -32,7 +31,6 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Er
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -59,7 +57,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerTracker: ReaderTracker,
     displayUtilsWrapper: DisplayUtilsWrapper,
-    private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val readerAnnouncementHelper: ReaderAnnouncementHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -148,40 +145,30 @@ class ReaderDiscoverViewModel @Inject constructor(
         // listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
-                val userTags = getFollowedTagsUseCase.get()
+                if (posts != null && posts.cards.isNotEmpty()) {
+                    val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
+                        listOf(
+                            ReaderCardUiState.ReaderAnnouncementCardUiState(
+                                readerAnnouncementHelper.getReaderAnnouncementItems(),
+                                ::dismissAnnouncementCard
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
 
-                // since new users have the dailyprompt tag followed by default, we need to ignore them when
-                // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
-                if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
-                    _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
-                        parentViewModel.onShowReaderInterests()
+                    _uiState.value = DiscoverUiState.ContentUiState(
+                        announcement + convertCardsToUiStates(posts),
+                        reloadProgressVisibility = false,
+                        loadMoreProgressVisibility = false,
+                    )
+                    if (swipeToRefreshTriggered) {
+                        _scrollToTopEvent.postValue(Event(Unit))
+                        swipeToRefreshTriggered = false
                     }
                 } else {
-                    if (posts != null && posts.cards.isNotEmpty()) {
-                        val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
-                            listOf(
-                                ReaderCardUiState.ReaderAnnouncementCardUiState(
-                                    readerAnnouncementHelper.getReaderAnnouncementItems(),
-                                    ::dismissAnnouncementCard
-                                )
-                            )
-                        } else {
-                            emptyList()
-                        }
-
-                        _uiState.value = DiscoverUiState.ContentUiState(
-                            announcement + convertCardsToUiStates(posts),
-                            reloadProgressVisibility = false,
-                            loadMoreProgressVisibility = false,
-                        )
-                        if (swipeToRefreshTriggered) {
-                            _scrollToTopEvent.postValue(Event(Unit))
-                            swipeToRefreshTriggered = false
-                        }
-                    } else {
-                        _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
-                            _navigationEvents.value = Event(ShowReaderSubs)
-                        }
+                    _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
+                        _navigationEvents.value = Event(ShowReaderSubs)
                     }
                 }
             }
