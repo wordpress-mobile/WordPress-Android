@@ -1,6 +1,6 @@
 [versions]
 agp = '8.8.1'
-airbnb-lottie = '6.6.2'
+airbnb-lottie = '6.6.3'
 android-desugar = '2.1.5'
 android-installreferrer = '2.2'
 android-security-lint = '1.0.3'
