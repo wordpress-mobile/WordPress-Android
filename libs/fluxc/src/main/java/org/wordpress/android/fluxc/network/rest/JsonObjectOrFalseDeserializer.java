@@ -50,9 +50,7 @@ public class JsonObjectOrFalseDeserializer implements JsonDeserializer<JsonObjec
                 }
                 Object elementToPrimitive = jsonPrimitiveToJavaPrimitive(field.getType(), element);
 
-                if (elementToPrimitive == null) {
-                    gson.fromJson(element, field.getType());
-                } else {
+                if (elementToPrimitive != null) {
                     field.set(result, jsonPrimitiveToJavaPrimitive(field.getType(), element));
                 }
             }

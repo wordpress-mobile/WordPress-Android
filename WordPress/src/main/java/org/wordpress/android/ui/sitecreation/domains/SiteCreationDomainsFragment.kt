@@ -2,8 +2,6 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -29,7 +27,6 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
@@ -148,7 +145,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
         private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
         private val divider = rootView.findViewById<View>(R.id.divider)
-        private val showKeyboardHandler = Handler(Looper.getMainLooper())
 
         var onTextChanged: ((String) -> Unit)? = null
 
@@ -192,24 +188,14 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             uiHelpers.updateVisibility(progressBar, uiState.showProgress)
             uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
             uiHelpers.updateVisibility(divider, uiState.showDivider)
-            showKeyboard(uiState.showKeyboard)
-        }
-
-        private fun showKeyboard(shouldShow: Boolean) {
-            if (shouldShow) {
+            if (uiState.focusSearch) {
                 searchInput.requestFocus()
-                /**
-                 * This workaround handles the case where the SiteCreationDomainsFragment appears after the
-                 * DesignPreviewFragment dismisses and the keyboard fails to appear
-                 */
-                showKeyboardHandler.postDelayed({ ActivityUtils.showKeyboard(searchInput) }, SHOW_KEYBOARD_DELAY)
             }
         }
     }
 
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
-        const val SHOW_KEYBOARD_DELAY = 200L
 
         fun newInstance(screenTitle: String): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()

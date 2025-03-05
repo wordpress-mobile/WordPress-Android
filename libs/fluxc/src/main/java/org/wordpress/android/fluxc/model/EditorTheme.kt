@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
@@ -88,15 +89,12 @@ data class BlockEditorSettings(
         get() = features?.removeFontFamilies()
 
     private fun JsonElement.removeFontFamilies(): JsonElement {
-        if (isJsonObject && asJsonObject.has("typography")) {
-            val featuresObject = asJsonObject
-            val typography = featuresObject.get("typography")
-            if (typography.isJsonObject) {
-                val typographyObject = typography.asJsonObject
-                if (typographyObject.has("fontFamilies")) {
-                    typographyObject.remove("fontFamilies")
-                    return featuresObject
+        (this as? JsonObject)?.let { jsonObject ->
+            (jsonObject.get("typography") as? JsonObject)?.let { typography ->
+                if (typography.has("fontFamilies")) {
+                    typography.remove("fontFamilies")
                 }
+                return jsonObject
             }
         }
         return this

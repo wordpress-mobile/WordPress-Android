@@ -221,7 +221,6 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.ExperimentalFeaturesActivity"
-            android:configChanges="locale|orientation|screenSize"
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
@@ -269,6 +268,8 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
+            android:configChanges="screenLayout|orientation|screenSize
+      |keyboard|keyboardHidden|smallestScreenSize"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
@@ -534,7 +535,7 @@
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/WordPress.NoActionBar.TranslucentStatus"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity

@@ -51,7 +51,7 @@ fastlane_require 'dotenv'
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
 Dotenv.load(USER_ENV_FILE_PATH)
 
-GHHELPER_REPO = 'wordpress-mobile/WordPress-Android'
+GITHUB_REPO = 'wordpress-mobile/WordPress-Android'
 DEFAULT_BRANCH = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 

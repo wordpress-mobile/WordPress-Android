@@ -23,7 +23,6 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
@@ -37,7 +36,6 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -54,7 +52,6 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -106,9 +103,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Mock
-    private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-
-    @Mock
     private lateinit var readerTracker: ReaderTracker
 
     @Mock
@@ -141,7 +135,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             readerUtilsWrapper,
             readerTracker,
             displayUtilsWrapper,
-            getFollowedTagsUseCase,
             mReaderAnnouncementHelper,
             testDispatcher(),
             testDispatcher()
@@ -205,7 +198,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         }
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
-        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList().apply { add(mock()) })
     }
 
     @Test
@@ -228,41 +220,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
-    }
-
-    @Test
-    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags`() = test {
-        // Arrange
-        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
-        val uiStates = init().uiStates
-        // Act
-        viewModel.start(parentViewModel)
-        // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
-    }
-
-    @Test
-    fun `ShowFollowInterestsEmptyUiState is shown when the user follows only the daily prompt tag`() = test {
-        // Arrange
-        val tagsWithDailyPrompt = ReaderTagList().apply {
-            add(
-                ReaderTag(
-                    "dailyprompt",
-                    "dailyprompt",
-                    "dailyprompt",
-                    "https://public-api.wordpress.com/rest/v1.2/read/tags/dailyprompt/posts",
-                    ReaderTagType.DEFAULT
-                )
-            )
-        }
-        whenever(getFollowedTagsUseCase.get()).thenReturn(tagsWithDailyPrompt)
-        val uiStates = init().uiStates
-        // Act
-        viewModel.start(parentViewModel)
-        // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
     }
 
     @Test
@@ -643,18 +600,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
 
             // Assert for load more
             assertThat(scrollToTopCounter.count).isZero()
-    }
-
-    @Test
-    fun `Action button on no tags empty screen opens reader interests screen`() = test {
-        // Arrange
-        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
-        init()
-        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
-        // Act
-        (viewModel.uiState.value as ShowNoFollowedTagsUiState).action.invoke()
-        // Assert
-        verify(parentViewModel).onShowReaderInterests()
     }
 
     @Test

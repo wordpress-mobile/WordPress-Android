@@ -397,7 +397,7 @@ private fun createSearchInputUiState(
             showProgress = showProgress,
             showClearButton = showClearButton,
             showDivider = showDivider,
-            showKeyboard = true
+            focusSearch = true
         )
     }
 

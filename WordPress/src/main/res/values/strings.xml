@@ -959,6 +959,9 @@
     <string name="experimental_features_screen_title">Experimental Features</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
+    <string name="experimental_features_feedback_dialog_title">Share feedback</string>
+    <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
+    <string name="experimental_features_feedback_dialog_decline">Not now</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>

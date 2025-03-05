@@ -1005,11 +1005,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editorMedia.toastMessage.observe(this) { event: Event<ToastMessageHolder?> ->
             event.getContentIfNotHandled()?.show(this)
         }
-        if (!isGutenbergKitEditor) {
-            storePostViewModel.onSavePostTriggered.observe(this) { unitEvent: Event<Unit> ->
-                unitEvent.applyIfNotHandled {
-                    updateAndSavePostAsync()
-                }
+        storePostViewModel.onSavePostTriggered.observe(this) { unitEvent: Event<Unit> ->
+            unitEvent.applyIfNotHandled {
+                updateAndSavePostAsync()
             }
         }
         storePostViewModel.onFinish.observe(this) { finishEvent ->
@@ -2572,7 +2570,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
-                    // Refactor GutenbergKit to rely upon this observer rather than its custom implementation
+
+                  // Refactor GutenbergKit to rely upon this observer rather than its custom implementation
                     if (editorFragment !is GutenbergKitEditorFragment) {
                         editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
                             storePostViewModel.savePostWithDelay()

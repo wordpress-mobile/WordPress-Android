@@ -335,7 +335,7 @@ platform :android do
     )
 
     comment_on_pr(
-      project: GHHELPER_REPO,
+      project: GITHUB_REPO,
       pr_number: Integer(ENV.fetch('BUILDKITE_PULL_REQUEST', nil)),
       reuse_identifier: "#{product.downcase}-prototype-build-link",
       body: comment_body
