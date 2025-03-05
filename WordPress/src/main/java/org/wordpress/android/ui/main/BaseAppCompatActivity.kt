@@ -23,6 +23,7 @@ import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.pages.PagesActivity
+import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.ExperimentalFeaturesActivity
@@ -108,6 +109,10 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             applyBottomOffset = false
         ),
         EditJetpackSocialShareMessageActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        EditPostActivity::class.java.name to ActivityOffsets(
             applyTopOffset = false,
             applyBottomOffset = false
         ),

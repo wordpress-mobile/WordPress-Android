@@ -269,7 +269,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
             <meta-data
