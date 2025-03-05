@@ -22,10 +22,13 @@ import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
+import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.pages.PagesActivity
+import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.ExperimentalFeaturesActivity
+import org.wordpress.android.ui.reader.ReaderCommentListActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.stats.refresh.StatsActivity
@@ -187,5 +190,20 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             applyTopOffset = true,
             applyBottomOffset = false
         ),
-    )
+
+        // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping
+        // their editors
+        EditPostActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        NotificationsDetailActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+        ReaderCommentListActivity::class.java.name to ActivityOffsets(
+            applyTopOffset = false,
+            applyBottomOffset = false
+        ),
+   )
 }
