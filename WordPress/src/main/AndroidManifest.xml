@@ -605,7 +605,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
