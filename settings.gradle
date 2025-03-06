@@ -59,6 +59,9 @@ dependencyResolutionManagement {
             }
         }
         maven { url "https://www.jitpack.io" }
+        maven {
+            url "https://maven.singular.net"
+        }
     }
 }
 

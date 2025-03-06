@@ -93,6 +93,7 @@ mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
 robolectric = '4.14.1'
 sentry = '5.3.0'
+singular = "12.6.1"
 squareup-java-poet = '1.13.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-okhttp3 = '4.12.0'
@@ -248,6 +249,7 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+singular = { module = "com.singular.sdk:singular_sdk", version.ref = "singular" }
 squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }
 squareup-kotlin-poet-main = { group = "com.squareup", name = "kotlinpoet", version.ref = "squareup-kotlin-poet" }
