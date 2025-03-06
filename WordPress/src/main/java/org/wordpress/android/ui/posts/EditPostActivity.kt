@@ -1982,11 +1982,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun initializeEditorFragment() {
         if (editorFragment is GutenbergKitEditorFragment) {
-            editorFragment?.onEditorContentChanged(object : GutenbergView.ContentChangeListener {
-                override fun onContentChanged(title: String, content: String) {
-                    storePostViewModel.savePostWithDelay()
-                }
-            })
             editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
                 override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
                     onToggleUndo(!hasUndo)
@@ -2570,12 +2565,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
-
-                  // Refactor GutenbergKit to rely upon this observer rather than its custom implementation
-                    if (editorFragment !is GutenbergKitEditorFragment) {
-                        editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
-                            storePostViewModel.savePostWithDelay()
-                        }
+                    editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
+                        storePostViewModel.savePostWithDelay()
                     }
                     if (editorFragment is EditorMediaUploadListener) {
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
