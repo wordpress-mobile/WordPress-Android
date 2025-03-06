@@ -73,6 +73,8 @@ steps:
           comment_with_dependency_diff 'WordPress' 'wordpressVanillaReleaseRuntimeClasspath'
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/diff/*"
 
   #################
   # Unit Tests
