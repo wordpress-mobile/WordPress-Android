@@ -363,7 +363,7 @@ platform :android do
     UI.important "Publishing release #{version_number} on GitHub"
 
     publish_github_release(
-      repository: GHHELPER_REPO,
+      repository: GITHUB_REPO,
       name: version_number
     )
 
@@ -613,7 +613,7 @@ platform :android do
   # Delete a branch remotely, after having removed any GitHub branch protection
   #
   def delete_remote_git_branch!(branch_name)
-    remove_branch_protection(repository: GHHELPER_REPO, branch: branch_name)
+    remove_branch_protection(repository: GITHUB_REPO, branch: branch_name)
 
     Git.open(Dir.pwd).push('origin', branch_name, delete: true)
   end
