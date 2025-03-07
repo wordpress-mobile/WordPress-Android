@@ -254,6 +254,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.setMinImagesWidth(minMediaSize);
         mContent.setMaxImagesWidth(maxMediaSize);
 
+        // On some Samsung devices, predictive text may cause the content to be malformed.
+        // To resolve this we disable predicative text. Note that Aztec only enforces this
+        // setting on devices using the Samsung keyboard and running API 33+.
+        // see https://github.com/wordpress-mobile/WordPress-Android/issues/21739
+        mContent.enableSamsungPredictiveBehaviorOverride();
+
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
