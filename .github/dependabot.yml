@@ -37,10 +37,8 @@ updates:
       - dependency-name: "com.facebook.fbjni:fbjni"
       # Our libraries that are stored in S3 have a custom versioning scheme which doesn't work with
       # dependapot.
-      - dependency-name: "org.wordpress:fluxc"
       - dependency-name: "org.wordpress:utils"
       - dependency-name: "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
-      - dependency-name: "org.wordpress:login"
       - dependency-name: "com.automattic:stories"
       - dependency-name: "com.automattic.stories:mp4compose"
       - dependency-name: "com.automattic.stories:photoeditor"
