@@ -39,9 +39,6 @@ updates:
       # dependapot.
       - dependency-name: "org.wordpress:utils"
       - dependency-name: "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
-      - dependency-name: "com.automattic:stories"
-      - dependency-name: "com.automattic.stories:mp4compose"
-      - dependency-name: "com.automattic.stories:photoeditor"
       - dependency-name: "org.wordpress:aztec"
       - dependency-name: "org.wordpress.aztec:wordpress-shortcodes"
       - dependency-name: "org.wordpress.aztec:wordpress-comments"
