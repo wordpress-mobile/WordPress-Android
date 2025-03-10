@@ -256,7 +256,7 @@
             android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
         <activity
@@ -270,7 +270,7 @@
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="screenLayout|orientation|screenSize
       |keyboard|keyboardHidden|smallestScreenSize"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
             <meta-data
@@ -605,7 +605,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
@@ -712,7 +712,7 @@
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
 
         <!--People Management-->
         <activity

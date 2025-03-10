@@ -18,11 +18,6 @@ updates:
         exclude-patterns:
           - "org.jetbrains.kotlinx*"
     ignore:
-      # The Android Gradle Plugin is a dependency that needs to be in sync with other
-      # in-house libraries due to compatibility with composite build.
-      - dependency-name: "com.android.tools.build:gradle"
-      - dependency-name: "com.android.application"
-      - dependency-name: "com.android.library"
       # Bumping 2.13.3 to the newest version requires lots of changes, including changes to
       # Gutenberg. As such, and as agreed, any update is paused. For more details, see
       # https://github.com/wordpress-mobile/WordPress-Android/pull/17936#issuecomment-1553227875
@@ -42,13 +37,8 @@ updates:
       - dependency-name: "com.facebook.fbjni:fbjni"
       # Our libraries that are stored in S3 have a custom versioning scheme which doesn't work with
       # dependapot.
-      - dependency-name: "org.wordpress:fluxc"
       - dependency-name: "org.wordpress:utils"
       - dependency-name: "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
-      - dependency-name: "org.wordpress:login"
-      - dependency-name: "com.automattic:stories"
-      - dependency-name: "com.automattic.stories:mp4compose"
-      - dependency-name: "com.automattic.stories:photoeditor"
       - dependency-name: "org.wordpress:aztec"
       - dependency-name: "org.wordpress.aztec:wordpress-shortcodes"
       - dependency-name: "org.wordpress.aztec:wordpress-comments"
