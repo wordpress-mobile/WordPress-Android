@@ -63,11 +63,32 @@ steps:
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
-  - label: "Dependency Tree Diff"
-    command: |
-      comment_with_dependency_diff 'WordPress' 'wordpressVanillaReleaseRuntimeClasspath'
-    if: build.pull_request.id != null
-    plugins: [$CI_TOOLKIT]
+  #################
+  # Diff Reports
+  #################
+  - group: "🕵️‍♂️ Diff Reports"
+    steps:
+      - label: "Dependency Tree Diff"
+        command: |
+          comment_with_dependency_diff 'WordPress' 'wordpressVanillaReleaseRuntimeClasspath'
+        if: build.pull_request.id != null
+        plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/diff/*"
+
+      - label: "Merged Manifest Diff WordPress"
+        command: ".buildkite/commands/diff-merged-manifest.sh wordpressVanillaRelease"
+        if: build.pull_request.id != null
+        plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/diff_manifest/**/**/*"
+
+      - label: "Merged Manifest Diff Jetpack"
+        command: ".buildkite/commands/diff-merged-manifest.sh jetpackVanillaRelease"
+        if: build.pull_request.id != null
+        plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/diff_manifest/**/**/*"
 
   #################
   # Unit Tests
