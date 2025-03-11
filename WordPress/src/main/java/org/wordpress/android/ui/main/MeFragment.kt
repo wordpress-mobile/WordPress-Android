@@ -337,6 +337,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
+    private fun MeFragmentBinding.refreshEmailVerifiedBanner(isVerified: Boolean) {
+        /*if (isVerified) {
+            emailVerifiedBanner.visibility = View.GONE
+        } else {
+            emailVerifiedBanner.visibility = View.VISIBLE
+        }*/
+    }
+
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
@@ -375,6 +383,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
+        viewModel.isEmailVerified.observeEvent(viewLifecycleOwner) {
+            refreshEmailVerifiedBanner(it)
         }
     }
 

@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult
@@ -35,7 +36,8 @@ class MeViewModel
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -51,6 +53,9 @@ class MeViewModel
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _isEmailVerified = MutableLiveData<Event<Boolean>>()
+    val isEmailVerified: LiveData<Event<Boolean>> = _isEmailVerified
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -71,6 +76,10 @@ class MeViewModel
         )
 
         fun isError() = error != null
+    }
+
+    init {
+        _isEmailVerified.value = Event(accountStore.account.emailVerified)
     }
 
     fun signOutWordPress(application: WordPress) {
