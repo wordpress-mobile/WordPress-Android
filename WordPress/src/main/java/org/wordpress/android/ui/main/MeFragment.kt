@@ -345,7 +345,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         } else {
             meEmailVerificationCard.visibility = View.VISIBLE
             meEmailVerificationComposeView.setContent {
-                MeEmailVerificationBanner(verificationState)
+                MeEmailVerificationBanner(
+                    isUnverified = verificationState == MeViewModel.EmailVerificationState.UNVERIFIED,
+                    emailAddress = accountStore.account.email
+                )
             }
         }
     }

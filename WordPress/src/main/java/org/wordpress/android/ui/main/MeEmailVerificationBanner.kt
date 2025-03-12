@@ -14,46 +14,81 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 
+/**
+ * Email verification banner for Me screen
+ * @param isUnverified Whether the email is unverified, when false it means it's been verified
+ * @param emailAddress The email address to display for the user
+ */
 @Composable
 fun MeEmailVerificationBanner(
-    verificationState: MeViewModel.EmailVerificationState
+    isUnverified: Boolean,
+    emailAddress: String,
 ) {
+    val title = if (isUnverified) {
+        stringResource(R.string.me_email_verification_verify_email)
+    } else {
+        stringResource(R.string.me_email_verification_sent,)
+    }
+    val titleColor = if (isUnverified) {
+        MaterialTheme.colorScheme.secondary
+    } else {
+        MaterialTheme.colorScheme.onTertiary
+    }
+    val description = if (isUnverified) {
+        stringResource(R.string.me_email_verification_verify_email_description, emailAddress)
+    } else {
+        stringResource(R.string.me_email_verification_sent_description, emailAddress)
+    }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        // First row with an icon and text
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Filled.Home,
-                contentDescription = "Home Icon",
+                contentDescription = null,
                 modifier = Modifier.padding(end = 8.dp)
             )
-            Text(text = "Welcome to Our App!", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = titleColor
+            )
         }
 
-        // Spacer to add space between the rows
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Second row of text
-        Text(text = "Explore features and more!", style = MaterialTheme.typography.bodyMedium)
+        Text(text = description, style = MaterialTheme.typography.bodyMedium)
 
-        // Spacer to add space between the rows
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Third row of text
-        Text(text = "Get started by browsing the app.", style = MaterialTheme.typography.bodyMedium)
+        if (isUnverified) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.me_email_verification_verify_email_send_link),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }
 
 @Preview
 @Composable
-fun MeGravatarQuickEditorPreview() {
-    MeEmailVerificationBanner(MeViewModel.EmailVerificationState.VERIFIED)
+fun MeGravatarQuickEditorUnverifiedPreview() {
+    MeEmailVerificationBanner(isUnverified = true, "kurt.vonnegut@example.com")
+}
+
+@Preview
+@Composable
+fun MeGravatarQuickEditorVerifyingPreview() {
+    MeEmailVerificationBanner(isUnverified = false, "kurt.vonnegut@example.com")
 }
