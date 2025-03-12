@@ -6,14 +6,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +23,8 @@ import org.wordpress.android.R
 
 /**
  * Email verification banner for Me screen
- * @param isUnverified Whether the email is unverified, when false it means it's been verified
+ *
+ * @param isUnverified True if email needs to be verified, False if it's being verified (ie: link sent to user)
  * @param emailAddress The email address to display for the user
  */
 @Composable
@@ -30,20 +32,23 @@ fun MeEmailVerificationBanner(
     isUnverified: Boolean,
     emailAddress: String,
 ) {
-    val title = if (isUnverified) {
-        stringResource(R.string.me_email_verification_verify_email)
+    val title: String
+    val description: String
+    val titleColor: Color
+    val iconId: Int
+    val iconTint: Color
+    if (isUnverified) {
+        title = stringResource(R.string.me_email_verification_verify_email)
+        description = stringResource(R.string.me_email_verification_verify_email_description, emailAddress)
+        titleColor = MaterialTheme.colorScheme.onSurface
+        iconId = R.drawable.ic_mail_white_24dp
+        iconTint = MaterialTheme.colorScheme.onSurface
     } else {
-        stringResource(R.string.me_email_verification_sent,)
-    }
-    val titleColor = if (isUnverified) {
-        MaterialTheme.colorScheme.secondary
-    } else {
-        MaterialTheme.colorScheme.onTertiary
-    }
-    val description = if (isUnverified) {
-        stringResource(R.string.me_email_verification_verify_email_description, emailAddress)
-    } else {
-        stringResource(R.string.me_email_verification_sent_description, emailAddress)
+        title = stringResource(R.string.me_email_verification_sent)
+        description = stringResource(R.string.me_email_verification_sent_description, emailAddress)
+        titleColor = colorResource(R.color.jetpack_green_50)
+        iconId = R.drawable.ic_gridicons_checkmark_circle
+        iconTint = titleColor
     }
 
     Column(
@@ -55,8 +60,9 @@ fun MeEmailVerificationBanner(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.Home,
+                painter = painterResource(iconId),
                 contentDescription = null,
+                tint = iconTint,
                 modifier = Modifier.padding(end = 8.dp)
             )
             Text(
@@ -75,7 +81,8 @@ fun MeEmailVerificationBanner(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.me_email_verification_verify_email_send_link),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = colorResource(R.color.jetpack_green_50)
             )
         }
     }
@@ -84,11 +91,11 @@ fun MeEmailVerificationBanner(
 @Preview
 @Composable
 fun MeGravatarQuickEditorUnverifiedPreview() {
-    MeEmailVerificationBanner(isUnverified = true, "kurt.vonnegut@example.com")
+    MeEmailVerificationBanner(isUnverified = true, "vonnegut@example.com")
 }
 
 @Preview
 @Composable
 fun MeGravatarQuickEditorVerifyingPreview() {
-    MeEmailVerificationBanner(isUnverified = false, "kurt.vonnegut@example.com")
+    MeEmailVerificationBanner(isUnverified = false, "vonnegut@example.com")
 }
