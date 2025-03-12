@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 
 /**
- * Email verification banner for Me screen
+ * Banner for Me screen when user's email hasn't yet been verified
  *
- * @param isUnverified True if email needs to be verified, False if it's being verified (ie: link sent to user)
+ * @param isUnverified True if email needs to be verified, False if it's awaiting verification (ie: link sent)
  * @param emailAddress The email address to display for the user
  */
 @Composable
