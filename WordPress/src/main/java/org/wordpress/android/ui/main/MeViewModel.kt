@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -54,6 +55,11 @@ class MeViewModel
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
+    private val _showEmailVerificationBanner = MutableLiveData<Event<Boolean>>()
+    val showEmailVerificationBanner: LiveData<Event<Boolean>> = _showEmailVerificationBanner
+
+    var isVerificationLinkSent: Boolean = false
+
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
         val error: String? = null,
@@ -77,22 +83,34 @@ class MeViewModel
 
     enum class EmailVerificationState {
         UNVERIFIED,
-        NO_EMAIL,
-        VERIFICATION_EMAIL_SENT,
+        NO_ACCOUNT,
         VERIFIED,
-        ERROR
+        VERIFICATION_LINK_SENT
     }
 
-    fun getEmailVerificationState(): EmailVerificationState {
+    init {
+        checkEmailVerificationState()
+    }
+
+    private fun checkEmailVerificationState() {
         val hasEmail = accountStore.account.email.isNotEmpty()
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
-        return if (isEmailVerified) {
+        val emailVerificationState = if (isEmailVerified) {
             EmailVerificationState.UNVERIFIED // TODO change to VERIFIED
+        } else if (isVerificationLinkSent) {
+            EmailVerificationState.VERIFICATION_LINK_SENT
         } else if (hasEmail) {
             EmailVerificationState.UNVERIFIED
         } else {
-            EmailVerificationState.NO_EMAIL
+            EmailVerificationState.NO_ACCOUNT
         }
+        _showEmailVerificationBanner.value = Event(emailVerificationState == EmailVerificationState.UNVERIFIED)
+    }
+
+    fun sendVerificationLinkClick(context: Context) {
+        isVerificationLinkSent = true
+        checkEmailVerificationState()
+        // TODO
     }
 
     fun signOutWordPress(application: WordPress) {
@@ -133,9 +151,11 @@ class MeViewModel
                     _recommendUiState.value = state
                 }
             }
+
             FetchingApi -> {
                 return
             }
+
             null -> {
                 getRecommendTemplate()
             }
@@ -173,7 +193,8 @@ class MeViewModel
     }
 
     private fun RecommendAppState.toUiState(): Event<RecommendAppUiState> {
-        return Event(when (this) {
+        return Event(
+            when (this) {
             is ApiFetchedResult -> if (this.isError()) {
                 RecommendAppUiState(this.error!!)
             } else {
@@ -184,6 +205,7 @@ class MeViewModel
                     analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
                 }
             }
+
             FetchingApi -> RecommendAppUiState(showLoading = true)
         })
     }

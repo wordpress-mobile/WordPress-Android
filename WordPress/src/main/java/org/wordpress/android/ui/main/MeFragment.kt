@@ -292,7 +292,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         refreshWPCOMLoggedInOnlyButtonsVisibility()
-        refreshEmailVerificationBanner()
     }
 
     private fun MeFragmentBinding.refreshWPCOMLoggedInOnlyButtonsVisibility() {
@@ -338,18 +337,23 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    private fun MeFragmentBinding.refreshEmailVerificationBanner() {
-        val verificationState = viewModel.getEmailVerificationState()
-        if (verificationState == MeViewModel.EmailVerificationState.VERIFIED || verificationState == MeViewModel.EmailVerificationState.NO_EMAIL) {
-            meEmailVerificationCard.visibility = View.GONE
-        } else {
+    /**
+     * Banner which asks user to verify their email address if they haven't already
+     */
+    private fun MeFragmentBinding.refreshEmailVerificationBanner(show: Boolean) {
+        if (show) {
             meEmailVerificationCard.visibility = View.VISIBLE
             meEmailVerificationComposeView.setContent {
                 MeEmailVerificationBanner(
-                    isUnverified = verificationState == MeViewModel.EmailVerificationState.UNVERIFIED,
-                    emailAddress = accountStore.account.email
+                    isUnverified = viewModel.isVerificationLinkSent.not(),
+                    emailAddress = accountStore.account.email,
+                    onSendLinkClick = {
+                        viewModel.sendVerificationLinkClick(requireActivity())
+                    }
                 )
             }
+        } else {
+            meEmailVerificationCard.visibility = View.GONE
         }
     }
 
@@ -391,6 +395,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
+        viewModel.showEmailVerificationBanner.observeEvent(viewLifecycleOwner) {
+            refreshEmailVerificationBanner(it)
         }
     }
 

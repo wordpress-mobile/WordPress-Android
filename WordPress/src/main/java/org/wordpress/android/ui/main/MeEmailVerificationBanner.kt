@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import org.wordpress.android.R
 fun MeEmailVerificationBanner(
     isUnverified: Boolean,
     emailAddress: String,
+    onSendLinkClick: () -> Unit,
 ) {
     val title: String
     val description: String
@@ -75,14 +77,20 @@ fun MeEmailVerificationBanner(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = description, style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyLarge
+        )
 
         if (isUnverified) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.me_email_verification_verify_email_send_link),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colorResource(R.color.jetpack_green_50)
+                style = MaterialTheme.typography.bodyLarge,
+                color = colorResource(R.color.jetpack_green_50),
+                modifier = Modifier.clickable {
+                    onSendLinkClick()
+                }
             )
         }
     }
@@ -91,11 +99,19 @@ fun MeEmailVerificationBanner(
 @Preview
 @Composable
 fun MeGravatarQuickEditorUnverifiedPreview() {
-    MeEmailVerificationBanner(isUnverified = true, "vonnegut@example.com")
+    MeEmailVerificationBanner(
+        isUnverified = true,
+        emailAddress = "vonnegut@example.com",
+        onSendLinkClick = {}
+    )
 }
 
 @Preview
 @Composable
 fun MeGravatarQuickEditorVerifyingPreview() {
-    MeEmailVerificationBanner(isUnverified = false, "vonnegut@example.com")
+    MeEmailVerificationBanner(
+        isUnverified = false,
+        emailAddress = "vonnegut@example.com",
+        onSendLinkClick = {}
+    )
 }
