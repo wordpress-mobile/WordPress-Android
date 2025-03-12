@@ -358,7 +358,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
                 meEmailVerificationCard.visibility = View.VISIBLE
                 meEmailVerificationComposeView.setContent {
-                    MeEmailVerificationRequestedBanner(
+                    MeEmailVerificationSendingBanner(
+                        emailAddress = accountStore.account.email,
+                    )
+                }
+            }
+            MeViewModel.EmailVerificationState.LINK_SENT -> {
+                meEmailVerificationCard.visibility = View.VISIBLE
+                meEmailVerificationComposeView.setContent {
+                    MeEmailVerificationSentBanner(
                         emailAddress = accountStore.account.email,
                     )
                 }

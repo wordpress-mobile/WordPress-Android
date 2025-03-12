@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.main
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -27,10 +29,7 @@ fun MeEmailUnverifiedBanner(
     emailAddress: String,
     onSendLinkClick: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
+    MeEmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -71,13 +70,43 @@ fun MeEmailUnverifiedBanner(
  * Banner for Me screen when user's email hasn't yet been verified but a verification link has been requested
  */
 @Composable
-fun MeEmailVerificationRequestedBanner(
+fun MeEmailVerificationSendingBanner(
     emailAddress: String,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
+    MeEmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_gridicons_checkmark_circle),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.me_email_verification_sending),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.me_email_verification_sending_description, emailAddress),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }
+}
+
+/**
+ * Banner for Me screen when user's email hasn't yet been verified but a verification link has been sent
+ */
+@Composable
+fun MeEmailVerificationSentBanner(
+    emailAddress: String,
+) {
+    MeEmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -103,6 +132,19 @@ fun MeEmailVerificationRequestedBanner(
     }
 }
 
+@Composable
+private fun MeEmailVerificationContainer(
+    content: @Composable () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 148.dp),
+    ) {
+        content()
+    }
+}
+
 @Preview
 @Composable
 fun MeEmailUnverifiedPreview() {
@@ -115,7 +157,15 @@ fun MeEmailUnverifiedPreview() {
 @Preview
 @Composable
 fun MeEmailVerificationRequestedPreview() {
-    MeEmailVerificationRequestedBanner(
+    MeEmailVerificationSendingBanner(
+        emailAddress = "vonnegut@example.com",
+    )
+}
+
+@Preview
+@Composable
+fun MeEmailVerificationSentPreview() {
+    MeEmailVerificationSentBanner(
         emailAddress = "vonnegut@example.com",
     )
 }

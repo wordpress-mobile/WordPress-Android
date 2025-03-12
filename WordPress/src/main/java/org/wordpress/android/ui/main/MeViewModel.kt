@@ -73,6 +73,7 @@ class MeViewModel
     val errorMessage: LiveData<UiString> = _errorMessage
 
     private var isEmailVerificationLinkRequested: Boolean = false
+    private var isEmailVerificationLinkSent: Boolean = false
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -99,12 +100,13 @@ class MeViewModel
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
         UNVERIFIED,     // user has not verified their email
         LINK_REQUESTED, // user has requested a verification link
+        LINK_SENT,      // verification link has been sent
         VERIFIED,       // user has verified their email address
     }
 
     init {
         dispatcher.register(this)
-        checkEmailVerificationState()
+        updateEmailVerificationState()
     }
 
     fun signOutWordPress(application: WordPress) {
@@ -156,11 +158,13 @@ class MeViewModel
         }
     }
 
-    private fun checkEmailVerificationState() {
+    private fun updateEmailVerificationState() {
         val hasEmail = accountStore.account.email.isNotEmpty()
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
         _emailVerificationState.value = if (!isEmailVerified) { // TODO remove !
             EmailVerificationState.VERIFIED
+        } else if (isEmailVerificationLinkSent) {
+            EmailVerificationState.LINK_SENT
         } else if (isEmailVerificationLinkRequested) {
             EmailVerificationState.LINK_REQUESTED
         } else if (hasEmail) {
@@ -177,7 +181,7 @@ class MeViewModel
         if (accountStore.hasAccessToken()) {
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
             isEmailVerificationLinkRequested = true
-            checkEmailVerificationState()
+            updateEmailVerificationState()
         }
     }
 
@@ -187,7 +191,7 @@ class MeViewModel
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
                 isEmailVerificationLinkRequested = false
-                checkEmailVerificationState()
+                isEmailVerificationLinkSent = false
                 if (event.error.message.isNotEmpty()) {
                     _errorMessage.value = UiString.UiStringText(event.error.message)
                 } else {
@@ -195,9 +199,10 @@ class MeViewModel
                 }
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
-            isEmailVerificationLinkRequested = true
-            checkEmailVerificationState()
+            isEmailVerificationLinkSent = true
         }
+
+        updateEmailVerificationState()
     }
 
     private fun getRecommendTemplate() {
