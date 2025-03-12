@@ -107,6 +107,19 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/me_email_verification_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="@dimen/card_elevation">
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/me_email_verification_compose_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.card.MaterialCardView>
+
+
             <LinearLayout
                 android:id="@+id/row_my_profile"
                 style="@style/MeListRowLayout">

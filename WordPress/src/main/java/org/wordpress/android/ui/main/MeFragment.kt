@@ -292,6 +292,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         refreshWPCOMLoggedInOnlyButtonsVisibility()
+        refreshEmailVerificationBanner()
     }
 
     private fun MeFragmentBinding.refreshWPCOMLoggedInOnlyButtonsVisibility() {
@@ -337,12 +338,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    private fun MeFragmentBinding.refreshEmailVerifiedBanner(isVerified: Boolean) {
-        /*if (isVerified) {
-            emailVerifiedBanner.visibility = View.GONE
+    private fun MeFragmentBinding.refreshEmailVerificationBanner() {
+        val verificationState = viewModel.getEmailVerificationState()
+        if (verificationState == MeViewModel.EmailVerificationState.VERIFIED || verificationState == MeViewModel.EmailVerificationState.NO_EMAIL) {
+            meEmailVerificationCard.visibility = View.GONE
         } else {
-            emailVerifiedBanner.visibility = View.VISIBLE
-        }*/
+            meEmailVerificationCard.visibility = View.VISIBLE
+            meEmailVerificationComposeView.setContent {
+                MeEmailVerificationBanner(verificationState)
+            }
+        }
     }
 
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
@@ -383,10 +388,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-        }
-
-        viewModel.isEmailVerified.observeEvent(viewLifecycleOwner) {
-            refreshEmailVerifiedBanner(it)
         }
     }
 

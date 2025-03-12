@@ -18,7 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MeEmailVerifiedBanner() {
+fun MeEmailVerificationBanner(
+    verificationState: MeViewModel.EmailVerificationState
+) {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -53,5 +55,5 @@ fun MeEmailVerifiedBanner() {
 @Preview
 @Composable
 fun MeGravatarQuickEditorPreview() {
-    MeEmailVerifiedBanner()
+    MeEmailVerificationBanner(MeViewModel.EmailVerificationState.VERIFIED)
 }

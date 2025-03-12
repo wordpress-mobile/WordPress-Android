@@ -2601,6 +2601,11 @@
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
     <string name="me_btn_scan_login_code">Scan Login Code</string>
+    <string name="me_email_verification_verify_email">Verify your email</string>
+    <string name="me_email_verification_verify_email_description">Please verify your email address (%s) to unlock all features</string>
+    <string name="me_email_verification_verify_email_send_link">Send verification link</string>
+    <string name="me_email_verification_sent">Verification link sent</string>
+    <string name="me_email_verification_sent_description">We\'ve sent a verification link to %s</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
