@@ -55,7 +55,6 @@ fun MeEmailVerificationBanner(
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
     ) {
         Row(

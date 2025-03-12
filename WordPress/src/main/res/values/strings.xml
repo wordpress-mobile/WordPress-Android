@@ -2606,6 +2606,7 @@
     <string name="me_email_verification_verify_email_send_link">Send verification link</string>
     <string name="me_email_verification_sent">Verification link sent</string>
     <string name="me_email_verification_sent_description">We\'ve sent a verification link to %s</string>
+    <string name="me_email_verification_sent_generic_error">Unable to send verification link</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>

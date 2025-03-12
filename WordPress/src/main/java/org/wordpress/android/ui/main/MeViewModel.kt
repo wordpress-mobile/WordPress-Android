@@ -9,9 +9,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction
+import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult
@@ -23,6 +30,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -38,6 +46,7 @@ class MeViewModel
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val dispatcher: Dispatcher,
     val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
@@ -55,8 +64,11 @@ class MeViewModel
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _showEmailVerificationBanner = MutableLiveData<Event<Boolean>>()
-    val showEmailVerificationBanner: LiveData<Event<Boolean>> = _showEmailVerificationBanner
+    private val _emailVerificationState = MutableLiveData<Event<EmailVerificationState>>()
+    val emailVerificationState: LiveData<Event<EmailVerificationState>> = _emailVerificationState
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     var isVerificationLinkSent: Boolean = false
 
@@ -85,32 +97,12 @@ class MeViewModel
         UNVERIFIED,
         NO_ACCOUNT,
         VERIFIED,
-        VERIFICATION_LINK_SENT
+        VERIFICATION_LINK_SENT,
     }
 
     init {
+        dispatcher.register(this)
         checkEmailVerificationState()
-    }
-
-    private fun checkEmailVerificationState() {
-        val hasEmail = accountStore.account.email.isNotEmpty()
-        val isEmailVerified = hasEmail && accountStore.account.emailVerified
-        val emailVerificationState = if (isEmailVerified) {
-            EmailVerificationState.UNVERIFIED // TODO change to VERIFIED
-        } else if (isVerificationLinkSent) {
-            EmailVerificationState.VERIFICATION_LINK_SENT
-        } else if (hasEmail) {
-            EmailVerificationState.UNVERIFIED
-        } else {
-            EmailVerificationState.NO_ACCOUNT
-        }
-        _showEmailVerificationBanner.value = Event(emailVerificationState == EmailVerificationState.UNVERIFIED)
-    }
-
-    fun sendVerificationLinkClick(context: Context) {
-        isVerificationLinkSent = true
-        checkEmailVerificationState()
-        // TODO
     }
 
     fun signOutWordPress(application: WordPress) {
@@ -159,6 +151,46 @@ class MeViewModel
             null -> {
                 getRecommendTemplate()
             }
+        }
+    }
+
+    private fun checkEmailVerificationState() {
+        val hasEmail = accountStore.account.email.isNotEmpty()
+        val isEmailVerified = hasEmail && accountStore.account.emailVerified
+        val emailVerificationState = if (isEmailVerified) {
+            EmailVerificationState.UNVERIFIED // TODO change to VERIFIED
+        } else if (isVerificationLinkSent) {
+            EmailVerificationState.VERIFICATION_LINK_SENT
+        } else if (hasEmail) {
+            EmailVerificationState.UNVERIFIED
+        } else {
+            EmailVerificationState.NO_ACCOUNT
+        }
+        _emailVerificationState.value = Event(emailVerificationState)
+    }
+
+    fun sendVerificationLinkClick(context: Context) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return
+        }
+        if (accountStore.hasAccessToken()) {
+            dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
+            isVerificationLinkSent = true
+            checkEmailVerificationState()
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAccountChanged(event: OnAccountChanged) {
+        if (event.isError) {
+            if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
+                isVerificationLinkSent = false
+                checkEmailVerificationState()
+                _errorMessage.value = event.error.message
+            }
+        } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
+            checkEmailVerificationState()
         }
     }
 

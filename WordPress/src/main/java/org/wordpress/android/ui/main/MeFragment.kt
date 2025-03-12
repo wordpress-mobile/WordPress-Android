@@ -340,8 +340,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     /**
      * Banner which asks user to verify their email address if they haven't already
      */
-    private fun MeFragmentBinding.refreshEmailVerificationBanner(show: Boolean) {
-        if (show) {
+    private fun MeFragmentBinding.refreshEmailVerificationBanner(
+        verificationState: MeViewModel.EmailVerificationState
+    ) {
+        if (verificationState == MeViewModel.EmailVerificationState.VERIFIED ||
+            verificationState == MeViewModel.EmailVerificationState.NO_ACCOUNT
+        ) {
+            meEmailVerificationCard.visibility = View.GONE
+        } else if (verificationState == MeViewModel.EmailVerificationState.UNVERIFIED) {
             meEmailVerificationCard.visibility = View.VISIBLE
             meEmailVerificationComposeView.setContent {
                 MeEmailVerificationBanner(
@@ -352,8 +358,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     }
                 )
             }
-        } else {
-            meEmailVerificationCard.visibility = View.GONE
         }
     }
 
@@ -397,8 +401,18 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        viewModel.showEmailVerificationBanner.observeEvent(viewLifecycleOwner) {
-            refreshEmailVerificationBanner(it)
+        viewModel.emailVerificationState.observeEvent(viewLifecycleOwner) { verificationState ->
+            if (!isAdded) return@observeEvent
+            refreshEmailVerificationBanner(verificationState)
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            if (!isAdded) return@observe
+            if (errorMessage.isNotEmpty()) {
+                ToastUtils.showToast(requireActivity(), errorMessage, ToastUtils.Duration.LONG)
+            } else {
+                ToastUtils.showToast(requireActivity(), R.string.me_email_verification_sent_generic_error, ToastUtils.Duration.LONG)
+            }
         }
     }
 
