@@ -179,9 +179,15 @@ class MeViewModel
             return
         }
         if (accountStore.hasAccessToken()) {
-            dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
             isEmailVerificationLinkRequested = true
             updateEmailVerificationState()
+            // briefly delay the request so the user can see the updated banner if the request completes quickly
+            launch {
+                withContext(bgDispatcher) {
+                    delay(REQUEST_VERIFICATION_LINK_DELAY)
+                    dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
+                }
+            }
         }
     }
 
@@ -255,5 +261,6 @@ class MeViewModel
 
     companion object {
         private const val SHOW_LOADING_DELAY = 300L
+        private const val REQUEST_VERIFICATION_LINK_DELAY = 500L
     }
 }
