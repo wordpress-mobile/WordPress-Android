@@ -98,7 +98,7 @@ fun MeEmailVerificationBanner(
 
 @Preview
 @Composable
-fun MeGravatarQuickEditorUnverifiedPreview() {
+fun MeEmailUnverifiedPreview() {
     MeEmailVerificationBanner(
         isUnverified = true,
         emailAddress = "vonnegut@example.com",
@@ -108,7 +108,7 @@ fun MeGravatarQuickEditorUnverifiedPreview() {
 
 @Preview
 @Composable
-fun MeGravatarQuickEditorVerifyingPreview() {
+fun MeEmailVerifyingPreview() {
     MeEmailVerificationBanner(
         isUnverified = false,
         emailAddress = "vonnegut@example.com",
