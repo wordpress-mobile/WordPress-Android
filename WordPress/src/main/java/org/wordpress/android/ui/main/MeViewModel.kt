@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -67,10 +69,10 @@ class MeViewModel
     private val _emailVerificationState = MutableLiveData<Event<EmailVerificationState>>()
     val emailVerificationState: LiveData<Event<EmailVerificationState>> = _emailVerificationState
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _emailVerificationError = MutableLiveData<UiString>()
+    val emailVerificationError: LiveData<UiString> = _emailVerificationError
 
-    var isVerificationLinkSent: Boolean = false
+    private var isEmailVerificationLinkSent: Boolean = false
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -94,10 +96,10 @@ class MeViewModel
     }
 
     enum class EmailVerificationState {
-        UNVERIFIED,
-        NO_ACCOUNT,
-        VERIFIED,
-        VERIFICATION_LINK_SENT,
+        NO_ACCOUNT, // user doesn't have an account so verification is not possible
+        UNVERIFIED, // user has an account but has not verified their email
+        LINK_SENT,  // user has an account and has requested a verification link
+        VERIFIED,   // user has an account and has verified their email address
     }
 
     init {
@@ -159,8 +161,8 @@ class MeViewModel
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
         val emailVerificationState = if (isEmailVerified) {
             EmailVerificationState.UNVERIFIED // TODO change to VERIFIED
-        } else if (isVerificationLinkSent) {
-            EmailVerificationState.VERIFICATION_LINK_SENT
+        } else if (isEmailVerificationLinkSent) {
+            EmailVerificationState.LINK_SENT
         } else if (hasEmail) {
             EmailVerificationState.UNVERIFIED
         } else {
@@ -175,7 +177,7 @@ class MeViewModel
         }
         if (accountStore.hasAccessToken()) {
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-            isVerificationLinkSent = true
+            isEmailVerificationLinkSent = true
             checkEmailVerificationState()
         }
     }
@@ -185,9 +187,13 @@ class MeViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                isVerificationLinkSent = false
+                isEmailVerificationLinkSent = false
                 checkEmailVerificationState()
-                _errorMessage.value = event.error.message
+                if (event.error.message.isNotEmpty()) {
+                    _emailVerificationError.value = UiString.UiStringText(event.error.message)
+                } else {
+                    _emailVerificationError.value = UiString.UiStringRes(R.string.me_email_verification_generic_error)
+                }
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
             checkEmailVerificationState()
