@@ -343,20 +343,28 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.refreshEmailVerificationBanner(
         verificationState: MeViewModel.EmailVerificationState
     ) {
-        if (verificationState == MeViewModel.EmailVerificationState.VERIFIED ||
-            verificationState == MeViewModel.EmailVerificationState.NO_ACCOUNT
-        ) {
-            meEmailVerificationCard.visibility = View.GONE
-        } else if (verificationState == MeViewModel.EmailVerificationState.UNVERIFIED) {
-            meEmailVerificationCard.visibility = View.VISIBLE
-            meEmailVerificationComposeView.setContent {
-                MeEmailVerificationBanner(
-                    isUnverified = verificationState == MeViewModel.EmailVerificationState.UNVERIFIED,
-                    emailAddress = accountStore.account.email,
-                    onSendLinkClick = {
-                        viewModel.sendVerificationLinkClick(requireActivity())
-                    }
-                )
+        when (verificationState) {
+            MeViewModel.EmailVerificationState.UNVERIFIED -> {
+                meEmailVerificationCard.visibility = View.VISIBLE
+                meEmailVerificationComposeView.setContent {
+                    MeEmailUnverifiedBanner(
+                        emailAddress = accountStore.account.email,
+                        onSendLinkClick = {
+                            viewModel.sendVerificationLinkClick(requireActivity())
+                        }
+                    )
+                }
+            }
+            MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
+                meEmailVerificationCard.visibility = View.VISIBLE
+                meEmailVerificationComposeView.setContent {
+                    MeEmailVerificationRequestedBanner(
+                        emailAddress = accountStore.account.email,
+                    )
+                }
+            }
+            else -> {
+                meEmailVerificationCard.visibility = View.GONE
             }
         }
     }
@@ -401,12 +409,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        viewModel.emailVerificationState.observeEvent(viewLifecycleOwner) { verificationState ->
-            if (!isAdded) return@observeEvent
+        viewModel.emailVerificationState.observe(viewLifecycleOwner) { verificationState ->
+            if (!isAdded) return@observe
             refreshEmailVerificationBanner(verificationState)
         }
 
-        viewModel.emailVerificationError.observe(viewLifecycleOwner) { uiString ->
+        viewModel.errorMessage.observe(viewLifecycleOwner) { uiString ->
             if (!isAdded) return@observe
             val errorMessage = uiHelpers.getTextOfUiString(requireActivity(), uiString).toString()
             ToastUtils.showToast(requireActivity(), errorMessage, ToastUtils.Duration.LONG)

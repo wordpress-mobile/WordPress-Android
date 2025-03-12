@@ -49,7 +49,7 @@ class MeViewModel
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val dispatcher: Dispatcher,
-    val accountStore: AccountStore,
+    private val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -66,13 +66,13 @@ class MeViewModel
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _emailVerificationState = MutableLiveData<Event<EmailVerificationState>>()
-    val emailVerificationState: LiveData<Event<EmailVerificationState>> = _emailVerificationState
+    private val _emailVerificationState = MutableLiveData<EmailVerificationState>()
+    val emailVerificationState: LiveData<EmailVerificationState> = _emailVerificationState
 
-    private val _emailVerificationError = MutableLiveData<UiString>()
-    val emailVerificationError: LiveData<UiString> = _emailVerificationError
+    private val _errorMessage = MutableLiveData<UiString>()
+    val errorMessage: LiveData<UiString> = _errorMessage
 
-    private var isEmailVerificationLinkSent: Boolean = false
+    private var isEmailVerificationLinkRequested: Boolean = false
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -96,10 +96,10 @@ class MeViewModel
     }
 
     enum class EmailVerificationState {
-        NO_ACCOUNT, // user doesn't have an account so verification is not possible
-        UNVERIFIED, // user has an account but has not verified their email
-        LINK_SENT,  // user has an account and has requested a verification link
-        VERIFIED,   // user has an account and has verified their email address
+        NO_ACCOUNT,     // user doesn't have an account so verification is not possible
+        UNVERIFIED,     // user has not verified their email
+        LINK_REQUESTED, // user has requested a verification link
+        VERIFIED,       // user has verified their email address
     }
 
     init {
@@ -159,16 +159,15 @@ class MeViewModel
     private fun checkEmailVerificationState() {
         val hasEmail = accountStore.account.email.isNotEmpty()
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
-        val emailVerificationState = if (isEmailVerified) {
-            EmailVerificationState.UNVERIFIED // TODO change to VERIFIED
-        } else if (isEmailVerificationLinkSent) {
-            EmailVerificationState.LINK_SENT
+        _emailVerificationState.value = if (!isEmailVerified) { // TODO remove !
+            EmailVerificationState.VERIFIED
+        } else if (isEmailVerificationLinkRequested) {
+            EmailVerificationState.LINK_REQUESTED
         } else if (hasEmail) {
             EmailVerificationState.UNVERIFIED
         } else {
             EmailVerificationState.NO_ACCOUNT
         }
-        _emailVerificationState.value = Event(emailVerificationState)
     }
 
     fun sendVerificationLinkClick(context: Context) {
@@ -177,7 +176,7 @@ class MeViewModel
         }
         if (accountStore.hasAccessToken()) {
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-            isEmailVerificationLinkSent = true
+            isEmailVerificationLinkRequested = true
             checkEmailVerificationState()
         }
     }
@@ -187,15 +186,16 @@ class MeViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                isEmailVerificationLinkSent = false
+                isEmailVerificationLinkRequested = false
                 checkEmailVerificationState()
                 if (event.error.message.isNotEmpty()) {
-                    _emailVerificationError.value = UiString.UiStringText(event.error.message)
+                    _errorMessage.value = UiString.UiStringText(event.error.message)
                 } else {
-                    _emailVerificationError.value = UiString.UiStringRes(R.string.me_email_verification_generic_error)
+                    _errorMessage.value = UiString.UiStringRes(R.string.me_email_verification_generic_error)
                 }
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
+            isEmailVerificationLinkRequested = true
             checkEmailVerificationState()
         }
     }
