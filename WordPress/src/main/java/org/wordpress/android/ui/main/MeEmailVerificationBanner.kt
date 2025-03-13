@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -132,6 +131,50 @@ fun MeEmailVerificationSentBanner(
     }
 }
 
+/**
+ * Banner for Me screen when requesting a verification link results in an error
+ */
+@Composable
+fun MeEmailVerificationErrorBanner(
+    onResendLinkClick: () -> Unit,
+) {
+    MeEmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_cross_in_circle_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.error),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.me_email_verification_error_description),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.retry),
+            style = MaterialTheme.typography.bodyLarge,
+            color = colorResource(R.color.jetpack_green_50),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    onResendLinkClick()
+                }
+        )
+    }
+}
+
 @Composable
 private fun MeEmailVerificationContainer(
     content: @Composable () -> Unit,
@@ -167,5 +210,13 @@ fun MeEmailVerificationRequestedPreview() {
 fun MeEmailVerificationSentPreview() {
     MeEmailVerificationSentBanner(
         emailAddress = "vonnegut@example.com",
+    )
+}
+
+@Preview
+@Composable
+fun MeEmailVerificationErrorPreview() {
+    MeEmailVerificationErrorBanner(
+        onResendLinkClick = {}
     )
 }

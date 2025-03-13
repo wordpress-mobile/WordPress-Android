@@ -371,6 +371,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     )
                 }
             }
+            MeViewModel.EmailVerificationState.ERROR -> {
+                meEmailVerificationCard.visibility = View.VISIBLE
+                meEmailVerificationComposeView.setContent {
+                    MeEmailVerificationErrorBanner(
+                        onResendLinkClick = {
+                            viewModel.sendVerificationLinkClick(requireActivity())
+                        }
+                    )
+                }
+            }
             else -> {
                 meEmailVerificationCard.visibility = View.GONE
             }
@@ -420,12 +430,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         viewModel.emailVerificationState.observe(viewLifecycleOwner) { verificationState ->
             if (!isAdded) return@observe
             refreshEmailVerificationBanner(verificationState)
-        }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) { uiString ->
-            if (!isAdded) return@observe
-            val errorMessage = uiHelpers.getTextOfUiString(requireActivity(), uiString).toString()
-            ToastUtils.showToast(requireActivity(), errorMessage, ToastUtils.Duration.LONG)
         }
     }
 

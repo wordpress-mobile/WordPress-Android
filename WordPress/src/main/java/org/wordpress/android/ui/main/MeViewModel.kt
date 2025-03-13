@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -69,11 +67,9 @@ class MeViewModel
     private val _emailVerificationState = MutableLiveData<EmailVerificationState>()
     val emailVerificationState: LiveData<EmailVerificationState> = _emailVerificationState
 
-    private val _errorMessage = MutableLiveData<UiString>()
-    val errorMessage: LiveData<UiString> = _errorMessage
-
     private var isEmailVerificationLinkRequested: Boolean = false
     private var isEmailVerificationLinkSent: Boolean = false
+    private var isEmailVerificationError: Boolean = false
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -102,6 +98,7 @@ class MeViewModel
         LINK_REQUESTED, // user has requested a verification link
         LINK_SENT,      // verification link has been sent
         VERIFIED,       // user has verified their email address
+        ERROR,          // an error occurred requesting the verification link
     }
 
     init {
@@ -161,8 +158,10 @@ class MeViewModel
     private fun updateEmailVerificationState() {
         val hasEmail = accountStore.account.email.isNotEmpty()
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
-        _emailVerificationState.value = if (!isEmailVerified) { // TODO remove !
+        _emailVerificationState.value = if (!isEmailVerified) { // TODO remove the !
             EmailVerificationState.VERIFIED
+        } else if (isEmailVerificationError) {
+            EmailVerificationState.ERROR
         } else if (isEmailVerificationLinkSent) {
             EmailVerificationState.LINK_SENT
         } else if (isEmailVerificationLinkRequested) {
@@ -179,6 +178,7 @@ class MeViewModel
             return
         }
         if (accountStore.hasAccessToken()) {
+            isEmailVerificationError = false
             isEmailVerificationLinkRequested = true
             updateEmailVerificationState()
             // briefly delay the request so the user can see the updated banner if the request completes quickly
@@ -198,14 +198,12 @@ class MeViewModel
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
                 isEmailVerificationLinkRequested = false
                 isEmailVerificationLinkSent = false
-                if (event.error.message.isNotEmpty()) {
-                    _errorMessage.value = UiString.UiStringText(event.error.message)
-                } else {
-                    _errorMessage.value = UiString.UiStringRes(R.string.me_email_verification_generic_error)
-                }
+                // TODO we ignore event.error because it's blank
+                isEmailVerificationError = true
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
             isEmailVerificationLinkSent = true
+            isEmailVerificationError = false
         }
 
         updateEmailVerificationState()
