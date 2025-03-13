@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="Base.ImageEditorTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>
