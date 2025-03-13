@@ -791,10 +791,6 @@
             android:label="@string/edit_photo_screen_title"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <activity android:name="org.wordpress.android.imageeditor.EditImageActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
-            tools:replace="android:theme" />
-
         <activity
             android:name=".ui.posts.JetpackSecuritySettingsActivity"
             android:theme="@style/WordPress.NoActionBar"/>
