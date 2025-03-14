@@ -173,7 +173,7 @@ class MeViewModel
         }
     }
 
-    fun sendVerificationLinkClick(context: Context) {
+    fun onSendVerificationLinkClick(context: Context) {
         if (!NetworkUtils.checkConnection(context)) {
             return
         }

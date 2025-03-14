@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,29 +16,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.isVisible
 import org.wordpress.android.R
+import org.wordpress.android.util.AniUtils
 
 class MeEmailVerificationBanner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AbstractComposeView(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
     private var verificationState: MeViewModel.EmailVerificationState? = null
+    private val composeView: ComposeView = ComposeView(context)
 
-    fun setContent(content: @Composable () -> Unit) {
-        shouldCreateCompositionOnAttachedToWindow = true
-        this.content.value = content
-        if (isAttachedToWindow) {
-            createComposition()
-        }
+    init {
+        addView(composeView)
     }
+
     fun setVerificationState(
         state: MeViewModel.EmailVerificationState,
         emailAddress: String = "",
@@ -46,9 +47,33 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
         verificationState = state
 
         when (state) {
+            MeViewModel.EmailVerificationState.UNVERIFIED,
+            MeViewModel.EmailVerificationState.LINK_REQUESTED,
+            MeViewModel.EmailVerificationState.LINK_SENT,
+            MeViewModel.EmailVerificationState.ERROR -> {
+                if (isVisible) {
+                    updateContent(emailAddress, onLinkClick)
+                } else {
+                    updateContent(emailAddress, onLinkClick)
+                }
+            }
+
+            else -> {
+                if (visibility != View.GONE) {
+                    AniUtils.fadeOut(this, AniUtils.Duration.SHORT)
+                }
+            }
+        }
+    }
+
+    private fun updateContent(
+        emailAddress: String = "",
+        onLinkClick: (context: Context) -> Unit = {},
+    ) {
+        when (verificationState!!) {
             MeViewModel.EmailVerificationState.UNVERIFIED -> {
                 visibility = View.VISIBLE
-                setContent {
+                composeView.setContent {
                     MeEmailUnverifiedBanner(
                         emailAddress = emailAddress,
                         onSendLinkClick = {
@@ -60,7 +85,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
                 visibility = View.VISIBLE
-                setContent {
+                composeView.setContent {
                     MeEmailVerificationSendingBanner(
                         emailAddress = emailAddress
                     )
@@ -69,7 +94,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.LINK_SENT -> {
                 visibility = View.VISIBLE
-                setContent {
+                composeView.setContent {
                     MeEmailVerificationSentBanner(
                         emailAddress = emailAddress
                     )
@@ -78,7 +103,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.ERROR -> {
                 visibility = View.VISIBLE
-                setContent {
+                composeView.setContent {
                     MeEmailVerificationErrorBanner(
                         onResendLinkClick = {
                             onLinkClick(context)
@@ -91,11 +116,6 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                 visibility = View.GONE
             }
         }
-    }
-
-    @Composable
-    override fun Content() {
-        // TODO
     }
 }
 

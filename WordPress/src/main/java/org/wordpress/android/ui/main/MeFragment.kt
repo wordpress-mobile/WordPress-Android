@@ -343,7 +343,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.refreshEmailVerificationBanner(
         verificationState: MeViewModel.EmailVerificationState
     ) {
-        // TODO
+        meEmailVerificationBanner.setVerificationState(
+            verificationState,
+            accountStore.account.email,
+            onLinkClick = {
+                viewModel.onSendVerificationLinkClick(requireActivity())
+            }
+        )
     }
 
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
