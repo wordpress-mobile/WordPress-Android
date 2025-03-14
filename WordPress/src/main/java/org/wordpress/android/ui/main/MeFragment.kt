@@ -343,48 +343,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.refreshEmailVerificationBanner(
         verificationState: MeViewModel.EmailVerificationState
     ) {
-        when (verificationState) {
-            MeViewModel.EmailVerificationState.UNVERIFIED -> {
-                meEmailVerificationCard.visibility = View.VISIBLE
-                meEmailVerificationComposeView.setContent {
-                    MeEmailUnverifiedBanner(
-                        emailAddress = accountStore.account.email,
-                        onSendLinkClick = {
-                            viewModel.sendVerificationLinkClick(requireActivity())
-                        }
-                    )
-                }
-            }
-            MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
-                meEmailVerificationCard.visibility = View.VISIBLE
-                meEmailVerificationComposeView.setContent {
-                    MeEmailVerificationSendingBanner(
-                        emailAddress = accountStore.account.email,
-                    )
-                }
-            }
-            MeViewModel.EmailVerificationState.LINK_SENT -> {
-                meEmailVerificationCard.visibility = View.VISIBLE
-                meEmailVerificationComposeView.setContent {
-                    MeEmailVerificationSentBanner(
-                        emailAddress = accountStore.account.email,
-                    )
-                }
-            }
-            MeViewModel.EmailVerificationState.ERROR -> {
-                meEmailVerificationCard.visibility = View.VISIBLE
-                meEmailVerificationComposeView.setContent {
-                    MeEmailVerificationErrorBanner(
-                        onResendLinkClick = {
-                            viewModel.sendVerificationLinkClick(requireActivity())
-                        }
-                    )
-                }
-            }
-            else -> {
-                meEmailVerificationCard.visibility = View.GONE
-            }
-        }
+        // TODO
     }
 
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {

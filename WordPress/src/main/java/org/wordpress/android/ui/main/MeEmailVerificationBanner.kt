@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.main
 
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -19,6 +23,81 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+
+class MeEmailVerificationBanner @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AbstractComposeView(context, attrs, defStyleAttr) {
+    private var verificationState: MeViewModel.EmailVerificationState? = null
+
+    fun setContent(content: @Composable () -> Unit) {
+        shouldCreateCompositionOnAttachedToWindow = true
+        this.content.value = content
+        if (isAttachedToWindow) {
+            createComposition()
+        }
+    }
+    fun setVerificationState(
+        state: MeViewModel.EmailVerificationState,
+        emailAddress: String = "",
+        onLinkClick: (context: Context) -> Unit = {},
+    ) {
+        verificationState = state
+
+        when (state) {
+            MeViewModel.EmailVerificationState.UNVERIFIED -> {
+                visibility = View.VISIBLE
+                setContent {
+                    MeEmailUnverifiedBanner(
+                        emailAddress = emailAddress,
+                        onSendLinkClick = {
+                            onLinkClick(context)
+                        }
+                    )
+                }
+            }
+
+            MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
+                visibility = View.VISIBLE
+                setContent {
+                    MeEmailVerificationSendingBanner(
+                        emailAddress = emailAddress
+                    )
+                }
+            }
+
+            MeViewModel.EmailVerificationState.LINK_SENT -> {
+                visibility = View.VISIBLE
+                setContent {
+                    MeEmailVerificationSentBanner(
+                        emailAddress = emailAddress
+                    )
+                }
+            }
+
+            MeViewModel.EmailVerificationState.ERROR -> {
+                visibility = View.VISIBLE
+                setContent {
+                    MeEmailVerificationErrorBanner(
+                        onResendLinkClick = {
+                            onLinkClick(context)
+                        }
+                    )
+                }
+            }
+
+            else -> {
+                visibility = View.GONE
+            }
+        }
+    }
+
+    @Composable
+    override fun Content() {
+        // TODO
+    }
+}
 
 /**
  * Banner for Me screen when user's email hasn't yet been verified
@@ -47,7 +126,10 @@ fun MeEmailUnverifiedBanner(
         }
 
         Text(
-            text = stringResource(R.string.me_email_verification_verify_email_description, emailAddress),
+            text = stringResource(
+                R.string.me_email_verification_verify_email_description,
+                emailAddress
+            ),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -91,7 +173,10 @@ fun MeEmailVerificationSendingBanner(
         }
 
         Text(
-            text = stringResource(R.string.me_email_verification_sending_description, emailAddress),
+            text = stringResource(
+                R.string.me_email_verification_sending_description,
+                emailAddress
+            ),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -124,7 +209,10 @@ fun MeEmailVerificationSentBanner(
         }
 
         Text(
-            text = stringResource(R.string.me_email_verification_sent_description, emailAddress),
+            text = stringResource(
+                R.string.me_email_verification_sent_description,
+                emailAddress
+            ),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp)
         )

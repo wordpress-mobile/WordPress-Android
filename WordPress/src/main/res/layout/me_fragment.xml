@@ -107,22 +107,17 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <FrameLayout
-                android:id="@+id/me_email_verification_card"
+            <org.wordpress.android.ui.main.MeEmailVerificationBanner
+                android:id="@+id/me_email_verification_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/margin_extra_small_large"
-                android:paddingTop="@dimen/margin_extra_small_large"
-                android:paddingBottom="@dimen/margin_extra_large"
                 android:layout_marginHorizontal="@dimen/margin_extra_large"
                 android:background="@drawable/bg_wordpress_gravatar_info"
-                android:visibility="gone">
-
-                <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/me_email_verification_compose_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </FrameLayout>
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:paddingHorizontal="@dimen/margin_extra_small_large"
+                android:paddingTop="@dimen/margin_extra_small_large"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_my_profile"
