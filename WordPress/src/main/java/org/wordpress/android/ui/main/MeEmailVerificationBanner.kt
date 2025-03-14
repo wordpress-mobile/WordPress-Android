@@ -68,11 +68,12 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                 if (isVisible) {
                     fadeOut(true)
                 } else {
-                    fadeIn()
+                    fadeInAndUpdate()
                 }
             }
 
-            else -> {
+            MeViewModel.EmailVerificationState.VERIFIED,
+            MeViewModel.EmailVerificationState.NO_ACCOUNT -> {
                 if (visibility != View.GONE) {
                     fadeOut(false)
                 }
@@ -83,7 +84,6 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
     private fun updateContent() {
         when (verificationState!!) {
             MeViewModel.EmailVerificationState.UNVERIFIED -> {
-                visibility = View.VISIBLE
                 composeView.setContent {
                     MeEmailUnverifiedBanner(
                         emailAddress = emailAddress,
@@ -93,27 +93,21 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                     )
                 }
             }
-
             MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
-                visibility = View.VISIBLE
                 composeView.setContent {
                     MeEmailVerificationSendingBanner(
                         emailAddress = emailAddress
                     )
                 }
             }
-
             MeViewModel.EmailVerificationState.LINK_SENT -> {
-                visibility = View.VISIBLE
                 composeView.setContent {
                     MeEmailVerificationSentBanner(
                         emailAddress = emailAddress
                     )
                 }
             }
-
             MeViewModel.EmailVerificationState.ERROR -> {
-                visibility = View.VISIBLE
                 composeView.setContent {
                     MeEmailVerificationErrorBanner(
                         onResendLinkClick = {
@@ -122,14 +116,13 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                     )
                 }
             }
-
             else -> {
-                visibility = View.GONE
+                // do nothing
             }
         }
     }
 
-    private fun fadeIn() {
+    private fun fadeInAndUpdate() {
         with(ObjectAnimator.ofFloat(this, ALPHA, 0.0f, 1.0f)) {
             setDuration(animDuration)
             interpolator = LinearInterpolator()
@@ -150,7 +143,9 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     if (updateAfterFadeOut) {
-                        fadeIn()
+                        fadeInAndUpdate()
+                    } else {
+                        this@MeEmailVerificationBanner.visibility = GONE
                     }
                 }
             })
