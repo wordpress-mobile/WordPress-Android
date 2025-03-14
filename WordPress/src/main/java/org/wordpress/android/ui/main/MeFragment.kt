@@ -337,9 +337,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    /**
-     * Banner which asks user to verify their email address if they haven't already
-     */
     private fun MeFragmentBinding.refreshEmailVerificationBanner(
         verificationState: MeViewModel.EmailVerificationState
     ) {

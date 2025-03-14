@@ -47,10 +47,6 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
     private val animDuration =
         context.resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-    companion object {
-        // TODO
-    }
-
     init {
         addView(composeView)
     }
@@ -70,23 +66,17 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
             MeViewModel.EmailVerificationState.LINK_SENT,
             MeViewModel.EmailVerificationState.ERROR -> {
                 if (isVisible) {
-                    updateContent()
+                    fadeOut(true)
                 } else {
-                    fadeAndUpdateContent()
+                    fadeIn()
                 }
             }
 
             else -> {
                 if (visibility != View.GONE) {
-                    getFadeOutAnim().start()
+                    fadeOut(false)
                 }
             }
-        }
-    }
-
-    private fun fadeAndUpdateContent() {
-        if (isVisible) {
-            getFadeOutAnim(updateContent()).start()
         }
     }
 
@@ -139,33 +129,33 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
         }
     }
 
-    private fun getFadeInAnim(
-        onEndFadeIn: () -> Unit = {}
-    ): ObjectAnimator {
-        val fadeIn = ObjectAnimator.ofFloat(this, ALPHA, 0.0f, 1.0f)
-        fadeIn.setDuration(animDuration)
-        fadeIn.interpolator = LinearInterpolator()
-        fadeIn.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator) {
-                this@MeEmailVerificationBanner.visibility = VISIBLE
-                onEndFadeIn.invoke()
-            }
-        })
-        return fadeIn
+    private fun fadeIn() {
+        with(ObjectAnimator.ofFloat(this, ALPHA, 0.0f, 1.0f)) {
+            setDuration(animDuration)
+            interpolator = LinearInterpolator()
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    this@MeEmailVerificationBanner.visibility = VISIBLE
+                    updateContent()
+                }
+            })
+            start()
+        }
     }
 
-    private fun getFadeOutAnim(
-        onEndFadeOut: () -> Unit = {}
-    ): ObjectAnimator {
-        val fadeOut = ObjectAnimator.ofFloat(this, ALPHA, 1.0f, 0.0f)
-        fadeOut.setDuration(animDuration)
-        fadeOut.interpolator = LinearInterpolator()
-        fadeOut.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                onEndFadeOut.invoke()
-            }
-        })
-        return fadeOut
+    private fun fadeOut(updateAfterFadeOut: Boolean) {
+        with(ObjectAnimator.ofFloat(this, ALPHA, 1.0f, 0.0f)) {
+            setDuration(animDuration)
+            interpolator = LinearInterpolator()
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    if (updateAfterFadeOut) {
+                        fadeIn()
+                    }
+                }
+            })
+            start()
+        }
     }
 }
 
