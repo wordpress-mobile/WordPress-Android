@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -62,7 +64,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
             MeViewModel.EmailVerificationState.UNVERIFIED,
             MeViewModel.EmailVerificationState.LINK_REQUESTED,
             MeViewModel.EmailVerificationState.LINK_SENT,
-            MeViewModel.EmailVerificationState.ERROR -> {
+            MeViewModel.EmailVerificationState.LINK_ERROR -> {
                 if (isVisible) {
                     fadeOut(true)
                 } else {
@@ -108,7 +110,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                 }
             }
 
-            MeViewModel.EmailVerificationState.ERROR -> {
+            MeViewModel.EmailVerificationState.LINK_ERROR -> {
                 composeView.setContent {
                     MeEmailVerificationErrorBanner(
                         onResendLinkClick = {
@@ -157,7 +159,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 }
 
 /**
- * Banner for Me screen when user's email hasn't yet been verified
+ * Banner when user's email hasn't yet been verified
  */
 @Composable
 fun MeEmailUnverifiedBanner(
@@ -205,7 +207,7 @@ fun MeEmailUnverifiedBanner(
 }
 
 /**
- * Banner for Me screen when user's email hasn't yet been verified but a verification link has been requested
+ * Banner when user's email hasn't been verified but a verification link has been requested
  */
 @Composable
 fun MeEmailVerificationSendingBanner(
@@ -215,33 +217,35 @@ fun MeEmailVerificationSendingBanner(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_gridicons_checkmark_circle),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(end = 8.dp)
+            CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .size(24.dp)
             )
             Text(
                 text = stringResource(R.string.me_email_verification_sending),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(start = 16.dp)
             )
         }
 
-        Text(
-            text = stringResource(
-                R.string.me_email_verification_sending_description,
-                emailAddress
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+        Row() {
+            Text(
+                text = stringResource(
+                    R.string.me_email_verification_sending_description,
+                    emailAddress
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }
 
 /**
- * Banner for Me screen when user's email hasn't yet been verified but a verification link has been sent
+ * Banner when user's email hasn't yet been verified but a verification link has been sent
  */
 @Composable
 fun MeEmailVerificationSentBanner(
@@ -277,7 +281,7 @@ fun MeEmailVerificationSentBanner(
 }
 
 /**
- * Banner for Me screen when requesting a verification link results in an error
+ * Banner when requesting a verification link results in an error
  */
 @Composable
 fun MeEmailVerificationErrorBanner(

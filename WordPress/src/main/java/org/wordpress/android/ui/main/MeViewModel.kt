@@ -95,10 +95,10 @@ class MeViewModel
     enum class EmailVerificationState {
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
         UNVERIFIED,     // user has not verified their email
-        LINK_REQUESTED, // user has requested a verification link
-        LINK_SENT,      // verification link has been sent
+        LINK_REQUESTED, // user has requested a verification link (API call in progress)
+        LINK_SENT,      // verification link has been sent successfully (API call completed)
+        LINK_ERROR,     // an error occurred requesting the verification link
         VERIFIED,       // user has verified their email address
-        ERROR,          // an error occurred requesting the verification link
     }
 
     init {
@@ -155,13 +155,16 @@ class MeViewModel
         }
     }
 
+    /*
+     * Update the email verification state, called when we suspect the state has changed
+     */
     private fun updateEmailVerificationState() {
         val hasEmail = accountStore.account.email.isNotEmpty()
         val isEmailVerified = hasEmail && accountStore.account.emailVerified
         _emailVerificationState.value = if (!isEmailVerified) { // TODO remove the !
             EmailVerificationState.VERIFIED
         } else if (isEmailVerificationError) {
-            EmailVerificationState.ERROR
+            EmailVerificationState.LINK_ERROR
         } else if (isEmailVerificationLinkSent) {
             EmailVerificationState.LINK_SENT
         } else if (isEmailVerificationLinkRequested) {
@@ -173,6 +176,9 @@ class MeViewModel
         }
     }
 
+    /**
+     * User clicked the "Send verification link" button on the email verification banner
+     */
     fun onSendVerificationLinkClick(context: Context) {
         if (!NetworkUtils.checkConnection(context)) {
             return
@@ -191,6 +197,10 @@ class MeViewModel
         }
     }
 
+    /**
+     * FluxC event for when the account state changes. Note that we only care about the email verification link
+     * request since that's the only account event sent from the Me screen.
+     */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
@@ -259,6 +269,6 @@ class MeViewModel
 
     companion object {
         private const val SHOW_LOADING_DELAY = 300L
-        private const val REQUEST_VERIFICATION_LINK_DELAY = 500L
+        private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
     }
 }
