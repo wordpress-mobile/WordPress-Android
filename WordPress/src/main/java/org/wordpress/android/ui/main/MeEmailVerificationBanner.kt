@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.main
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,51 +29,68 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.isVisible
 import org.wordpress.android.R
-import org.wordpress.android.util.AniUtils
 
+/**
+ * Custom view for Me screen composable email verification banner
+ */
 class MeEmailVerificationBanner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private var verificationState: MeViewModel.EmailVerificationState? = null
     private val composeView: ComposeView = ComposeView(context)
+
+    private var verificationState: MeViewModel.EmailVerificationState? = null
+    private var emailAddress: String = ""
+    private var onLinkClick: (context: Context) -> Unit = {}
+
+    private val animDuration =
+        context.resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+    companion object {
+        // TODO
+    }
 
     init {
         addView(composeView)
     }
 
     fun setVerificationState(
-        state: MeViewModel.EmailVerificationState,
+        verificationState: MeViewModel.EmailVerificationState,
         emailAddress: String = "",
         onLinkClick: (context: Context) -> Unit = {},
     ) {
-        verificationState = state
+        this.verificationState = verificationState
+        this.emailAddress = emailAddress
+        this.onLinkClick = onLinkClick
 
-        when (state) {
+        when (verificationState) {
             MeViewModel.EmailVerificationState.UNVERIFIED,
             MeViewModel.EmailVerificationState.LINK_REQUESTED,
             MeViewModel.EmailVerificationState.LINK_SENT,
             MeViewModel.EmailVerificationState.ERROR -> {
                 if (isVisible) {
-                    updateContent(emailAddress, onLinkClick)
+                    updateContent()
                 } else {
-                    updateContent(emailAddress, onLinkClick)
+                    fadeAndUpdateContent()
                 }
             }
 
             else -> {
                 if (visibility != View.GONE) {
-                    AniUtils.fadeOut(this, AniUtils.Duration.SHORT)
+                    getFadeOutAnim().start()
                 }
             }
         }
     }
 
-    private fun updateContent(
-        emailAddress: String = "",
-        onLinkClick: (context: Context) -> Unit = {},
-    ) {
+    private fun fadeAndUpdateContent() {
+        if (isVisible) {
+            getFadeOutAnim(updateContent()).start()
+        }
+    }
+
+    private fun updateContent() {
         when (verificationState!!) {
             MeViewModel.EmailVerificationState.UNVERIFIED -> {
                 visibility = View.VISIBLE
@@ -116,6 +137,35 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                 visibility = View.GONE
             }
         }
+    }
+
+    private fun getFadeInAnim(
+        onEndFadeIn: () -> Unit = {}
+    ): ObjectAnimator {
+        val fadeIn = ObjectAnimator.ofFloat(this, ALPHA, 0.0f, 1.0f)
+        fadeIn.setDuration(animDuration)
+        fadeIn.interpolator = LinearInterpolator()
+        fadeIn.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                this@MeEmailVerificationBanner.visibility = VISIBLE
+                onEndFadeIn.invoke()
+            }
+        })
+        return fadeIn
+    }
+
+    private fun getFadeOutAnim(
+        onEndFadeOut: () -> Unit = {}
+    ): ObjectAnimator {
+        val fadeOut = ObjectAnimator.ofFloat(this, ALPHA, 1.0f, 0.0f)
+        fadeOut.setDuration(animDuration)
+        fadeOut.interpolator = LinearInterpolator()
+        fadeOut.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                onEndFadeOut.invoke()
+            }
+        })
+        return fadeOut
     }
 }
 
