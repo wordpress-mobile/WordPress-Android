@@ -206,7 +206,7 @@ private fun MeEmailVerificationContainer(
 }
 
 @Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MeEmailUnverifiedPreview() {
     MeEmailUnverifiedBanner(
@@ -216,7 +216,7 @@ fun MeEmailUnverifiedPreview() {
 }
 
 @Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MeEmailVerificationRequestedPreview() {
     MeEmailVerificationSendingBanner(
@@ -225,7 +225,7 @@ fun MeEmailVerificationRequestedPreview() {
 }
 
 @Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MeEmailVerificationSentPreview() {
     MeEmailVerificationSentBanner(
@@ -234,7 +234,7 @@ fun MeEmailVerificationSentPreview() {
 }
 
 @Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MeEmailVerificationErrorPreview() {
     MeEmailVerificationErrorBanner(
