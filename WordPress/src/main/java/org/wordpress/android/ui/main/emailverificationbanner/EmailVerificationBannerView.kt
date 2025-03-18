@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.main.emailverificationbanner
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -9,11 +9,12 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isVisible
+import org.wordpress.android.ui.main.MeViewModel
 
 /**
  * Custom view for Me screen email verification banner
  */
-class MeEmailVerificationBanner @JvmOverloads constructor(
+class EmailVerificationBanner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -65,7 +66,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
         when (verificationState!!) {
             MeViewModel.EmailVerificationState.UNVERIFIED -> {
                 composeView.setContent {
-                    MeEmailUnverifiedBanner(
+                    EmailUnverifiedBanner(
                         emailAddress = emailAddress,
                         onSendLinkClick = {
                             onLinkClick(context)
@@ -76,7 +77,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.LINK_REQUESTED -> {
                 composeView.setContent {
-                    MeEmailVerificationSendingBanner(
+                    EmailVerificationSendingBanner(
                         emailAddress = emailAddress
                     )
                 }
@@ -84,7 +85,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.LINK_SENT -> {
                 composeView.setContent {
-                    MeEmailVerificationSentBanner(
+                    EmailVerificationSentBanner(
                         emailAddress = emailAddress
                     )
                 }
@@ -92,7 +93,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
 
             MeViewModel.EmailVerificationState.LINK_ERROR -> {
                 composeView.setContent {
-                    MeEmailVerificationErrorBanner(
+                    EmailVerificationErrorBanner(
                         onResendLinkClick = {
                             onLinkClick(context)
                         }
@@ -112,7 +113,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
             interpolator = LinearInterpolator()
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    this@MeEmailVerificationBanner.isVisible = true
+                    this@EmailVerificationBanner.isVisible = true
                     updateContent()
                 }
             })
@@ -129,7 +130,7 @@ class MeEmailVerificationBanner @JvmOverloads constructor(
                     if (updateAfterFadeOut) {
                         fadeInAndUpdate()
                     } else {
-                        this@MeEmailVerificationBanner.isVisible = false
+                        this@EmailVerificationBanner.isVisible = false
                     }
                 }
             })

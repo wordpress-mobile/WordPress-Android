@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.main.emailverificationbanner
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -29,11 +29,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * Banner when user's email hasn't yet been verified
  */
 @Composable
-fun MeEmailUnverifiedBanner(
+fun EmailUnverifiedBanner(
     emailAddress: String,
     onSendLinkClick: () -> Unit,
 ) {
-    MeEmailVerificationContainer {
+    EmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -77,10 +77,10 @@ fun MeEmailUnverifiedBanner(
  * Banner when user's email hasn't been verified but a verification link has been requested
  */
 @Composable
-fun MeEmailVerificationSendingBanner(
+fun EmailVerificationSendingBanner(
     emailAddress: String,
 ) {
-    MeEmailVerificationContainer {
+    EmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -115,10 +115,10 @@ fun MeEmailVerificationSendingBanner(
  * Banner when user's email hasn't yet been verified but a verification link has been sent
  */
 @Composable
-fun MeEmailVerificationSentBanner(
+fun EmailVerificationSentBanner(
     emailAddress: String,
 ) {
-    MeEmailVerificationContainer {
+    EmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -152,10 +152,10 @@ fun MeEmailVerificationSentBanner(
  * Banner when requesting a verification link results in an error
  */
 @Composable
-fun MeEmailVerificationErrorBanner(
+fun EmailVerificationErrorBanner(
     onResendLinkClick: () -> Unit,
 ) {
-    MeEmailVerificationContainer {
+    EmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -193,7 +193,7 @@ fun MeEmailVerificationErrorBanner(
 }
 
 @Composable
-private fun MeEmailVerificationContainer(
+private fun EmailVerificationContainer(
     content: @Composable () -> Unit,
 ) {
     AppThemeM3 {
@@ -214,8 +214,8 @@ private fun MeEmailVerificationContainer(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MeEmailUnverifiedPreview() {
-    MeEmailUnverifiedBanner(
+fun EmailUnverifiedPreview() {
+    EmailUnverifiedBanner(
         emailAddress = "vonnegut@example.com",
         onSendLinkClick = {}
     )
@@ -224,8 +224,8 @@ fun MeEmailUnverifiedPreview() {
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MeEmailVerificationRequestedPreview() {
-    MeEmailVerificationSendingBanner(
+fun EmailVerificationRequestedPreview() {
+    EmailVerificationSendingBanner(
         emailAddress = "vonnegut@example.com",
     )
 }
@@ -233,8 +233,8 @@ fun MeEmailVerificationRequestedPreview() {
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MeEmailVerificationSentPreview() {
-    MeEmailVerificationSentBanner(
+fun EmailVerificationSentPreview() {
+    EmailVerificationSentBanner(
         emailAddress = "vonnegut@example.com",
     )
 }
@@ -242,8 +242,8 @@ fun MeEmailVerificationSentPreview() {
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MeEmailVerificationErrorPreview() {
-    MeEmailVerificationErrorBanner(
+fun EmailVerificationErrorPreview() {
+    EmailVerificationErrorBanner(
         onResendLinkClick = {}
     )
 }
