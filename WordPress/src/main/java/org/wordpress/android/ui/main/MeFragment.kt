@@ -346,7 +346,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             verificationState = verificationState,
             emailAddress =  accountStore.account.email,
             errorMessage = emailVerificationViewModel.emailVerificationError,
-            onLinkClick = {
+            onSendLinkClick = {
                 emailVerificationViewModel.onSendVerificationLinkClick()
             }
         )

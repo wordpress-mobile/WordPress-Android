@@ -80,16 +80,14 @@ class EmailVerificationViewModel
         if (!NetworkUtils.checkConnection(WordPress.getContext())) {
             return
         }
-        if (accountStore.hasAccessToken()) {
-            isEmailVerificationError = false
-            isEmailVerificationLinkRequested = true
-            updateEmailVerificationState()
-            // briefly delay the request so the user can see the updated banner if the request completes quickly
-            launch {
-                withContext(bgDispatcher) {
-                    delay(REQUEST_VERIFICATION_LINK_DELAY)
-                    dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-                }
+        isEmailVerificationError = false
+        isEmailVerificationLinkRequested = true
+        updateEmailVerificationState()
+        // briefly delay the request so the user can see the updated banner if the request completes quickly
+        launch {
+            withContext(bgDispatcher) {
+                delay(REQUEST_VERIFICATION_LINK_DELAY)
+                dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
             }
         }
     }
@@ -100,9 +98,14 @@ class EmailVerificationViewModel
     private fun pollVerificationState() {
         launch {
             withContext(bgDispatcher) {
-                for (i in 0..POLLING_TIMES) {
+                for (i in 0..POLLING_COUNT) {
                     dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
                     delay(POLLING_INTERVAL) // TODO move this above dispatching
+                    if (accountStore.account.emailVerified) {
+                        isEmailVerificationError = false
+                        updateEmailVerificationState()
+                        return@withContext
+                    }
                 }
             }
         }
@@ -128,14 +131,12 @@ class EmailVerificationViewModel
             isEmailVerificationError = false
             updateEmailVerificationState()
             pollVerificationState()
-        } else if (event.causeOfChange == AccountAction.FETCHED_ACCOUNT) {
-            updateEmailVerificationState()
         }
     }
 
     companion object {
         private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
         private const val POLLING_INTERVAL = 60L * 1000L    // poll verification state every minute
-        private const val POLLING_TIMES = 15                // poll verification state 15 times
+        private const val POLLING_COUNT = 5                 // poll verification state 5 times
     }
 }

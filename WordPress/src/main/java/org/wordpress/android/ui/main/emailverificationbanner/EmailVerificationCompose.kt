@@ -30,14 +30,14 @@ fun EmailVerificationBanner(
     verificationState: EmailVerificationViewModel.EmailVerificationState,
     emailAddress: String = "",
     errorMessage: String = "",
-    onLinkClick: () -> Unit = {},
+    onSendLinkClick: () -> Unit = {},
 ) {
     when (verificationState) {
         EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
             EmailUnverifiedBanner(
                 emailAddress = emailAddress,
                 onSendLinkClick = {
-                    onLinkClick()
+                    onSendLinkClick()
                 }
             )
         }
@@ -58,7 +58,7 @@ fun EmailVerificationBanner(
             EmailVerificationErrorBanner(
                 errorMessage = errorMessage,
                 onResendLinkClick = {
-                    onLinkClick()
+                    onSendLinkClick()
                 }
             )
         }

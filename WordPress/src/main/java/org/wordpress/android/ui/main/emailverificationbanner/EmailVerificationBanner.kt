@@ -23,7 +23,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
     private var verificationState: EmailVerificationViewModel.EmailVerificationState? = null
     private var emailAddress: String = ""
     private var errorMessage: String = ""
-    private var onLinkClick: () -> Unit = {}
+    private var onSendLinkClick: () -> Unit = {}
 
     private val animDuration =
         context.resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
@@ -36,12 +36,12 @@ class EmailVerificationBanner @JvmOverloads constructor(
         verificationState: EmailVerificationViewModel.EmailVerificationState,
         emailAddress: String = "",
         errorMessage: String = "",
-        onLinkClick: () -> Unit = {},
+        onSendLinkClick: () -> Unit = {},
     ) {
         this.verificationState = verificationState
         this.emailAddress = emailAddress
         this.errorMessage = errorMessage
-        this.onLinkClick = onLinkClick
+        this.onSendLinkClick = onSendLinkClick
 
         when (verificationState) {
             EmailVerificationViewModel.EmailVerificationState.UNVERIFIED,
@@ -70,8 +70,8 @@ class EmailVerificationBanner @JvmOverloads constructor(
                 verificationState = verificationState!!,
                 emailAddress = emailAddress,
                 errorMessage = errorMessage,
-                onLinkClick = {
-                    this.onLinkClick()
+                onSendLinkClick = {
+                    this.onSendLinkClick()
                 }
             )
         }
