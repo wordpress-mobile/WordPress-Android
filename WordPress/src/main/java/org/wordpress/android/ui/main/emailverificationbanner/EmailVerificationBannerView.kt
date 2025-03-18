@@ -22,7 +22,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
 
     private var verificationState: EmailVerificationViewModel.EmailVerificationState? = null
     private var emailAddress: String = ""
-    private var onLinkClick: (context: Context) -> Unit = {}
+    private var onLinkClick: () -> Unit = {}
 
     private val animDuration =
         context.resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
@@ -34,7 +34,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
     fun setVerificationState(
         verificationState: EmailVerificationViewModel.EmailVerificationState,
         emailAddress: String = "",
-        onLinkClick: (context: Context) -> Unit = {},
+        onLinkClick: () -> Unit = {},
     ) {
         this.verificationState = verificationState
         this.emailAddress = emailAddress
@@ -62,47 +62,14 @@ class EmailVerificationBanner @JvmOverloads constructor(
     }
 
     private fun updateContent() {
-        when (verificationState!!) {
-            EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
-                composeView.setContent {
-                    EmailUnverifiedBanner(
-                        emailAddress = emailAddress,
-                        onSendLinkClick = {
-                            onLinkClick(context)
-                        }
-                    )
+        composeView.setContent {
+            EmailVerificationBanner(
+                verificationState = verificationState!!,
+                emailAddress = emailAddress,
+                onLinkClick = {
+                    this.onLinkClick()
                 }
-            }
-
-            EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED -> {
-                composeView.setContent {
-                    EmailVerificationSendingBanner(
-                        emailAddress = emailAddress
-                    )
-                }
-            }
-
-            EmailVerificationViewModel.EmailVerificationState.LINK_SENT -> {
-                composeView.setContent {
-                    EmailVerificationSentBanner(
-                        emailAddress = emailAddress
-                    )
-                }
-            }
-
-            EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
-                composeView.setContent {
-                    EmailVerificationErrorBanner(
-                        onResendLinkClick = {
-                            onLinkClick(context)
-                        }
-                    )
-                }
-            }
-
-            else -> {
-                // do nothing
-            }
+            )
         }
     }
 

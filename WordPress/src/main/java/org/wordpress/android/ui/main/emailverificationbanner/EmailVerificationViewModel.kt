@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -75,8 +75,8 @@ class EmailVerificationViewModel
     /**
      * User clicked the "Send verification link" button on the email verification banner
      */
-    fun onSendVerificationLinkClick(context: Context) {
-        if (!NetworkUtils.checkConnection(context)) {
+    fun onSendVerificationLinkClick() {
+        if (!NetworkUtils.checkConnection(WordPress.getContext())) {
             return
         }
         if (accountStore.hasAccessToken()) {

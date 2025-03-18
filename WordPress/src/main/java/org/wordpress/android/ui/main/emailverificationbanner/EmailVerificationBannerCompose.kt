@@ -25,11 +25,53 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+@Composable
+fun EmailVerificationBanner(
+    verificationState: EmailVerificationViewModel.EmailVerificationState,
+    emailAddress: String = "",
+    onLinkClick: () -> Unit = {},
+) {
+    when (verificationState) {
+        EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
+            EmailUnverifiedBanner(
+                emailAddress = emailAddress,
+                onSendLinkClick = {
+                    onLinkClick()
+                }
+            )
+        }
+
+        EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED -> {
+            EmailVerificationSendingBanner(
+                emailAddress = emailAddress
+            )
+        }
+
+        EmailVerificationViewModel.EmailVerificationState.LINK_SENT -> {
+            EmailVerificationSentBanner(
+                emailAddress = emailAddress
+            )
+        }
+
+        EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
+            EmailVerificationErrorBanner(
+                onResendLinkClick = {
+                    onLinkClick()
+                }
+            )
+        }
+
+        else -> {
+            // do nothing
+        }
+    }
+}
+
 /**
  * Banner when user's email hasn't yet been verified
  */
 @Composable
-fun EmailUnverifiedBanner(
+private fun EmailUnverifiedBanner(
     emailAddress: String,
     onSendLinkClick: () -> Unit,
 ) {
@@ -77,7 +119,7 @@ fun EmailUnverifiedBanner(
  * Banner when user's email hasn't been verified but a verification link has been requested
  */
 @Composable
-fun EmailVerificationSendingBanner(
+private fun EmailVerificationSendingBanner(
     emailAddress: String,
 ) {
     EmailVerificationContainer {
@@ -115,7 +157,7 @@ fun EmailVerificationSendingBanner(
  * Banner when user's email hasn't yet been verified but a verification link has been sent
  */
 @Composable
-fun EmailVerificationSentBanner(
+private fun EmailVerificationSentBanner(
     emailAddress: String,
 ) {
     EmailVerificationContainer {
@@ -152,7 +194,7 @@ fun EmailVerificationSentBanner(
  * Banner when requesting a verification link results in an error
  */
 @Composable
-fun EmailVerificationErrorBanner(
+private fun EmailVerificationErrorBanner(
     onResendLinkClick: () -> Unit,
 ) {
     EmailVerificationContainer {
