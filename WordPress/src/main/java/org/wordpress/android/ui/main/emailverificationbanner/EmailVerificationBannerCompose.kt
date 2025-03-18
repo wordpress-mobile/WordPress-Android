@@ -31,50 +31,38 @@ fun EmailVerificationBanner(
     emailAddress: String = "",
     onLinkClick: () -> Unit = {},
 ) {
-    AppThemeM3 {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = colorResource(R.color.gravatar_info_banner),
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .padding(20.dp)
-        ) {
-            when (verificationState) {
-                EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
-                    EmailUnverifiedBanner(
-                        emailAddress = emailAddress,
-                        onSendLinkClick = {
-                            onLinkClick()
-                        }
-                    )
+    when (verificationState) {
+        EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
+            EmailUnverifiedBanner(
+                emailAddress = emailAddress,
+                onSendLinkClick = {
+                    onLinkClick()
                 }
+            )
+        }
 
-                EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED -> {
-                    EmailVerificationSendingBanner(
-                        emailAddress = emailAddress
-                    )
-                }
+        EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED -> {
+            EmailVerificationSendingBanner(
+                emailAddress = emailAddress
+            )
+        }
 
-                EmailVerificationViewModel.EmailVerificationState.LINK_SENT -> {
-                    EmailVerificationSentBanner(
-                        emailAddress = emailAddress
-                    )
-                }
+        EmailVerificationViewModel.EmailVerificationState.LINK_SENT -> {
+            EmailVerificationSentBanner(
+                emailAddress = emailAddress
+            )
+        }
 
-                EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
-                    EmailVerificationErrorBanner(
-                        onResendLinkClick = {
-                            onLinkClick()
-                        }
-                    )
+        EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
+            EmailVerificationErrorBanner(
+                onResendLinkClick = {
+                    onLinkClick()
                 }
+            )
+        }
 
-                else -> {
-                    // do nothing
-                }
-            }
+        else -> {
+            // do nothing
         }
     }
 }
@@ -87,42 +75,44 @@ private fun EmailUnverifiedBanner(
     emailAddress: String,
     onSendLinkClick: () -> Unit,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_mail_white_24dp),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(end = 8.dp)
-        )
+    EmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_mail_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.me_email_verification_verify_email),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
         Text(
-            text = stringResource(R.string.me_email_verification_verify_email),
+            text = stringResource(
+                R.string.me_email_verification_verify_email_description,
+                emailAddress
+            ),
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.me_email_verification_verify_email_send_link),
+            style = MaterialTheme.typography.bodyLarge,
+            color = colorResource(R.color.jetpack_green_50),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    onSendLinkClick()
+                }
         )
     }
-
-    Text(
-        text = stringResource(
-            R.string.me_email_verification_verify_email_description,
-            emailAddress
-        ),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(top = 8.dp)
-    )
-
-    Text(
-        text = stringResource(R.string.me_email_verification_verify_email_send_link),
-        style = MaterialTheme.typography.bodyLarge,
-        color = colorResource(R.color.jetpack_green_50),
-        modifier = Modifier
-            .padding(top = 8.dp)
-            .clickable {
-                onSendLinkClick()
-            }
-    )
 }
 
 /**
@@ -132,32 +122,34 @@ private fun EmailUnverifiedBanner(
 private fun EmailVerificationSendingBanner(
     emailAddress: String,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        CircularProgressIndicator(
-            strokeWidth = 2.dp,
-            modifier = Modifier
-                .size(24.dp)
-        )
-        Text(
-            text = stringResource(R.string.me_email_verification_sending),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-    }
+    EmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.me_email_verification_sending),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
 
-    Row {
-        Text(
-            text = stringResource(
-                R.string.me_email_verification_sending_description,
-                emailAddress
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+        Row {
+            Text(
+                text = stringResource(
+                    R.string.me_email_verification_sending_description,
+                    emailAddress
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }
 
@@ -168,32 +160,34 @@ private fun EmailVerificationSendingBanner(
 private fun EmailVerificationSentBanner(
     emailAddress: String,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_gridicons_checkmark_circle),
-            contentDescription = null,
-            tint = colorResource(R.color.jetpack_green_50),
-            modifier = Modifier.padding(end = 8.dp)
-        )
+    EmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_gridicons_checkmark_circle),
+                contentDescription = null,
+                tint = colorResource(R.color.jetpack_green_50),
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.me_email_verification_sent),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = colorResource(R.color.jetpack_green_50)
+            )
+        }
+
         Text(
-            text = stringResource(R.string.me_email_verification_sent),
+            text = stringResource(
+                R.string.me_email_verification_sent_description,
+                emailAddress
+            ),
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.jetpack_green_50)
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 8.dp)
         )
     }
-
-    Text(
-        text = stringResource(
-            R.string.me_email_verification_sent_description,
-            emailAddress
-        ),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(top = 8.dp)
-    )
 }
 
 /**
@@ -203,39 +197,60 @@ private fun EmailVerificationSentBanner(
 private fun EmailVerificationErrorBanner(
     onResendLinkClick: () -> Unit,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_cross_in_circle_white_24dp),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(end = 8.dp)
-        )
+    EmailVerificationContainer {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_cross_in_circle_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.error),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
         Text(
-            text = stringResource(R.string.error),
+            text = stringResource(R.string.me_email_verification_error_description),
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.error
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.retry),
+            style = MaterialTheme.typography.bodyLarge,
+            color = colorResource(R.color.jetpack_green_50),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    onResendLinkClick()
+                }
         )
     }
+}
 
-    Text(
-        text = stringResource(R.string.me_email_verification_error_description),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(top = 8.dp)
-    )
-
-    Text(
-        text = stringResource(R.string.retry),
-        style = MaterialTheme.typography.bodyLarge,
-        color = colorResource(R.color.jetpack_green_50),
-        modifier = Modifier
-            .padding(top = 8.dp)
-            .clickable {
-                onResendLinkClick()
-            }
-    )
+@Composable
+private fun EmailVerificationContainer(
+    content: @Composable () -> Unit,
+) {
+    AppThemeM3 {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = colorResource(R.color.gravatar_info_banner),
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .padding(20.dp)
+        ) {
+            content()
+        }
+    }
 }
 
 @Preview
