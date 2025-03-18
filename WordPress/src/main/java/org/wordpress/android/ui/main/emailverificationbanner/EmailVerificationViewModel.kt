@@ -36,6 +36,7 @@ class EmailVerificationViewModel
     private var isEmailVerificationLinkRequested: Boolean = false
     private var isEmailVerificationLinkSent: Boolean = false
     private var isEmailVerificationError: Boolean = false
+    var emailVerificationError: String = ""
 
     enum class EmailVerificationState {
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
@@ -115,7 +116,7 @@ class EmailVerificationViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                // TODO we ignore event.error because it's blank
+                emailVerificationError = event.error.message
                 isEmailVerificationError = true
                 isEmailVerificationLinkRequested = false
                 isEmailVerificationLinkSent = false

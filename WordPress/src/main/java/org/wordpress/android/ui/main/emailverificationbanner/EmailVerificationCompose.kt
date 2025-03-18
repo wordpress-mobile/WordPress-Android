@@ -29,6 +29,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun EmailVerificationBanner(
     verificationState: EmailVerificationViewModel.EmailVerificationState,
     emailAddress: String = "",
+    errorMessage: String = "",
     onLinkClick: () -> Unit = {},
 ) {
     when (verificationState) {
@@ -55,6 +56,7 @@ fun EmailVerificationBanner(
 
         EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
             EmailVerificationErrorBanner(
+                errorMessage = errorMessage,
                 onResendLinkClick = {
                     onLinkClick()
                 }
@@ -195,6 +197,7 @@ private fun EmailVerificationSentBanner(
  */
 @Composable
 private fun EmailVerificationErrorBanner(
+    errorMessage: String = "",
     onResendLinkClick: () -> Unit,
 ) {
     EmailVerificationContainer {
@@ -216,7 +219,9 @@ private fun EmailVerificationErrorBanner(
         }
 
         Text(
-            text = stringResource(R.string.me_email_verification_error_description),
+            text = errorMessage.takeIf {
+                errorMessage.isNotEmpty()
+            } ?: stringResource(R.string.me_email_verification_generic_error),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
