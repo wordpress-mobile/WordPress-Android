@@ -21,10 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-
-/**
- * TODO Dark mode support
- */
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 /**
  * Banner when user's email hasn't yet been verified
@@ -197,11 +194,13 @@ fun MeEmailVerificationErrorBanner(
 private fun MeEmailVerificationContainer(
     content: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        content()
+    AppThemeM3 {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            content()
+        }
     }
 }
 
