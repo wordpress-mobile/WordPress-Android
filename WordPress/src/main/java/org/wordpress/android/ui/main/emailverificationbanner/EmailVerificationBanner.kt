@@ -22,6 +22,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
 
     private var verificationState: EmailVerificationViewModel.EmailVerificationState? = null
     private var emailAddress: String = ""
+    private var errorMessage: String = ""
     private var onLinkClick: () -> Unit = {}
 
     private val animDuration =
@@ -34,10 +35,12 @@ class EmailVerificationBanner @JvmOverloads constructor(
     fun setVerificationState(
         verificationState: EmailVerificationViewModel.EmailVerificationState,
         emailAddress: String = "",
+        errorMessage: String = "",
         onLinkClick: () -> Unit = {},
     ) {
         this.verificationState = verificationState
         this.emailAddress = emailAddress
+        this.errorMessage = errorMessage
         this.onLinkClick = onLinkClick
 
         when (verificationState) {
@@ -66,6 +69,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
             EmailVerificationBanner(
                 verificationState = verificationState!!,
                 emailAddress = emailAddress,
+                errorMessage = errorMessage,
                 onLinkClick = {
                     this.onLinkClick()
                 }
