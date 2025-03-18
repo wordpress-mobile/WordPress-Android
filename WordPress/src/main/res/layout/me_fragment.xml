@@ -112,10 +112,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_extra_large"
-                android:background="@drawable/bg_wordpress_gravatar_info"
-                android:paddingBottom="@dimen/margin_extra_large"
-                android:paddingHorizontal="@dimen/margin_extra_small_large"
-                android:paddingTop="@dimen/margin_extra_small_large"
                 android:visibility="gone"
                 tools:visibility="visible"/>
 
