@@ -94,28 +94,47 @@ class EmailVerificationViewModel
     }
 
     /**
-     * FluxC event for when the account state changes. Note that we only care about the email verification link
-     * request since that's the only account event sent from this view model.
+     * Repeatedly fetches the user's account to detect when the user has verified their email address
+     */
+    private fun pollVerificationState() {
+        launch {
+            withContext(bgDispatcher) {
+                for (i in 0..POLLING_TIMES) {
+                    dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+                    delay(POLLING_INTERVAL) // TODO move this above dispatching
+                }
+            }
+        }
+    }
+
+    /**
+     * FluxC event for when the account state changes
      */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                isEmailVerificationLinkRequested = false
-                isEmailVerificationLinkSent = false
                 // TODO we ignore event.error because it's blank
                 isEmailVerificationError = true
+                isEmailVerificationLinkRequested = false
+                isEmailVerificationLinkSent = false
+                updateEmailVerificationState()
+                pollVerificationState() // TODO remove
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
             isEmailVerificationLinkSent = true
             isEmailVerificationError = false
+            updateEmailVerificationState()
+            pollVerificationState()
+        } else if (event.causeOfChange == AccountAction.FETCHED_ACCOUNT) {
+            updateEmailVerificationState()
         }
-
-        updateEmailVerificationState()
     }
 
     companion object {
         private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
+        private const val POLLING_INTERVAL = 60L * 1000L    // poll verification state every minute
+        private const val POLLING_TIMES = 15                // poll verification state 15 times
     }
 }
