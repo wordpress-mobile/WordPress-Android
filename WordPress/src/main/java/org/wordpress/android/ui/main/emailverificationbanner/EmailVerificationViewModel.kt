@@ -71,6 +71,11 @@ class EmailVerificationViewModel
             return
         }
 
+        if (pollingJob?.isActive == true) {
+            appLogWrapper.d(AppLog.T.MAIN, "$TAG: Cancelling verification state polling")
+            pollingJob?.cancel()
+        }
+
         _verificationState.value = VerificationState.LINK_REQUESTED
         appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
 

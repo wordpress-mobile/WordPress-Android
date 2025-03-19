@@ -2608,6 +2608,7 @@
     <string name="me_email_verification_sending_description">Sending verification link to %s</string>
     <string name="me_email_verification_sent">Verification link sent</string>
     <string name="me_email_verification_sent_description">We\'ve sent a verification link to %s</string>
+    <string name="me_email_verification_resend">Resend link</string>
     <string name="me_email_verification_generic_error">Unable to send verification link</string>
 
     <!--TabBar Accessibility Labels-->

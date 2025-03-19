@@ -51,14 +51,17 @@ fun EmailVerificationBanner(
 
         VerificationState.LINK_SENT -> {
             EmailVerificationSentBanner(
-                emailAddress = emailAddress
+                emailAddress = emailAddress,
+                onResendLinkClick = {
+                    onSendLinkClick()
+                }
             )
         }
 
         VerificationState.LINK_ERROR -> {
             EmailVerificationErrorBanner(
                 errorMessage = errorMessage,
-                onResendLinkClick = {
+                onRetrySendLinkClick = {
                     onSendLinkClick()
                 }
             )
@@ -162,6 +165,7 @@ private fun EmailVerificationSendingBanner(
 @Composable
 private fun EmailVerificationSentBanner(
     emailAddress: String,
+    onResendLinkClick: () -> Unit,
 ) {
     EmailVerificationContainer {
         Row(
@@ -190,6 +194,17 @@ private fun EmailVerificationSentBanner(
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 8.dp)
         )
+
+        Text(
+            text = stringResource(R.string.me_email_verification_resend),
+            style = MaterialTheme.typography.bodyLarge,
+            color = colorResource(R.color.jetpack_green_50),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clickable {
+                    onResendLinkClick()
+                }
+        )
     }
 }
 
@@ -199,7 +214,7 @@ private fun EmailVerificationSentBanner(
 @Composable
 private fun EmailVerificationErrorBanner(
     errorMessage: String = "",
-    onResendLinkClick: () -> Unit,
+    onRetrySendLinkClick: () -> Unit,
 ) {
     EmailVerificationContainer {
         Row(
@@ -234,7 +249,7 @@ private fun EmailVerificationErrorBanner(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .clickable {
-                    onResendLinkClick()
+                    onRetrySendLinkClick()
                 }
         )
     }
@@ -284,6 +299,7 @@ fun EmailVerificationRequestedPreview() {
 fun EmailVerificationSentPreview() {
     EmailVerificationSentBanner(
         emailAddress = "vonnegut@example.com",
+        onResendLinkClick = {}
     )
 }
 
@@ -292,6 +308,6 @@ fun EmailVerificationSentPreview() {
 @Composable
 fun EmailVerificationErrorPreview() {
     EmailVerificationErrorBanner(
-        onResendLinkClick = {}
+        onRetrySendLinkClick = {}
     )
 }
