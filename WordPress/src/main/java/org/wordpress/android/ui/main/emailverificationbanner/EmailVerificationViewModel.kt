@@ -15,8 +15,10 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -29,9 +31,12 @@ class EmailVerificationViewModel
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
+    private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _verificationState = MutableLiveData<VerificationState>()
     val verificationState: LiveData<VerificationState> = _verificationState
+
+    private var isPolling = false
 
     var verificationError: String = ""
         private set
@@ -48,7 +53,7 @@ class EmailVerificationViewModel
     init {
         dispatcher.register(this)
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.VERIFIED
+            VerificationState.UNVERIFIED // TODO VERIFIED
         } else if (accountStore.account.email.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
@@ -61,9 +66,13 @@ class EmailVerificationViewModel
      */
     fun onSendVerificationLinkClick() {
         if (!NetworkUtils.checkConnection(WordPress.getContext())) {
+            appLogWrapper.d(AppLog.T.MAIN, "$TAG: No connection")
             return
         }
+
         _verificationState.value = VerificationState.LINK_REQUESTED
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
+
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch {
             withContext(bgDispatcher) {
@@ -77,18 +86,27 @@ class EmailVerificationViewModel
      * Repeatedly fetches the user's account to detect when the user has verified their email address
      */
     private fun pollVerificationState() {
+        if (isPolling) {
+            appLogWrapper.w(AppLog.T.MAIN, "$TAG: Already polling verification state")
+            return
+        }
+
+        isPolling = true
         launch {
-            for (i in 0..POLLING_COUNT) {
+            repeat(POLLING_COUNT) {
                 dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-                delay(POLLING_INTERVAL) // TODO move this above dispatching
+                delay(POLLING_INTERVAL)
                 if (accountStore.account.emailVerified) {
                     withContext(mainDispatcher) {
                         _verificationState.value = VerificationState.VERIFIED
+                        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Email verified")
+                        isPolling = false
                         return@withContext
                     }
                 }
             }
         }
+        isPolling = false
     }
 
     /**
@@ -102,9 +120,11 @@ class EmailVerificationViewModel
                 verificationError = event.error.message
                 _verificationState.value = VerificationState.LINK_ERROR
                 pollVerificationState() // TODO remove
+                appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
             _verificationState.value = VerificationState.LINK_SENT
+            appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
             pollVerificationState()
         }
     }
@@ -113,5 +133,6 @@ class EmailVerificationViewModel
         private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
         private const val POLLING_INTERVAL = 60L * 1000L    // poll verification state every minute
         private const val POLLING_COUNT = 5                 // poll verification state 5 times
+        private const val TAG = "EmailVerificationViewModel"
     }
 }
