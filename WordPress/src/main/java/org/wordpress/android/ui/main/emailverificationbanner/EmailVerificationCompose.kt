@@ -24,16 +24,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 
 @Composable
 fun EmailVerificationBanner(
-    verificationState: EmailVerificationViewModel.EmailVerificationState,
+    verificationState: VerificationState,
     emailAddress: String = "",
     errorMessage: String = "",
     onSendLinkClick: () -> Unit = {},
 ) {
     when (verificationState) {
-        EmailVerificationViewModel.EmailVerificationState.UNVERIFIED -> {
+        VerificationState.UNVERIFIED -> {
             EmailUnverifiedBanner(
                 emailAddress = emailAddress,
                 onSendLinkClick = {
@@ -42,19 +43,19 @@ fun EmailVerificationBanner(
             )
         }
 
-        EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED -> {
+        VerificationState.LINK_REQUESTED -> {
             EmailVerificationSendingBanner(
                 emailAddress = emailAddress
             )
         }
 
-        EmailVerificationViewModel.EmailVerificationState.LINK_SENT -> {
+        VerificationState.LINK_SENT -> {
             EmailVerificationSentBanner(
                 emailAddress = emailAddress
             )
         }
 
-        EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
+        VerificationState.LINK_ERROR -> {
             EmailVerificationErrorBanner(
                 errorMessage = errorMessage,
                 onResendLinkClick = {

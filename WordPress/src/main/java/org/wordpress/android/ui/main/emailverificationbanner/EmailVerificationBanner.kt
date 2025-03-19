@@ -9,6 +9,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isVisible
+import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 
 /**
  * Custom view for Me screen email verification banner
@@ -20,7 +21,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val composeView: ComposeView = ComposeView(context)
 
-    private var verificationState: EmailVerificationViewModel.EmailVerificationState? = null
+    private var verificationState: VerificationState? = null
     private var emailAddress: String = ""
     private var errorMessage: String = ""
     private var onSendLinkClick: () -> Unit = {}
@@ -33,7 +34,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
     }
 
     fun setVerificationState(
-        verificationState: EmailVerificationViewModel.EmailVerificationState,
+        verificationState: VerificationState,
         emailAddress: String = "",
         errorMessage: String = "",
         onSendLinkClick: () -> Unit = {},
@@ -44,10 +45,10 @@ class EmailVerificationBanner @JvmOverloads constructor(
         this.onSendLinkClick = onSendLinkClick
 
         when (verificationState) {
-            EmailVerificationViewModel.EmailVerificationState.UNVERIFIED,
-            EmailVerificationViewModel.EmailVerificationState.LINK_REQUESTED,
-            EmailVerificationViewModel.EmailVerificationState.LINK_SENT,
-            EmailVerificationViewModel.EmailVerificationState.LINK_ERROR -> {
+            VerificationState.UNVERIFIED,
+            VerificationState.LINK_REQUESTED,
+            VerificationState.LINK_SENT,
+            VerificationState.LINK_ERROR -> {
                 if (isVisible) {
                     fadeOut(true)
                 } else {
@@ -55,8 +56,8 @@ class EmailVerificationBanner @JvmOverloads constructor(
                 }
             }
 
-            EmailVerificationViewModel.EmailVerificationState.VERIFIED,
-            EmailVerificationViewModel.EmailVerificationState.NO_ACCOUNT -> {
+            VerificationState.VERIFIED,
+            VerificationState.NO_ACCOUNT -> {
                 if (isVisible.not()) {
                     fadeOut(false)
                 }

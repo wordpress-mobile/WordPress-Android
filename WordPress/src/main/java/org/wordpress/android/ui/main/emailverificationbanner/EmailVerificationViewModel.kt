@@ -30,13 +30,13 @@ class EmailVerificationViewModel
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
-    private val _emailVerificationState = MutableLiveData<EmailVerificationState>()
-    val emailVerificationState: LiveData<EmailVerificationState> = _emailVerificationState
+    private val _verificationState = MutableLiveData<VerificationState>()
+    val verificationState: LiveData<VerificationState> = _verificationState
 
-    var emailVerificationError: String = ""
+    var verificationError: String = ""
         private set
 
-    enum class EmailVerificationState {
+    enum class VerificationState {
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
         UNVERIFIED,     // user has not verified their email
         LINK_REQUESTED, // user has requested a verification link (API call in progress)
@@ -47,21 +47,12 @@ class EmailVerificationViewModel
 
     init {
         dispatcher.register(this)
-        _emailVerificationState.value = if (accountStore.account.emailVerified) {
-            EmailVerificationState.VERIFIED
+        _verificationState.value = if (accountStore.account.emailVerified) {
+            VerificationState.VERIFIED
         } else if (accountStore.account.email.isNotEmpty()) {
-            EmailVerificationState.UNVERIFIED
+            VerificationState.UNVERIFIED
         } else {
-            EmailVerificationState.NO_ACCOUNT
-        }
-    }
-
-    private fun checkVerificationState(): Boolean {
-        if (accountStore.account.emailVerified) {
-            _emailVerificationState.value = EmailVerificationState.VERIFIED
-            return true
-        } else {
-            return false
+            VerificationState.NO_ACCOUNT
         }
     }
 
@@ -72,7 +63,7 @@ class EmailVerificationViewModel
         if (!NetworkUtils.checkConnection(WordPress.getContext())) {
             return
         }
-        _emailVerificationState.value = EmailVerificationState.LINK_REQUESTED
+        _verificationState.value = VerificationState.LINK_REQUESTED
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch {
             withContext(bgDispatcher) {
@@ -90,8 +81,9 @@ class EmailVerificationViewModel
             for (i in 0..POLLING_COUNT) {
                 dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
                 delay(POLLING_INTERVAL) // TODO move this above dispatching
-                withContext(mainDispatcher) {
-                    if (checkVerificationState()) {
+                if (accountStore.account.emailVerified) {
+                    withContext(mainDispatcher) {
+                        _verificationState.value = VerificationState.VERIFIED
                         return@withContext
                     }
                 }
@@ -107,12 +99,12 @@ class EmailVerificationViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                emailVerificationError = event.error.message
-                _emailVerificationState.value = EmailVerificationState.LINK_ERROR
+                verificationError = event.error.message
+                _verificationState.value = VerificationState.LINK_ERROR
                 pollVerificationState() // TODO remove
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
-            _emailVerificationState.value = EmailVerificationState.LINK_SENT
+            _verificationState.value = VerificationState.LINK_SENT
             pollVerificationState()
         }
     }
