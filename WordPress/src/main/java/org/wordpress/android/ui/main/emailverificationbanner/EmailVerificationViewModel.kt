@@ -54,7 +54,7 @@ class EmailVerificationViewModel
     init {
         dispatcher.register(this)
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.UNVERIFIED // TODO
+            VerificationState.VERIFIED
         } else if (accountStore.account.email.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
@@ -81,7 +81,7 @@ class EmailVerificationViewModel
 
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch(bgDispatcher) {
-            delay(REQUEST_VERIFICATION_LINK_DELAY)
+            delay(REQUEST_LINK_DELAY)
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
         }
     }
@@ -120,7 +120,7 @@ class EmailVerificationViewModel
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
                 verificationError = event.error.message
-                _verificationState.value = VerificationState.LINK_SENT // TODO
+                _verificationState.value = VerificationState.LINK_ERROR
                 appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
@@ -131,7 +131,7 @@ class EmailVerificationViewModel
     }
 
     companion object {
-        private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
+        private const val REQUEST_LINK_DELAY = 750L
         private const val POLLING_INTERVAL_MS = 60L * 1000L    // poll verification state every minute
         private const val POLLING_COUNT = 5                    // poll verification state 5 times
         private const val TAG = "EmailVerificationViewModel"
