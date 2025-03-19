@@ -36,7 +36,6 @@ fun EmailVerificationBanner(
     when (verificationState) {
         VerificationState.UNVERIFIED -> {
             EmailUnverifiedBanner(
-                emailAddress = emailAddress,
                 onSendLinkClick = {
                     onSendLinkClick()
                 }
@@ -44,9 +43,7 @@ fun EmailVerificationBanner(
         }
 
         VerificationState.LINK_REQUESTED -> {
-            EmailVerificationSendingBanner(
-                emailAddress = emailAddress
-            )
+            EmailVerificationSendingBanner()
         }
 
         VerificationState.LINK_SENT -> {
@@ -78,7 +75,6 @@ fun EmailVerificationBanner(
  */
 @Composable
 private fun EmailUnverifiedBanner(
-    emailAddress: String,
     onSendLinkClick: () -> Unit,
 ) {
     EmailVerificationContainer {
@@ -100,10 +96,7 @@ private fun EmailUnverifiedBanner(
         }
 
         Text(
-            text = stringResource(
-                R.string.me_email_verification_verify_email_description,
-                emailAddress
-            ),
+            text = stringResource(R.string.me_email_verification_verify_email_description),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -125,9 +118,7 @@ private fun EmailUnverifiedBanner(
  * Banner when user's email hasn't been verified but a verification link has been requested
  */
 @Composable
-private fun EmailVerificationSendingBanner(
-    emailAddress: String,
-) {
+private fun EmailVerificationSendingBanner() {
     EmailVerificationContainer {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -148,10 +139,7 @@ private fun EmailVerificationSendingBanner(
 
         Row {
             Text(
-                text = stringResource(
-                    R.string.me_email_verification_sending_description,
-                    emailAddress
-                ),
+                text = stringResource(R.string.me_email_verification_sending_description),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 8.dp)
             )
@@ -279,7 +267,6 @@ private fun EmailVerificationContainer(
 @Composable
 fun EmailUnverifiedPreview() {
     EmailUnverifiedBanner(
-        emailAddress = "vonnegut@example.com",
         onSendLinkClick = {}
     )
 }
@@ -288,9 +275,7 @@ fun EmailUnverifiedPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationRequestedPreview() {
-    EmailVerificationSendingBanner(
-        emailAddress = "vonnegut@example.com",
-    )
+    EmailVerificationSendingBanner()
 }
 
 @Preview
