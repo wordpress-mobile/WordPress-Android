@@ -25,7 +25,7 @@ import javax.inject.Named
 @HiltViewModel
 class EmailVerificationViewModel
 @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
@@ -33,10 +33,8 @@ class EmailVerificationViewModel
     private val _emailVerificationState = MutableLiveData<EmailVerificationState>()
     val emailVerificationState: LiveData<EmailVerificationState> = _emailVerificationState
 
-    private var isEmailVerificationLinkRequested: Boolean = false
-    private var isEmailVerificationLinkSent: Boolean = false
-    private var isEmailVerificationError: Boolean = false
     var emailVerificationError: String = ""
+        private set
 
     enum class EmailVerificationState {
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
@@ -49,27 +47,21 @@ class EmailVerificationViewModel
 
     init {
         dispatcher.register(this)
-        updateEmailVerificationState()
-    }
-
-    /*
-     * Update the email verification state, called when we suspect the state has changed
-     */
-    private fun updateEmailVerificationState() {
-        val hasEmail = accountStore.account.email.isNotEmpty()
-        val isEmailVerified = hasEmail && accountStore.account.emailVerified
-        _emailVerificationState.value = if (!isEmailVerified) { // TODO remove the !
+        _emailVerificationState.value = if (accountStore.account.emailVerified) {
             EmailVerificationState.VERIFIED
-        } else if (isEmailVerificationError) {
-            EmailVerificationState.LINK_ERROR
-        } else if (isEmailVerificationLinkSent) {
-            EmailVerificationState.LINK_SENT
-        } else if (isEmailVerificationLinkRequested) {
-            EmailVerificationState.LINK_REQUESTED
-        } else if (hasEmail) {
+        } else if (accountStore.account.email.isNotEmpty()) {
             EmailVerificationState.UNVERIFIED
         } else {
             EmailVerificationState.NO_ACCOUNT
+        }
+    }
+
+    private fun checkVerificationState(): Boolean {
+        if (accountStore.account.emailVerified) {
+            _emailVerificationState.value = EmailVerificationState.VERIFIED
+            return true
+        } else {
+            return false
         }
     }
 
@@ -80,9 +72,7 @@ class EmailVerificationViewModel
         if (!NetworkUtils.checkConnection(WordPress.getContext())) {
             return
         }
-        isEmailVerificationError = false
-        isEmailVerificationLinkRequested = true
-        updateEmailVerificationState()
+        _emailVerificationState.value = EmailVerificationState.LINK_REQUESTED
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch {
             withContext(bgDispatcher) {
@@ -97,13 +87,11 @@ class EmailVerificationViewModel
      */
     private fun pollVerificationState() {
         launch {
-            withContext(bgDispatcher) {
-                for (i in 0..POLLING_COUNT) {
-                    dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-                    delay(POLLING_INTERVAL) // TODO move this above dispatching
-                    if (accountStore.account.emailVerified) {
-                        isEmailVerificationError = false
-                        updateEmailVerificationState()
+            for (i in 0..POLLING_COUNT) {
+                dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+                delay(POLLING_INTERVAL) // TODO move this above dispatching
+                withContext(mainDispatcher) {
+                    if (checkVerificationState()) {
                         return@withContext
                     }
                 }
@@ -120,16 +108,11 @@ class EmailVerificationViewModel
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
                 emailVerificationError = event.error.message
-                isEmailVerificationError = true
-                isEmailVerificationLinkRequested = false
-                isEmailVerificationLinkSent = false
-                updateEmailVerificationState()
+                _emailVerificationState.value = EmailVerificationState.LINK_ERROR
                 pollVerificationState() // TODO remove
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
-            isEmailVerificationLinkSent = true
-            isEmailVerificationError = false
-            updateEmailVerificationState()
+            _emailVerificationState.value = EmailVerificationState.LINK_SENT
             pollVerificationState()
         }
     }

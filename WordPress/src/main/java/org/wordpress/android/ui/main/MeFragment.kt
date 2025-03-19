@@ -339,11 +339,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    private fun MeFragmentBinding.refreshEmailVerificationBanner(
-        verificationState: EmailVerificationViewModel.EmailVerificationState
-    ) {
+    private fun MeFragmentBinding.refreshEmailVerificationBanner() {
         meEmailVerificationBanner.setVerificationState(
-            verificationState = verificationState,
+            verificationState = emailVerificationViewModel.emailVerificationState.value!!,
             emailAddress =  accountStore.account.email,
             errorMessage = emailVerificationViewModel.emailVerificationError,
             onSendLinkClick = {
@@ -392,9 +390,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        emailVerificationViewModel.emailVerificationState.observe(viewLifecycleOwner) { verificationState ->
+        emailVerificationViewModel.emailVerificationState.observe(viewLifecycleOwner) { _ ->
             if (!isAdded) return@observe
-            refreshEmailVerificationBanner(verificationState)
+            refreshEmailVerificationBanner()
         }
     }
 
