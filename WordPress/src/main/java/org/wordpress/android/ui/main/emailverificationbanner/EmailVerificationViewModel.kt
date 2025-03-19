@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -36,7 +37,7 @@ class EmailVerificationViewModel
     private val _verificationState = MutableLiveData<VerificationState>()
     val verificationState: LiveData<VerificationState> = _verificationState
 
-    private var isPolling = false
+    private var pollingJob: Job? = null
 
     var verificationError: String = ""
         private set
@@ -86,27 +87,25 @@ class EmailVerificationViewModel
      * Repeatedly fetches the user's account to detect when the user has verified their email address
      */
     private fun pollVerificationState() {
-        if (isPolling) {
+        if (pollingJob?.isActive == true) {
             appLogWrapper.w(AppLog.T.MAIN, "$TAG: Already polling verification state")
             return
         }
 
-        isPolling = true
-        launch {
+        pollingJob = launch {
             repeat(POLLING_COUNT) {
                 dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-                delay(POLLING_INTERVAL)
+                delay(POLLING_INTERVAL_MS)
                 if (accountStore.account.emailVerified) {
                     withContext(mainDispatcher) {
                         _verificationState.value = VerificationState.VERIFIED
                         appLogWrapper.d(AppLog.T.MAIN, "$TAG: Email verified")
-                        isPolling = false
+                        pollingJob?.cancel()
                         return@withContext
                     }
                 }
             }
         }
-        isPolling = false
     }
 
     /**
@@ -131,7 +130,7 @@ class EmailVerificationViewModel
 
     companion object {
         private const val REQUEST_VERIFICATION_LINK_DELAY = 750L
-        private const val POLLING_INTERVAL = 60L * 1000L    // poll verification state every minute
+        private const val POLLING_INTERVAL_MS = 60L * 1L    // poll verification state every minute TODO change to 1000L
         private const val POLLING_COUNT = 5                 // poll verification state 5 times
         private const val TAG = "EmailVerificationViewModel"
     }
