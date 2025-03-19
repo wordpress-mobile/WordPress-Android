@@ -54,7 +54,7 @@ class EmailVerificationViewModel
     init {
         dispatcher.register(this)
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.VERIFIED
+            VerificationState.UNVERIFIED // TODO
         } else if (accountStore.account.email.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
@@ -80,11 +80,9 @@ class EmailVerificationViewModel
         appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
 
         // briefly delay the request so the user can see the updated banner if the request completes quickly
-        launch {
-            withContext(bgDispatcher) {
-                delay(REQUEST_VERIFICATION_LINK_DELAY)
-                dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-            }
+        launch(bgDispatcher) {
+            delay(REQUEST_VERIFICATION_LINK_DELAY)
+            dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
         }
     }
 
@@ -97,7 +95,7 @@ class EmailVerificationViewModel
             return
         }
 
-        pollingJob = launch {
+        pollingJob = launch(bgDispatcher) {
             repeat(POLLING_COUNT) {
                 dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
                 delay(POLLING_INTERVAL_MS)
@@ -122,7 +120,7 @@ class EmailVerificationViewModel
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
                 verificationError = event.error.message
-                _verificationState.value = VerificationState.LINK_ERROR
+                _verificationState.value = VerificationState.LINK_SENT // TODO
                 appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
             }
         } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {

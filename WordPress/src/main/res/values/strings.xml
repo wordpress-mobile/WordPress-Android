@@ -2602,13 +2602,13 @@
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
     <string name="me_btn_scan_login_code">Scan Login Code</string>
     <string name="me_email_verification_verify_email">Verify your email</string>
-    <string name="me_email_verification_verify_email_description">Please verify your email address (%s) to unlock all features</string>
+    <string name="me_email_verification_verify_email_description">Please verify your email address (%s) to secure your account and unlock all features</string>
     <string name="me_email_verification_verify_email_send_link">Send verification link</string>
-    <string name="me_email_verification_sending">Sending verification</string>
+    <string name="me_email_verification_sending">Sending…</string>
     <string name="me_email_verification_sending_description">Sending verification link to %s</string>
-    <string name="me_email_verification_sent">Verification link sent</string>
-    <string name="me_email_verification_sent_description">We\'ve sent a verification link to %s</string>
-    <string name="me_email_verification_resend">Resend link</string>
+    <string name="me_email_verification_sent">Email sent</string>
+    <string name="me_email_verification_sent_description">Check your inbox at %s for the confirmation email</string>
+    <string name="me_email_verification_resend">Resend verification link</string>
     <string name="me_email_verification_generic_error">Unable to send verification link</string>
 
     <!--TabBar Accessibility Labels-->
