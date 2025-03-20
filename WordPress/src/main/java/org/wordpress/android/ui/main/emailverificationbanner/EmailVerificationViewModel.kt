@@ -138,9 +138,11 @@ class EmailVerificationViewModel
     }
 
     companion object {
-        private const val REQUEST_LINK_DELAY = 750L
-        private const val POLLING_INTERVAL_MS = 60L * 1000L    // poll verification state every minute
-        private const val POLLING_COUNT = 5                    // poll verification state 5 times
         private const val TAG = "EmailVerificationViewModel"
+        private const val REQUEST_LINK_DELAY = 750L
+
+        // poll verification state every minute for 5 times
+        private const val POLLING_INTERVAL_MS = 60L * 1000L
+        private const val POLLING_COUNT = 5
     }
 }
