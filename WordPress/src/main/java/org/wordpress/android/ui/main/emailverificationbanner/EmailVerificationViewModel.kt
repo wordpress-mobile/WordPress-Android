@@ -123,10 +123,14 @@ class EmailVerificationViewModel
                 _verificationState.value = VerificationState.LINK_ERROR
                 appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
             }
-        } else if (event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL) {
-            _verificationState.value = VerificationState.LINK_SENT
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
-            pollVerificationState()
+        } else if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL ||
+            event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL
+        ) {
+            if (_verificationState.value != VerificationState.LINK_SENT) {
+                _verificationState.value = VerificationState.LINK_SENT
+                appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
+                pollVerificationState()
+            }
         }
     }
 

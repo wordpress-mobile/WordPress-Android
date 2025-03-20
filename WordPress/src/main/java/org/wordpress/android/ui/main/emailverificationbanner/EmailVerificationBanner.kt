@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
@@ -58,7 +59,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
 
             VerificationState.VERIFIED,
             VerificationState.NO_ACCOUNT -> {
-                if (isVisible.not()) {
+                if (visibility != View.GONE) {
                     fadeOut(false)
                 }
             }
