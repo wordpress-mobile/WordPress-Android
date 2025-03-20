@@ -1,16 +1,11 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.view.isVisible
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 
 /**
@@ -36,6 +31,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
     }
 
     fun setViewModel(viewModel: EmailVerificationViewModel) {
+        visibility = View.VISIBLE
         composeView.setContent {
             EmailVerificationBanner(
                 verificationState = viewModel.verificationState.collectAsState(),
@@ -48,7 +44,7 @@ class EmailVerificationBanner @JvmOverloads constructor(
         }
     }
 
-    fun setVerificationState(
+    /*fun setVerificationState(
         verificationState: VerificationState,
         emailAddress: String = "",
         errorMessage: String = "",
@@ -122,5 +118,5 @@ class EmailVerificationBanner @JvmOverloads constructor(
             })
             start()
         }
-    }
+    }*/
 }

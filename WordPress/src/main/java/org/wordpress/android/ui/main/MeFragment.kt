@@ -294,6 +294,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         refreshWPCOMLoggedInOnlyButtonsVisibility()
+
+        meEmailVerificationBanner.setViewModel(emailVerificationViewModel)
     }
 
     private fun MeFragmentBinding.refreshWPCOMLoggedInOnlyButtonsVisibility() {
@@ -339,7 +341,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    private fun MeFragmentBinding.refreshEmailVerificationBanner() {
+    /*private fun MeFragmentBinding.refreshEmailVerificationBanner() {
         meEmailVerificationBanner.setVerificationState(
             verificationState = emailVerificationViewModel.verificationState.value!!,
             emailAddress =  accountStore.account.email,
@@ -348,7 +350,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 emailVerificationViewModel.onSendVerificationLinkClick()
             }
         )
-    }
+    }*/
 
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
@@ -390,10 +392,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        emailVerificationViewModel.verificationState.observe(viewLifecycleOwner) { _ ->
+        /*emailVerificationViewModel.verificationState.observe(viewLifecycleOwner) { _ ->
             if (!isAdded) return@observe
             refreshEmailVerificationBanner()
-        }
+        }*/
     }
 
     private fun shouldShowQrCodeLogin(): Boolean {

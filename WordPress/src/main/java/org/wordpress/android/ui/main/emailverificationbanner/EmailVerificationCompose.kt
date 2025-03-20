@@ -29,7 +29,7 @@ import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationVi
 
 @Composable
 fun EmailVerificationBanner(
-    verificationState: State<VerificationState>,
+    verificationState: State<VerificationState?>,
     emailAddress: State<String>,
     errorMessage: State<String>,
     onSendLinkClick: () -> Unit = {},
