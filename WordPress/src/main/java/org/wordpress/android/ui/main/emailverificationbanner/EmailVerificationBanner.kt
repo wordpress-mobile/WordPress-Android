@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main.emailverificationbanner
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -33,7 +32,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 
-private const val ANIM_DURATION = 300
+private const val ANIM_ALPHA = 0.2f
 
 @Composable
 fun EmailVerificationBanner(
@@ -74,7 +73,7 @@ fun EmailVerificationBanner(
         }
 
         else -> {
-            // do nothing
+            // show nothing
         }
     }
 }
@@ -263,8 +262,12 @@ private fun EmailVerificationContainer(
     }
     AnimatedVisibility(
         visibleState = state,
-        enter = fadeIn(tween(delayMillis = ANIM_DURATION)),
-        exit = fadeOut(tween(delayMillis = ANIM_DURATION))
+        enter = fadeIn(
+            initialAlpha = ANIM_ALPHA
+        ),
+        exit = fadeOut(
+            targetAlpha = ANIM_ALPHA
+        )
     ) {
         AppThemeM3 {
             Column(

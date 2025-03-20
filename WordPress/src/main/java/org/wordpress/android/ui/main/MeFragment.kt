@@ -297,7 +297,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         refreshWPCOMLoggedInOnlyButtonsVisibility()
 
-        meEmailVerificationBanner.setContent {
+        meEmailVerificationComposeView.setContent {
             EmailVerificationBanner(
                 verificationState = emailVerificationViewModel.verificationState.collectAsState(),
                 emailAddress = emailVerificationViewModel.emailAddress.collectAsState(),
