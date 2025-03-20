@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -28,12 +29,12 @@ import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationVi
 
 @Composable
 fun EmailVerificationBanner(
-    verificationState: VerificationState,
-    emailAddress: String = "",
-    errorMessage: String = "",
+    verificationState: State<VerificationState>,
+    emailAddress: State<String>,
+    errorMessage: State<String>,
     onSendLinkClick: () -> Unit = {},
 ) {
-    when (verificationState) {
+    when (verificationState.value) {
         VerificationState.UNVERIFIED -> {
             EmailUnverifiedBanner(
                 onSendLinkClick = {
@@ -48,7 +49,7 @@ fun EmailVerificationBanner(
 
         VerificationState.LINK_SENT -> {
             EmailVerificationSentBanner(
-                emailAddress = emailAddress,
+                emailAddress = emailAddress.value,
                 onResendLinkClick = {
                     onSendLinkClick()
                 }
@@ -57,7 +58,7 @@ fun EmailVerificationBanner(
 
         VerificationState.LINK_ERROR -> {
             EmailVerificationErrorBanner(
-                errorMessage = errorMessage,
+                errorMessage = errorMessage.value,
                 onRetrySendLinkClick = {
                     onSendLinkClick()
                 }

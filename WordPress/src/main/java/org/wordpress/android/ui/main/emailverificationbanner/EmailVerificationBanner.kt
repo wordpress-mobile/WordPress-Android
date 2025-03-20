@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isVisible
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
@@ -32,6 +33,19 @@ class EmailVerificationBanner @JvmOverloads constructor(
 
     init {
         addView(composeView)
+    }
+
+    fun setViewModel(viewModel: EmailVerificationViewModel) {
+        composeView.setContent {
+            EmailVerificationBanner(
+                verificationState = viewModel.verificationState.collectAsState(),
+                emailAddress = viewModel.emailAddress.collectAsState(),
+                errorMessage = viewModel.errorMessage.collectAsState(),
+                onSendLinkClick = {
+                    viewModel.onSendVerificationLinkClick()
+                }
+            )
+        }
     }
 
     fun setVerificationState(
