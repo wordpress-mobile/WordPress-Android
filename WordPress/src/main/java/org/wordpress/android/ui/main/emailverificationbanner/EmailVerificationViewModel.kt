@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,13 +34,16 @@ class EmailVerificationViewModel
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
-    private val _verificationState = MutableLiveData<VerificationState>()
-    val verificationState: LiveData<VerificationState> = _verificationState
+    private val _verificationState = MutableStateFlow<VerificationState?>(null)
+    val verificationState = _verificationState.asStateFlow()
+
+    private val _emailAddress = MutableStateFlow("")
+    val emailAddress = _emailAddress.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage = _errorMessage.asStateFlow()
 
     private var pollingJob: Job? = null
-
-    var verificationError: String = ""
-        private set
 
     enum class VerificationState {
         NO_ACCOUNT,     // user doesn't have an account so verification is not possible
@@ -54,7 +57,7 @@ class EmailVerificationViewModel
     init {
         dispatcher.register(this)
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.VERIFIED
+            VerificationState.UNVERIFIED // TODO
         } else if (accountStore.account.email.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
@@ -119,7 +122,7 @@ class EmailVerificationViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                verificationError = event.error.message
+                _errorMessage.value = event.error.message
                 _verificationState.value = VerificationState.LINK_ERROR
                 appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
             }
