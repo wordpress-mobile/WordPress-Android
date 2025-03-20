@@ -1,5 +1,5 @@
 [versions]
-agp = '8.8.1'
+agp = '8.9.0'
 airbnb-lottie = '6.6.4'
 android-desugar = '2.1.5'
 android-installreferrer = '2.2'
