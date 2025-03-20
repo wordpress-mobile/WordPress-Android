@@ -14,10 +14,10 @@ steps:
   #################
   # Gradle Wrapper Validation
   #################
-  - label: "Gradle Wrapper Validation"
-    command: |
-      validate_gradle_wrapper
-    plugins: [$CI_TOOLKIT]
+  - label: Gradle Wrapper Validation
+    command: validate_gradle_wrapper
+    agents:
+      queue: linter
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
