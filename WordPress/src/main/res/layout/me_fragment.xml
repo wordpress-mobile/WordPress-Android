@@ -111,9 +111,7 @@
                 android:id="@+id/me_email_verification_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_extra_large"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                android:layout_marginHorizontal="@dimen/margin_extra_large" />
 
             <LinearLayout
                 android:id="@+id/row_my_profile"

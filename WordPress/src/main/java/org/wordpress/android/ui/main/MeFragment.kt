@@ -341,17 +341,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    /*private fun MeFragmentBinding.refreshEmailVerificationBanner() {
-        meEmailVerificationBanner.setVerificationState(
-            verificationState = emailVerificationViewModel.verificationState.value!!,
-            emailAddress =  accountStore.account.email,
-            errorMessage = emailVerificationViewModel.verificationError,
-            onSendLinkClick = {
-                emailVerificationViewModel.onSendVerificationLinkClick()
-            }
-        )
-    }*/
-
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
@@ -391,11 +380,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
-
-        /*emailVerificationViewModel.verificationState.observe(viewLifecycleOwner) { _ ->
-            if (!isAdded) return@observe
-            refreshEmailVerificationBanner()
-        }*/
     }
 
     private fun shouldShowQrCodeLogin(): Boolean {
