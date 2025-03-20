@@ -2,13 +2,12 @@ package org.wordpress.android.ui.main.emailverificationbanner
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 
 /**
- * Custom view for Me screen email verification banner
+ * Custom view which hosts the email verification banner
  */
 class EmailVerificationBanner @JvmOverloads constructor(
     context: Context,
@@ -16,6 +15,10 @@ class EmailVerificationBanner @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val composeView: ComposeView = ComposeView(context)
+
+    init {
+        addView(composeView)
+    }
 
     fun setViewModel(viewModel: EmailVerificationViewModel) {
         composeView.setContent {

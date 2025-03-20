@@ -2,10 +2,10 @@ package org.wordpress.android.ui.main.emailverificationbanner
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
+
+private const val ANIM_DURATION = 300
 
 @Composable
 fun EmailVerificationBanner(
@@ -256,12 +256,16 @@ private fun EmailVerificationErrorBanner(
 private fun EmailVerificationContainer(
     content: @Composable () -> Unit,
 ) {
-    var visible by remember { mutableStateOf(true) }
-
+    val state = remember {
+        MutableTransitionState(false).apply {
+            // Start the animation immediately.
+            targetState = true
+        }
+    }
     AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut()
+        visibleState = state,
+        enter = fadeIn(tween(delayMillis = ANIM_DURATION)),
+        exit = fadeOut(tween(delayMillis = ANIM_DURATION))
     ) {
         AppThemeM3 {
             Column(
@@ -272,10 +276,6 @@ private fun EmailVerificationContainer(
                         shape = RoundedCornerShape(10.dp)
                     )
                     .padding(20.dp)
-                    .animateEnterExit(
-                        enter = slideInVertically(),
-                        exit = slideOutVertically()
-                    )
             ) {
                 content()
             }
