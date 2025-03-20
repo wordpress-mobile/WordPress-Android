@@ -57,7 +57,7 @@ class EmailVerificationViewModel
     init {
         dispatcher.register(this)
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.UNVERIFIED // TODO
+            VerificationState.VERIFIED
         } else if (accountStore.account.email.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
