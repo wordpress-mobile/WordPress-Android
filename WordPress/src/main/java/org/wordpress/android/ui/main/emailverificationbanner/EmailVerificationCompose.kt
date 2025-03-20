@@ -1,6 +1,11 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,6 +20,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -248,17 +256,29 @@ private fun EmailVerificationErrorBanner(
 private fun EmailVerificationContainer(
     content: @Composable () -> Unit,
 ) {
-    AppThemeM3 {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = colorResource(R.color.gravatar_info_banner),
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .padding(20.dp)
-        ) {
-            content()
+    var visible by remember { mutableStateOf(true) }
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        AppThemeM3 {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = colorResource(R.color.gravatar_info_banner),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(20.dp)
+                    .animateEnterExit(
+                        enter = slideInVertically(),
+                        exit = slideOutVertically()
+                    )
+            ) {
+                content()
+            }
         }
     }
 }
