@@ -107,7 +107,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/me_email_verification_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
