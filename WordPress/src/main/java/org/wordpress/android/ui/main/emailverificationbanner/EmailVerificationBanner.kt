@@ -297,41 +297,49 @@ private fun EmailVerificationContainer(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailUnverifiedPreview() {
-    EmailVerificationContainer {
-        EmailUnverifiedBanner(
-            onSendLinkClick = {}
-        )
-    }
+    EmailVerificationContainer(
+        content = {
+            EmailUnverifiedBanner(
+                onSendLinkClick = {}
+            )
+        }
+    )
 }
 
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationRequestedPreview() {
-    EmailVerificationContainer {
-        EmailVerificationSendingBanner()
-    }
+    EmailVerificationContainer(
+        content = {
+            EmailVerificationSendingBanner()
+        }
+    )
 }
 
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationSentPreview() {
-    EmailVerificationContainer {
-        EmailVerificationSentBanner(
-            emailAddress = "vonnegut@example.com",
-            onResendLinkClick = {}
-        )
-    }
+    EmailVerificationContainer(
+        content = {
+            EmailVerificationSentBanner(
+                emailAddress = "vonnegut@example.com",
+                onResendLinkClick = {}
+            )
+        }
+    )
 }
 
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationErrorPreview() {
-    EmailVerificationContainer {
-        EmailVerificationErrorBanner(
-            onRetrySendLinkClick = {}
-        )
-    }
+    EmailVerificationContainer(
+        content = {
+            EmailVerificationErrorBanner(
+                onRetrySendLinkClick = {}
+            )
+        }
+    )
 }
