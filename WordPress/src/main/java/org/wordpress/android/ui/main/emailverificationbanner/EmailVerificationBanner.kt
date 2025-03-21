@@ -22,6 +22,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -263,11 +264,14 @@ private fun EmailVerificationErrorBanner(
 private fun EmailVerificationContainer(
     content: @Composable () -> Unit,
 ) {
+    // always make the banner initially visible in preview mode
+    val isPreview = LocalInspectionMode.current
     val state = remember {
-        MutableTransitionState(false).apply {
+        MutableTransitionState(isPreview).apply {
             targetState = true
         }
     }
+
     AppThemeM3 {
         AnimatedVisibility(
             visibleState = state,
