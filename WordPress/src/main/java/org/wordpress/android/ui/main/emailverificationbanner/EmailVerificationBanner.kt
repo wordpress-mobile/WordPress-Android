@@ -18,11 +18,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +46,33 @@ fun EmailVerificationBanner(
     errorMessage: State<String>,
     onSendLinkClick: () -> Unit = {},
 ) {
+    // states that were initiated via user interaction should be announced to screen readers
+    val announcementStringRes = when (verificationState.value) {
+        VerificationState.LINK_REQUESTED -> {
+            R.string.me_email_verification_sending
+        }
+
+        VerificationState.LINK_SENT -> {
+            R.string.me_email_verification_sent
+        }
+
+        VerificationState.LINK_ERROR -> {
+            R.string.me_email_verification_generic_error
+        }
+
+        else -> {
+            null
+        }
+    }
+
+    announcementStringRes?.let { stringRes ->
+        val context = LocalContext.current
+        val view = LocalView.current
+        LaunchedEffect(verificationState.value) {
+            view.announceForAccessibility(context.getString(stringRes))
+        }
+    }
+
     when (verificationState.value) {
         VerificationState.UNVERIFIED -> {
             EmailVerificationContainer(
