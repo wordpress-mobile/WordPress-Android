@@ -268,16 +268,16 @@ private fun EmailVerificationContainer(
             targetState = true
         }
     }
-    AnimatedVisibility(
-        visibleState = state,
-        enter = fadeIn(
-            initialAlpha = ANIM_ALPHA
-        ),
-        exit = fadeOut(
-            targetAlpha = ANIM_ALPHA
-        )
-    ) {
-        AppThemeM3 {
+    AppThemeM3 {
+        AnimatedVisibility(
+            visibleState = state,
+            enter = fadeIn(
+                initialAlpha = ANIM_ALPHA
+            ),
+            exit = fadeOut(
+                targetAlpha = ANIM_ALPHA
+            )
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -293,7 +293,7 @@ private fun EmailVerificationContainer(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailUnverifiedPreview() {
@@ -306,7 +306,7 @@ fun EmailUnverifiedPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationRequestedPreview() {
@@ -317,7 +317,7 @@ fun EmailVerificationRequestedPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationSentPreview() {
@@ -331,7 +331,7 @@ fun EmailVerificationSentPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmailVerificationErrorPreview() {
