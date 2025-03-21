@@ -43,41 +43,49 @@ fun EmailVerificationBanner(
 ) {
     when (verificationState.value) {
         VerificationState.UNVERIFIED -> {
-            EmailVerificationContainer {
-                EmailUnverifiedBanner(
-                    onSendLinkClick = {
-                        onSendLinkClick()
-                    }
-                )
-            }
+            EmailVerificationContainer(
+                content = {
+                    EmailUnverifiedBanner(
+                        onSendLinkClick = {
+                            onSendLinkClick()
+                        }
+                    )
+                }
+            )
         }
 
         VerificationState.LINK_REQUESTED -> {
-            EmailVerificationContainer {
-                EmailVerificationSendingBanner()
-            }
+            EmailVerificationContainer(
+                content = {
+                    EmailVerificationSendingBanner()
+                }
+            )
         }
 
         VerificationState.LINK_SENT -> {
-            EmailVerificationContainer {
-                EmailVerificationSentBanner(
-                    emailAddress = emailAddress.value,
-                    onResendLinkClick = {
-                        onSendLinkClick()
-                    }
-                )
-            }
+            EmailVerificationContainer(
+                content = {
+                    EmailVerificationSentBanner(
+                        emailAddress = emailAddress.value,
+                        onResendLinkClick = {
+                            onSendLinkClick()
+                        }
+                    )
+                }
+            )
         }
 
         VerificationState.LINK_ERROR -> {
-            EmailVerificationContainer {
-                EmailVerificationErrorBanner(
-                    errorMessage = errorMessage.value,
-                    onRetrySendLinkClick = {
-                        onSendLinkClick()
-                    }
-                )
-            }
+            EmailVerificationContainer(
+                content = {
+                    EmailVerificationErrorBanner(
+                        errorMessage = errorMessage.value,
+                        onRetrySendLinkClick = {
+                            onSendLinkClick()
+                        }
+                    )
+                }
+            )
         }
 
         else -> {
