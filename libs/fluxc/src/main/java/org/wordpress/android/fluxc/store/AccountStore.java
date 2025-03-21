@@ -1162,7 +1162,10 @@ public class AccountStore extends Store {
         OnAccountChanged accountChanged = new OnAccountChanged();
         accountChanged.causeOfChange = AccountAction.SEND_VERIFICATION_EMAIL;
         if (payload.isError()) {
-            accountChanged.error = new AccountError(AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR, "");
+            accountChanged.error = new AccountError(
+                    AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR,
+                    payload.error.message
+            );
         }
         emitChange(accountChanged);
     }
