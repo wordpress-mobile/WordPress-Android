@@ -41,7 +41,9 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.config.GutenbergKitPluginsFeatureConfig
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
     EXPERIMENTAL_BLOCK_EDITOR("experimental_block_editor", R.string.experimental_block_editor),
@@ -87,6 +89,7 @@ class FeatureViewModel : ViewModel() {
 @AndroidEntryPoint
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
     private val viewModel: FeatureViewModel by viewModels()
+    @Inject lateinit var gutenbergKitPluginsFeatureConfig: GutenbergKitPluginsFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +110,10 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 }
 
                 ExperimentalFeaturesScreen(
-                    features = features,
+                    features = features.filterKeys { feature ->
+                        feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_PLUGINS ||
+                        gutenbergKitPluginsFeatureConfig.isEnabled()
+                    },
                     onFeatureToggled = { feature, enabled ->
                         if (feature == ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR && !enabled) {
                             showDialog.value = true
