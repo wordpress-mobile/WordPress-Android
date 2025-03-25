@@ -2502,10 +2502,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val siteId = site.siteId
             val authToken = accountStore.accessToken
             val authHeader = "Bearer $authToken"
-            val siteApiNamespace = "sites/$siteId"
+            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
 
             val settings = mutableMapOf<String, Any?>(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
