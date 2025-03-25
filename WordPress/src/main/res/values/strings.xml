@@ -2749,7 +2749,7 @@
 
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_subscribers">Subscribers</string>
-    <string name="people_dropdown_item_email_subscribers">Email Subscribers</string>
+    <string name="people_dropdown_item_email_subscribers">Email subscribers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
     <string name="people_empty_list_filtered_subscribers">No subscribers yet</string>
@@ -2757,7 +2757,7 @@
     <string name="people_empty_list_filtered_viewers">No viewers yet</string>
     <string name="people_fetching">Fetching users…</string>
     <string name="title_subscriber">Subscriber</string>
-    <string name="title_email_subscriber">Email Subscriber</string>
+    <string name="title_email_subscriber">Email subscriber</string>
 
     <string name="role_subscriber">Subscriber</string>
     <string name="role_email_subscriber">@string/title_email_subscriber</string>
