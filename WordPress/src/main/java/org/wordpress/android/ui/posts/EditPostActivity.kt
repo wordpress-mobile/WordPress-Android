@@ -255,6 +255,8 @@ import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.MediaType
+import org.wordpress.gutenberg.WebViewGlobal
+import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
 import java.util.Locale
 import java.util.regex.Matcher
@@ -2516,7 +2518,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
                 "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
-                "plugins" to gutenbergKitPluginsConfig.isEnabled()
+                "plugins" to gutenbergKitPluginsConfig.isEnabled(),
+                "webViewGlobals" to listOf(
+                    WebViewGlobal(
+                        "_currentSiteType",
+                        when {
+                            siteModel.isWPComAtomic -> WebViewGlobalValue.StringValue("atomic")
+                            siteModel.isWPCom -> WebViewGlobalValue.StringValue("simple")
+                            else -> WebViewGlobalValue.NullValue
+                        }
+                    )
+                )
             )
 
             return GutenbergKitEditorFragment.newInstance(

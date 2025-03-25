@@ -51,9 +51,11 @@ import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
 import org.wordpress.gutenberg.EditorConfiguration;
+import org.wordpress.gutenberg.WebViewGlobal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -168,6 +170,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
                 .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
                 .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
                 .build();
 
         mGutenbergView.start(config);
