@@ -158,6 +158,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mGutenbergView.start(
                 (String) mSettings.get("siteApiRoot"),
                 (String[]) mSettings.get("siteApiNamespace"),
+                (String[]) mSettings.get("namespaceExcludedPaths"),
                 (String) mSettings.get("authHeader"),
                 (Boolean) mSettings.get("themeStyles"),
                 (Boolean) mSettings.get("plugins"),
