@@ -413,6 +413,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
     private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
         ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+    private val gutenbergKitPluginsConfig: ExperimentalFeature =
+        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_PLUGINS
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -2513,7 +2515,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "siteApiRoot" to siteApiRoot,
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled()
+                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
+                "plugins" to gutenbergKitPluginsConfig.isEnabled()
             )
 
             return GutenbergKitEditorFragment.newInstance(
