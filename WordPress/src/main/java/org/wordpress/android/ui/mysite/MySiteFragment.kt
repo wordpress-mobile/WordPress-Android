@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.compose.runtime.collectAsState
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -42,6 +43,8 @@ import org.wordpress.android.ui.main.AddSiteHandler
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
+import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
+import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -143,6 +146,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var wpMainActivityViewModel: WPMainActivityViewModel
+    private lateinit var emailVerificationViewModel: EmailVerificationViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
@@ -156,7 +160,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        initViewModels()
         binding = MySiteFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()
@@ -313,12 +317,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    private fun initViewModel() {
+    private fun initViewModels() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(WPMainActivityViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(BasicDialogViewModel::class.java)
+        emailVerificationViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(EmailVerificationViewModel::class.java)
     }
 
     private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
@@ -382,6 +388,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {
         noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
+
+        noSitesView.emailVerificationComposeView.setContent {
+            EmailVerificationBanner(
+                verificationState = emailVerificationViewModel.verificationState.collectAsState(),
+                emailAddress = emailVerificationViewModel.emailAddress.collectAsState(),
+                errorMessage = emailVerificationViewModel.errorMessage.collectAsState(),
+                onSendLinkClick = {
+                    emailVerificationViewModel.onSendVerificationLinkClick()
+                }
+            )
+        }
     }
 
     @Suppress("LongMethod")
