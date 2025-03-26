@@ -322,11 +322,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun initViewModels() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
-        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(WPMainActivityViewModel::class.java)
-        dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(BasicDialogViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MySiteViewModel::class.java]
+        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[WPMainActivityViewModel::class.java]
+        dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[BasicDialogViewModel::class.java]
     }
 
     private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
@@ -596,7 +594,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
     @Suppress("ComplexMethod", "LongMethod")
-    fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
+    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
         is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
