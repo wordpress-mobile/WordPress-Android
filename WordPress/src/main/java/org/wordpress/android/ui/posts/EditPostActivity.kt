@@ -2520,7 +2520,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
                 "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
-                "plugins" to (gutenbergKitPluginsConfig.isEnabled() && gutenbergKitPluginsFeatureConfig.isEnabled()),
+                // Limited to Simple sites until application passwords are supported
+                "plugins" to (gutenbergKitPluginsConfig.isEnabled() && gutenbergKitPluginsFeatureConfig.isEnabled() && site.isWPCom),
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
