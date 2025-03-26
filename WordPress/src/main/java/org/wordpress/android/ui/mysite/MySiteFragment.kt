@@ -13,11 +13,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -91,6 +93,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
 
+@AndroidEntryPoint
 @Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
     TextInputDialogFragment.Callback,
@@ -146,8 +149,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var wpMainActivityViewModel: WPMainActivityViewModel
-    private lateinit var emailVerificationViewModel: EmailVerificationViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+
+    private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
@@ -323,8 +327,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             .get(WPMainActivityViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(BasicDialogViewModel::class.java)
-        emailVerificationViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(EmailVerificationViewModel::class.java)
     }
 
     private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
