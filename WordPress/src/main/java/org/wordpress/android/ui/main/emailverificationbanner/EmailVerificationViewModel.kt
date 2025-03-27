@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -57,11 +56,16 @@ class EmailVerificationViewModel
 
     init {
         dispatcher.register(this)
+        checkVerificationState()
+    }
+
+    private fun checkVerificationState() {
+        val hasEmail = accountStore.account.email.isNotEmpty()
         _emailAddress.value = accountStore.account.email
 
-        _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.UNVERIFIED // TODO VERIFIED
-        } else if (_emailAddress.value.isNotEmpty()) {
+        _verificationState.value = if (hasEmail && accountStore.account.emailVerified) {
+            VerificationState.UNVERIFIED // TODO
+        } else if (hasEmail) {
             VerificationState.UNVERIFIED
         } else {
             VerificationState.NO_ACCOUNT
@@ -123,19 +127,28 @@ class EmailVerificationViewModel
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
-        if (event.isError) {
-            if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                _errorMessage.value = event.error.message
-                _verificationState.value = VerificationState.LINK_ERROR
-                appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
+        when (event.causeOfChange) {
+            AccountAction.SEND_VERIFICATION_EMAIL,
+            AccountAction.SENT_VERIFICATION_EMAIL -> {
+                if (event.isError) {
+                    _errorMessage.value = event.error.message
+                    _verificationState.value = VerificationState.LINK_ERROR
+                    appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
+                } else if (_verificationState.value != VerificationState.LINK_SENT) {
+                    _verificationState.value = VerificationState.LINK_SENT
+                    appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
+                    pollVerificationState()
+                }
             }
-        } else if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL ||
-            event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL
-        ) {
-            if (_verificationState.value != VerificationState.LINK_SENT) {
-                _verificationState.value = VerificationState.LINK_SENT
-                appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
-                pollVerificationState()
+
+            AccountAction.FETCH_ACCOUNT -> {
+                if (event.accountInfosChanged && _verificationState.value == VerificationState.NO_ACCOUNT) {
+                    checkVerificationState()
+                }
+            }
+
+            else -> {
+                // noop
             }
         }
     }
