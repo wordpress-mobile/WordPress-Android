@@ -133,8 +133,9 @@
             android:id="@+id/actionable_empty_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/toolbar_height"
+            android:layout_marginVertical="@dimen/margin_large"
             android:visibility="gone"
+
             app:aevButton="@string/my_site_add_new_site"
             app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
             app:aevSubtitle="@string/my_site_create_new_site"
