@@ -560,6 +560,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 )
             }
         }
+
         showAvatarSettingsView(state)
         siteTitle = getString(R.string.my_site_section_screen_title)
     }

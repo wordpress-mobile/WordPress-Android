@@ -72,7 +72,6 @@
                     android:layout_toStartOf="@+id/go_to_settings"
                     android:orientation="vertical">
 
-
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_display_name"
                         style="@style/TextAppearance.MaterialComponents.Headline6"
@@ -135,7 +134,6 @@
             android:layout_height="0dp"
             android:layout_marginVertical="@dimen/margin_large"
             android:visibility="gone"
-
             app:aevButton="@string/my_site_add_new_site"
             app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
             app:aevSubtitle="@string/my_site_create_new_site"

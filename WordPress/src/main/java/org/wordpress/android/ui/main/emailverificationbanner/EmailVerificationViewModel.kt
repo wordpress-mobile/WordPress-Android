@@ -59,19 +59,6 @@ class EmailVerificationViewModel
         checkVerificationState()
     }
 
-    private fun checkVerificationState() {
-        val hasEmail = accountStore.account.email.isNotEmpty()
-        _emailAddress.value = accountStore.account.email
-
-        _verificationState.value = if (hasEmail && accountStore.account.emailVerified) {
-            VerificationState.UNVERIFIED // TODO
-        } else if (hasEmail) {
-            VerificationState.UNVERIFIED
-        } else {
-            VerificationState.NO_ACCOUNT
-        }
-    }
-
     /**
      * User clicked the "Send verification link" button on the email verification banner
      */
@@ -93,6 +80,19 @@ class EmailVerificationViewModel
         launch(bgDispatcher) {
             delay(REQUEST_LINK_DELAY)
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
+        }
+    }
+
+    private fun checkVerificationState() {
+        val hasEmail = accountStore.account.email.isNotEmpty()
+        _emailAddress.value = accountStore.account.email
+
+        _verificationState.value = if (hasEmail && accountStore.account.emailVerified) {
+            VerificationState.UNVERIFIED // TODO change to VERIFIED
+        } else if (hasEmail) {
+            VerificationState.UNVERIFIED
+        } else {
+            VerificationState.NO_ACCOUNT
         }
     }
 
