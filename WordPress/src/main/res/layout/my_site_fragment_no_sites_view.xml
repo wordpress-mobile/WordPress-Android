@@ -123,25 +123,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_extra_large"
+            android:layout_marginVertical="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@id/avatar_account_settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:composableName="org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBannerKt.EmailUnverifiedPreview" />
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionable_empty_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/margin_large"
             android:visibility="gone"
             app:aevButton="@string/my_site_add_new_site"
             app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
             app:aevSubtitle="@string/my_site_create_new_site"
             app:aevTitle="@string/my_site_create_new_site_title"
-            app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
+            app:layout_constraintBottom_toTopOf="@+id/email_verification_compose_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_verification_compose_view"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
