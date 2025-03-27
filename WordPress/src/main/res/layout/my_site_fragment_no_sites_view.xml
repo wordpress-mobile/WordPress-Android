@@ -114,11 +114,21 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/email_verification_compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:composableName="org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBannerKt.EmailUnverifiedPreview" />
+
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/toolbar_height"
+        android:layout_marginVertical="@dimen/toolbar_height"
         android:visibility="gone"
         app:aevButton="@string/my_site_add_new_site"
         app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
