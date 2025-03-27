@@ -124,9 +124,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_extra_large"
-            app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:composableName="org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBannerKt.EmailUnverifiedPreview" />
 
         <org.wordpress.android.ui.ActionableEmptyView
@@ -142,7 +142,7 @@
             app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_verification_compose_view"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
