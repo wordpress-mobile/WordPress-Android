@@ -323,7 +323,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun initViewModels() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MySiteViewModel::class.java]
-        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[WPMainActivityViewModel::class.java]
+        wpMainActivityViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[WPMainActivityViewModel::class.java]
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[BasicDialogViewModel::class.java]
     }
 
