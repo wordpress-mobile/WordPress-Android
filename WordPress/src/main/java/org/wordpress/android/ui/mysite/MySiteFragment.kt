@@ -388,17 +388,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {
         noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
-
-        noSitesView.emailVerificationComposeView.setContent {
-            EmailVerificationBanner(
-                verificationState = emailVerificationViewModel.verificationState.collectAsState(),
-                emailAddress = emailVerificationViewModel.emailAddress.collectAsState(),
-                errorMessage = emailVerificationViewModel.errorMessage.collectAsState(),
-                onSendLinkClick = {
-                    emailVerificationViewModel.onSendVerificationLinkClick()
-                }
-            )
-        }
     }
 
     @Suppress("LongMethod")
@@ -558,6 +547,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             viewModel.onActionableEmptyViewVisible()
+
+            noSitesView.emailVerificationComposeView.setContent {
+                EmailVerificationBanner(
+                    verificationState = emailVerificationViewModel.verificationState.collectAsState(),
+                    emailAddress = emailVerificationViewModel.emailAddress.collectAsState(),
+                    errorMessage = emailVerificationViewModel.errorMessage.collectAsState(),
+                    onSendLinkClick = {
+                        emailVerificationViewModel.onSendVerificationLinkClick()
+                    }
+                )
+            }
         }
         showAvatarSettingsView(state)
         siteTitle = getString(R.string.my_site_section_screen_title)
