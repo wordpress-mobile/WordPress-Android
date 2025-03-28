@@ -4,7 +4,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.annotation.Feature
 import javax.inject.Inject
 
-private const val GUTENBERG_KIT_PLUGINS_REMOTE_FIELD = "gutenberg_kit_plugins"
+private const val GUTENBERG_KIT_PLUGINS_REMOTE_FIELD = "gutenberg_kit_plugins_availability"
 
 @Feature(GUTENBERG_KIT_PLUGINS_REMOTE_FIELD, false)
 class GutenbergKitPluginsFeatureConfig @Inject constructor(
