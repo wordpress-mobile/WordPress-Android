@@ -88,7 +88,7 @@ class EmailVerificationViewModel
         _emailAddress.value = accountStore.account.email
 
         _verificationState.value = if (hasEmail && accountStore.account.emailVerified) {
-            VerificationState.VERIFIED
+            VerificationState.UNVERIFIED // TODO change to VERIFIED
         } else if (hasEmail) {
             VerificationState.UNVERIFIED
         } else {

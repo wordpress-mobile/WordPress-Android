@@ -136,6 +136,7 @@
             android:visibility="gone"
             app:aevButton="@string/my_site_add_new_site"
             app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
+            app:aevImageHiddenInLandscape="true"
             app:aevSubtitle="@string/my_site_create_new_site"
             app:aevTitle="@string/my_site_create_new_site_title"
             app:layout_constraintBottom_toTopOf="@+id/email_verification_compose_view"
