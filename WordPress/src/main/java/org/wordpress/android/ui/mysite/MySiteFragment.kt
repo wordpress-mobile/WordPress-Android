@@ -548,7 +548,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             viewModel.onActionableEmptyViewVisible()
-
+            noSitesView.emailVerificationComposeView.visibility = View.VISIBLE
             noSitesView.emailVerificationComposeView.setContent {
                 EmailVerificationBanner(
                     verificationState = emailVerificationViewModel.verificationState.collectAsState(),
