@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
+import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
@@ -33,16 +35,19 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    lateinit var context: Context
+
     private lateinit var viewModel: EmailVerificationViewModel
 
     @Before
     fun setup() {
         AccountModel().also {
-            it.userName = "testuser"
-            it.displayName = "Test User"
             it.email = "testuser@example.com"
             whenever(accountStore.account).thenReturn(it)
         }
+
+        whenever(contextProvider.getContext()).thenReturn(context)
 
         viewModel = EmailVerificationViewModel(
             mainDispatcher = testDispatcher(),
@@ -105,6 +110,7 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
     @Test
     fun `when no connection, state changes to error`() = runTest {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(context.getString(any())).thenReturn("No network")
         viewModel.onSendVerificationLinkClick()
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_ERROR)
     }
