@@ -183,7 +183,6 @@ android {
         buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
         buildConfigField "boolean", "ENABLE_GUTENBERG_KIT", "false"
         buildConfigField "boolean", "ENABLE_GUTENBERG_KIT_THEME_STYLES", "false"
-        buildConfigField "boolean", "ENABLE_GUTENBERG_KIT_PLUGINS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
