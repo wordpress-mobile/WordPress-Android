@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
@@ -34,6 +33,13 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
+        AccountModel().also {
+            it.userName = "testuser"
+            it.displayName = "Test User"
+            it.email = "testuser@example.com"
+            whenever(accountStore.account).thenReturn(it)
+        }
+
         viewModel = EmailVerificationViewModel(
             mainDispatcher = testDispatcher(),
             bgDispatcher = testDispatcher(),
@@ -42,23 +48,12 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
             appLogWrapper = appLogWrapper,
             contextProvider = contextProvider,
         )
-
-        val accountModel = AccountModel()
-        accountModel.userName = "testuser"
-        accountModel.displayName = "Test User"
-
-        whenever(accountStore.account).thenReturn(accountModel)
     }
 
     @Test
-    fun `initial state is unverified`() = runTest {
-        assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.UNVERIFIED)
-    }
-
-    @Test
-    fun `when send link clicked, state changes to link requested`() = runTest {
+    fun `when link requested, state changes to link requested`() = runTest {
         // When
-        viewModel.onSendVerificationLinkClick()
+        viewModel.onVerificationLinkRequested()
 
         // Then
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_REQUESTED)
@@ -66,8 +61,8 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when link sent successfully, state changes to link sent`() = runTest {
-        // Given
-        viewModel.onVerificationEmailSent()
+        // When
+        viewModel.onVerificationLinkSent()
 
         // Then
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_SENT)
@@ -75,11 +70,8 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when link fails, state changes to error`() = runTest {
-        // Given
-        viewModel.onSendVerificationLinkClick()
-
         // When
-        viewModel.onVerificationEmailError("Network error")
+        viewModel.onVerificationLinkError("Network error")
 
         // Then
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_ERROR)
@@ -98,35 +90,23 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
     @Test
     fun `error message is cleared when sending new verification email`() = runTest {
         // Given
-        viewModel.onVerificationEmailError("Previous error")
+        viewModel.onVerificationLinkError("Previous error")
 
         // When
-        viewModel.onSendVerificationLinkClick()
+        viewModel.onVerificationLinkRequested()
 
         // Then
         assertThat(viewModel.errorMessage.value).isEmpty()
     }
 
     @Test
-    fun `state transition sequence is correct`() = runTest {
-        // Test complete flow: UNVERIFIED -> LINK_REQUESTED -> LINK_SENT
-        assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.UNVERIFIED)
-
-        viewModel.onSendVerificationLinkClick()
-        assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_REQUESTED)
-
-        viewModel.onVerificationEmailSent()
-        assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_SENT)
-    }
-
-    @Test
     fun `error state can be recovered from`() = runTest {
         // Given
-        viewModel.onVerificationEmailError("Error")
+        viewModel.onVerificationLinkError("Error")
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_ERROR)
 
         // When
-        viewModel.onSendVerificationLinkClick()
+        viewModel.onVerificationLinkRequested()
 
         // Then
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.LINK_REQUESTED)

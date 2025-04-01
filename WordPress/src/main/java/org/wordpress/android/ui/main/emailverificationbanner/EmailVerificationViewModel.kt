@@ -82,7 +82,7 @@ class EmailVerificationViewModel
             pollingJob?.cancel()
         }
 
-        onVerificationEmailRequested()
+        onVerificationLinkRequested()
 
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch(bgDispatcher) {
@@ -91,19 +91,18 @@ class EmailVerificationViewModel
         }
     }
 
-    fun onVerificationEmailRequested() {
+    fun onVerificationLinkRequested() {
+        _errorMessage.value = ""
         _verificationState.value = VerificationState.LINK_REQUESTED
         appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
     }
 
-    fun onVerificationEmailSent() {
-        if (_verificationState.value != VerificationState.LINK_SENT) {
-            _verificationState.value = VerificationState.LINK_SENT
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
-        }
+    fun onVerificationLinkSent() {
+        _verificationState.value = VerificationState.LINK_SENT
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
     }
 
-    fun onVerificationEmailError(message: String) {
+    fun onVerificationLinkError(message: String) {
         _errorMessage.value = message
         _verificationState.value = VerificationState.LINK_ERROR
         appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, $message")
@@ -146,12 +145,12 @@ class EmailVerificationViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                onVerificationEmailError(event.error.message)
+                onVerificationLinkError(event.error.message)
             }
         } else if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL ||
             event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL
         ) {
-            onVerificationEmailSent()
+            onVerificationLinkSent()
             pollVerificationState()
         }
     }
