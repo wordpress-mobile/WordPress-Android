@@ -19,8 +19,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,7 +32,7 @@ class EmailVerificationViewModel
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
-    private val contextProvider: ContextProvider,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _verificationState = MutableStateFlow<VerificationState?>(null)
     val verificationState = _verificationState.asStateFlow()
@@ -72,8 +71,8 @@ class EmailVerificationViewModel
      * User clicked the "Send verification link" button on the email verification banner
      */
     fun onSendVerificationLinkClick() {
-        if (!NetworkUtils.checkConnection(contextProvider.getContext())) {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG: No connection")
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onVerificationLinkError("No connection")
             return
         }
 
