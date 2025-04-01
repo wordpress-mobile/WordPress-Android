@@ -1,36 +1,53 @@
 package org.wordpress.android.ui.main.emailverificationbanner
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 import org.assertj.core.api.Assertions.assertThat
-import org.wordpress.android.CoroutineTestRule
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
+import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class EmailVerificationViewModelTest : BaseUnitTest() {
-    @Rule
-    @JvmField
-    val coroutineRule = CoroutineTestRule()
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
 
     private lateinit var viewModel: EmailVerificationViewModel
-    private val verificationState = MutableStateFlow<VerificationState?>(null)
-    private val emailAddress = MutableStateFlow("test@example.com")
-    private val errorMessage = MutableStateFlow("")
 
     @Before
     fun setup() {
         viewModel = EmailVerificationViewModel(
-            initialState = VerificationState.UNVERIFIED,
-            coroutineDispatcher = coroutineRule.testDispatcher
+            mainDispatcher = testDispatcher(),
+            bgDispatcher = testDispatcher(),
+            dispatcher = dispatcher,
+            accountStore = accountStore,
+            appLogWrapper = appLogWrapper,
+            contextProvider = contextProvider,
         )
+
+        val accountModel = AccountModel()
+        accountModel.userName = "testuser"
+        accountModel.displayName = "Test User"
+
+        whenever(accountStore.account).thenReturn(accountModel)
     }
 
     @Test
@@ -50,9 +67,6 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
     @Test
     fun `when link sent successfully, state changes to link sent`() = runTest {
         // Given
-        viewModel.onSendVerificationLinkClick()
-
-        // When
         viewModel.onVerificationEmailSent()
 
         // Then
@@ -79,16 +93,6 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
         // Then
         assertThat(viewModel.verificationState.value).isEqualTo(VerificationState.VERIFIED)
-    }
-
-    @Test
-    fun `email address is exposed through state`() = runTest {
-        // Given
-        val testEmail = "test@example.com"
-        viewModel.updateEmailAddress(testEmail)
-
-        // Then
-        assertThat(viewModel.emailAddress.value).isEqualTo(testEmail)
     }
 
     @Test
