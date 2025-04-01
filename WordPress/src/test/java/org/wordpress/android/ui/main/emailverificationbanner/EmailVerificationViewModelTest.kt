@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationViewModel.VerificationState
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
 class EmailVerificationViewModelTest : BaseUnitTest() {
@@ -25,6 +26,9 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -46,6 +50,7 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
             dispatcher = dispatcher,
             accountStore = accountStore,
             appLogWrapper = appLogWrapper,
+            contextProvider = contextProvider,
             networkUtilsWrapper = networkUtilsWrapper,
         )
     }

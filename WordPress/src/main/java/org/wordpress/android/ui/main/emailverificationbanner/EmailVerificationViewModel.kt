@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -20,6 +21,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,6 +34,7 @@ class EmailVerificationViewModel
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
+    private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _verificationState = MutableStateFlow<VerificationState?>(null)
@@ -59,7 +62,7 @@ class EmailVerificationViewModel
         _emailAddress.value = accountStore.account.email
 
         _verificationState.value = if (accountStore.account.emailVerified) {
-            VerificationState.VERIFIED
+            VerificationState.UNVERIFIED // TODO
         } else if (_emailAddress.value.isNotEmpty()) {
             VerificationState.UNVERIFIED
         } else {
@@ -72,7 +75,7 @@ class EmailVerificationViewModel
      */
     fun onSendVerificationLinkClick() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            onVerificationLinkError("No connection")
+            onVerificationLinkError(contextProvider.getContext().getString(R.string.no_network_message))
             return
         }
 
