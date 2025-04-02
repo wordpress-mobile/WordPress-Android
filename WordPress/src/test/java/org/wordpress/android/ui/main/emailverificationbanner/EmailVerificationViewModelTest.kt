@@ -42,12 +42,13 @@ class EmailVerificationViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        AccountModel().also {
-            it.email = "testuser@example.com"
-            whenever(accountStore.account).thenReturn(it)
-        }
-
         whenever(contextProvider.getContext()).thenReturn(context)
+
+        whenever(accountStore.account).thenReturn(
+            AccountModel().also {
+                it.email = "testuser@example.com"
+            }
+        )
 
         viewModel = EmailVerificationViewModel(
             mainDispatcher = testDispatcher(),
