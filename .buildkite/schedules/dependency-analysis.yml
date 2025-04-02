@@ -2,7 +2,7 @@
 ---
 
 agents:
-  queue: "android"
+  queue: "android-staging"
 
 steps:
   - label: "dependency analysis"
