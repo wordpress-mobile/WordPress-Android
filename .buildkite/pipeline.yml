@@ -62,6 +62,8 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        agents:
+          queue: "android"
 
   #################
   # Diff Reports
@@ -89,6 +91,8 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff_manifest/**/**/*"
+        agents:
+          queue: "android"
 
   #################
   # Unit Tests
@@ -184,3 +188,5 @@ steps:
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
+        agents:
+          queue: "android"
