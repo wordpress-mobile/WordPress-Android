@@ -255,6 +255,8 @@ import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.MediaType
+import org.wordpress.gutenberg.WebViewGlobal
+import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
 import java.util.Locale
 import java.util.regex.Matcher
@@ -413,6 +415,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
     private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
         ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+    private val gutenbergKitPluginsConfig: ExperimentalFeature =
+        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_PLUGINS
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -2500,10 +2504,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val siteId = site.siteId
             val authToken = accountStore.accessToken
             val authHeader = "Bearer $authToken"
-            val siteApiNamespace = "sites/$siteId"
+            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
 
             val settings = mutableMapOf<String, Any?>(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
@@ -2511,9 +2514,22 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
                 "siteApiRoot" to siteApiRoot,
+                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled()
+                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
+                // Limited to Simple sites until application passwords are supported
+                "plugins" to (gutenbergKitPluginsConfig.isEnabled() && site.isWPCom),
+                "webViewGlobals" to listOf(
+                    WebViewGlobal(
+                        "_currentSiteType",
+                        when {
+                            siteModel.isWPComAtomic -> WebViewGlobalValue.StringValue("atomic")
+                            siteModel.isWPCom -> WebViewGlobalValue.StringValue("simple")
+                            else -> WebViewGlobalValue.NullValue
+                        }
+                    )
+                )
             )
 
             return GutenbergKitEditorFragment.newInstance(
