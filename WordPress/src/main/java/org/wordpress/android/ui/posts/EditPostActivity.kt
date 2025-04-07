@@ -4065,6 +4065,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         postEditorAnalyticsSession?.editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEditorSettingsChanged(event: EditorSettingsStore.OnEditorSettingsChanged) {
+        if (site.id != event.siteId) return
+        val editorSettings = event.editorSettings ?: return
+
+        (editorFragment as? GutenbergKitEditorFragment)?.updateEditorSettings(editorSettings.toBundle())
+    }
+
     // EditPostActivityHook methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
