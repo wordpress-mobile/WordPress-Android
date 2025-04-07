@@ -25,6 +25,9 @@ import androidx.lifecycle.LiveData;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -574,5 +577,27 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onEditorSettingsChanged(EditorSettingsStore.OnEditorSettingsChanged event) {
+        if (mGutenbergView == null || event.editorSettings == null)
+            return;
+
+        EditorConfiguration config = mGutenbergView.getEditorConfiguration();
+        config.editorSettings = event.editorSettings.toBundle();
+        mGutenbergView.setEditorConfiguration(config);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }
