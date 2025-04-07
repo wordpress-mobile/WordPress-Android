@@ -38,6 +38,7 @@ static def loadSecrets(Logger logger, File defaultsFile, File secretsFile) {
 
 static def loadPropertiesFromFile(File inputFile) {
     def properties = new Properties()
+    if (!inputFile.exists()) return properties
     inputFile.withInputStream { stream ->
         properties.load(stream)
     }
@@ -108,6 +109,7 @@ apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
 
 buildCache {
+    local.directory = file("${System.getProperty("user.home")}/build-cache-test")
     if (gradle.ext.isCi) {
         remote(HttpBuildCache) {
             url = "http://10.0.2.214:5071/cache/"
