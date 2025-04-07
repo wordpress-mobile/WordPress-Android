@@ -16,7 +16,33 @@ plugins {
     id "com.gradle.develocity" version "3.19.2"
 }
 
-gradle.ext.isCi = System.getenv('CI')?.toBoolean() ?: false
+gradle.ext {
+    isCi = System.getenv('CI')?.toBoolean() ?: false
+
+    secretProperties = loadSecrets(
+            logger,
+            file("${rootDir}/defaults.properties"),
+            file("${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties")
+    )
+    developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
+}
+
+static def loadSecrets(Logger logger, File defaultsFile, File secretsFile) {
+    if (secretsFile.exists()) {
+        return loadPropertiesFromFile(secretsFile)
+    } else {
+        logger.warn("Secrets file not found. Using defaults.")
+        return loadPropertiesFromFile(defaultsFile)
+    }
+}
+
+static def loadPropertiesFromFile(File inputFile) {
+    def properties = new Properties()
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
+}
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -79,5 +105,28 @@ include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
 include ':libs:login'
 
 apply from: './config/gradle/included_builds.gradle'
-apply from: './config/gradle/gradle_build_cache.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
+
+buildCache {
+    if (gradle.ext.isCi) {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.214:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+            credentials {
+                username = "ci-user"
+                password = System.getenv('GRADLE_CACHE_NODE_PASSWORD')
+            }
+        }
+    } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
+        remote(HttpBuildCache) {
+            url = gradle.ext.secretsProperties.get('gradleCacheNodeUrl')
+            push = false
+            credentials {
+                username = "developer"
+                password = gradle.ext.secretsProperties.get('gradleCacheNodePassword')
+            }
+        }
+    }
+}
