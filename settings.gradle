@@ -121,11 +121,11 @@ buildCache {
         }
     } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
         remote(HttpBuildCache) {
-            url = gradle.ext.secretsProperties.get('gradleCacheNodeUrl')
+            url = gradle.ext.secretProperties.get('gradleCacheNodeUrl')
             push = false
             credentials {
                 username = "developer"
-                password = gradle.ext.secretsProperties.get('gradleCacheNodePassword')
+                password = gradle.ext.secretProperties.get('gradleCacheNodePassword')
             }
         }
     }
