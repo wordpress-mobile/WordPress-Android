@@ -183,4 +183,9 @@ steps:
       - label: ":jetpack: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
-        plugins: [$CI_TOOLKIT]
+        plugins: [$CI_TOOLKIT ]
+
+  - label: "🐘 Populate Gradle build cache"
+    command: ".buildkite/commands/gradle-cache-build.sh"
+    plugins: [ $CI_TOOLKIT ]
+
