@@ -555,15 +555,9 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
-    public void updateEditorSettings(Bundle editorSettings) {
+    public void updateEditorSettings(String editorSettings) {
         if (mGutenbergView == null) {
             return;
-        }
-
-        Map<String, Object> settingsMap = new HashMap<>();
-        for (String key : editorSettings.keySet()) {
-            Object value = editorSettings.get(key);
-            settingsMap.put(key, value);
         }
 
         EditorConfiguration config = new EditorConfiguration.Builder()
@@ -578,7 +572,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
                 .setAuthHeader((String) mSettings.get("authHeader"))
                 .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
-                .setEditorSettings(settingsMap)
+                .setEditorSettings(editorSettings)
                 .build();
 
         mGutenbergView.start(config);
