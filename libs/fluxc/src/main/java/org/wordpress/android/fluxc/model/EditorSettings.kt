@@ -2,61 +2,61 @@ package org.wordpress.android.fluxc.model
 
 import android.os.Bundle
 import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import com.google.gson.JsonArray
+import com.google.gson.JsonPrimitive
 
 data class EditorSettings(
-    @SerializedName("colors") val colors: List<EditorThemeElement>? = null,
-    @SerializedName("gradients") val gradients: List<EditorThemeElement>? = null,
-    @SerializedName("styles") val styles: String? = null,
-    @SerializedName("features") val features: String? = null,
-    @SerializedName("isBlockBasedTheme") val isBlockBasedTheme: Boolean = false,
-    @SerializedName("galleryWithImageBlocks") val galleryWithImageBlocks: Boolean = false,
-    @SerializedName("quoteBlockV2") val quoteBlockV2: Boolean = false,
-    @SerializedName("listBlockV2") val listBlockV2: Boolean = false,
-    @SerializedName("hasBlockTemplates") val hasBlockTemplates: Boolean = false,
-    val rawSettings: JsonObject? = null
+    val settings: JsonObject
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
+        processJsonObject(settings, bundle)
+        return bundle
+    }
 
-        colors?.map { it.toBundle() }?.let {
-            bundle.putParcelableArrayList("colors", ArrayList(it))
-        }
-
-        gradients?.map { it.toBundle() }?.let {
-            bundle.putParcelableArrayList("gradients", ArrayList(it))
-        }
-
-        styles?.let { bundle.putString("styles", it) }
-        features?.let { bundle.putString("features", it) }
-        bundle.putBoolean("isBlockBasedTheme", isBlockBasedTheme)
-        bundle.putBoolean("galleryWithImageBlocks", galleryWithImageBlocks)
-        bundle.putBoolean("quoteBlockV2", quoteBlockV2)
-        bundle.putBoolean("listBlockV2", listBlockV2)
-        bundle.putBoolean("hasBlockTemplates", hasBlockTemplates)
-
-        rawSettings?.let { json ->
-            json.entrySet().forEach { entry ->
-                when (val value = entry.value) {
-                    is com.google.gson.JsonPrimitive -> {
-                        if (value.isBoolean) {
-                            bundle.putBoolean(entry.key, value.asBoolean)
-                        } else if (value.isNumber) {
-                            bundle.putDouble(entry.key, value.asDouble)
-                        } else if (value.isString) {
-                            bundle.putString(entry.key, value.asString)
-                        }
-                    }
-                    is com.google.gson.JsonArray -> {
-                        // Handle arrays if needed
-                    }
-                    is com.google.gson.JsonObject -> {
-                        // Handle nested objects if needed
-                    }
+    private fun processJsonObject(jsonObject: JsonObject, bundle: Bundle) {
+        jsonObject.entrySet().forEach { entry ->
+            when (val value = entry.value) {
+                is JsonPrimitive -> processJsonPrimitive(entry.key, value, bundle)
+                is JsonArray -> processJsonArray(entry.key, value, bundle)
+                is JsonObject -> {
+                    val nestedBundle = Bundle()
+                    processJsonObject(value, nestedBundle)
+                    bundle.putBundle(entry.key, nestedBundle)
                 }
             }
         }
+    }
 
-        return bundle
+    private fun processJsonPrimitive(key: String, value: JsonPrimitive, bundle: Bundle) {
+        when {
+            value.isBoolean -> bundle.putBoolean(key, value.asBoolean)
+            value.isNumber -> bundle.putDouble(key, value.asDouble)
+            value.isString -> bundle.putString(key, value.asString)
+        }
+    }
+
+    private fun processJsonArray(key: String, array: JsonArray, bundle: Bundle) {
+        val arrayList = ArrayList<Bundle>()
+        array.forEach { element ->
+            when (element) {
+                is JsonObject -> {
+                    val nestedBundle = Bundle()
+                    processJsonObject(element, nestedBundle)
+                    arrayList.add(nestedBundle)
+                }
+                is JsonPrimitive -> {
+                    val primitiveBundle = Bundle()
+                    processJsonPrimitive("value", element, primitiveBundle)
+                    arrayList.add(primitiveBundle)
+                }
+                is JsonArray -> {
+                    val arrayBundle = Bundle()
+                    processJsonArray("nested", element, arrayBundle)
+                    arrayList.add(arrayBundle)
+                }
+            }
+        }
+        bundle.putParcelableArrayList(key, arrayList)
     }
 }
