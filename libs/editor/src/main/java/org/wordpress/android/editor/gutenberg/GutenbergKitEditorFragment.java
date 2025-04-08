@@ -55,6 +55,7 @@ import org.wordpress.gutenberg.WebViewGlobal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -141,6 +142,8 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
+
+        mEditorFragmentListener.onEditorFragmentInitialized();
 
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
         mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -557,9 +560,28 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             return;
         }
 
-        EditorConfiguration config = mGutenbergView.getEditorConfiguration();
-        config.editorSettings = editorSettings;
-        mGutenbergView.setEditorConfiguration(config);
+        Map<String, Object> settingsMap = new HashMap<>();
+        for (String key : editorSettings.keySet()) {
+            Object value = editorSettings.get(key);
+            settingsMap.put(key, value);
+        }
+
+        EditorConfiguration config = new EditorConfiguration.Builder()
+                .setTitle((String) mSettings.get("postTitle"))
+                .setContent((String) mSettings.get("postContent"))
+                .setPostId((Integer) mSettings.get("postId"))
+                .setPostType((String) mSettings.get("postType"))
+                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
+                .setPlugins((Boolean) mSettings.get("plugins"))
+                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
+                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
+                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
+                .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
+                .setEditorSettings(settingsMap)
+                .build();
+
+        mGutenbergView.start(config);
     }
 
     @Override

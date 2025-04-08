@@ -82,6 +82,7 @@ import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companio
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
+import org.wordpress.android.fluxc.generated.EditorSettingsActionBuilder
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -99,6 +100,9 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.fluxc.store.EditorSettingsStore
+import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
+import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
@@ -347,6 +351,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var uploadStore: UploadStore
 
     @Inject lateinit var editorThemeStore: EditorThemeStore
+
+    @Inject lateinit var editorSettingsStore: EditorSettingsStore
 
     @Inject lateinit var imageLoader: FluxCImageLoader
 
@@ -3636,9 +3642,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
-        refreshEditorContent()
+        if (editorFragment !is GutenbergKitEditorFragment) {
+            refreshEditorContent()
+        }
 
         onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
+        onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
         onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
     private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
@@ -3661,6 +3670,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
         }
     }
+
+    private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
+        if (showGutenbergEditor && editorFragment is GutenbergKitEditorFragment) {
+            refreshEditorSettings()
+        }
+    }
+
     private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
         if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
@@ -4065,8 +4081,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         postEditorAnalyticsSession?.editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
     }
 
+    private fun refreshEditorSettings() {
+        val payload = FetchEditorSettingsPayload(siteModel)
+        dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
+    }
+
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEditorSettingsChanged(event: EditorSettingsStore.OnEditorSettingsChanged) {
+    fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
         if (site.id != event.siteId) return
         val editorSettings = event.editorSettings ?: return
 
