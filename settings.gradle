@@ -19,10 +19,11 @@ plugins {
 gradle.ext {
     isCi = System.getenv('CI')?.toBoolean() ?: false
 
+    secretPath = "${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties"
     secretProperties = loadSecrets(
             logger,
             file("${rootDir}/defaults.properties"),
-            file("${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties")
+            file(secretPath)
     )
     developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
 }
@@ -122,6 +123,9 @@ buildCache {
             }
         }
     } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
+
+        checkForRemoteBuildCacheOptimizedExperience()
+
         remote(HttpBuildCache) {
             url = gradle.ext.secretProperties.get('gradleCacheNodeUrl')
             push = false
@@ -130,5 +134,27 @@ buildCache {
                 password = gradle.ext.secretProperties.get('gradleCacheNodePassword')
             }
         }
+    }
+}
+
+def checkForRemoteBuildCacheOptimizedExperience() {
+    assertSecretsApplied()
+    assertJava17Amazon()
+}
+
+def assertSecretsApplied() {
+    if (!file(gradle.ext.secretPath).exists()) {
+        throw new GradleException("The build requested remote build cache, but secrets file is not found. Please run `bundle exec fastlane run configure_apply` to apply secrets.")
+    }
+}
+
+boolean assertJava17Amazon() {
+    def version = System.getProperty("java.version")
+    def expectedVersion = "17.0.14"
+    def vendor = System.getProperty("java.vendor")
+
+    if (!(version.contains(expectedVersion) && vendor.toLowerCase().contains("amazon"))) {
+        logger.error("Java version: $version, vendor: $vendor")
+        throw new GradleException("Java version is not $expectedVersion or vendor is not Amazon Corretto. This significantly reduces efficiency of remote build cache. Please set up the matching JDK.")
     }
 }
