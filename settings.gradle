@@ -140,7 +140,24 @@ buildCache {
 
 def checkForRemoteBuildCacheOptimizedExperience() {
     assertSecretsApplied()
+    assertDeveloperPropertiesMatch("${rootDir}/libs/login/developer.properties")
+    assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
     assertJava17Amazon()
+}
+
+def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
+    def developerProperties = loadPropertiesFromFile(file(developerPropertiesPath))
+    def developerPropertiesExample = loadPropertiesFromFile(file("${developerPropertiesPath}-example"))
+
+    if (developerProperties.isEmpty()) {
+        return
+    }
+
+    if (developerProperties != developerPropertiesExample) {
+        def yellow = "\u001B[33m"
+        def reset = "\u001B[0m"
+        logger.warn("${yellow}The developer properties file $developerPropertiesPath does not match the default developer properties file. This will reduce efficiency of remote build cache.$reset")
+    }
 }
 
 def assertSecretsApplied() {
