@@ -55,7 +55,6 @@ import org.wordpress.gutenberg.WebViewGlobal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -222,7 +221,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                         filePathCallback.onReceiveValue(uris);
                     } else if (data.getData() != null) {
                         Uri uri = data.getData();
-                        filePathCallback.onReceiveValue(new Uri[] { uri });
+                        filePathCallback.onReceiveValue(new Uri[] {uri});
                     } else {
                         filePathCallback.onReceiveValue(null);
                     }
