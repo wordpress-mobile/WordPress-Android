@@ -89,6 +89,88 @@ allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
+import java.security.MessageDigest
+
+tasks.withType(JavaCompile).configureEach { task ->
+    task.doFirst {
+        def inputFile = task.project.file("build/${project.name}-task-inputs-${task.name}.txt")
+        inputFile.text = "Task: ${task.name}\n\n=== Input Files ===\n"
+
+        // Function to compute MD5 hash of a file
+        def computeMD5 = { file ->
+            if (file.exists() && file.isFile()) {
+                def md5Digest = MessageDigest.getInstance("MD5")
+                file.withInputStream { stream ->
+                    byte[] buffer = new byte[8192]
+                    int bytesRead
+                    while ((bytesRead = stream.read(buffer)) != -1) {
+                        md5Digest.update(buffer, 0, bytesRead)
+                    }
+                }
+                return md5Digest.digest().collect { String.format("%02x", it) }.join("")
+            }
+            return "N/A"
+        }
+
+        // Save all input files (including directories) with relative paths and MD5 hashes
+        task.inputs.files.sort().each { file ->
+            def relativePath = project.relativePath(file)
+            def md5Hash = computeMD5(file)
+            inputFile.append("Input File: ${relativePath} (MD5: ${md5Hash})\n")
+        }
+
+        // Save input properties
+        inputFile.append("\n=== Input Properties ===\n")
+        task.inputs.properties.each { key, value ->
+            inputFile.append("${key}: ${value}\n")
+        }
+
+        // Save task-specific properties
+        inputFile.append("\n=== Task Properties ===\n")
+        inputFile.append("Source Compatibility: ${task.sourceCompatibility}\n")
+        inputFile.append("Target Compatibility: ${task.targetCompatibility}\n")
+
+        // Log the options if available
+        if (task.options) {
+            task.options.compilerArgumentProviders.forEach { value ->
+                if(value instanceof com.android.build.gradle.tasks.CommandLineArgumentProviderAdapter){
+                    inputFile.append("Class names: ${value.classNames.get()}\n")
+                    inputFile.append("Arguments: ${value.arguments.get()}\n")
+                }
+                if (value instanceof com.android.build.gradle.tasks.JdkImageInput) {
+                    inputFile.append("Generated module file: ${project.relativePath(value.generatedModuleFile.get())}, md5: ${computeMD5(value.generatedModuleFile.get())} \n")
+                    inputFile.append("Jrt fs jar: ${project.relativePath(value.jrtFsJar.get())}, md5: ${computeMD5(value.jrtFsJar.get())} \n")
+                }
+            }
+            task.options.debugOptions {
+                inputFile.append("Debug level: ${it.debugLevel}\n")
+            }
+            inputFile.append("\n=== Compiler Options ===\n")
+            inputFile.append("Compiler Args: ${task.options.compilerArgs.join(', ')}\n")
+            inputFile.append("Annotation Processor Path: ${task.options.annotationProcessorPath}\n")
+
+            inputFile.append("\n=== Fork Options ===\n")
+            inputFile.append("Fork: ${task.options.forkOptions.executable}\n")
+            inputFile.append("Fork: ${task.options.forkOptions.javaHome}\n")
+            inputFile.append("Fork: ${task.options.forkOptions.tempDir}\n")
+        }
+        inputFile.append("\n=== Metadata ===\n")
+
+        def metadata = javaCompiler.get().metadata
+
+        inputFile.append("Compiler: ${metadata.currentJvm}\n")
+        inputFile.append("Compiler: ${metadata.installationPath}\n")
+        inputFile.append("Compiler: ${metadata.javaRuntimeVersion}\n")
+        inputFile.append("Compiler: ${metadata.jvmVersion}\n")
+        inputFile.append("Compiler: ${metadata.languageVersion}\n")
+        inputFile.append("Compiler: ${metadata.vendor}\n")
+
+        inputFile.append("\n=== Java compiler ===\n")
+        inputFile.append("Compiler: ${javaCompiler.get().executablePath}\n")
+        inputFile.append("Compiler: ${javaCompiler.get().metadata}\n")
+
+    }
+}
 
 android {
     useLibrary 'android.test.runner'

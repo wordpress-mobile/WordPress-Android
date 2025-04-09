@@ -191,9 +191,13 @@ steps:
         command: ".buildkite/commands/gradle-cache-build.sh wordpress"
         if: build.pull_request.id != null
         plugins: [ $CI_TOOLKIT ]
+        artifact_paths:
+          - "**/build/*-task-inputs**.*"
 
       - label: ":jetpack: Populate Gradle build cache"
         command: ".buildkite/commands/gradle-cache-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: [ $CI_TOOLKIT ]
+        artifact_paths:
+          - "**/build/*-task-inputs**.*"
 
