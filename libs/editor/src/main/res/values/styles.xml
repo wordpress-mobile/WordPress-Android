@@ -4,6 +4,7 @@
 
     <style name="GutenbergContainerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorAccent">@color/accent_color</item>
+        <item name="android:windowBackground">@null</item>
     </style>
 
     <style name="FormatBarButton">

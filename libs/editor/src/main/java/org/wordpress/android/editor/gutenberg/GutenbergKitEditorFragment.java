@@ -93,6 +93,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
     private boolean mEditorDidMount;
+    @Nullable
     private View mRootView;
 
     @Nullable
@@ -100,7 +101,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     public static GutenbergKitEditorFragment newInstance(Context context,
             boolean isNewPost,
-            GutenbergWebViewAuthorizationData webViewAuthorizationData,
+            @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
             boolean jetpackFeaturesEnabled,
             @Nullable Map<String, Object> settings) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
@@ -571,7 +572,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
-    public void updateEditorSettings(String editorSettings) {
+    public void updateEditorSettings(@NonNull String editorSettings) {
         if (mGutenbergView == null) {
             return;
         }
