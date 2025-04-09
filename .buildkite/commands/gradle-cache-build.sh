@@ -10,9 +10,12 @@ bundle exec fastlane run configure_apply
 
 echo "--- :hammer_and_wrench: Building"
 if [ "$1" = "wordpress" ]; then
-  ./gradlew assembleWordpressWasabiDebug -Dorg.gradle.caching.debug=true
+  ./gradlew assembleWordpressWasabiDebug -Dorg.gradle.caching.debug=true --rerun-tasks
 fi
 
 if [ "$1" = "jetpack" ]; then
   ./gradlew assembleJetpackWasabiDebug -Dorg.gradle.caching.debug=true
 fi
+
+find ../libs/ -type f -name "annotations.jar" -exec cp {} . \;
+find ../libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
