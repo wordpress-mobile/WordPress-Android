@@ -171,6 +171,13 @@ public class UploadService extends Service {
         return START_REDELIVER_INTENT;
     }
 
+    @Override
+    public void onTimeout(int startId) {
+        super.onTimeout(startId);
+        stopSelf(startId);
+        AppLog.i(T.MAIN, "UploadService > timed out");
+    }
+
     private void unpackMediaIntent(@NonNull Intent intent) {
         // TODO right now, in the case we had pending uploads and the app/service was restarted,
         // we don't really have a way to tell which media was supposed to be added to which post,

@@ -50,9 +50,12 @@ import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
+import org.wordpress.gutenberg.EditorConfiguration;
+import org.wordpress.gutenberg.WebViewGlobal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -155,16 +158,22 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (postId != null && postId == 0) {
             postId = -1;
         }
-        mGutenbergView.start(
-                (String) mSettings.get("siteApiRoot"),
-                (String) mSettings.get("siteApiNamespace"),
-                (String) mSettings.get("authHeader"),
-                (Boolean) mSettings.get("themeStyles"),
-                postId,
-                (String) mSettings.get("postType"),
-                (String) mSettings.get("postTitle"),
-                (String) mSettings.get("postContent")
-        );
+
+        EditorConfiguration config = new EditorConfiguration.Builder()
+                .setTitle((String) mSettings.get("postTitle"))
+                .setContent((String) mSettings.get("postContent"))
+                .setPostId(postId)
+                .setPostType((String) mSettings.get("postType"))
+                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
+                .setPlugins((Boolean) mSettings.get("plugins"))
+                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
+                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
+                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
+                .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
+                .build();
+
+        mGutenbergView.start(config);
 
         return mGutenbergView;
     }
