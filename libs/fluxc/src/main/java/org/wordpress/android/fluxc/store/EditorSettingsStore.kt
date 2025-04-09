@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.EditorSettings
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.persistence.EditorSettingsSqlUtils
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -26,8 +27,7 @@ class EditorSettingsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    // Cache to store editor settings by site ID
-    private val editorSettingsCache = mutableMapOf<Int, EditorSettings>()
+    private val editorSettingsSqlUtils = EditorSettingsSqlUtils()
 
     class FetchEditorSettingsPayload(val site: SiteModel) : Payload<BaseNetworkError>()
 
@@ -68,7 +68,7 @@ class EditorSettingsStore @Inject constructor(
 
     private suspend fun fetchEditorSettings(site: SiteModel, action: EditorSettingsAction) {
         // First emit cached data if available
-        val cachedSettings = editorSettingsCache[site.id]
+        val cachedSettings = editorSettingsSqlUtils.getEditorSettingsForSite(site)
         if (cachedSettings != null) {
             emitChange(OnEditorSettingsChanged(cachedSettings, site.id, action, isFromCache = true))
         }
@@ -88,7 +88,7 @@ class EditorSettingsStore @Inject constructor(
 
                 val editorSettings = EditorSettings(response.result.asJsonObject)
                 // Update cache
-                editorSettingsCache[site.id] = editorSettings
+                editorSettingsSqlUtils.replaceEditorSettingsForSite(site, editorSettings)
 
                 // Only emit change if the data is different from cache
                 if (cachedSettings != editorSettings) {
