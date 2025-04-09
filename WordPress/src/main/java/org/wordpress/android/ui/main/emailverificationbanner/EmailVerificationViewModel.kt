@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.WordPress
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -20,7 +20,8 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,6 +34,8 @@ class EmailVerificationViewModel
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
+    private val contextProvider: ContextProvider,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _verificationState = MutableStateFlow<VerificationState?>(null)
     val verificationState = _verificationState.asStateFlow()
@@ -71,8 +74,8 @@ class EmailVerificationViewModel
      * User clicked the "Send verification link" button on the email verification banner
      */
     fun onSendVerificationLinkClick() {
-        if (!NetworkUtils.checkConnection(WordPress.getContext())) {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG: No connection")
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onVerificationLinkError(contextProvider.getContext().getString(R.string.no_network_message))
             return
         }
 
@@ -81,14 +84,35 @@ class EmailVerificationViewModel
             pollingJob?.cancel()
         }
 
-        _verificationState.value = VerificationState.LINK_REQUESTED
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
+        onVerificationLinkRequested()
 
         // briefly delay the request so the user can see the updated banner if the request completes quickly
         launch(bgDispatcher) {
             delay(REQUEST_LINK_DELAY)
             dispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction())
         }
+    }
+
+    fun onVerificationLinkRequested() {
+        _errorMessage.value = ""
+        _verificationState.value = VerificationState.LINK_REQUESTED
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link requested")
+    }
+
+    fun onVerificationLinkSent() {
+        _verificationState.value = VerificationState.LINK_SENT
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
+    }
+
+    fun onVerificationLinkError(message: String) {
+        _errorMessage.value = message
+        _verificationState.value = VerificationState.LINK_ERROR
+        appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, $message")
+    }
+
+    fun onEmailVerified() {
+        _verificationState.value = VerificationState.VERIFIED
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Email verified")
     }
 
     /**
@@ -106,9 +130,8 @@ class EmailVerificationViewModel
                 delay(POLLING_INTERVAL_MS)
                 if (accountStore.account.emailVerified) {
                     withContext(mainDispatcher) {
-                        _verificationState.value = VerificationState.VERIFIED
-                        appLogWrapper.d(AppLog.T.MAIN, "$TAG: Email verified")
                         pollingJob?.cancel()
+                        onEmailVerified()
                         return@withContext
                     }
                 }
@@ -124,18 +147,13 @@ class EmailVerificationViewModel
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.isError) {
             if (event.error.type == AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR) {
-                _errorMessage.value = event.error.message
-                _verificationState.value = VerificationState.LINK_ERROR
-                appLogWrapper.e(AppLog.T.MAIN, "$TAG: Error sending verification link, ${event.error.message}")
+                onVerificationLinkError(event.error.message)
             }
         } else if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL ||
             event.causeOfChange == AccountAction.SENT_VERIFICATION_EMAIL
         ) {
-            if (_verificationState.value != VerificationState.LINK_SENT) {
-                _verificationState.value = VerificationState.LINK_SENT
-                appLogWrapper.d(AppLog.T.MAIN, "$TAG: Verification link sent")
-                pollVerificationState()
-            }
+            onVerificationLinkSent()
+            pollVerificationState()
         }
     }
 
