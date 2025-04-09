@@ -26,12 +26,16 @@ class EditorSettingsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
+    // Cache to store editor settings by site ID
+    private val editorSettingsCache = mutableMapOf<Int, EditorSettings>()
+
     class FetchEditorSettingsPayload(val site: SiteModel) : Payload<BaseNetworkError>()
 
     data class OnEditorSettingsChanged(
         val editorSettings: EditorSettings?,
         val siteId: Int,
-        val causeOfChange: EditorSettingsAction
+        val causeOfChange: EditorSettingsAction,
+        val isFromCache: Boolean = false
     ) : Store.OnChanged<EditorSettingsError>() {
         constructor(error: EditorSettingsError, causeOfChange: EditorSettingsAction) :
                 this(editorSettings = null, siteId = -1, causeOfChange = causeOfChange) {
@@ -63,6 +67,13 @@ class EditorSettingsStore @Inject constructor(
     }
 
     private suspend fun fetchEditorSettings(site: SiteModel, action: EditorSettingsAction) {
+        // First emit cached data if available
+        val cachedSettings = editorSettingsCache[site.id]
+        if (cachedSettings != null) {
+            emitChange(OnEditorSettingsChanged(cachedSettings, site.id, action, isFromCache = true))
+        }
+
+        // Then fetch fresh data
         val response = reactNativeStore.executeGetRequest(site, EDITOR_SETTINGS_REQUEST_PATH, false)
 
         when (response) {
@@ -76,8 +87,14 @@ class EditorSettingsStore @Inject constructor(
                 }
 
                 val editorSettings = EditorSettings(response.result.asJsonObject)
-                val onChanged = OnEditorSettingsChanged(editorSettings, site.id, action)
-                emitChange(onChanged)
+                // Update cache
+                editorSettingsCache[site.id] = editorSettings
+
+                // Only emit change if the data is different from cache
+                if (cachedSettings != editorSettings) {
+                    val onChanged = OnEditorSettingsChanged(editorSettings, site.id, action)
+                    emitChange(onChanged)
+                }
             }
             is Error -> {
                 val onChanged = OnEditorSettingsChanged(
