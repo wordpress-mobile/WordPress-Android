@@ -94,6 +94,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
     private boolean mEditorDidMount;
+    private View mRootView;
 
     @Nullable
     private static Map<String, Object> mSettings;
@@ -145,10 +146,17 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
+        mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false);
+        ViewGroup gutenbergViewContainer = mRootView.findViewById(R.id.gutenberg_view_container);
+
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
         mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
+        gutenbergViewContainer.addView(mGutenbergView);
+
+        setEditorProgressBarVisibility(true);
+
         mGutenbergView.setOnFileChooserRequestedListener((intent, requestCode) -> {
             startActivityForResult(intent, requestCode);
             return null;
@@ -158,7 +166,9 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
+            mEditorDidMount = true;
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
+            setEditorProgressBarVisibility(false);
         });
 
         Integer postId = (Integer) mSettings.get("postId");
@@ -182,7 +192,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
         mGutenbergView.start(config);
 
-        return mGutenbergView;
+        return mRootView;
     }
 
     @Override
@@ -227,6 +237,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onResume() {
         super.onResume();
+        setEditorProgressBarVisibility(!mEditorDidMount);
+    }
+
+    private void setEditorProgressBarVisibility(boolean shown) {
+        if (isAdded() && mRootView != null) {
+            mRootView.findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
