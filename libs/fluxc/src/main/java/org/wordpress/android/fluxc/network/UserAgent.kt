@@ -8,7 +8,8 @@ import javax.inject.Singleton
 @Singleton
 @SuppressWarnings("SwallowedException", "TooGenericExceptionCaught", "MemberNameEqualsClassName")
 class UserAgent(appContext: Context?, appName: String) {
-    val userAgent: String
+    var userAgent: String
+        private set
 
     init {
         // Device's default User-Agent string.
