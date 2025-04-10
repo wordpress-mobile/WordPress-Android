@@ -21,4 +21,4 @@ echo "--- :hammer_and_wrench: Building"
 
 #find libs/ -type f -name "annotations.jar" -exec cp {} . \;
 #find libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
-find ~.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.1.10/ -type f -name "kotlin-stdlib-2.1.10.jar" -exec cp {} . \;
+find ~/.gradle/caches/modules-2/files-2.1/ -type f -name "kotlin-stdlib-2.1.10.jar" -exec cp {} . \;
