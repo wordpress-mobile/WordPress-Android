@@ -172,6 +172,13 @@ tasks.withType(JavaCompile).configureEach { task ->
     }
 }
 
+tasks.withType(AbstractArchiveTask).configureEach {
+    it.preserveFileTimestamps = false
+    it.reproducibleFileOrder = true
+    filePermissions { unix(0644) }
+    dirPermissions { unix(0755) }
+}
+
 android {
     useLibrary 'android.test.runner'
 
