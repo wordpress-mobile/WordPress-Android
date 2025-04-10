@@ -180,7 +180,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && mFragment == null) {
             mFragment = getChildFragmentManager().findFragmentById(mBinding.fullScreenDialogFragmentContent.getId());
         }
 
