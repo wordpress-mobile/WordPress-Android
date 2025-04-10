@@ -24,3 +24,10 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlin.reflect)
 }
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    it.preserveFileTimestamps = false
+    it.reproducibleFileOrder = true
+    filePermissions { unix(0644) }
+    dirPermissions { unix(0755) }
+}
