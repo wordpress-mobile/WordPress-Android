@@ -10,6 +10,9 @@ kotlin {
     targetCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
 }
 
-tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+tasks.withType(AbstractArchiveTask).configureEach {
     it.preserveFileTimestamps = false
+    it.reproducibleFileOrder = true
+    filePermissions { unix(0644) }
+    dirPermissions { unix(0755) }
 }
