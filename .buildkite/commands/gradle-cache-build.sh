@@ -9,13 +9,15 @@ echo "--- :closed_lock_with_key: Installing Secrets"
 bundle exec fastlane run configure_apply
 
 echo "--- :hammer_and_wrench: Building"
-if [ "$1" = "wordpress" ]; then
-  ./gradlew assembleWordpressWasabiDebug -Dorg.gradle.caching.debug=true --rerun-tasks --console=plain
-fi
+#if [ "$1" = "wordpress" ]; then
+#  ./gradlew assembleWordpressWasabiDebug -Dorg.gradle.caching.debug=true --rerun-tasks --console=plain
+#fi
+#
+#if [ "$1" = "jetpack" ]; then
+#  ./gradlew assembleJetpackWasabiDebug -Dorg.gradle.caching.debug=true
+#fi
 
-if [ "$1" = "jetpack" ]; then
-  ./gradlew assembleJetpackWasabiDebug -Dorg.gradle.caching.debug=true
-fi
+./gradlew :WordPress:compileWordpressWasabiDebugJavaWithJavac -Dorg.gradle.caching.debug=true --rerun --console=plain
 
-find libs/ -type f -name "annotations.jar" -exec cp {} . \;
-find libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
+#find libs/ -type f -name "annotations.jar" -exec cp {} . \;
+#find libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
