@@ -17,5 +17,5 @@ if [ "$1" = "jetpack" ]; then
   ./gradlew assembleJetpackWasabiDebug -Dorg.gradle.caching.debug=true
 fi
 
-find ../libs/ -type f -name "annotations.jar" -exec cp {} . \;
-find ../libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
+find libs/ -type f -name "annotations.jar" -exec cp {} . \;
+find libs/ -type f -name "fluxc-annotations.jar" -exec cp {} . \;
