@@ -9,3 +9,7 @@ java {
     sourceCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
     targetCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
 }
+
+tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+    it.preserveFileTimestamps = false
+}
