@@ -167,27 +167,6 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             setEditorProgressBarVisibility(false);
         });
 
-        Integer postId = (Integer) mSettings.get("postId");
-        if (postId != null && postId == 0) {
-            postId = -1;
-        }
-
-        EditorConfiguration config = new EditorConfiguration.Builder()
-                .setTitle((String) mSettings.get("postTitle"))
-                .setContent((String) mSettings.get("postContent"))
-                .setPostId(postId)
-                .setPostType((String) mSettings.get("postType"))
-                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
-                .setPlugins((Boolean) mSettings.get("plugins"))
-                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
-                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
-                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
-                .setAuthHeader((String) mSettings.get("authHeader"))
-                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
-                .build();
-
-        mGutenbergView.start(config);
-
         return mRootView;
     }
 
@@ -563,7 +542,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
-    public void updateEditorSettings(@NonNull String editorSettings) {
+    public void startWithEditorSettings(@NonNull String editorSettings) {
         if (mGutenbergView == null) {
             return;
         }

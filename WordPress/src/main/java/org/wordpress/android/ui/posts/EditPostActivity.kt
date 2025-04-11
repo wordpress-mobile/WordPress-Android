@@ -4092,7 +4092,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (site.id != event.siteId) return
         val editorSettings = event.editorSettings ?: return
 
-        (editorFragment as? GutenbergKitEditorFragment)?.updateEditorSettings(editorSettings.toJsonString())
+        (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
     // EditPostActivityHook methods
