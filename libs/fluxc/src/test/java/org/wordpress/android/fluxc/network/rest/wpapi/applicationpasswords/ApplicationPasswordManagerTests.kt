@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 import com.android.volley.NetworkResponse
 import com.android.volley.VolleyError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -50,7 +50,7 @@ class ApplicationPasswordManagerTests {
     }
 
     @Test
-    fun `given a local password exists, when we ask for a password, then return it`() = runBlockingTest {
+    fun `given a local password exists, when we ask for a password, then return it`() = runTest {
         whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
         val result = mApplicationPasswordsManager.getApplicationCredentials(
             testSite
@@ -61,7 +61,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given no local password is saved, when we ask for a password for a jetpack site, then create it`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
@@ -92,7 +92,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given no local password is saved, when we ask for a password for a non-jetpack site, then create it`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
@@ -122,7 +122,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `when a jetpack site returns 404, then return feature not available`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
@@ -143,7 +143,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `when a jetpack site returns application_passwords_disabled, then return feature not available`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
@@ -166,7 +166,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `when a non-jetpack site returns 404, then return feature not available`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
@@ -187,7 +187,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `when a non-jetpack site returns application_passwords_disabled, then return feature not available`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
@@ -210,7 +210,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given a duplicate password already exists, when creating a new password, then delete the previous one`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
@@ -235,7 +235,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given application password doesn't exist locally, when deleting a password, then fetch the UUID`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
@@ -255,7 +255,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given application password exists locally, when deleting a password, then delete it using it itself`() =
-        runBlockingTest {
+        runTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
