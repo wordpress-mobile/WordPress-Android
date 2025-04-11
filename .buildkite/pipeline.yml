@@ -196,6 +196,7 @@ steps:
           - "fluxc-annotations.jar"
           - "annotations.jar"
           - "kotlin-stdlib-2.1.10.jar"
+          - "okio-jvm-3.9.0.jar"
 
 #      - label: ":jetpack: Populate Gradle build cache"
 #        command: ".buildkite/commands/gradle-cache-build.sh jetpack"
