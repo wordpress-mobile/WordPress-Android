@@ -23,7 +23,7 @@ class ConcurrentContinuationWrapper<T> : ContinuationWrapper<T> {
     override fun continueWith(t: T) {
         continuationList.removeFirstOrNull()?.let {
             if (it.isActive) {
-                it.resume(t, null)
+                it.resumeWith(Result.success(t))
             }
         }
     }
