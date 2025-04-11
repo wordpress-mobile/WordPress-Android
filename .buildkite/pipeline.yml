@@ -183,4 +183,17 @@ steps:
       - label: ":jetpack: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
-        plugins: [$CI_TOOLKIT]
+        plugins: [$CI_TOOLKIT ]
+
+  - group: "🐘 Gradle build cache"
+    steps:
+      - label: ":wordpress: Populate Gradle build cache"
+        command: ".buildkite/commands/gradle-cache-build.sh wordpress"
+        if: build.pull_request.id != null
+        plugins: [ $CI_TOOLKIT ]
+
+      - label: ":jetpack: Populate Gradle build cache"
+        command: ".buildkite/commands/gradle-cache-build.sh jetpack"
+        if: build.pull_request.id != null
+        plugins: [ $CI_TOOLKIT ]
+
