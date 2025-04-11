@@ -577,10 +577,15 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             return;
         }
 
+        Integer postId = (Integer) mSettings.get("postId");
+        if (postId != null && postId == 0) {
+            postId = -1;
+        }
+
         EditorConfiguration config = new EditorConfiguration.Builder()
                 .setTitle((String) mSettings.get("postTitle"))
                 .setContent((String) mSettings.get("postContent"))
-                .setPostId((Integer) mSettings.get("postId"))
+                .setPostId(postId)
                 .setPostType((String) mSettings.get("postType"))
                 .setThemeStyles((Boolean) mSettings.get("themeStyles"))
                 .setPlugins((Boolean) mSettings.get("plugins"))
