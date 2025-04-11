@@ -68,8 +68,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
-    @Nullable
-    private GutenbergView mGutenbergView;
+    @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -85,25 +84,21 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     private boolean mHtmlModeEnabled;
 
     private final LiveTextWatcher mTextWatcher = new LiveTextWatcher();
-    @Nullable
-    private HistoryChangeListener mHistoryChangeListener = null;
-    @Nullable
-    private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
-    @Nullable
-    private LogJsExceptionListener mOnLogJsExceptionListener = null;
+    @Nullable private HistoryChangeListener mHistoryChangeListener = null;
+    @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
+    @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
     private boolean mEditorDidMount;
     @Nullable
     private View mRootView;
 
-    @Nullable
-    private static Map<String, Object> mSettings;
+    @Nullable private static Map<String, Object> mSettings;
 
     public static GutenbergKitEditorFragment newInstance(Context context,
-            boolean isNewPost,
-            @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
-            boolean jetpackFeaturesEnabled,
-            @Nullable Map<String, Object> settings) {
+                                                         boolean isNewPost,
+                                                         @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
+                                                         boolean jetpackFeaturesEnabled,
+                                                         @Nullable Map<String, Object> settings) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -152,7 +147,8 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
         mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
         gutenbergViewContainer.addView(mGutenbergView);
 
         setEditorProgressBarVisibility(true);
@@ -195,8 +191,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         return mRootView;
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    @Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         if (mGutenbergView != null) {
@@ -222,7 +217,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                         filePathCallback.onReceiveValue(uris);
                     } else if (data.getData() != null) {
                         Uri uri = data.getData();
-                        filePathCallback.onReceiveValue(new Uri[] {uri});
+                        filePathCallback.onReceiveValue(new Uri[]{uri});
                     } else {
                         filePathCallback.onReceiveValue(null);
                     }
@@ -234,8 +229,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         }
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         setEditorProgressBarVisibility(!mEditorDidMount);
     }
@@ -248,7 +242,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         if (PermissionUtils.checkCameraAndStoragePermissions(this.getActivity())) {
             if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
                 mEditorFragmentListener.onCapturePhotoClicked();
@@ -361,8 +355,8 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override
-    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent)
-            throws EditorFragmentNotAddedException {
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException {
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -396,8 +390,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     /**
-     * Returns the contents of the content field from the JavaScript editor. Should
-     * be called from a background thread
+     * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
      */
     @Override
@@ -441,8 +434,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void appendMediaFiles(Map<String, MediaFile> mediaList) {
         if (getActivity() == null) {
-            // appendMediaFile may be called from a background thread (example:
-            // EditPostActivity.java#L2165) and
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
             // Activity may have already be gone.
             // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
             AppLog.d(T.MEDIA, "appendMediaFiles() called but Activity is null!");
@@ -527,8 +519,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         super.onDestroy();
     }
 
-    @Override
-    public void mediaSelectionCancelled() {
+    @Override public void mediaSelectionCancelled() {
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
@@ -610,13 +601,11 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
-    @Override
-    public void onUndoPressed() {
+    @Override public void onUndoPressed() {
         mGutenbergView.undo();
     }
 
-    @Override
-    public void onRedoPressed() {
+    @Override public void onRedoPressed() {
         mGutenbergView.redo();
     }
 
