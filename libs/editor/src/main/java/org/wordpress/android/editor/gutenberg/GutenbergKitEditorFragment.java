@@ -95,10 +95,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private static Map<String, Object> mSettings;
 
     public static GutenbergKitEditorFragment newInstance(Context context,
-                                                         boolean isNewPost,
-                                                         @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
-                                                         boolean jetpackFeaturesEnabled,
-                                                         @Nullable Map<String, Object> settings) {
+            boolean isNewPost,
+            @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
+            boolean jetpackFeaturesEnabled,
+            @Nullable Map<String, Object> settings) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
