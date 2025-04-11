@@ -35,7 +35,7 @@ class MeViewModel
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -111,9 +111,11 @@ class MeViewModel
                     _recommendUiState.value = state
                 }
             }
+
             FetchingApi -> {
                 return
             }
+
             null -> {
                 getRecommendTemplate()
             }
@@ -151,7 +153,8 @@ class MeViewModel
     }
 
     private fun RecommendAppState.toUiState(): Event<RecommendAppUiState> {
-        return Event(when (this) {
+        return Event(
+            when (this) {
             is ApiFetchedResult -> if (this.isError()) {
                 RecommendAppUiState(this.error!!)
             } else {
@@ -162,6 +165,7 @@ class MeViewModel
                     analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
                 }
             }
+
             FetchingApi -> RecommendAppUiState(showLoading = true)
         })
     }

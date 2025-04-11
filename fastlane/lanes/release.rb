@@ -463,7 +463,7 @@ platform :android do
     end.select { |f| File.exist?(f) }
 
     release_title = versions.last
-    set_prerelease_flag = prerelease.nil? ? /-rc-|alpha-/.match?(release_title) : prerelease
+    beta_release = prerelease.nil? ? /-rc-|alpha-/.match?(release_title) : prerelease
 
     UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
 
@@ -479,8 +479,9 @@ platform :android do
       repository: GITHUB_REPO,
       version: release_title,
       release_notes_file_path: tmp_file,
-      prerelease: set_prerelease_flag,
-      release_assets: release_assets.join(',')
+      release_assets: release_assets.join(','),
+      prerelease: beta_release, # Beta = prerelease, Final = normal Release
+      is_draft: !beta_release # Beta = publish immediately, Final = Draft (only publish after Apple approval)
     )
 
     FileUtils.rm(tmp_file)

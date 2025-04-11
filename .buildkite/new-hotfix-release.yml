@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+steps:
+  - label: New Hotfix Release
+    plugins: [$CI_TOOLKIT]
+    command: |
+      echo '--- :robot_face: Use bot for Git operations'
+      source use-bot-for-git
+
+      echo '--- :ruby: Setup Ruby tools'
+      install_gems
+
+      echo '--- :shipit: Start new hotfix'
+      bundle exec fastlane new_hotfix_release version_name:"$RELEASE_VERSION" build_code:"$BUILD_CODE" skip_confirm:true
+    agents:
+       queue: tumblr-metal
+    retry:
+      manual:
+        # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+        allowed: false
+        reason: If this job fails, please trigger a new build from ReleasesV2 instead of retrying this step

@@ -5,7 +5,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,7 +56,7 @@ class ApplicationPasswordsNetworkTests {
     }
 
     @Test
-    fun `when sending a new request, then fetch the application password`() = runBlockingTest {
+    fun `when sending a new request, then fetch the application password`() = runTest {
         givenSuccessResponse()
         whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
@@ -67,7 +67,7 @@ class ApplicationPasswordsNetworkTests {
     }
 
     @Test
-    fun `given a locally existing password, when password is revoked, then regenerate a new one`() = runBlockingTest {
+    fun `given a locally existing password, when password is revoked, then regenerate a new one`() = runTest {
         whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
             .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
@@ -81,7 +81,7 @@ class ApplicationPasswordsNetworkTests {
     }
 
     @Test
-    fun `given request succeeds, when request is executed, then return the response`() = runBlockingTest {
+    fun `given request succeeds, when request is executed, then return the response`() = runTest {
         val expectedResponse = TestResponse("value")
         givenSuccessResponse(expectedResponse)
         whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
@@ -94,7 +94,7 @@ class ApplicationPasswordsNetworkTests {
     }
 
     @Test
-    fun `given request fails, when request is executed, then return the error`() = runBlockingTest {
+    fun `given request fails, when request is executed, then return the error`() = runTest {
         val networkError = VolleyError(NetworkResponse(500, byteArrayOf(), true, 0, emptyList()))
         givenErrorResponse(networkError)
         whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
@@ -108,7 +108,7 @@ class ApplicationPasswordsNetworkTests {
 
     @Test
     fun `given site doesn't support application passwords, when a new request, then notify listener`() =
-        runBlockingTest {
+        runTest {
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(501, byteArrayOf(), true, 0, emptyList())))
             whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
                 .thenReturn(ApplicationPasswordCreationResult.NotSupported(BaseNetworkError(networkError)))
@@ -120,7 +120,7 @@ class ApplicationPasswordsNetworkTests {
 
     @Test
     fun `when a new password is created, then notify listener`() =
-        runBlockingTest {
+        runTest {
             givenSuccessResponse()
             whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
                 .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
@@ -132,7 +132,7 @@ class ApplicationPasswordsNetworkTests {
 
     @Test
     fun `given a revoked local password, when a new password is created, then notify listener`() =
-        runBlockingTest {
+        runTest {
             whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
                 .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
                 .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))

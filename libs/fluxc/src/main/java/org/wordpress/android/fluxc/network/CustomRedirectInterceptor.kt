@@ -13,6 +13,10 @@ class CustomRedirectInterceptor : Interceptor {
         if (response.isRedirect) {
             val newRequest = getRedirectRequest(originalRequest, response)
             if (newRequest != null) {
+                // Failing to close the existing response results in this error:
+                // "IllegalStateException: cannot make a new request because the
+                //  previous response is still open: please call response.close()"
+                response.body?.close()
                 return chain.proceed(newRequest)
             }
         }

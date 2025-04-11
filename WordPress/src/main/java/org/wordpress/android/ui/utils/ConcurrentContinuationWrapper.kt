@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.utils
 
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class ConcurrentContinuationWrapper<T> : ContinuationWrapper<T> {
@@ -19,11 +18,10 @@ class ConcurrentContinuationWrapper<T> : ContinuationWrapper<T> {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun continueWith(t: T) {
         continuationList.removeFirstOrNull()?.let {
             if (it.isActive) {
-                it.resume(t, null)
+                it.resumeWith(Result.success(t))
             }
         }
     }

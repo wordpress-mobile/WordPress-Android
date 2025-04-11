@@ -111,3 +111,5 @@ google-upload-credentials.json
 
 # Kotlin
 .kotlin/
+
+developer.properties
