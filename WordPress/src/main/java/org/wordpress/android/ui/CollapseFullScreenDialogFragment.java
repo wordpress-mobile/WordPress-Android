@@ -120,10 +120,6 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mFragment = getChildFragmentManager().findFragmentById(mBinding.fullScreenDialogFragmentContent.getId());
-        }
-
         mController = new CollapseFullScreenDialogController() {
             @Override
             public void collapse(@Nullable Bundle result) {
@@ -184,6 +180,10 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null && mFragment == null) {
+            mFragment = getChildFragmentManager().findFragmentById(mBinding.fullScreenDialogFragmentContent.getId());
+        }
+
         ((CollapseFullScreenDialogContent) getContent()).onViewCreated(mController);
     }
 
