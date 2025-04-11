@@ -14,9 +14,38 @@ pluginManagement {
 
 plugins {
     id "com.gradle.develocity" version "3.19.2"
+    id "com.gradle.common-custom-user-data-gradle-plugin" version "2.2.1"
 }
 
-gradle.ext.isCi = System.getenv('CI')?.toBoolean() ?: false
+gradle.ext {
+    isCi = System.getenv('CI')?.toBoolean() ?: false
+
+    secretPath = "${System.getProperty("user.home")}/.configure/wordpress-android/secrets/secrets.properties"
+    secretProperties = loadSecrets(
+            logger,
+            file("${rootDir}/defaults.properties"),
+            file(secretPath)
+    )
+    developerProperties = loadPropertiesFromFile(file("$rootDir/developer.properties"))
+}
+
+static def loadSecrets(Logger logger, File defaultsFile, File secretsFile) {
+    if (secretsFile.exists()) {
+        return loadPropertiesFromFile(secretsFile)
+    } else {
+        logger.warn("Secrets file not found. Using defaults.")
+        return loadPropertiesFromFile(defaultsFile)
+    }
+}
+
+static def loadPropertiesFromFile(File inputFile) {
+    def properties = new Properties()
+    if (!inputFile.exists()) return properties
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
+}
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -79,5 +108,72 @@ include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
 include ':libs:login'
 
 apply from: './config/gradle/included_builds.gradle'
-apply from: './config/gradle/gradle_build_cache.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
+
+buildCache {
+    if (gradle.ext.isCi) {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.214:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+            credentials {
+                username = "ci-user"
+                password = System.getenv('GRADLE_CACHE_NODE_PASSWORD')
+            }
+        }
+    } else if (gradle.ext.developerProperties["use_remote_build_cache_locally"]?.toBoolean() == true) {
+
+        checkForRemoteBuildCacheOptimizedExperience()
+
+        remote(HttpBuildCache) {
+            url = gradle.ext.secretProperties.get('gradleCacheNodeUrl')
+            push = false
+            credentials {
+                username = "developer"
+                password = gradle.ext.secretProperties.get('gradleCacheNodePassword')
+            }
+        }
+    } else {
+        logger.warn("\nℹ️ Remote build cache is disabled. If you have stable internet connection, consider enabling it via `developer.properties`.")
+    }
+}
+
+def checkForRemoteBuildCacheOptimizedExperience() {
+    assertSecretsApplied()
+    assertDeveloperPropertiesMatch("${rootDir}/libs/login/developer.properties")
+    assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
+    assertJava17Amazon()
+}
+
+def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
+    def developerProperties = loadPropertiesFromFile(file(developerPropertiesPath))
+    def developerPropertiesExample = loadPropertiesFromFile(file("${developerPropertiesPath}-example"))
+
+    if (developerProperties.isEmpty()) {
+        return
+    }
+
+    if (developerProperties != developerPropertiesExample) {
+        def yellow = "\u001B[33m"
+        def reset = "\u001B[0m"
+        logger.warn("${yellow}The developer properties file $developerPropertiesPath does not match the default developer properties file. This will reduce efficiency of remote build cache.$reset")
+    }
+}
+
+def assertSecretsApplied() {
+    if (!file(gradle.ext.secretPath).exists()) {
+        throw new GradleException("The build requested remote build cache, but secrets file is not found. Please run `bundle exec fastlane run configure_apply` to apply secrets.")
+    }
+}
+
+boolean assertJava17Amazon() {
+    def version = System.getProperty("java.version")
+    def expectedVersion = "17.0.14"
+    def vendor = System.getProperty("java.vendor")
+
+    if (!(version.contains(expectedVersion) && vendor.toLowerCase().contains("amazon"))) {
+        logger.error("Java version: $version, vendor: $vendor")
+        throw new GradleException("Java version is not $expectedVersion or vendor is not Amazon Corretto. This significantly reduces efficiency of remote build cache. Please set up the matching JDK.")
+    }
+}
