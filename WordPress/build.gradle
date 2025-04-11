@@ -267,8 +267,8 @@ android {
         }
 
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `secrets.properties`
-        addBuildConfigFieldsFromPrefixedProperties(wordpress, secretProperties, ['wp'])
-        addBuildConfigFieldsFromPrefixedProperties(jetpack, secretProperties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
+        addBuildConfigFieldsFromPrefixedProperties(wordpress, gradle.ext.secretProperties, ['wp'])
+        addBuildConfigFieldsFromPrefixedProperties(jetpack, gradle.ext.secretProperties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
     }
 
     buildTypes {
@@ -286,20 +286,20 @@ android {
     }
 
     signingConfigs {
-        if (["uploadStoreFile", "uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"].count { !secretProperties.containsKey(it) } == 0) {
+        if (["uploadStoreFile", "uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"].count { !gradle.ext.secretProperties.containsKey(it) } == 0) {
             logger.info("App signing properties found in secrets.properties, configuring signing for release builds.")
             release {
-                storeFile = rootProject.file(secretProperties.get("uploadStoreFile"))
-                storePassword = secretProperties.get("uploadStorePassword")
-                keyAlias = secretProperties.get("uploadKeyAlias")
-                keyPassword = secretProperties.get("uploadKeyPassword")
+                storeFile = rootProject.file(gradle.ext.secretProperties.get("uploadStoreFile"))
+                storePassword = gradle.ext.secretProperties.get("uploadStorePassword")
+                keyAlias = gradle.ext.secretProperties.get("uploadKeyAlias")
+                keyPassword = gradle.ext.secretProperties.get("uploadKeyPassword")
             }
             android.buildTypes.release.signingConfig = android.signingConfigs.release
         }
 
-        if (secretProperties.containsKey("debugStoreFile")) {
+        if (gradle.ext.secretProperties.containsKey("debugStoreFile")) {
             logger.info("Debug signing properties found in secrets.properties, configuring signing for debug builds.")
-            def sharedDebugStore = file(secretProperties.get("debugStoreFile").replaceFirst("^~", System.getProperty("user.home")))
+            def sharedDebugStore = file(gradle.ext.secretProperties.get("debugStoreFile").replaceFirst("^~", System.getProperty("user.home")))
             if (sharedDebugStore.exists()) {
                 debug {
                     storeFile sharedDebugStore
