@@ -96,11 +96,16 @@ class EditorSettingsStore @Inject constructor(
                 }
             }
             is Error -> {
-                val onChanged = OnEditorSettingsChanged(
-                    EditorSettingsError(response.error.message),
-                    action
-                )
-                emitChange(onChanged)
+                if (cachedSettings != null) {
+                    val onChanged = OnEditorSettingsChanged(cachedSettings, site.id, action, isFromCache = true)
+                    emitChange(onChanged)
+                } else {
+                    val onChanged = OnEditorSettingsChanged(
+                        EditorSettingsError(response.error.message),
+                        action
+                    )
+                    emitChange(onChanged)
+                }
             }
         }
     }
