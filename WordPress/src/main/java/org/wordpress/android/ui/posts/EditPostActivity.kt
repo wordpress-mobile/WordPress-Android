@@ -47,6 +47,7 @@ import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonObject
 import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -88,6 +89,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.EditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.MediaModel
@@ -4089,9 +4091,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        if (site.id != event.siteId) return
-        val editorSettings = event.editorSettings ?: return
-
+        val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
         (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
