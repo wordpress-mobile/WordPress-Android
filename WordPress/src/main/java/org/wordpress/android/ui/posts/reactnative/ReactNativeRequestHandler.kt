@@ -82,7 +82,9 @@ class ReactNativeRequestHandler @Inject constructor(
                         putString("message", it)
                     }
                 }
-                onError(bundle)
+                mainThreadHandler.post {
+                    onError(bundle)
+                }
             }
         }
     }
