@@ -28,6 +28,7 @@ class WPcomLoginHelper @Inject constructor(
     private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
     private var processedAuthData: String? = null
 
+    @Suppress("ReturnCount")
     fun tryLoginWithDataString(data: String?): Boolean {
         if (data == null || data == processedAuthData) {
             return false
