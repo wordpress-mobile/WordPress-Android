@@ -48,10 +48,6 @@ enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
     EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
         "experimental_block_editor_theme_styles",
         R.string.experimental_block_editor_theme_styles
-    ),
-    EXPERIMENTAL_BLOCK_EDITOR_PLUGINS(
-        "experimental_block_editor_plugins",
-        R.string.experimental_block_editor_plugins
     );
 
     fun isEnabled() : Boolean {

@@ -235,6 +235,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
+import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
@@ -412,11 +413,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
+    @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
+
     private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
     private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
         ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
-    private val gutenbergKitPluginsConfig: ExperimentalFeature =
-        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_PLUGINS
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -2519,7 +2520,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "siteApiNamespace" to siteApiNamespace,
                 "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
                 // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsConfig.isEnabled() && site.isWPCom),
+                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
