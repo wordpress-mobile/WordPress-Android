@@ -1056,7 +1056,7 @@ public class AppPrefs {
     }
 
     public static int getAvatarVersion() {
-        return getInt(DeletablePrefKey.AVATAR_VERSION, 0);
+        return getInt(DeletablePrefKey.AVATAR_VERSION, 1);
     }
 
     public static void setAvatarVersion(int version) {
