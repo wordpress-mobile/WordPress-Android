@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class MeGravatarLoader @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val imageManager: ImageManager,
-    private val resourseProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider
 ) {
     fun load(
         newAvatarSelected: Boolean,
@@ -32,10 +32,10 @@ class MeGravatarLoader @Inject constructor(
             // request cache.
             WordPress.getBitmapCache().removeSimilar(avatarUrl)
             // Changing the signature invalidates Glide's cache
-            appPrefsWrapper.avatarVersion = appPrefsWrapper.avatarVersion + 1
+            appPrefsWrapper.avatarVersion += 1
         }
 
-        val bitmap = WordPress.getBitmapCache().get(avatarUrl)
+        val bitmap = WordPress.getBitmapCache()[avatarUrl]
         // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
         // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
         // which temporary saves the new image into a local bitmap cache.
@@ -59,7 +59,7 @@ class MeGravatarLoader @Inject constructor(
     }
 
     fun constructGravatarUrl(rawAvatarUrl: String, forceRefresh: Boolean = false): String {
-        val avatarSz = resourseProvider.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
+        val avatarSz = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
         val cacheBuster = if (forceRefresh) System.currentTimeMillis().toString() else null
         return WPAvatarUtils.rewriteAvatarUrl(rawAvatarUrl, avatarSz, cacheBuster)
     }
