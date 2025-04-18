@@ -102,7 +102,7 @@ class SelectedSiteRepository @Inject constructor(
     }
 
     private fun fetchEditorSettings(site: SiteModel) {
-        val payload = FetchEditorSettingsPayload(site)
+        val payload = FetchEditorSettingsPayload(site, skipNetworkIfCacheExists = true)
         dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
     }
 

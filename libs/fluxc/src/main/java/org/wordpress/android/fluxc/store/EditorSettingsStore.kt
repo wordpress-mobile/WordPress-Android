@@ -28,7 +28,10 @@ class EditorSettingsStore @Inject constructor(
 ) : Store(dispatcher) {
     private val editorSettingsSqlUtils = EditorSettingsSqlUtils()
 
-    class FetchEditorSettingsPayload(val site: SiteModel) : Payload<BaseNetworkError>()
+    class FetchEditorSettingsPayload(
+        val site: SiteModel,
+        val skipNetworkIfCacheExists: Boolean = false
+    ) : Payload<BaseNetworkError>()
 
     data class OnEditorSettingsChanged(
         val editorSettings: EditorSettings?,
@@ -55,7 +58,7 @@ class EditorSettingsStore @Inject constructor(
                     EditorSettingsStore::class.java.simpleName + ": On FETCH_EDITOR_SETTINGS"
                 ) {
                     val payload = action.payload as FetchEditorSettingsPayload
-                    fetchEditorSettings(payload.site, actionType)
+                    fetchEditorSettings(payload.site, actionType, payload.skipNetworkIfCacheExists)
                 }
             }
         }
@@ -65,11 +68,20 @@ class EditorSettingsStore @Inject constructor(
         AppLog.d(AppLog.T.API, EditorSettingsStore::class.java.simpleName + " onRegister")
     }
 
-    private suspend fun fetchEditorSettings(site: SiteModel, action: EditorSettingsAction) {
+    private suspend fun fetchEditorSettings(
+        site: SiteModel,
+        action: EditorSettingsAction,
+        skipNetworkIfCacheExists: Boolean
+    ) {
         // First emit cached data if available
         val cachedSettings = editorSettingsSqlUtils.getEditorSettingsForSite(site)
         if (cachedSettings != null) {
             emitChange(OnEditorSettingsChanged(cachedSettings, site.id, action, isFromCache = true))
+        }
+
+        // Skip network request if cache exists and flag is set
+        if (cachedSettings != null && skipNetworkIfCacheExists) {
+            return
         }
 
         // Then fetch fresh data
