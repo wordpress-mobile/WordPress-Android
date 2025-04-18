@@ -92,7 +92,7 @@ private val excludedActivities = listOf(
     SiteMonitorParentActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
-    // this is excluded because it uses edge-to-edge insets
+    // this is excluded because it explicitly enables edge-to-edge
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping

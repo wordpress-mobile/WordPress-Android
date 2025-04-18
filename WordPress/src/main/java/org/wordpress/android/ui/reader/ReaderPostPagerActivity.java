@@ -13,10 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.WindowCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -186,7 +189,7 @@ public class ReaderPostPagerActivity extends BaseAppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        EdgeToEdge.enable(this); // TODO check on pre-API35
         setContentView(R.layout.reader_activity_post_pager);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -298,6 +301,18 @@ public class ReaderPostPagerActivity extends BaseAppCompatActivity {
                 false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
         );
+
+        // ensure the system navigation bar isn't overlaid by our bottom appbar in edge-to-edge
+        ViewCompat.setOnApplyWindowInsetsListener(mViewPager, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(
+                    insets.left,
+                    insets.top,
+                    insets.right,
+                    insets.bottom
+            );
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         observeOverlayEvents();
     }
