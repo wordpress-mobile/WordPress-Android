@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -185,6 +186,7 @@ public class ReaderPostPagerActivity extends BaseAppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.reader_activity_post_pager);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
