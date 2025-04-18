@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.EditorSettingsActionBuilder
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.ExperimentalFeature
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
@@ -98,6 +101,11 @@ class SelectedSiteRepository @Inject constructor(
         }
     }
 
+    private fun fetchEditorSettings(site: SiteModel) {
+        val payload = FetchEditorSettingsPayload(site)
+        dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
+    }
+
     fun updateSiteSettingsIfNecessary() {
         // If the selected site is null, we can't update its site settings
         val selectedSite = getSelectedSite() ?: return
@@ -123,8 +131,13 @@ class SelectedSiteRepository @Inject constructor(
 
             siteSettings?.init(true)
         }
-        // Fetch editor theme to update block-based-theme flag
-        fetchEditorTheme(selectedSite)
+
+        // Fetch the site's editor theme and settings
+        if (ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled()) {
+            fetchEditorSettings(selectedSite)
+        } else {
+            fetchEditorTheme(selectedSite)
+        }
     }
 
     fun isSiteIconUploadInProgress(): Boolean {

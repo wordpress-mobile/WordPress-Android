@@ -102,7 +102,6 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
-import org.wordpress.android.fluxc.store.EditorSettingsStore
 import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
 import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
@@ -353,8 +352,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var uploadStore: UploadStore
 
     @Inject lateinit var editorThemeStore: EditorThemeStore
-
-    @Inject lateinit var editorSettingsStore: EditorSettingsStore
 
     @Inject lateinit var imageLoader: FluxCImageLoader
 
