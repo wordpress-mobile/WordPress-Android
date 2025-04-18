@@ -10,10 +10,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="ReaderPostPagerTheme" parent="WordPress.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
     <style name="ReaderRecyclerView">
         <item name="android:background">@color/reader_post_list_background</item>
     </style>
