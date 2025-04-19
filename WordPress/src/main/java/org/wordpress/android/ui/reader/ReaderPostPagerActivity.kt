@@ -132,7 +132,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         POST_LIKE,
     }
 
-    private var mViewPager: WPViewPager? = null
+    private lateinit var mViewPager: WPViewPager
     private var mProgress: ProgressBar? = null
 
     private var currentTag: ReaderTag? = null
@@ -212,15 +212,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        mJetpackFullScreenViewModel = ViewModelProvider(this).get(
-            JetpackFeatureFullScreenOverlayViewModel::class.java
-        )
+        mJetpackFullScreenViewModel = ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
 
         setContentView(R.layout.reader_activity_post_pager)
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val fragment: ReaderPostDetailFragment = this.activeDetailFragment
+                val fragment = activeDetailFragment
                 if (fragment != null && fragment.isCustomViewShowing) {
                     // if full screen video is showing, hide the custom view rather than navigate back
                     fragment.hideCustomView()
@@ -673,7 +671,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val doLike = "1" == uri.getQueryParameter("like")
         val likeActor = uri.getQueryParameter("like_actor")
 
-        if (doLike && likeActor != null && likeActor.trim { it <= ' ' }.length > 0) {
+        if (doLike && likeActor != null && likeActor.trim { it <= ' ' }.isNotEmpty()) {
             mDirectOperation = DirectOperation.POST_LIKE
 
             // check whether we are to like a specific comment
@@ -732,13 +730,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private fun hasPagerAdapter(): Boolean {
-        return (mViewPager != null && mViewPager!!.adapter != null)
+        return (mViewPager.adapter != null)
     }
 
     private val pagerAdapter: PostPagerAdapter?
         get() {
-            return if (mViewPager != null && mViewPager!!.adapter != null) {
-                mViewPager!!.adapter as PostPagerAdapter?
+            return if (mViewPager.adapter != null) {
+                mViewPager.adapter as PostPagerAdapter?
             } else {
                 null
             }
@@ -845,9 +843,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 } else {
                     val maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     idList =
-                        when (this.postListType) {
+                        when (postListType) {
                             ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW -> ReaderPostTable.getBlogIdPostIdsWithTag(
-                                this.currentTag, maxPosts
+                                currentTag, maxPosts
                             )
 
                             ReaderPostListType.BLOG_PREVIEW -> ReaderPostTable.getBlogIdPostIdsInBlog(
@@ -873,18 +871,18 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     )
                     val adapter =
                         PostPagerAdapter(supportFragmentManager, idList)
-                    mViewPager!!.adapter = adapter
+                    mViewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
-                        mViewPager!!.currentItem = newPosition
+                        mViewPager.currentItem = newPosition
                         trackPostAtPositionIfNeeded(newPosition)
                     } else if (adapter.isValidPosition(currentPosition)) {
-                        mViewPager!!.currentItem = currentPosition
+                        mViewPager.currentItem = currentPosition
                         trackPostAtPositionIfNeeded(currentPosition)
                     }
 
                     // let the user know they can swipe between posts
                     if (adapter.count > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                        WPSwipeSnackbar.show(mViewPager!!)
+                        WPSwipeSnackbar.show(mViewPager)
                         AppPrefs.setReaderSwipeToNavigateShown(true)
                     }
                 }
@@ -950,6 +948,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             )
 
             ReaderPostListType.SEARCH_RESULTS -> {}
+
+            ReaderPostListType.TAGS_FEED -> {}
+
+            else -> {}
         }
     }
 
@@ -1036,12 +1038,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         fun canRequestMostPosts(): Boolean {
-            return !mAllPostsLoaded && !mIsSinglePostView && (mIdList != null && mIdList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
+            return !mAllPostsLoaded && !mIsSinglePostView && (mIdList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
         fun isValidPosition(position: Int): Boolean {
-            return (position >= 0 && position < count)
+            return (position in 0..<count)
         }
 
         override fun getCount(): Int {
@@ -1061,7 +1063,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 mCommentId,
                 mIsRelatedPostView,
                 mInterceptedUri,
-                this.postListType,
+                postListType,
                 mPostSlugsResolutionUnderway
             )
         }
@@ -1080,7 +1082,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         val activeFragment: Fragment?
-            get() = getFragmentAtPosition(mViewPager!!.currentItem)
+            get() = getFragmentAtPosition(mViewPager.currentItem)
 
         fun getFragmentAtPosition(position: Int): Fragment? {
             return if (isValidPosition(position)) {
@@ -1091,7 +1093,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         val currentBlogIdPostId: ReaderBlogIdPostId?
-            get() = getBlogIdPostIdAtPosition(mViewPager!!.currentItem)
+            get() = getBlogIdPostIdAtPosition(mViewPager.currentItem)
 
         fun getBlogIdPostIdAtPosition(position: Int): ReaderBlogIdPostId? {
             return if (isValidPosition(position)) {
@@ -1122,7 +1124,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     )
 
                     // a restart will happen so, no need to continue here
-                    break
+                    return
                 }
 
                 val snackbarAttachView = findViewById<View>(R.id.coordinator)
@@ -1134,7 +1136,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         post,
                         site,
                         mUploadActionUseCase!!.getUploadAction(post),
-                        { v: View? ->
+                        { _: View? ->
                             UploadUtils.publishPost(
                                 this@ReaderPostPagerActivity,
                                 post,
