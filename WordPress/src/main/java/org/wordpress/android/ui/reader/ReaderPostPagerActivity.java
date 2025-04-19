@@ -2,22 +2,25 @@ package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -187,12 +190,6 @@ public class ReaderPostPagerActivity extends BaseAppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
-        // enable edge-to-edge full screen
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            EdgeToEdge.enable(this);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-
         setContentView(R.layout.reader_activity_post_pager);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -306,6 +303,21 @@ public class ReaderPostPagerActivity extends BaseAppCompatActivity {
         );
 
         observeOverlayEvents();
+    }
+
+    @Override
+    @Nullable
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context,
+                             @NonNull AttributeSet attrs) {
+        // enable full screen for Android 33+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getWindow().setDecorFitsSystemWindows(false);
+            WindowInsetsControllerCompat controller =
+                    new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+            controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     private void observeOverlayEvents() {
