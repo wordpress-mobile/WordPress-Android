@@ -14,6 +14,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.ExperimentalFeature
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
+import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +34,8 @@ class SelectedSiteRepository @Inject constructor(
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
 
     val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
+
+    @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
 
     fun refresh() {
         updateSiteSettingsIfNecessary()
@@ -133,7 +136,7 @@ class SelectedSiteRepository @Inject constructor(
         }
 
         // Fetch the site's editor theme and settings
-        if (ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled()) {
+        if (ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled() || gutenbergKitFeature.isEnabled()) {
             fetchEditorSettings(selectedSite)
         } else {
             fetchEditorTheme(selectedSite)
