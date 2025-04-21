@@ -1073,6 +1073,7 @@ class SiteRestClient @Inject constructor(
         site.setIsJetpackInstalled(from.jetpack)
         site.setIsJetpackCPConnected(from.jetpack_connection && !from.jetpack)
         site.setIsVisible(from.visible)
+        site.setIsDeleted(from.is_deleted)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
         site.organizationId = from.organization_id
