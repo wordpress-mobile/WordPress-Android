@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+// TODO @file:Suppress("DEPRECATION")
 
 package org.wordpress.android.ui.reader
 
@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -214,7 +215,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        jetpackFullScreenViewModel = ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
+        jetpackFullScreenViewModel =
+            ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
 
         setContentView(R.layout.reader_activity_post_pager)
 
@@ -253,25 +255,40 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             isFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED)
             blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
-            directOperation = savedInstanceState
-                .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as DirectOperation?
+            directOperation = BundleCompat.getSerializable(
+                savedInstanceState,
+                ReaderConstants.ARG_DIRECT_OPERATION,
+                DirectOperation::class.java
+            )
             commentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID)
             isSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST)
             isRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 postListType =
-                    savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    BundleCompat.getSerializable(
+                        savedInstanceState,
+                        ReaderConstants.ARG_POST_LIST_TYPE,
+                        ReaderPostListType::class.java
+                    )
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 currentTag =
-                    savedInstanceState.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
+                    BundleCompat.getSerializable(
+                        savedInstanceState,
+                        ReaderConstants.ARG_TAG,
+                        ReaderTag::class.java
+                    )
             }
             postSlugsResolutionUnderway =
                 savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
                 val positions =
-                    savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS)
+                    BundleCompat.getSerializable(
+                        savedInstanceState,
+                        ReaderConstants.KEY_TRACKED_POSITIONS,
+                        HashSet<*>::class.java
+                    )
                 @Suppress("UNCHECKED_CAST")
                 (positions as? HashSet<*>).let {
                     trackedPositions.addAll(it as HashSet<Int>)
@@ -281,18 +298,31 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
             postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
-            directOperation = intent
-                .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION) as DirectOperation?
             commentId = intent.getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0)
             isSinglePostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false)
             isRelatedPostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false)
             interceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
+            if (intent.hasExtra(ReaderConstants.ARG_DIRECT_OPERATION)) {
+                directOperation = BundleCompat.getSerializable(
+                    intent.extras!!,
+                    ReaderConstants.ARG_DIRECT_OPERATION,
+                    DirectOperation::class.java
+                )
+            }
             if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 postListType =
-                    intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    BundleCompat.getSerializable(
+                        intent.extras!!,
+                        ReaderConstants.ARG_POST_LIST_TYPE,
+                        ReaderPostListType::class.java
+                    )
             }
             if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
-                currentTag = intent.getSerializableExtra(ReaderConstants.ARG_TAG) as ReaderTag?
+                currentTag = BundleCompat.getSerializable(
+                    intent.extras!!,
+                    ReaderConstants.ARG_TAG,
+                    ReaderTag::class.java
+                )
             }
         }
 
@@ -1116,7 +1146,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     return
                 }
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
-                val site = data.getSerializableExtra(WordPress.SITE) as SiteModel?
+                val site = data.extras?.let {
+                    BundleCompat.getSerializable(
+                        it,
+                        WordPress.SITE,
+                        SiteModel::class.java
+                    )
+                }
                 val post = postStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
