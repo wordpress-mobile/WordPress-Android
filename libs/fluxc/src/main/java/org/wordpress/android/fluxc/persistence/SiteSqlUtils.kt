@@ -274,6 +274,7 @@ class SiteSqlUtils
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .equals(SiteModelTable.IS_VISIBLE, true)
+                .equals(SiteModelTable.IS_DELETED, false)
                 .endGroup().endWhere()
 
     fun getPostFormats(site: SiteModel): List<PostFormatModel> {
