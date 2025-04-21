@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
@@ -111,7 +113,6 @@ import javax.inject.Inject
 *
 * Will also handle jumping to the comments section, liking a commend and liking a post directly
 */
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ReaderPostPagerActivity : BaseAppCompatActivity() {
     /**
@@ -533,15 +534,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                                     // the custom and *.wordpress.com domains need to be used interchangeably since
                                     // they can both be used as the primary domain when identifying the blog_url
                                     // in the ReaderPostTable query.
-                                    val post =
+                                    val readerPost =
                                         ReaderPostTable.getBlogPost(
                                             primaryBlogIdentifier, postIdentifier,
                                             true
                                         )
-                                    val slugsResolved = if (post != null)
+                                    val slugsResolved = if (readerPost != null)
                                         PostSlugsRequestCompleted(
-                                            200, post.blogId,
-                                            post.postId
+                                            200, readerPost.blogId,
+                                            readerPost.postId
                                         )
                                     else
                                         PostSlugsRequestCompleted(200, 0, 0)
@@ -549,8 +550,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                                     EventBus.getDefault().post(slugsResolved)
 
                                     // post wasn't available locally earlier so, track it now
-                                    if (post != null) {
-                                        trackPost(post.blogId, post.postId)
+                                    if (readerPost != null) {
+                                        trackPost(readerPost.blogId, readerPost.postId)
                                     }
                                 }
 
@@ -590,11 +591,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
             null,
-            false,
-            true,
-            SiteCreationSource.UNSPECIFIED,
-            false,
-            JetpackFeatureCollectionOverlaySource.UNSPECIFIED
+            isSiteCreationOverlay = false,
+            isDeepLinkOverlay = true,
+            siteCreationSource = SiteCreationSource.UNSPECIFIED,
+            isFeatureCollectionOverlay = false,
+            featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )
             .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         return true
@@ -1105,6 +1106,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
