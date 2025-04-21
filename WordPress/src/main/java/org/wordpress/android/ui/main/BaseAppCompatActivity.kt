@@ -26,6 +26,7 @@ import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 
@@ -90,6 +91,9 @@ private val excludedActivities = listOf(
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
+
+    // this is excluded because it explicitly enables edge-to-edge
+    ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping
     // their editors
