@@ -49,7 +49,7 @@ class SiteViewModel @Inject constructor(
         } else {
             siteStore.sites
         }
-        return result.map { SiteRecord(it) }.let { sortSites(it) }
+        return result.filter { !it.isDeleted }.map { SiteRecord(it) }.let { sortSites(it) }
     }
 
     /**
