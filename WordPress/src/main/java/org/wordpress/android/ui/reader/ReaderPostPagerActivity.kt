@@ -116,6 +116,7 @@ import javax.inject.Inject
 * Will also handle jumping to the comments section, liking a commend and liking a post directly
 */
 @AndroidEntryPoint
+@Suppress("LargeClass")
 class ReaderPostPagerActivity : BaseAppCompatActivity() {
     /**
      * Type of URL intercepted
@@ -213,6 +214,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
 
+    @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -436,6 +438,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         backFromLogin = false
     }
 
+    @Suppress("NestedBlockDepth", "MagicNumber")
     private fun finishDeepLinkRequest(action: String, uri: Uri) {
         var interceptType = InterceptType.READER_BLOG
         var blogIdentifier: String? = null // can be an id or a slug
@@ -495,6 +498,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         startActivity(intent)
     }
 
+    @Suppress("MagicNumber")
     private fun showPost(
         interceptType: InterceptType,
         blogIdentifier: String?,
@@ -605,14 +609,14 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         try {
             blogId = blogIdentifier.toLong()
             postId = postIdentifier.toLong()
+            return true
         } catch (e: NumberFormatException) {
             AppLog.e(AppLog.T.READER, e)
             return false
         }
-
-        return true
     }
 
+    @Suppress("ReturnCount")
     private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded(): Boolean {
         if (!isSignedInWPComOrHasWPOrgSite) return false
 
@@ -642,6 +646,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      *
      * @param uri the full URI input, including the fragment
      */
+    @Suppress("ReturnCount")
     private fun parseFragment(uri: Uri?) {
         // default to do-nothing w.r.t. comments
         directOperation = null
@@ -876,9 +881,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     val maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     idList =
                         when (postListType) {
-                            ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW -> ReaderPostTable.getBlogIdPostIdsWithTag(
-                                currentTag, maxPosts
-                            )
+                            ReaderPostListType.TAG_FOLLOWED,
+                            ReaderPostListType.TAG_PREVIEW ->
+                                ReaderPostTable.getBlogIdPostIdsWithTag(currentTag, maxPosts)
 
                             ReaderPostListType.BLOG_PREVIEW -> ReaderPostTable.getBlogIdPostIdsInBlog(
                                 blogId,
@@ -933,14 +938,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
     private val activeDetailFragment: ReaderPostDetailFragment?
-        get() {
-            val fragment = activePagerFragment
-            return if (fragment is ReaderPostDetailFragment) {
-                fragment
-            } else {
-                null
-            }
-        }
+        get() = activePagerFragment as? ReaderPostDetailFragment
 
     private fun getPagerFragmentAtPosition(position: Int): Fragment? {
         val adapter = pagerAdapter ?: return null
@@ -948,12 +946,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private fun getDetailFragmentAtPosition(position: Int): ReaderPostDetailFragment? {
-        val fragment = getPagerFragmentAtPosition(position)
-        return if (fragment is ReaderPostDetailFragment) {
-            fragment
-        } else {
-            null
-        }
+        return getPagerFragmentAtPosition(position) as? ReaderPostDetailFragment
     }
 
     /*
@@ -967,11 +960,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         AppLog.d(AppLog.T.READER, "reader pager > requesting older posts")
         when (postListType) {
-            ReaderPostListType.TAG_PREVIEW, ReaderPostListType.TAG_FOLLOWED -> ReaderPostServiceStarter.startServiceForTag(
-                this,
-                currentTag,
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-            )
+            ReaderPostListType.TAG_PREVIEW,
+            ReaderPostListType.TAG_FOLLOWED ->
+                ReaderPostServiceStarter.startServiceForTag(
+                    this,
+                    currentTag,
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+                )
 
             ReaderPostListType.BLOG_PREVIEW -> ReaderPostServiceStarter.startServiceForBlog(
                 this,
