@@ -157,59 +157,59 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private val trackedPositions = HashSet<Int>()
 
     @Inject
-    lateinit var mSiteStore: SiteStore
+    lateinit var siteStore: SiteStore
 
     @Inject
-    lateinit var mReaderTracker: ReaderTracker
+    lateinit var readerTracker: ReaderTracker
 
     @Inject
-    lateinit var mAnalyticsUtilsWrapper: AnalyticsUtilsWrapper
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     @Inject
-    lateinit var mReaderPostTableWrapper: ReaderPostTableWrapper
+    lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
     @Inject
-    lateinit var mPostStore: PostStore
+    lateinit var postStore: PostStore
 
     @Inject
-    lateinit var mDispatcher: Dispatcher
+    lateinit var dispatcher: Dispatcher
 
     @Inject
-    lateinit var mUploadActionUseCase: UploadActionUseCase
+    lateinit var uploadActionUseCase: UploadActionUseCase
 
     @Inject
-    lateinit var mUploadUtilsWrapper: UploadUtilsWrapper
+    lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    lateinit var mPostSeenStatusWrapper: ReaderPostSeenStatusWrapper
+    lateinit var postSeenStatusWrapper: ReaderPostSeenStatusWrapper
 
     @Inject
-    lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
-    lateinit var mUrlUtilsWrapper: UrlUtilsWrapper
+    lateinit var urlUtilsWrapper: UrlUtilsWrapper
 
     @Inject
-    lateinit var mDeepLinkTrackingUtils: DeepLinkTrackingUtils
+    lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
 
     @Inject
-    lateinit var mSelectedSiteRepository: SelectedSiteRepository
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Inject
-    lateinit var mDeepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    lateinit var deepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     @Inject
-    lateinit var mJetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
+    lateinit var jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
     private var jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var mJetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Inject
-    lateinit var mGetReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
+    lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -236,12 +236,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, callback)
 
         // Start migration flow passing deep link data if requirements are met
-        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+        if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             val deepLinkData = PreMigrationDeepLinkData(
                 intent.action,
                 intent.data
             )
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData)
+            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData)
             finish()
             return
         }
@@ -349,7 +349,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             this
         ) { action: JetpackFeatureOverlayActions? ->
             if (action is ForwardToJetpack) {
-                if (!mDeepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
+                if (!deepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
                     finishDeepLinkRequestFromOverlay(intent.action!!, intent.data!!)
                 } else {
                     WPActivityUtils.disableReaderDeeplinks(this)
@@ -374,12 +374,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-            || mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
+        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+            || jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
         ) {
-            mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
+            readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
-            if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
                 val intent = Intent(this, WPMainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
@@ -437,7 +437,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
 
                 parseFragment(uri)
-                mDeepLinkTrackingUtils.track(action, OpenInReader(wrappedUri), wrappedUri)
+                deepLinkTrackingUtils.track(action, OpenInReader(wrappedUri), wrappedUri)
                 showPost(interceptType, blogIdentifier, postIdentifier)
                 return
             } else if (segments.size >= 4) {
@@ -453,7 +453,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 detectLike(uri)
 
                 interceptType = InterceptType.WPCOM_POST_SLUG
-                mDeepLinkTrackingUtils.track(action, OpenInReader(wrappedUri), wrappedUri)
+                deepLinkTrackingUtils.track(action, OpenInReader(wrappedUri), wrappedUri)
                 showPost(interceptType, blogIdentifier, postIdentifier)
                 return
             }
@@ -480,7 +480,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         postIdentifier!!
                     )
                 ) {
-                    mReaderTracker.trackBlogPost(
+                    readerTracker.trackBlogPost(
                         AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
                         blogId,
                         postId
@@ -491,7 +491,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
 
                 InterceptType.READER_FEED -> if (parseIds(blogIdentifier!!, postIdentifier!!)) {
-                    mReaderTracker.trackFeedPost(
+                    readerTracker.trackFeedPost(
                         AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
                         blogId,
                         postId
@@ -502,7 +502,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
 
                 InterceptType.WPCOM_POST_SLUG -> {
-                    mReaderTracker.trackBlogPost(
+                    readerTracker.trackBlogPost(
                         AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED,
                         blogIdentifier!!,
                         postIdentifier!!,
@@ -525,7 +525,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
                                     // the scheme is removed to match the query pattern in ReaderPostTable
                                     // .getBlogPost
-                                    val primaryBlogIdentifier = mUrlUtilsWrapper.removeScheme(
+                                    val primaryBlogIdentifier = urlUtilsWrapper.removeScheme(
                                         blogUrl!!
                                     )
 
@@ -586,9 +586,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded(): Boolean {
         if (!isSignedInWPComOrHasWPOrgSite) return false
 
-        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) return false
+        if (!deepLinkOpenWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) return false
 
-        mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
+        deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
             null,
             isSiteCreationOverlay = false,
@@ -603,7 +603,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     private val isSignedInWPComOrHasWPOrgSite: Boolean
         get() {
-            return FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+            return FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, siteStore)
         }
 
     /**
@@ -695,11 +695,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > START Count")
-        mReaderTracker.start(ReaderTrackerType.PAGED_POST)
+        readerTracker.start(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().register(this)
 
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
-        mDispatcher.register(this)
+        dispatcher.register(this)
 
         if (!hasPagerAdapter() || backFromLogin) {
             if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
@@ -718,9 +718,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     override fun onPause() {
         super.onPause()
         AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count")
-        mReaderTracker.stop(ReaderTrackerType.PAGED_POST)
+        readerTracker.stop(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().unregister(this)
-        mDispatcher.unregister(this)
+        dispatcher.unregister(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -813,20 +813,20 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      */
     private fun trackPost(blogId: Long, postId: Long) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId)
+        ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
 
-        if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
             val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
             if (currentPost != null) {
-                mPostSeenStatusWrapper.markPostAsSeenSilently(currentPost)
+                postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
             }
         }
 
         // analytics tracking
-        mReaderTracker.trackPost(
+        readerTracker.trackPost(
             AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-            mReaderPostTableWrapper.getBlogPost(blogId, postId, true),
-            mGetReadingPreferencesSyncUseCase.invoke()
+            readerPostTableWrapper.getBlogPost(blogId, postId, true),
+            getReadingPreferencesSyncUseCase.invoke()
         )
     }
 
@@ -1000,7 +1000,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, interceptedUri!!)
+        readerTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, interceptedUri!!)
         ActivityLauncher.loginWithoutMagicLink(this)
     }
 
@@ -1117,7 +1117,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                 val site = data.getSerializableExtra(WordPress.SITE) as SiteModel?
-                val post = mPostStore.getPostByLocalPostId(localId)
+                val post = postStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
@@ -1132,19 +1132,19 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
                 val snackbarAttachView = findViewById<View>(R.id.coordinator)
                 if (site != null && post != null && snackbarAttachView != null) {
-                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
+                    uploadUtilsWrapper.handleEditPostResultSnackbars(
                         this,
                         snackbarAttachView,
                         data,
                         post,
                         site,
-                        mUploadActionUseCase.getUploadAction(post),
+                        uploadActionUseCase.getUploadAction(post),
                         { _: View? ->
                             UploadUtils.publishPost(
                                 this@ReaderPostPagerActivity,
                                 post,
                                 site,
-                                mDispatcher
+                                dispatcher
                             )
                         })
                 }
@@ -1163,10 +1163,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        val site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId())
+        val site = siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
         val snackbarAttachView = findViewById<View>(R.id.coordinator)
         if (site != null && event.post != null && snackbarAttachView != null) {
-            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                 this,
                 snackbarAttachView,
                 event.isError,
