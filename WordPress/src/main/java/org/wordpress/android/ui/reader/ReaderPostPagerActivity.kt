@@ -1018,7 +1018,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             loadPosts(blogId, postId)
         } else {
             AppLog.d(AppLog.T.READER, "reader pager > all posts loaded")
-            adapter.mAllPostsLoaded = true
+            adapter.allPostsLoaded = true
         }
     }
 
@@ -1041,15 +1041,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         ids: ReaderBlogIdPostIdList
     ) :
         FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val mIdList = ids.clone() as ReaderBlogIdPostIdList
-        var mAllPostsLoaded: Boolean = false
+        private val idList = ids.clone() as ReaderBlogIdPostIdList
+        var allPostsLoaded: Boolean = false
 
         // this is used to retain created fragments so we can access them in
         // getFragmentAtPosition() - necessary because the pager provides no
         // built-in way to do this - note that destroyItem() removes fragments
         // from this map when they're removed from the adapter, so this doesn't
         // retain *every* fragment
-        private val mFragmentMap = SparseArray<Fragment>()
+        private val fragmentMap = SparseArray<Fragment>()
 
         override fun restoreState(state: Parcelable?, loader: ClassLoader?) {
             // work around "Fragement no longer exists for key" Android bug
@@ -1069,7 +1069,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         fun canRequestMostPosts(): Boolean {
-            return !mAllPostsLoaded && !isSinglePostView && (mIdList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
+            return !allPostsLoaded && !isSinglePostView && (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
@@ -1078,7 +1078,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         override fun getCount(): Int {
-            return mIdList.size
+            return idList.size
         }
 
         override fun getItem(position: Int): Fragment {
@@ -1088,8 +1088,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
             return newInstance(
                 isFeed,
-                mIdList[position].blogId,
-                mIdList[position].postId,
+                idList[position].blogId,
+                idList[position].postId,
                 directOperation,
                 commentId,
                 isRelatedPostView,
@@ -1102,13 +1102,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val item = super.instantiateItem(container, position)
             if (item is Fragment) {
-                mFragmentMap.put(position, item)
+                fragmentMap.put(position, item)
             }
             return item
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            mFragmentMap.remove(position)
+            fragmentMap.remove(position)
             super.destroyItem(container, position, `object`)
         }
 
@@ -1117,7 +1117,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         fun getFragmentAtPosition(position: Int): Fragment? {
             return if (isValidPosition(position)) {
-                mFragmentMap[position]
+                fragmentMap[position]
             } else {
                 null
             }
@@ -1128,7 +1128,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         fun getBlogIdPostIdAtPosition(position: Int): ReaderBlogIdPostId? {
             return if (isValidPosition(position)) {
-                mIdList[position]
+                idList[position]
             } else {
                 null
             }
