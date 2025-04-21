@@ -155,59 +155,59 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private val mTrackedPositions = HashSet<Int>()
 
     @Inject
-    var mSiteStore: SiteStore? = null
+    lateinit var mSiteStore: SiteStore
 
     @Inject
-    var mReaderTracker: ReaderTracker? = null
+    lateinit var mReaderTracker: ReaderTracker
 
     @Inject
-    var mAnalyticsUtilsWrapper: AnalyticsUtilsWrapper? = null
+    lateinit var mAnalyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     @Inject
-    var mReaderPostTableWrapper: ReaderPostTableWrapper? = null
+    lateinit var mReaderPostTableWrapper: ReaderPostTableWrapper
 
     @Inject
-    var mPostStore: PostStore? = null
+    lateinit var mPostStore: PostStore
 
     @Inject
-    var mDispatcher: Dispatcher? = null
+    lateinit var mDispatcher: Dispatcher
 
     @Inject
-    var mUploadActionUseCase: UploadActionUseCase? = null
+    lateinit var mUploadActionUseCase: UploadActionUseCase
 
     @Inject
-    var mUploadUtilsWrapper: UploadUtilsWrapper? = null
+    lateinit var mUploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    var mPostSeenStatusWrapper: ReaderPostSeenStatusWrapper? = null
+    lateinit var mPostSeenStatusWrapper: ReaderPostSeenStatusWrapper
 
     @Inject
-    var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig? = null
+    lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
-    var mUrlUtilsWrapper: UrlUtilsWrapper? = null
+    lateinit var mUrlUtilsWrapper: UrlUtilsWrapper
 
     @Inject
-    var mDeepLinkTrackingUtils: DeepLinkTrackingUtils? = null
+    lateinit var mDeepLinkTrackingUtils: DeepLinkTrackingUtils
 
     @Inject
-    var mSelectedSiteRepository: SelectedSiteRepository? = null
+    lateinit var mSelectedSiteRepository: SelectedSiteRepository
 
     @Inject
-    var mDeepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper? = null
+    lateinit var mDeepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     @Inject
-    var mJetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils? = null
+    lateinit var mJetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
     private var mJetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
-    var mAccountStore: AccountStore? = null
+    lateinit var mAccountStore: AccountStore
 
     @Inject
-    var mJetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper? = null
+    lateinit var mJetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Inject
-    var mGetReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase? = null
+    lateinit var mGetReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -618,7 +618,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        val fragment = uri.fragment
+        val fragment: CharSequence = uri.fragment ?: ""
 
         val fragmentCommentsPattern = Pattern.compile("comments", Pattern.CASE_INSENSITIVE)
         val fragmentCommentIdPattern = Pattern.compile("comment-(\\d+)", Pattern.CASE_INSENSITIVE)
@@ -656,7 +656,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         // check for the "#comment-xyz" fragment to jump to a specific comment
         val commentIdMatcher = fragmentCommentIdPattern.matcher(fragment)
         if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
-            mCommentId = commentIdMatcher.group(1).toInt()
+            commentIdMatcher.group(1)?.toInt() ?: 0
             mDirectOperation = DirectOperation.COMMENT_JUMP
         }
     }
