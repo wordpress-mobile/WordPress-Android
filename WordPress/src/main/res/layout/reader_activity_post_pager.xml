@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <!-- this coordinator exists only for snackbars -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
@@ -24,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- this coordinator exists only for snackbars -->
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
