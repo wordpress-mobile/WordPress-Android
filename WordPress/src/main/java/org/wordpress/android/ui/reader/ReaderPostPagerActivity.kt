@@ -134,27 +134,27 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         POST_LIKE,
     }
 
-    private lateinit var mViewPager: WPViewPager
-    private var mProgress: ProgressBar? = null
+    private lateinit var viewPager: WPViewPager
+    private var progressBar: ProgressBar? = null
 
     private var currentTag: ReaderTag? = null
-    private var mIsFeed = false
-    private var mBlogId: Long = 0
-    private var mPostId: Long = 0
-    private var mCommentId = 0
-    private var mDirectOperation: DirectOperation? = null
-    private var mInterceptedUri: String? = null
-    private var mLastSelectedPosition = -1
+    private var isFeed = false
+    private var blogId: Long = 0
+    private var postId: Long = 0
+    private var commentId = 0
+    private var directOperation: DirectOperation? = null
+    private var interceptedUri: String? = null
+    private var lastSelectedPosition = -1
     private var postListType: ReaderPostListType? = null
 
-    private var mPostSlugsResolutionUnderway = false
-    private var mIsRequestingMorePosts = false
-    private var mIsSinglePostView = false
-    private var mIsRelatedPostView = false
+    private var postSlugsResolutionUnderway = false
+    private var isRequestingMorePosts = false
+    private var isSinglePostView = false
+    private var isRelatedPostView = false
 
-    private var mBackFromLogin = false
+    private var backFromLogin = false
 
-    private val mTrackedPositions = HashSet<Int>()
+    private val trackedPositions = HashSet<Int>()
 
     @Inject
     lateinit var mSiteStore: SiteStore
@@ -200,7 +200,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mJetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
-    private var mJetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
+    private var jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel? = null
 
     @Inject
     lateinit var mAccountStore: AccountStore
@@ -214,7 +214,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        mJetpackFullScreenViewModel = ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
+        jetpackFullScreenViewModel = ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
 
         setContentView(R.layout.reader_activity_post_pager)
 
@@ -246,19 +246,19 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        mViewPager = findViewById(R.id.viewpager)
-        mProgress = findViewById(R.id.progress_loading)
+        viewPager = findViewById(R.id.viewpager)
+        progressBar = findViewById(R.id.progress_loading)
 
         if (savedInstanceState != null) {
-            mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED)
-            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
-            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
-            mDirectOperation = savedInstanceState
+            isFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED)
+            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
+            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
+            directOperation = savedInstanceState
                 .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as DirectOperation?
-            mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID)
-            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST)
-            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
-            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+            commentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID)
+            isSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST)
+            isRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
+            interceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 postListType =
                     savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
@@ -267,26 +267,26 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 currentTag =
                     savedInstanceState.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
             }
-            mPostSlugsResolutionUnderway =
+            postSlugsResolutionUnderway =
                 savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
                 val positions =
                     savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS)
                 @Suppress("UNCHECKED_CAST")
                 (positions as? HashSet<*>).let {
-                    mTrackedPositions.addAll(it as HashSet<Int>)
+                    trackedPositions.addAll(it as HashSet<Int>)
                 }
             }
         } else {
-            mIsFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
-            mBlogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
-            mPostId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
-            mDirectOperation = intent
+            isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
+            blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+            postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
+            directOperation = intent
                 .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION) as DirectOperation?
-            mCommentId = intent.getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0)
-            mIsSinglePostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false)
-            mIsRelatedPostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false)
-            mInterceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
+            commentId = intent.getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0)
+            isSinglePostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false)
+            isRelatedPostView = intent.getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false)
+            interceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
             if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 postListType =
                     intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
@@ -300,15 +300,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             postListType = ReaderPostListType.TAG_FOLLOWED
         }
 
-        mViewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 trackPostAtPositionIfNeeded(position)
 
-                if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
+                if (lastSelectedPosition > -1 && lastSelectedPosition != position) {
                     // pause the previous web view - important because otherwise embedded content
                     // will continue to play
-                    val lastFragment = getDetailFragmentAtPosition(mLastSelectedPosition)
+                    val lastFragment = getDetailFragmentAtPosition(lastSelectedPosition)
                     lastFragment?.pauseWebView()
                 }
 
@@ -316,11 +316,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 val thisFragment = getDetailFragmentAtPosition(position)
                 thisFragment?.resumeWebViewIfPaused()
 
-                mLastSelectedPosition = position
+                lastSelectedPosition = position
             }
         })
 
-        mViewPager.setPageTransformer(
+        viewPager.setPageTransformer(
             false,
             WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
         )
@@ -345,7 +345,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private fun observeOverlayEvents() {
-        mJetpackFullScreenViewModel!!.action.observe(
+        jetpackFullScreenViewModel!!.action.observe(
             this
         ) { action: JetpackFeatureOverlayActions? ->
             if (action is ForwardToJetpack) {
@@ -402,8 +402,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private fun finishDeepLinkRequestFromOverlay(action: String, uri: Uri) {
         finishDeepLinkRequest(action, uri)
         // We interrupted the normal flow to show the overly, we now need to rerun these methods on a dismiss action
-        loadPosts(mBlogId, mPostId)
-        mBackFromLogin = false
+        loadPosts(blogId, postId)
+        backFromLogin = false
     }
 
     private fun finishDeepLinkRequest(action: String, uri: Uri) {
@@ -411,7 +411,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         var blogIdentifier: String? = null // can be an id or a slug
         var postIdentifier: String? = null // can be an id or a slug
 
-        mInterceptedUri = uri.toString()
+        interceptedUri = uri.toString()
 
         val segments = uri.pathSegments
 
@@ -428,7 +428,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         interceptType = InterceptType.READER_BLOG
                     } else if (segments[1] == "feeds") {
                         interceptType = InterceptType.READER_FEED
-                        mIsFeed = true
+                        isFeed = true
                     }
                 }
 
@@ -471,8 +471,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         postIdentifier: String?
     ) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
-            mIsSinglePostView = true
-            mIsRelatedPostView = false
+            isSinglePostView = true
+            isRelatedPostView = false
 
             when (interceptType) {
                 InterceptType.READER_BLOG -> if (parseIds(
@@ -482,8 +482,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 ) {
                     mReaderTracker.trackBlogPost(
                         AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                        mBlogId,
-                        mPostId
+                        blogId,
+                        postId
                     )
                     // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                 } else {
@@ -493,8 +493,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 InterceptType.READER_FEED -> if (parseIds(blogIdentifier!!, postIdentifier!!)) {
                     mReaderTracker.trackFeedPost(
                         AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                        mBlogId,
-                        mPostId
+                        blogId,
+                        postId
                     )
                     // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                 } else {
@@ -506,22 +506,22 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED,
                         blogIdentifier!!,
                         postIdentifier!!,
-                        mCommentId
+                        commentId
                     )
 
                     // try to get the post from the local db
                     val post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true)
                     if (post != null) {
                         // set the IDs and let ReaderPostPagerActivity normally display the post
-                        mBlogId = post.blogId
-                        mPostId = post.postId
+                        blogId = post.blogId
+                        postId = post.postId
                     } else {
                         // not stored locally, so request it
                         ReaderPostActions.requestBlogPost(
                             blogIdentifier, postIdentifier,
                             object : OnRequestListener<String?> {
                                 override fun onSuccess(blogUrl: String?) {
-                                    mPostSlugsResolutionUnderway = false
+                                    postSlugsResolutionUnderway = false
 
                                     // the scheme is removed to match the query pattern in ReaderPostTable
                                     // .getBlogPost
@@ -556,13 +556,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                                 }
 
                                 override fun onFailure(statusCode: Int) {
-                                    mPostSlugsResolutionUnderway = false
+                                    postSlugsResolutionUnderway = false
                                     // notify that the slug resolution request has completed
                                     EventBus.getDefault()
                                         .post(PostSlugsRequestCompleted(statusCode, 0, 0))
                                 }
                             })
-                        mPostSlugsResolutionUnderway = true
+                        postSlugsResolutionUnderway = true
                     }
                 }
             }
@@ -573,8 +573,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     private fun parseIds(blogIdentifier: String, postIdentifier: String): Boolean {
         try {
-            mBlogId = blogIdentifier.toLong()
-            mPostId = postIdentifier.toLong()
+            blogId = blogIdentifier.toLong()
+            postId = postIdentifier.toLong()
         } catch (e: NumberFormatException) {
             AppLog.e(AppLog.T.READER, e)
             return false
@@ -614,7 +614,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      */
     private fun parseFragment(uri: Uri?) {
         // default to do-nothing w.r.t. comments
-        mDirectOperation = null
+        directOperation = null
 
         if (uri == null || uri.fragment == null) {
             return
@@ -629,21 +629,21 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         // check for the general "#comments" fragment to jump to the comments section
         val commentsMatcher = fragmentCommentsPattern.matcher(fragment)
         if (commentsMatcher.matches()) {
-            mDirectOperation = DirectOperation.COMMENT_JUMP
-            mCommentId = 0
+            directOperation = DirectOperation.COMMENT_JUMP
+            commentId = 0
             return
         }
 
         // check for the "#respond" fragment to jump to the reply box
         val respondMatcher = fragmentRespondPattern.matcher(fragment)
         if (respondMatcher.matches()) {
-            mDirectOperation = DirectOperation.COMMENT_REPLY
+            directOperation = DirectOperation.COMMENT_REPLY
 
             // check whether we are to reply to a specific comment
             val replyToCommentId = uri.getQueryParameter("replytocom")
             if (replyToCommentId != null) {
                 try {
-                    mCommentId = replyToCommentId.toInt()
+                    commentId = replyToCommentId.toInt()
                 } catch (e: NumberFormatException) {
                     AppLog.e(
                         AppLog.T.UTILS,
@@ -659,7 +659,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val commentIdMatcher = fragmentCommentIdPattern.matcher(fragment)
         if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
             commentIdMatcher.group(1)?.toInt() ?: 0
-            mDirectOperation = DirectOperation.COMMENT_JUMP
+            directOperation = DirectOperation.COMMENT_JUMP
         }
     }
 
@@ -674,14 +674,14 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val likeActor = uri.getQueryParameter("like_actor")
 
         if (doLike && likeActor != null && likeActor.trim { it <= ' ' }.isNotEmpty()) {
-            mDirectOperation = DirectOperation.POST_LIKE
+            directOperation = DirectOperation.POST_LIKE
 
             // check whether we are to like a specific comment
             val likeCommentId = uri.getQueryParameter("commentid")
             if (likeCommentId != null) {
                 try {
-                    mCommentId = likeCommentId.toInt()
-                    mDirectOperation = DirectOperation.COMMENT_LIKE
+                    commentId = likeCommentId.toInt()
+                    directOperation = DirectOperation.COMMENT_LIKE
                 } catch (e: NumberFormatException) {
                     AppLog.e(
                         AppLog.T.UTILS,
@@ -701,17 +701,17 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
         mDispatcher.register(this)
 
-        if (!hasPagerAdapter() || mBackFromLogin) {
+        if (!hasPagerAdapter() || backFromLogin) {
             if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
                         == intent.action)
             ) {
                 handleDeepLinking()
             }
 
-            loadPosts(mBlogId, mPostId)
+            loadPosts(blogId, postId)
 
             // clear up the back-from-login flag anyway
-            mBackFromLogin = false
+            backFromLogin = false
         }
     }
 
@@ -732,25 +732,25 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private fun hasPagerAdapter(): Boolean {
-        return (mViewPager.adapter != null)
+        return (viewPager.adapter != null)
     }
 
     private val pagerAdapter: PostPagerAdapter?
         get() {
-            return if (mViewPager.adapter != null) {
-                mViewPager.adapter as PostPagerAdapter?
+            return if (viewPager.adapter != null) {
+                viewPager.adapter as PostPagerAdapter?
             } else {
                 null
             }
         }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView)
-        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView)
-        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri)
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, isSinglePostView)
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPostView)
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
 
-        outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation)
-        outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId)
+        outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
+        outState.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, currentTag)
@@ -767,11 +767,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         outState.putBoolean(
             ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
-            mPostSlugsResolutionUnderway
+            postSlugsResolutionUnderway
         )
 
-        if (mTrackedPositions.size > 0) {
-            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, mTrackedPositions)
+        if (trackedPositions.size > 0) {
+            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, trackedPositions)
         }
 
         super.onSaveInstanceState(outState)
@@ -793,7 +793,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * if it hasn't already been done
      */
     private fun trackPostAtPositionIfNeeded(position: Int) {
-        if (!hasPagerAdapter() || mTrackedPositions.contains(position)) {
+        if (!hasPagerAdapter() || trackedPositions.contains(position)) {
             return
         }
 
@@ -803,7 +803,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             AppLog.T.READER,
             "reader pager > tracking post at position $position"
         )
-        mTrackedPositions.add(position)
+        trackedPositions.add(position)
 
         trackPost(idPair.blogId, idPair.postId)
     }
@@ -839,7 +839,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         object : Thread() {
             override fun run() {
                 val idList: ReaderBlogIdPostIdList
-                if (mIsSinglePostView) {
+                if (isSinglePostView) {
                     idList = ReaderBlogIdPostIdList()
                     idList.add(ReaderBlogIdPostId(blogId, postId))
                 } else {
@@ -860,7 +860,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         }
                 }
 
-                val currentPosition = mViewPager.currentItem
+                val currentPosition = viewPager.currentItem
                 val newPosition = idList.indexOf(blogId, postId)
 
                 runOnUiThread {
@@ -873,18 +873,18 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     )
                     val adapter =
                         PostPagerAdapter(supportFragmentManager, idList)
-                    mViewPager.adapter = adapter
+                    viewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
-                        mViewPager.currentItem = newPosition
+                        viewPager.currentItem = newPosition
                         trackPostAtPositionIfNeeded(newPosition)
                     } else if (adapter.isValidPosition(currentPosition)) {
-                        mViewPager.currentItem = currentPosition
+                        viewPager.currentItem = currentPosition
                         trackPostAtPositionIfNeeded(currentPosition)
                     }
 
                     // let the user know they can swipe between posts
                     if (adapter.count > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                        WPSwipeSnackbar.show(mViewPager)
+                        WPSwipeSnackbar.show(viewPager)
                         AppPrefs.setReaderSwipeToNavigateShown(true)
                     }
                 }
@@ -931,7 +931,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * current tag or in the current blog
      */
     private fun requestMorePosts() {
-        if (mIsRequestingMorePosts) {
+        if (isRequestingMorePosts) {
             return
         }
 
@@ -945,7 +945,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
             ReaderPostListType.BLOG_PREVIEW -> ReaderPostServiceStarter.startServiceForBlog(
                 this,
-                mBlogId,
+                blogId,
                 ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
             )
 
@@ -964,8 +964,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        mIsRequestingMorePosts = true
-        mProgress!!.visibility = View.VISIBLE
+        isRequestingMorePosts = true
+        progressBar!!.visibility = View.VISIBLE
     }
 
     @Suppress("unused")
@@ -977,8 +977,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         val adapter = pagerAdapter ?: return
 
-        mIsRequestingMorePosts = false
-        mProgress!!.visibility = View.GONE
+        isRequestingMorePosts = false
+        progressBar!!.visibility = View.GONE
 
         if (event.result == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received")
@@ -1000,7 +1000,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri!!)
+        mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, interceptedUri!!)
         ActivityLauncher.loginWithoutMagicLink(this)
     }
 
@@ -1040,7 +1040,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         fun canRequestMostPosts(): Boolean {
-            return !mAllPostsLoaded && !mIsSinglePostView && (mIdList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
+            return !mAllPostsLoaded && !isSinglePostView && (mIdList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
@@ -1058,15 +1058,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             }
 
             return newInstance(
-                mIsFeed,
+                isFeed,
                 mIdList[position].blogId,
                 mIdList[position].postId,
-                mDirectOperation,
-                mCommentId,
-                mIsRelatedPostView,
-                mInterceptedUri,
+                directOperation,
+                commentId,
+                isRelatedPostView,
+                interceptedUri,
                 postListType,
-                mPostSlugsResolutionUnderway
+                postSlugsResolutionUnderway
             )
         }
 
@@ -1084,7 +1084,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         val activeFragment: Fragment?
-            get() = getFragmentAtPosition(mViewPager.currentItem)
+            get() = getFragmentAtPosition(viewPager.currentItem)
 
         fun getFragmentAtPosition(position: Int): Fragment? {
             return if (isValidPosition(position)) {
@@ -1095,7 +1095,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         val currentBlogIdPostId: ReaderBlogIdPostId?
-            get() = getBlogIdPostIdAtPosition(mViewPager.currentItem)
+            get() = getBlogIdPostIdAtPosition(viewPager.currentItem)
 
         fun getBlogIdPostIdAtPosition(position: Int): ReaderBlogIdPostId? {
             return if (isValidPosition(position)) {
@@ -1151,7 +1151,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             }
 
             RequestCodes.DO_LOGIN -> if (resultCode == RESULT_OK) {
-                mBackFromLogin = true
+                backFromLogin = true
             }
 
             RequestCodes.NO_REBLOG_SITE -> if (resultCode == RESULT_OK) {
