@@ -283,15 +283,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             postSlugsResolutionUnderway =
                 savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
-                val positions =
-                    BundleCompat.getSerializable(
-                        savedInstanceState,
-                        ReaderConstants.KEY_TRACKED_POSITIONS,
-                        HashSet<*>::class.java
-                    )
-                @Suppress("UNCHECKED_CAST")
-                (positions as? HashSet<*>).let {
-                    trackedPositions.addAll(it as HashSet<Int>)
+                BundleCompat.getSerializable(
+                    savedInstanceState,
+                    ReaderConstants.KEY_TRACKED_POSITIONS,
+                    HashSet::class.java
+                )?.let { positions ->
+                    @Suppress("UNCHECKED_CAST")
+                    trackedPositions.addAll(positions as HashSet<Int>)
                 }
             }
         } else {
@@ -358,6 +356,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         observeOverlayEvents()
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreateView(
         parent: View?, name: String, context: Context,
         attrs: AttributeSet
