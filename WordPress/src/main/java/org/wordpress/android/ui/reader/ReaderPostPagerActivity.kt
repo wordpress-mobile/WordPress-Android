@@ -1033,6 +1033,84 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         ActivityLauncher.loginWithoutMagicLink(this)
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            RequestCodes.EDIT_POST -> {
+                if (resultCode != RESULT_OK || data == null || isFinishing) {
+                    return
+                }
+                val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                val site = data.extras?.let {
+                    BundleCompat.getSerializable(
+                        it,
+                        WordPress.SITE,
+                        SiteModel::class.java
+                    )
+                }
+                val post = postStore.getPostByLocalPostId(localId)
+
+                if (checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(
+                        data,
+                        this@ReaderPostPagerActivity, site,
+                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                    )
+
+                    // a restart will happen so, no need to continue here
+                    return
+                }
+
+                val snackbarAttachView = findViewById<View>(R.id.coordinator)
+                if (site != null && post != null && snackbarAttachView != null) {
+                    uploadUtilsWrapper.handleEditPostResultSnackbars(
+                        this,
+                        snackbarAttachView,
+                        data,
+                        post,
+                        site,
+                        uploadActionUseCase.getUploadAction(post),
+                        { _: View? ->
+                            UploadUtils.publishPost(
+                                this@ReaderPostPagerActivity,
+                                post,
+                                site,
+                                dispatcher
+                            )
+                        })
+                }
+            }
+
+            RequestCodes.DO_LOGIN -> if (resultCode == RESULT_OK) {
+                backFromLogin = true
+            }
+
+            RequestCodes.NO_REBLOG_SITE -> if (resultCode == RESULT_OK) {
+                finish() // Finish activity to make My Site page visible
+            }
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        val site = siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
+        val snackbarAttachView = findViewById<View>(R.id.coordinator)
+        if (site != null && event.post != null && snackbarAttachView != null) {
+            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                this,
+                snackbarAttachView,
+                event.isError,
+                event.isFirstTimePublish,
+                event.post,
+                null,
+                site
+            )
+        }
+    }
+
     /**
      * pager adapter containing post detail fragments
      */
@@ -1132,84 +1210,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             } else {
                 null
             }
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            RequestCodes.EDIT_POST -> {
-                if (resultCode != RESULT_OK || data == null || isFinishing) {
-                    return
-                }
-                val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
-                val site = data.extras?.let {
-                    BundleCompat.getSerializable(
-                        it,
-                        WordPress.SITE,
-                        SiteModel::class.java
-                    )
-                }
-                val post = postStore.getPostByLocalPostId(localId)
-
-                if (checkToRestart(data)) {
-                    ActivityLauncher.editPostOrPageForResult(
-                        data,
-                        this@ReaderPostPagerActivity, site,
-                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
-                    )
-
-                    // a restart will happen so, no need to continue here
-                    return
-                }
-
-                val snackbarAttachView = findViewById<View>(R.id.coordinator)
-                if (site != null && post != null && snackbarAttachView != null) {
-                    uploadUtilsWrapper.handleEditPostResultSnackbars(
-                        this,
-                        snackbarAttachView,
-                        data,
-                        post,
-                        site,
-                        uploadActionUseCase.getUploadAction(post),
-                        { _: View? ->
-                            UploadUtils.publishPost(
-                                this@ReaderPostPagerActivity,
-                                post,
-                                site,
-                                dispatcher
-                            )
-                        })
-                }
-            }
-
-            RequestCodes.DO_LOGIN -> if (resultCode == RESULT_OK) {
-                backFromLogin = true
-            }
-
-            RequestCodes.NO_REBLOG_SITE -> if (resultCode == RESULT_OK) {
-                finish() // Finish activity to make My Site page visible
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        val site = siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
-        val snackbarAttachView = findViewById<View>(R.id.coordinator)
-        if (site != null && event.post != null && snackbarAttachView != null) {
-            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                this,
-                snackbarAttachView,
-                event.isError,
-                event.isFirstTimePublish,
-                event.post,
-                null,
-                site
-            )
         }
     }
 }
