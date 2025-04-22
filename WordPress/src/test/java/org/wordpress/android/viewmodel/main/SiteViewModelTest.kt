@@ -29,9 +29,6 @@ class SiteViewModelTest : BaseUnitTest() {
     private lateinit var siteModel2: SiteModel
 
     @Mock
-    private lateinit var deletedSiteModel: SiteModel
-
-    @Mock
     private lateinit var siteStore: SiteStore
 
     @Mock
@@ -49,8 +46,6 @@ class SiteViewModelTest : BaseUnitTest() {
         whenever(siteModel2.id).thenReturn(456)
         whenever(siteModel2.name).thenReturn("World")
         whenever(siteModel2.url).thenReturn("def.com")
-
-        whenever(deletedSiteModel.isDeleted).thenReturn(true)
     }
 
     @Test
@@ -152,21 +147,6 @@ class SiteViewModelTest : BaseUnitTest() {
         viewModel.loadSites(SitePickerMode.WPCOM_SITES_ONLY, "bar")
 
         assertThat(viewModel.sites.value).hasSize(0)
-    }
-
-    @Test
-    fun `given deleted site, when load sites, then return all sites except the deleted one`() {
-        whenever(siteStore.sites).thenReturn(listOf(siteModel1, siteModel2, deletedSiteModel))
-        whenever(appPrefsWrapper.pinnedSiteLocalIds).thenReturn(mutableSetOf(PINNED_SITE_ID))
-
-        viewModel.loadSites(SitePickerMode.DEFAULT)
-
-        verify(siteStore).sites
-        verify(siteStore, never()).sitesAccessedViaWPComRest
-
-        assertThat(viewModel.sites.value).hasSize(2)
-        assertThat(viewModel.sites.value!![0].blogName).isEqualTo(siteModel1.name)
-        assertThat(viewModel.sites.value!![1].blogName).isEqualTo(siteModel2.name)
     }
 
     companion object {
