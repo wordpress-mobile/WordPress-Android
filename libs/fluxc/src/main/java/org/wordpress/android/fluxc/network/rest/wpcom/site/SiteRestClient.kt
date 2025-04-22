@@ -1073,6 +1073,7 @@ class SiteRestClient @Inject constructor(
         site.setIsJetpackInstalled(from.jetpack)
         site.setIsJetpackCPConnected(from.jetpack_connection && !from.jetpack)
         site.setIsVisible(from.visible)
+        site.setIsDeleted(from.is_deleted)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
         site.organizationId = from.organization_id
@@ -1266,7 +1267,7 @@ class SiteRestClient @Inject constructor(
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = "ID,URL,name,description,jetpack,jetpack_connection,visible,is_private," +
                 "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id," +
-                "was_ecommerce_trial,single_user_site"
+                "was_ecommerce_trial,single_user_site,is_deleted"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
