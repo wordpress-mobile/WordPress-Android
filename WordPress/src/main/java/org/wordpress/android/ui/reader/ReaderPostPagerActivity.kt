@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.MenuItem
@@ -504,14 +503,14 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         blogIdentifier: String?,
         postIdentifier: String?
     ) {
-        if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
+        if (!blogIdentifier.isNullOrEmpty() && !postIdentifier.isNullOrEmpty()) {
             isSinglePostView = true
             isRelatedPostView = false
 
             when (interceptType) {
                 InterceptType.READER_BLOG -> if (parseIds(
-                        blogIdentifier!!,
-                        postIdentifier!!
+                        blogIdentifier,
+                        postIdentifier
                     )
                 ) {
                     readerTracker.trackBlogPost(
@@ -524,7 +523,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     ToastUtils.showToast(this, R.string.error_generic)
                 }
 
-                InterceptType.READER_FEED -> if (parseIds(blogIdentifier!!, postIdentifier!!)) {
+                InterceptType.READER_FEED -> if (parseIds(blogIdentifier, postIdentifier)) {
                     readerTracker.trackFeedPost(
                         AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
                         blogId,
@@ -538,8 +537,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 InterceptType.WPCOM_POST_SLUG -> {
                     readerTracker.trackBlogPost(
                         AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED,
-                        blogIdentifier!!,
-                        postIdentifier!!,
+                        blogIdentifier,
+                        postIdentifier,
                         commentId
                     )
 
