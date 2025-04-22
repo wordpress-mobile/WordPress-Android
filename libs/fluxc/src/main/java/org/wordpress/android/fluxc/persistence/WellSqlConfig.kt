@@ -2054,7 +2054,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     """.trimIndent())
                 }
 
-                204 -> db.execSQL("ALTER TABLE SiteModel ADD IS_DELETED INTEGER")
+                204 -> db.execSQL("ALTER TABLE SiteModel ADD IS_DELETED INTEGER DEFAULT 0")
             }
         }
         db.setTransactionSuccessful()
