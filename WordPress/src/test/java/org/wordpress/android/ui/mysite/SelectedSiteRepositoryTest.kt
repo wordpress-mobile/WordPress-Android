@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.mysite
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -21,6 +24,8 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
+import org.wordpress.android.util.config.GutenbergKitFeature
+import org.wordpress.android.AppInitializer
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -36,6 +41,18 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var gutenbergKitFeature: GutenbergKitFeature
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var sharedPreferences: SharedPreferences
+
+    @Mock
+    lateinit var editor: Editor
+
     private lateinit var siteModel: SiteModel
     private var siteIconProgressBarVisible: Boolean = false
     private var selectedSite: SiteModel? = null
@@ -48,11 +65,27 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        // Mock AppInitializer.context
+        AppInitializer::class.java.getDeclaredField("context").apply {
+            isAccessible = true
+            set(null, context)
+        }
+
+        // Mock shared preferences
+        whenever(context.getSharedPreferences(any(), any())).thenReturn(sharedPreferences)
+
+        // Mock AppPrefsWrapper
+        whenever(appPrefsWrapper.setSelectedSite(any())).then { }
+
+        // Mock GutenbergKitFeature
+        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
+
         selectedSiteRepository = SelectedSiteRepository(
             dispatcher,
             siteSettingsInterfaceFactory,
             appPrefsWrapper,
         )
+        selectedSiteRepository.gutenbergKitFeature = gutenbergKitFeature
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
         selectedSiteRepository.selectedSiteChange.observeForever { selectedSite = it }
         siteModel = SiteModel()
