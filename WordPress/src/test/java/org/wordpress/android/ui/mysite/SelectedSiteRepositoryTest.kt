@@ -26,6 +26,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.AppInitializer
+import org.wordpress.android.fluxc.action.EditorSettingsAction
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -257,12 +258,38 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should fetch EditorTheme when updateSiteSettingsIfNecessary is called`() {
+    fun `Should fetch EditorTheme when GutenbergKit and ExperimentalBlockEditor are disabled`() {
+        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
         initializeSiteAndSiteSettings()
 
         selectedSiteRepository.updateSiteSettingsIfNecessary()
 
         assertThat(actions.last().type).isEqualTo(EditorThemeAction.FETCH_EDITOR_THEME)
+    }
+
+    @Test
+    fun `Should fetch EditorSettings when GutenbergKit is enabled`() {
+        whenever(gutenbergKitFeature.isEnabled()).thenReturn(true)
+        initializeSiteAndSiteSettings()
+
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
+
+        assertThat(actions.last().type).isEqualTo(EditorSettingsAction.FETCH_EDITOR_SETTINGS)
+    }
+
+    @Test
+    fun `Should fetch EditorSettings when ExperimentalBlockEditor is enabled`() {
+        // Mocking via the specific key is required as ExperimentalFeature currently relies upon AppPrefs rather than
+        // AppPrefsWrapper, making mocking a bit more difficult
+        whenever(sharedPreferences.getBoolean(
+            eq("EXPERIMENTAL_FEATURE_CONFIGexperimental_block_editor"),
+            eq(false)
+        )).thenReturn(true)
+        initializeSiteAndSiteSettings()
+
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
+
+        assertThat(actions.last().type).isEqualTo(EditorSettingsAction.FETCH_EDITOR_SETTINGS)
     }
 
     private fun initializeSiteAndSiteSettings() {
