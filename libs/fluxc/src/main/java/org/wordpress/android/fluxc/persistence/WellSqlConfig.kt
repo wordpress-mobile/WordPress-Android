@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 204
+        return 205
     }
 
     override fun getDbName(): String {
@@ -2053,6 +2053,8 @@ open class WellSqlConfig : DefaultWellConfig {
                         )
                     """.trimIndent())
                 }
+
+                204 -> db.execSQL("ALTER TABLE SiteModel ADD IS_DELETED INTEGER DEFAULT 0")
             }
         }
         db.setTransactionSuccessful()

@@ -1055,8 +1055,9 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, false);
     }
 
+    // Default to 1 rather than 0 because a signature of 0 will not affect the cache key
     public static int getAvatarVersion() {
-        return getInt(DeletablePrefKey.AVATAR_VERSION, 0);
+        return getInt(DeletablePrefKey.AVATAR_VERSION, 1);
     }
 
     public static void setAvatarVersion(int version) {

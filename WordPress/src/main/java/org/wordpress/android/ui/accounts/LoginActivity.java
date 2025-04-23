@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -485,7 +486,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 .setShowTitle(false)
                 .build();
 
-        intent.launchUrl(this, mLoginHelper.getWpcomLoginUri());
+        Uri loginUri = mLoginHelper.getWpcomLoginUri();
+        try {
+            intent.launchUrl(this, loginUri);
+        } catch (SecurityException | ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
+        }
     }
 
     @Override
