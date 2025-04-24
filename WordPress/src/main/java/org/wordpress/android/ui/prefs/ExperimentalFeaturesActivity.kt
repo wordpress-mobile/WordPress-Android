@@ -44,6 +44,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
 enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
+    DISABLE_EXPERIMENTAL_BLOCK_EDITOR("disable_experimental_block_editor", R.string.disable_experimental_block_editor),
     EXPERIMENTAL_BLOCK_EDITOR("experimental_block_editor", R.string.experimental_block_editor),
     EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
         "experimental_block_editor_theme_styles",
@@ -64,9 +65,11 @@ class FeatureViewModel : ViewModel() {
     val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
 
     init {
-        val initialStates = ExperimentalFeature.entries.associate { feature ->
-            feature to feature.isEnabled()
-        }
+        val initialStates = ExperimentalFeature.entries
+            .filter { it != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR }
+            .associate { feature ->
+                feature to feature.isEnabled()
+            }
         _switchStates.value = initialStates
     }
 
