@@ -23,7 +23,6 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.stats.refresh.StatsFragment
 import org.wordpress.android.ui.stats.refresh.StatsPullToRefreshListener
 import org.wordpress.android.ui.stats.refresh.StatsPullToRefreshListener.PullToRefreshEmitterListener
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
