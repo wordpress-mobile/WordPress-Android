@@ -24,6 +24,8 @@ import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.StatsFragment
+import org.wordpress.android.ui.stats.refresh.StatsPullToRefreshListener
+import org.wordpress.android.ui.stats.refresh.StatsPullToRefreshListener.PullToRefreshEmitterListener
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -46,7 +48,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
+class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment), PullToRefreshEmitterListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -210,7 +212,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         super.onResume()
         @Suppress("DEPRECATION")
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
-        (parentFragment as? StatsFragment)?.setCurrentStatsListFragment(this)
+        (parentFragment as? StatsPullToRefreshListener.PullToRefreshReceiverListener)?.setPullToRefreshReceiver(this)
     }
 
     override fun onDestroyView() {
@@ -218,7 +220,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         binding = null
     }
 
-    fun onPullRefresh() {
+    override fun onPullRefresh() {
         viewModel.onRefresh()
     }
 

@@ -58,7 +58,8 @@ private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
 private var statsTrafficTabEnabled = false
 
 @AndroidEntryPoint
-class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener,
+    StatsPullToRefreshListener.PullToRefreshReceiverListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
@@ -76,10 +77,13 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private var binding: StatsFragmentBinding? = null
 
-    private var currentStatsListFragment: WeakReference<StatsListFragment>? = null
+    private var currentStatsPullToRefreshListener:
+            WeakReference<StatsPullToRefreshListener.PullToRefreshEmitterListener>? = null
 
-    fun setCurrentStatsListFragment(statsListFragment: StatsListFragment) {
-        currentStatsListFragment = WeakReference(statsListFragment)
+    override fun setPullToRefreshReceiver(
+        pullToRefreshEmitterListener: StatsPullToRefreshListener.PullToRefreshEmitterListener
+    ) {
+        currentStatsPullToRefreshListener = WeakReference(pullToRefreshEmitterListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,7 +127,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
-            currentStatsListFragment?.get()?.onPullRefresh()
+            currentStatsPullToRefreshListener?.get()?.onPullRefresh()
         }
         disabledView.statsDisabledView.button.setOnClickListener {
             viewModel.onEnableStatsModuleClick()
@@ -363,5 +367,14 @@ private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelected
 
     override fun onTabSelected(tab: Tab) {
         viewModel.onSectionSelected(statsTabs[tab.position])
+    }
+}
+
+interface StatsPullToRefreshListener {
+    interface PullToRefreshReceiverListener {
+        fun setPullToRefreshReceiver(emitterListener: PullToRefreshEmitterListener)
+    }
+    interface PullToRefreshEmitterListener {
+        fun onPullRefresh()
     }
 }
