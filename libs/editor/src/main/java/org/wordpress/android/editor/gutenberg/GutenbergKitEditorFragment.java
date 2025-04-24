@@ -89,14 +89,16 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
     private boolean mEditorDidMount;
+    @Nullable
+    private View mRootView;
 
     @Nullable private static Map<String, Object> mSettings;
 
     public static GutenbergKitEditorFragment newInstance(Context context,
-                                                         boolean isNewPost,
-                                                         GutenbergWebViewAuthorizationData webViewAuthorizationData,
-                                                         boolean jetpackFeaturesEnabled,
-                                                         @Nullable Map<String, Object> settings) {
+            boolean isNewPost,
+            @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
+            boolean jetpackFeaturesEnabled,
+            @Nullable Map<String, Object> settings) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -137,11 +139,20 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
+        mEditorFragmentListener.onEditorFragmentInitialized();
+
+        mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false);
+        ViewGroup gutenbergViewContainer = mRootView.findViewById(R.id.gutenberg_view_container);
+
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
         mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
+        gutenbergViewContainer.addView(mGutenbergView);
+
+        setEditorProgressBarVisibility(true);
+
         mGutenbergView.setOnFileChooserRequestedListener((intent, requestCode) -> {
             startActivityForResult(intent, requestCode);
             return null;
@@ -151,31 +162,12 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
+            mEditorDidMount = true;
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
+            setEditorProgressBarVisibility(false);
         });
 
-        Integer postId = (Integer) mSettings.get("postId");
-        if (postId != null && postId == 0) {
-            postId = -1;
-        }
-
-        EditorConfiguration config = new EditorConfiguration.Builder()
-                .setTitle((String) mSettings.get("postTitle"))
-                .setContent((String) mSettings.get("postContent"))
-                .setPostId(postId)
-                .setPostType((String) mSettings.get("postType"))
-                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
-                .setPlugins((Boolean) mSettings.get("plugins"))
-                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
-                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
-                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
-                .setAuthHeader((String) mSettings.get("authHeader"))
-                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
-                .build();
-
-        mGutenbergView.start(config);
-
-        return mGutenbergView;
+        return mRootView;
     }
 
     @Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -218,6 +210,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     @Override public void onResume() {
         super.onResume();
+        setEditorProgressBarVisibility(!mEditorDidMount);
+    }
+
+    private void setEditorProgressBarVisibility(boolean shown) {
+        if (isAdded() && mRootView != null) {
+            mRootView.findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -541,6 +540,34 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    public void startWithEditorSettings(@NonNull String editorSettings) {
+        if (mGutenbergView == null) {
+            return;
+        }
+
+        Integer postId = (Integer) mSettings.get("postId");
+        if (postId != null && postId == 0) {
+            postId = -1;
+        }
+
+        EditorConfiguration config = new EditorConfiguration.Builder()
+                .setTitle((String) mSettings.get("postTitle"))
+                .setContent((String) mSettings.get("postContent"))
+                .setPostId(postId)
+                .setPostType((String) mSettings.get("postType"))
+                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
+                .setPlugins((Boolean) mSettings.get("plugins"))
+                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
+                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
+                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
+                .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
+                .setEditorSettings(editorSettings)
+                .build();
+
+        mGutenbergView.start(config);
     }
 
     @Override

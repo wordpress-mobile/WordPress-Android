@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 205
+        return 206
     }
 
     override fun getDbName(): String {
@@ -2055,6 +2055,17 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
 
                 204 -> db.execSQL("ALTER TABLE SiteModel ADD IS_DELETED INTEGER DEFAULT 0")
+
+                205 -> migrate(version) {
+                    db.execSQL("""
+                        CREATE TABLE IF NOT EXISTS EditorSettings (
+                            _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            LOCAL_SITE_ID INTEGER NOT NULL,
+                            RAW_SETTINGS TEXT,
+                            FOREIGN KEY (LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE
+                        )
+                    """.trimIndent())
+                }
             }
         }
         db.setTransactionSuccessful()
