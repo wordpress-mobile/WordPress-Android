@@ -87,7 +87,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
-    protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
+    protected fun evaluateState(state: State<DOMAIN_MODEL>) {
         val useCaseState = when (state) {
             is Error -> ERROR
             is Data -> {
@@ -110,6 +110,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     fun onUiState(newState: UI_STATE? = null) {
         uiState = newState ?: uiState
         updateState()
+        // Fetch possible new changes
+        launch(backgroundDispatcher) {
+            delay(100)
+            fetch(true, false)
+        }
     }
 
     /**
