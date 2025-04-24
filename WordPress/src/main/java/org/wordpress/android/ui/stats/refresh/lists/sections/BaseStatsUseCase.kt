@@ -110,11 +110,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     fun onUiState(newState: UI_STATE? = null) {
         uiState = newState ?: uiState
         updateState()
-        // Fetch possible new changes
-        launch(backgroundDispatcher) {
-            delay(100)
-            fetch(true, false)
-        }
     }
 
     /**

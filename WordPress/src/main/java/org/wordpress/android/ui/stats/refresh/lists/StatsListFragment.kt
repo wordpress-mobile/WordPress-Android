@@ -23,6 +23,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.stats.refresh.StatsFragment
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -209,11 +210,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         super.onResume()
         @Suppress("DEPRECATION")
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
+        (parentFragment as? StatsFragment)?.setCurrentStatsListFragment(this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    fun onPullRefresh() {
+        viewModel.onRefresh()
     }
 
     private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {

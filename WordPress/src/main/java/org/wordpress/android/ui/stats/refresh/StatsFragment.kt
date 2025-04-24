@@ -50,6 +50,7 @@ import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfi
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
@@ -74,6 +75,12 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     private var restorePreviousSearch = false
 
     private var binding: StatsFragmentBinding? = null
+
+    private var currentStatsListFragment: WeakReference<StatsListFragment>? = null
+
+    fun setCurrentStatsListFragment(statsListFragment: StatsListFragment) {
+        currentStatsListFragment = WeakReference(statsListFragment)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,6 +123,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
+            currentStatsListFragment?.get()?.onPullRefresh()
         }
         disabledView.statsDisabledView.button.setOnClickListener {
             viewModel.onEnableStatsModuleClick()
