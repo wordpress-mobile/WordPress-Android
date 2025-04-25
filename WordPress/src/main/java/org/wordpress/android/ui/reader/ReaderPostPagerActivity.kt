@@ -1,6 +1,3 @@
-// TODO this class is deprecated due to the use of FragmentStatePagerAdapter which should be updated to a ViewPager2
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.reader
 
 import android.content.Context
