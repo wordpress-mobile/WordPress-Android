@@ -150,8 +150,12 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Attempt Login if this activity was created in response to a user confirming login
-        mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+        // Attempt Login if this activity was created in response to a user confirming login, and if
+        // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
+        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+        if (loginProcessed) {
+            getIntent().setData(null);
+        }
 
         // Start preloading the WordPress.com login page if needed – this avoids visual hitches
         // when displaying that screen
