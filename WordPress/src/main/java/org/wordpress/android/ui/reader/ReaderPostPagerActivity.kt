@@ -3,28 +3,25 @@
 
 package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -94,8 +91,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
-import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.android.widgets.WPViewPagerTransformer
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.regex.Pattern
@@ -136,7 +131,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         POST_LIKE,
     }
 
-    private lateinit var viewPager: WPViewPager
+    private lateinit var viewPager: ViewPager2
     private var progressBar: ProgressBar? = null
 
     private var currentTag: ReaderTag? = null
@@ -330,7 +325,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             postListType = ReaderPostListType.TAG_FOLLOWED
         }
 
-        viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
+        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 trackPostAtPositionIfNeeded(position)
@@ -350,10 +345,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             }
         })
 
+        /* TODO
         viewPager.setPageTransformer(
-            false,
             WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
-        )
+        )*/
 
         observeOverlayEvents()
     }
@@ -906,7 +901,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter =
-                        PostPagerAdapter(supportFragmentManager, idList)
+                        PostPagerAdapter(idList, this@ReaderPostPagerActivity)
                     viewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
                         viewPager.currentItem = newPosition
@@ -917,7 +912,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     }
 
                     // let the user know they can swipe between posts
-                    if (adapter.count > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                    if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
                         WPSwipeSnackbar.show(viewPager)
                         AppPrefs.setReaderSwipeToNavigateShown(true)
                     }
@@ -1109,11 +1104,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     /**
      * pager adapter containing post detail fragments
      */
-    private inner class PostPagerAdapter @SuppressLint("WrongConstant") constructor(
-        fm: FragmentManager,
-        ids: ReaderBlogIdPostIdList
-    ) :
-        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class PostPagerAdapter(
+        ids: ReaderBlogIdPostIdList,
+        fragmentActivity: FragmentActivity
+    ) : FragmentStateAdapter(fragmentActivity) {
         private val idList = ids.clone() as ReaderBlogIdPostIdList
         var allPostsLoaded: Boolean = false
 
@@ -1124,42 +1118,23 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         // retain *every* fragment
         private val fragmentMap = SparseArray<Fragment>()
 
-        override fun restoreState(state: Parcelable?, loader: ClassLoader?) {
-            // work around "Fragement no longer exists for key" Android bug
-            // by catching the IllegalStateException
-            // https://code.google.com/p/android/issues/detail?id=42601
-            try {
-                AppLog.d(AppLog.T.READER, "reader pager > adapter restoreState")
-                super.restoreState(state, loader)
-            } catch (e: IllegalStateException) {
-                AppLog.e(AppLog.T.READER, e)
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            AppLog.d(AppLog.T.READER, "reader pager > adapter saveState")
-            return super.saveState()
-        }
-
         fun canRequestMostPosts(): Boolean {
             return !allPostsLoaded && !isSinglePostView && (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
         fun isValidPosition(position: Int): Boolean {
-            return (position in 0..<count)
+            return (position in 0..< itemCount)
         }
 
-        override fun getCount(): Int {
-            return idList.size
-        }
+        override fun getItemCount() = idList.size
 
-        override fun getItem(position: Int): Fragment {
-            if ((position == count - 1) && canRequestMostPosts()) {
+        override fun createFragment(position: Int): Fragment {
+            if ((position == itemCount - 1) && canRequestMostPosts()) {
                 requestMorePosts()
             }
 
-            return newInstance(
+            val fragment = newInstance(
                 isFeed,
                 idList[position].blogId,
                 idList[position].postId,
@@ -1170,20 +1145,16 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 postListType,
                 postSlugsResolutionUnderway
             )
+
+
+            fragmentMap.put(position, fragment)
+            return fragment
         }
 
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val item = super.instantiateItem(container, position)
-            if (item is Fragment) {
-                fragmentMap.put(position, item)
-            }
-            return item
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        /*override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
             fragmentMap.remove(position)
             super.destroyItem(container, position, `object`)
-        }
+        }*/
 
         val activeFragment: Fragment?
             get() = getFragmentAtPosition(viewPager.currentItem)
