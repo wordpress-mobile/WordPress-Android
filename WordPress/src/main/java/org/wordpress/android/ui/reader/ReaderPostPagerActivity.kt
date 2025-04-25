@@ -91,6 +91,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
+import org.wordpress.android.widgets.WPViewPager2Transformer
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.regex.Pattern
@@ -345,10 +346,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             }
         })
 
-        /* TODO
         viewPager.setPageTransformer(
-            WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
-        )*/
+            WPViewPager2Transformer(WPViewPager2Transformer.TransformType.SlideOver)
+        )
 
         observeOverlayEvents()
     }
