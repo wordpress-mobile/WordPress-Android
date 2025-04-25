@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -85,6 +86,7 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
 import org.wordpress.android.widgets.WPViewPager2Transformer
 import java.io.UnsupportedEncodingException
@@ -307,13 +309,28 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             postListType = ReaderPostListType.TAG_FOLLOWED
         }
 
-        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 trackPostAtPositionIfNeeded(position)
+                // pause the previous web view - otherwise embedded content will continue to play
+                if (lastSelectedPosition > -1 && lastSelectedPosition != position) {
+                    pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.pauseWebView()
+                }
                 lastSelectedPosition = position
             }
         })
+
+        onBackPressedDispatcher.addCallback(this) {
+            pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.let { fragment ->
+                // if full screen video is showing, hide the custom view rather than navigate back
+                if (fragment.isCustomViewShowing) {
+                    fragment.hideCustomView()
+                } else if (!fragment.goBackInPostHistory()) {
+                    onBackPressedDispatcher.onBackPressedCompat(this)
+                }
+            }
+        }
 
         viewPager.setPageTransformer(
             WPViewPager2Transformer(WPViewPager2Transformer.TransformType.SlideOver)
@@ -1086,6 +1103,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 null
             }
         }
+
+        /**
+         * In ViewPager2 the FragmentManager by default have assigned tags to fragments like this:
+         *  Fragment in 1st position has a tag of "f0"
+         *  Fragment in 2nd position has a tag of "f1"
+         *  etc.
+         */
+        fun getFragmentAtPosition(position: Int) =
+                supportFragmentManager.findFragmentByTag("f$position") as? ReaderPostDetailFragment
     }
 
     companion object {
