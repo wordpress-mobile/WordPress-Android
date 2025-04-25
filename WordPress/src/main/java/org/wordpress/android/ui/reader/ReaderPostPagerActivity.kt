@@ -15,7 +15,6 @@ import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -874,7 +873,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter =
-                        PostPagerAdapter(idList, this@ReaderPostPagerActivity)
+                        PostPagerAdapter(idList)
                     viewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
                         viewPager.currentItem = newPosition
@@ -1058,10 +1057,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * ViewPager2 adapter containing post detail fragments
      */
     private inner class PostPagerAdapter(
-        ids: ReaderBlogIdPostIdList,
-        fragmentActivity: FragmentActivity
-    ) : FragmentStateAdapter(fragmentActivity) {
-        private val idList = ids.clone() as ReaderBlogIdPostIdList
+        private val idList: ReaderBlogIdPostIdList,
+    ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 
         fun canRequestMostPosts(): Boolean {
