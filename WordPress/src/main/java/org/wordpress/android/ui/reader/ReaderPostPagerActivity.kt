@@ -9,11 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.SparseArray
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -89,7 +87,6 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
-import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
 import org.wordpress.android.widgets.WPViewPager2Transformer
 import java.io.UnsupportedEncodingException
@@ -218,23 +215,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         setContentView(R.layout.reader_activity_post_pager)
 
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val fragment = activeDetailFragment
-                if (fragment != null && fragment.isCustomViewShowing) {
-                    // if full screen video is showing, hide the custom view rather than navigate back
-                    fragment.hideCustomView()
-                } else {
-                    if (fragment != null && fragment.goBackInPostHistory()) {
-                        // noop - fragment moved back to a previous post
-                    } else {
-                        onBackPressedDispatcher.onBackPressedCompat(this)
-                    }
-                }
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
-
         // Start migration flow passing deep link data if requirements are met
         if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             val deepLinkData = PreMigrationDeepLinkData(
@@ -330,18 +310,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 trackPostAtPositionIfNeeded(position)
-
-                if (lastSelectedPosition > -1 && lastSelectedPosition != position) {
-                    // pause the previous web view - important because otherwise embedded content
-                    // will continue to play
-                    val lastFragment = getDetailFragmentAtPosition(lastSelectedPosition)
-                    lastFragment?.pauseWebView()
-                }
-
-                // resume the newly active webView if it was previously paused
-                val thisFragment = getDetailFragmentAtPosition(position)
-                thisFragment?.resumeWebViewIfPaused()
-
                 lastSelectedPosition = position
             }
         })
@@ -925,24 +893,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return currentTag != null
     }
 
-    private val activePagerFragment: Fragment?
-        get() {
-            val adapter = pagerAdapter ?: return null
-            return adapter.activeFragment
-        }
-
-    private val activeDetailFragment: ReaderPostDetailFragment?
-        get() = activePagerFragment as? ReaderPostDetailFragment
-
-    private fun getPagerFragmentAtPosition(position: Int): Fragment? {
-        val adapter = pagerAdapter ?: return null
-        return adapter.getFragmentAtPosition(position)
-    }
-
-    private fun getDetailFragmentAtPosition(position: Int): ReaderPostDetailFragment? {
-        return getPagerFragmentAtPosition(position) as? ReaderPostDetailFragment
-    }
-
     /*
      * called when user scrolls towards the last posts - requests older posts with the
      * current tag or in the current blog
@@ -1111,13 +1061,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         private val idList = ids.clone() as ReaderBlogIdPostIdList
         var allPostsLoaded: Boolean = false
 
-        // this is used to retain created fragments so we can access them in
-        // getFragmentAtPosition() - necessary because the pager provides no
-        // built-in way to do this - note that destroyItem() removes fragments
-        // from this map when they're removed from the adapter, so this doesn't
-        // retain *every* fragment
-        private val fragmentMap = SparseArray<Fragment>()
-
         fun canRequestMostPosts(): Boolean {
             return !allPostsLoaded && !isSinglePostView && (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
@@ -1134,7 +1077,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 requestMorePosts()
             }
 
-            val fragment = newInstance(
+            return newInstance(
                 isFeed,
                 idList[position].blogId,
                 idList[position].postId,
@@ -1145,26 +1088,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 postListType,
                 postSlugsResolutionUnderway
             )
-
-
-            fragmentMap.put(position, fragment)
-            return fragment
-        }
-
-        /*override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            fragmentMap.remove(position)
-            super.destroyItem(container, position, `object`)
-        }*/
-
-        val activeFragment: Fragment?
-            get() = getFragmentAtPosition(viewPager.currentItem)
-
-        fun getFragmentAtPosition(position: Int): Fragment? {
-            return if (isValidPosition(position)) {
-                fragmentMap[position]
-            } else {
-                null
-            }
         }
 
         val currentBlogIdPostId: ReaderBlogIdPostId?
