@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -224,6 +225,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         viewPager = findViewById(R.id.viewpager)
+        @SuppressLint("WrongConstant")
+        viewPager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+
         progressBar = findViewById(R.id.progress_loading)
 
         if (savedInstanceState != null) {
@@ -1044,7 +1048,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         var allPostsLoaded: Boolean = false
 
         fun canRequestMostPosts(): Boolean {
-            return !allPostsLoaded && !isSinglePostView && (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
+            return !allPostsLoaded &&
+                    !isSinglePostView &&
+                    (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
@@ -1058,15 +1064,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             }
 
             return newInstance(
-                isFeed,
-                idList[position].blogId,
-                idList[position].postId,
-                directOperation,
-                commentId,
-                isRelatedPostView,
-                interceptedUri,
-                postListType,
-                postSlugsResolutionUnderway
+                isFeed = isFeed,
+                blogId = idList[position].blogId,
+                postId = idList[position].postId,
+                directOperation = directOperation,
+                commentId = commentId,
+                isRelatedPost = isRelatedPostView,
+                interceptedUri = interceptedUri,
+                postListType = postListType,
+                postSlugsResolutionUnderway = postSlugsResolutionUnderway
             )
         }
 
@@ -1080,5 +1086,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 null
             }
         }
+    }
+
+    companion object {
+        private const val OFFSCREEN_PAGE_LIMIT = 2
     }
 }
