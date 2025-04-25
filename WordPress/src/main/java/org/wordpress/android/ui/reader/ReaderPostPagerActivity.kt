@@ -928,7 +928,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("unused")
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsStarted?) {
         if (isFinishing) {
@@ -939,7 +939,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (isFinishing) {
@@ -964,7 +963,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("unused")
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: DoSignIn?) {
         if (isFinishing) {
