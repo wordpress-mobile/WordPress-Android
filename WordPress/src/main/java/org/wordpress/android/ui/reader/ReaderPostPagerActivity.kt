@@ -725,9 +725,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hasPagerAdapter(): Boolean {
-        return (viewPager.adapter != null)
-    }
+    private fun hasPagerAdapter() = viewPager.adapter != null
 
     private val pagerAdapter: PostPagerAdapter?
         get() = viewPager.adapter as? PostPagerAdapter?
@@ -766,15 +764,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private val adapterCurrentBlogIdPostId: ReaderBlogIdPostId?
-        get() {
-            val adapter = pagerAdapter ?: return null
-            return adapter.currentBlogIdPostId
-        }
+        get() = pagerAdapter?.currentBlogIdPostId
 
-    private fun getAdapterBlogIdPostIdAtPosition(position: Int): ReaderBlogIdPostId? {
-        val adapter = pagerAdapter ?: return null
-        return adapter.getBlogIdPostIdAtPosition(position)
-    }
+    private fun getAdapterBlogIdPostIdAtPosition(position: Int) =
+        pagerAdapter?.getBlogIdPostIdAtPosition(position)
 
     /*
      * perform analytics tracking and bump the page view for the post at the passed position
@@ -880,9 +873,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }.start()
     }
 
-    private fun hasCurrentTag(): Boolean {
-        return currentTag != null
-    }
+    private fun hasCurrentTag() = currentTag != null
 
     /*
      * called when user scrolls towards the last posts - requests older posts with the
@@ -938,7 +929,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val adapter = pagerAdapter ?: return
 
         isRequestingMorePosts = false
-        progressBar!!.visibility = View.GONE
+        progressBar?.visibility = View.GONE
 
         if (event.result == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received")
@@ -1043,7 +1034,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * pager adapter containing post detail fragments
+     * ViewPager2 adapter containing post detail fragments
      */
     private inner class PostPagerAdapter(
         ids: ReaderBlogIdPostIdList,
@@ -1057,9 +1048,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
-        fun isValidPosition(position: Int): Boolean {
-            return (position in 0..< itemCount)
-        }
+        fun isValidPosition(position: Int) = position in 0..< itemCount
 
         override fun getItemCount() = idList.size
 
