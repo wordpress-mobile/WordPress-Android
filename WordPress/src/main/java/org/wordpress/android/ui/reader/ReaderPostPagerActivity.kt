@@ -748,7 +748,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private fun hasPagerAdapter() = viewPager.adapter != null
 
     private val pagerAdapter: PostPagerAdapter?
-        get() = viewPager.adapter as? PostPagerAdapter?
+        get() = viewPager.adapter as? PostPagerAdapter
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, isSinglePostView)
