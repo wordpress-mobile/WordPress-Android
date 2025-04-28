@@ -1,6 +1,3 @@
-// TODO this class is deprecated due to the use of FragmentStatePagerAdapter which should be updated to a ViewPager2
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
@@ -9,22 +6,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
-import android.util.SparseArray
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -94,8 +87,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
-import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.android.widgets.WPViewPagerTransformer
+import org.wordpress.android.widgets.WPViewPager2Transformer
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.regex.Pattern
@@ -136,7 +128,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         POST_LIKE,
     }
 
-    private lateinit var viewPager: WPViewPager
+    private lateinit var viewPager: ViewPager2
     private var progressBar: ProgressBar? = null
 
     private var currentTag: ReaderTag? = null
@@ -222,23 +214,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         setContentView(R.layout.reader_activity_post_pager)
 
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val fragment = activeDetailFragment
-                if (fragment != null && fragment.isCustomViewShowing) {
-                    // if full screen video is showing, hide the custom view rather than navigate back
-                    fragment.hideCustomView()
-                } else {
-                    if (fragment != null && fragment.goBackInPostHistory()) {
-                        // noop - fragment moved back to a previous post
-                    } else {
-                        onBackPressedDispatcher.onBackPressedCompat(this)
-                    }
-                }
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
-
         // Start migration flow passing deep link data if requirements are met
         if (jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             val deepLinkData = PreMigrationDeepLinkData(
@@ -251,6 +226,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         viewPager = findViewById(R.id.viewpager)
+        // lint complains about OFFSCREEN_PAGE_LIMIT, even through it's a valid constant (?)
+        @SuppressLint("WrongConstant")
+        viewPager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+
         progressBar = findViewById(R.id.progress_loading)
 
         if (savedInstanceState != null) {
@@ -330,29 +309,33 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             postListType = ReaderPostListType.TAG_FOLLOWED
         }
 
-        viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 trackPostAtPositionIfNeeded(position)
-
+                // pause the previous web view - otherwise embedded content will continue to play
                 if (lastSelectedPosition > -1 && lastSelectedPosition != position) {
-                    // pause the previous web view - important because otherwise embedded content
-                    // will continue to play
-                    val lastFragment = getDetailFragmentAtPosition(lastSelectedPosition)
-                    lastFragment?.pauseWebView()
+                    pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.pauseWebView()
                 }
-
-                // resume the newly active webView if it was previously paused
-                val thisFragment = getDetailFragmentAtPosition(position)
-                thisFragment?.resumeWebViewIfPaused()
-
+                // unpause this web view if it was previously paused
+                pagerAdapter?.getFragmentAtPosition(position)?.resumeWebViewIfPaused()
                 lastSelectedPosition = position
             }
         })
 
+        onBackPressedDispatcher.addCallback(this) {
+            pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.let { fragment ->
+                // if full screen video is showing, hide the custom view rather than navigate back
+                if (fragment.isCustomViewShowing) {
+                    fragment.hideCustomView()
+                } else if (!fragment.goBackInPostHistory()) {
+                    onBackPressedDispatcher.onBackPressedCompat(this)
+                }
+            }
+        }
+
         viewPager.setPageTransformer(
-            false,
-            WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
+            WPViewPager2Transformer(WPViewPager2Transformer.TransformType.SlideOver)
         )
 
         observeOverlayEvents()
@@ -765,18 +748,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hasPagerAdapter(): Boolean {
-        return (viewPager.adapter != null)
-    }
+    private fun hasPagerAdapter() = viewPager.adapter != null
 
     private val pagerAdapter: PostPagerAdapter?
-        get() {
-            return if (viewPager.adapter != null) {
-                viewPager.adapter as PostPagerAdapter?
-            } else {
-                null
-            }
-        }
+        get() = viewPager.adapter as? PostPagerAdapter
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, isSinglePostView)
@@ -812,15 +787,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     private val adapterCurrentBlogIdPostId: ReaderBlogIdPostId?
-        get() {
-            val adapter = pagerAdapter ?: return null
-            return adapter.currentBlogIdPostId
-        }
+        get() = pagerAdapter?.currentBlogIdPostId
 
-    private fun getAdapterBlogIdPostIdAtPosition(position: Int): ReaderBlogIdPostId? {
-        val adapter = pagerAdapter ?: return null
-        return adapter.getBlogIdPostIdAtPosition(position)
-    }
+    private fun getAdapterBlogIdPostIdAtPosition(position: Int) =
+        pagerAdapter?.getBlogIdPostIdAtPosition(position)
 
     /*
      * perform analytics tracking and bump the page view for the post at the passed position
@@ -906,7 +876,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter =
-                        PostPagerAdapter(supportFragmentManager, idList)
+                        PostPagerAdapter(idList)
                     viewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
                         viewPager.currentItem = newPosition
@@ -917,7 +887,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     }
 
                     // let the user know they can swipe between posts
-                    if (adapter.count > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                    if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
                         WPSwipeSnackbar.show(viewPager)
                         AppPrefs.setReaderSwipeToNavigateShown(true)
                     }
@@ -926,27 +896,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }.start()
     }
 
-    private fun hasCurrentTag(): Boolean {
-        return currentTag != null
-    }
-
-    private val activePagerFragment: Fragment?
-        get() {
-            val adapter = pagerAdapter ?: return null
-            return adapter.activeFragment
-        }
-
-    private val activeDetailFragment: ReaderPostDetailFragment?
-        get() = activePagerFragment as? ReaderPostDetailFragment
-
-    private fun getPagerFragmentAtPosition(position: Int): Fragment? {
-        val adapter = pagerAdapter ?: return null
-        return adapter.getFragmentAtPosition(position)
-    }
-
-    private fun getDetailFragmentAtPosition(position: Int): ReaderPostDetailFragment? {
-        return getPagerFragmentAtPosition(position) as? ReaderPostDetailFragment
-    }
+    private fun hasCurrentTag() = currentTag != null
 
     /*
      * called when user scrolls towards the last posts - requests older posts with the
@@ -981,7 +931,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("unused")
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsStarted?) {
         if (isFinishing) {
@@ -992,7 +942,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (isFinishing) {
@@ -1002,7 +951,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val adapter = pagerAdapter ?: return
 
         isRequestingMorePosts = false
-        progressBar!!.visibility = View.GONE
+        progressBar?.visibility = View.GONE
 
         if (event.result == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received")
@@ -1017,7 +966,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("unused")
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: DoSignIn?) {
         if (isFinishing) {
@@ -1107,93 +1056,40 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * pager adapter containing post detail fragments
+     * ViewPager2 adapter containing post detail fragments
      */
-    private inner class PostPagerAdapter @SuppressLint("WrongConstant") constructor(
-        fm: FragmentManager,
-        ids: ReaderBlogIdPostIdList
-    ) :
-        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val idList = ids.clone() as ReaderBlogIdPostIdList
+    private inner class PostPagerAdapter(
+        private val idList: ReaderBlogIdPostIdList,
+    ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 
-        // this is used to retain created fragments so we can access them in
-        // getFragmentAtPosition() - necessary because the pager provides no
-        // built-in way to do this - note that destroyItem() removes fragments
-        // from this map when they're removed from the adapter, so this doesn't
-        // retain *every* fragment
-        private val fragmentMap = SparseArray<Fragment>()
-
-        override fun restoreState(state: Parcelable?, loader: ClassLoader?) {
-            // work around "Fragement no longer exists for key" Android bug
-            // by catching the IllegalStateException
-            // https://code.google.com/p/android/issues/detail?id=42601
-            try {
-                AppLog.d(AppLog.T.READER, "reader pager > adapter restoreState")
-                super.restoreState(state, loader)
-            } catch (e: IllegalStateException) {
-                AppLog.e(AppLog.T.READER, e)
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            AppLog.d(AppLog.T.READER, "reader pager > adapter saveState")
-            return super.saveState()
-        }
-
         fun canRequestMostPosts(): Boolean {
-            return !allPostsLoaded && !isSinglePostView && (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
+            return !allPostsLoaded &&
+                    !isSinglePostView &&
+                    (idList.size < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                     && NetworkUtils.isNetworkAvailable(this@ReaderPostPagerActivity)
         }
 
-        fun isValidPosition(position: Int): Boolean {
-            return (position in 0..<count)
-        }
+        fun isValidPosition(position: Int) = position in 0..< itemCount
 
-        override fun getCount(): Int {
-            return idList.size
-        }
+        override fun getItemCount() = idList.size
 
-        override fun getItem(position: Int): Fragment {
-            if ((position == count - 1) && canRequestMostPosts()) {
+        override fun createFragment(position: Int): Fragment {
+            if ((position == itemCount - 1) && canRequestMostPosts()) {
                 requestMorePosts()
             }
 
             return newInstance(
-                isFeed,
-                idList[position].blogId,
-                idList[position].postId,
-                directOperation,
-                commentId,
-                isRelatedPostView,
-                interceptedUri,
-                postListType,
-                postSlugsResolutionUnderway
+                isFeed = isFeed,
+                blogId = idList[position].blogId,
+                postId = idList[position].postId,
+                directOperation = directOperation,
+                commentId = commentId,
+                isRelatedPost = isRelatedPostView,
+                interceptedUri = interceptedUri,
+                postListType = postListType,
+                postSlugsResolutionUnderway = postSlugsResolutionUnderway
             )
-        }
-
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val item = super.instantiateItem(container, position)
-            if (item is Fragment) {
-                fragmentMap.put(position, item)
-            }
-            return item
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            fragmentMap.remove(position)
-            super.destroyItem(container, position, `object`)
-        }
-
-        val activeFragment: Fragment?
-            get() = getFragmentAtPosition(viewPager.currentItem)
-
-        fun getFragmentAtPosition(position: Int): Fragment? {
-            return if (isValidPosition(position)) {
-                fragmentMap[position]
-            } else {
-                null
-            }
         }
 
         val currentBlogIdPostId: ReaderBlogIdPostId?
@@ -1206,5 +1102,18 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 null
             }
         }
+
+        /**
+         * In ViewPager2 the FragmentManager by default have assigned tags to fragments like this:
+         *  Fragment in 1st position has a tag of "f0"
+         *  Fragment in 2nd position has a tag of "f1"
+         *  etc.
+         */
+        fun getFragmentAtPosition(position: Int) =
+                supportFragmentManager.findFragmentByTag("f$position") as? ReaderPostDetailFragment
+    }
+
+    companion object {
+        private const val OFFSCREEN_PAGE_LIMIT = 2
     }
 }
