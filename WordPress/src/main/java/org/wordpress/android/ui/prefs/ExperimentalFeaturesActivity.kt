@@ -163,6 +163,22 @@ fun ExperimentalFeaturesScreen(
                         onChange = onFeatureToggled,
                     )
                 }
+
+                Column(
+                    modifier = Modifier.padding(
+                        start = Margin.ExtraLarge.value,
+                        end = Margin.ExtraLarge.value,
+                        top = Margin.Large.value,
+                        bottom = Margin.Large.value
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.experimental_block_editor_note),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = Margin.Small.value)
+                    )
+                }
             }
         }
     }
