@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -43,12 +44,21 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
-enum class ExperimentalFeature(val prefKey: String, val labelResId: Int) {
-    DISABLE_EXPERIMENTAL_BLOCK_EDITOR("disable_experimental_block_editor", R.string.disable_experimental_block_editor),
-    EXPERIMENTAL_BLOCK_EDITOR("experimental_block_editor", R.string.experimental_block_editor),
+enum class ExperimentalFeature(val prefKey: String, val labelResId: Int, val descriptionResId: Int) {
+    DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
+        "disable_experimental_block_editor",
+        R.string.disable_experimental_block_editor,
+        R.string.disable_experimental_block_editor_description
+    ),
+    EXPERIMENTAL_BLOCK_EDITOR(
+        "experimental_block_editor",
+        R.string.experimental_block_editor,
+        R.string.experimental_block_editor_description
+    ),
     EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
         "experimental_block_editor_theme_styles",
-        R.string.experimental_block_editor_theme_styles
+        R.string.experimental_block_editor_theme_styles,
+        R.string.experimental_block_editor_theme_styles_description
     );
 
     fun isEnabled() : Boolean {
@@ -164,27 +174,29 @@ fun FeatureToggle(
     enabled: Boolean,
     onChange: (ExperimentalFeature, Boolean) -> Unit,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clickable { onChange(feature, !enabled) }
-            .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.MediumLarge.value)
-    ) {
-        Text(
-            text = stringResource(feature.labelResId),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = Margin.Medium.value)
-        )
-        Switch(
-            checked = enabled,
-            onCheckedChange = { newValue ->
-                onChange(feature, newValue)
-            },
-        )
-    }
+    ListItem(
+        headlineContent = {
+            Text(
+                text = stringResource(feature.labelResId),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        },
+        supportingContent = {
+            Text(
+                text = stringResource(feature.descriptionResId),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        },
+        trailingContent = {
+            Switch(
+                checked = enabled,
+                onCheckedChange = { newValue ->
+                    onChange(feature, newValue)
+                },
+            )
+        },
+        modifier = Modifier.clickable { onChange(feature, !enabled) }
+    )
 }
 
 @Composable
