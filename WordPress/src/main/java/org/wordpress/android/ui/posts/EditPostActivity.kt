@@ -534,7 +534,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        isGutenbergKitEditor = gutenbergKitFeatureConfig.isEnabled() || (gutenbergKitFeature.isEnabled() && !disableGutenbergKitFeatureConfig.isEnabled())
+        isGutenbergKitEditor = (gutenbergKitFeatureConfig.isEnabled() || gutenbergKitFeature.isEnabled()) && !disableGutenbergKitFeatureConfig.isEnabled()
 
         createEditShareMessageActivityResultLauncher()
 

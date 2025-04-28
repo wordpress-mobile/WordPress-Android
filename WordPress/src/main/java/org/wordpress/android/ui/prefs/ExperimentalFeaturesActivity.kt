@@ -43,7 +43,10 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 enum class ExperimentalFeature(val prefKey: String, val labelResId: Int, val descriptionResId: Int) {
     DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
@@ -71,13 +74,22 @@ enum class ExperimentalFeature(val prefKey: String, val labelResId: Int, val des
     }
 }
 
-class FeatureViewModel : ViewModel() {
+@HiltViewModel
+class FeatureViewModel @Inject constructor(
+    private val gutenbergKitFeature: GutenbergKitFeature
+) : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<ExperimentalFeature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
 
     init {
         val initialStates = ExperimentalFeature.entries
-            .filter { it != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR }
+            .filter { feature ->
+                if (gutenbergKitFeature.isEnabled()) {
+                    feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
+                } else {
+                    feature != ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+                }
+            }
             .associate { feature ->
                 feature to feature.isEnabled()
             }
