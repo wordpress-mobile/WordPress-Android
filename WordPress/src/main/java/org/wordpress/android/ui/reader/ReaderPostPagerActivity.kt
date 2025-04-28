@@ -226,6 +226,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         viewPager = findViewById(R.id.viewpager)
+        // lint complains about OFFSCREEN_PAGE_LIMIT, even through it's a valid constant (?)
         @SuppressLint("WrongConstant")
         viewPager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
 
