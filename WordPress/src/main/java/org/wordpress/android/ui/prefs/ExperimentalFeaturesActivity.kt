@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -172,6 +173,12 @@ fun ExperimentalFeaturesScreen(
                         bottom = Margin.Large.value
                     )
                 ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = Margin.ExtraLarge.value)
+                    )
                     Text(
                         text = stringResource(R.string.experimental_block_editor_note),
                         style = MaterialTheme.typography.bodySmall,
