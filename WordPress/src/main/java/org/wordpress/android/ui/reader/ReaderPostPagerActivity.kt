@@ -317,6 +317,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 if (lastSelectedPosition > -1 && lastSelectedPosition != position) {
                     pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.pauseWebView()
                 }
+                // unpause this web view if it was previously paused
+                pagerAdapter?.getFragmentAtPosition(position)?.resumeWebViewIfPaused()
                 lastSelectedPosition = position
             }
         })
