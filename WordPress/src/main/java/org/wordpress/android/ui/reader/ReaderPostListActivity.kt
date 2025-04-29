@@ -46,30 +46,30 @@ import javax.inject.Inject
 */
 @AndroidEntryPoint
 class ReaderPostListActivity : BaseAppCompatActivity() {
-    private var mSource: String? = null
-    private var mPostListType: ReaderPostListType? = null
-    private var mSiteId: Long = 0
+    private var source: String? = null
+    private var postListType: ReaderPostListType? = null
+    private var siteId: Long = 0
 
     @Inject
-    lateinit var mSiteStore: SiteStore
+    lateinit var siteStore: SiteStore
 
     @Inject
-    lateinit var mPostStore: PostStore
+    lateinit var postStore: PostStore
 
     @Inject
-    lateinit var mDispatcher: Dispatcher
+    lateinit var dispatcher: Dispatcher
 
     @Inject
-    lateinit var mUploadActionUseCase: UploadActionUseCase
+    lateinit var uploadActionUseCase: UploadActionUseCase
 
     @Inject
-    lateinit var mUploadUtilsWrapper: UploadUtilsWrapper
+    lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    lateinit var mReaderTracker: ReaderTracker
+    lateinit var readerTracker: ReaderTracker
 
     @Inject
-    lateinit var mSelectedSiteRepository: SelectedSiteRepository
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,40 +94,40 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
-        mSource = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
-        mPostListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+        source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
+        postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
             BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
 
-        if (postListType == ReaderPostListType.TAG_PREVIEW
-            || postListType == ReaderPostListType.BLOG_PREVIEW
+        if (currentPostListType == ReaderPostListType.TAG_PREVIEW
+            || currentPostListType == ReaderPostListType.BLOG_PREVIEW
         ) {
             toolbar.setNavigationOnClickListener { finish() }
 
-            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+            if (currentPostListType == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_blog_preview)
                 if (savedInstanceState == null) {
                     val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
                     val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
                     if (feedId != 0L) {
                         showListFragmentForFeed(feedId)
-                        mSiteId = feedId
+                        siteId = feedId
                     } else {
                         showListFragmentForBlog(blogId)
-                        mSiteId = blogId
+                        siteId = blogId
                     }
                 } else {
-                    mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
+                    siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
                 }
-            } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
+            } else if (currentPostListType == ReaderPostListType.TAG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_tag_preview)
                 if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                     val tag =
                         BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_TAG, ReaderTag::class.java)
                     if (tag != null && savedInstanceState == null) {
-                        showListFragmentForTag(tag, mPostListType)
+                        showListFragmentForTag(tag, postListType)
                     }
                 }
             }
@@ -148,12 +148,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
-        mDispatcher.register(this)
+        dispatcher.register(this)
     }
 
     override fun onPause() {
         super.onPause()
-        mDispatcher.unregister(this)
+        dispatcher.unregister(this)
     }
 
     /*
@@ -178,8 +178,8 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         }
     }
 
-    private val postListType: ReaderPostListType
-        get() = (if (mPostListType != null) mPostListType!! else ReaderTypes.DEFAULT_POST_LIST_TYPE)
+    private val currentPostListType: ReaderPostListType
+        get() = (if (postListType != null) postListType!! else ReaderTypes.DEFAULT_POST_LIST_TYPE)
 
     public override fun onSaveInstanceState(outState: Bundle) {
         if (outState.isEmpty) {
@@ -187,18 +187,18 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         }
 
         // store the title for blog/tag preview so we can restore it upon recreation
-        if (postListType == ReaderPostListType.BLOG_PREVIEW
-            || postListType == ReaderPostListType.TAG_PREVIEW
+        if (currentPostListType == ReaderPostListType.BLOG_PREVIEW
+            || currentPostListType == ReaderPostListType.TAG_PREVIEW
         ) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
-            outState.putLong(ReaderConstants.KEY_SITE_ID, mSiteId)
+            outState.putLong(ReaderConstants.KEY_SITE_ID, siteId)
         }
 
         super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+        if (currentPostListType == ReaderPostListType.BLOG_PREVIEW) {
             menuInflater.inflate(R.menu.share, menu)
         }
 
@@ -223,7 +223,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     private fun shareSite() {
-        val blog = ReaderBlogTable.getBlogInfo(mSiteId)
+        val blog = ReaderBlogTable.getBlogInfo(siteId)
 
         if (blog != null && blog.hasUrl()) {
             val intent = Intent(Intent.ACTION_SEND)
@@ -235,12 +235,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             }
 
             try {
-                mReaderTracker.trackBlog(
+                readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SITE_SHARED,
                     blog.blogId,
                     blog.feedId,
                     blog.isFollowing,
-                    mSource!!
+                    source!!
                 )
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
             } catch (exception: ActivityNotFoundException) {
@@ -335,7 +335,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                 val site = BundleCompat.getSerializable(data.extras!!, WordPress.SITE, SiteModel::class.java)
-                val post = mPostStore.getPostByLocalPostId(localId)
+                val post = postStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
@@ -349,19 +349,19 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
                 val snackbarAttachView = findViewById<View>(R.id.coordinator)
                 if (site != null && post != null && snackbarAttachView != null) {
-                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
+                    uploadUtilsWrapper.handleEditPostResultSnackbars(
                         this,
                         snackbarAttachView,
                         data,
                         post,
                         site,
-                        mUploadActionUseCase.getUploadAction(post),
+                        uploadActionUseCase.getUploadAction(post),
                         {
                             UploadUtils.publishPost(
                                 this@ReaderPostListActivity,
                                 post,
                                 site,
-                                mDispatcher
+                                dispatcher
                             )
                         })
                 }
@@ -372,10 +372,10 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        val site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId())
+        val site = siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
         val snackbarAttachView = findViewById<View>(R.id.coordinator)
         if (site != null && event.post != null && snackbarAttachView != null) {
-            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                 this,
                 snackbarAttachView,
                 event.isError,
