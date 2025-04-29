@@ -50,25 +50,25 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private var mSiteId: Long = 0
 
     @Inject
-    var mSiteStore: SiteStore? = null
+    lateinit var mSiteStore: SiteStore
 
     @Inject
-    var mPostStore: PostStore? = null
+    lateinit var mPostStore: PostStore
 
     @Inject
-    var mDispatcher: Dispatcher? = null
+    lateinit var mDispatcher: Dispatcher
 
     @Inject
-    var mUploadActionUseCase: UploadActionUseCase? = null
+    lateinit var mUploadActionUseCase: UploadActionUseCase
 
     @Inject
-    var mUploadUtilsWrapper: UploadUtilsWrapper? = null
+    lateinit var mUploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    var mReaderTracker: ReaderTracker? = null
+    lateinit var mReaderTracker: ReaderTracker
 
     @Inject
-    var mSelectedSiteRepository: SelectedSiteRepository? = null
+    lateinit var mSelectedSiteRepository: SelectedSiteRepository
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
