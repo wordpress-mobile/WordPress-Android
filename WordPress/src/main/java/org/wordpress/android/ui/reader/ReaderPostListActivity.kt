@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -75,16 +74,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.reader_activity_post_list)
-
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val fragment: ReaderPostListFragment? = listFragment
-                if (fragment == null || !fragment.onActivityBackPressed()) {
-                    onBackPressedDispatcher.onBackPressedCompat(this)
-                }
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
+        setupBackPressCallback()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -100,10 +90,10 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
 
-        if (postListType == ReaderPostListType.TAG_PREVIEW
-            || postListType == ReaderPostListType.BLOG_PREVIEW
-        ) {
-            toolbar.setNavigationOnClickListener { finish() }
+        if (postListType == ReaderPostListType.TAG_PREVIEW || postListType == ReaderPostListType.BLOG_PREVIEW) {
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
 
             if (postListType == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_blog_preview)
@@ -133,7 +123,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         }
 
         // restore the activity title
-        if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE)) {
+        if (savedInstanceState?.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE) == true) {
             title = savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE)
         }
     }
@@ -153,6 +143,19 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     override fun onPause() {
         super.onPause()
         dispatcher.unregister(this)
+    }
+
+    private fun setupBackPressCallback() {
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                listFragment?.let {
+                    if (!it.onActivityBackPressed()) {
+                        onBackPressedDispatcher.onBackPressedCompat(this)
+                    }
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     /*
@@ -183,9 +186,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         }
 
         // store the title for blog/tag preview so we can restore it upon recreation
-        if (postListType == ReaderPostListType.BLOG_PREVIEW
-            || postListType == ReaderPostListType.TAG_PREVIEW
-        ) {
+        if (postListType == ReaderPostListType.BLOG_PREVIEW || postListType == ReaderPostListType.TAG_PREVIEW) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
             outState.putLong(ReaderConstants.KEY_SITE_ID, siteId)
         }
@@ -201,7 +202,6 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    @SuppressLint("NonConstantResourceId")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
