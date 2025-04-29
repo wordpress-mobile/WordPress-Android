@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,7 +96,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
         mSource = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         mPostListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+            BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
@@ -122,9 +123,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                 }
             } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_tag_preview)
-                val tag = intent.getSerializableExtra(ReaderConstants.ARG_TAG) as ReaderTag?
-                if (tag != null && savedInstanceState == null) {
-                    showListFragmentForTag(tag, mPostListType)
+                if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
+                    val tag =
+                        BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_TAG, ReaderTag::class.java)
+                    if (tag != null && savedInstanceState == null) {
+                        showListFragmentForTag(tag, mPostListType)
+                    }
                 }
             }
         }
@@ -330,7 +334,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
             RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
-                val site = data.getSerializableExtra(WordPress.SITE) as SiteModel?
+                val site = BundleCompat.getSerializable(data.extras!!, WordPress.SITE, SiteModel::class.java)
                 val post = mPostStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
