@@ -169,7 +169,8 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     /*
-     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
+     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering. These
+     * views are not part of this activity.
      */
     private fun disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
@@ -322,6 +323,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         return (fragment as? ReaderPostListFragment)
     }
 
+    /**
+     * Returns the view to attach the snackbar to. Note that this view isn't part of this activity.
+     */
+    private fun getSnackbarAttachView(): View? = findViewById(R.id.coordinator)
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -350,23 +356,24 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                     return
                 }
 
-                val snackbarAttachView = findViewById<View>(R.id.coordinator)
-                if (site != null && post != null && snackbarAttachView != null) {
-                    uploadUtilsWrapper.handleEditPostResultSnackbars(
-                        activity = this,
-                        snackbarAttachView = snackbarAttachView,
-                        data = data,
-                        post = post,
-                        site = site,
-                        uploadAction = uploadActionUseCase.getUploadAction(post),
-                        publishPostListener = {
-                            UploadUtils.publishPost(
-                                this@ReaderPostListActivity,
-                                post,
-                                site,
-                                dispatcher
-                            )
-                        })
+                if (site != null && post != null) {
+                    getSnackbarAttachView()?.let { snackbarAttachView ->
+                        uploadUtilsWrapper.handleEditPostResultSnackbars(
+                            activity = this,
+                            snackbarAttachView = snackbarAttachView,
+                            data = data,
+                            post = post,
+                            site = site,
+                            uploadAction = uploadActionUseCase.getUploadAction(post),
+                            publishPostListener = {
+                                UploadUtils.publishPost(
+                                    this@ReaderPostListActivity,
+                                    post,
+                                    site,
+                                    dispatcher
+                                )
+                            })
+                    }
                 }
             }
         }
@@ -376,17 +383,18 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val site = siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
-        val snackbarAttachView = findViewById<View>(R.id.coordinator)
-        if (site != null && event.post != null && snackbarAttachView != null) {
-            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                activity = this,
-                snackbarAttachView = snackbarAttachView,
-                isError = event.isError,
-                isFirstTimePublish = event.isFirstTimePublish,
-                post = event.post,
-                errorMessage = null,
-                site = site
-            )
+        if (site != null && event.post != null) {
+            getSnackbarAttachView()?.let { snackbarAttachView ->
+                uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                    activity = this,
+                    snackbarAttachView = snackbarAttachView,
+                    isError = event.isError,
+                    isFirstTimePublish = event.isFirstTimePublish,
+                    post = event.post,
+                    errorMessage = null,
+                    site = site
+                )
+            }
         }
     }
 }
