@@ -26,19 +26,24 @@ class WPcomLoginHelper @Inject constructor(
 
     val wpcomLoginUri = loginClient.loginUri(appSecrets.redirectUri)
     private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
+    private var processedAuthData: String? = null
 
-    fun tryLoginWithDataString(data: String?) {
-        if (data == null) {
-            return
+    @Suppress("ReturnCount")
+    fun tryLoginWithDataString(data: String?): Boolean {
+        if (data == null || data == processedAuthData) {
+            return false
         }
 
-        val code = this.codeFromAuthorizationUri(data) ?: return
+        val code = this.codeFromAuthorizationUri(data) ?: return false
 
         runBlocking {
             val tokenResult = loginClient.exchangeAuthCodeForToken(code)
             accountStore.updateAccessToken(tokenResult.getOrThrow())
             Log.i("WPCOM_LOGIN", "Login Successful")
         }
+
+        processedAuthData = data
+        return true
     }
 
     fun isLoggedIn(): Boolean {

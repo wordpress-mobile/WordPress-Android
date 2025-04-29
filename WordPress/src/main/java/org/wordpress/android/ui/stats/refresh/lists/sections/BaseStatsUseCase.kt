@@ -87,7 +87,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
-    protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
+    protected fun evaluateState(state: State<DOMAIN_MODEL>) {
         val useCaseState = when (state) {
             is Error -> ERROR
             is Data -> {
