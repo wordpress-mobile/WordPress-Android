@@ -85,7 +85,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)!!
+            BundleCompat.getSerializable(
+                intent.extras!!,
+                ReaderConstants.ARG_POST_LIST_TYPE,
+                ReaderPostListType::class.java
+            )!!
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
@@ -114,7 +118,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                 setTitle(R.string.reader_activity_title_tag_preview)
                 if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                     val tag =
-                        BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_TAG, ReaderTag::class.java)
+                        BundleCompat.getSerializable(
+                            intent.extras!!,
+                            ReaderConstants.ARG_TAG,
+                            ReaderTag::class.java
+                        )
                     if (tag != null && savedInstanceState == null) {
                         showListFragmentForTag(tag, postListType)
                     }
@@ -327,7 +335,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
             RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
-                val site = BundleCompat.getSerializable(data.extras!!, WordPress.SITE, SiteModel::class.java)
+                val site = BundleCompat.getSerializable(
+                    data.extras!!,
+                    WordPress.SITE,
+                    SiteModel::class.java
+                )
                 val post = postStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
