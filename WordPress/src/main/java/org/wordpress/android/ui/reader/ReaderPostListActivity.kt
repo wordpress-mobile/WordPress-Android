@@ -144,12 +144,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
-        mDispatcher!!.register(this)
+        mDispatcher.register(this)
     }
 
     override fun onPause() {
         super.onPause()
-        mDispatcher!!.unregister(this)
+        mDispatcher.unregister(this)
     }
 
     /*
@@ -231,7 +231,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             }
 
             try {
-                mReaderTracker!!.trackBlog(
+                mReaderTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SITE_SHARED,
                     blog.blogId,
                     blog.feedId,
@@ -331,7 +331,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
                 val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                 val site = data.getSerializableExtra(WordPress.SITE) as SiteModel?
-                val post = mPostStore!!.getPostByLocalPostId(localId)
+                val post = mPostStore.getPostByLocalPostId(localId)
 
                 if (checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
@@ -345,13 +345,13 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
                 val snackbarAttachView = findViewById<View>(R.id.coordinator)
                 if (site != null && post != null && snackbarAttachView != null) {
-                    mUploadUtilsWrapper!!.handleEditPostResultSnackbars(
+                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
                         this,
                         snackbarAttachView,
                         data,
                         post,
                         site,
-                        mUploadActionUseCase!!.getUploadAction(post),
+                        mUploadActionUseCase.getUploadAction(post),
                         {
                             UploadUtils.publishPost(
                                 this@ReaderPostListActivity,
@@ -368,10 +368,10 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        val site = mSiteStore!!.getSiteByLocalId(mSelectedSiteRepository!!.getSelectedSiteLocalId())
+        val site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId())
         val snackbarAttachView = findViewById<View>(R.id.coordinator)
         if (site != null && event.post != null && snackbarAttachView != null) {
-            mUploadUtilsWrapper!!.onPostUploadedSnackbarHandler(
+            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                 this,
                 snackbarAttachView,
                 event.isError,
