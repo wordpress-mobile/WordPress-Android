@@ -154,6 +154,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 import androidx.core.view.isVisible
 
+@Suppress("LargeClass")
 class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFollowListener,
     OnPostListItemButtonListener, OnActivityBackPressedListener, OnScrollToTopListener {
     private val mTagPreviewHistory = ReaderHistoryStack("tag_preview_history")
@@ -362,7 +363,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
             if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
-                    BundleCompat.getSerializable(state, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)
+                    BundleCompat.getSerializable(
+                        state,
+                        ReaderConstants.ARG_POST_LIST_TYPE,
+                        ReaderPostListType::class.java
+                    )
             }
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(state)
@@ -423,6 +428,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
+    @Suppress("LongMethod")
     private fun setupObservers() {
         mViewModel!!.navigationEvents.observe(
             viewLifecycleOwner
@@ -564,22 +570,24 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         if (!isAdded || view == null) return
-        mSnackbarSequencer.enqueue(
-            SnackbarItem(
-                SnackbarItem.Info(
-                    snackbarParent!!,
-                    holder.message,
-                    holder.duration,
-                    holder.isImportant
-                ),
-                if (holder.buttonTitle != null)
-                    SnackbarItem.Action(
-                        holder.buttonTitle
-                    ) { holder.buttonAction.invoke() }
-                else
-                    null
+        getSnackbarParent()?.let { snackbarParent ->
+            mSnackbarSequencer.enqueue(
+                SnackbarItem(
+                    SnackbarItem.Info(
+                        view = snackbarParent,
+                        textRes = holder.message,
+                        duration = holder.duration,
+                        isImportant = holder.isImportant
+                    ),
+                    if (holder.buttonTitle != null)
+                        SnackbarItem.Action(
+                            holder.buttonTitle
+                        ) { holder.buttonAction.invoke() }
+                    else
+                        null
+                )
             )
-        )
+        }
     }
 
     private fun addWebViewCachingFragment(blogId: Long, postId: Long) {
@@ -993,6 +1001,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
+    @Suppress("LongMethod")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -1146,7 +1155,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
             val actions =
-                BundleCompat.getSerializable(savedInstanceState, ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, HashSet::class.java)
+                BundleCompat.getSerializable(
+                    savedInstanceState,
+                    ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS,
+                    HashSet::class.java
+                )
             if (actions is HashSet<*>) {
                 @Suppress("UNCHECKED_CAST")
                 mCurrentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
@@ -1640,20 +1653,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    private val snackbarParent: View?
-        /*
-             * returns the parent view for snackbars - if this fragment is hosted in the main activity we want the
-             * parent to be the main activity's CoordinatorLayout
-             */
-        get() {
-            val coordinator =
-                requireActivity().findViewById<View>(R.id.coordinator_layout)
-            if (coordinator != null) {
-                return coordinator
-            }
-            return view
-        }
+    /*
+     * returns the parent view for snackbars - if this fragment is hosted in the main activity we want the
+     * parent to be the main activity's CoordinatorLayout
+     */
+    private fun getSnackbarParent(): View? {
+        val coordinator =
+            requireActivity().findViewById<View>(R.id.coordinator_layout)
+        return coordinator ?: view
+    }
 
+    @Suppress("LongMethod")
     private fun setEmptyTitleDescriptionAndButton(requestFailed: Boolean) {
         if (!isAdded) {
             return
@@ -2601,6 +2611,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         trackTag(stat, tag.tagSlug)
     }
 
+    @Suppress("LongMethod")
     override fun onButtonClicked(post: ReaderPost, actionType: ReaderPostCardActionType) {
         when (actionType) {
             ReaderPostCardActionType.FOLLOW -> mViewModel!!.onFollowSiteClicked(
@@ -2705,12 +2716,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (blogId > 0) {
             make(
-                snackbarParent!!,
-                HtmlCompat.fromHtml(
+                view = getSnackbarParent()!!,
+                text = HtmlCompat.fromHtml(
                     getString(R.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 ),
-                Snackbar.LENGTH_LONG
+                duration = Snackbar.LENGTH_LONG
             ).setAction(
                 getString(R.string.reader_followed_blog_notifications_action)
             ) {
@@ -2728,8 +2739,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     )
                 )
                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-            }
-                .show()
+            }.show()
         }
     }
 
