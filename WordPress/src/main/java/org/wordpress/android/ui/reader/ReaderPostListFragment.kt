@@ -96,9 +96,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataRequestedListener
-import org.wordpress.android.ui.reader.adapters.OnSuggestionClearClickListener
-import org.wordpress.android.ui.reader.adapters.OnSuggestionClickListener
-import org.wordpress.android.ui.reader.adapters.OnSuggestionDeleteClickListener
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter
@@ -161,49 +158,50 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private val mTagPreviewHistory = ReaderHistoryStack("tag_preview_history")
 
     @Inject
-    var mViewModelFactory: ViewModelProvider.Factory? = null
+    lateinit var mViewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    var mAccountStore: AccountStore? = null
+    lateinit var mAccountStore: AccountStore
 
     @Inject
-    var mReaderStore: ReaderStore? = null
+    lateinit var mReaderStore: ReaderStore
 
     @Inject
-    var mDispatcher: Dispatcher? = null
+    lateinit var mDispatcher: Dispatcher
 
     @Inject
-    var mImageManager: ImageManager? = null
+    lateinit var mImageManager: ImageManager
 
     @Inject
-    var mUiHelpers: UiHelpers? = null
+    lateinit var mUiHelpers: UiHelpers
 
     @Inject
-    var mNetworkUtilsWrapper: NetworkUtilsWrapper? = null
+    lateinit var mNetworkUtilsWrapper: NetworkUtilsWrapper
 
     @Inject
-    var mTagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider? = null
+    lateinit var mTagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 
     @Inject
-    var mQuickStartUtilsWrapper: QuickStartUtilsWrapper? = null
+    lateinit var mQuickStartUtilsWrapper: QuickStartUtilsWrapper
 
     @Inject
-    var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig? = null
+    lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
-    var mJetpackBrandingUtils: JetpackBrandingUtils? = null
+    lateinit var mJetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
-    var mQuickStartRepository: QuickStartRepository? = null
+    lateinit var mQuickStartRepository: QuickStartRepository
 
     @Inject
-    var mReaderTracker: ReaderTracker? = null
+    lateinit var mReaderTracker: ReaderTracker
 
     @Inject
-    var mSnackbarSequencer: SnackbarSequencer? = null
+    lateinit var mSnackbarSequencer: SnackbarSequencer
 
     @Inject
-    var mDisplayUtilsWrapper: DisplayUtilsWrapper? = null
+    lateinit var mDisplayUtilsWrapper: DisplayUtilsWrapper
+
     private var mPostAdapter: ReaderPostAdapter? = null
     private var mSiteSearchAdapter: ReaderSiteSearchAdapter? = null
     private var mSearchSuggestionAdapter: ReaderSearchSuggestionAdapter? = null
@@ -507,8 +505,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         mViewModel!!.updateFollowStatus.observe(
             viewLifecycleOwner
-        ) {
-            readerData: FollowStatusChanged -> setFollowStatusForBlog(readerData)
+        ) { readerData: FollowStatusChanged ->
+            setFollowStatusForBlog(readerData)
         }
     }
 
@@ -1510,13 +1508,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         })
 
-        mSearchSuggestionAdapter!!.setOnSuggestionDeleteClickListener(
-            OnSuggestionDeleteClickListener { query: String? ->
-                this.onSearchSuggestionDeleteClicked(
-                    query!!
-                )
-            })
-        mSearchSuggestionAdapter!!.setOnSuggestionClearClickListener(OnSuggestionClearClickListener { this.onSearchSuggestionClearClicked() })
+        mSearchSuggestionAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
+            this.onSearchSuggestionDeleteClicked(
+                query!!
+            )
+        }
+        mSearchSuggestionAdapter!!.setOnSuggestionClearClickListener { this.onSearchSuggestionClearClicked() }
     }
 
     private fun populateSearchSuggestionAdapter(query: String?) {
@@ -1530,19 +1527,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mSearchSuggestionRecyclerAdapter = ReaderSearchSuggestionRecyclerAdapter()
         mRecyclerView.setSearchSuggestionAdapter(mSearchSuggestionRecyclerAdapter)
 
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClickListener(OnSuggestionClickListener { query: String? ->
-            this.onSearchSuggestionClicked(
+        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClickListener { query: String? ->
+            onSearchSuggestionClicked(
                 query
             )
-        })
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionDeleteClickListener(
-            OnSuggestionDeleteClickListener { query: String? ->
-                this.onSearchSuggestionDeleteClicked(
-                    query!!
-                )
-            })
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClearClickListener(
-            OnSuggestionClearClickListener { this.onSearchSuggestionClearClicked() })
+        }
+        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
+            onSearchSuggestionDeleteClicked(
+                query!!
+            )
+        }
+        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClearClickListener { onSearchSuggestionClearClicked() }
     }
 
     private fun populateSearchSuggestionRecyclerAdapter(query: String?) {
@@ -2447,7 +2442,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * are we showing all posts with a specific tag (followed or previewed), or all
      * posts in a specific blog?
      */
-    private fun getPostListType() : ReaderPostListType {
+    private fun getPostListType(): ReaderPostListType {
         return mPostListType ?: ReaderTypes.DEFAULT_POST_LIST_TYPE
     }
 
