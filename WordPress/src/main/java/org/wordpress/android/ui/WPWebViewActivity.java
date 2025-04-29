@@ -653,6 +653,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
+            allowedURL = new ArrayList<>();
             if (!TextUtils.isEmpty(addressToLoad)) {
                 allowedURL.add(addressToLoad);
             }
