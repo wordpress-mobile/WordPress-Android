@@ -331,6 +331,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private fun getSnackbarAttachView(): View? = findViewById(R.id.coordinator)
 
     @Deprecated("Deprecated in Java")
+    @Suppress("NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
