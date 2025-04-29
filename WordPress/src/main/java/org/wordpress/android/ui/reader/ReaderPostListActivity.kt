@@ -74,14 +74,6 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.reader_activity_post_list)
-        setupBackPressCallback()
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
-        setSupportActionBar(toolbar)
-        supportActionBar?.let {
-            it.setDisplayShowTitleEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
 
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -94,38 +86,35 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
 
-        if (postListType == ReaderPostListType.TAG_PREVIEW || postListType == ReaderPostListType.BLOG_PREVIEW) {
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
+        setupBackPressCallback()
+        setupToolbar(postListType)
 
-            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
-                setTitle(R.string.reader_activity_title_blog_preview)
-                if (savedInstanceState == null) {
-                    val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
-                    val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
-                    if (feedId != 0L) {
-                        showListFragmentForFeed(feedId)
-                        siteId = feedId
-                    } else {
-                        showListFragmentForBlog(blogId)
-                        siteId = blogId
-                    }
+        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+            setTitle(R.string.reader_activity_title_blog_preview)
+            if (savedInstanceState == null) {
+                val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+                val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
+                if (feedId != 0L) {
+                    showListFragmentForFeed(feedId)
+                    siteId = feedId
                 } else {
-                    siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
+                    showListFragmentForBlog(blogId)
+                    siteId = blogId
                 }
-            } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
-                setTitle(R.string.reader_activity_title_tag_preview)
-                if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
-                    val tag =
-                        BundleCompat.getSerializable(
-                            intent.extras!!,
-                            ReaderConstants.ARG_TAG,
-                            ReaderTag::class.java
-                        )
-                    if (tag != null && savedInstanceState == null) {
-                        showListFragmentForTag(tag, postListType)
-                    }
+            } else {
+                siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
+            }
+        } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
+            setTitle(R.string.reader_activity_title_tag_preview)
+            if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
+                val tag =
+                    BundleCompat.getSerializable(
+                        intent.extras!!,
+                        ReaderConstants.ARG_TAG,
+                        ReaderTag::class.java
+                    )
+                if (tag != null && savedInstanceState == null) {
+                    showListFragmentForTag(tag, postListType)
                 }
             }
         }
@@ -164,6 +153,21 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    private fun setupToolbar(postListType: ReaderPostListType) {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayShowTitleEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
+        }
+
+        if (postListType == ReaderPostListType.TAG_PREVIEW || postListType == ReaderPostListType.BLOG_PREVIEW) {
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 
     /*
