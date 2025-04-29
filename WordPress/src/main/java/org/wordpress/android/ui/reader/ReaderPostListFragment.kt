@@ -423,7 +423,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.navigationEvents.observe(
             viewLifecycleOwner
         ) { event: Event<ReaderNavigationEvents> ->
-            event.applyIfNotHandled { navTarget: ReaderNavigationEvents ->
+            event.applyIfNotHandled() {
+                val navTarget = this
                 if (navTarget is ShowSitePickerForResult) {
                     val data = navTarget
                     ActivityLauncher.showSitePickerForResult(
@@ -471,8 +472,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.snackbarEvents.observe(
             viewLifecycleOwner
         ) { event: Event<SnackbarMessageHolder> ->
-            event.applyIfNotHandled { holder: SnackbarMessageHolder ->
-                showSnackbar(holder)
+            event.applyIfNotHandled {
+                showSnackbar(this)
                 Unit
             }
         }
@@ -480,8 +481,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.preloadPostEvents.observe(
             viewLifecycleOwner
         ) { event: Event<PreLoadPostContent> ->
-            event.applyIfNotHandled { holder: PreLoadPostContent ->
-                addWebViewCachingFragment(holder.blogId, holder.postId)
+            event.applyIfNotHandled {
+                addWebViewCachingFragment(this.blogId, this.postId)
                 Unit
             }
         }
@@ -489,7 +490,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.refreshPosts.observe(
             viewLifecycleOwner
         ) { event: Event<Unit> ->
-            event.applyIfNotHandled { holder: Unit ->
+            event.applyIfNotHandled {
                 refreshPosts()
                 Unit
             }
@@ -497,7 +498,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         mViewModel!!.updateFollowStatus.observe(
             viewLifecycleOwner
-        ) { readerData: FollowStatusChanged -> this.setFollowStatusForBlog(readerData) }
+        ) {
+            readerData: FollowStatusChanged -> this.setFollowStatusForBlog(readerData)
+        }
     }
 
     private fun toggleJetpackBannerIfEnabled(showIfEnabled: Boolean, animateOnScroll: Boolean) {
