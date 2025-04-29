@@ -26,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -256,7 +257,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         currentTag,
                         ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
                     )
-                    mReaderTracker!!.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {
@@ -267,7 +268,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     }
                     if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER)
-                        mReaderTracker!!.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                     }
                 }
 
@@ -278,7 +279,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     val offset = ReaderPostTable.getNumPostsWithTag(searchTag)
                     if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentSearch(offset)
-                        mReaderTracker!!.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                     }
                 }
 
@@ -308,15 +309,19 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         args?.let { arguments ->
             if (arguments.containsKey(ReaderConstants.ARG_TAG)) {
-                mCurrentTag = arguments.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
+                mCurrentTag = BundleCompat.getSerializable(arguments, ReaderConstants.ARG_TAG, ReaderTag::class.java)
             }
             if (arguments.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 mTagFragmentStartedWith =
-                    arguments.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
+                    BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
             }
             if (arguments.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
-                    arguments.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    BundleCompat.getSerializable(
+                        arguments,
+                        ReaderConstants.ARG_POST_LIST_TYPE,
+                        ReaderPostListType::class.java
+                    )
             }
 
             if (arguments.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
@@ -344,7 +349,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             AppLog.d(AppLog.T.READER, "reader post list > restoring instance state")
             if (state.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag =
-                    state.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
+                    BundleCompat.getSerializable(state, ReaderConstants.ARG_TAG, ReaderTag::class.java)
             }
             if (state.containsKey(ReaderConstants.ARG_BLOG_ID)) {
                 mCurrentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
@@ -357,7 +362,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
             if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
-                    state.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    BundleCompat.getSerializable(state, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)
             }
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(state)
@@ -372,7 +377,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             if (state.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 mTagFragmentStartedWith =
-                    state.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
+                    BundleCompat.getSerializable(state, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
             }
 
             mRestorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
@@ -392,11 +397,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mViewModel = ViewModelProvider(this, mViewModelFactory!!)[ReaderPostListViewModel::class.java]
+        mViewModel = ViewModelProvider(this, mViewModelFactory)[ReaderPostListViewModel::class.java]
         if (mIsTopLevel) {
             mReaderViewModel = ViewModelProvider(
                 requireParentFragment(),
-                mViewModelFactory!!
+                mViewModelFactory
             )[ReaderViewModel::class.java]
         }
 
@@ -513,10 +518,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun toggleJetpackBannerIfEnabled(showIfEnabled: Boolean, animateOnScroll: Boolean) {
         if (!isAdded || view == null || !isSearching) return
 
-        if (mJetpackBrandingUtils!!.shouldShowJetpackBranding()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             if (animateOnScroll) {
                 val scrollView = mRecyclerView.internalRecyclerView
-                mJetpackBrandingUtils!!.showJetpackBannerIfScrolledToTop(
+                mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(
                     mJetpackBanner,
                     scrollView
                 )
@@ -524,7 +529,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 return
             }
 
-            if (showIfEnabled && !mDisplayUtilsWrapper!!.isPhoneLandscape()) {
+            if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
                 showJetpackBanner()
             } else {
                 hideJetpackBanner()
@@ -559,7 +564,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         if (!isAdded || view == null) return
-        mSnackbarSequencer!!.enqueue(
+        mSnackbarSequencer.enqueue(
             SnackbarItem(
                 SnackbarItem.Info(
                     snackbarParent!!,
@@ -802,7 +807,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onStart() {
         super.onStart()
-        mDispatcher!!.register(this)
+        mDispatcher.register(this)
         EventBus.getDefault().register(this)
 
         reloadTags()
@@ -822,7 +827,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     override fun onStop() {
         super.onStop()
         mNewPostsBar.clearAnimation()
-        mDispatcher!!.unregister(this)
+        mDispatcher.unregister(this)
         EventBus.getDefault().unregister(this)
     }
 
@@ -1013,7 +1018,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             override fun onLoadData(forced: Boolean) {
                 if (forced) {
-                    mReaderTracker!!.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
                 }
                 updatePosts(forced)
             }
@@ -1097,8 +1102,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
         }
 
-        // add a menu to the filtered recycler's toolbar
-        if (mAccountStore!!.hasAccessToken() && isSearching) {
+        // add a menu to the filtered recycler toolbar
+        if (mAccountStore.hasAccessToken() && isSearching) {
             setupRecyclerToolbar()
         }
 
@@ -1117,32 +1122,33 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mProgress.visibility = View.GONE
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner)
-        if (mJetpackBrandingUtils!!.shouldShowJetpackBranding()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen: JetpackPoweredScreen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH
-            mJetpackBrandingUtils!!.initJetpackBannerAnimation(
+            mJetpackBrandingUtils.initJetpackBannerAnimation(
                 mJetpackBanner,
                 mRecyclerView.internalRecyclerView
             )
             val jetpackBannerTextView =
                 mJetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
-            jetpackBannerTextView.text = mUiHelpers!!.getTextOfUiString(
+            jetpackBannerTextView.text = mUiHelpers.getTextOfUiString(
                 requireContext(),
-                mJetpackBrandingUtils!!.getBrandingTextForScreen(screen)
+                mJetpackBrandingUtils.getBrandingTextForScreen(screen)
             )
 
-            if (mJetpackBrandingUtils!!.shouldShowJetpackPoweredBottomSheet()) {
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 mJetpackBanner.setOnClickListener {
-                    mJetpackBrandingUtils!!.trackBannerTapped(screen)
+                    mJetpackBrandingUtils.trackBannerTapped(screen)
                     JetpackPoweredBottomSheetFragment()
                         .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                 }
             }
         }
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
             val actions =
-                savedInstanceState.getSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS)
+                BundleCompat.getSerializable(savedInstanceState, ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, HashSet::class.java)
             if (actions is HashSet<*>) {
+                @Suppress("UNCHECKED_CAST")
                 mCurrentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
                 updateProgressIndicators()
             }
@@ -1152,7 +1158,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     /*
-     * adds a menu to the recycler's toolbar containing search items - only called
+     * adds a menu to the recycler toolbar containing search items - only called
      * for followed tags
      */
     private fun setupRecyclerToolbar() {
@@ -1181,7 +1187,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mSearchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    mReaderTracker!!.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED)
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED)
                 }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS)
                 populateSearchSuggestions(null)
@@ -1285,7 +1291,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             offset,
             false
         )
-        mDispatcher!!.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
+        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1328,7 +1334,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         // track that the user performed a search
         if (trimQuery != "") {
-            mReaderTracker!!.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery)
+            mReaderTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery)
         }
     }
 
@@ -1540,6 +1546,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClearClickListener { onSearchSuggestionClearClicked() }
     }
 
+    @Suppress("SameParameterValue")
     private fun populateSearchSuggestionRecyclerAdapter(query: String?) {
         if (mSearchSuggestionRecyclerAdapter == null) {
             createSearchSuggestionRecyclerAdapter()
@@ -1579,7 +1586,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun clearSearchSuggestions() {
-        mReaderTracker!!.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
+        mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
         ReaderSearchTable.deleteAllQueries()
 
         mSearchSuggestionAdapter!!.swapCursor(null)
@@ -1770,7 +1777,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun shouldShowEmptyViewForSelfHostedCta(): Boolean {
         return mIsFilterableScreen &&
-                !mAccountStore!!.hasAccessToken()
+                !mAccountStore.hasAccessToken()
                 && mSubFilterViewModel?.getCurrentSubfilterValue() is SiteAll
     }
 
@@ -1951,7 +1958,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     getPostListType(),
                     mImageManager,
                     mUiHelpers,
-                    mNetworkUtilsWrapper!!,
+                    mNetworkUtilsWrapper,
                     mIsTopLevel,
                     this.lifecycleScope
                 )
@@ -2460,7 +2467,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (post.isBookmarked) {
             if (isBookmarksList) {
-                mReaderTracker!!.trackBlog(
+                mReaderTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
                     post.blogId,
                     post.feedId,
@@ -2468,7 +2475,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     mPostAdapter!!.source
                 )
             } else {
-                mReaderTracker!!.trackBlog(
+                mReaderTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
                     post.blogId,
                     post.feedId,
@@ -2492,7 +2499,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     )
                     return
                 } else if (discoverData.hasPermalink()) {
-                    if (mSeenUnseenWithCounterFeatureConfig!!.isEnabled()) {
+                    if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
                         mViewModel!!.onExternalPostOpened(post)
                     }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
@@ -2529,7 +2536,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
 
             ReaderPostListType.SEARCH_RESULTS -> {
-                mReaderTracker!!.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
+                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
                 ReaderActivityLauncher.showReaderPostDetail(activity, post.blogId, post.postId)
             }
 
@@ -2610,7 +2617,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
 
             ReaderPostCardActionType.SHARE -> {
-                mReaderTracker!!.trackBlog(
+                mReaderTracker.trackBlog(
                     AnalyticsTracker.Stat.SHARED_ITEM_READER,
                     post.blogId,
                     post.feedId,
@@ -2621,7 +2628,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
 
             ReaderPostCardActionType.VISIT_SITE -> {
-                mReaderTracker!!.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                 ReaderActivityLauncher.openPost(context, post)
             }
 
@@ -2675,7 +2682,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
             )
 
-            ReaderPostCardActionType.TOGGLE_SEEN_STATUS -> if (mSeenUnseenWithCounterFeatureConfig!!.isEnabled()) {
+            ReaderPostCardActionType.TOGGLE_SEEN_STATUS -> if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
                 mViewModel!!.onToggleSeenStatusClicked(
                     post,
                     isBookmarksList,
@@ -2689,7 +2696,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     override fun onFollowTapped(view: View, blogName: String, blogId: Long, feedId: Long) {
-        mDispatcher!!.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
 
         val blog = if (TextUtils.isEmpty(blogName))
             getString(R.string.reader_followed_blog_notifications_this)
@@ -2707,7 +2714,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             ).setAction(
                 getString(R.string.reader_followed_blog_notifications_action)
             ) {
-                mReaderTracker!!.trackBlog(
+                mReaderTracker.trackBlog(
                     AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
                     blogId,
                     feedId
@@ -2715,7 +2722,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 val payload = AddOrDeleteSubscriptionPayload(
                     blogId.toString(), SubscriptionAction.NEW
                 )
-                mDispatcher!!.dispatch(
+                mDispatcher.dispatch(
                     AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(
                         payload
                     )
@@ -2727,7 +2734,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     override fun onFollowingTapped() {
-        mDispatcher!!.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
     }
 
     @Suppress("unused")
@@ -2740,7 +2747,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         + event.error.type + " - " + event.error.message)
             )
         } else {
-            mDispatcher!!.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
     }
 
