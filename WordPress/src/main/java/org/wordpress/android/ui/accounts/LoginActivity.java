@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -149,8 +150,12 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Attempt Login if this activity was created in response to a user confirming login
-        mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+        // Attempt Login if this activity was created in response to a user confirming login, and if
+        // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
+        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+        if (loginProcessed) {
+            getIntent().setData(null);
+        }
 
         // Start preloading the WordPress.com login page if needed – this avoids visual hitches
         // when displaying that screen
@@ -485,7 +490,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 .setShowTitle(false)
                 .build();
 
-        intent.launchUrl(this, mLoginHelper.getWpcomLoginUri());
+        Uri loginUri = mLoginHelper.getWpcomLoginUri();
+        try {
+            intent.launchUrl(this, loginUri);
+        } catch (SecurityException | ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
+        }
     }
 
     @Override

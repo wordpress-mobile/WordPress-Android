@@ -141,6 +141,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column
     private boolean mIsVisible = true;
     @Column
+    private boolean mIsDeleted;
+    @Column
     private boolean mIsPrivate;
     @Column
     private boolean mIsComingSoon;
@@ -410,6 +412,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
+    }
+
+    public boolean isDeleted() {
+        return mIsDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        mIsDeleted = isDeleted;
     }
 
     public boolean isPrivate() {

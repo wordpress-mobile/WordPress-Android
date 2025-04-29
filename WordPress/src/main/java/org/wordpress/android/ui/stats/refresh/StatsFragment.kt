@@ -50,6 +50,7 @@ import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfi
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
@@ -57,7 +58,8 @@ private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
 private var statsTrafficTabEnabled = false
 
 @AndroidEntryPoint
-class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener,
+    StatsPullToRefreshListener.PullToRefreshReceiverListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
@@ -74,6 +76,15 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     private var restorePreviousSearch = false
 
     private var binding: StatsFragmentBinding? = null
+
+    private var currentStatsPullToRefreshListener:
+            WeakReference<StatsPullToRefreshListener.PullToRefreshEmitterListener>? = null
+
+    override fun setPullToRefreshReceiver(
+        pullToRefreshEmitterListener: StatsPullToRefreshListener.PullToRefreshEmitterListener
+    ) {
+        currentStatsPullToRefreshListener = WeakReference(pullToRefreshEmitterListener)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,6 +127,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
+            currentStatsPullToRefreshListener?.get()?.onPullRefresh()
         }
         disabledView.statsDisabledView.button.setOnClickListener {
             viewModel.onEnableStatsModuleClick()
@@ -355,5 +367,14 @@ private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelected
 
     override fun onTabSelected(tab: Tab) {
         viewModel.onSectionSelected(statsTabs[tab.position])
+    }
+}
+
+interface StatsPullToRefreshListener {
+    interface PullToRefreshReceiverListener {
+        fun setPullToRefreshReceiver(emitterListener: PullToRefreshEmitterListener)
+    }
+    interface PullToRefreshEmitterListener {
+        fun onPullRefresh()
     }
 }
