@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.BundleCompat
-import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -143,7 +142,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     private fun setupBackPressCallback() {
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 getListFragment()?.let {
                     if (!it.onActivityBackPressed()) {
@@ -176,19 +175,17 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private fun disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
-        val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
-        if (appBarLayout != null) {
-            val lp = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
-            lp.height = 0
-            appBarLayout.layoutParams = lp
+        findViewById<AppBarLayout>(R.id.app_bar_layout)?.let { appBarLayout ->
+            val params = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+            params.height = 0
+            appBarLayout.layoutParams = params
         }
 
         // disabling any CoordinatorLayout behavior for scrolling
-        val toolbarWithSpinner = findViewById<Toolbar>(R.id.toolbar_with_spinner)
-        if (toolbarWithSpinner != null) {
-            val p = toolbarWithSpinner.layoutParams as AppBarLayout.LayoutParams
-            p.scrollFlags = 0
-            toolbarWithSpinner.layoutParams = p
+        findViewById<Toolbar>(R.id.toolbar_with_spinner)?.let { toolbarWithSpinner ->
+            val params = toolbarWithSpinner.layoutParams as AppBarLayout.LayoutParams
+            params.scrollFlags = 0
+            toolbarWithSpinner.layoutParams = params
         }
     }
 
@@ -225,6 +222,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     @Suppress("SwallowedException")
     private fun shareSite() {
         val blog = ReaderBlogTable.getBlogInfo(siteId)
@@ -233,7 +231,6 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             val intent = Intent(Intent.ACTION_SEND)
             intent.setType("text/plain")
             intent.putExtra(Intent.EXTRA_TEXT, blog.url)
-
             if (blog.hasName()) {
                 intent.putExtra(Intent.EXTRA_SUBJECT, blog.name)
             }
@@ -244,7 +241,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                     blog.blogId,
                     blog.feedId,
                     blog.isFollowing,
-                    source!!
+                    source ?: ""
                 )
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
             } catch (e: ActivityNotFoundException) {
@@ -268,7 +265,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         if (isFinishing) {
             return
         }
-        val fragment: Fragment = ReaderPostListFragment.newInstanceForTag(tag, listType)
+        val fragment = ReaderPostListFragment.newInstanceForTag(tag, listType)
         supportFragmentManager
             .beginTransaction()
             .replace(
@@ -287,7 +284,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         if (isFinishing) {
             return
         }
-        val fragment: Fragment = ReaderPostListFragment.newInstanceForBlog(blogId)
+        val fragment = ReaderPostListFragment.newInstanceForBlog(blogId)
         supportFragmentManager
             .beginTransaction()
             .replace(
@@ -303,7 +300,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         if (isFinishing) {
             return
         }
-        val fragment: Fragment = ReaderPostListFragment.newInstanceForFeed(feedId)
+        val fragment = ReaderPostListFragment.newInstanceForFeed(feedId)
         supportFragmentManager
             .beginTransaction()
             .replace(
@@ -350,20 +347,20 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                         this@ReaderPostListActivity, site,
                         data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
-                    // a restart will happen so, no need to continue here
+                    // a restart will happen so no need to continue here
                     return
                 }
 
                 val snackbarAttachView = findViewById<View>(R.id.coordinator)
                 if (site != null && post != null && snackbarAttachView != null) {
                     uploadUtilsWrapper.handleEditPostResultSnackbars(
-                        this,
-                        snackbarAttachView,
-                        data,
-                        post,
-                        site,
-                        uploadActionUseCase.getUploadAction(post),
-                        {
+                        activity = this,
+                        snackbarAttachView = snackbarAttachView,
+                        data = data,
+                        post = post,
+                        site = site,
+                        uploadAction = uploadActionUseCase.getUploadAction(post),
+                        publishPostListener = {
                             UploadUtils.publishPost(
                                 this@ReaderPostListActivity,
                                 post,
@@ -383,13 +380,13 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         val snackbarAttachView = findViewById<View>(R.id.coordinator)
         if (site != null && event.post != null && snackbarAttachView != null) {
             uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                this,
-                snackbarAttachView,
-                event.isError,
-                event.isFirstTimePublish,
-                event.post,
-                null,
-                site
+                activity = this,
+                snackbarAttachView = snackbarAttachView,
+                isError = event.isError,
+                isFirstTimePublish = event.isFirstTimePublish,
+                post = event.post,
+                errorMessage = null,
+                site = site
             )
         }
     }

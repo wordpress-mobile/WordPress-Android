@@ -618,7 +618,7 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
