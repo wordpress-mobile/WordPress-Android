@@ -156,7 +156,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private fun setupBackPressCallback() {
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                listFragment?.let {
+                getListFragment()?.let {
                     if (!it.onActivityBackPressed()) {
                         onBackPressedDispatcher.onBackPressedCompat(this)
                     }
@@ -316,13 +316,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         setTitle(title)
     }
 
-    private val listFragment: ReaderPostListFragment?
-        get() {
-            val fragment =
-                supportFragmentManager.findFragmentByTag(getString(R.string.fragment_tag_reader_post_list))
-                    ?: return null
-            return (fragment as ReaderPostListFragment)
-        }
+    private fun getListFragment(): ReaderPostListFragment? {
+        val fragment =
+            supportFragmentManager.findFragmentByTag(getString(R.string.fragment_tag_reader_post_list))
+        return (fragment as? ReaderPostListFragment)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
