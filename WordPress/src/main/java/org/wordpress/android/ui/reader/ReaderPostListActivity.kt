@@ -144,10 +144,9 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private fun setupBackPressCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                getListFragment()?.let {
-                    if (!it.onActivityBackPressed()) {
-                        onBackPressedDispatcher.onBackPressedCompat(this)
-                    }
+                val fragment = getListFragment()
+                if (fragment == null || !fragment.onActivityBackPressed()) {
+                    onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             }
         }
