@@ -88,15 +88,14 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true)
-            actionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.let {
+            it.setDisplayShowTitleEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
         }
 
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)
+            BundleCompat.getSerializable(intent.extras!!, ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType::class.java)!!
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
@@ -321,6 +320,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             return (fragment as ReaderPostListFragment)
         }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
