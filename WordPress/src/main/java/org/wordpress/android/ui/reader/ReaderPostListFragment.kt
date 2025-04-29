@@ -283,9 +283,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
 
                 else -> { // noop }
+                }
             }
         }
     }
+
     private var mWasPaused = false
     private var mHasRequestedPosts = false
     private var mHasUpdatedPosts = false
@@ -297,41 +299,36 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var mSubFilterViewModel: SubFilterViewModel? = null
     private var mReaderViewModel: ReaderViewModel? = null
 
-    val selectedSite: SiteModel?
-        get() {
-            if (activity is WPMainActivity) {
-                val mainActivity = activity as WPMainActivity?
-                return mainActivity!!.selectedSite
-            }
-            return null
-        }
+    fun getSelectedSite(): SiteModel? {
+        return (activity as? WPMainActivity)?.selectedSite
+    }
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
 
-        if (args != null) {
-            if (args.containsKey(ReaderConstants.ARG_TAG)) {
-                mCurrentTag = args.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
+        args?.let { arguments ->
+            if (arguments.containsKey(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = arguments.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
             }
-            if (args.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
+            if (arguments.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 mTagFragmentStartedWith =
-                    args.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
+                    arguments.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
             }
-            if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            if (arguments.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
-                    args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    arguments.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
             }
 
-            if (args.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
-                mIsTopLevel = args.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
+            if (arguments.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
+                mIsTopLevel = arguments.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
             }
-            if (args.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
-                mIsFilterableScreen = args.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+            if (arguments.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
+                mIsFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
             }
 
-            mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID)
-            mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID)
-            mCurrentSearchQuery = args.getString(ReaderConstants.ARG_SEARCH_QUERY)
+            mCurrentBlogId = arguments.getLong(ReaderConstants.ARG_BLOG_ID)
+            mCurrentFeedId = arguments.getLong(ReaderConstants.ARG_FEED_ID)
+            mCurrentSearchQuery = arguments.getString(ReaderConstants.ARG_SEARCH_QUERY)
 
             if (postListType == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(currentTagName)
@@ -341,64 +338,64 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
 
-        if (savedInstanceState != null) {
+        savedInstanceState?.let { state ->
             AppLog.d(AppLog.T.READER, "reader post list > restoring instance state")
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
+            if (state.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag =
-                    savedInstanceState.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
+                    state.getSerializable(ReaderConstants.ARG_TAG) as ReaderTag?
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_ID)) {
-                mCurrentBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
+            if (state.containsKey(ReaderConstants.ARG_BLOG_ID)) {
+                mCurrentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_FEED_ID)) {
-                mCurrentFeedId = savedInstanceState.getLong(ReaderConstants.ARG_FEED_ID)
+            if (state.containsKey(ReaderConstants.ARG_FEED_ID)) {
+                mCurrentFeedId = state.getLong(ReaderConstants.ARG_FEED_ID)
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
-                mCurrentSearchQuery = savedInstanceState.getString(ReaderConstants.ARG_SEARCH_QUERY)
+            if (state.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
+                mCurrentSearchQuery = state.getString(ReaderConstants.ARG_SEARCH_QUERY)
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
-                    savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
+                    state.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
             }
             if (postListType == ReaderPostListType.TAG_PREVIEW) {
-                mTagPreviewHistory.restoreInstance(savedInstanceState)
+                mTagPreviewHistory.restoreInstance(state)
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
-                mIsTopLevel = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
+            if (state.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
+                mIsTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
+            if (state.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
                 mIsFilterableScreen =
-                    savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+                    state.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
             }
 
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
+            if (state.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 mTagFragmentStartedWith =
-                    savedInstanceState.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
+                    state.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG) as ReaderTag?
             }
 
-            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+            mRestorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
             mSiteSearchRestorePosition =
-                savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION)
-            mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
+                state.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION)
+            mWasPaused = state.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
             mHasRequestedPosts =
-                savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
-            mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
-            mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
+                state.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
+            mHasUpdatedPosts = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
+            mFirstLoad = state.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
             mSearchTabsPos =
-                savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
+                state.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
         }
     }
 
-    @Suppress("deprecation")
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mViewModel = ViewModelProvider(this, mViewModelFactory!!)
             .get(ReaderPostListViewModel::class.java)
         if (mIsTopLevel) {
             mReaderViewModel = ViewModelProvider(
-                parentFragment!!,
+                requireParentFragment(),
                 mViewModelFactory!!
             )
                 .get(ReaderViewModel::class.java)
@@ -408,6 +405,21 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             initSubFilterViewModel(savedInstanceState)
         }
 
+        setupObservers()
+        mViewModel!!.start(mReaderViewModel)
+
+        if (isFollowingScreen) {
+            mSubFilterViewModel!!.onUserComesToReader()
+        }
+
+        if (isSearching) {
+            mRecyclerView!!.showAppBarLayout()
+            mSearchMenuItem!!.expandActionView()
+            mRecyclerView!!.setToolbarScrollFlags(0)
+        }
+    }
+
+    private fun setupObservers() {
         mViewModel!!.navigationEvents.observe(
             viewLifecycleOwner
         ) { event: Event<ReaderNavigationEvents> ->
@@ -486,18 +498,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.updateFollowStatus.observe(
             viewLifecycleOwner
         ) { readerData: FollowStatusChanged -> this.setFollowStatusForBlog(readerData) }
-
-        mViewModel!!.start(mReaderViewModel)
-
-        if (isFollowingScreen) {
-            mSubFilterViewModel!!.onUserComesToReader()
-        }
-
-        if (isSearching) {
-            mRecyclerView!!.showAppBarLayout()
-            mSearchMenuItem!!.expandActionView()
-            mRecyclerView!!.setToolbarScrollFlags(0)
-        }
     }
 
     private fun toggleJetpackBannerIfEnabled(showIfEnabled: Boolean, animateOnScroll: Boolean) {
