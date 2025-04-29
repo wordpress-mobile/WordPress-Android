@@ -492,7 +492,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
