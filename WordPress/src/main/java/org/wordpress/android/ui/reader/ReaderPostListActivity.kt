@@ -181,10 +181,6 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        if (outState.isEmpty) {
-            outState.putBoolean("bug_19917_fix", true)
-        }
-
         // store the title for blog/tag preview so we can restore it upon recreation
         if (postListType == ReaderPostListType.BLOG_PREVIEW || postListType == ReaderPostListType.TAG_PREVIEW) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
