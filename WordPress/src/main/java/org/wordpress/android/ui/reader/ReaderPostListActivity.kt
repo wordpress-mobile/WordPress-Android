@@ -211,25 +211,25 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressedDispatcher.onBackPressed()
-                return true
+                true
             }
 
             R.id.menu_share -> {
                 shareSite()
-                return true
+                true
             }
+
+            else -> super.onOptionsItemSelected(item)
         }
-
-        return super.onOptionsItemSelected(item)
     }
-
+    @Suppress("SwallowedException")
     private fun shareSite() {
         val blog = ReaderBlogTable.getBlogInfo(siteId)
 
-        if (blog != null && blog.hasUrl()) {
+        if (blog?.hasUrl() == true) {
             val intent = Intent(Intent.ACTION_SEND)
             intent.setType("text/plain")
             intent.putExtra(Intent.EXTRA_TEXT, blog.url)
@@ -247,7 +247,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                     source!!
                 )
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
-            } catch (exception: ActivityNotFoundException) {
+            } catch (e: ActivityNotFoundException) {
                 ToastUtils.showToast(
                     this@ReaderPostListActivity,
                     R.string.reader_toast_err_share_intent
