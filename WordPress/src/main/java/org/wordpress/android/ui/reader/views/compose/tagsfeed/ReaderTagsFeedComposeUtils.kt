@@ -1,13 +1,19 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.width
 
 object ReaderTagsFeedComposeUtils {
     const val LOADING_POSTS_COUNT = 5
@@ -29,9 +35,17 @@ object ReaderTagsFeedComposeUtils {
     val PostItemWidth: Dp
         @Composable
         get() {
-            val localConfiguration = LocalConfiguration.current
-            val screenWidth = remember(localConfiguration) {
-                localConfiguration.screenWidthDp.dp
+            var containerWidthInPixels by remember { mutableStateOf(0) }
+            val windowInfo = LocalWindowInfo.current
+            val localDensity = LocalDensity.current
+
+            // Update the width in pixels only when it changes
+            if (windowInfo.containerSize.width != containerWidthInPixels) {
+                containerWidthInPixels = windowInfo.containerSize.width
+            }
+
+            val screenWidth: Dp = with(localDensity) {
+                containerWidthInPixels.toDp()
             }
             return min((screenWidth * POST_ITEM_WIDTH_PERCENTAGE), POST_ITEM_MAX_WIDTH)
         }
