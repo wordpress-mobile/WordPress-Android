@@ -316,7 +316,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             if (mFilterListener != null) {
                 if (mShowEmptyView) {
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
-                    if (msg == null) {
+                    if (msg == null || msg.isEmpty()) {
                         msg = getContext().getString(R.string.empty_list_default);
                     }
                     mEmptyView.setText(msg);
