@@ -47,7 +47,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReaderPostListActivity : BaseAppCompatActivity() {
     private var source: String? = null
-    private var postListType: ReaderPostListType? = null
+    private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
     private var siteId: Long = 0
 
     @Inject
@@ -101,12 +101,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
 
-        if (currentPostListType == ReaderPostListType.TAG_PREVIEW
-            || currentPostListType == ReaderPostListType.BLOG_PREVIEW
+        if (postListType == ReaderPostListType.TAG_PREVIEW
+            || postListType == ReaderPostListType.BLOG_PREVIEW
         ) {
             toolbar.setNavigationOnClickListener { finish() }
 
-            if (currentPostListType == ReaderPostListType.BLOG_PREVIEW) {
+            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_blog_preview)
                 if (savedInstanceState == null) {
                     val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
@@ -121,7 +121,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                 } else {
                     siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
                 }
-            } else if (currentPostListType == ReaderPostListType.TAG_PREVIEW) {
+            } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
                 setTitle(R.string.reader_activity_title_tag_preview)
                 if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                     val tag =
@@ -178,17 +178,14 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         }
     }
 
-    private val currentPostListType: ReaderPostListType
-        get() = (if (postListType != null) postListType!! else ReaderTypes.DEFAULT_POST_LIST_TYPE)
-
     public override fun onSaveInstanceState(outState: Bundle) {
         if (outState.isEmpty) {
             outState.putBoolean("bug_19917_fix", true)
         }
 
         // store the title for blog/tag preview so we can restore it upon recreation
-        if (currentPostListType == ReaderPostListType.BLOG_PREVIEW
-            || currentPostListType == ReaderPostListType.TAG_PREVIEW
+        if (postListType == ReaderPostListType.BLOG_PREVIEW
+            || postListType == ReaderPostListType.TAG_PREVIEW
         ) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
             outState.putLong(ReaderConstants.KEY_SITE_ID, siteId)
@@ -198,7 +195,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (currentPostListType == ReaderPostListType.BLOG_PREVIEW) {
+        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
             menuInflater.inflate(R.menu.share, menu)
         }
 
