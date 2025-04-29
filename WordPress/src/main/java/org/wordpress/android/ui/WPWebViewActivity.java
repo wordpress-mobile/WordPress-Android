@@ -1,5 +1,10 @@
 package org.wordpress.android.ui;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -66,6 +72,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -227,6 +234,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         final Bundle extras = getIntent().getExtras();
 
+        fetchHtmlAndLoad(extras.getString(URL_TO_LOAD));
+
         if (extras != null) {
             mPreviewModeChangeAllowed = extras.getBoolean(SHOW_PREVIEW_MODE_TOGGLE, false);
             if (!mPreviewModeChangeAllowed) {
@@ -240,6 +249,42 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         setupToolbar();
 
         mViewModel.track(Stat.WEBVIEW_DISPLAYED, getSource());
+    }
+
+    private void fetchHtmlAndLoad(final String url) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("WPWebViewActivity", "Failed to fetch HTML", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String html = response.body() != null ? response.body().string() : "";
+
+                    final String str = html.replaceAll(
+                            "(https://youtu\\.be/([\\w\\-]+))",
+                            "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/$2\" frameborder=\"0\" allowfullscreen></iframe>"
+                    );
+
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWebView.loadDataWithBaseURL(url, str, "text/html", "utf-8", null);
+                        }
+                    });
+                } else {
+                    Log.e("WPWebViewActivity", "Response was not successful: " + response.code());
+                }
+            }
+        });
     }
 
     private void setupToolbar() {
@@ -447,7 +492,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
         intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
@@ -608,7 +653,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
-            allowedURL = new ArrayList<>();
             if (!TextUtils.isEmpty(addressToLoad)) {
                 allowedURL.add(addressToLoad);
             }
