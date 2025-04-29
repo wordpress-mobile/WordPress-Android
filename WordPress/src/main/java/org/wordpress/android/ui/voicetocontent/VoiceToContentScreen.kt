@@ -38,6 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +64,12 @@ fun VoiceToContentScreen(
     val state by viewModel.state.collectAsState()
     val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
     val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
+    val windowInfo = LocalWindowInfo.current
+    val localDensity = LocalDensity.current
+    val screenHeight = with(localDensity) {
+        val containerWidthInPixels = windowInfo.containerSize.width
+        containerWidthInPixels.toDp()
+    }
     val isRecording by viewModel.isRecording.collectAsState()
 
     DisposableEffect(Unit) {

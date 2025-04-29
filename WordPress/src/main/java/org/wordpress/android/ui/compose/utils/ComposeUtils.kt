@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -30,8 +31,7 @@ fun LocaleAwareComposable(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val resources = context.resources
-    val configuration = resources.configuration
+    val configuration = LocalConfiguration.current
 
     val currentLocale = context.primaryLocale
     if (currentLocale != locale) {
