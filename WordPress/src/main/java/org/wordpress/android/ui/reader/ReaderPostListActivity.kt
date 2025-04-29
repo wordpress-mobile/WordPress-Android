@@ -1,368 +1,385 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-
-import com.google.android.material.appbar.AppBarLayout;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.main.BaseAppCompatActivity;
-import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.uploads.UploadActionUseCase;
-import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.CompatExtensionsKt;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
+import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.onBackPressedCompat
+import javax.inject.Inject
 
 /*
- * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
- */
+* serves as the host for ReaderPostListFragment when showing blog preview & tag preview
+*/
 @AndroidEntryPoint
-public class ReaderPostListActivity extends BaseAppCompatActivity {
-    private String mSource;
-    private ReaderPostListType mPostListType;
-    private long mSiteId;
+class ReaderPostListActivity : BaseAppCompatActivity() {
+    private var mSource: String? = null
+    private var mPostListType: ReaderPostListType? = null
+    private var mSiteId: Long = 0
 
-    @Inject SiteStore mSiteStore;
-    @Inject PostStore mPostStore;
-    @Inject Dispatcher mDispatcher;
-    @Inject UploadActionUseCase mUploadActionUseCase;
-    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
-    @Inject ReaderTracker mReaderTracker;
-    @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject
+    var mSiteStore: SiteStore? = null
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Inject
+    var mPostStore: PostStore? = null
 
-        setContentView(R.layout.reader_activity_post_list);
+    @Inject
+    var mDispatcher: Dispatcher? = null
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                ReaderPostListFragment fragment = getListFragment();
+    @Inject
+    var mUploadActionUseCase: UploadActionUseCase? = null
+
+    @Inject
+    var mUploadUtilsWrapper: UploadUtilsWrapper? = null
+
+    @Inject
+    var mReaderTracker: ReaderTracker? = null
+
+    @Inject
+    var mSelectedSiteRepository: SelectedSiteRepository? = null
+
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.reader_activity_post_list)
+
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragment: ReaderPostListFragment? = listFragment
                 if (fragment == null || !fragment.onActivityBackPressed()) {
-                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                    onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             }
-        };
-        getOnBackPressedDispatcher().addCallback(this, callback);
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
+        setSupportActionBar(toolbar)
+        val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
-        mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
-        if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+        mSource = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
+        mPostListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType?
         } else {
-            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+            ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
 
-        if (getPostListType() == ReaderPostListType.TAG_PREVIEW
-            || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            toolbar.setNavigationOnClickListener(view -> finish());
+        if (postListType == ReaderPostListType.TAG_PREVIEW
+            || postListType == ReaderPostListType.BLOG_PREVIEW
+        ) {
+            toolbar.setNavigationOnClickListener { finish() }
 
-            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                setTitle(R.string.reader_activity_title_blog_preview);
+            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+                setTitle(R.string.reader_activity_title_blog_preview)
                 if (savedInstanceState == null) {
-                    long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                    if (feedId != 0) {
-                        showListFragmentForFeed(feedId);
-                        mSiteId = feedId;
+                    val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+                    val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
+                    if (feedId != 0L) {
+                        showListFragmentForFeed(feedId)
+                        mSiteId = feedId
                     } else {
-                        showListFragmentForBlog(blogId);
-                        mSiteId = blogId;
+                        showListFragmentForBlog(blogId)
+                        mSiteId = blogId
                     }
                 } else {
-                    mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
+                    mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
                 }
-            } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                setTitle(R.string.reader_activity_title_tag_preview);
-                ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+            } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
+                setTitle(R.string.reader_activity_title_tag_preview)
+                val tag = intent.getSerializableExtra(ReaderConstants.ARG_TAG) as ReaderTag?
                 if (tag != null && savedInstanceState == null) {
-                    showListFragmentForTag(tag, mPostListType);
+                    showListFragmentForTag(tag, mPostListType)
                 }
             }
         }
 
         // restore the activity title
         if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE)) {
-            setTitle(savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE));
+            title = savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE)
         }
     }
 
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         // this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
-        disableFilteredRecyclerViewToolbar();
+        disableFilteredRecyclerViewToolbar()
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    override fun onResume() {
+        super.onResume()
         // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
-        mDispatcher.register(this);
+        mDispatcher!!.register(this)
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDispatcher.unregister(this);
+    override fun onPause() {
+        super.onPause()
+        mDispatcher!!.unregister(this)
     }
 
     /*
      * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
      */
-    private void disableFilteredRecyclerViewToolbar() {
+    private fun disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
         if (appBarLayout != null) {
-            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-            lp.height = 0;
-            appBarLayout.setLayoutParams(lp);
+            val lp = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+            lp.height = 0
+            appBarLayout.layoutParams = lp
         }
 
         // disabling any CoordinatorLayout behavior for scrolling
-        Toolbar toolbarWithSpinner = findViewById(R.id.toolbar_with_spinner);
+        val toolbarWithSpinner = findViewById<Toolbar>(R.id.toolbar_with_spinner)
         if (toolbarWithSpinner != null) {
-            AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbarWithSpinner.getLayoutParams();
-            p.setScrollFlags(0);
-            toolbarWithSpinner.setLayoutParams(p);
+            val p = toolbarWithSpinner.layoutParams as AppBarLayout.LayoutParams
+            p.scrollFlags = 0
+            toolbarWithSpinner.layoutParams = p
         }
     }
 
-    private ReaderPostListType getPostListType() {
-        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
-    }
+    private val postListType: ReaderPostListType
+        get() = (if (mPostListType != null) mPostListType!! else ReaderTypes.DEFAULT_POST_LIST_TYPE)
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
+    public override fun onSaveInstanceState(outState: Bundle) {
+        if (outState.isEmpty) {
+            outState.putBoolean("bug_19917_fix", true)
         }
 
         // store the title for blog/tag preview so we can restore it upon recreation
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW
-            || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
-            outState.putLong(ReaderConstants.KEY_SITE_ID, mSiteId);
+        if (postListType == ReaderPostListType.BLOG_PREVIEW
+            || postListType == ReaderPostListType.TAG_PREVIEW
+        ) {
+            outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, title.toString())
+            outState.putLong(ReaderConstants.KEY_SITE_ID, mSiteId)
         }
 
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState)
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            getMenuInflater().inflate(R.menu.share, menu);
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (postListType == ReaderPostListType.BLOG_PREVIEW) {
+            menuInflater.inflate(R.menu.share, menu)
         }
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu)
     }
 
-    @Override
     @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_share:
-                shareSite();
-                return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+
+            R.id.menu_share -> {
+                shareSite()
+                return true
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    private void shareSite() {
-        ReaderBlog blog = ReaderBlogTable.getBlogInfo(mSiteId);
+    private fun shareSite() {
+        val blog = ReaderBlogTable.getBlogInfo(mSiteId)
 
         if (blog != null && blog.hasUrl()) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, blog.getUrl());
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.setType("text/plain")
+            intent.putExtra(Intent.EXTRA_TEXT, blog.url)
 
             if (blog.hasName()) {
-                intent.putExtra(Intent.EXTRA_SUBJECT, blog.getName());
+                intent.putExtra(Intent.EXTRA_SUBJECT, blog.name)
             }
 
             try {
-                mReaderTracker.trackBlog(
-                        AnalyticsTracker.Stat.READER_SITE_SHARED,
-                        blog.blogId,
-                        blog.feedId,
-                        blog.isFollowing,
-                        mSource
-                );
-                startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
-            } catch (ActivityNotFoundException exception) {
-                ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
+                mReaderTracker!!.trackBlog(
+                    AnalyticsTracker.Stat.READER_SITE_SHARED,
+                    blog.blogId,
+                    blog.feedId,
+                    blog.isFollowing,
+                    mSource!!
+                )
+                startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
+            } catch (exception: ActivityNotFoundException) {
+                ToastUtils.showToast(
+                    this@ReaderPostListActivity,
+                    R.string.reader_toast_err_share_intent
+                )
             }
         } else {
-            ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
+            ToastUtils.showToast(
+                this@ReaderPostListActivity,
+                R.string.reader_toast_err_share_intent
+            )
         }
     }
 
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(@NonNull final ReaderTag tag, ReaderPostListType listType) {
-        if (isFinishing()) {
-            return;
+    private fun showListFragmentForTag(tag: ReaderTag, listType: ReaderPostListType?) {
+        if (isFinishing) {
+            return
         }
-        Fragment fragment = ReaderPostListFragment.newInstanceForTag(tag, listType);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
-        setTitle("");
+        val fragment: Fragment = ReaderPostListFragment.newInstanceForTag(tag, listType)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment,
+                getString(R.string.fragment_tag_reader_post_list)
+            )
+            .commit()
+        title = ""
     }
 
     /*
      * show fragment containing list of latest posts in a specific blog
      */
-    private void showListFragmentForBlog(long blogId) {
-        if (isFinishing()) {
-            return;
+    private fun showListFragmentForBlog(blogId: Long) {
+        if (isFinishing) {
+            return
         }
-        Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
-        setTitle("");
+        val fragment: Fragment = ReaderPostListFragment.newInstanceForBlog(blogId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment,
+                getString(R.string.fragment_tag_reader_post_list)
+            )
+            .commit()
+        title = ""
     }
 
-    private void showListFragmentForFeed(long feedId) {
-        if (isFinishing()) {
-            return;
+    private fun showListFragmentForFeed(feedId: Long) {
+        if (isFinishing) {
+            return
         }
-        Fragment fragment = ReaderPostListFragment.newInstanceForFeed(feedId);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+        val fragment: Fragment = ReaderPostListFragment.newInstanceForFeed(feedId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment,
+                getString(R.string.fragment_tag_reader_post_list)
+            )
+            .commit()
 
-        String title = ReaderBlogTable.getFeedName(feedId);
+        var title = ReaderBlogTable.getFeedName(feedId)
         if (title.isEmpty()) {
-            title = getString(R.string.reader_activity_title_blog_preview);
+            title = getString(R.string.reader_activity_title_blog_preview)
         }
-        setTitle(title);
+        setTitle(title)
     }
 
-    private ReaderPostListFragment getListFragment() {
-        Fragment fragment =
-                getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
-        if (fragment == null) {
-            return null;
+    private val listFragment: ReaderPostListFragment?
+        get() {
+            val fragment =
+                supportFragmentManager.findFragmentByTag(getString(R.string.fragment_tag_reader_post_list))
+                    ?: return null
+            return (fragment as ReaderPostListFragment)
         }
-        return ((ReaderPostListFragment) fragment);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        switch (requestCode) {
-            case RequestCodes.NO_REBLOG_SITE:
-                if (resultCode == Activity.RESULT_OK) {
-                    finish(); // Finish activity to make My Site page visible
+        when (requestCode) {
+            RequestCodes.NO_REBLOG_SITE -> if (resultCode == RESULT_OK) {
+                finish() // Finish activity to make My Site page visible
+            }
+
+            RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
+                val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                val site = data.getSerializableExtra(WordPress.SITE) as SiteModel?
+                val post = mPostStore!!.getPostByLocalPostId(localId)
+
+                if (checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(
+                        data,
+                        this@ReaderPostListActivity, site,
+                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                    )
+                    // a restart will happen so, no need to continue here
+                    return
                 }
-                break;
-            case RequestCodes.EDIT_POST:
-                if (resultCode == Activity.RESULT_OK && data != null && !isFinishing()) {
-                    int localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0);
-                    final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
-                    final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-                    if (EditPostActivity.checkToRestart(data)) {
-                        ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
-                                data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0));
-                        // a restart will happen so, no need to continue here
-                        return;
-                    }
-
-                    View snackbarAttachView = findViewById(R.id.coordinator);
-                    if (site != null && post != null && snackbarAttachView != null) {
-                        mUploadUtilsWrapper.handleEditPostResultSnackbars(
-                                this,
-                                snackbarAttachView,
-                                data,
+                val snackbarAttachView = findViewById<View>(R.id.coordinator)
+                if (site != null && post != null && snackbarAttachView != null) {
+                    mUploadUtilsWrapper!!.handleEditPostResultSnackbars(
+                        this,
+                        snackbarAttachView,
+                        data,
+                        post,
+                        site,
+                        mUploadActionUseCase!!.getUploadAction(post),
+                        {
+                            UploadUtils.publishPost(
+                                this@ReaderPostListActivity,
                                 post,
                                 site,
-                                mUploadActionUseCase.getUploadAction(post),
-                                v -> UploadUtils.publishPost(
-                                        ReaderPostListActivity.this,
-                                        post,
-                                        site,
-                                        mDispatcher
-                                ));
-                    }
+                                mDispatcher
+                            )
+                        })
                 }
-                break;
+            }
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostUploaded(OnPostUploaded event) {
-        SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
-        View snackbarAttachView = findViewById(R.id.coordinator);
+    fun onPostUploaded(event: OnPostUploaded) {
+        val site = mSiteStore!!.getSiteByLocalId(mSelectedSiteRepository!!.getSelectedSiteLocalId())
+        val snackbarAttachView = findViewById<View>(R.id.coordinator)
         if (site != null && event.post != null && snackbarAttachView != null) {
-            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                    this,
-                    snackbarAttachView,
-                    event.isError(),
-                    event.isFirstTimePublish,
-                    event.post,
-                    null,
-                    site);
+            mUploadUtilsWrapper!!.onPostUploadedSnackbarHandler(
+                this,
+                snackbarAttachView,
+                event.isError,
+                event.isFirstTimePublish,
+                event.post,
+                null,
+                site
+            )
         }
     }
 }
