@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.ReaderActivityPostListBinding
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -47,6 +48,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     private var source: String? = null
     private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
     private var siteId: Long = 0
+    private lateinit var binding: ReaderActivityPostListBinding
 
     @Inject
     lateinit var siteStore: SiteStore
@@ -72,7 +74,8 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.reader_activity_post_list)
+        binding = ReaderActivityPostListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -154,15 +157,14 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
     }
 
     private fun setupToolbar(postListType: ReaderPostListType) {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setDisplayShowTitleEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
 
         if (postListType == ReaderPostListType.TAG_PREVIEW || postListType == ReaderPostListType.BLOG_PREVIEW) {
-            toolbar.setNavigationOnClickListener {
+            binding.toolbarMain.setNavigationOnClickListener {
                 finish()
             }
         }
