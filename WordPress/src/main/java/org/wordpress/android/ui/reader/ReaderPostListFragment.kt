@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -531,9 +532,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // Add bottom margin to search suggestions list and empty view.
         val jetpackBannerHeight = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
         (mRecyclerView!!.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin
-        = jetpackBannerHeight
-        (mActionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin =
-            jetpackBannerHeight
+        (mActionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = jetpackBannerHeight
     }
 
     private fun hideJetpackBanner() {
@@ -583,8 +582,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun initSubFilterViewModel(savedInstanceState: Bundle?) {
-        mSubFilterViewModel = getSubFilterViewModelForTag
-        (this, mTagFragmentStartedWith, savedInstanceState)
+        mSubFilterViewModel = getSubFilterViewModelForTag(
+            fragment = this,
+            tag = mTagFragmentStartedWith!!,
+            savedInstanceState = savedInstanceState
+        )
 
         mSubFilterViewModel!!.currentSubFilter.observe(
             viewLifecycleOwner
@@ -650,6 +652,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mViewModel!!.onFragmentPause(mIsTopLevel, isSearching, mIsFilterableScreen)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         /*
@@ -665,7 +668,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             if (postListType == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag()
-            } else if ((siteIfBlogPreview.also { currentSite = it }) != null) {
+            } else if ((getSiteIfBlogPreview().also { currentSite = it }) != null) {
                 resumeFollowedSite(currentSite!!)
             } else {
                 refreshPosts()
@@ -722,19 +725,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    private val siteIfBlogPreview: SubfilterListItem.Site?
-        get() {
-            var currentSite: SubfilterListItem.Site? =
-                null
-
-            if (mIsFilterableScreen && postListType == ReaderPostListType.BLOG_PREVIEW) {
-                currentSite =
-                    if (mSubFilterViewModel!!.getCurrentSubfilterValue() is SubfilterListItem.Site) (mSubFilterViewModel
-                        .getCurrentSubfilterValue()) as SubfilterListItem.Site else null
-            }
-
-            return currentSite
+    private fun getSiteIfBlogPreview(): SubfilterListItem.Site? {
+        if (mIsFilterableScreen && (postListType == ReaderPostListType.BLOG_PREVIEW)) {
+            return mSubFilterViewModel!!.getCurrentSubfilterValue() as? SubfilterListItem.Site
         }
+        return null
+    }
 
     private fun resumeFollowedSite(currentSite: SubfilterListItem.Site) {
         val blog = currentSite.blog
