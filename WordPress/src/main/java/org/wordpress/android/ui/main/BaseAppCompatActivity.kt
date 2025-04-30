@@ -27,6 +27,7 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
+import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 
@@ -99,5 +100,6 @@ private val excludedActivities = listOf(
     // their editors
     EditPostActivity::class.java.name,
     NotificationsDetailActivity::class.java.name,
-    ReaderCommentListActivity::class.java.name
+    ReaderCommentListActivity::class.java.name,
+    ReaderSubsActivity::class.java.name,
 )
