@@ -36,6 +36,6 @@ class LoginViewModel @Inject constructor(private val buildConfigWrapper: BuildCo
 
     fun runApiDiscoveryTest(input: String) = runBlocking {
         val urlDiscovery = WpLoginClient().apiDiscovery(input)
-        urlDiscovery.getOrThrow().apiDetails.findApplicationPasswordsAuthenticationUrl()
+        urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
     }
 }
