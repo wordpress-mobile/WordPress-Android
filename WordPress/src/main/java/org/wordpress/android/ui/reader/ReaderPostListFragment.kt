@@ -287,7 +287,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     }
                 }
 
-                else -> { // noop }
+                else -> {
+                    // noop
                 }
             }
         }
@@ -2019,7 +2020,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             } else if (isSearching) {
                 val searchTag =
                     ReaderUtils.getTagForSearchQuery(
-                        currentSearchQuery!!
+                        currentSearchQuery ?: ""
                     )
                 readerPostAdapter!!.setCurrentTag(searchTag)
             }
