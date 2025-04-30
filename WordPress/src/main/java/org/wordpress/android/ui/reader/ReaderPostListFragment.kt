@@ -250,7 +250,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
-    private val mDataRequestedListener: DataRequestedListener = object : DataRequestedListener {
+    private val dataRequestedListener: DataRequestedListener = object : DataRequestedListener {
         override fun onRequestData() {
             // skip if update is already in progress
             if (isUpdating) {
@@ -2000,7 +2000,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             readerPostAdapter!!.setOnPostSelectedListener(this)
             readerPostAdapter!!.setOnPostListItemButtonListener(this)
             readerPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
-            readerPostAdapter!!.setOnDataRequestedListener(mDataRequestedListener)
+            readerPostAdapter!!.setOnDataRequestedListener(dataRequestedListener)
             if (activity is OnBlogInfoLoadedListener) {
                 readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
             }
