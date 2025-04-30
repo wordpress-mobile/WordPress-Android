@@ -441,65 +441,68 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    @Suppress("LongMethod", "UseCheckOrError")
+    private fun handleNavigationEventObserved(navTarget: ReaderNavigationEvents) {
+        when (navTarget) {
+            is ShowSitePickerForResult -> {
+                ActivityLauncher.showSitePickerForResult(
+                    this@ReaderPostListFragment,
+                    navTarget.preselectedSite,
+                    navTarget.mode
+                )
+            }
+
+            is OpenEditorForReblog -> {
+                ActivityLauncher.openEditorForReblog(
+                    activity,
+                    navTarget.site,
+                    navTarget.post,
+                    navTarget.source
+                )
+            }
+
+            is ShowNoSitesToReblog -> {
+                ReaderActivityLauncher.showNoSiteToReblog(activity)
+            }
+
+            is ShowBookmarkedTab -> {
+                ActivityLauncher.viewSavedPostsListInReader(activity)
+            }
+
+            is ShowBookmarkedSavedOnlyLocallyDialog -> {
+                showBookmarksSavedLocallyDialog(navTarget)
+            }
+
+            is ShowReportPost -> {
+                ReaderActivityLauncher.openUrl(
+                    context,
+                    ReaderUtils.getReportPostUrl(navTarget.url),
+                    OpenUrlType.INTERNAL
+                )
+            }
+
+            is ShowReportUser -> {
+                ReaderActivityLauncher.openUrl(
+                    context,
+                    ReaderUtils.getReportUserUrl(
+                        navTarget.url,
+                        navTarget.authorId
+                    ),
+                    OpenUrlType.INTERNAL
+                )
+            }
+
+            else -> {
+                error("Action not supported in ReaderPostListFragment $navTarget")
+            }
+        }
+    }
+
     private fun setupObservers() {
         postListViewModel!!.navigationEvents.observe(
             viewLifecycleOwner
         ) { event: Event<ReaderNavigationEvents> ->
             event.applyIfNotHandled {
-                when (val navTarget = this) {
-                    is ShowSitePickerForResult -> {
-                        ActivityLauncher.showSitePickerForResult(
-                            this@ReaderPostListFragment,
-                            navTarget.preselectedSite,
-                            navTarget.mode
-                        )
-                    }
-
-                    is OpenEditorForReblog -> {
-                        ActivityLauncher.openEditorForReblog(
-                            activity,
-                            navTarget.site,
-                            navTarget.post,
-                            navTarget.source
-                        )
-                    }
-
-                    is ShowNoSitesToReblog -> {
-                        ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    }
-
-                    is ShowBookmarkedTab -> {
-                        ActivityLauncher.viewSavedPostsListInReader(activity)
-                    }
-
-                    is ShowBookmarkedSavedOnlyLocallyDialog -> {
-                        showBookmarksSavedLocallyDialog(navTarget)
-                    }
-
-                    is ShowReportPost -> {
-                        ReaderActivityLauncher.openUrl(
-                            context,
-                            ReaderUtils.getReportPostUrl(navTarget.url),
-                            OpenUrlType.INTERNAL
-                        )
-                    }
-
-                    is ShowReportUser -> {
-                        ReaderActivityLauncher.openUrl(
-                            context,
-                            ReaderUtils.getReportUserUrl(
-                                navTarget.url,
-                                navTarget.authorId
-                            ),
-                            OpenUrlType.INTERNAL
-                        )
-                    }
-
-                    else -> {
-                        throw IllegalStateException("Action not supported in ReaderPostListFragment $navTarget")
-                    }
-                }
+                handleNavigationEventObserved(this)
             }
         }
 
