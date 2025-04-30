@@ -161,81 +161,81 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private val mTagPreviewHistory = ReaderHistoryStack("tag_preview_history")
 
     @Inject
-    lateinit var mViewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var mAccountStore: AccountStore
+    lateinit var accountStore: AccountStore
 
     @Inject
-    lateinit var mReaderStore: ReaderStore
+    lateinit var readerStore: ReaderStore
 
     @Inject
-    lateinit var mDispatcher: Dispatcher
+    lateinit var dispatcher: Dispatcher
 
     @Inject
-    lateinit var mImageManager: ImageManager
+    lateinit var imageManager: ImageManager
 
     @Inject
-    lateinit var mUiHelpers: UiHelpers
+    lateinit var uiHelpers: UiHelpers
 
     @Inject
-    lateinit var mNetworkUtilsWrapper: NetworkUtilsWrapper
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Inject
-    lateinit var mTagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
+    lateinit var tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 
     @Inject
-    lateinit var mQuickStartUtilsWrapper: QuickStartUtilsWrapper
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     @Inject
-    lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
-    lateinit var mJetpackBrandingUtils: JetpackBrandingUtils
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
-    lateinit var mQuickStartRepository: QuickStartRepository
+    lateinit var quickStartRepository: QuickStartRepository
 
     @Inject
-    lateinit var mReaderTracker: ReaderTracker
+    lateinit var readerTracker: ReaderTracker
 
     @Inject
-    lateinit var mSnackbarSequencer: SnackbarSequencer
+    lateinit var snackbarSequencer: SnackbarSequencer
 
     @Inject
-    lateinit var mDisplayUtilsWrapper: DisplayUtilsWrapper
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
-    private var mPostAdapter: ReaderPostAdapter? = null
-    private var mSiteSearchAdapter: ReaderSiteSearchAdapter? = null
-    private var mSearchSuggestionAdapter: ReaderSearchSuggestionAdapter? = null
-    private var mSearchSuggestionRecyclerAdapter: ReaderSearchSuggestionRecyclerAdapter? = null
-    private lateinit var mRecyclerView: FilteredRecyclerView
-    private var mFirstLoad = true
-    private lateinit var mNewPostsBar: View
-    private var mActionableEmptyView: ActionableEmptyView? = null
-    private lateinit var mProgress: ProgressBar
-    private var mSearchTabs: TabLayout? = null
-    private var mSearchView: SearchView? = null
-    private lateinit var mSearchMenuItem: MenuItem
-    private lateinit var mJetpackBanner: View
-    private var mIsTopLevel = false
-    private var mBottomNavController: BottomNavController? = null
-    private var mCurrentTag: ReaderTag? = null
-    private var mTagFragmentStartedWith: ReaderTag? = null
-    private var mCurrentBlogId: Long = 0
-    private var mCurrentFeedId: Long = 0
-    private var mCurrentSearchQuery: String? = null
-    private var mPostListType: ReaderPostListType? = null
-    private var mLastTappedSiteSearchResult: ReaderSiteModel? = null
-    private var mRestorePosition = 0
-    private var mSiteSearchRestorePosition = 0
-    private var mPostSearchAdapterPos = 0
-    private var mSiteSearchAdapterPos = 0
-    private var mSearchTabsPos = NO_POSITION
-    private var mIsFilterableScreen = false
-    private var mIsFiltered = false
-    private var mReaderSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
-    private var mCurrentUpdateActions = HashSet<ReaderPostServiceStarter.UpdateAction>()
+    private var readerPostAdapter: ReaderPostAdapter? = null
+    private var searchAdapter: ReaderSiteSearchAdapter? = null
+    private var suggestionAdapter: ReaderSearchSuggestionAdapter? = null
+    private var searchSuggestionRecyclerAdapter: ReaderSearchSuggestionRecyclerAdapter? = null
+    private lateinit var recyclerView: FilteredRecyclerView
+    private var firstLoad = true
+    private lateinit var newPostsBar: View
+    private var actionableEmptyView: ActionableEmptyView? = null
+    private lateinit var progressBar: ProgressBar
+    private var searchTabs: TabLayout? = null
+    private var searchView: SearchView? = null
+    private lateinit var searchMenuItem: MenuItem
+    private lateinit var jetpackBanner: View
+    private var isTopLevel = false
+    private var bottomNavController: BottomNavController? = null
+    private var currentReaderTag: ReaderTag? = null
+    private var tagFragmentStartedWith: ReaderTag? = null
+    private var currentBlogId: Long = 0
+    private var currentFeedId: Long = 0
+    private var currentSearchQuery: String? = null
+    private var readerPostListType: ReaderPostListType? = null
+    private var lastTappedSiteSearchResult: ReaderSiteModel? = null
+    private var restorePosition = 0
+    private var siteSearchRestorePosition = 0
+    private var postSearchAdapterPos = 0
+    private var siteSearchAdapterPos = 0
+    private var searchTabsPos = NO_POSITION
+    private var isFilterableScreen = false
+    private var isFiltered = false
+    private var readerSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
+    private var currentUpdateActions = HashSet<ReaderPostServiceStarter.UpdateAction>()
 
     /*
      * called by post adapter to load older posts when user scrolls to the last post
@@ -251,7 +251,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             when (getPostListType()) {
                 ReaderPostListType.TAG_FOLLOWED,
                 ReaderPostListType.TAG_PREVIEW -> {
-                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) <
+                    if (ReaderPostTable.getNumPostsWithTag(currentReaderTag) <
                         ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     ) {
                         // request older posts
@@ -259,30 +259,30 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                             currentTag,
                             ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
                         )
-                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                     }
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {
-                    val numPosts = if (mCurrentFeedId != 0L) {
-                        ReaderPostTable.getNumPostsInFeed(mCurrentFeedId)
+                    val numPosts = if (currentFeedId != 0L) {
+                        ReaderPostTable.getNumPostsInFeed(currentFeedId)
                     } else {
-                        ReaderPostTable.getNumPostsInBlog(mCurrentBlogId)
+                        ReaderPostTable.getNumPostsInBlog(currentBlogId)
                     }
                     if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER)
-                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                     }
                 }
 
                 ReaderPostListType.SEARCH_RESULTS -> {
                     val searchTag = ReaderUtils.getTagForSearchQuery(
-                        mCurrentSearchQuery!!
+                        currentSearchQuery!!
                     )
                     val offset = ReaderPostTable.getNumPostsWithTag(searchTag)
                     if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentSearch(offset)
-                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
                     }
                 }
 
@@ -312,14 +312,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         args?.let { arguments ->
             if (arguments.containsKey(ReaderConstants.ARG_TAG)) {
-                mCurrentTag = BundleCompat.getSerializable(arguments, ReaderConstants.ARG_TAG, ReaderTag::class.java)
+                currentReaderTag = BundleCompat.getSerializable(arguments, ReaderConstants.ARG_TAG, ReaderTag::class.java)
             }
             if (arguments.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
-                mTagFragmentStartedWith =
+                tagFragmentStartedWith =
                     BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
             }
             if (arguments.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                mPostListType =
+                readerPostListType =
                     BundleCompat.getSerializable(
                         arguments,
                         ReaderConstants.ARG_POST_LIST_TYPE,
@@ -328,15 +328,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
 
             if (arguments.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
-                mIsTopLevel = arguments.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
+                isTopLevel = arguments.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
             }
             if (arguments.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
-                mIsFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+                isFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
             }
 
-            mCurrentBlogId = arguments.getLong(ReaderConstants.ARG_BLOG_ID)
-            mCurrentFeedId = arguments.getLong(ReaderConstants.ARG_FEED_ID)
-            mCurrentSearchQuery = arguments.getString(ReaderConstants.ARG_SEARCH_QUERY)
+            currentBlogId = arguments.getLong(ReaderConstants.ARG_BLOG_ID)
+            currentFeedId = arguments.getLong(ReaderConstants.ARG_FEED_ID)
+            currentSearchQuery = arguments.getString(ReaderConstants.ARG_SEARCH_QUERY)
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(currentTagName)
@@ -351,20 +351,20 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         savedInstanceState?.let { state ->
             AppLog.d(AppLog.T.READER, "reader post list > restoring instance state")
             if (state.containsKey(ReaderConstants.ARG_TAG)) {
-                mCurrentTag =
+                currentReaderTag =
                     BundleCompat.getSerializable(state, ReaderConstants.ARG_TAG, ReaderTag::class.java)
             }
             if (state.containsKey(ReaderConstants.ARG_BLOG_ID)) {
-                mCurrentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
+                currentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
             }
             if (state.containsKey(ReaderConstants.ARG_FEED_ID)) {
-                mCurrentFeedId = state.getLong(ReaderConstants.ARG_FEED_ID)
+                currentFeedId = state.getLong(ReaderConstants.ARG_FEED_ID)
             }
             if (state.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
-                mCurrentSearchQuery = state.getString(ReaderConstants.ARG_SEARCH_QUERY)
+                currentSearchQuery = state.getString(ReaderConstants.ARG_SEARCH_QUERY)
             }
             if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                mPostListType =
+                readerPostListType =
                     BundleCompat.getSerializable(
                         state,
                         ReaderConstants.ARG_POST_LIST_TYPE,
@@ -375,27 +375,27 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 mTagPreviewHistory.restoreInstance(state)
             }
             if (state.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
-                mIsTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
+                isTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
             }
             if (state.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
-                mIsFilterableScreen =
+                isFilterableScreen =
                     state.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
             }
 
             if (state.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
-                mTagFragmentStartedWith =
+                tagFragmentStartedWith =
                     BundleCompat.getSerializable(state, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
             }
 
-            mRestorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
-            mSiteSearchRestorePosition =
+            restorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+            siteSearchRestorePosition =
                 state.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION)
             mWasPaused = state.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
             mHasRequestedPosts =
                 state.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
             mHasUpdatedPosts = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
-            mFirstLoad = state.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
-            mSearchTabsPos =
+            firstLoad = state.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
+            searchTabsPos =
                 state.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
         }
     }
@@ -404,15 +404,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mViewModel = ViewModelProvider(this, mViewModelFactory)[ReaderPostListViewModel::class.java]
-        if (mIsTopLevel) {
+        mViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
+        if (isTopLevel) {
             mReaderViewModel = ViewModelProvider(
                 requireParentFragment(),
-                mViewModelFactory
+                viewModelFactory
             )[ReaderViewModel::class.java]
         }
 
-        if (mIsFilterableScreen) {
+        if (isFilterableScreen) {
             initSubFilterViewModel(savedInstanceState)
         }
 
@@ -424,9 +424,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         if (isSearching) {
-            mRecyclerView.showAppBarLayout()
-            mSearchMenuItem.expandActionView()
-            mRecyclerView.setToolbarScrollFlags(0)
+            recyclerView.showAppBarLayout()
+            searchMenuItem.expandActionView()
+            recyclerView.setToolbarScrollFlags(0)
         }
     }
 
@@ -526,18 +526,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun toggleJetpackBannerIfEnabled(showIfEnabled: Boolean, animateOnScroll: Boolean) {
         if (!isAdded || view == null || !isSearching) return
 
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             if (animateOnScroll) {
-                val scrollView = mRecyclerView.internalRecyclerView
-                mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(
-                    mJetpackBanner,
+                val scrollView = recyclerView.internalRecyclerView
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(
+                    jetpackBanner,
                     scrollView
                 )
                 // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
                 return
             }
 
-            if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
+            if (showIfEnabled && !displayUtilsWrapper.isPhoneLandscape()) {
                 showJetpackBanner()
             } else {
                 hideJetpackBanner()
@@ -546,21 +546,21 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun showJetpackBanner() {
-        mJetpackBanner.visibility = View.VISIBLE
+        jetpackBanner.visibility = View.VISIBLE
 
         // Add bottom margin to search suggestions list and empty view.
         val jetpackBannerHeight = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-        (mRecyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin
-        (mActionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = jetpackBannerHeight
+        (recyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin
+        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = jetpackBannerHeight
     }
 
     private fun hideJetpackBanner() {
-        mJetpackBanner.visibility = View.GONE
+        jetpackBanner.visibility = View.GONE
 
         // Remove bottom margin from search suggestions list and empty view.
-        (mRecyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin =
+        (recyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin =
             0
-        (mActionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = 0
+        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = 0
     }
 
     private fun setFollowStatusForBlog(readerData: FollowStatusChanged) {
@@ -573,7 +573,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         if (!isAdded || view == null) return
         getSnackbarParent()?.let { snackbarParent ->
-            mSnackbarSequencer.enqueue(
+            snackbarSequencer.enqueue(
                 SnackbarItem(
                     SnackbarItem.Info(
                         view = snackbarParent,
@@ -605,7 +605,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun initSubFilterViewModel(savedInstanceState: Bundle?) {
         mSubFilterViewModel = getSubFilterViewModelForTag(
             fragment = this,
-            tag = mTagFragmentStartedWith!!,
+            tag = tagFragmentStartedWith!!,
             savedInstanceState = savedInstanceState
         )
 
@@ -634,10 +634,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (onlyOnChanges) {
             changesDetected =
-                (readerModeInfo.tag != null && mCurrentTag != null && (readerModeInfo.tag != mCurrentTag))
-                        || (mPostListType != readerModeInfo.listType)
-                        || (mCurrentBlogId != readerModeInfo.blogId)
-                        || (mCurrentFeedId != readerModeInfo.feedId)
+                (readerModeInfo.tag != null && currentReaderTag != null && (readerModeInfo.tag != currentReaderTag))
+                        || (readerPostListType != readerModeInfo.listType)
+                        || (currentBlogId != readerModeInfo.blogId)
+                        || (currentFeedId != readerModeInfo.feedId)
                         || (readerModeInfo.isFirstLoad)
 
             if (changesDetected && !readerModeInfo.isFirstLoad) {
@@ -648,15 +648,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (onlyOnChanges && !changesDetected) return
 
         if (readerModeInfo.tag != null) {
-            mCurrentTag = readerModeInfo.tag
+            currentReaderTag = readerModeInfo.tag
         }
 
-        mPostListType = readerModeInfo.listType
-        mCurrentBlogId = readerModeInfo.blogId
-        mCurrentFeedId = readerModeInfo.feedId
-        mIsFiltered = readerModeInfo.isFiltered
+        readerPostListType = readerModeInfo.listType
+        currentBlogId = readerModeInfo.blogId
+        currentFeedId = readerModeInfo.feedId
+        isFiltered = readerModeInfo.isFiltered
 
-        resetPostAdapter(mPostListType!!)
+        resetPostAdapter(readerPostListType!!)
         if (readerModeInfo.requestNewerPosts) {
             updatePosts(false)
         }
@@ -670,7 +670,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
         mWasPaused = true
 
-        mViewModel!!.onFragmentPause(mIsTopLevel, isSearching, mIsFilterableScreen)
+        mViewModel!!.onFragmentPause(isTopLevel, isSearching, isFilterableScreen)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -695,16 +695,16 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 refreshPosts()
             }
 
-            if (mIsTopLevel) {
+            if (isTopLevel) {
                 // Remove sticky event if not consumed
                 EventBus.getDefault().removeStickyEvent(TagAdded::class.java)
             }
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
             // status so tell the search adapter to check whether it has the correct follow status
-            if (isSearching && mLastTappedSiteSearchResult != null) {
-                siteSearchAdapter.checkFollowStatusForSite(mLastTappedSiteSearchResult!!)
-                mLastTappedSiteSearchResult = null
+            if (isSearching && lastTappedSiteSearchResult != null) {
+                siteSearchAdapter.checkFollowStatusForSite(lastTappedSiteSearchResult!!)
+                lastTappedSiteSearchResult = null
             }
 
             if (isSearching) {
@@ -718,8 +718,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         mViewModel!!.onFragmentResume(
-            mIsTopLevel, isSearching, mIsFilterableScreen,
-            if (mIsFilterableScreen) mSubFilterViewModel!!.getCurrentSubfilterValue() else null
+            isTopLevel, isSearching, isFilterableScreen,
+            if (isFilterableScreen) mSubFilterViewModel!!.getCurrentSubfilterValue() else null
         )
     }
 
@@ -747,7 +747,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun getSiteIfBlogPreview(): SubfilterListItem.Site? {
-        if (mIsFilterableScreen && (getPostListType() == ReaderPostListType.BLOG_PREVIEW)) {
+        if (isFilterableScreen && (getPostListType() == ReaderPostListType.BLOG_PREVIEW)) {
             return mSubFilterViewModel!!.getCurrentSubfilterValue() as? SubfilterListItem.Site
         }
         return null
@@ -765,7 +765,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (isSiteStillAvailable) {
             refreshPosts()
         } else {
-            if (mIsFilterableScreen) {
+            if (isFilterableScreen) {
                 mSubFilterViewModel!!.setDefaultSubfilter(false)
             }
         }
@@ -777,7 +777,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
         // hide the bottom nav when the user searches from the reader
         if (context is BottomNavController) {
-            mBottomNavController = context
+            bottomNavController = context
         }
 
         initReaderSubsActivityResultLauncher()
@@ -791,7 +791,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun initReaderSubsActivityResultLauncher() {
-        mReaderSubsActivityResultLauncher = registerForActivityResult(
+        readerSubsActivityResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -812,12 +812,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onDetach() {
         super.onDetach()
-        mBottomNavController = null
+        bottomNavController = null
     }
 
     override fun onStart() {
         super.onStart()
-        mDispatcher.register(this)
+        dispatcher.register(this)
         EventBus.getDefault().register(this)
 
         reloadTags()
@@ -836,8 +836,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onStop() {
         super.onStop()
-        mNewPostsBar.clearAnimation()
-        mDispatcher.unregister(this)
+        newPostsBar.clearAnimation()
+        dispatcher.unregister(this)
         EventBus.getDefault().unregister(this)
     }
 
@@ -845,8 +845,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * ensures the adapter is created and posts are updated if they haven't already been
      */
     private fun checkPostAdapter() {
-        if (isAdded && mRecyclerView.adapter == null) {
-            mRecyclerView.adapter = postAdapter
+        if (isAdded && recyclerView.adapter == null) {
+            recyclerView.adapter = postAdapter
             refreshPosts()
             if (!mHasRequestedPosts && NetworkUtils.isNetworkAvailable(
                     activity
@@ -866,11 +866,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * reset the post adapter to initial state and create it again using the passed list type
      */
     private fun resetPostAdapter(postListType: ReaderPostListType) {
-        mPostListType = postListType
-        mPostAdapter = null
-        mRecyclerView.adapter = null
-        mRecyclerView.adapter = postAdapter
-        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
+        readerPostListType = postListType
+        readerPostAdapter = null
+        recyclerView.adapter = null
+        recyclerView.adapter = postAdapter
+        recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
     }
 
     @Suppress("unused")
@@ -905,42 +905,42 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     override fun onSaveInstanceState(outState: Bundle) {
         AppLog.d(AppLog.T.READER, "reader post list > saving instance state")
 
-        if (mCurrentTag != null) {
-            outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag)
+        if (currentReaderTag != null) {
+            outState.putSerializable(ReaderConstants.ARG_TAG, currentReaderTag)
         }
 
-        if (mTagFragmentStartedWith != null) {
-            outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, mTagFragmentStartedWith)
+        if (tagFragmentStartedWith != null) {
+            outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tagFragmentStartedWith)
         }
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState)
-        } else if (isSearching && mSearchView != null && mSearchView!!.query != null) {
-            val query = mSearchView!!.query.toString()
+        } else if (isSearching && searchView != null && searchView!!.query != null) {
+            val query = searchView!!.query.toString()
             outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query)
         }
 
-        outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId)
-        outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId)
+        outState.putLong(ReaderConstants.ARG_BLOG_ID, currentBlogId)
+        outState.putLong(ReaderConstants.ARG_FEED_ID, currentFeedId)
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasRequestedPosts)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts)
-        outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad)
-        outState.putSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, mCurrentUpdateActions)
+        outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, firstLoad)
+        outState.putSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, currentUpdateActions)
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, currentPosition)
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType())
-        outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel)
-        outState.putBoolean(ReaderConstants.ARG_IS_FILTERABLE, mIsFilterableScreen)
+        outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
+        outState.putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterableScreen)
 
         if (isSearchTabsShowing()) {
             val tabPosition = searchTabsPosition
             outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, tabPosition)
             val siteSearchPosition =
-                if (tabPosition == TAB_SITES) currentPosition else mSiteSearchAdapterPos
+                if (tabPosition == TAB_SITES) currentPosition else siteSearchAdapterPos
             outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, siteSearchPosition)
         }
 
-        if (mIsFilterableScreen && mSubFilterViewModel != null) {
+        if (isFilterableScreen && mSubFilterViewModel != null) {
             mSubFilterViewModel!!.onSaveInstanceState(outState)
         }
 
@@ -950,7 +950,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private val currentPosition: Int
         get() {
             return if (hasPostAdapter()) {
-                mRecyclerView.currentPosition
+                recyclerView.currentPosition
             } else {
                 -1
             }
@@ -962,7 +962,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         if (!NetworkUtils.checkConnection(activity)) {
-            mRecyclerView.isRefreshing = false
+            recyclerView.isRefreshing = false
             return
         }
 
@@ -974,12 +974,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
         }
 
-        if (mFirstLoad) {
+        if (firstLoad) {
             // let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData
             // method is called on two moments: once for first time load, and then each time the swipe to
             // refresh gesture triggers a refresh.
-            mRecyclerView.isRefreshing = false
-            mFirstLoad = false
+            recyclerView.isRefreshing = false
+            firstLoad = false
         } else {
             val updateAction = if (forced)
                 ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
@@ -995,7 +995,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostListType.TAGS_FEED -> {}
             }
             // make sure swipe-to-refresh progress shows since this is a manual refresh
-            mRecyclerView.isRefreshing = true
+            recyclerView.isRefreshing = true
         }
         if (currentTag != null && currentTag!!.isBookmarked) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag()
@@ -1011,13 +1011,13 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     ): View {
         val rootView =
             inflater.inflate(R.layout.reader_fragment_post_cards, container, false) as ViewGroup
-        mRecyclerView = rootView.findViewById(R.id.reader_recycler_view)
+        recyclerView = rootView.findViewById(R.id.reader_recycler_view)
 
-        mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view)
+        actionableEmptyView = rootView.findViewById(R.id.empty_custom_view)
 
-        mRecyclerView.setLogT(AppLog.T.READER)
-        mRecyclerView.setCustomEmptyView()
-        mRecyclerView.setFilterListener(object : FilteredRecyclerView.FilterListener {
+        recyclerView.setLogT(AppLog.T.READER)
+        recyclerView.setCustomEmptyView()
+        recyclerView.setFilterListener(object : FilteredRecyclerView.FilterListener {
             override fun onLoadFilterCriteriaOptions(refresh: Boolean): List<FilterCriteria> {
                 return emptyList()
             }
@@ -1030,7 +1030,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             override fun onLoadData(forced: Boolean) {
                 if (forced) {
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
+                    readerTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
                 }
                 updatePosts(forced)
             }
@@ -1043,13 +1043,13 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 if (hasCurrentTag()) {
                     val defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                         requireActivity(),
-                        mTagUpdateClientUtilsProvider
+                        tagUpdateClientUtilsProvider
                     )
 
                     val tag = ReaderUtils.getValidTagForSharedPrefs(
                         currentTag!!,
-                        mIsTopLevel,
-                        mRecyclerView,
+                        isTopLevel,
+                        recyclerView,
                         defaultTag
                     )
 
@@ -1076,7 +1076,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         })
 
-        mRecyclerView.setBackgroundColor(
+        recyclerView.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(), R.color.reader_post_list_background
             )
@@ -1088,7 +1088,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         val spacingVerticalRes = R.dimen.reader_card_gutters
         val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
         val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
-        mRecyclerView.addItemDecoration(
+        recyclerView.addItemDecoration(
             RecyclerItemDecoration(
                 spacingHorizontal,
                 spacingVertical,
@@ -1097,59 +1097,59 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         )
 
         // add a proper item divider to the RecyclerView
-        mRecyclerView.addItemDivider(R.drawable.default_list_divider)
+        recyclerView.addItemDivider(R.drawable.default_list_divider)
 
-        mRecyclerView.setToolbarBackgroundColor(0)
-        mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp)
+        recyclerView.setToolbarBackgroundColor(0)
+        recyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp)
 
-        if (mIsTopLevel) {
-            mRecyclerView.setToolbarTitle(
+        if (isTopLevel) {
+            recyclerView.setToolbarTitle(
                 R.string.reader_screen_title,
                 resources.getDimensionPixelSize(R.dimen.margin_extra_large)
             )
         } else {
-            mRecyclerView.setToolbarLeftAndRightPadding(
+            recyclerView.setToolbarLeftAndRightPadding(
                 resources.getDimensionPixelSize(R.dimen.margin_medium),
                 resources.getDimensionPixelSize(R.dimen.margin_extra_large)
             )
         }
 
         // add a menu to the filtered recycler toolbar
-        if (mAccountStore.hasAccessToken() && isSearching) {
+        if (accountStore.hasAccessToken() && isSearching) {
             setupRecyclerToolbar()
         }
 
-        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
+        recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
 
         // bar that appears at top after new posts are loaded
-        mNewPostsBar = rootView.findViewById(R.id.layout_new_posts)
-        mNewPostsBar.visibility = View.GONE
-        mNewPostsBar.setOnClickListener {
-            mRecyclerView.scrollRecycleViewToPosition(0)
+        newPostsBar = rootView.findViewById(R.id.layout_new_posts)
+        newPostsBar.visibility = View.GONE
+        newPostsBar.setOnClickListener {
+            recyclerView.scrollRecycleViewToPosition(0)
             refreshPosts()
         }
 
         // progress bar that appears when loading more posts
-        mProgress = rootView.findViewById(R.id.progress_footer)
-        mProgress.visibility = View.GONE
+        progressBar = rootView.findViewById(R.id.progress_footer)
+        progressBar.visibility = View.GONE
 
-        mJetpackBanner = rootView.findViewById(R.id.jetpack_banner)
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+        jetpackBanner = rootView.findViewById(R.id.jetpack_banner)
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen: JetpackPoweredScreen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH
-            mJetpackBrandingUtils.initJetpackBannerAnimation(
-                mJetpackBanner,
-                mRecyclerView.internalRecyclerView
+            jetpackBrandingUtils.initJetpackBannerAnimation(
+                jetpackBanner,
+                recyclerView.internalRecyclerView
             )
             val jetpackBannerTextView =
-                mJetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
-            jetpackBannerTextView.text = mUiHelpers.getTextOfUiString(
+                jetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
+            jetpackBannerTextView.text = uiHelpers.getTextOfUiString(
                 requireContext(),
-                mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                jetpackBrandingUtils.getBrandingTextForScreen(screen)
             )
 
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                mJetpackBanner.setOnClickListener {
-                    mJetpackBrandingUtils.trackBannerTapped(screen)
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBanner.setOnClickListener {
+                    jetpackBrandingUtils.trackBannerTapped(screen)
                     JetpackPoweredBottomSheetFragment()
                         .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                 }
@@ -1165,7 +1165,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 )
             if (actions is HashSet<*>) {
                 @Suppress("UNCHECKED_CAST")
-                mCurrentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
+                currentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
                 updateProgressIndicators()
             }
         }
@@ -1178,39 +1178,39 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * for followed tags
      */
     private fun setupRecyclerToolbar() {
-        val menu = mRecyclerView.addToolbarMenu(R.menu.reader_list)
-        mSearchMenuItem = menu.findItem(R.id.menu_reader_search)
+        val menu = recyclerView.addToolbarMenu(R.menu.reader_list)
+        searchMenuItem = menu.findItem(R.id.menu_reader_search)
 
-        mSearchView = mSearchMenuItem.actionView as SearchView?
-        mSearchView!!.queryHint = getString(R.string.reader_hint_post_search)
-        mSearchView!!.isSubmitButtonEnabled = false
-        mSearchView!!.setIconifiedByDefault(true)
-        mSearchView!!.isIconified = true
+        searchView = searchMenuItem.actionView as SearchView?
+        searchView!!.queryHint = getString(R.string.reader_hint_post_search)
+        searchView!!.isSubmitButtonEnabled = false
+        searchView!!.setIconifiedByDefault(true)
+        searchView!!.isIconified = true
 
         // force the search view to take up as much horizontal space as possible (without this
         // it looks truncated on landscape)
         val maxWidth = DisplayUtils.getWindowPixelWidth(requireActivity())
-        mSearchView!!.maxWidth = maxWidth
+        searchView!!.maxWidth = maxWidth
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
         val view =
-            mSearchView!!.findViewById<View>(com.google.android.material.R.id.search_src_text)
+            searchView!!.findViewById<View>(com.google.android.material.R.id.search_src_text)
         if (view is AutoCompleteTextView) {
             view.threshold = 1
         }
 
-        mSearchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED)
+                    readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED)
                 }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS)
                 populateSearchSuggestions(null)
                 showSearchMessageOrSuggestions()
                 // hide the bottom navigation when search is active
-                if (mBottomNavController != null) {
-                    mBottomNavController!!.onRequestHideBottomNavigation()
+                if (bottomNavController != null) {
+                    bottomNavController!!.onRequestHideBottomNavigation()
                 }
 
                 return true
@@ -1225,7 +1225,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         })
 
-        mSearchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 submitSearchQuery(query)
                 return true
@@ -1242,7 +1242,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun showSearchMessageOrSuggestions() {
         val hasQuery = !isSearchViewEmpty
-        val hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery)
+        val hasPerformedSearch = !TextUtils.isEmpty(currentSearchQuery)
 
         toggleJetpackBannerIfEnabled(showIfEnabled = true, animateOnScroll = false)
 
@@ -1264,10 +1264,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             hideSearchTabs()
 
             // clears the last performed query
-            mCurrentSearchQuery = null
+            currentSearchQuery = null
 
             val hasSuggestions =
-                mSearchSuggestionRecyclerAdapter != null && mSearchSuggestionRecyclerAdapter!!.itemCount > 0
+                searchSuggestionRecyclerAdapter != null && searchSuggestionRecyclerAdapter!!.itemCount > 0
 
             if (hasSuggestions) {
                 hideSearchMessage()
@@ -1287,7 +1287,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     * offset is used during infinite scroll, pass zero for initial search
     */
     private fun updatePostsInCurrentSearch(offset: Int) {
-        ReaderSearchServiceStarter.startService(activity, mCurrentSearchQuery!!, offset)
+        ReaderSearchServiceStarter.startService(activity, currentSearchQuery!!, offset)
     }
 
     /*
@@ -1296,25 +1296,25 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun updateSitesInCurrentSearch(offset: Int) {
         if (searchTabsPosition == TAB_SITES) {
             if (offset == 0) {
-                mRecyclerView.isRefreshing = true
+                recyclerView.isRefreshing = true
             } else {
                 showLoadingProgress(true)
             }
         }
         val payload = ReaderSearchSitesPayload(
-            mCurrentSearchQuery!!,
+            currentSearchQuery!!,
             ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST,
             offset,
             false
         )
-        mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
+        dispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ConnectionChangeEvent) {
         if (event.isConnected) {
-            if (mCurrentSearchQuery != null) {
-                submitSearchQuery(mCurrentSearchQuery!!)
+            if (currentSearchQuery != null) {
+                submitSearchQuery(currentSearchQuery!!)
             }
         }
     }
@@ -1324,7 +1324,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        mSearchView!!.clearFocus() // this will hide suggestions and the virtual keyboard
+        searchView!!.clearFocus() // this will hide suggestions and the virtual keyboard
         hideSearchMessage()
         hideSearchSuggestions()
 
@@ -1341,8 +1341,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         val searchTag = ReaderUtils.getTagForSearchQuery(trimQuery)
         ReaderPostTable.deletePostsWithTag(searchTag)
 
-        mPostAdapter!!.setCurrentTag(searchTag)
-        mCurrentSearchQuery = trimQuery
+        readerPostAdapter!!.setCurrentTag(searchTag)
+        currentSearchQuery = trimQuery
         updatePostsInCurrentSearch(0)
         updateSitesInCurrentSearch(0)
 
@@ -1350,7 +1350,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         // track that the user performed a search
         if (trimQuery != "") {
-            mReaderTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery)
+            readerTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery)
         }
     }
 
@@ -1362,22 +1362,22 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         if (!isUpdating) {
-            mRecyclerView.isRefreshing = false
+            recyclerView.isRefreshing = false
         }
         showLoadingProgress(false)
 
         val adapter = siteSearchAdapter
         if (event.isError) {
             adapter.clear()
-        } else if (StringUtils.equals(event.searchTerm, mCurrentSearchQuery)) {
+        } else if (StringUtils.equals(event.searchTerm, currentSearchQuery)) {
             adapter.setCanLoadMore(event.canLoadMore)
             if (event.offset == 0) {
                 adapter.setSiteList(event.sites)
             } else {
                 adapter.addSiteList(event.sites)
             }
-            if (mSiteSearchRestorePosition > 0) {
-                mRecyclerView.scrollRecycleViewToPosition(mSiteSearchRestorePosition)
+            if (siteSearchRestorePosition > 0) {
+                recyclerView.scrollRecycleViewToPosition(siteSearchRestorePosition)
             }
         }
 
@@ -1386,7 +1386,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             showEmptyView()
         }
 
-        mSiteSearchRestorePosition = 0
+        siteSearchRestorePosition = 0
     }
 
     /*
@@ -1406,11 +1406,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun showSearchSuggestions() {
-        mRecyclerView.showSearchSuggestions()
+        recyclerView.showSearchSuggestions()
     }
 
     private fun hideSearchSuggestions() {
-        mRecyclerView.hideSearchSuggestions()
+        recyclerView.hideSearchSuggestions()
     }
 
     /*
@@ -1418,36 +1418,36 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * the FilteredRecyclerView's toolbar
      */
     private fun createSearchTabs() {
-        if (mSearchTabs == null) {
+        if (searchTabs == null) {
             val rootView = requireView().findViewById<ViewGroup>(android.R.id.content)
             val inflater = LayoutInflater.from(activity)
-            mSearchTabs = inflater.inflate(R.layout.reader_search_tabs, rootView) as TabLayout
-            mSearchTabs!!.visibility = View.GONE
-            mRecyclerView.appBarLayout.addView(mSearchTabs)
+            searchTabs = inflater.inflate(R.layout.reader_search_tabs, rootView) as TabLayout
+            searchTabs!!.visibility = View.GONE
+            recyclerView.appBarLayout.addView(searchTabs)
         }
     }
 
-    private fun isSearchTabsShowing() = mSearchTabs?.isVisible ?: false
+    private fun isSearchTabsShowing() = searchTabs?.isVisible ?: false
 
     private fun showSearchTabs() {
         if (!isAdded) {
             return
         }
-        if (mSearchTabs == null) {
+        if (searchTabs == null) {
             createSearchTabs()
         }
-        if (mSearchTabs!!.visibility != View.VISIBLE) {
-            mSearchTabs!!.visibility = View.VISIBLE
+        if (searchTabs!!.visibility != View.VISIBLE) {
+            searchTabs!!.visibility = View.VISIBLE
 
-            mPostSearchAdapterPos = 0
-            mSiteSearchAdapterPos = 0
+            postSearchAdapterPos = 0
+            siteSearchAdapterPos = 0
 
-            mSearchTabs!!.addOnTabSelectedListener(object : OnTabSelectedListener {
+            searchTabs!!.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
                     if (tab.position == TAB_POSTS) {
-                        mRecyclerView.adapter = postAdapter
-                        if (mPostSearchAdapterPos > 0) {
-                            mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos)
+                        recyclerView.adapter = postAdapter
+                        if (postSearchAdapterPos > 0) {
+                            recyclerView.scrollRecycleViewToPosition(postSearchAdapterPos)
                         }
                         if (postAdapter.isEmpty) {
                             setEmptyTitleDescriptionAndButton(false)
@@ -1456,9 +1456,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                             hideEmptyView()
                         }
                     } else if (tab.position == TAB_SITES) {
-                        mRecyclerView.adapter = siteSearchAdapter
-                        if (mSiteSearchAdapterPos > 0) {
-                            mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos)
+                        recyclerView.adapter = siteSearchAdapter
+                        if (siteSearchAdapterPos > 0) {
+                            recyclerView.scrollRecycleViewToPosition(siteSearchAdapterPos)
                         }
                         if (siteSearchAdapter.isEmpty) {
                             setEmptyTitleDescriptionAndButton(false)
@@ -1471,40 +1471,40 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
                 override fun onTabUnselected(tab: TabLayout.Tab) {
                     if (tab.position == TAB_POSTS) {
-                        mPostSearchAdapterPos = mRecyclerView.currentPosition
+                        postSearchAdapterPos = recyclerView.currentPosition
                     } else if (tab.position == TAB_SITES) {
-                        mSiteSearchAdapterPos = mRecyclerView.currentPosition
+                        siteSearchAdapterPos = recyclerView.currentPosition
                     }
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab) {
-                    mRecyclerView.smoothScrollToPosition(0)
+                    recyclerView.smoothScrollToPosition(0)
                 }
             })
 
-            if (mSearchTabsPos != NO_POSITION && mSearchTabsPos != mSearchTabs!!.selectedTabPosition) {
-                val tab = mSearchTabs!!.getTabAt(mSearchTabsPos)
+            if (searchTabsPos != NO_POSITION && searchTabsPos != searchTabs!!.selectedTabPosition) {
+                val tab = searchTabs!!.getTabAt(searchTabsPos)
                 tab?.select()
-                mSearchTabsPos = NO_POSITION
+                searchTabsPos = NO_POSITION
             }
         }
     }
 
     private fun hideSearchTabs() {
-        if (isAdded && mSearchTabs != null && mSearchTabs!!.isVisible) {
-            mSearchTabs!!.visibility = View.GONE
-            mSearchTabs!!.clearOnTabSelectedListeners()
-            if (mSearchTabs!!.selectedTabPosition != TAB_POSTS) {
-                mSearchTabs!!.getTabAt(TAB_POSTS)!!.select()
+        if (isAdded && searchTabs != null && searchTabs!!.isVisible) {
+            searchTabs!!.visibility = View.GONE
+            searchTabs!!.clearOnTabSelectedListeners()
+            if (searchTabs!!.selectedTabPosition != TAB_POSTS) {
+                searchTabs!!.getTabAt(TAB_POSTS)!!.select()
             }
-            mRecyclerView.adapter = postAdapter
-            mLastTappedSiteSearchResult = null
+            recyclerView.adapter = postAdapter
+            lastTappedSiteSearchResult = null
             showLoadingProgress(false)
         }
     }
 
     private val searchTabsPosition: Int
-        get() = if (isSearchTabsShowing()) mSearchTabs!!.selectedTabPosition else -1
+        get() = if (isSearchTabsShowing()) searchTabs!!.selectedTabPosition else -1
 
     private fun populateSearchSuggestions(query: String?) {
         populateSearchSuggestionAdapter(query)
@@ -1515,72 +1515,72 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * create and assign the suggestion adapter for the search view
      */
     private fun createSearchSuggestionAdapter() {
-        mSearchSuggestionAdapter = ReaderSearchSuggestionAdapter(activity)
-        mSearchView!!.suggestionsAdapter = mSearchSuggestionAdapter
+        suggestionAdapter = ReaderSearchSuggestionAdapter(activity)
+        searchView!!.suggestionsAdapter = suggestionAdapter
 
-        mSearchView!!.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+        searchView!!.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
                 return false
             }
 
             override fun onSuggestionClick(position: Int): Boolean {
-                val query = mSearchSuggestionAdapter!!.getSuggestion(position)
+                val query = suggestionAdapter!!.getSuggestion(position)
                 onSearchSuggestionClicked(query)
                 return true
             }
         })
 
-        mSearchSuggestionAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
+        suggestionAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
             this.onSearchSuggestionDeleteClicked(
                 query!!
             )
         }
-        mSearchSuggestionAdapter!!.setOnSuggestionClearClickListener { this.onSearchSuggestionClearClicked() }
+        suggestionAdapter!!.setOnSuggestionClearClickListener { this.onSearchSuggestionClearClicked() }
     }
 
     private fun populateSearchSuggestionAdapter(query: String?) {
-        if (mSearchSuggestionAdapter == null) {
+        if (suggestionAdapter == null) {
             createSearchSuggestionAdapter()
         }
-        mSearchSuggestionAdapter!!.setFilter(query)
+        suggestionAdapter!!.setFilter(query)
     }
 
     private fun createSearchSuggestionRecyclerAdapter() {
-        mSearchSuggestionRecyclerAdapter = ReaderSearchSuggestionRecyclerAdapter()
-        mRecyclerView.setSearchSuggestionAdapter(mSearchSuggestionRecyclerAdapter)
+        searchSuggestionRecyclerAdapter = ReaderSearchSuggestionRecyclerAdapter()
+        recyclerView.setSearchSuggestionAdapter(searchSuggestionRecyclerAdapter)
 
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClickListener { query: String? ->
+        searchSuggestionRecyclerAdapter!!.setOnSuggestionClickListener { query: String? ->
             onSearchSuggestionClicked(
                 query
             )
         }
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
+        searchSuggestionRecyclerAdapter!!.setOnSuggestionDeleteClickListener { query: String? ->
             onSearchSuggestionDeleteClicked(
                 query!!
             )
         }
-        mSearchSuggestionRecyclerAdapter!!.setOnSuggestionClearClickListener { onSearchSuggestionClearClicked() }
+        searchSuggestionRecyclerAdapter!!.setOnSuggestionClearClickListener { onSearchSuggestionClearClicked() }
     }
 
     @Suppress("SameParameterValue")
     private fun populateSearchSuggestionRecyclerAdapter(query: String?) {
-        if (mSearchSuggestionRecyclerAdapter == null) {
+        if (searchSuggestionRecyclerAdapter == null) {
             createSearchSuggestionRecyclerAdapter()
         }
-        mSearchSuggestionRecyclerAdapter!!.setQuery(query)
+        searchSuggestionRecyclerAdapter!!.setQuery(query)
     }
 
     private fun onSearchSuggestionClicked(query: String?) {
         if (!TextUtils.isEmpty(query)) {
-            mSearchView!!.setQuery(query, true)
+            searchView!!.setQuery(query, true)
         }
     }
 
     private fun onSearchSuggestionDeleteClicked(query: String) {
         ReaderSearchTable.deleteQueryString(query)
 
-        mSearchSuggestionAdapter!!.reload()
-        mSearchSuggestionRecyclerAdapter!!.reload()
+        suggestionAdapter!!.reload()
+        searchSuggestionRecyclerAdapter!!.reload()
 
         showSearchMessageOrSuggestions()
     }
@@ -1602,11 +1602,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun clearSearchSuggestions() {
-        mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_SEARCH_HISTORY_CLEARED)
         ReaderSearchTable.deleteAllQueries()
 
-        mSearchSuggestionAdapter!!.swapCursor(null)
-        mSearchSuggestionRecyclerAdapter!!.swapCursor(null)
+        suggestionAdapter!!.swapCursor(null)
+        searchSuggestionRecyclerAdapter!!.swapCursor(null)
 
         showSearchMessageOrSuggestions()
     }
@@ -1615,10 +1615,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         /*
              * is the search input showing?
              */
-        get() = mSearchView != null && !mSearchView!!.isIconified
+        get() = searchView != null && !searchView!!.isIconified
 
     private val isSearchViewEmpty: Boolean
-        get() = mSearchView != null && mSearchView!!.query.isEmpty()
+        get() = searchView != null && searchView!!.query.isEmpty()
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1655,7 +1655,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // load the results if the search succeeded and it's the current search - note that success
         // means the search didn't fail, not necessarily that is has results - which is fine because
         // if there aren't results then refreshing will show the empty message
-        if (event.didSucceed() && isSearching && event.query == mCurrentSearchQuery) {
+        if (event.didSucceed() && isSearching && event.query == currentSearchQuery) {
             refreshPosts()
             showSearchTabs()
         } else {
@@ -1681,15 +1681,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         val heightToolbar = requireActivity().resources.getDimensionPixelSize(R.dimen.toolbar_height)
         val heightTabs = requireActivity().resources.getDimensionPixelSize(R.dimen.tab_height)
-        mActionableEmptyView!!.updateLayoutForSearch(false, 0)
-        mActionableEmptyView!!.subtitle.contentDescription = null
+        actionableEmptyView!!.updateLayoutForSearch(false, 0)
+        actionableEmptyView!!.subtitle.contentDescription = null
         var isImageHidden = false
         val title: String
         var description: String? = null
         var button: ActionableEmptyViewButtonType? = null
 
         // Ensure the default image is reset for empty views before applying logic
-        mActionableEmptyView!!.image.setImageResource(R.drawable.illustration_reader_empty)
+        actionableEmptyView!!.image.setImageResource(R.drawable.illustration_reader_empty)
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta()
@@ -1743,20 +1743,20 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostListType.SEARCH_RESULTS -> {
                     isImageHidden = true
 
-                    if (isSearchViewEmpty || TextUtils.isEmpty(mCurrentSearchQuery)) {
+                    if (isSearchViewEmpty || TextUtils.isEmpty(currentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer)
-                        mActionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
+                        actionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
                     } else if (isUpdating) {
                         title = ""
-                        mActionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
+                        actionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
                     } else {
                         title = getString(R.string.reader_empty_search_title)
-                        val formattedQuery = "<em>$mCurrentSearchQuery</em>"
+                        val formattedQuery = "<em>$currentSearchQuery</em>"
                         description = String.format(
                             getString(R.string.reader_empty_search_description),
                             formattedQuery
                         )
-                        mActionableEmptyView!!.updateLayoutForSearch(
+                        actionableEmptyView!!.updateLayoutForSearch(
                             true,
                             heightToolbar + heightTabs
                         )
@@ -1782,15 +1782,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         val ssb = SpannableStringBuilder(description)
         val imagePlaceholderPosition = description.indexOf("%s")
         addBookmarkImageSpan(ssb, imagePlaceholderPosition)
-        mActionableEmptyView!!.image.visibility = View.VISIBLE
-        mActionableEmptyView!!.title.setText(R.string.reader_empty_saved_posts_title)
-        mActionableEmptyView!!.subtitle.text = ssb
-        mActionableEmptyView!!.subtitle.contentDescription =
+        actionableEmptyView!!.image.visibility = View.VISIBLE
+        actionableEmptyView!!.title.setText(R.string.reader_empty_saved_posts_title)
+        actionableEmptyView!!.subtitle.text = ssb
+        actionableEmptyView!!.subtitle.contentDescription =
             getString(R.string.reader_empty_saved_posts_content_description)
-        mActionableEmptyView!!.subtitle.visibility = View.VISIBLE
-        mActionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
-        mActionableEmptyView!!.button.visibility = View.VISIBLE
-        mActionableEmptyView!!.button.setOnClickListener {
+        actionableEmptyView!!.subtitle.visibility = View.VISIBLE
+        actionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+        actionableEmptyView!!.button.visibility = View.VISIBLE
+        actionableEmptyView!!.button.setOnClickListener {
             setCurrentTagFromEmptyViewButton(
                 ActionableEmptyViewButtonType.FOLLOWED
             )
@@ -1798,8 +1798,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun shouldShowEmptyViewForSelfHostedCta(): Boolean {
-        return mIsFilterableScreen &&
-                !mAccountStore.hasAccessToken()
+        return isFilterableScreen &&
+                !accountStore.hasAccessToken()
                 && mSubFilterViewModel?.getCurrentSubfilterValue() is SiteAll
     }
 
@@ -1808,11 +1808,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        mActionableEmptyView!!.image.visibility = View.VISIBLE
-        mActionableEmptyView!!.title.text =
+        actionableEmptyView!!.image.visibility = View.VISIBLE
+        actionableEmptyView!!.title.text =
             getString(R.string.reader_self_hosted_select_filter)
-        mActionableEmptyView!!.subtitle.visibility = View.GONE
-        mActionableEmptyView!!.button.visibility = View.GONE
+        actionableEmptyView!!.subtitle.visibility = View.GONE
+        actionableEmptyView!!.button.visibility = View.GONE
     }
 
     private fun addBookmarkImageSpan(ssb: SpannableStringBuilder, imagePlaceholderPosition: Int) {
@@ -1841,43 +1841,43 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        mActionableEmptyView!!.image.visibility =
+        actionableEmptyView!!.image.visibility =
             if (!isUpdating && !isImageHidden) View.VISIBLE else View.GONE
-        mActionableEmptyView!!.title.text = title
+        actionableEmptyView!!.title.text = title
 
         if (description == null) {
-            mActionableEmptyView!!.subtitle.visibility = View.GONE
+            actionableEmptyView!!.subtitle.visibility = View.GONE
         } else {
-            mActionableEmptyView!!.subtitle.visibility = View.VISIBLE
+            actionableEmptyView!!.subtitle.visibility = View.VISIBLE
 
             if (description.contains("<") && description.contains(">")) {
-                mActionableEmptyView!!.subtitle.text = HtmlCompat.fromHtml(
+                actionableEmptyView!!.subtitle.text = HtmlCompat.fromHtml(
                     description,
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
             } else {
-                mActionableEmptyView!!.subtitle.text = description
+                actionableEmptyView!!.subtitle.text = description
             }
         }
 
         if (button == null) {
-            mActionableEmptyView!!.button.visibility = View.GONE
+            actionableEmptyView!!.button.visibility = View.GONE
         } else {
-            mActionableEmptyView!!.button.visibility = View.VISIBLE
+            actionableEmptyView!!.button.visibility = View.VISIBLE
 
             when (button) {
                 ActionableEmptyViewButtonType.DISCOVER -> {
-                    mActionableEmptyView!!.button.setText(
+                    actionableEmptyView!!.button.setText(
                         R.string.reader_no_followed_blogs_button_discover
                     )
                 }
 
                 ActionableEmptyViewButtonType.FOLLOWED -> {
-                    mActionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+                    actionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
                 }
             }
 
-            mActionableEmptyView!!.button.setOnClickListener {
+            actionableEmptyView!!.button.setOnClickListener {
                 setCurrentTagFromEmptyViewButton(
                     button
                 )
@@ -1887,14 +1887,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun showEmptyView() {
         if (isAdded) {
-            mActionableEmptyView!!.visibility = View.VISIBLE
-            mActionableEmptyView!!.announceEmptyStateForAccessibility()
+            actionableEmptyView!!.visibility = View.VISIBLE
+            actionableEmptyView!!.announceEmptyStateForAccessibility()
         }
     }
 
     private fun hideEmptyView() {
         if (isAdded) {
-            mActionableEmptyView!!.visibility = View.GONE
+            actionableEmptyView!!.visibility = View.GONE
         }
     }
 
@@ -1958,9 +1958,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             } else {
                 hideEmptyView()
                 announceListStateForAccessibility()
-                if (mRestorePosition > 0) {
+                if (restorePosition > 0) {
                     AppLog.d(AppLog.T.READER, "reader post list > restoring position")
-                    mRecyclerView.scrollRecycleViewToPosition(mRestorePosition)
+                    recyclerView.scrollRecycleViewToPosition(restorePosition)
                 }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
@@ -1968,68 +1968,68 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     toggleJetpackBannerIfEnabled(showIfEnabled = true, animateOnScroll = true)
                 }
             }
-            mRestorePosition = 0
+            restorePosition = 0
         }
     }
 
     private val isBookmarksList: Boolean
         get() = getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && (mCurrentTag != null && mCurrentTag!!.isBookmarked)
+                && (currentReaderTag != null && currentReaderTag!!.isBookmarked)
 
     private val postAdapter: ReaderPostAdapter
         get() {
-            if (mPostAdapter == null) {
+            if (readerPostAdapter == null) {
                 AppLog.d(
                     AppLog.T.READER,
                     "reader post list > creating post adapter"
                 )
                 val context =
                     WPActivityUtils.getThemedContext(activity)
-                mPostAdapter = ReaderPostAdapter(
+                readerPostAdapter = ReaderPostAdapter(
                     context,
                     getPostListType(),
-                    mImageManager,
-                    mUiHelpers,
-                    mNetworkUtilsWrapper,
-                    mIsTopLevel,
+                    imageManager,
+                    uiHelpers,
+                    networkUtilsWrapper,
+                    isTopLevel,
                     this.lifecycleScope
                 )
-                mPostAdapter!!.setOnFollowListener(this)
-                mPostAdapter!!.setOnPostSelectedListener(this)
-                mPostAdapter!!.setOnPostListItemButtonListener(this)
-                mPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
-                mPostAdapter!!.setOnDataRequestedListener(mDataRequestedListener)
+                readerPostAdapter!!.setOnFollowListener(this)
+                readerPostAdapter!!.setOnPostSelectedListener(this)
+                readerPostAdapter!!.setOnPostListItemButtonListener(this)
+                readerPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
+                readerPostAdapter!!.setOnDataRequestedListener(mDataRequestedListener)
                 if (activity is OnBlogInfoLoadedListener) {
-                    mPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
+                    readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
                 }
                 if (getPostListType().isTagType) {
-                    mPostAdapter!!.setCurrentTag(currentTag)
+                    readerPostAdapter!!.setCurrentTag(currentTag)
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                    mPostAdapter!!.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId)
+                    readerPostAdapter!!.setCurrentBlogAndFeed(currentBlogId, currentFeedId)
                 } else if (isSearching) {
                     val searchTag =
                         ReaderUtils.getTagForSearchQuery(
-                            mCurrentSearchQuery!!
+                            currentSearchQuery!!
                         )
-                    mPostAdapter!!.setCurrentTag(searchTag)
+                    readerPostAdapter!!.setCurrentTag(searchTag)
                 }
             }
-            return mPostAdapter!!
+            return readerPostAdapter!!
         }
 
     private val siteSearchAdapter: ReaderSiteSearchAdapter
         get() {
-            if (mSiteSearchAdapter == null) {
-                mSiteSearchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
+            if (searchAdapter == null) {
+                searchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
                     override fun onSiteClicked(site: ReaderSiteModel) {
-                        mLastTappedSiteSearchResult = site
+                        lastTappedSiteSearchResult = site
                         ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             activity,
                             site.siteId,
                             site.feedId,
                             site.isFollowing,
-                            mPostAdapter!!.source,
-                            mReaderTracker
+                            readerPostAdapter!!.source,
+                            readerTracker
                         )
                     }
 
@@ -2039,18 +2039,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     }
                 })
             }
-            return mSiteSearchAdapter!!
+            return searchAdapter!!
         }
 
     private fun hasPostAdapter(): Boolean {
-        return (mPostAdapter != null)
+        return (readerPostAdapter != null)
     }
 
     private val isPostAdapterEmpty: Boolean
-        get() = (mPostAdapter == null || mPostAdapter!!.isEmpty)
+        get() = (readerPostAdapter == null || readerPostAdapter!!.isEmpty)
 
     private fun isCurrentTag(tag: ReaderTag?): Boolean {
-        return ReaderTag.isSameTag(tag, mCurrentTag)
+        return ReaderTag.isSameTag(tag, currentReaderTag)
     }
 
     private fun isCurrentTagName(tagName: String?): Boolean {
@@ -2058,7 +2058,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private var currentTag: ReaderTag?
-        get() = mCurrentTag
+        get() = currentReaderTag
         private set(tag) {
             if (tag == null) {
                 return
@@ -2072,10 +2072,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 return
             }
 
-            mCurrentTag = tag
+            currentReaderTag = tag
 
-            if (mIsFilterableScreen) {
-                if (isFilterableTag(mCurrentTag) || mCurrentTag!!.isDefaultInMemoryTag) {
+            if (isFilterableScreen) {
+                if (isFilterableTag(currentReaderTag) || currentReaderTag!!.isDefaultInMemoryTag) {
                     mSubFilterViewModel!!.onSubfilterReselected()
                 } else {
                     changeReaderMode(
@@ -2087,7 +2087,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                             false,
                             null,
                             false,
-                            mIsFiltered
+                            isFiltered
                         ),
                         false
                     )
@@ -2096,11 +2096,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             val validTag = ReaderUtils.getValidTagForSharedPrefs(
                 tag,
-                mIsTopLevel,
-                mRecyclerView,
+                isTopLevel,
+                recyclerView,
                 ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
                     requireActivity(),
-                    mTagUpdateClientUtilsProvider
+                    tagUpdateClientUtilsProvider
                 )
             )
 
@@ -2115,7 +2115,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {
-                    if (mIsTopLevel) {
+                    if (isTopLevel) {
                         AppPrefs.setReaderTag(validTag)
                     }
                 }
@@ -2124,21 +2124,21 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostListType.TAGS_FEED -> {}
             }
 
-            postAdapter.setCurrentTag(mCurrentTag)
+            postAdapter.setCurrentTag(currentReaderTag)
             hideNewPostsBar()
             showLoadingProgress(false)
             updateCurrentTagIfTime()
         }
 
     private val currentTagName: String
-        get() = (if (mCurrentTag != null) mCurrentTag!!.tagSlug else "")
+        get() = (if (currentReaderTag != null) currentReaderTag!!.tagSlug else "")
 
     private fun hasCurrentTag(): Boolean {
-        return mCurrentTag != null
+        return currentReaderTag != null
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View? {
-        return mRecyclerView.internalRecyclerView
+        return recyclerView.internalRecyclerView
     }
 
     /*
@@ -2147,7 +2147,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     override fun onActivityBackPressed(): Boolean {
         return if (isSearchViewExpanded) {
-            mSearchMenuItem.collapseActionView()
+            searchMenuItem.collapseActionView()
             true
         } else {
             goBackInTagHistory()
@@ -2204,7 +2204,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     private fun reloadTags() {
         if (isAdded) {
-            mRecyclerView.refreshFilterCriteriaOptions()
+            recyclerView.refreshFilterCriteriaOptions()
         }
     }
 
@@ -2219,10 +2219,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
             return
         }
-        if (mCurrentFeedId != 0L) {
-            ReaderPostServiceStarter.startServiceForFeed(activity, mCurrentFeedId, updateAction)
+        if (currentFeedId != 0L) {
+            ReaderPostServiceStarter.startServiceForFeed(activity, currentFeedId, updateAction)
         } else {
-            ReaderPostServiceStarter.startServiceForBlog(activity, mCurrentBlogId, updateAction)
+            ReaderPostServiceStarter.startServiceForBlog(activity, currentBlogId, updateAction)
         }
     }
 
@@ -2271,7 +2271,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             event.action == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER &&
             getPostListType() == ReaderPostListType.TAG_FOLLOWED &&
             !isPostAdapterEmpty &&
-            !mRecyclerView.isFirstItemVisible
+            !recyclerView.isFirstItemVisible
         ) {
             showNewPostsBar()
         } else if (event.result.isNewOrChanged
@@ -2339,20 +2339,20 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     activity.runOnUiThread {
                         if (isBookmarksList && isPostAdapterEmpty && isAdded) {
                             setEmptyTitleAndDescriptionForBookmarksList()
-                            mActionableEmptyView!!.image.setImageResource(
+                            actionableEmptyView!!.image.setImageResource(
                                 R.drawable.illustration_reader_empty
                             )
                             showEmptyView()
                         } else if ((currentTag?.isListTopic() == true) && isPostAdapterEmpty && isAdded) {
-                            mActionableEmptyView!!.image.setImageResource(
+                            actionableEmptyView!!.image.setImageResource(
                                 R.drawable.illustration_reader_empty
                             )
-                            mActionableEmptyView!!.title.text =
+                            actionableEmptyView!!.title.text =
                                 getString(R.string.reader_empty_blogs_posts_in_custom_list)
-                            mActionableEmptyView!!.image.visibility = View.VISIBLE
-                            mActionableEmptyView!!.title.visibility = View.VISIBLE
-                            mActionableEmptyView!!.button.visibility = View.GONE
-                            mActionableEmptyView!!.subtitle.visibility = View.GONE
+                            actionableEmptyView!!.image.visibility = View.VISIBLE
+                            actionableEmptyView!!.title.visibility = View.VISIBLE
+                            actionableEmptyView!!.button.visibility = View.GONE
+                            actionableEmptyView!!.subtitle.visibility = View.GONE
                             showEmptyView()
                         } else if (!isPostAdapterEmpty) {
                             hideEmptyView()
@@ -2364,7 +2364,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private val isUpdating: Boolean
-        get() = mCurrentUpdateActions.size > 0
+        get() = currentUpdateActions.size > 0
 
     /*
     * show/hide progress bar which appears at the bottom of the activity when loading more posts
@@ -2372,10 +2372,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun showLoadingProgress(showProgress: Boolean) {
         if (isAdded) {
             if (showProgress) {
-                mProgress.bringToFront()
-                mProgress.visibility = View.VISIBLE
+                progressBar.bringToFront()
+                progressBar.visibility = View.VISIBLE
             } else {
-                mProgress.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
         }
     }
@@ -2383,7 +2383,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun clearCurrentUpdateActions() {
         if (!isAdded || !isUpdating) return
 
-        mCurrentUpdateActions.clear()
+        currentUpdateActions.clear()
         updateProgressIndicators()
     }
 
@@ -2393,9 +2393,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     ) {
         if (!isAdded) return
         val isUiUpdateNeeded = if (isUpdating) {
-            mCurrentUpdateActions.add(updateAction)
+            currentUpdateActions.add(updateAction)
         } else {
-            mCurrentUpdateActions.remove(updateAction)
+            currentUpdateActions.remove(updateAction)
         }
 
         if (isUiUpdateNeeded) updateProgressIndicators()
@@ -2405,24 +2405,24 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (!isUpdating) {
             // when there's no update in progress, hide the bottom and swipe-to-refresh progress bars
             showLoadingProgress(false)
-            mRecyclerView.isRefreshing = false
-        } else if (mCurrentUpdateActions.size == 1 && mCurrentUpdateActions.contains(
+            recyclerView.isRefreshing = false
+        } else if (currentUpdateActions.size == 1 && currentUpdateActions.contains(
                 ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
             )
         ) {
             // if only older posts are being updated, show only the bottom progress bar
             showLoadingProgress(true)
-            mRecyclerView.isRefreshing = false
+            recyclerView.isRefreshing = false
         } else {
             // if anything else is being updated, show only the swipe-to-refresh progress bar
             showLoadingProgress(false)
-            mRecyclerView.isRefreshing = true
+            recyclerView.isRefreshing = true
         }
 
         // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
         // doing a refresh while another update is already in progress
-        if (!mRecyclerView.isRefreshing) {
-            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported)
+        if (!recyclerView.isRefreshing) {
+            recyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported)
         }
     }
 
@@ -2436,22 +2436,22 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     /*
      * bar that appears at the top when new posts have been retrieved
      */
-    private fun isNewPostsBarShowing() = mNewPostsBar.isVisible
+    private fun isNewPostsBarShowing() = newPostsBar.isVisible
 
     private fun showNewPostsBar() {
         if (!isAdded || isNewPostsBarShowing()) {
             return
         }
 
-        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in)
-        mNewPostsBar.visibility = View.VISIBLE
+        AniUtils.startAnimation(newPostsBar, R.anim.reader_top_bar_in)
+        newPostsBar.visibility = View.VISIBLE
 
         // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
         // it right away since the user may be scrolling when the bar appears (which would cause it
         // to disappear as soon as it's displayed)
-        mRecyclerView.postDelayed({
+        recyclerView.postDelayed({
             if (isAdded && isNewPostsBarShowing()) {
-                mRecyclerView.addOnScrollListener(mOnScrollListener)
+                recyclerView.addOnScrollListener(mOnScrollListener)
             }
         }, RECYCLER_DELAY_MS)
 
@@ -2467,7 +2467,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         mIsAnimatingOutNewPostsBar = true
 
         // remove the onScrollListener assigned in showNewPostsBar()
-        mRecyclerView.removeOnScrollListener(mOnScrollListener)
+        recyclerView.removeOnScrollListener(mOnScrollListener)
 
         val listener: Animation.AnimationListener = object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
@@ -2476,7 +2476,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             override fun onAnimationEnd(animation: Animation) {
                 if (isAdded) {
-                    mNewPostsBar.visibility = View.GONE
+                    newPostsBar.visibility = View.GONE
                     mIsAnimatingOutNewPostsBar = false
                 }
             }
@@ -2485,7 +2485,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 // noop
             }
         }
-        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener)
+        AniUtils.startAnimation(newPostsBar, R.anim.reader_top_bar_out, listener)
     }
 
     /*
@@ -2493,7 +2493,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * posts in a specific blog?
      */
     private fun getPostListType(): ReaderPostListType {
-        return mPostListType ?: ReaderTypes.DEFAULT_POST_LIST_TYPE
+        return readerPostListType ?: ReaderTypes.DEFAULT_POST_LIST_TYPE
     }
 
     /*
@@ -2511,20 +2511,20 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (post.isBookmarked) {
             if (isBookmarksList) {
-                mReaderTracker.trackBlog(
+                readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
                     post.blogId,
                     post.feedId,
                     post.isFollowedByCurrentUser,
-                    mPostAdapter!!.source
+                    readerPostAdapter!!.source
                 )
             } else {
-                mReaderTracker.trackBlog(
+                readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
                     post.blogId,
                     post.feedId,
                     post.isFollowedByCurrentUser,
-                    mPostAdapter!!.source
+                    readerPostAdapter!!.source
                 )
             }
         }
@@ -2543,7 +2543,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     )
                     return
                 } else if (discoverData.hasPermalink()) {
-                    if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                    if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
                         mViewModel!!.onExternalPostOpened(post)
                     }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
@@ -2585,7 +2585,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
 
             ReaderPostListType.SEARCH_RESULTS -> {
-                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
+                readerTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
                 ReaderActivityLauncher.showReaderPostDetail(activity, post.blogId, post.postId)
             }
 
@@ -2636,7 +2636,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      *
      * This is because this method is also being triggered through the static
      * [ReaderPostListFragment.newInstanceForTag] method, which means that the
-     * [ReaderPostListFragment.mReaderTracker] field instance will not be yet available, and
+     * [ReaderPostListFragment.readerTracker] field instance will not be yet available, and
      * as thus cannot be used, or else it will result in a [NullPointerException].
      */
     private fun trackTagLoaded(tag: ReaderTag?) {
@@ -2660,73 +2660,73 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             ReaderPostCardActionType.FOLLOW -> mViewModel!!.onFollowSiteClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.SITE_NOTIFICATIONS -> mViewModel!!.onSiteNotificationMenuClicked(
                 post.blogId,
                 post.postId,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.SHARE -> {
-                mReaderTracker.trackBlog(
+                readerTracker.trackBlog(
                     AnalyticsTracker.Stat.SHARED_ITEM_READER,
                     post.blogId,
                     post.feedId,
                     post.isFollowedByCurrentUser,
-                    mPostAdapter!!.source
+                    readerPostAdapter!!.source
                 )
                 sharePost(post)
             }
 
             ReaderPostCardActionType.VISIT_SITE -> {
-                mReaderTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
+                readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                 ReaderActivityLauncher.openPost(context, post)
             }
 
             ReaderPostCardActionType.LIKE -> mViewModel!!.onLikeButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.REBLOG -> mViewModel!!.onReblogButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.REPORT_POST -> mViewModel!!.onReportPostButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.REPORT_USER -> mViewModel!!.onReportUserButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.BLOCK_SITE -> mViewModel!!.onBlockSiteButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.BLOCK_USER -> mViewModel!!.onBlockUserButtonClicked(
                 post,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.BOOKMARK -> mViewModel!!.onBookmarkButtonClicked(
                 post.blogId,
                 post.postId,
                 isBookmarksList,
-                mPostAdapter!!.source
+                readerPostAdapter!!.source
             )
 
             ReaderPostCardActionType.COMMENTS -> ReaderActivityLauncher.showReaderComments(
@@ -2736,11 +2736,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
             )
 
-            ReaderPostCardActionType.TOGGLE_SEEN_STATUS -> if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+            ReaderPostCardActionType.TOGGLE_SEEN_STATUS -> if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
                 mViewModel!!.onToggleSeenStatusClicked(
                     post,
                     isBookmarksList,
-                    mPostAdapter!!.source
+                    readerPostAdapter!!.source
                 )
             }
 
@@ -2750,7 +2750,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     override fun onFollowTapped(view: View, blogName: String, blogId: Long, feedId: Long) {
-        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
 
         val blog = if (TextUtils.isEmpty(blogName))
             getString(R.string.reader_followed_blog_notifications_this)
@@ -2768,7 +2768,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             ).setAction(
                 getString(R.string.reader_followed_blog_notifications_action)
             ) {
-                mReaderTracker.trackBlog(
+                readerTracker.trackBlog(
                     AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
                     blogId,
                     feedId
@@ -2776,7 +2776,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 val payload = AddOrDeleteSubscriptionPayload(
                     blogId.toString(), SubscriptionAction.NEW
                 )
-                mDispatcher.dispatch(
+                dispatcher.dispatch(
                     AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(
                         payload
                     )
@@ -2787,7 +2787,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     override fun onFollowingTapped() {
-        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
     }
 
     @Suppress("unused")
@@ -2800,7 +2800,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         + event.error.type + " - " + event.error.message)
             )
         } else {
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
     }
 
@@ -2833,7 +2833,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onScrollToTop() {
         if (isAdded && currentPosition > 0) {
-            mRecyclerView.smoothScrollToPosition(0)
+            recyclerView.smoothScrollToPosition(0)
         }
     }
 
@@ -2851,7 +2851,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private val isFollowingScreen: Boolean
-        get() = mTagFragmentStartedWith != null && mTagFragmentStartedWith!!.isFollowedSites
+        get() = tagFragmentStartedWith != null && tagFragmentStartedWith!!.isFollowedSites
 
     private fun isFilterableTag(tag: ReaderTag?): Boolean {
         return tag != null && tag.isFilterable
