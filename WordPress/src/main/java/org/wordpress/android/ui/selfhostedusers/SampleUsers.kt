@@ -75,7 +75,7 @@ object SampleUsers {
         fun addWithId(user: UserWithEditContext) {
             sampleUserList.add(
                 user.copy(
-                    id = sampleUserList.size,
+                    id = sampleUserList.size.toLong(),
                     name = "${user.name}${sampleUserList.size}"
                 )
             )
