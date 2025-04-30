@@ -49,7 +49,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder
 import org.wordpress.android.fluxc.model.ReaderSiteModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
@@ -72,7 +71,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.BottomNavController
 import org.wordpress.android.ui.main.ChooseSiteActivity
-import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -303,10 +301,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
             }
         }
-    }
-
-    fun getSelectedSite(): SiteModel? {
-        return (activity as? WPMainActivity)?.selectedSite
     }
 
     override fun setArguments(args: Bundle?) {
