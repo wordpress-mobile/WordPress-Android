@@ -1018,7 +1018,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    @Suppress("LongMethod")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -1030,8 +1029,92 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         actionableEmptyView = rootView.findViewById(R.id.empty_custom_view)
 
+        setupRecycler()
+        setupRecyclerFilterListener()
+
+        // bar that appears at top after new posts are loaded
+        newPostsBar = rootView.findViewById(R.id.layout_new_posts)
+        newPostsBar.visibility = View.GONE
+        newPostsBar.setOnClickListener {
+            recyclerView.scrollRecycleViewToPosition(0)
+            refreshPosts()
+        }
+
+        // progress bar that appears when loading more posts
+        progressBar = rootView.findViewById(R.id.progress_footer)
+        progressBar.visibility = View.GONE
+
+        jetpackBanner = rootView.findViewById(R.id.jetpack_banner)
+        setupJetpackBanner()
+
+        if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
+            val actions =
+                BundleCompat.getSerializable(
+                    savedInstanceState,
+                    ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS,
+                    HashSet::class.java
+                )
+            if (actions is HashSet<*>) {
+                @Suppress("UNCHECKED_CAST")
+                currentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
+                updateProgressIndicators()
+            }
+        }
+
+        return rootView
+    }
+
+    private fun setupRecycler() {
         recyclerView.setLogT(AppLog.T.READER)
         recyclerView.setCustomEmptyView()
+
+        recyclerView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(), R.color.reader_post_list_background
+            )
+        )
+
+        // add the item decoration (dividers) to the recycler, skipping the first item if the first
+        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
+        // having the tag toolbar take up more vertical space than necessary
+        val spacingVerticalRes = R.dimen.reader_card_gutters
+        val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
+        val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
+        recyclerView.addItemDecoration(
+            RecyclerItemDecoration(
+                spacingHorizontal,
+                spacingVertical,
+                false
+            )
+        )
+
+        // add a proper item divider to the RecyclerView
+        recyclerView.addItemDivider(R.drawable.default_list_divider)
+
+        recyclerView.setToolbarBackgroundColor(0)
+        recyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp)
+
+        if (isTopLevel) {
+            recyclerView.setToolbarTitle(
+                R.string.reader_screen_title,
+                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+            )
+        } else {
+            recyclerView.setToolbarLeftAndRightPadding(
+                resources.getDimensionPixelSize(R.dimen.margin_medium),
+                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+            )
+        }
+
+        // add a menu to the filtered recycler toolbar
+        if (accountStore.hasAccessToken() && isSearching) {
+            setupRecyclerToolbar()
+        }
+
+        recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
+    }
+
+    private fun setupRecyclerFilterListener() {
         recyclerView.setFilterListener(object : FilteredRecyclerView.FilterListener {
             override fun onLoadFilterCriteriaOptions(refresh: Boolean): List<FilterCriteria> {
                 return emptyList()
@@ -1090,102 +1173,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 )
             }
         })
-
-        recyclerView.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(), R.color.reader_post_list_background
-            )
-        )
-
-        // add the item decoration (dividers) to the recycler, skipping the first item if the first
-        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
-        // having the tag toolbar take up more vertical space than necessary
-        val spacingVerticalRes = R.dimen.reader_card_gutters
-        val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
-        val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
-        recyclerView.addItemDecoration(
-            RecyclerItemDecoration(
-                spacingHorizontal,
-                spacingVertical,
-                false
-            )
-        )
-
-        // add a proper item divider to the RecyclerView
-        recyclerView.addItemDivider(R.drawable.default_list_divider)
-
-        recyclerView.setToolbarBackgroundColor(0)
-        recyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp)
-
-        if (isTopLevel) {
-            recyclerView.setToolbarTitle(
-                R.string.reader_screen_title,
-                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-            )
-        } else {
-            recyclerView.setToolbarLeftAndRightPadding(
-                resources.getDimensionPixelSize(R.dimen.margin_medium),
-                resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-            )
-        }
-
-        // add a menu to the filtered recycler toolbar
-        if (accountStore.hasAccessToken() && isSearching) {
-            setupRecyclerToolbar()
-        }
-
-        recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
-
-        // bar that appears at top after new posts are loaded
-        newPostsBar = rootView.findViewById(R.id.layout_new_posts)
-        newPostsBar.visibility = View.GONE
-        newPostsBar.setOnClickListener {
-            recyclerView.scrollRecycleViewToPosition(0)
-            refreshPosts()
-        }
-
-        // progress bar that appears when loading more posts
-        progressBar = rootView.findViewById(R.id.progress_footer)
-        progressBar.visibility = View.GONE
-
-        jetpackBanner = rootView.findViewById(R.id.jetpack_banner)
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen: JetpackPoweredScreen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH
-            jetpackBrandingUtils.initJetpackBannerAnimation(
-                jetpackBanner,
-                recyclerView.internalRecyclerView
-            )
-            val jetpackBannerTextView =
-                jetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
-            jetpackBannerTextView.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
-            )
-
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener {
-                    jetpackBrandingUtils.trackBannerTapped(screen)
-                    JetpackPoweredBottomSheetFragment()
-                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                }
-            }
-        }
-
-        if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
-            val actions =
-                BundleCompat.getSerializable(
-                    savedInstanceState,
-                    ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS,
-                    HashSet::class.java
-                )
-            if (actions is HashSet<*>) {
-                @Suppress("UNCHECKED_CAST")
-                currentUpdateActions = actions as HashSet<ReaderPostServiceStarter.UpdateAction>
-                updateProgressIndicators()
-            }
-        }
-
-        return rootView
     }
 
     /*
@@ -1245,6 +1232,30 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
         )
+    }
+
+    private fun setupJetpackBanner() {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen: JetpackPoweredScreen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH
+            jetpackBrandingUtils.initJetpackBannerAnimation(
+                jetpackBanner,
+                recyclerView.internalRecyclerView
+            )
+            val jetpackBannerTextView =
+                jetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
+            jetpackBannerTextView.text = uiHelpers.getTextOfUiString(
+                requireContext(),
+                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+            )
+
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBanner.setOnClickListener {
+                    jetpackBrandingUtils.trackBannerTapped(screen)
+                    JetpackPoweredBottomSheetFragment()
+                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                }
+            }
+        }
     }
 
     private fun showSearchMessageOrSuggestions() {
