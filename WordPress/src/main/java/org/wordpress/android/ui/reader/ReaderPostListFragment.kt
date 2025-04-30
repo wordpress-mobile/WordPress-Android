@@ -155,7 +155,7 @@ import javax.inject.Inject
 @Suppress("LargeClass")
 class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFollowListener,
     OnPostListItemButtonListener, OnActivityBackPressedListener, OnScrollToTopListener {
-    private val mTagPreviewHistory = ReaderHistoryStack("tag_preview_history")
+    private val tagPreviewHistory = ReaderHistoryStack("tag_preview_history")
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -349,7 +349,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             currentSearchQuery = arguments.getString(ReaderConstants.ARG_SEARCH_QUERY)
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
-                mTagPreviewHistory.push(currentTagName)
+                tagPreviewHistory.push(currentTagName)
             }
         }
     }
@@ -387,7 +387,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 )
         }
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            mTagPreviewHistory.restoreInstance(state)
+            tagPreviewHistory.restoreInstance(state)
         }
         if (state.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
             isTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
@@ -936,7 +936,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            mTagPreviewHistory.saveInstance(outState)
+            tagPreviewHistory.saveInstance(outState)
         } else if (isSearching && searchView != null && searchView!!.query != null) {
             val query = searchView!!.query.toString()
             outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query)
@@ -2131,7 +2131,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
 
                 ReaderPostListType.TAG_PREVIEW -> {
-                    mTagPreviewHistory.push(tag.tagSlug)
+                    tagPreviewHistory.push(tag.tagSlug)
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {
@@ -2174,23 +2174,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    /*
-     * when previewing posts with a specific tag, a history of previewed tags is retained so
-     * the user can navigate back through them - this is faster and requires less memory
-     * than creating a new fragment for each previewed tag
-     */
     @Suppress("ReturnCount")
     private fun goBackInTagHistory(): Boolean {
-        if (mTagPreviewHistory.empty()) {
+        if (tagPreviewHistory.empty()) {
             return false
         }
 
-        var tagName = mTagPreviewHistory.pop()
+        var tagName = tagPreviewHistory.pop()
         if (isCurrentTagName(tagName)) {
-            if (mTagPreviewHistory.empty()) {
+            if (tagPreviewHistory.empty()) {
                 return false
             }
-            tagName = mTagPreviewHistory.pop()
+            tagName = tagPreviewHistory.pop()
         }
 
         val newTag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED)
