@@ -314,11 +314,19 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         args?.let { arguments ->
             if (arguments.containsKey(ReaderConstants.ARG_TAG)) {
-                currentReaderTag = BundleCompat.getSerializable(arguments, ReaderConstants.ARG_TAG, ReaderTag::class.java)
+                currentReaderTag = BundleCompat.getSerializable(
+                    arguments,
+                    ReaderConstants.ARG_TAG,
+                    ReaderTag::class.java
+                )
             }
             if (arguments.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 tagFragmentStartedWith =
-                    BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
+                    BundleCompat.getSerializable(
+                        arguments,
+                        ReaderConstants.ARG_ORIGINAL_TAG,
+                        ReaderTag::class.java
+                    )
             }
             if (arguments.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 readerPostListType =
@@ -350,56 +358,64 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
 
-        savedInstanceState?.let { state ->
-            AppLog.d(AppLog.T.READER, "reader post list > restoring instance state")
-            if (state.containsKey(ReaderConstants.ARG_TAG)) {
-                currentReaderTag =
-                    BundleCompat.getSerializable(state, ReaderConstants.ARG_TAG, ReaderTag::class.java)
-            }
-            if (state.containsKey(ReaderConstants.ARG_BLOG_ID)) {
-                currentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
-            }
-            if (state.containsKey(ReaderConstants.ARG_FEED_ID)) {
-                currentFeedId = state.getLong(ReaderConstants.ARG_FEED_ID)
-            }
-            if (state.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
-                currentSearchQuery = state.getString(ReaderConstants.ARG_SEARCH_QUERY)
-            }
-            if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                readerPostListType =
-                    BundleCompat.getSerializable(
-                        state,
-                        ReaderConstants.ARG_POST_LIST_TYPE,
-                        ReaderPostListType::class.java
-                    )
-            }
-            if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                mTagPreviewHistory.restoreInstance(state)
-            }
-            if (state.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
-                isTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
-            }
-            if (state.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
-                isFilterableScreen =
-                    state.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
-            }
-
-            if (state.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
-                tagFragmentStartedWith =
-                    BundleCompat.getSerializable(state, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
-            }
-
-            restorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
-            siteSearchRestorePosition =
-                state.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION)
-            mWasPaused = state.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
-            mHasRequestedPosts =
-                state.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
-            mHasUpdatedPosts = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
-            firstLoad = state.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
-            searchTabsPos =
-                state.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
+        savedInstanceState?.let {
+            restoreState(it)
         }
+    }
+
+    private fun restoreState(state: Bundle) {
+        AppLog.d(AppLog.T.READER, "reader post list fragment > restoring instance state")
+        if (state.containsKey(ReaderConstants.ARG_TAG)) {
+            currentReaderTag =
+                BundleCompat.getSerializable(state, ReaderConstants.ARG_TAG, ReaderTag::class.java)
+        }
+        if (state.containsKey(ReaderConstants.ARG_BLOG_ID)) {
+            currentBlogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
+        }
+        if (state.containsKey(ReaderConstants.ARG_FEED_ID)) {
+            currentFeedId = state.getLong(ReaderConstants.ARG_FEED_ID)
+        }
+        if (state.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
+            currentSearchQuery = state.getString(ReaderConstants.ARG_SEARCH_QUERY)
+        }
+        if (state.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            readerPostListType =
+                BundleCompat.getSerializable(
+                    state,
+                    ReaderConstants.ARG_POST_LIST_TYPE,
+                    ReaderPostListType::class.java
+                )
+        }
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            mTagPreviewHistory.restoreInstance(state)
+        }
+        if (state.containsKey(ReaderConstants.ARG_IS_TOP_LEVEL)) {
+            isTopLevel = state.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
+        }
+        if (state.containsKey(ReaderConstants.ARG_IS_FILTERABLE)) {
+            isFilterableScreen =
+                state.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+        }
+
+        if (state.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
+            tagFragmentStartedWith =
+                BundleCompat.getSerializable(
+                    state,
+                    ReaderConstants.ARG_ORIGINAL_TAG,
+                    ReaderTag::class.java
+                )
+        }
+
+        restorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+        siteSearchRestorePosition =
+            state.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION)
+        mWasPaused = state.getBoolean(ReaderConstants.KEY_WAS_PAUSED)
+        mHasRequestedPosts =
+            state.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
+        mHasUpdatedPosts = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
+        firstLoad = state.getBoolean(ReaderConstants.KEY_FIRST_LOAD)
+        searchTabsPos =
+            state.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
     }
 
     @Suppress("DEPRECATION")
@@ -553,7 +569,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // Add bottom margin to search suggestions list and empty view.
         val jetpackBannerHeight = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
         (recyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin
-        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = jetpackBannerHeight
+        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin =
+            jetpackBannerHeight
     }
 
     private fun hideJetpackBanner() {
@@ -1681,7 +1698,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        val heightToolbar = requireActivity().resources.getDimensionPixelSize(R.dimen.toolbar_height)
+        val heightToolbar =
+            requireActivity().resources.getDimensionPixelSize(R.dimen.toolbar_height)
         val heightTabs = requireActivity().resources.getDimensionPixelSize(R.dimen.tab_height)
         actionableEmptyView!!.updateLayoutForSearch(false, 0)
         actionableEmptyView!!.subtitle.contentDescription = null
@@ -1979,44 +1997,44 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 && (currentReaderTag != null && currentReaderTag!!.isBookmarked)
 
     private fun getPostAdapter(): ReaderPostAdapter {
-            if (readerPostAdapter == null) {
-                AppLog.d(
-                    AppLog.T.READER,
-                    "reader post list > creating post adapter"
-                )
-                val context =
-                    WPActivityUtils.getThemedContext(activity)
-                readerPostAdapter = ReaderPostAdapter(
-                    context,
-                    getPostListType(),
-                    imageManager,
-                    uiHelpers,
-                    networkUtilsWrapper,
-                    isTopLevel,
-                    this.lifecycleScope
-                )
-                readerPostAdapter!!.setOnFollowListener(this)
-                readerPostAdapter!!.setOnPostSelectedListener(this)
-                readerPostAdapter!!.setOnPostListItemButtonListener(this)
-                readerPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
-                readerPostAdapter!!.setOnDataRequestedListener(mDataRequestedListener)
-                if (activity is OnBlogInfoLoadedListener) {
-                    readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
-                }
-                if (getPostListType().isTagType) {
-                    readerPostAdapter!!.setCurrentTag(currentTag)
-                } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                    readerPostAdapter!!.setCurrentBlogAndFeed(currentBlogId, currentFeedId)
-                } else if (isSearching) {
-                    val searchTag =
-                        ReaderUtils.getTagForSearchQuery(
-                            currentSearchQuery!!
-                        )
-                    readerPostAdapter!!.setCurrentTag(searchTag)
-                }
+        if (readerPostAdapter == null) {
+            AppLog.d(
+                AppLog.T.READER,
+                "reader post list > creating post adapter"
+            )
+            val context =
+                WPActivityUtils.getThemedContext(activity)
+            readerPostAdapter = ReaderPostAdapter(
+                context,
+                getPostListType(),
+                imageManager,
+                uiHelpers,
+                networkUtilsWrapper,
+                isTopLevel,
+                this.lifecycleScope
+            )
+            readerPostAdapter!!.setOnFollowListener(this)
+            readerPostAdapter!!.setOnPostSelectedListener(this)
+            readerPostAdapter!!.setOnPostListItemButtonListener(this)
+            readerPostAdapter!!.setOnDataLoadedListener(mDataLoadedListener)
+            readerPostAdapter!!.setOnDataRequestedListener(mDataRequestedListener)
+            if (activity is OnBlogInfoLoadedListener) {
+                readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
             }
-            return readerPostAdapter!!
+            if (getPostListType().isTagType) {
+                readerPostAdapter!!.setCurrentTag(currentTag)
+            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                readerPostAdapter!!.setCurrentBlogAndFeed(currentBlogId, currentFeedId)
+            } else if (isSearching) {
+                val searchTag =
+                    ReaderUtils.getTagForSearchQuery(
+                        currentSearchQuery!!
+                    )
+                readerPostAdapter!!.setCurrentTag(searchTag)
+            }
         }
+        return readerPostAdapter!!
+    }
 
     private val siteSearchAdapter: ReaderSiteSearchAdapter
         get() {
