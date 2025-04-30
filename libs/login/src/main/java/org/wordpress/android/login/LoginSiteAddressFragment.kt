@@ -3,7 +3,6 @@ package org.wordpress.android.login
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -37,6 +36,7 @@ import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
@@ -90,7 +90,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         val siteAddressInput: WPLoginInputRow = rootView.findViewById(R.id.login_site_address_row)
         this.siteAddressInput = siteAddressInput
         if (BuildConfig.DEBUG) {
-            siteAddressInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_WEBSITE_URL)
+            siteAddressInput.editText.setText(BuildConfig.DEBUG_WPCOM_WEBSITE_URL)
         }
         siteAddressInput.addTextChangedListener(this)
         siteAddressInput.setOnEditorCommitListener(this)
@@ -124,6 +124,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         super.onAttach(context)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -140,22 +141,16 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
 
         loginSiteAddressValidator = LoginSiteAddressValidator()
 
-        loginSiteAddressValidator?.isValid?.observe(
-            viewLifecycleOwner,
-            { enabled ->
-                bottomButton.isEnabled = enabled
+        loginSiteAddressValidator?.isValid?.observe(viewLifecycleOwner) { enabled ->
+            bottomButton.isEnabled = enabled
+        }
+        loginSiteAddressValidator?.errorMessageResId?.observe(viewLifecycleOwner) { resId ->
+            if (resId != null) {
+                showError(resId)
+            } else {
+                siteAddressInput?.setError(null)
             }
-        )
-        loginSiteAddressValidator?.errorMessageResId?.observe(
-            viewLifecycleOwner,
-            { resId ->
-                if (resId != null) {
-                    showError(resId)
-                } else {
-                    siteAddressInput?.setError(null)
-                }
-            }
-        )
+        }
     }
 
     override fun onResume() {
@@ -488,7 +483,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         val cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(url)
 
         // Make sure to use a valid URL so that DiscoveryUtils#stripKnownPaths is able to strip paths
-        val scheme = Uri.parse(cleanedXmlrpcSuffix).scheme
+        val scheme = cleanedXmlrpcSuffix.toUri().scheme
         val urlWithScheme = if (scheme == null) {
             UrlUtils.addUrlSchemeIfNeeded(cleanedXmlrpcSuffix, false)
         } else {
