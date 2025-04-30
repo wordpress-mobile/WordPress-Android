@@ -132,7 +132,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             try {
                 EditTextUtils.showSoftInput(getEditTextToFocusOnStart());
             } catch (Exception exception) {
-                AppLog.e(T.MAIN, "Error showing soft input: " + exception.getMessage());
+                AppLog.e(T.MAIN, "Error showing soft input", exception);
             }
         }
     }
