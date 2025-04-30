@@ -412,10 +412,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             state.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION)
     }
 
-    @Suppress("DEPRECATION")
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         postListViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
         if (isTopLevel) {
             readerViewModel = ViewModelProvider(
