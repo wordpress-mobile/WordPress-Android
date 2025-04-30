@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.Animation
-import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
@@ -1210,14 +1209,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // it looks truncated on landscape)
         val maxWidth = DisplayUtils.getWindowPixelWidth(requireActivity())
         searchView!!.maxWidth = maxWidth
-
-        // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
-        // after a single character is typed, and there's no less hacky way to do this...
-        val view =
-            searchView!!.findViewById<View>(com.google.android.material.R.id.search_src_text)
-        if (view is AutoCompleteTextView) {
-            view.threshold = 1
-        }
 
         searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
