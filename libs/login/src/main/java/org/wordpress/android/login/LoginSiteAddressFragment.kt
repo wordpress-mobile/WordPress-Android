@@ -40,31 +40,31 @@ import javax.inject.Inject
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
-    private var mSiteAddressInput: WPLoginInputRow? = null
+    private var siteAddressInput: WPLoginInputRow? = null
 
-    private var mRequestedSiteAddress: String? = null
+    private var requestedSiteAddress: String? = null
 
-    private var mConnectSiteInfoUrl: String? = null
-    private var mConnectSiteInfoUrlRedirect: String? = null
-    private var mConnectSiteInfoCalculatedHasJetpack = false
+    private var connectSiteInfoUrl: String? = null
+    private var connectSiteInfoUrlRedirect: String? = null
+    private var connectSiteInfoCalculatedHasJetpack = false
 
-    private var mLoginSiteAddressValidator: LoginSiteAddressValidator? = null
-
-    @JvmField
-    @Inject
-    var mAccountStore: AccountStore? = null
+    private var loginSiteAddressValidator: LoginSiteAddressValidator? = null
 
     @JvmField
     @Inject
-    var mDispatcher: Dispatcher? = null
+    var accountStore: AccountStore? = null
 
     @JvmField
     @Inject
-    var mHTTPAuthManager: HTTPAuthManager? = null
+    var dispatcher: Dispatcher? = null
 
     @JvmField
     @Inject
-    var mMemorizingTrustManager: MemorizingTrustManager? = null
+    var httpAuthManager: HTTPAuthManager? = null
+
+    @JvmField
+    @Inject
+    var memorizingTrustManager: MemorizingTrustManager? = null
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -88,7 +88,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         // important for accessibility - talkback
         requireActivity().setTitle(R.string.site_address_login_title)
         val siteAddressInput: WPLoginInputRow = rootView.findViewById(R.id.login_site_address_row)
-        mSiteAddressInput = siteAddressInput
+        this.siteAddressInput = siteAddressInput
         if (BuildConfig.DEBUG) {
             siteAddressInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_WEBSITE_URL)
         }
@@ -110,12 +110,12 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     }
 
     override fun getEditTextToFocusOnStart(): EditText? {
-        return mSiteAddressInput?.editText
+        return siteAddressInput?.editText
     }
 
     override fun onHelp() {
         if (mLoginListener != null) {
-            mLoginListener.helpSiteAddress(mRequestedSiteAddress.orEmpty())
+            mLoginListener.helpSiteAddress(requestedSiteAddress.orEmpty())
         }
     }
 
@@ -128,31 +128,31 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         super.onActivityCreated(savedInstanceState)
 
         if (savedInstanceState != null) {
-            mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
-            mConnectSiteInfoUrl = savedInstanceState.getString(KEY_SITE_INFO_URL)
-            mConnectSiteInfoUrlRedirect =
+            requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
+            connectSiteInfoUrl = savedInstanceState.getString(KEY_SITE_INFO_URL)
+            connectSiteInfoUrlRedirect =
                 savedInstanceState.getString(KEY_SITE_INFO_URL_AFTER_REDIRECTS)
-            mConnectSiteInfoCalculatedHasJetpack =
+            connectSiteInfoCalculatedHasJetpack =
                 savedInstanceState.getBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK)
         } else {
             mAnalyticsListener.trackUrlFormViewed()
         }
 
-        mLoginSiteAddressValidator = LoginSiteAddressValidator()
+        loginSiteAddressValidator = LoginSiteAddressValidator()
 
-        mLoginSiteAddressValidator?.isValid?.observe(
+        loginSiteAddressValidator?.isValid?.observe(
             viewLifecycleOwner,
             { enabled ->
                 bottomButton.isEnabled = enabled
             }
         )
-        mLoginSiteAddressValidator?.errorMessageResId?.observe(
+        loginSiteAddressValidator?.errorMessageResId?.observe(
             viewLifecycleOwner,
             { resId ->
                 if (resId != null) {
                     showError(resId)
                 } else {
-                    mSiteAddressInput?.setError(null)
+                    siteAddressInput?.setError(null)
                 }
             }
         )
@@ -167,18 +167,18 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress)
-        outState.putString(KEY_SITE_INFO_URL, mConnectSiteInfoUrl)
-        outState.putString(KEY_SITE_INFO_URL_AFTER_REDIRECTS, mConnectSiteInfoUrlRedirect)
+        outState.putString(KEY_REQUESTED_SITE_ADDRESS, requestedSiteAddress)
+        outState.putString(KEY_SITE_INFO_URL, connectSiteInfoUrl)
+        outState.putString(KEY_SITE_INFO_URL_AFTER_REDIRECTS, connectSiteInfoUrlRedirect)
         outState.putBoolean(
             KEY_SITE_INFO_CALCULATED_HAS_JETPACK,
-            mConnectSiteInfoCalculatedHasJetpack
+            connectSiteInfoCalculatedHasJetpack
         )
     }
 
     override fun onDestroyView() {
-        mLoginSiteAddressValidator?.dispose()
-        mSiteAddressInput = null
+        loginSiteAddressValidator?.dispose()
+        siteAddressInput = null
 
         super.onDestroyView()
     }
@@ -191,12 +191,12 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
 
         mLoginBaseDiscoveryListener = this
 
-        mRequestedSiteAddress = mLoginSiteAddressValidator?.cleanedSiteAddress
+        requestedSiteAddress = loginSiteAddressValidator?.cleanedSiteAddress
 
-        val cleanedUrl = stripKnownPaths(mRequestedSiteAddress.orEmpty())
+        val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
 
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
-        mDispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
+        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
 
         startProgress()
     }
@@ -208,40 +208,40 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     }
 
     override fun afterTextChanged(s: Editable) {
-        mSiteAddressInput?.let { siteAddressInput ->
-            mLoginSiteAddressValidator?.setAddress(EditTextUtils.getText(siteAddressInput.editText))
+        siteAddressInput?.let { siteAddressInput ->
+            loginSiteAddressValidator?.setAddress(EditTextUtils.getText(siteAddressInput.editText))
         }
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-        mConnectSiteInfoUrl = null
-        mConnectSiteInfoUrlRedirect = null
-        mConnectSiteInfoCalculatedHasJetpack = false
+        connectSiteInfoUrl = null
+        connectSiteInfoUrlRedirect = null
+        connectSiteInfoCalculatedHasJetpack = false
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            mSiteAddressInput?.setError(null)
+            siteAddressInput?.setError(null)
     }
 
     private fun showError(messageId: Int) {
         val message = getString(messageId)
         mAnalyticsListener.trackFailure(message)
-        mSiteAddressInput?.setError(message)
+        siteAddressInput?.setError(message)
     }
 
     override fun endProgress() {
         super.endProgress()
-        mRequestedSiteAddress = null
+        requestedSiteAddress = null
     }
 
     override fun getRequestedSiteAddress(): String {
-        return mRequestedSiteAddress.orEmpty()
+        return requestedSiteAddress.orEmpty()
     }
 
     override fun handleDiscoveryError(error: DiscoveryError, failedEndpoint: String?) {
         when (error) {
             DiscoveryError.ERRONEOUS_SSL_CERTIFICATE -> mLoginListener.handleSslCertificateError(
-                mMemorizingTrustManager,
+                memorizingTrustManager,
                 SelfSignedSSLCallback {
                     if (failedEndpoint == null) {
                         return@SelfSignedSSLCallback
@@ -273,8 +273,8 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         AppLog.e(AppLog.T.API, "Inputted a wpcom address in site address screen.")
 
         // If the user is already logged in a wordpress.com account, bail out
-        val accountStore = mAccountStore
-        if (accountStore?.hasAccessToken() ?: false) {
+        val accountStore = this.accountStore
+        if (accountStore?.hasAccessToken() == true) {
             val currentUsername = accountStore.account.userName
             AppLog.e(
                 AppLog.T.NUX,
@@ -295,13 +295,13 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         )
 
         // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
-        val inputSiteAddress = mRequestedSiteAddress
+        val inputSiteAddress = requestedSiteAddress
         endProgress()
         if (mLoginListener.loginMode == LoginMode.WOO_LOGIN_MODE) {
             mLoginListener.gotConnectedSiteInfo(
-                mConnectSiteInfoUrl.orEmpty(),
-                mConnectSiteInfoUrlRedirect,
-                mConnectSiteInfoCalculatedHasJetpack
+                connectSiteInfoUrl.orEmpty(),
+                connectSiteInfoUrlRedirect,
+                connectSiteInfoCalculatedHasJetpack
             )
         } else {
             mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress)
@@ -338,7 +338,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
             val url = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_URL)
             val httpUsername = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_USERNAME)
             val httpPassword = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_PASSWORD)
-            mHTTPAuthManager?.addHTTPAuthCredentials(
+            httpAuthManager?.addHTTPAuthCredentials(
                 httpUsername.orEmpty(),
                 httpPassword.orEmpty(),
                 url.orEmpty(),
@@ -352,7 +352,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onFetchedConnectSiteInfo(event: OnConnectSiteInfoChecked) {
-        if (mRequestedSiteAddress == null) {
+        if (requestedSiteAddress == null) {
             // bail if user canceled
             return
         }
@@ -363,7 +363,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
 
         if (event.isError) {
             mAnalyticsListener.trackConnectedSiteInfoFailed(
-                mRequestedSiteAddress,
+                requestedSiteAddress,
                 event.javaClass.simpleName,
                 event.error.type.name,
                 event.error.message
@@ -380,9 +380,9 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         } else {
             val hasJetpack = calculateHasJetpack(event.info)
 
-            mConnectSiteInfoUrl = event.info.url
-            mConnectSiteInfoUrlRedirect = event.info.urlAfterRedirects
-            mConnectSiteInfoCalculatedHasJetpack = hasJetpack
+            connectSiteInfoUrl = event.info.url
+            connectSiteInfoUrlRedirect = event.info.urlAfterRedirects
+            connectSiteInfoCalculatedHasJetpack = hasJetpack
 
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(
                 createConnectSiteInfoProperties(
@@ -411,9 +411,9 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         } else {
             endProgressIfNeeded()
             mLoginListener.gotConnectedSiteInfo(
-                mConnectSiteInfoUrl.orEmpty(),
-                mConnectSiteInfoUrlRedirect,
-                mConnectSiteInfoCalculatedHasJetpack
+                connectSiteInfoUrl.orEmpty(),
+                connectSiteInfoUrlRedirect,
+                connectSiteInfoCalculatedHasJetpack
             )
         }
     }
