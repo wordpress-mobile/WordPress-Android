@@ -27,6 +27,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
+import org.wordpress.android.fluxc.store.ReaderStore
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
 import org.wordpress.android.models.FilterCriteria
@@ -147,9 +149,8 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.EnumSet
-import javax.inject.Inject
-import androidx.core.view.isVisible
 import java.util.Locale
+import javax.inject.Inject
 
 @Suppress("LargeClass")
 class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFollowListener,
@@ -161,6 +162,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var accountStore: AccountStore
+
+    // This must be injected for site search to work
+    @Inject
+    lateinit var readerStore: ReaderStore
 
     @Inject
     lateinit var dispatcher: Dispatcher
