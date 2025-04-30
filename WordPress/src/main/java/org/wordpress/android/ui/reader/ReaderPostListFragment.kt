@@ -199,7 +199,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     private var readerPostAdapter: ReaderPostAdapter? = null
-    private var searchAdapter: ReaderSiteSearchAdapter? = null
+    private var siteSearchAdapter: ReaderSiteSearchAdapter? = null
     private var suggestionAdapter: ReaderSearchSuggestionAdapter? = null
     private var searchSuggestionRecyclerAdapter: ReaderSearchSuggestionRecyclerAdapter? = null
 
@@ -2033,8 +2033,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun getSiteSearchAdapter(): ReaderSiteSearchAdapter {
-        if (searchAdapter == null) {
-            searchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
+        if (siteSearchAdapter == null) {
+            siteSearchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
                 override fun onSiteClicked(site: ReaderSiteModel) {
                     lastTappedSiteSearchResult = site
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
@@ -2053,7 +2053,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
             })
         }
-        return searchAdapter!!
+        return siteSearchAdapter!!
     }
 
     private fun hasPostAdapter(): Boolean {
@@ -2441,11 +2441,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
+    /*
+     * swipe-to-refresh isn't supported for search results since they're really brief snapshots
+     * and are unlikely to show new posts due to the way they're sorted
+     */
     private val isSwipeToRefreshSupported: Boolean
-        /*
-             * swipe-to-refresh isn't supported for search results since they're really brief snapshots
-             * and are unlikely to show new posts due to the way they're sorted
-             */
         get() = getPostListType() != ReaderPostListType.SEARCH_RESULTS
 
     /*
