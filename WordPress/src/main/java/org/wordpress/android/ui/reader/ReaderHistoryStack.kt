@@ -17,11 +17,7 @@ class ReaderHistoryStack(private val keyName: String) : Stack<String?>() {
     fun saveInstance(bundle: Bundle) {
         if (!isEmpty()) {
             val history = ArrayList<String>()
-            this.forEach {
-                if (it != null) {
-                    history.add(it)
-                }
-            }
+            history.addAll(this.filterNotNull())
             bundle.putStringArrayList(keyName, history)
         }
     }
