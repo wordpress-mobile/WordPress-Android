@@ -153,6 +153,7 @@ import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.EnumSet
 import javax.inject.Inject
 import androidx.core.view.isVisible
+import java.util.Locale
 
 @Suppress("LargeClass")
 class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFollowListener,
@@ -248,17 +249,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             // request older posts unless we already have the max # to show
             when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW -> if (ReaderPostTable.getNumPostsWithTag(
-                        mCurrentTag
-                    )
-                    < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                ) {
-                    // request older posts
-                    updatePostsWithTag(
-                        currentTag,
-                        ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-                    )
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                ReaderPostListType.TAG_FOLLOWED,
+                ReaderPostListType.TAG_PREVIEW -> {
+                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) <
+                        ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                    ) {
+                        // request older posts
+                        updatePostsWithTag(
+                            currentTag,
+                            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+                        )
+                        mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                    }
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {
@@ -428,7 +430,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "UseCheckOrError")
     private fun setupObservers() {
         mViewModel!!.navigationEvents.observe(
             viewLifecycleOwner
@@ -888,12 +890,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "ComplexCondition")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: FollowedBlogsFetched) {
         // refresh posts if user is viewing "Followed Sites"
         if (event.didChange()
-            && getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()
+            && (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag())
             && (currentTag!!.isFollowedSites || currentTag!!.isDefaultInMemoryTag)
         ) {
             refreshPosts()
@@ -1023,6 +1025,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             override fun onLoadFilterCriteriaOptionsAsync(
                 listener: FilterCriteriaAsyncLoaderListener, refresh: Boolean
             ) {
+                // noop
             }
 
             override fun onLoadData(forced: Boolean) {
@@ -1625,7 +1628,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         val updateAction =
-            if (event.offset == 0) ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER else ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+            if (event.offset == 0) {
+                ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
+            } else {
+                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+            }
         setIsUpdating(true, updateAction)
         setEmptyTitleDescriptionAndButton(false)
         if (isPostAdapterEmpty) showEmptyView()
@@ -1638,8 +1645,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        val updateAction =
-            if (event.offset == 0) ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER else ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+        val updateAction = if (event.offset == 0) {
+            ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
+        } else {
+            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+        }
         setIsUpdating(false, updateAction)
 
         // load the results if the search succeeded and it's the current search - note that success
@@ -1663,7 +1673,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         return coordinator ?: view
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "NestedBlockDepth", "CyclomaticComplexMethod", "ReturnCount")
     private fun setEmptyTitleDescriptionAndButton(requestFailed: Boolean) {
         if (!isAdded) {
             return
@@ -1700,29 +1710,31 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             title = getString(R.string.reader_empty_posts_in_tag_updating)
         } else {
             when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED -> if (currentTag!!.isFollowedSites || currentTag!!.isDefaultInMemoryTag) {
-                    isImageHidden = true
+                ReaderPostListType.TAG_FOLLOWED -> {
+                    if (currentTag!!.isFollowedSites || currentTag!!.isDefaultInMemoryTag) {
+                        isImageHidden = true
 
-                    if (ReaderBlogTable.hasFollowedBlogs()) {
-                        title =
-                            getString(R.string.reader_empty_followed_blogs_no_recent_posts_title)
-                        description = getString(
-                            R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description
-                        )
+                        if (ReaderBlogTable.hasFollowedBlogs()) {
+                            title =
+                                getString(R.string.reader_empty_followed_blogs_no_recent_posts_title)
+                            description = getString(
+                                R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description
+                            )
+                        } else {
+                            title = getString(R.string.reader_no_followed_blogs_title)
+                            description = getString(R.string.reader_no_followed_blogs_description)
+                        }
+
+                        button = ActionableEmptyViewButtonType.DISCOVER
+                    } else if (currentTag!!.isPostsILike) {
+                        title = getString(R.string.reader_empty_posts_liked_title)
+                        description = getString(R.string.reader_empty_posts_liked_description)
+                        button = ActionableEmptyViewButtonType.FOLLOWED
+                    } else if (currentTag!!.isListTopic) {
+                        title = getString(R.string.reader_empty_blogs_posts_in_custom_list)
                     } else {
-                        title = getString(R.string.reader_no_followed_blogs_title)
-                        description = getString(R.string.reader_no_followed_blogs_description)
+                        title = getString(R.string.reader_no_posts_with_this_tag)
                     }
-
-                    button = ActionableEmptyViewButtonType.DISCOVER
-                } else if (currentTag!!.isPostsILike) {
-                    title = getString(R.string.reader_empty_posts_liked_title)
-                    description = getString(R.string.reader_empty_posts_liked_description)
-                    button = ActionableEmptyViewButtonType.FOLLOWED
-                } else if (currentTag!!.isListTopic) {
-                    title = getString(R.string.reader_empty_blogs_posts_in_custom_list)
-                } else {
-                    title = getString(R.string.reader_no_posts_with_this_tag)
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> title =
@@ -1804,13 +1816,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun addBookmarkImageSpan(ssb: SpannableStringBuilder, imagePlaceholderPosition: Int) {
-        val d = ContextCompat.getDrawable(
+        val drawable = ContextCompat.getDrawable(
             requireContext(),
             R.drawable.ic_bookmark_grey_dark_18dp
         )
-        d!!.setBounds(0, 0, (d.intrinsicWidth * 1.2).toInt(), (d.intrinsicHeight * 1.2).toInt())
+        drawable!!.setBounds(
+            0,
+            0,
+            (drawable.intrinsicWidth * BOOKMARK_IMAGE_MULTIPLER).toInt(),
+            (drawable.intrinsicHeight * BOOKMARK_IMAGE_MULTIPLER).toInt()
+        )
         ssb.setSpan(
-            ImageSpan(d), imagePlaceholderPosition, imagePlaceholderPosition + 2,
+            ImageSpan(drawable), imagePlaceholderPosition, imagePlaceholderPosition + 2,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
@@ -1849,11 +1866,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             mActionableEmptyView!!.button.visibility = View.VISIBLE
 
             when (button) {
-                ActionableEmptyViewButtonType.DISCOVER -> mActionableEmptyView!!.button.setText(
-                    R.string.reader_no_followed_blogs_button_discover
-                )
+                ActionableEmptyViewButtonType.DISCOVER -> {
+                    mActionableEmptyView!!.button.setText(
+                        R.string.reader_no_followed_blogs_button_discover
+                    )
+                }
 
-                ActionableEmptyViewButtonType.FOLLOWED -> mActionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+                ActionableEmptyViewButtonType.FOLLOWED -> {
+                    mActionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+                }
             }
 
             mActionableEmptyView!!.button.setOnClickListener {
@@ -1921,6 +1942,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * called by post adapter when data has been loaded
      */
     private val mDataLoadedListener: DataLoadedListener = object : DataLoadedListener {
+        @Suppress("ComplexCondition")
         override fun onDataLoaded(isEmpty: Boolean) {
             if (!isAdded || (isEmpty && !mHasUpdatedPosts)) {
                 return
@@ -2083,12 +2105,19 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
 
             when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED ->                 // remember this as the current tag if viewing followed tag
+                ReaderPostListType.TAG_FOLLOWED -> {
+                    // remember this as the current tag if viewing followed tag
                     AppPrefs.setReaderTag(validTag)
+                }
 
-                ReaderPostListType.TAG_PREVIEW -> mTagPreviewHistory.push(tag.tagSlug)
-                ReaderPostListType.BLOG_PREVIEW -> if (mIsTopLevel) {
-                    AppPrefs.setReaderTag(validTag)
+                ReaderPostListType.TAG_PREVIEW -> {
+                    mTagPreviewHistory.push(tag.tagSlug)
+                }
+
+                ReaderPostListType.BLOG_PREVIEW -> {
+                    if (mIsTopLevel) {
+                        AppPrefs.setReaderTag(validTag)
+                    }
                 }
 
                 ReaderPostListType.SEARCH_RESULTS -> {}
@@ -2117,11 +2146,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * is handled here and should be ignored by the activity
      */
     override fun onActivityBackPressed(): Boolean {
-        if (isSearchViewExpanded) {
+        return if (isSearchViewExpanded) {
             mSearchMenuItem.collapseActionView()
-            return true
+            true
         } else {
-            return goBackInTagHistory()
+            goBackInTagHistory()
         }
     }
 
@@ -2130,6 +2159,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      * the user can navigate back through them - this is faster and requires less memory
      * than creating a new fragment for each previewed tag
      */
+    @Suppress("ReturnCount")
     private fun goBackInTagHistory(): Boolean {
         if (mTagPreviewHistory.empty()) {
             return false
@@ -2206,12 +2236,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (event.readerTag != null && !isCurrentTag(event.readerTag)) {
             return
         }
+
         setIsUpdating(true, event.action)
         setEmptyTitleDescriptionAndButton(false)
-        if (isPostAdapterEmpty) showEmptyView()
+        if (isPostAdapterEmpty) {
+            showEmptyView()
+        }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "CyclomaticComplexMethod", "ReturnCount", "ComplexCondition")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (!isAdded) {
@@ -2238,7 +2271,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             event.action == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER &&
             getPostListType() == ReaderPostListType.TAG_FOLLOWED &&
             !isPostAdapterEmpty &&
-            (!isAdded || !mRecyclerView.isFirstItemVisible)
+            !mRecyclerView.isFirstItemVisible
         ) {
             showNewPostsBar()
         } else if (event.result.isNewOrChanged
@@ -2270,17 +2303,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             AppLog.i(AppLog.T.READER, "reader post list > network unavailable, canceled tag update")
-            return
-        }
-        if (tag == null) {
+        } else if (tag == null) {
             AppLog.w(AppLog.T.READER, "null tag passed to updatePostsWithTag")
-            return
+        } else {
+            AppLog.d(
+                AppLog.T.READER,
+                "reader post list > updating tag " + tag.tagNameForLog + ", updateAction=" + updateAction.name
+            )
+            ReaderPostServiceStarter.startServiceForTag(activity, tag, updateAction)
         }
-        AppLog.d(
-            AppLog.T.READER,
-            "reader post list > updating tag " + tag.tagNameForLog + ", updateAction=" + updateAction.name
-        )
-        ReaderPostServiceStarter.startServiceForTag(activity, tag, updateAction)
     }
 
     private fun updateCurrentTag() {
@@ -2422,7 +2453,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (isAdded && isNewPostsBarShowing()) {
                 mRecyclerView.addOnScrollListener(mOnScrollListener)
             }
-        }, 1000L)
+        }, RECYCLER_DELAY_MS)
 
         // remove the gap marker if it's showing, since it's no longer valid
         postAdapter.removeGapMarker()
@@ -2440,6 +2471,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         val listener: Animation.AnimationListener = object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
+                // noop
             }
 
             override fun onAnimationEnd(animation: Animation) {
@@ -2450,6 +2482,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
 
             override fun onAnimationRepeat(animation: Animation) {
+                // noop
             }
         }
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener)
@@ -2466,6 +2499,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     /*
     * called from adapter when user taps a post
     */
+    @Suppress("LongMethod", "NestedBlockDepth", "ReturnCount", "CyclomaticComplexMethod")
     override fun onPostSelected(post: ReaderPost?) {
         if (!isAdded || post == null) {
             return
@@ -2531,19 +2565,24 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         when (val type = getPostListType()) {
-            ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW -> ReaderActivityLauncher.showReaderPostPagerForTag(
-                activity,
-                currentTag,
-                type,
-                post.blogId,
-                post.postId
-            )
+            ReaderPostListType.TAG_FOLLOWED,
+            ReaderPostListType.TAG_PREVIEW -> {
+                ReaderActivityLauncher.showReaderPostPagerForTag(
+                    activity,
+                    currentTag,
+                    type,
+                    post.blogId,
+                    post.postId
+                )
+            }
 
-            ReaderPostListType.BLOG_PREVIEW -> ReaderActivityLauncher.showReaderPostPagerForBlog(
-                activity,
-                post.blogId,
-                post.postId
-            )
+            ReaderPostListType.BLOG_PREVIEW -> {
+                ReaderActivityLauncher.showReaderPostPagerForBlog(
+                    activity,
+                    post.blogId,
+                    post.postId
+                )
+            }
 
             ReaderPostListType.SEARCH_RESULTS -> {
                 mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
@@ -2581,7 +2620,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         trackTagLoaded(tag)
         AppLog.d(
             AppLog.T.READER,
-            String.format("reader post list > tag %s displayed", tag.tagNameForLog)
+            String.format(
+                Locale.US,
+                "reader post list > tag %s displayed",
+                tag.tagNameForLog
+            )
         )
         currentTag = tag
     }
@@ -2761,6 +2804,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
+    @Suppress("SwallowedException")
     private fun sharePost(post: ReaderPost) {
         val url = (if (post.hasShortUrl()) post.shortUrl else post.url)
 
@@ -2822,6 +2866,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         private const val TAB_POSTS = 0
         private const val TAB_SITES = 1
         private const val NO_POSITION = -1
+        private const val RECYCLER_DELAY_MS = 1000L
+        private const val BOOKMARK_IMAGE_MULTIPLER = 1.2
         private var mHasPurgedReaderDb = false
 
         /*
