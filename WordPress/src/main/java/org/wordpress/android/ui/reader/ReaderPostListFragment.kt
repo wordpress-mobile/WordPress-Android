@@ -722,7 +722,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             // if the user tapped a site to show site preview, it's possible they also changed the follow
             // status so tell the search adapter to check whether it has the correct follow status
             if (isSearching && lastTappedSiteSearchResult != null) {
-                siteSearchAdapter.checkFollowStatusForSite(lastTappedSiteSearchResult!!)
+                getSiteSearchAdapter().checkFollowStatusForSite(lastTappedSiteSearchResult!!)
                 lastTappedSiteSearchResult = null
             }
 
@@ -1270,7 +1270,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (!hasQuery || !hasPerformedSearch) {
             // clear posts and sites so only the suggestions or the empty view are visible
             getPostAdapter().clear()
-            siteSearchAdapter.clear()
+            getSiteSearchAdapter().clear()
 
             hideSearchTabs()
 
@@ -1377,7 +1377,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
         showLoadingProgress(false)
 
-        val adapter = siteSearchAdapter
+        val adapter = getSiteSearchAdapter()
         if (event.isError) {
             adapter.clear()
         } else if (StringUtils.equals(event.searchTerm, currentSearchQuery)) {
@@ -1467,11 +1467,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                             hideEmptyView()
                         }
                     } else if (tab.position == TAB_SITES) {
-                        recyclerView.adapter = siteSearchAdapter
+                        recyclerView.adapter = getSiteSearchAdapter()
                         if (siteSearchAdapterPos > 0) {
                             recyclerView.scrollRecycleViewToPosition(siteSearchAdapterPos)
                         }
-                        if (siteSearchAdapter.isEmpty) {
+                        if (getSiteSearchAdapter().isEmpty) {
                             setEmptyTitleDescriptionAndButton(false)
                             showEmptyView()
                         } else {
@@ -1961,7 +1961,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
             if (isEmpty) {
                 if ((getPostListType() != ReaderPostListType.SEARCH_RESULTS) ||
-                    (searchTabsPosition == TAB_SITES && siteSearchAdapter.isEmpty) ||
+                    (searchTabsPosition == TAB_SITES && getSiteSearchAdapter().isEmpty) ||
                     (searchTabsPosition == TAB_POSTS && getPostAdapter().isEmpty)
                 ) {
                     setEmptyTitleDescriptionAndButton(false)
@@ -2028,30 +2028,29 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         return readerPostAdapter!!
     }
 
-    private val siteSearchAdapter: ReaderSiteSearchAdapter
-        get() {
-            if (searchAdapter == null) {
-                searchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
-                    override fun onSiteClicked(site: ReaderSiteModel) {
-                        lastTappedSiteSearchResult = site
-                        ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            activity,
-                            site.siteId,
-                            site.feedId,
-                            site.isFollowing,
-                            readerPostAdapter!!.source,
-                            readerTracker
-                        )
-                    }
+    private fun getSiteSearchAdapter(): ReaderSiteSearchAdapter {
+        if (searchAdapter == null) {
+            searchAdapter = ReaderSiteSearchAdapter(object : SiteSearchAdapterListener {
+                override fun onSiteClicked(site: ReaderSiteModel) {
+                    lastTappedSiteSearchResult = site
+                    ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                        activity,
+                        site.siteId,
+                        site.feedId,
+                        site.isFollowing,
+                        readerPostAdapter!!.source,
+                        readerTracker
+                    )
+                }
 
-                    override fun onLoadMore(offset: Int) {
-                        showLoadingProgress(true)
-                        updateSitesInCurrentSearch(offset)
-                    }
-                })
-            }
-            return searchAdapter!!
+                override fun onLoadMore(offset: Int) {
+                    showLoadingProgress(true)
+                    updateSitesInCurrentSearch(offset)
+                }
+            })
         }
+        return searchAdapter!!
+    }
 
     private fun hasPostAdapter(): Boolean {
         return (readerPostAdapter != null)
