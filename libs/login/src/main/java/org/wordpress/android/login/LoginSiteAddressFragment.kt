@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import dagger.android.support.AndroidSupportInjection
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -41,7 +40,6 @@ import javax.inject.Inject
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
-
     private var mSiteAddressInput: WPLoginInputRow? = null
 
     private var mRequestedSiteAddress: String? = null
@@ -185,7 +183,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         super.onDestroyView()
     }
 
-    protected fun discover() {
+    private fun discover() {
         if (!NetworkUtils.checkConnection(activity)) {
             return
         }
@@ -335,11 +333,17 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == LoginHttpAuthDialogFragment.DO_HTTP_AUTH && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == LoginHttpAuthDialogFragment.DO_HTTP_AUTH &&
+            resultCode == Activity.RESULT_OK && data != null) {
             val url = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_URL)
             val httpUsername = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_USERNAME)
             val httpPassword = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_PASSWORD)
-            mHTTPAuthManager?.addHTTPAuthCredentials(httpUsername.orEmpty(), httpPassword.orEmpty(), url.orEmpty(), null)
+            mHTTPAuthManager?.addHTTPAuthCredentials(
+                httpUsername.orEmpty(),
+                httpPassword.orEmpty(),
+                url.orEmpty(),
+                null
+            )
             discover()
         }
     }
@@ -441,16 +445,6 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         }
     }
 
-    private fun handleConnectSiteInfoForJetpack(siteInfo: ConnectSiteInfoPayload) {
-        endProgressIfNeeded()
-
-        if (siteInfo.hasJetpack && siteInfo.isJetpackConnected && siteInfo.isJetpackActive) {
-            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url))
-        } else {
-            mLoginListener.handleSiteAddressError(siteInfo)
-        }
-    }
-
     private fun calculateHasJetpack(siteInfo: ConnectSiteInfoPayload): Boolean {
         // Determining if jetpack is actually installed takes additional logic. This final
         // calculated event property will make querying this event more straight-forward.
@@ -523,3 +517,4 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         const val TAG: String = "login_site_address_fragment_tag"
     }
 }
+
