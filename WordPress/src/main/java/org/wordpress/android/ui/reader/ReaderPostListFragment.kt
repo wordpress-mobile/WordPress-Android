@@ -209,6 +209,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private lateinit var searchMenuItem: MenuItem
     private lateinit var jetpackBanner: View
 
+    private lateinit var postListViewModel: ReaderPostListViewModel
+
     private var bottomNavController: BottomNavController? = null
     private var actionableEmptyView: ActionableEmptyView? = null
     private var searchTabs: TabLayout? = null
@@ -241,7 +243,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var currentUpdateActions = HashSet<ReaderPostServiceStarter.UpdateAction>()
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
-    private var postListViewModel: ReaderPostListViewModel? = null
 
     // This VM is initialized only on the Following tab
     private var subFilterViewModel: SubFilterViewModel? = null
@@ -416,6 +417,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         super.onViewCreated(view, savedInstanceState)
 
         postListViewModel = ViewModelProvider(this, viewModelFactory)[ReaderPostListViewModel::class.java]
+
         if (isTopLevel) {
             readerViewModel = ViewModelProvider(
                 requireParentFragment(),
@@ -428,7 +430,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         setupObservers()
-        postListViewModel!!.start(readerViewModel)
+        postListViewModel.start(readerViewModel)
 
         if (isFollowingScreen) {
             subFilterViewModel!!.onUserComesToReader()
@@ -498,7 +500,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun setupObservers() {
-        postListViewModel!!.navigationEvents.observe(
+        postListViewModel.navigationEvents.observe(
             viewLifecycleOwner
         ) { event: Event<ReaderNavigationEvents> ->
             event.applyIfNotHandled {
@@ -506,7 +508,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
 
-        postListViewModel!!.snackbarEvents.observe(
+        postListViewModel.snackbarEvents.observe(
             viewLifecycleOwner
         ) { event: Event<SnackbarMessageHolder> ->
             event.applyIfNotHandled {
@@ -514,7 +516,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
 
-        postListViewModel!!.preloadPostEvents.observe(
+        postListViewModel.preloadPostEvents.observe(
             viewLifecycleOwner
         ) { event: Event<PreLoadPostContent> ->
             event.applyIfNotHandled {
@@ -522,7 +524,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
 
-        postListViewModel!!.refreshPosts.observe(
+        postListViewModel.refreshPosts.observe(
             viewLifecycleOwner
         ) { event: Event<Unit> ->
             event.applyIfNotHandled {
@@ -530,7 +532,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
 
-        postListViewModel!!.updateFollowStatus.observe(
+        postListViewModel.updateFollowStatus.observe(
             viewLifecycleOwner
         ) { readerData: FollowStatusChanged ->
             setFollowStatusForBlog(readerData)
@@ -685,7 +687,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
         wasPaused = true
 
-        postListViewModel!!.onFragmentPause(isTopLevel, isSearching, isFilterableScreen)
+        postListViewModel.onFragmentPause(isTopLevel, isSearching, isFilterableScreen)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -732,7 +734,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             showEmptyView()
         }
 
-        postListViewModel!!.onFragmentResume(
+        postListViewModel.onFragmentResume(
             isTopLevel, isSearching, isFilterableScreen,
             if (isFilterableScreen) subFilterViewModel!!.getCurrentSubfilterValue() else null
         )
@@ -1359,7 +1361,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         val searchTag = ReaderUtils.getTagForSearchQuery(trimQuery)
         ReaderPostTable.deletePostsWithTag(searchTag)
 
-        readerPostAdapter!!.setCurrentTag(searchTag)
+        getPostAdapter().setCurrentTag(searchTag)
         currentSearchQuery = trimQuery
         updatePostsInCurrentSearch(0)
         updateSitesInCurrentSearch(0)
@@ -1642,12 +1644,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         }
 
-        val updateAction =
-            if (event.offset == 0) {
-                ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
-            } else {
-                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-            }
+        val updateAction = if (event.offset == 0) {
+            ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
+        } else {
+            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+        }
         setIsUpdating(true, updateAction)
         setEmptyTitleDescriptionAndButton(false)
         if (isPostAdapterEmpty()) showEmptyView()
@@ -1928,7 +1929,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             tag = ReaderUtils.getDefaultTag()
         }
 
-        postListViewModel!!.onEmptyStateButtonTapped(tag!!)
+        postListViewModel.onEmptyStateButtonTapped(tag!!)
     }
 
     private fun announceListStateForAccessibility() {
@@ -1998,17 +1999,16 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 AppLog.T.READER,
                 "reader post list > creating post adapter"
             )
-            val context =
-                WPActivityUtils.getThemedContext(activity)
             readerPostAdapter = ReaderPostAdapter(
-                context,
+                WPActivityUtils.getThemedContext(activity),
                 getPostListType(),
                 imageManager,
                 uiHelpers,
                 networkUtilsWrapper,
                 isTopLevel,
-                this.lifecycleScope
+                lifecycleScope
             )
+
             readerPostAdapter!!.setOnFollowListener(this)
             readerPostAdapter!!.setOnPostSelectedListener(this)
             readerPostAdapter!!.setOnPostListItemButtonListener(this)
@@ -2042,7 +2042,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         site.siteId,
                         site.feedId,
                         site.isFollowing,
-                        readerPostAdapter!!.source,
+                        getPostAdapter().source,
                         readerTracker
                     )
                 }
@@ -2259,7 +2259,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    @Suppress("unused", "CyclomaticComplexMethod", "ReturnCount", "ComplexCondition")
+    @Suppress("unused", "ReturnCount", "ComplexCondition")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (!isAdded) {
@@ -2533,7 +2533,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
         else if (post.isXpost) {
             // if this is a cross-post, we want to show the original post
-            handleXpostSelected(post)
+            handleCrossPostSelected(post)
         } else {
             when (val type = getPostListType()) {
                 ReaderPostListType.TAG_FOLLOWED,
@@ -2572,7 +2572,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 post.blogId,
                 post.feedId,
                 post.isFollowedByCurrentUser,
-                readerPostAdapter!!.source
+                getPostAdapter().source
             )
         } else {
             readerTracker.trackBlog(
@@ -2580,7 +2580,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 post.blogId,
                 post.feedId,
                 post.isFollowedByCurrentUser,
-                readerPostAdapter!!.source
+                getPostAdapter().source
             )
         }
     }
@@ -2597,7 +2597,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     )
                 } else if (discoverData.hasPermalink()) {
                     if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-                        postListViewModel!!.onExternalPostOpened(post)
+                        postListViewModel.onExternalPostOpened(post)
                     }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
@@ -2607,7 +2607,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
     }
 
-    private fun handleXpostSelected(post: ReaderPost) {
+    private fun handleCrossPostSelected(post: ReaderPost) {
         ReaderActivityLauncher.showReaderPostDetail(
             activity,
             post.xpostBlogId,
@@ -2678,18 +2678,22 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Suppress("LongMethod")
     override fun onButtonClicked(post: ReaderPost, actionType: ReaderPostCardActionType) {
-        when (actionType) {
-            ReaderPostCardActionType.FOLLOW -> postListViewModel!!.onFollowSiteClicked(
-                post,
-                isBookmarksList,
-                readerPostAdapter!!.source
-            )
+        val source = getPostAdapter().source
 
-            ReaderPostCardActionType.SITE_NOTIFICATIONS -> postListViewModel!!.onSiteNotificationMenuClicked(
+        when (actionType) {
+            ReaderPostCardActionType.FOLLOW -> {
+                postListViewModel.onFollowSiteClicked(
+                    post,
+                    isBookmarksList,
+                    source
+                )
+            }
+
+            ReaderPostCardActionType.SITE_NOTIFICATIONS -> postListViewModel.onSiteNotificationMenuClicked(
                 post.blogId,
                 post.postId,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
             ReaderPostCardActionType.SHARE -> {
@@ -2698,7 +2702,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     post.blogId,
                     post.feedId,
                     post.isFollowedByCurrentUser,
-                    readerPostAdapter!!.source
+                    source
                 )
                 sharePost(post)
             }
@@ -2708,47 +2712,47 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderActivityLauncher.openPost(context, post)
             }
 
-            ReaderPostCardActionType.LIKE -> postListViewModel!!.onLikeButtonClicked(
+            ReaderPostCardActionType.LIKE -> postListViewModel.onLikeButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.REBLOG -> postListViewModel!!.onReblogButtonClicked(
+            ReaderPostCardActionType.REBLOG -> postListViewModel.onReblogButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.REPORT_POST -> postListViewModel!!.onReportPostButtonClicked(
+            ReaderPostCardActionType.REPORT_POST -> postListViewModel.onReportPostButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.REPORT_USER -> postListViewModel!!.onReportUserButtonClicked(
+            ReaderPostCardActionType.REPORT_USER -> postListViewModel.onReportUserButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.BLOCK_SITE -> postListViewModel!!.onBlockSiteButtonClicked(
+            ReaderPostCardActionType.BLOCK_SITE -> postListViewModel.onBlockSiteButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.BLOCK_USER -> postListViewModel!!.onBlockUserButtonClicked(
+            ReaderPostCardActionType.BLOCK_USER -> postListViewModel.onBlockUserButtonClicked(
                 post,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
-            ReaderPostCardActionType.BOOKMARK -> postListViewModel!!.onBookmarkButtonClicked(
+            ReaderPostCardActionType.BOOKMARK -> postListViewModel.onBookmarkButtonClicked(
                 post.blogId,
                 post.postId,
                 isBookmarksList,
-                readerPostAdapter!!.source
+                source
             )
 
             ReaderPostCardActionType.COMMENTS -> ReaderActivityLauncher.showReaderComments(
@@ -2759,10 +2763,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             )
 
             ReaderPostCardActionType.TOGGLE_SEEN_STATUS -> if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-                postListViewModel!!.onToggleSeenStatusClicked(
+                postListViewModel.onToggleSeenStatusClicked(
                     post,
                     isBookmarksList,
-                    readerPostAdapter!!.source
+                    source
                 )
             }
 
@@ -2868,7 +2872,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                 SelectedSiteRepository.UNAVAILABLE
             )
-            postListViewModel!!.onReblogSiteSelected(siteLocalId)
+            postListViewModel.onReblogSiteSelected(siteLocalId)
         }
     }
 
