@@ -2500,7 +2500,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     /*
     * called from adapter when user taps a post
     */
-    @Suppress("LongMethod", "NestedBlockDepth", "ReturnCount", "CyclomaticComplexMethod")
     override fun onPostSelected(post: ReaderPost?) {
         if (!isAdded || post == null) {
             return
@@ -2511,38 +2510,77 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         )
 
         if (post.isBookmarked) {
-            if (isBookmarksList) {
-                readerTracker.trackBlog(
-                    AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
-                    post.blogId,
-                    post.feedId,
-                    post.isFollowedByCurrentUser,
-                    readerPostAdapter!!.source
-                )
-            } else {
-                readerTracker.trackBlog(
-                    AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
-                    post.blogId,
-                    post.feedId,
-                    post.isFollowedByCurrentUser,
-                    readerPostAdapter!!.source
-                )
-            }
+            trackBookmarkedPostSelected(post)
         }
 
-        // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost) {
-            val discoverData = post.discoverData
-            if (discoverData != null
-                && discoverData.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
-            ) {
+            // "discover" posts that highlight another post should open the original (source) post when tapped
+            handleDiscoverPostSelected(post)
+        }
+        else if (post.isXpost) {
+            // if this is a cross-post, we want to show the original post
+            handleXpostSelected(post)
+        } else {
+            when (val type = getPostListType()) {
+                ReaderPostListType.TAG_FOLLOWED,
+                ReaderPostListType.TAG_PREVIEW -> {
+                    ReaderActivityLauncher.showReaderPostPagerForTag(
+                        activity,
+                        currentTag,
+                        type,
+                        post.blogId,
+                        post.postId
+                    )
+                }
+
+                ReaderPostListType.BLOG_PREVIEW -> {
+                    ReaderActivityLauncher.showReaderPostPagerForBlog(
+                        activity,
+                        post.blogId,
+                        post.postId
+                    )
+                }
+
+                ReaderPostListType.SEARCH_RESULTS -> {
+                    readerTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
+                    ReaderActivityLauncher.showReaderPostDetail(activity, post.blogId, post.postId)
+                }
+
+                ReaderPostListType.TAGS_FEED -> {}
+            }
+        }
+    }
+
+    private fun trackBookmarkedPostSelected(post: ReaderPost) {
+        if (isBookmarksList) {
+            readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
+                post.blogId,
+                post.feedId,
+                post.isFollowedByCurrentUser,
+                readerPostAdapter!!.source
+            )
+        } else {
+            readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                post.blogId,
+                post.feedId,
+                post.isFollowedByCurrentUser,
+                readerPostAdapter!!.source
+            )
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleDiscoverPostSelected(post: ReaderPost) {
+        post.discoverData?.let { discoverData ->
+            if (discoverData.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.blogId != 0L && discoverData.postId != 0L) {
                     ReaderActivityLauncher.showReaderPostDetail(
                         activity,
                         discoverData.blogId,
                         discoverData.postId
                     )
-                    return
                 } else if (discoverData.hasPermalink()) {
                     if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
                         postListViewModel!!.onExternalPostOpened(post)
@@ -2550,48 +2588,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(activity, discoverData.permaLink)
-                    return
                 }
             }
         }
+    }
 
-        // if this is a cross-post, we want to show the original post
-        if (post.isXpost) {
-            ReaderActivityLauncher.showReaderPostDetail(
-                activity,
-                post.xpostBlogId,
-                post.xpostPostId
-            )
-            return
-        }
-
-        when (val type = getPostListType()) {
-            ReaderPostListType.TAG_FOLLOWED,
-            ReaderPostListType.TAG_PREVIEW -> {
-                ReaderActivityLauncher.showReaderPostPagerForTag(
-                    activity,
-                    currentTag,
-                    type,
-                    post.blogId,
-                    post.postId
-                )
-            }
-
-            ReaderPostListType.BLOG_PREVIEW -> {
-                ReaderActivityLauncher.showReaderPostPagerForBlog(
-                    activity,
-                    post.blogId,
-                    post.postId
-                )
-            }
-
-            ReaderPostListType.SEARCH_RESULTS -> {
-                readerTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
-                ReaderActivityLauncher.showReaderPostDetail(activity, post.blogId, post.postId)
-            }
-
-            ReaderPostListType.TAGS_FEED -> {}
-        }
+    private fun handleXpostSelected(post: ReaderPost) {
+        ReaderActivityLauncher.showReaderPostDetail(
+            activity,
+            post.xpostBlogId,
+            post.xpostPostId
+        )
     }
 
     /*
@@ -2839,7 +2846,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     @Deprecated("Deprecated in Java")
-    @Suppress("deprecation")
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
