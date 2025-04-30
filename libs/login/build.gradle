@@ -70,8 +70,6 @@ dependencies {
     implementation libs.androidx.credentials.main
     implementation libs.androidx.credentials.play.service.auth
 
-    implementation libs.wordpress.rs.android
-
     // Dagger
     implementation libs.google.dagger
     ksp libs.google.dagger.compiler
