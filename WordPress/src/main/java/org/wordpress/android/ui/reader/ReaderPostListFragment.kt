@@ -55,7 +55,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
-import org.wordpress.android.fluxc.store.ReaderStore
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
 import org.wordpress.android.models.FilterCriteria
@@ -570,7 +569,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (!hasPostAdapter()) {
             return
         }
-        postAdapter.setFollowStatusForBlog(readerData.blogId, readerData.following)
+        getPostAdapter().setFollowStatusForBlog(readerData.blogId, readerData.following)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -683,7 +682,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
          * This is a workaround for https://github.com/wordpress-mobile/WordPress-Android/issues/11985.
          * The RecyclerView doesn't get redrawn correctly when the adapter finishes its initialization in onStart.
          */
-        postAdapter.notifyDataSetChanged()
+        getPostAdapter().notifyDataSetChanged()
         if (mWasPaused) {
             AppLog.d(AppLog.T.READER, "reader post list > resumed from paused state")
             mWasPaused = false
@@ -849,7 +848,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     private fun checkPostAdapter() {
         if (isAdded && recyclerView.adapter == null) {
-            recyclerView.adapter = postAdapter
+            recyclerView.adapter = getPostAdapter()
             refreshPosts()
             if (!mHasRequestedPosts && NetworkUtils.isNetworkAvailable(
                     activity
@@ -872,7 +871,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         readerPostListType = postListType
         readerPostAdapter = null
         recyclerView.adapter = null
-        recyclerView.adapter = postAdapter
+        recyclerView.adapter = getPostAdapter()
         recyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported)
     }
 
@@ -1261,7 +1260,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (!hasQuery || !hasPerformedSearch) {
             // clear posts and sites so only the suggestions or the empty view are visible
-            postAdapter.clear()
+            getPostAdapter().clear()
             siteSearchAdapter.clear()
 
             hideSearchTabs()
@@ -1448,11 +1447,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             searchTabs!!.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
                     if (tab.position == TAB_POSTS) {
-                        recyclerView.adapter = postAdapter
+                        recyclerView.adapter = getPostAdapter()
                         if (postSearchAdapterPos > 0) {
                             recyclerView.scrollRecycleViewToPosition(postSearchAdapterPos)
                         }
-                        if (postAdapter.isEmpty) {
+                        if (getPostAdapter().isEmpty) {
                             setEmptyTitleDescriptionAndButton(false)
                             showEmptyView()
                         } else {
@@ -1500,7 +1499,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (searchTabs!!.selectedTabPosition != TAB_POSTS) {
                 searchTabs!!.getTabAt(TAB_POSTS)!!.select()
             }
-            recyclerView.adapter = postAdapter
+            recyclerView.adapter = getPostAdapter()
             lastTappedSiteSearchResult = null
             showLoadingProgress(false)
         }
@@ -1923,7 +1922,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             requireView().announceForAccessibility(
                 getString(
                     R.string.reader_acessibility_list_loaded,
-                    postAdapter.itemCount
+                    getPostAdapter().itemCount
                 )
             )
         }
@@ -1953,7 +1952,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (isEmpty) {
                 if ((getPostListType() != ReaderPostListType.SEARCH_RESULTS) ||
                     (searchTabsPosition == TAB_SITES && siteSearchAdapter.isEmpty) ||
-                    (searchTabsPosition == TAB_POSTS && postAdapter.isEmpty)
+                    (searchTabsPosition == TAB_POSTS && getPostAdapter().isEmpty)
                 ) {
                     setEmptyTitleDescriptionAndButton(false)
                     showEmptyView()
@@ -1979,8 +1978,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         get() = getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && (currentReaderTag != null && currentReaderTag!!.isBookmarked)
 
-    private val postAdapter: ReaderPostAdapter
-        get() {
+    private fun getPostAdapter(): ReaderPostAdapter {
             if (readerPostAdapter == null) {
                 AppLog.d(
                     AppLog.T.READER,
@@ -2070,7 +2068,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             // skip if this is already the current tag and the post adapter is already showing it
             if (isCurrentTag(tag)
                 && hasPostAdapter()
-                && postAdapter.isCurrentTag(tag)
+                && getPostAdapter().isCurrentTag(tag)
             ) {
                 return
             }
@@ -2127,7 +2125,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostListType.TAGS_FEED -> {}
             }
 
-            postAdapter.setCurrentTag(currentReaderTag)
+            getPostAdapter().setCurrentTag(currentReaderTag)
             hideNewPostsBar()
             showLoadingProgress(false)
             updateCurrentTagIfTime()
@@ -2188,7 +2186,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun refreshPosts() {
         hideNewPostsBar()
         if (hasPostAdapter()) {
-            postAdapter.refresh()
+            getPostAdapter().refresh()
         }
     }
 
@@ -2198,7 +2196,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private fun reloadPosts() {
         hideNewPostsBar()
         if (hasPostAdapter()) {
-            postAdapter.reload()
+            getPostAdapter().reload()
         }
     }
 
@@ -2459,7 +2457,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }, RECYCLER_DELAY_MS)
 
         // remove the gap marker if it's showing, since it's no longer valid
-        postAdapter.removeGapMarker()
+        getPostAdapter().removeGapMarker()
     }
 
     private fun hideNewPostsBar() {
