@@ -167,9 +167,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     lateinit var accountStore: AccountStore
 
     @Inject
-    lateinit var readerStore: ReaderStore
-
-    @Inject
     lateinit var dispatcher: Dispatcher
 
     @Inject
@@ -209,29 +206,35 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var searchAdapter: ReaderSiteSearchAdapter? = null
     private var suggestionAdapter: ReaderSearchSuggestionAdapter? = null
     private var searchSuggestionRecyclerAdapter: ReaderSearchSuggestionRecyclerAdapter? = null
+
     private lateinit var recyclerView: FilteredRecyclerView
-    private var firstLoad = true
     private lateinit var newPostsBar: View
-    private var actionableEmptyView: ActionableEmptyView? = null
     private lateinit var progressBar: ProgressBar
-    private var searchTabs: TabLayout? = null
-    private var searchView: SearchView? = null
     private lateinit var searchMenuItem: MenuItem
     private lateinit var jetpackBanner: View
-    private var isTopLevel = false
+
     private var bottomNavController: BottomNavController? = null
+    private var actionableEmptyView: ActionableEmptyView? = null
+    private var searchTabs: TabLayout? = null
+    private var searchView: SearchView? = null
+
+    private var firstLoad = true
+    private var isTopLevel = false
+
     private var currentReaderTag: ReaderTag? = null
-    private var tagFragmentStartedWith: ReaderTag? = null
     private var currentBlogId: Long = 0
     private var currentFeedId: Long = 0
     private var currentSearchQuery: String? = null
     private var readerPostListType: ReaderPostListType? = null
     private var lastTappedSiteSearchResult: ReaderSiteModel? = null
+    private var tagFragmentStartedWith: ReaderTag? = null
+
     private var restorePosition = 0
     private var siteSearchRestorePosition = 0
     private var postSearchAdapterPos = 0
     private var siteSearchAdapterPos = 0
     private var searchTabsPos = NO_POSITION
+
     private var isFilterableScreen = false
     private var isFiltered = false
     private var readerSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
