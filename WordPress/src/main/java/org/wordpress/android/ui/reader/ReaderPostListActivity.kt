@@ -77,7 +77,14 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         binding = ReaderActivityPostListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        restoreState(savedInstanceState)
+        setupBackPressCallback()
+        setupToolbar()
+    }
+
+    private fun restoreState(savedInstanceState: Bundle?) {
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
+
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
             BundleCompat.getSerializable(
                 intent.extras!!,
@@ -87,9 +94,6 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         } else {
             ReaderTypes.DEFAULT_POST_LIST_TYPE
         }
-
-        setupBackPressCallback()
-        setupToolbar(postListType)
 
         if (postListType == ReaderPostListType.BLOG_PREVIEW) {
             setTitle(R.string.reader_activity_title_blog_preview)
@@ -156,7 +160,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    private fun setupToolbar(postListType: ReaderPostListType) {
+    private fun setupToolbar() {
         setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setDisplayShowTitleEnabled(true)
