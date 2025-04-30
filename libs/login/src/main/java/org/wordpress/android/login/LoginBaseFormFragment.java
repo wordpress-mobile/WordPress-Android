@@ -108,7 +108,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
-        setupLabel(rootView.findViewById(R.id.label));
+        setupLabel((TextView) rootView.findViewById(R.id.label));
         setupContent(rootView);
         mBottomButton = rootView.findViewById(R.id.bottom_button);
         setupBottomButton(mBottomButton);
