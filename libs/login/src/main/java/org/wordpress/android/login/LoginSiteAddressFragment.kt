@@ -198,6 +198,8 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
 
         val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
 
+        // This work is in progress as right now we are just testing the API discovery through the RS library
+        // No further actions are taken
         viewModel.runApiDiscovery(cleanedUrl)
 
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
