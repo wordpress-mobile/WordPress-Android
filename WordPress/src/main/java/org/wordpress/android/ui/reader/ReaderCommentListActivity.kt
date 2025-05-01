@@ -1,1178 +1,1256 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.HapticFeedbackConstants;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.LayoutManager;
-
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.databinding.ReaderActivityCommentListBinding;
-import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
-import org.wordpress.android.datasets.ReaderCommentTable;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.UserSuggestionTable;
-import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.ReaderComment;
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.UserSuggestion;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
-import org.wordpress.android.ui.CommentFullScreenDialogFragment;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
-import org.wordpress.android.ui.main.BaseAppCompatActivity;
-import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
-import org.wordpress.android.ui.reader.services.comment.ReaderCommentService;
-import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
-import org.wordpress.android.ui.suggestion.Suggestion;
-import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
-import org.wordpress.android.util.extensions.CompatExtensionsKt;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPSnackbar;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.inject.Inject;
-
-import kotlin.Unit;
-import dagger.hilt.android.AndroidEntryPoint;
-
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
-import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
-import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
+import android.view.HapticFeedbackConstants
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.ReaderActivityCommentListBinding
+import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding
+import org.wordpress.android.datasets.ReaderCommentTable
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.UserSuggestionTable
+import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderComment
+import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener
+import org.wordpress.android.ui.CommentFullScreenDialogFragment
+import org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion.newBundle
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity.Companion.createIntent
+import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment.Companion.newInstance
+import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
+import org.wordpress.android.ui.reader.ReaderEvents.CommentModerated
+import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsEnded
+import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsStarted
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.reader.actions.ReaderActions
+import org.wordpress.android.ui.reader.actions.ReaderActions.CommentActionListener
+import org.wordpress.android.ui.reader.actions.ReaderCommentActions
+import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel.ShowBottomSheetData
+import org.wordpress.android.ui.suggestion.Suggestion.Companion.fromUserSuggestions
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
+import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils.setupUserSuggestions
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.EditTextUtils
+import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.WPActivityUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.extensions.onBackPressedCompat
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.widgets.RecyclerItemDecoration
+import org.wordpress.android.widgets.WPSnackbar.Companion.make
+import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
-public class ReaderCommentListActivity extends BaseAppCompatActivity implements OnConfirmListener,
-        OnCollapseListener {
-    private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
+class ReaderCommentListActivity : BaseAppCompatActivity(),
+    CollapseFullScreenDialogFragment.OnConfirmListener,
+    OnCollapseListener {
+    private var mPostId: Long = 0
+    private var mBlogId: Long = 0
+    private var mPost: ReaderPost? = null
+    private var mCommentAdapter: ReaderCommentAdapter? = null
+    private var mSuggestionAdapter: SuggestionAdapter? = null
+    private var mSuggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
 
-    private static final String NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG";
+    private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
 
-    private long mPostId;
-    private long mBlogId;
-    @Nullable private ReaderPost mPost;
-    @Nullable private ReaderCommentAdapter mCommentAdapter;
-    @Nullable private SuggestionAdapter mSuggestionAdapter;
-    @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+    private var mIsUpdatingComments = false
+    private var mHasUpdatedComments = false
+    private var mIsSubmittingComment = false
+    private var mUpdateOnResume = false
 
-    @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private var mDirectOperation: DirectOperation? = null
+    private var mReplyToCommentId: Long = 0
+    private var mCommentId: Long = 0
+    private var mRestorePosition = 0
+    private var mInterceptedUri: String? = null
+    private var mSource: String? = null
 
-    private boolean mIsUpdatingComments;
-    private boolean mHasUpdatedComments;
-    private boolean mIsSubmittingComment;
-    private boolean mUpdateOnResume;
+    @Inject
+    var mAccountStore: AccountStore? = null
 
-    @Nullable private DirectOperation mDirectOperation;
-    private long mReplyToCommentId;
-    private long mCommentId;
-    private int mRestorePosition;
-    @Nullable private String mInterceptedUri;
-    @Nullable private String mSource;
+    @Inject
+    var mUiHelpers: UiHelpers? = null
 
-    @Inject AccountStore mAccountStore;
-    @Inject UiHelpers mUiHelpers;
-    @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject ReaderTracker mReaderTracker;
-    @Inject SiteStore mSiteStore;
+    @Inject
+    var mViewModelFactory: ViewModelProvider.Factory? = null
 
-    @Nullable private ReaderCommentListViewModel mViewModel;
-    @Nullable private ConversationNotificationsViewModel mConversationViewModel;
+    @Inject
+    var mReaderTracker: ReaderTracker? = null
 
-    @Nullable private ReaderActivityCommentListBinding mBinding = null;
-    @Nullable private ReaderIncludeCommentBoxBinding mBoxBinding = null;
+    @Inject
+    var mSiteStore: SiteStore? = null
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = ReaderActivityCommentListBinding.inflate(getLayoutInflater());
-        mBoxBinding = mBinding.layoutCommentBox;
-        setContentView(mBinding.getRoot());
+    private var mViewModel: ReaderCommentListViewModel? = null
+    private var mConversationViewModel: ConversationNotificationsViewModel? = null
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+    private var mBinding: ReaderActivityCommentListBinding? = null
+    private var mBoxBinding: ReaderIncludeCommentBoxBinding? = null
+
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mBinding = ReaderActivityCommentListBinding.inflate(
+            layoutInflater
+        )
+        mBoxBinding = mBinding!!.layoutCommentBox
+        setContentView(mBinding!!.root)
+
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragment =
+                    supportFragmentManager.findFragmentByTag(CollapseFullScreenDialogFragment.TAG) as CollapseFullScreenDialogFragment?
 
                 if (fragment != null) {
-                    fragment.collapse();
+                    fragment.collapse()
                 } else {
-                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                    onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             }
-        };
-        getOnBackPressedDispatcher().addCallback(this, callback);
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
         if (mBinding != null) {
-            setSupportActionBar(mBinding.toolbarMain);
-            ActionBar actionBar = getSupportActionBar();
+            setSupportActionBar(mBinding!!.toolbarMain)
+            val actionBar = supportActionBar
             if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(true)
+                actionBar.setDisplayHomeAsUpEnabled(true)
             }
         }
 
         if (mBinding != null) {
-            initViewModels(mBinding, savedInstanceState);
+            initViewModels(mBinding!!, savedInstanceState)
         }
 
         if (mBinding != null && mBoxBinding != null && mConversationViewModel != null) {
-            mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                    mBinding.swipeToRefresh,
-                    () -> {
-                        mConversationViewModel.onRefresh();
-                        updatePostAndComments(mBinding, mBoxBinding);
-                    }
-            );
+            mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
+                mBinding!!.swipeToRefresh
+            ) {
+                mConversationViewModel!!.onRefresh()
+                updatePostAndComments(mBinding!!, mBoxBinding!!)
+            }
         }
 
         if (mBoxBinding != null) {
-            mBoxBinding.editComment.initializeWithPrefix('@');
-            mBoxBinding.editComment.getAutoSaveTextHelper().setUniqueId(
-                    String.format(Locale.US, "%d%d", mPostId, mBlogId)
-            );
+            mBoxBinding!!.editComment.initializeWithPrefix('@')
+            mBoxBinding!!.editComment.autoSaveTextHelper.uniqueId =
+                String.format(Locale.US, "%d%d", mPostId, mBlogId)
 
-            mBoxBinding.editComment.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
+            mBoxBinding!!.editComment.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
-                @Override
-                public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 }
 
-                @Override
-                public void afterTextChanged(@NonNull Editable s) {
-                    mBoxBinding.btnSubmitReply.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
+                override fun afterTextChanged(s: Editable) {
+                    mBoxBinding!!.btnSubmitReply.isEnabled =
+                        !TextUtils.isEmpty(s.toString().trim { it <= ' ' })
                 }
-            });
-            mBoxBinding.btnSubmitReply.setEnabled(false);
-            mBoxBinding.btnSubmitReply.setOnLongClickListener(view -> {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            })
+            mBoxBinding!!.btnSubmitReply.isEnabled = false
+            mBoxBinding!!.btnSubmitReply.setOnLongClickListener { view: View ->
+                if (view.isHapticFeedbackEnabled) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 }
-
-                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
-                return true;
-            });
-            ViewExtensionsKt.redirectContextClickToLongPressListener(mBoxBinding.btnSubmitReply);
+                Toast.makeText(
+                    view.context,
+                    R.string.send,
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+            mBoxBinding!!.btnSubmitReply.redirectContextClickToLongPressListener()
         }
 
-        if (mBinding != null && mBoxBinding != null
-            && !loadPost(mBinding, mBoxBinding)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
-            finish();
-            return;
+        if (mBinding != null && mBoxBinding != null && !loadPost(mBinding!!, mBoxBinding!!)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_get_post)
+            finish()
+            return
         }
 
         if (mBinding != null && mBoxBinding != null) {
-            int spacingHorizontal = 0;
-            int spacingVertical = DisplayUtils.dpToPx(this, 1);
-            mBinding.recyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
-            mBinding.recyclerView.setAdapter(getCommentAdapter(mBinding, mBoxBinding));
+            val spacingHorizontal = 0
+            val spacingVertical = DisplayUtils.dpToPx(this, 1)
+            mBinding!!.recyclerView.addItemDecoration(
+                RecyclerItemDecoration(
+                    spacingHorizontal,
+                    spacingVertical
+                )
+            )
+            mBinding!!.recyclerView.adapter = getCommentAdapter(mBinding!!, mBoxBinding!!)
         }
 
-        if (mBinding != null && mBoxBinding != null
-            && savedInstanceState != null) {
+        if (mBinding != null && mBoxBinding != null && savedInstanceState != null) {
             setReplyToCommentId(
-                    mBinding,
-                    mBoxBinding,
-                    savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID),
-                    false
-            );
+                mBinding!!,
+                mBoxBinding!!,
+                savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID),
+                false
+            )
         }
 
         // update the post and its comments upon creation
-        mUpdateOnResume = (savedInstanceState == null);
+        mUpdateOnResume = (savedInstanceState == null)
 
         if (mSource != null) {
-            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
+            mReaderTracker!!.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost,
+                mSource!!
+            )
         }
 
         if (mBoxBinding != null && mPost != null) {
-            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
-            mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
-                    mBlogId,
-                    this,
-                    mSuggestionServiceConnectionManager,
-                    mPost.isWP()
-            );
-            mBoxBinding.editComment.setAdapter(mSuggestionAdapter);
+            mSuggestionServiceConnectionManager = SuggestionServiceConnectionManager(this, mBlogId)
+            mSuggestionAdapter = setupUserSuggestions(
+                mBlogId,
+                this,
+                mSuggestionServiceConnectionManager!!,
+                mPost!!.isWP
+            )
+            mBoxBinding!!.editComment.setAdapter(mSuggestionAdapter)
 
-            mBoxBinding.buttonExpand.setOnClickListener(
-                    v -> {
-                        Bundle bundle = CommentFullScreenDialogFragment.Companion
-                                .newBundle(
-                                        mBoxBinding.editComment.getText().toString(),
-                                        mBoxBinding.editComment.getSelectionStart(),
-                                        mBoxBinding.editComment.getSelectionEnd(),
-                                        mBlogId
-                                );
+            mBoxBinding!!.buttonExpand.setOnClickListener { v: View? ->
+                val bundle = newBundle(
+                    mBoxBinding!!.editComment.text.toString(),
+                    mBoxBinding!!.editComment.selectionStart,
+                    mBoxBinding!!.editComment.selectionEnd,
+                    mBlogId
+                )
+                CollapseFullScreenDialogFragment.Builder(this@ReaderCommentListActivity)
+                    .setTitle(R.string.comment)
+                    .setOnCollapseListener(this)
+                    .setOnConfirmListener(this)
+                    .setContent(CommentFullScreenDialogFragment::class.java, bundle)
+                    .setAction(R.string.send)
+                    .setHideActivityBar(true)
+                    .build()
+                    .show(supportFragmentManager, CollapseFullScreenDialogFragment.TAG)
+            }
 
-                        new Builder(ReaderCommentListActivity.this)
-                                .setTitle(R.string.comment)
-                                .setOnCollapseListener(this)
-                                .setOnConfirmListener(this)
-                                .setContent(CommentFullScreenDialogFragment.class, bundle)
-                                .setAction(R.string.send)
-                                .setHideActivityBar(true)
-                                .build()
-                                .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
-                    }
-            );
-
-            mBoxBinding.buttonExpand.setOnLongClickListener(view -> {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            mBoxBinding!!.buttonExpand.setOnLongClickListener { view: View ->
+                if (view.isHapticFeedbackEnabled) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 }
-
-                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-                return true;
-            });
-            ViewExtensionsKt.redirectContextClickToLongPressListener(mBoxBinding.buttonExpand);
+                Toast.makeText(
+                    view.context,
+                    R.string.description_expand,
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+            mBoxBinding!!.buttonExpand.redirectContextClickToLongPressListener()
         }
 
         // reattach listeners to collapsible reply dialog
-        CollapseFullScreenDialogFragment fragment =
-                (CollapseFullScreenDialogFragment) getSupportFragmentManager().findFragmentByTag(
-                        CollapseFullScreenDialogFragment.TAG);
+        val fragment =
+            supportFragmentManager.findFragmentByTag(
+                CollapseFullScreenDialogFragment.TAG
+            ) as CollapseFullScreenDialogFragment?
 
-        if (fragment != null && fragment.isAdded()) {
-            fragment.setOnCollapseListener(this);
-            fragment.setOnConfirmListener(this);
+        if (fragment != null && fragment.isAdded) {
+            fragment.setOnCollapseListener(this)
+            fragment.setOnConfirmListener(this)
         }
     }
 
-    private void initViewModels(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @Nullable Bundle savedInstanceState
+    private fun initViewModels(
+        binding: ReaderActivityCommentListBinding,
+        savedInstanceState: Bundle?
     ) {
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
-        mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
-            ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
-            LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
+        mViewModel = ViewModelProvider(this, mViewModelFactory!!).get(
+            ReaderCommentListViewModel::class.java
+        )
+        mViewModel!!.scrollTo.observe(
+            this
+        ) { scrollPositionEvent: Event<ScrollPosition?> ->
+            val content = scrollPositionEvent.getContentIfNotHandled()
+            val layoutManager = binding.recyclerView.layoutManager
             if (content != null && layoutManager != null) {
-                if (content.isSmooth()) {
-                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
-                        @Override protected int getVerticalSnapPreference() {
-                            return LinearSmoothScroller.SNAP_TO_START;
+                if (content.isSmooth) {
+                    val smoothScrollerToTop: RecyclerView.SmoothScroller =
+                        object :
+                            LinearSmoothScroller(this) {
+                            override fun getVerticalSnapPreference(): Int {
+                                return@observe SNAP_TO_START
+                            }
                         }
-                    };
-                    smoothScrollerToTop.setTargetPosition(content.getPosition());
-                    layoutManager.startSmoothScroll(smoothScrollerToTop);
+                    smoothScrollerToTop.targetPosition = content.position
+                    layoutManager.startSmoothScroll(smoothScrollerToTop)
                 } else {
-                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
+                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+                        content.position,
+                        0
+                    )
                 }
-                binding.appbarMain.post(binding.appbarMain::requestLayout);
+                binding.appbarMain.post { binding.appbarMain.requestLayout() }
             }
-        });
+        }
 
-        mConversationViewModel = new ViewModelProvider(this, mViewModelFactory).get(
-                ConversationNotificationsViewModel.class
-        );
-        mConversationViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
-            FragmentManager fm = getSupportFragmentManager();
-            CommentNotificationsBottomSheetFragment bottomSheet =
-                    (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
+        mConversationViewModel = ViewModelProvider(
+            this,
+            mViewModelFactory!!
+        ).get(
+            ConversationNotificationsViewModel::class.java
+        )
+        mConversationViewModel!!.snackbarEvents.observe(
+            this
+        ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
+            val fm =
+                supportFragmentManager
+            val bottomSheet =
+                fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as CommentNotificationsBottomSheetFragment?
 
-            if (bottomSheet != null) return;
+            if (bottomSheet != null) return@observe
+            snackbarMessageHolderEvent.applyIfNotHandled { holder: SnackbarMessageHolder ->
+                make(
+                    binding.coordinatorLayout,
+                    mUiHelpers!!.getTextOfUiString(
+                        this@ReaderCommentListActivity,
+                        holder.message
+                    ),
+                    Snackbar.LENGTH_LONG
+                )
+                    .setAction(
+                        if (holder.buttonTitle != null)
+                            mUiHelpers!!.getTextOfUiString(
+                                this@ReaderCommentListActivity,
+                                holder.buttonTitle
+                            )
+                        else
+                            null
+                    ) { v: View? -> holder.buttonAction.invoke() }
+                    .show()
+                Unit
+            }
+        }
 
-            snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
-                WPSnackbar.make(binding.coordinatorLayout,
-                                  mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
-                                  Snackbar.LENGTH_LONG)
-                          .setAction(
-                                  holder.getButtonTitle() != null
-                                          ? mUiHelpers.getTextOfUiString(
-                                          ReaderCommentListActivity.this,
-                                          holder.getButtonTitle())
-                                          : null,
-                                  v -> holder.getButtonAction().invoke())
-                          .show();
-                return Unit.INSTANCE;
-            });
-        });
-
-        mConversationViewModel.getShowBottomSheetEvent().observe(this, event ->
-                event.applyIfNotHandled(isShowingData -> {
-                    FragmentManager fm = getSupportFragmentManager();
-                    CommentNotificationsBottomSheetFragment bottomSheet =
-                            (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
-                                    NOTIFICATIONS_BOTTOM_SHEET_TAG
-                            );
-                    if (isShowingData.getShow() && bottomSheet == null) {
-                        bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                                isShowingData.isReceivingNotifications(),
-                                false
-                        );
-                        bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
-                    } else if (!isShowingData.getShow() && bottomSheet != null) {
-                        bottomSheet.dismiss();
-                    }
-                    return Unit.INSTANCE;
-                })
-        );
+        mConversationViewModel!!.showBottomSheetEvent.observe(
+            this
+        ) { event: Event<ShowBottomSheetData> ->
+            event.applyIfNotHandled { isShowingData: ShowBottomSheetData ->
+                val fm =
+                    supportFragmentManager
+                var bottomSheet =
+                    fm.findFragmentByTag(
+                        NOTIFICATIONS_BOTTOM_SHEET_TAG
+                    ) as CommentNotificationsBottomSheetFragment?
+                if (isShowingData.show && bottomSheet == null) {
+                    bottomSheet = newInstance(
+                        isShowingData.isReceivingNotifications,
+                        false
+                    )
+                    bottomSheet.show(
+                        fm,
+                        NOTIFICATIONS_BOTTOM_SHEET_TAG
+                    )
+                } else if (!isShowingData.show && bottomSheet != null) {
+                    bottomSheet.dismiss()
+                }
+                Unit
+            }
+        }
 
         if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
-            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
-            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
-            mSource = savedInstanceState.getString(ReaderConstants.ARG_SOURCE);
+            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
+            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
+            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+            mSource = savedInstanceState.getString(ReaderConstants.ARG_SOURCE)
         } else {
-            mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-            mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mDirectOperation = (DirectOperation) getIntent()
-                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
-            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-            mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
+            mBlogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+            mPostId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
+            mDirectOperation = intent
+                .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION) as DirectOperation?
+            mCommentId = intent.getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0)
+            mInterceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
+            mSource = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         }
 
-        mConversationViewModel.start(mBlogId, mPostId, ThreadedCommentsActionSource.READER_THREADED_COMMENTS);
+        mConversationViewModel!!.start(
+            mBlogId,
+            mPostId,
+            ThreadedCommentsActionSource.READER_THREADED_COMMENTS
+        )
     }
 
-    @Override
-    public void onCollapse(@Nullable Bundle result) {
+    override fun onCollapse(result: Bundle?) {
         if (mBoxBinding != null && result != null) {
-            mBoxBinding.editComment.setText(result.getString(RESULT_REPLY));
-            mBoxBinding.editComment.setSelection(
-                    result.getInt(RESULT_SELECTION_START),
-                    result.getInt(RESULT_SELECTION_END)
-            );
-            mBoxBinding.editComment.requestFocus();
+            mBoxBinding!!.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+            mBoxBinding!!.editComment.setSelection(
+                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END)
+            )
+            mBoxBinding!!.editComment.requestFocus()
         }
     }
 
-    @Override
-    public void onConfirm(@Nullable Bundle result) {
+    override fun onConfirm(result: Bundle?) {
         if (mBinding != null && mBoxBinding != null && result != null) {
-            mBoxBinding.editComment.setText(result.getString(RESULT_REPLY));
-            submitComment(mBinding, mBoxBinding);
+            mBoxBinding!!.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+            submitComment(mBinding!!, mBoxBinding!!)
         }
     }
 
-    private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(@NonNull View v) {
-            if (isFinishing()) {
-                return;
-            }
-
-            if (mInterceptedUri != null) {
-                mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
-            }
-            ActivityLauncher.loginWithoutMagicLink(ReaderCommentListActivity.this);
+    private val mSignInClickListener = View.OnClickListener {
+        if (isFinishing) {
+            return@OnClickListener
         }
-    };
+        if (mInterceptedUri != null) {
+            mReaderTracker!!.trackUri(
+                AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED,
+                mInterceptedUri!!
+            )
+        }
+        ActivityLauncher.loginWithoutMagicLink(this@ReaderCommentListActivity)
+    }
 
     // to do a complete refresh we need to get updated post and new comments
-    private void updatePostAndComments(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun updatePostAndComments(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
         if (mPost != null) {
-            ReaderPostActions.updatePost(mPost, result -> {
-                if (!isFinishing() && result.isNewOrChanged()) {
+            ReaderPostActions.updatePost(
+                mPost!!
+            ) { result: ReaderActions.UpdateResult ->
+                if (!isFinishing && result.isNewOrChanged) {
                     // get the updated post and pass it to the adapter
-                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                    val post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false)
                     if (post != null) {
-                        getCommentAdapter(binding, boxBinding).setPost(post);
-                        mPost = post;
+                        getCommentAdapter(binding, boxBinding)!!.setPost(post)
+                        mPost = post
                     }
                 }
-            });
+            }
 
             // load the first page of comments
-            updateComments(binding, mPost, true, false);
+            updateComments(binding, mPost!!, true, false)
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
+    public override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
 
         if (mBinding != null && mBoxBinding != null) {
-            refreshComments(mBinding, mBoxBinding);
+            refreshComments(mBinding!!, mBoxBinding!!)
 
             if (mUpdateOnResume && NetworkUtils.isNetworkAvailable(this)) {
-                updatePostAndComments(mBinding, mBoxBinding);
-                mUpdateOnResume = false;
+                updatePostAndComments(mBinding!!, mBoxBinding!!)
+                mUpdateOnResume = false
             }
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
+    fun onEventMainThread(event: SuggestionNameListUpdated) {
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
-            List<UserSuggestion> userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
-            List<Suggestion> suggestions = Suggestion.Companion.fromUserSuggestions(userSuggestions);
-            mSuggestionAdapter.setSuggestionList(suggestions);
+        if (event.mRemoteBlogId != 0L && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
+            val userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
+            val suggestions = fromUserSuggestions(userSuggestions)
+            mSuggestionAdapter!!.suggestionList = suggestions
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.threaded_comments_menu, menu);
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.threaded_comments_menu, menu)
 
         if (mConversationViewModel != null) {
-            mConversationViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
-                MenuItem followItem = menu.findItem(R.id.follow_item);
-
+            mConversationViewModel!!.updateFollowUiState.observe(
+                this
+            ) { uiState: FollowConversationUiState ->
+                val bellItem = menu.findItem(R.id.manage_notifications_item)
+                val followItem = menu.findItem(R.id.follow_item)
                 if (bellItem != null && followItem != null) {
-                    ShimmerFrameLayout shimmerView =
-                            followItem.getActionView().findViewById(R.id.shimmer_view_container);
-                    TextView followText =
-                            followItem.getActionView().findViewById(R.id.follow_button);
+                    val shimmerView =
+                        followItem.actionView!!.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+                    val followText =
+                        followItem.actionView!!.findViewById<TextView>(R.id.follow_button)
 
-                    followItem.getActionView().setOnClickListener(
-                            uiState.getOnFollowTapped() != null
-                                    ? v -> uiState.getOnFollowTapped().invoke()
-                                    : null
-                    );
+                    followItem.actionView!!.setOnClickListener(
+                        if (uiState.onFollowTapped != null)
+                            View.OnClickListener { v: View? -> uiState.onFollowTapped.invoke() }
+                        else
+                            null
+                    )
 
-                    bellItem.setOnMenuItemClickListener(item -> {
-                        uiState.getOnManageNotificationsTapped().invoke();
-                        return true;
-                    });
-
-                    followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
-                    followText.setEnabled(uiState.getFlags().isMenuEnabled());
-                    bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
-
-                    if (uiState.getFlags().getShowMenuShimmer()) {
-                        if (!shimmerView.isShimmerVisible()) {
-                            shimmerView.showShimmer(true);
-                        } else if (!shimmerView.isShimmerStarted()) {
-                            shimmerView.startShimmer();
-                        }
-                    } else {
-                        shimmerView.hideShimmer();
+                    bellItem.setOnMenuItemClickListener { item: MenuItem? ->
+                        uiState.onManageNotificationsTapped.invoke()
+                        true
                     }
 
-                    followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
-                    bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
+                    followItem.actionView!!.isEnabled = uiState.flags.isMenuEnabled
+                    followText.isEnabled = uiState.flags.isMenuEnabled
+                    bellItem.setEnabled(uiState.flags.isMenuEnabled)
 
-                    setResult(RESULT_OK, new Intent().putExtra(
+                    if (uiState.flags.showMenuShimmer) {
+                        if (!shimmerView.isShimmerVisible) {
+                            shimmerView.showShimmer(true)
+                        } else if (!shimmerView.isShimmerStarted) {
+                            shimmerView.startShimmer()
+                        }
+                    } else {
+                        shimmerView.hideShimmer()
+                    }
+
+                    followItem.setVisible(uiState.flags.isFollowMenuVisible)
+                    bellItem.setVisible(uiState.flags.isBellMenuVisible)
+
+                    setResult(
+                        RESULT_OK, Intent().putExtra(
                             FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
-                            uiState.getFlags()
-                    ));
+                            uiState.flags
+                        )
+                    )
                 }
-            });
+            }
         }
-        return true;
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
+    public override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
     }
 
-    private void performCommentAction(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            @NonNull ReaderComment comment,
-            @NonNull ReaderCommentMenuActionType action
+    private fun performCommentAction(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding,
+        comment: ReaderComment,
+        action: ReaderCommentMenuActionType
     ) {
-        switch (action) {
-            case EDIT:
-                SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
+        when (action) {
+            ReaderCommentMenuActionType.EDIT -> {
+                val postSite = mSiteStore!!.getSiteBySiteId(comment.blogId)
                 if (postSite != null) {
-                    openCommentEditor(comment, postSite);
+                    openCommentEditor(comment, postSite)
                 }
-                break;
-            case UNAPPROVE:
-                moderateComment(
-                        binding,
-                        boxBinding,
-                        comment,
-                        CommentStatus.UNAPPROVED,
-                        R.string.comment_unapproved,
-                        Stat.COMMENT_UNAPPROVED
-                );
-                break;
-            case SPAM:
-                moderateComment(
-                        binding,
-                        boxBinding,
-                        comment,
-                        CommentStatus.SPAM,
-                        R.string.comment_spammed,
-                        Stat.COMMENT_SPAMMED
-                );
-                break;
-            case TRASH:
-                moderateComment(
-                        binding,
-                        boxBinding,
-                        comment,
-                        CommentStatus.TRASH,
-                        R.string.comment_trashed,
-                        Stat.COMMENT_TRASHED
-                );
-                break;
-            case SHARE:
-                shareComment(comment.getShortUrl());
-                break;
-            case APPROVE:
-            case DIVIDER_NO_ACTION:
-                break;
+            }
+
+            ReaderCommentMenuActionType.UNAPPROVE -> moderateComment(
+                binding,
+                boxBinding,
+                comment,
+                CommentStatus.UNAPPROVED,
+                R.string.comment_unapproved,
+                AnalyticsTracker.Stat.COMMENT_UNAPPROVED
+            )
+
+            ReaderCommentMenuActionType.SPAM -> moderateComment(
+                binding,
+                boxBinding,
+                comment,
+                CommentStatus.SPAM,
+                R.string.comment_spammed,
+                AnalyticsTracker.Stat.COMMENT_SPAMMED
+            )
+
+            ReaderCommentMenuActionType.TRASH -> moderateComment(
+                binding,
+                boxBinding,
+                comment,
+                CommentStatus.TRASH,
+                R.string.comment_trashed,
+                AnalyticsTracker.Stat.COMMENT_TRASHED
+            )
+
+            ReaderCommentMenuActionType.SHARE -> shareComment(comment.shortUrl)
+            ReaderCommentMenuActionType.APPROVE, ReaderCommentMenuActionType.DIVIDER_NO_ACTION -> {}
         }
     }
 
-    private void openCommentEditor(
-            @NonNull ReaderComment comment,
-            @NonNull SiteModel postSite
+    private fun openCommentEditor(
+        comment: ReaderComment,
+        postSite: SiteModel
     ) {
-        final Intent intent = UnifiedCommentsEditActivity.createIntent(
-                this,
-                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
-                postSite
-        );
-        startActivity(intent);
+        val intent = createIntent(
+            this,
+            ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
+            postSite
+        )
+        startActivity(intent)
     }
 
-    private void moderateComment(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            ReaderComment comment,
-            CommentStatus newStatus,
-            int undoMessage,
-            Stat tracker
+    private fun moderateComment(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding,
+        comment: ReaderComment,
+        newStatus: CommentStatus,
+        undoMessage: Int,
+        tracker: AnalyticsTracker.Stat
     ) {
-        getCommentAdapter(binding, boxBinding).removeComment(comment.commentId);
-        checkEmptyView(binding, boxBinding);
+        getCommentAdapter(binding, boxBinding)!!.removeComment(comment.commentId)
+        checkEmptyView(binding, boxBinding)
 
-        Snackbar snackbar = WPSnackbar.make(
-                binding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
-        ).setAction(R.string.undo, view -> getCommentAdapter(binding, boxBinding).refreshComments());
+        val snackbar = make(
+            binding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
+        ).setAction(
+            R.string.undo
+        ) { view: View? -> getCommentAdapter(binding, boxBinding)!!.refreshComments() }
 
-        snackbar.addCallback(new BaseCallback<Snackbar>() {
-            @Override
-            public void onDismissed(@Nullable Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
+        snackbar.addCallback(object : BaseCallback<Snackbar?>() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
 
                 if (event == DISMISS_EVENT_ACTION) {
                     AnalyticsUtils.trackCommentActionWithReaderPostDetails(
-                            Stat.COMMENT_MODERATION_UNDO,
-                            AnalyticsCommentActionSource.READER, mPost
-                    );
-                    return;
+                        AnalyticsTracker.Stat.COMMENT_MODERATION_UNDO,
+                        AnalyticsCommentActionSource.READER, mPost
+                    )
+                    return
                 }
 
                 AnalyticsUtils.trackCommentActionWithReaderPostDetails(
-                        tracker,
-                        AnalyticsCommentActionSource.READER,
-                        mPost
-                );
-                ReaderCommentActions.moderateComment(comment, newStatus);
+                    tracker,
+                    AnalyticsCommentActionSource.READER,
+                    mPost
+                )
+                ReaderCommentActions.moderateComment(comment, newStatus)
             }
-        });
+        })
 
-        snackbar.show();
+        snackbar.show()
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.CommentModerated event) {
-        if (mBinding == null || mBoxBinding == null || isFinishing()) {
-            return;
+    fun onEventMainThread(event: CommentModerated) {
+        if (mBinding == null || mBoxBinding == null || isFinishing) {
+            return
         }
 
-        if (!event.isSuccess()) {
-            ToastUtils.showToast(ReaderCommentListActivity.this, R.string.comment_moderation_error);
-            getCommentAdapter(mBinding, mBoxBinding).refreshComments();
+        if (!event.isSuccess) {
+            ToastUtils.showToast(this@ReaderCommentListActivity, R.string.comment_moderation_error)
+            getCommentAdapter(mBinding!!, mBoxBinding!!)!!.refreshComments()
         } else {
             // we do try to remove the comment in case you did PTR and it appeared in the list again
-            getCommentAdapter(mBinding, mBoxBinding).removeComment(event.getCommentId());
+            getCommentAdapter(mBinding!!, mBoxBinding!!)!!.removeComment(event.commentId)
         }
-        checkEmptyView(mBinding, mBoxBinding);
+        checkEmptyView(mBinding!!, mBoxBinding!!)
     }
 
 
-    private void shareComment(String commentUrl) {
-        mReaderTracker.trackPost(
-                Stat.READER_ARTICLE_COMMENT_SHARED,
-                mPost
-        );
+    private fun shareComment(commentUrl: String) {
+        mReaderTracker!!.trackPost(
+            AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_SHARED,
+            mPost
+        )
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl);
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("text/plain")
+        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl)
 
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)))
     }
 
-    @SuppressWarnings("deprecation")
-    private void setReplyToCommentId(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            long commentId,
-            boolean doFocus
+    @Suppress("deprecation")
+    private fun setReplyToCommentId(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding,
+        commentId: Long,
+        doFocus: Boolean
     ) {
-        if (mReplyToCommentId == commentId) {
-            mReplyToCommentId = 0;
+        mReplyToCommentId = if (mReplyToCommentId == commentId) {
+            0
         } else {
-            mReplyToCommentId = commentId;
+            commentId
         }
-        boxBinding.editComment.setHint(mReplyToCommentId == 0
-                ? R.string.reader_hint_comment_on_post
-                : R.string.reader_hint_comment_on_comment
-        );
+        boxBinding.editComment.setHint(
+            if (mReplyToCommentId == 0L)
+                R.string.reader_hint_comment_on_post
+            else
+                R.string.reader_hint_comment_on_comment
+        )
 
         if (doFocus) {
-            boxBinding.editComment.postDelayed(() -> {
-                final boolean isFocusableInTouchMode = boxBinding.editComment.isFocusableInTouchMode();
+            boxBinding.editComment.postDelayed({
+                val isFocusableInTouchMode = boxBinding.editComment.isFocusableInTouchMode
+                boxBinding.editComment.isFocusableInTouchMode = true
+                EditTextUtils.showSoftInput(boxBinding.editComment)
 
-                boxBinding.editComment.setFocusableInTouchMode(true);
-                EditTextUtils.showSoftInput(boxBinding.editComment);
-
-                boxBinding.editComment.setFocusableInTouchMode(isFocusableInTouchMode);
-
-                setupReplyToComment(binding, boxBinding);
-            }, 200);
+                boxBinding.editComment.isFocusableInTouchMode = isFocusableInTouchMode
+                setupReplyToComment(binding, boxBinding)
+            }, 200)
         } else {
-            setupReplyToComment(binding, boxBinding);
+            setupReplyToComment(binding, boxBinding)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void setupReplyToComment(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun setupReplyToComment(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
-        getCommentAdapter(binding, boxBinding).setHighlightCommentId(mReplyToCommentId, false);
-        getCommentAdapter(binding, boxBinding).setReplyTargetComment(mReplyToCommentId);
-        getCommentAdapter(binding, boxBinding).notifyDataSetChanged();
-        if (mReplyToCommentId != 0) {
-            scrollToCommentId(binding, boxBinding, mReplyToCommentId);
+        getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(mReplyToCommentId, false)
+        getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(mReplyToCommentId)
+        getCommentAdapter(binding, boxBinding)!!.notifyDataSetChanged()
+        if (mReplyToCommentId != 0L) {
+            scrollToCommentId(binding, boxBinding, mReplyToCommentId)
 
             // reset to replying to the post when user hasn't entered any text and hits
             // the back button in the editText to hide the soft keyboard
-            boxBinding.editComment.setOnBackListener(() -> {
+            boxBinding.editComment.setOnBackListener {
                 if (EditTextUtils.isEmpty(boxBinding.editComment)) {
-                    setReplyToCommentId(binding, boxBinding, 0, false);
+                    setReplyToCommentId(binding, boxBinding, 0, false)
                 }
-            });
+            }
         } else {
-            boxBinding.editComment.setOnBackListener(null);
+            boxBinding.editComment.setOnBackListener(null)
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
-        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
+    public override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId)
+        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId)
         if (mBinding != null) {
-            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition(mBinding));
+            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition(mBinding!!))
         } else {
-            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, 0);
+            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, 0)
         }
-        outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
-        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
-        outState.putString(ReaderConstants.ARG_SOURCE, mSource);
+        outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId)
+        outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments)
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri)
+        outState.putString(ReaderConstants.ARG_SOURCE, mSource)
 
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState)
     }
 
-    private void showCommentsClosedMessage(
-            @NonNull ReaderActivityCommentListBinding binding,
-            boolean show
+    private fun showCommentsClosedMessage(
+        binding: ReaderActivityCommentListBinding,
+        show: Boolean
     ) {
-        binding.textCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
+        binding.textCommentsClosed.visibility =
+            if (show) View.VISIBLE else View.GONE
     }
 
-    private boolean loadPost(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
-    ) {
-        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+    private fun loadPost(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
+    ): Boolean {
+        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false)
         if (mBoxBinding == null || mPost == null) {
-            return false;
+            return false
         }
 
-        if (!mAccountStore.hasAccessToken()) {
-            mBoxBinding.layoutContainer.setVisibility(View.GONE);
-            showCommentsClosedMessage(binding, false);
-        } else if (mPost.isCommentsOpen) {
-            mBoxBinding.layoutContainer.setVisibility(View.VISIBLE);
-            showCommentsClosedMessage(binding, false);
+        if (!mAccountStore!!.hasAccessToken()) {
+            mBoxBinding!!.layoutContainer.visibility = View.GONE
+            showCommentsClosedMessage(binding, false)
+        } else if (mPost!!.isCommentsOpen) {
+            mBoxBinding!!.layoutContainer.visibility = View.VISIBLE
+            showCommentsClosedMessage(binding, false)
 
-            mBoxBinding.editComment.setOnEditorActionListener((v, actionId, event) -> {
+            mBoxBinding!!.editComment.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitComment(binding, boxBinding);
+                    submitComment(binding, boxBinding)
                 }
-                return false;
-            });
+                false
+            }
 
-            mBoxBinding.btnSubmitReply.setOnClickListener(v -> submitComment(binding, boxBinding));
+            mBoxBinding!!.btnSubmitReply.setOnClickListener { v: View? ->
+                submitComment(
+                    binding,
+                    boxBinding
+                )
+            }
         } else {
-            mBoxBinding.layoutContainer.setVisibility(View.GONE);
-            mBoxBinding.editComment.setEnabled(false);
-            showCommentsClosedMessage(binding, true);
+            mBoxBinding!!.layoutContainer.visibility = View.GONE
+            mBoxBinding!!.editComment.isEnabled = false
+            showCommentsClosedMessage(binding, true)
         }
 
-        return true;
+        return true
     }
 
-    @Override
-    public void onDestroy() {
+    public override fun onDestroy() {
         if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
+            mSuggestionServiceConnectionManager!!.unbindFromService()
         }
-        super.onDestroy();
+        super.onDestroy()
     }
 
-    private boolean hasCommentAdapter() {
-        return (mCommentAdapter != null);
+    private fun hasCommentAdapter(): Boolean {
+        return (mCommentAdapter != null)
     }
 
-    private ReaderCommentAdapter getCommentAdapter(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
-    ) {
+    private fun getCommentAdapter(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
+    ): ReaderCommentAdapter? {
         if (mCommentAdapter == null && mPost != null) {
-            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), mPost);
+            mCommentAdapter = ReaderCommentAdapter(
+                WPActivityUtils.getThemedContext(this),
+                mPost!!
+            )
 
             // adapter calls this when user taps reply icon
-            mCommentAdapter.setReplyListener(
-                    commentId -> setReplyToCommentId(binding, boxBinding, commentId, true)
-            );
+            mCommentAdapter!!.setReplyListener { commentId: Long ->
+                setReplyToCommentId(
+                    binding,
+                    boxBinding,
+                    commentId,
+                    true
+                )
+            }
             // adapter calls this when user taps share icon
-            mCommentAdapter.setCommentMenuActionListener(
-                    (comment, action) -> performCommentAction(binding, boxBinding, comment, action)
-            );
+            mCommentAdapter!!.setCommentMenuActionListener { comment: ReaderComment, action: ReaderCommentMenuActionType ->
+                performCommentAction(
+                    binding,
+                    boxBinding,
+                    comment,
+                    action
+                )
+            }
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {
-                mCommentAdapter.enableHeaderClicks();
+                mCommentAdapter!!.enableHeaderClicks()
             }
 
             // adapter calls this when data has been loaded & displayed
-            mCommentAdapter.setDataLoadedListener(isEmpty -> {
-                if (!isFinishing()) {
+            mCommentAdapter!!.setDataLoadedListener { isEmpty: Boolean ->
+                if (!isFinishing) {
                     if (isEmpty || !mHasUpdatedComments) {
-                        updateComments(binding, mPost, isEmpty, false);
+                        updateComments(binding, mPost!!, isEmpty, false)
                     } else if (mCommentId > 0 || mDirectOperation != null) {
                         if (mCommentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(binding, boxBinding, mCommentId);
+                            smoothScrollToCommentId(binding, boxBinding, mCommentId)
                         }
 
-                        doDirectOperation(binding, boxBinding);
+                        doDirectOperation(binding, boxBinding)
                     } else if (mRestorePosition > 0) {
                         if (mViewModel != null) {
-                            mViewModel.scrollToPosition(mRestorePosition, false);
+                            mViewModel!!.scrollToPosition(mRestorePosition, false)
                         }
                     }
-                    mRestorePosition = 0;
-                    checkEmptyView(binding, boxBinding);
+                    mRestorePosition = 0
+                    checkEmptyView(binding, boxBinding)
                 }
-            });
+            }
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
-            mCommentAdapter.setDataRequestedListener(() -> {
+            mCommentAdapter!!.setDataRequestedListener {
                 if (!mIsUpdatingComments) {
-                    AppLog.i(T.READER, "reader comments > requesting next page of comments");
-                    updateComments(binding, mPost, true, true);
+                    AppLog.i(
+                        AppLog.T.READER,
+                        "reader comments > requesting next page of comments"
+                    )
+                    updateComments(binding, mPost!!, true, true)
                 }
-            });
+            }
         }
-        return mCommentAdapter;
+        return mCommentAdapter
     }
 
-    private void doDirectOperation(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun doDirectOperation(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
         if (mDirectOperation != null) {
-            switch (mDirectOperation) {
-                case COMMENT_JUMP:
-                    if (mCommentAdapter != null) {
-                        mCommentAdapter.setHighlightCommentId(mCommentId, false);
-
-                        // clear up the direct operation vars. Only performing it once.
-                        mDirectOperation = null;
-                        mCommentId = 0;
-                    }
-                    break;
-                case COMMENT_REPLY:
-                    setReplyToCommentId(binding, boxBinding, mCommentId, mAccountStore.hasAccessToken());
+            when (mDirectOperation) {
+                DirectOperation.COMMENT_JUMP -> if (mCommentAdapter != null) {
+                    mCommentAdapter!!.setHighlightCommentId(mCommentId, false)
 
                     // clear up the direct operation vars. Only performing it once.
-                    mDirectOperation = null;
-                    mCommentId = 0;
-                    break;
-                case COMMENT_LIKE:
-                    getCommentAdapter(binding, boxBinding).setHighlightCommentId(mCommentId, false);
-                    if (!mAccountStore.hasAccessToken()) {
-                        WPSnackbar.make(binding.coordinatorLayout,
-                                          R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                                          Snackbar.LENGTH_INDEFINITE)
-                                  .setAction(R.string.sign_in, mSignInClickListener)
-                                  .show();
+                    mDirectOperation = null
+                    mCommentId = 0
+                }
+
+                DirectOperation.COMMENT_REPLY -> {
+                    setReplyToCommentId(
+                        binding,
+                        boxBinding,
+                        mCommentId,
+                        mAccountStore!!.hasAccessToken()
+                    )
+
+                    // clear up the direct operation vars. Only performing it once.
+                    mDirectOperation = null
+                    mCommentId = 0
+                }
+
+                DirectOperation.COMMENT_LIKE -> {
+                    getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(
+                        mCommentId,
+                        false
+                    )
+                    if (!mAccountStore!!.hasAccessToken()) {
+                        make(
+                            binding.coordinatorLayout,
+                            R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.sign_in, mSignInClickListener)
+                            .show()
                     } else if (mPost != null) {
-                        ReaderComment comment = ReaderCommentTable.getComment(mPost.blogId, mPost.postId, mCommentId);
+                        val comment = ReaderCommentTable.getComment(
+                            mPost!!.blogId,
+                            mPost!!.postId,
+                            mCommentId
+                        )
                         if (comment == null) {
                             ToastUtils.showToast(
-                                    ReaderCommentListActivity.this,
-                                    R.string.reader_toast_err_comment_not_found
-                            );
+                                this@ReaderCommentListActivity,
+                                R.string.reader_toast_err_comment_not_found
+                            )
                         } else if (comment.isLikedByCurrentUser) {
                             ToastUtils.showToast(
-                                    ReaderCommentListActivity.this,
-                                    R.string.reader_toast_err_already_liked
-                            );
+                                this@ReaderCommentListActivity,
+                                R.string.reader_toast_err_already_liked
+                            )
                         } else {
-                            long wpComUserId = mAccountStore.getAccount().getUserId();
+                            val wpComUserId = mAccountStore!!.account.userId
                             if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-                                && getCommentAdapter(binding, boxBinding).refreshComment(mCommentId)) {
-                                getCommentAdapter(binding, boxBinding).setAnimateLikeCommentId(mCommentId);
+                                && getCommentAdapter(binding, boxBinding)!!.refreshComment(
+                                    mCommentId
+                                )
+                            ) {
+                                getCommentAdapter(binding, boxBinding)!!.setAnimateLikeCommentId(
+                                    mCommentId
+                                )
 
-                                mReaderTracker.trackPost(
-                                        AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
-                                        mPost
-                                );
-                                mReaderTracker.trackPost(
-                                        AnalyticsTracker.Stat.COMMENT_LIKED,
-                                        mPost,
-                                        AnalyticsCommentActionSource.READER.toString()
-                                );
+                                mReaderTracker!!.trackPost(
+                                    AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
+                                    mPost
+                                )
+                                mReaderTracker!!.trackPost(
+                                    AnalyticsTracker.Stat.COMMENT_LIKED,
+                                    mPost,
+                                    AnalyticsCommentActionSource.READER.toString()
+                                )
                             } else {
                                 ToastUtils.showToast(
-                                        ReaderCommentListActivity.this,
-                                        R.string.reader_toast_err_generic
-                                );
+                                    this@ReaderCommentListActivity,
+                                    R.string.reader_toast_err_generic
+                                )
                             }
                         }
 
                         // clear up the direct operation vars. Only performing it once.
-                        mDirectOperation = null;
+                        mDirectOperation = null
                     }
-                    break;
-                case POST_LIKE:
-                    // nothing special to do in this case
-                    break;
+                }
+
+                DirectOperation.POST_LIKE -> {}
             }
         } else {
-            mCommentId = 0;
+            mCommentId = 0
         }
     }
 
-    private void showProgress(@NonNull ReaderActivityCommentListBinding binding) {
-        binding.progressLoading.setVisibility(View.VISIBLE);
+    private fun showProgress(binding: ReaderActivityCommentListBinding) {
+        binding.progressLoading.visibility = View.VISIBLE
     }
 
-    private void hideProgress(@NonNull ReaderActivityCommentListBinding binding) {
-        binding.progressLoading.setVisibility(View.GONE);
+    private fun hideProgress(binding: ReaderActivityCommentListBinding) {
+        binding.progressLoading.visibility = View.GONE
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.UpdateCommentsStarted event) {
-        mIsUpdatingComments = true;
+    fun onEventMainThread(event: UpdateCommentsStarted?) {
+        mIsUpdatingComments = true
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.UpdateCommentsEnded event) {
-        if (mBinding == null || mBoxBinding == null || isFinishing()) {
-            return;
+    fun onEventMainThread(event: UpdateCommentsEnded) {
+        if (mBinding == null || mBoxBinding == null || isFinishing) {
+            return
         }
 
-        mIsUpdatingComments = false;
-        mHasUpdatedComments = true;
-        hideProgress(mBinding);
+        mIsUpdatingComments = false
+        mHasUpdatedComments = true
+        hideProgress(mBinding!!)
 
-        if (event.getResult().isNewOrChanged()) {
-            mRestorePosition = getCurrentPosition(mBinding);
-            refreshComments(mBinding, mBoxBinding);
+        if (event.result.isNewOrChanged) {
+            mRestorePosition = getCurrentPosition(mBinding!!)
+            refreshComments(mBinding!!, mBoxBinding!!)
         } else {
-            checkEmptyView(mBinding, mBoxBinding);
+            checkEmptyView(mBinding!!, mBoxBinding!!)
         }
 
-        setRefreshing(false);
+        setRefreshing(false)
     }
 
     /*
      * request comments for this post
      */
-    private void updateComments(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderPost post,
-            boolean showProgress,
-            boolean requestNextPage
+    private fun updateComments(
+        binding: ReaderActivityCommentListBinding,
+        post: ReaderPost,
+        showProgress: Boolean,
+        requestNextPage: Boolean
     ) {
         if (mIsUpdatingComments) {
-            AppLog.w(T.READER, "reader comments > already updating comments");
-            setRefreshing(false);
-            return;
+            AppLog.w(AppLog.T.READER, "reader comments > already updating comments")
+            setRefreshing(false)
+            return
         }
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.w(T.READER, "reader comments > no connection, update canceled");
-            setRefreshing(false);
-            return;
+            AppLog.w(AppLog.T.READER, "reader comments > no connection, update canceled")
+            setRefreshing(false)
+            return
         }
 
         if (showProgress) {
-            showProgress(binding);
+            showProgress(binding)
         }
-        ReaderCommentService.startService(this, post.blogId, post.postId, requestNextPage);
+        ReaderCommentService.startService(this, post.blogId, post.postId, requestNextPage)
     }
 
-    private void checkEmptyView(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun checkEmptyView(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
-        boolean isEmpty = hasCommentAdapter()
-                          && getCommentAdapter(binding, boxBinding).isEmpty()
-                          && !mIsSubmittingComment;
+        val isEmpty = hasCommentAdapter()
+                && getCommentAdapter(binding, boxBinding)!!.isEmpty
+                && !mIsSubmittingComment
         if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
-            binding.textEmpty.setText(R.string.no_network_message);
-            binding.textEmpty.setVisibility(View.VISIBLE);
+            binding.textEmpty.setText(R.string.no_network_message)
+            binding.textEmpty.visibility = View.VISIBLE
         } else if (isEmpty && mHasUpdatedComments) {
-            binding.textEmpty.setText(R.string.reader_empty_comments);
-            binding.textEmpty.setVisibility(View.VISIBLE);
+            binding.textEmpty.setText(R.string.reader_empty_comments)
+            binding.textEmpty.visibility = View.VISIBLE
         } else {
-            binding.textEmpty.setVisibility(View.GONE);
+            binding.textEmpty.visibility = View.GONE
         }
     }
 
     /*
      * refresh adapter so latest comments appear
      */
-    private void refreshComments(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun refreshComments(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
-        AppLog.d(T.READER, "reader comments > refreshComments");
-        getCommentAdapter(binding, boxBinding).refreshComments();
+        AppLog.d(AppLog.T.READER, "reader comments > refreshComments")
+        getCommentAdapter(binding, boxBinding)!!.refreshComments()
     }
 
     /*
      * scrolls the passed comment to the top of the listView
      */
-    private void scrollToCommentId(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            long commentId
+    private fun scrollToCommentId(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding,
+        commentId: Long
     ) {
-        int position = getCommentAdapter(binding, boxBinding).positionOfCommentId(commentId);
+        val position = getCommentAdapter(binding, boxBinding)!!.positionOfCommentId(commentId)
         if (mViewModel != null && position > -1) {
-            mViewModel.scrollToPosition(position, false);
+            mViewModel!!.scrollToPosition(position, false)
         }
     }
 
     /*
      * Smoothly scrolls the passed comment to the top of the listView
      */
-    private void smoothScrollToCommentId(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            long commentId
+    private fun smoothScrollToCommentId(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding,
+        commentId: Long
     ) {
-        int position = getCommentAdapter(binding, boxBinding).positionOfCommentId(commentId);
+        val position = getCommentAdapter(binding, boxBinding)!!.positionOfCommentId(commentId)
         if (mViewModel != null && position > -1) {
-            mViewModel.scrollToPosition(position, true);
+            mViewModel!!.scrollToPosition(position, true)
         }
     }
 
     /*
      * submit the text typed into the comment box as a comment on the current post
      */
-    private void submitComment(
-            @NonNull ReaderActivityCommentListBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding boxBinding
+    private fun submitComment(
+        binding: ReaderActivityCommentListBinding,
+        boxBinding: ReaderIncludeCommentBoxBinding
     ) {
         if (mBoxBinding == null) {
-            return;
+            return
         }
 
-        final String commentText = EditTextUtils.getText(mBoxBinding.editComment);
+        val commentText = EditTextUtils.getText(
+            mBoxBinding!!.editComment
+        )
         if (TextUtils.isEmpty(commentText)) {
-            return;
+            return
         }
 
         if (!NetworkUtils.checkConnection(this)) {
-            return;
+            return
         }
 
-        if (mReplyToCommentId != 0) {
-            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
+        if (mReplyToCommentId != 0L) {
+            mReaderTracker!!.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_REPLIED_TO,
+                mPost
+            )
         } else {
-            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost);
+            mReaderTracker!!.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost)
         }
 
-        mBoxBinding.btnSubmitReply.setEnabled(false);
-        mBoxBinding.editComment.setEnabled(false);
-        mIsSubmittingComment = true;
+        mBoxBinding!!.btnSubmitReply.isEnabled = false
+        mBoxBinding!!.editComment.isEnabled = false
+        mIsSubmittingComment = true
 
         // generate a "fake" comment id to assign to the new comment so we can add it to the db
         // and reflect it in the adapter before the API call returns
-        final long fakeCommentId = ReaderCommentActions.generateFakeCommentId();
+        val fakeCommentId = ReaderCommentActions.generateFakeCommentId()
 
-        ReaderActions.CommentActionListener actionListener = (succeeded, newComment) -> {
-            if (isFinishing()) {
-                return;
+        val actionListener =
+            CommentActionListener { succeeded: Boolean, newComment: ReaderComment? ->
+                if (isFinishing) {
+                    return@CommentActionListener
+                }
+                mIsSubmittingComment = false
+                mBoxBinding!!.editComment.isEnabled = true
+                if (succeeded) {
+                    mBoxBinding!!.btnSubmitReply.isEnabled = false
+                    // stop highlighting the fake comment and replace it with the real one
+                    getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(0, false)
+                    getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(0)
+                    getCommentAdapter(binding, boxBinding)!!.replaceComment(
+                        fakeCommentId,
+                        newComment
+                    )
+                    getCommentAdapter(binding, boxBinding)!!.refreshPost()
+                    setReplyToCommentId(binding, boxBinding, 0, false)
+                    mBoxBinding!!.editComment.autoSaveTextHelper.clearSavedText(mBoxBinding!!.editComment)
+                } else {
+                    mBoxBinding!!.editComment.setText(commentText)
+                    mBoxBinding!!.btnSubmitReply.isEnabled = true
+                    getCommentAdapter(binding, boxBinding)!!.removeComment(fakeCommentId)
+                    ToastUtils.showToast(
+                        this@ReaderCommentListActivity, R.string.reader_toast_err_comment_failed,
+                        ToastUtils.Duration.LONG
+                    )
+                }
+                checkEmptyView(binding, boxBinding)
             }
-            mIsSubmittingComment = false;
-            mBoxBinding.editComment.setEnabled(true);
-            if (succeeded) {
-                mBoxBinding.btnSubmitReply.setEnabled(false);
-                // stop highlighting the fake comment and replace it with the real one
-                getCommentAdapter(binding, boxBinding).setHighlightCommentId(0, false);
-                getCommentAdapter(binding, boxBinding).setReplyTargetComment(0);
-                getCommentAdapter(binding, boxBinding).replaceComment(fakeCommentId, newComment);
-                getCommentAdapter(binding, boxBinding).refreshPost();
-                setReplyToCommentId(binding, boxBinding, 0, false);
-                mBoxBinding.editComment.getAutoSaveTextHelper().clearSavedText(mBoxBinding.editComment);
-            } else {
-                mBoxBinding.editComment.setText(commentText);
-                mBoxBinding.btnSubmitReply.setEnabled(true);
-                getCommentAdapter(binding, boxBinding).removeComment(fakeCommentId);
-                ToastUtils.showToast(
-                        ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed,
-                        ToastUtils.Duration.LONG);
-            }
-            checkEmptyView(binding, boxBinding);
-        };
 
-        long wpComUserId = mAccountStore.getAccount().getUserId();
-        ReaderComment newComment = ReaderCommentActions.submitPostComment(
-                mPost,
-                fakeCommentId,
-                commentText,
-                mReplyToCommentId,
-                actionListener,
-                wpComUserId);
+        val wpComUserId = mAccountStore!!.account.userId
+        val newComment = ReaderCommentActions.submitPostComment(
+            mPost,
+            fakeCommentId,
+            commentText,
+            mReplyToCommentId,
+            actionListener,
+            wpComUserId
+        )
 
         if (newComment != null) {
-            mBoxBinding.editComment.setText(null);
+            mBoxBinding!!.editComment.text = null
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
-            getCommentAdapter(binding, boxBinding).setHighlightCommentId(newComment.commentId, true);
-            getCommentAdapter(binding, boxBinding).setReplyTargetComment(0);
-            getCommentAdapter(binding, boxBinding).addComment(newComment);
+            getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(
+                newComment.commentId,
+                true
+            )
+            getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(0)
+            getCommentAdapter(binding, boxBinding)!!.addComment(newComment)
             // make sure it's scrolled into view
-            scrollToCommentId(binding, boxBinding, fakeCommentId);
-            checkEmptyView(binding, boxBinding);
+            scrollToCommentId(binding, boxBinding, fakeCommentId)
+            checkEmptyView(binding, boxBinding)
         }
     }
 
-    private int getCurrentPosition(@NonNull ReaderActivityCommentListBinding binding) {
+    private fun getCurrentPosition(binding: ReaderActivityCommentListBinding): Int {
         if (hasCommentAdapter()) {
-            LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
-            if (layoutManager != null) {
-                return layoutManager.findFirstVisibleItemPosition();
-            } else {
-                return 0;
-            }
+            val layoutManager = binding.recyclerView.layoutManager as LinearLayoutManager?
+            return layoutManager?.findFirstVisibleItemPosition() ?: 0
         } else {
-            return 0;
+            return 0
         }
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private void setRefreshing(boolean refreshing) {
+    private fun setRefreshing(refreshing: Boolean) {
         if (mSwipeToRefreshHelper != null) {
-            mSwipeToRefreshHelper.setRefreshing(refreshing);
+            mSwipeToRefreshHelper!!.isRefreshing = refreshing
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         // if user is returning from login, make sure to update the post and its comments
-        if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
-            mUpdateOnResume = true;
+        if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
+            mUpdateOnResume = true
         }
+    }
+
+    companion object {
+        private const val KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id"
+        private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
+
+        private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
     }
 }
