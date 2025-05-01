@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -49,6 +50,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
+import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
@@ -147,5 +149,11 @@ public abstract class ApplicationModule {
     @Provides
     public static RecordingStrategy provideVoiceToContentRecordingStrategy() {
         return new VoiceToContentRecordingStrategy();
+    }
+
+    @Provides
+    @Singleton
+    public static WpLoginClient provideWpLoginClient() {
+        return new WpLoginClient();
     }
 }
