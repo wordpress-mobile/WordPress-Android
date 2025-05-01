@@ -7,7 +7,9 @@ import kotlinx.coroutines.launch
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 
-class LoginSiteAddressViewModel @Inject constructor() : ViewModel() {
+class LoginSiteAddressViewModel @Inject constructor(
+    private val wpLoginClient: WpLoginClient
+) : ViewModel() {
     fun runApiDiscovery(url: String) {
         viewModelScope.launch {
             try {
