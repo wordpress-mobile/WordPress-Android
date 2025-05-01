@@ -264,7 +264,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             )
             mBoxBinding!!.editComment.setAdapter(mSuggestionAdapter)
 
-            mBoxBinding!!.buttonExpand.setOnClickListener { v: View? ->
+            mBoxBinding!!.buttonExpand.setOnClickListener {
                 val bundle = newBundle(
                     mBoxBinding!!.editComment.text.toString(),
                     mBoxBinding!!.editComment.selectionStart,
@@ -312,9 +312,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         binding: ReaderActivityCommentListBinding,
         savedInstanceState: Bundle?
     ) {
-        mViewModel = ViewModelProvider(this, mViewModelFactory!!).get(
-            ReaderCommentListViewModel::class.java
-        )
+        mViewModel = ViewModelProvider(this, mViewModelFactory!!)[ReaderCommentListViewModel::class.java]
         mViewModel!!.scrollTo.observe(
             this
         ) { scrollPositionEvent: Event<ScrollPosition?> ->
@@ -326,7 +324,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         object :
                             LinearSmoothScroller(this) {
                             override fun getVerticalSnapPreference(): Int {
-                                return@observe SNAP_TO_START
+                                return SNAP_TO_START
                             }
                         }
                     smoothScrollerToTop.targetPosition = content.position
@@ -344,9 +342,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         mConversationViewModel = ViewModelProvider(
             this,
             mViewModelFactory!!
-        ).get(
-            ConversationNotificationsViewModel::class.java
-        )
+        )[ConversationNotificationsViewModel::class.java]
         mConversationViewModel!!.snackbarEvents.observe(
             this
         ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
@@ -356,49 +352,47 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as CommentNotificationsBottomSheetFragment?
 
             if (bottomSheet != null) return@observe
-            snackbarMessageHolderEvent.applyIfNotHandled { holder: SnackbarMessageHolder ->
+            snackbarMessageHolderEvent.applyIfNotHandled {
                 make(
                     binding.coordinatorLayout,
                     mUiHelpers!!.getTextOfUiString(
                         this@ReaderCommentListActivity,
-                        holder.message
+                        message
                     ),
                     Snackbar.LENGTH_LONG
                 )
                     .setAction(
-                        if (holder.buttonTitle != null)
+                        if (buttonTitle != null)
                             mUiHelpers!!.getTextOfUiString(
                                 this@ReaderCommentListActivity,
-                                holder.buttonTitle
+                                buttonTitle
                             )
                         else
                             null
-                    ) { v: View? -> holder.buttonAction.invoke() }
+                    ) { buttonAction.invoke() }
                     .show()
-                Unit
             }
         }
 
         mConversationViewModel!!.showBottomSheetEvent.observe(
             this
         ) { event: Event<ShowBottomSheetData> ->
-            event.applyIfNotHandled { isShowingData: ShowBottomSheetData ->
-                val fm =
-                    supportFragmentManager
+            event.applyIfNotHandled {
+                val fm = supportFragmentManager
                 var bottomSheet =
                     fm.findFragmentByTag(
                         NOTIFICATIONS_BOTTOM_SHEET_TAG
                     ) as CommentNotificationsBottomSheetFragment?
-                if (isShowingData.show && bottomSheet == null) {
+                if (show && bottomSheet == null) {
                     bottomSheet = newInstance(
-                        isShowingData.isReceivingNotifications,
+                        isReceivingNotifications,
                         false
                     )
                     bottomSheet.show(
                         fm,
                         NOTIFICATIONS_BOTTOM_SHEET_TAG
                     )
-                } else if (!isShowingData.show && bottomSheet != null) {
+                } else if (!show && bottomSheet != null) {
                     bottomSheet.dismiss()
                 }
                 Unit
@@ -480,7 +474,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
 
             // load the first page of comments
-            updateComments(binding, mPost!!, true, false)
+            updateComments(binding, mPost!!, showProgress = true, requestNextPage = false)
         }
     }
 
@@ -528,12 +522,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
                     followItem.actionView!!.setOnClickListener(
                         if (uiState.onFollowTapped != null)
-                            View.OnClickListener { v: View? -> uiState.onFollowTapped.invoke() }
+                            View.OnClickListener { uiState.onFollowTapped.invoke() }
                         else
                             null
                     )
 
-                    bellItem.setOnMenuItemClickListener { item: MenuItem? ->
+                    bellItem.setOnMenuItemClickListener {
                         uiState.onManageNotificationsTapped.invoke()
                         true
                     }
@@ -653,7 +647,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             binding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
         ).setAction(
             R.string.undo
-        ) { view: View? -> getCommentAdapter(binding, boxBinding)!!.refreshComments() }
+        ) { _: View? -> getCommentAdapter(binding, boxBinding)!!.refreshComments() }
 
         snackbar.addCallback(object : BaseCallback<Snackbar?>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -809,14 +803,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             mBoxBinding!!.layoutContainer.visibility = View.VISIBLE
             showCommentsClosedMessage(binding, false)
 
-            mBoxBinding!!.editComment.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
+            mBoxBinding!!.editComment.setOnEditorActionListener { _: TextView?, actionId: Int, event: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment(binding, boxBinding)
                 }
                 false
             }
 
-            mBoxBinding!!.btnSubmitReply.setOnClickListener { v: View? ->
+            mBoxBinding!!.btnSubmitReply.setOnClickListener {
                 submitComment(
                     binding,
                     boxBinding
@@ -906,7 +900,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         AppLog.T.READER,
                         "reader comments > requesting next page of comments"
                     )
-                    updateComments(binding, mPost!!, true, true)
+                    updateComments(binding, mPost!!, showProgress = true, requestNextPage = true)
                 }
             }
         }
@@ -1002,7 +996,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     }
                 }
 
-                DirectOperation.POST_LIKE -> {}
+                else -> {}
             }
         } else {
             mCommentId = 0
@@ -1238,6 +1232,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
