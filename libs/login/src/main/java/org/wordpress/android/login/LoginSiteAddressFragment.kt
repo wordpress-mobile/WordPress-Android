@@ -37,6 +37,8 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.login.viewmodel.LoginSiteAddressViewModel
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
@@ -49,6 +51,10 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     private var connectSiteInfoCalculatedHasJetpack = false
 
     private var loginSiteAddressValidator: LoginSiteAddressValidator? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: LoginSiteAddressViewModel
 
     @JvmField
     @Inject
@@ -127,6 +133,8 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(LoginSiteAddressViewModel::class.java)
 
         if (savedInstanceState != null) {
             requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
