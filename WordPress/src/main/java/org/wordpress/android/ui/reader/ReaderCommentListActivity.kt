@@ -162,14 +162,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             it.setDisplayHomeAsUpEnabled(true)
         }
 
-        initViewModels(mBinding, savedInstanceState)
+        initViewModels(savedInstanceState)
 
         if (conversationViewModel != null) {
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
                 mBinding.swipeToRefresh
             ) {
                 conversationViewModel!!.onRefresh()
-                updatePostAndComments(mBinding, mBoxBinding)
+                updatePostAndComments()
             }
         }
 
@@ -210,7 +210,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
         mBoxBinding.btnSubmitReply.redirectContextClickToLongPressListener()
 
-        if (!loadPost(mBinding, mBoxBinding)) {
+        if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post)
             finish()
             return
@@ -224,12 +224,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 spacingVertical
             )
         )
-        mBinding.recyclerView.adapter = getCommentAdapter(mBinding, mBoxBinding)
+        mBinding.recyclerView.adapter = getCommentAdapter()
 
         savedInstanceState?.let {
             setReplyToCommentId(
-                mBinding,
-                mBoxBinding,
                 it.getLong(KEY_REPLY_TO_COMMENT_ID),
                 false
             )
@@ -300,7 +298,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     @Suppress("LongMethod")
     private fun initViewModels(
-        binding: ReaderActivityCommentListBinding,
         savedInstanceState: Bundle?
     ) {
         viewModel = ViewModelProvider(this, viewModelFactory!!)[ReaderCommentListViewModel::class.java]
@@ -308,7 +305,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             this
         ) { scrollPositionEvent: Event<ScrollPosition?> ->
             val content = scrollPositionEvent.getContentIfNotHandled()
-            val layoutManager = binding.recyclerView.layoutManager
+            val layoutManager = mBinding.recyclerView.layoutManager
             if (content != null && layoutManager != null) {
                 if (content.isSmooth) {
                     val smoothScrollerToTop: RecyclerView.SmoothScroller =
@@ -326,7 +323,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         0
                     )
                 }
-                binding.appbarMain.post { binding.appbarMain.requestLayout() }
+                mBinding.appbarMain.post { mBinding.appbarMain.requestLayout() }
             }
         }
 
@@ -345,7 +342,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             if (bottomSheet != null) return@observe
             snackbarMessageHolderEvent.applyIfNotHandled {
                 make(
-                    binding.coordinatorLayout,
+                    mBinding.coordinatorLayout,
                     uiHelpers!!.getTextOfUiString(
                         this@ReaderCommentListActivity,
                         message
@@ -420,7 +417,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     override fun onCollapse(result: Bundle?) {
-        if (mBoxBinding != null && result != null) {
+        if (result != null) {
             mBoxBinding.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
             mBoxBinding.editComment.setSelection(
                 result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_START),
@@ -431,9 +428,9 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     override fun onConfirm(result: Bundle?) {
-        if (mBinding != null && mBoxBinding != null && result != null) {
+        if (result != null) {
             mBoxBinding.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
-            submitComment(mBinding!!, mBoxBinding)
+            submitComment()
         }
     }
 
@@ -451,10 +448,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     // to do a complete refresh we need to get updated post and new comments
-    private fun updatePostAndComments(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
+    private fun updatePostAndComments() {
         if (readerPost != null) {
             ReaderPostActions.updatePost(
                 readerPost!!
@@ -463,14 +457,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     // get the updated post and pass it to the adapter
                     val post = ReaderPostTable.getBlogPost(blogId, postId, false)
                     if (post != null) {
-                        getCommentAdapter(binding, boxBinding)!!.setPost(post)
+                        getCommentAdapter()!!.setPost(post)
                         readerPost = post
                     }
                 }
             }
 
             // load the first page of comments
-            updateComments(binding, readerPost!!, showProgress = true, requestNextPage = false)
+            updateComments(readerPost!!, showProgress = true, requestNextPage = false)
         }
     }
 
@@ -478,13 +472,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         super.onResume()
         EventBus.getDefault().register(this)
 
-        if (mBinding != null && mBoxBinding != null) {
-            refreshComments(mBinding!!, mBoxBinding)
+            refreshComments()
 
             if (updateOnResume && NetworkUtils.isNetworkAvailable(this)) {
-                updatePostAndComments(mBinding!!, mBoxBinding)
+                updatePostAndComments()
                 updateOnResume = false
-            }
         }
     }
 
@@ -571,8 +563,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     private fun performCommentAction(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding,
         comment: ReaderComment,
         action: ReaderCommentMenuActionType
     ) {
@@ -585,8 +575,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
 
             ReaderCommentMenuActionType.UNAPPROVE -> moderateComment(
-                binding,
-                boxBinding,
                 comment,
                 CommentStatus.UNAPPROVED,
                 R.string.comment_unapproved,
@@ -594,8 +582,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             )
 
             ReaderCommentMenuActionType.SPAM -> moderateComment(
-                binding,
-                boxBinding,
                 comment,
                 CommentStatus.SPAM,
                 R.string.comment_spammed,
@@ -603,8 +589,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             )
 
             ReaderCommentMenuActionType.TRASH -> moderateComment(
-                binding,
-                boxBinding,
                 comment,
                 CommentStatus.TRASH,
                 R.string.comment_trashed,
@@ -628,23 +612,21 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         startActivity(intent)
     }
 
-    @Suppress("LongParameterList", "LongMethod")
+    @Suppress("LongMethod")
     private fun moderateComment(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding,
         comment: ReaderComment,
         newStatus: CommentStatus,
         undoMessage: Int,
         tracker: AnalyticsTracker.Stat
     ) {
-        getCommentAdapter(binding, boxBinding)!!.removeComment(comment.commentId)
-        checkEmptyView(binding, boxBinding)
+        getCommentAdapter()!!.removeComment(comment.commentId)
+        checkEmptyView()
 
         val snackbar = make(
-            binding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
+            mBinding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
         ).setAction(
             R.string.undo
-        ) { _: View? -> getCommentAdapter(binding, boxBinding)!!.refreshComments() }
+        ) { _: View? -> getCommentAdapter()!!.refreshComments() }
 
         snackbar.addCallback(object : BaseCallback<Snackbar?>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -673,18 +655,18 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: CommentModerated) {
-        if (mBinding == null || mBoxBinding == null || isFinishing) {
+        if (isFinishing) {
             return
         }
 
         if (!event.isSuccess) {
             ToastUtils.showToast(this@ReaderCommentListActivity, R.string.comment_moderation_error)
-            getCommentAdapter(mBinding!!, mBoxBinding)!!.refreshComments()
+            getCommentAdapter()!!.refreshComments()
         } else {
             // we do try to remove the comment in case you did PTR and it appeared in the list again
-            getCommentAdapter(mBinding!!, mBoxBinding)!!.removeComment(event.commentId)
+            getCommentAdapter()!!.removeComment(event.commentId)
         }
-        checkEmptyView(mBinding!!, mBoxBinding)
+        checkEmptyView()
     }
 
 
@@ -703,8 +685,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     @Suppress("deprecation")
     private fun setReplyToCommentId(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding,
         commentId: Long,
         doFocus: Boolean
     ) {
@@ -713,7 +693,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         } else {
             commentId
         }
-        boxBinding.editComment.setHint(
+        mBoxBinding.editComment.setHint(
             if (replyToCommentId == 0L)
                 R.string.reader_hint_comment_on_post
             else
@@ -721,53 +701,48 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         )
 
         if (doFocus) {
-            boxBinding.editComment.postDelayed({
-                val isFocusableInTouchMode = boxBinding.editComment.isFocusableInTouchMode
-                boxBinding.editComment.isFocusableInTouchMode = true
-                EditTextUtils.showSoftInput(boxBinding.editComment)
+            mBoxBinding.editComment.postDelayed({
+                val isFocusableInTouchMode = mBoxBinding.editComment.isFocusableInTouchMode
+                mBoxBinding.editComment.isFocusableInTouchMode = true
+                EditTextUtils.showSoftInput(mBoxBinding.editComment)
 
-                boxBinding.editComment.isFocusableInTouchMode = isFocusableInTouchMode
-                setupReplyToComment(binding, boxBinding)
+                mBoxBinding.editComment.isFocusableInTouchMode = isFocusableInTouchMode
+                setupReplyToComment()
             }, FOCUS_DELAY_MS)
         } else {
-            setupReplyToComment(binding, boxBinding)
+            setupReplyToComment()
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setupReplyToComment(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
+    private fun setupReplyToComment() {
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
-        getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(replyToCommentId, false)
-        getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(replyToCommentId)
-        getCommentAdapter(binding, boxBinding)!!.notifyDataSetChanged()
+        getCommentAdapter()?.let { adapter ->
+            adapter.setHighlightCommentId(replyToCommentId, false)
+            adapter.setReplyTargetComment(replyToCommentId)
+            adapter.notifyDataSetChanged()
+        }
         if (replyToCommentId != 0L) {
-            scrollToCommentId(binding, boxBinding, replyToCommentId)
+            scrollToCommentId(replyToCommentId)
 
             // reset to replying to the post when user hasn't entered any text and hits
             // the back button in the editText to hide the soft keyboard
-            boxBinding.editComment.setOnBackListener {
-                if (EditTextUtils.isEmpty(boxBinding.editComment)) {
-                    setReplyToCommentId(binding, boxBinding, 0, false)
+            mBoxBinding.editComment.setOnBackListener {
+                if (EditTextUtils.isEmpty(mBoxBinding.editComment)) {
+                    setReplyToCommentId(0, false)
                 }
             }
         } else {
-            boxBinding.editComment.setOnBackListener(null)
+            mBoxBinding.editComment.setOnBackListener(null)
         }
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, blogId)
         outState.putLong(ReaderConstants.ARG_POST_ID, postId)
-        if (mBinding != null) {
-            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition(mBinding!!))
-        } else {
-            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, 0)
-        }
+        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition())
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, replyToCommentId)
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, hasUpdatedComments)
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
@@ -776,47 +751,38 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         super.onSaveInstanceState(outState)
     }
 
-    private fun showCommentsClosedMessage(
-        binding: ReaderActivityCommentListBinding,
-        show: Boolean
-    ) {
-        binding.textCommentsClosed.visibility =
+    private fun showCommentsClosedMessage(show: Boolean) {
+        mBinding.textCommentsClosed.visibility =
             if (show) View.VISIBLE else View.GONE
     }
 
-    private fun loadPost(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ): Boolean {
+    private fun loadPost(): Boolean {
         readerPost = ReaderPostTable.getBlogPost(blogId, postId, false)
-        if (mBoxBinding == null || readerPost == null) {
+        if (readerPost == null) {
             return false
         }
 
         if (!accountStore!!.hasAccessToken()) {
             mBoxBinding.layoutContainer.visibility = View.GONE
-            showCommentsClosedMessage(binding, false)
+            showCommentsClosedMessage(false)
         } else if (readerPost!!.isCommentsOpen) {
             mBoxBinding.layoutContainer.visibility = View.VISIBLE
-            showCommentsClosedMessage(binding, false)
+            showCommentsClosedMessage(false)
 
             mBoxBinding.editComment.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitComment(binding, boxBinding)
+                    submitComment()
                 }
                 false
             }
 
             mBoxBinding.btnSubmitReply.setOnClickListener {
-                submitComment(
-                    binding,
-                    boxBinding
-                )
+                submitComment()
             }
         } else {
             mBoxBinding.layoutContainer.visibility = View.GONE
             mBoxBinding.editComment.isEnabled = false
-            showCommentsClosedMessage(binding, true)
+            showCommentsClosedMessage(true)
         }
 
         return true
@@ -833,10 +799,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         return (commentAdapter != null)
     }
 
-    private fun getCommentAdapter(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ): ReaderCommentAdapter? {
+    private fun getCommentAdapter(): ReaderCommentAdapter? {
         if (commentAdapter == null && readerPost != null) {
             commentAdapter = ReaderCommentAdapter(
                 WPActivityUtils.getThemedContext(this),
@@ -846,8 +809,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             // adapter calls this when user taps reply icon
             commentAdapter!!.setReplyListener { commentId: Long ->
                 setReplyToCommentId(
-                    binding,
-                    boxBinding,
                     commentId,
                     true
                 )
@@ -855,8 +816,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             // adapter calls this when user taps share icon
             commentAdapter!!.setCommentMenuActionListener { comment: ReaderComment, action: ReaderCommentMenuActionType ->
                 performCommentAction(
-                    binding,
-                    boxBinding,
                     comment,
                     action
                 )
@@ -871,21 +830,21 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             commentAdapter!!.setDataLoadedListener { isEmpty: Boolean ->
                 if (!isFinishing) {
                     if (isEmpty || !hasUpdatedComments) {
-                        updateComments(binding, readerPost!!, isEmpty, false)
+                        updateComments(readerPost!!, isEmpty, false)
                     } else if (mCommentId > 0 || directOperation != null) {
                         if (mCommentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(binding, boxBinding, mCommentId)
+                            smoothScrollToCommentId(mCommentId)
                         }
 
-                        doDirectOperation(binding, boxBinding)
+                        doDirectOperation()
                     } else if (restorePosition > 0) {
                         if (viewModel != null) {
                             viewModel!!.scrollToPosition(restorePosition, false)
                         }
                     }
                     restorePosition = 0
-                    checkEmptyView(binding, boxBinding)
+                    checkEmptyView()
                 }
             }
 
@@ -897,7 +856,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         AppLog.T.READER,
                         "reader comments > requesting next page of comments"
                     )
-                    updateComments(binding, readerPost!!, showProgress = true, requestNextPage = true)
+                    updateComments(readerPost!!, showProgress = true, requestNextPage = true)
                 }
             }
         }
@@ -905,10 +864,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     @Suppress("LongMethod")
-    private fun doDirectOperation(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
+    private fun doDirectOperation() {
         if (directOperation != null) {
             when (directOperation) {
                 DirectOperation.COMMENT_JUMP -> if (commentAdapter != null) {
@@ -921,8 +877,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
                 DirectOperation.COMMENT_REPLY -> {
                     setReplyToCommentId(
-                        binding,
-                        boxBinding,
                         mCommentId,
                         accountStore!!.hasAccessToken()
                     )
@@ -933,13 +887,13 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 }
 
                 DirectOperation.COMMENT_LIKE -> {
-                    getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(
+                    getCommentAdapter()!!.setHighlightCommentId(
                         mCommentId,
                         false
                     )
                     if (!accountStore!!.hasAccessToken()) {
                         make(
-                            binding.coordinatorLayout,
+                            mBinding.coordinatorLayout,
                             R.string.reader_snackbar_err_cannot_like_post_logged_out,
                             Snackbar.LENGTH_INDEFINITE
                         )
@@ -964,11 +918,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         } else {
                             val wpComUserId = accountStore!!.account.userId
                             if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-                                && getCommentAdapter(binding, boxBinding)!!.refreshComment(
+                                && getCommentAdapter()!!.refreshComment(
                                     mCommentId
                                 )
                             ) {
-                                getCommentAdapter(binding, boxBinding)!!.setAnimateLikeCommentId(
+                                getCommentAdapter()!!.setAnimateLikeCommentId(
                                     mCommentId
                                 )
 
@@ -1001,12 +955,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
-    private fun showProgress(binding: ReaderActivityCommentListBinding) {
-        binding.progressLoading.visibility = View.VISIBLE
+    private fun showProgress() {
+        mBinding.progressLoading.visibility = View.VISIBLE
     }
 
-    private fun hideProgress(binding: ReaderActivityCommentListBinding) {
-        binding.progressLoading.visibility = View.GONE
+    private fun hideProgress() {
+        mBinding.progressLoading.visibility = View.GONE
     }
 
     @Suppress("unused")
@@ -1018,19 +972,19 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdateCommentsEnded) {
-        if (mBinding == null || mBoxBinding == null || isFinishing) {
+        if (isFinishing) {
             return
         }
 
         isUpdatingComments = false
         hasUpdatedComments = true
-        hideProgress(mBinding!!)
+        hideProgress()
 
         if (event.result.isNewOrChanged) {
-            restorePosition = getCurrentPosition(mBinding!!)
-            refreshComments(mBinding!!, mBoxBinding)
+            restorePosition = getCurrentPosition()
+            refreshComments()
         } else {
-            checkEmptyView(mBinding!!, mBoxBinding)
+            checkEmptyView()
         }
 
         setRefreshing(false)
@@ -1040,7 +994,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      * request comments for this post
      */
     private fun updateComments(
-        binding: ReaderActivityCommentListBinding,
         post: ReaderPost,
         showProgress: Boolean,
         requestNextPage: Boolean
@@ -1057,49 +1010,39 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
 
         if (showProgress) {
-            showProgress(binding)
+            showProgress()
         }
         ReaderCommentService.startService(this, post.blogId, post.postId, requestNextPage)
     }
 
-    private fun checkEmptyView(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
+    private fun checkEmptyView() {
         val isEmpty = hasCommentAdapter()
-                && getCommentAdapter(binding, boxBinding)!!.isEmpty
+                && getCommentAdapter()!!.isEmpty
                 && !isSubmittingComment
         if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
-            binding.textEmpty.setText(R.string.no_network_message)
-            binding.textEmpty.visibility = View.VISIBLE
+            mBinding.textEmpty.setText(R.string.no_network_message)
+            mBinding.textEmpty.visibility = View.VISIBLE
         } else if (isEmpty && hasUpdatedComments) {
-            binding.textEmpty.setText(R.string.reader_empty_comments)
-            binding.textEmpty.visibility = View.VISIBLE
+            mBinding.textEmpty.setText(R.string.reader_empty_comments)
+            mBinding.textEmpty.visibility = View.VISIBLE
         } else {
-            binding.textEmpty.visibility = View.GONE
+            mBinding.textEmpty.visibility = View.GONE
         }
     }
 
     /*
      * refresh adapter so latest comments appear
      */
-    private fun refreshComments(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
+    private fun refreshComments() {
         AppLog.d(AppLog.T.READER, "reader comments > refreshComments")
-        getCommentAdapter(binding, boxBinding)!!.refreshComments()
+        getCommentAdapter()!!.refreshComments()
     }
 
     /*
      * scrolls the passed comment to the top of the listView
      */
-    private fun scrollToCommentId(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding,
-        commentId: Long
-    ) {
-        val position = getCommentAdapter(binding, boxBinding)!!.positionOfCommentId(commentId)
+    private fun scrollToCommentId(commentId: Long) {
+        val position = getCommentAdapter()!!.positionOfCommentId(commentId)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, false)
         }
@@ -1109,11 +1052,9 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      * Smoothly scrolls the passed comment to the top of the listView
      */
     private fun smoothScrollToCommentId(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding,
         commentId: Long
     ) {
-        val position = getCommentAdapter(binding, boxBinding)!!.positionOfCommentId(commentId)
+        val position = getCommentAdapter()!!.positionOfCommentId(commentId)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, true)
         }
@@ -1123,17 +1064,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      * submit the text typed into the comment box as a comment on the current post
      */
     @Suppress("LongMethod")
-    private fun submitComment(
-        binding: ReaderActivityCommentListBinding,
-        boxBinding: ReaderIncludeCommentBoxBinding
-    ) {
-        if (mBoxBinding == null) {
-            return
-        }
-
-        val commentText = EditTextUtils.getText(
-            mBoxBinding.editComment
-        )
+    private fun submitComment() {
+        val commentText = EditTextUtils.getText(mBoxBinding.editComment)
         if (TextUtils.isEmpty(commentText)) {
             return
         }
@@ -1169,25 +1101,25 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 if (succeeded) {
                     mBoxBinding.btnSubmitReply.isEnabled = false
                     // stop highlighting the fake comment and replace it with the real one
-                    getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(0, false)
-                    getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(0)
-                    getCommentAdapter(binding, boxBinding)!!.replaceComment(
+                    getCommentAdapter()!!.setHighlightCommentId(0, false)
+                    getCommentAdapter()!!.setReplyTargetComment(0)
+                    getCommentAdapter()!!.replaceComment(
                         fakeCommentId,
                         newComment
                     )
-                    getCommentAdapter(binding, boxBinding)!!.refreshPost()
-                    setReplyToCommentId(binding, boxBinding, 0, false)
+                    getCommentAdapter()!!.refreshPost()
+                    setReplyToCommentId(0, false)
                     mBoxBinding.editComment.autoSaveTextHelper.clearSavedText(mBoxBinding.editComment)
                 } else {
                     mBoxBinding.editComment.setText(commentText)
                     mBoxBinding.btnSubmitReply.isEnabled = true
-                    getCommentAdapter(binding, boxBinding)!!.removeComment(fakeCommentId)
+                    getCommentAdapter()!!.removeComment(fakeCommentId)
                     ToastUtils.showToast(
                         this@ReaderCommentListActivity, R.string.reader_toast_err_comment_failed,
                         ToastUtils.Duration.LONG
                     )
                 }
-                checkEmptyView(binding, boxBinding)
+                checkEmptyView()
             }
 
         val wpComUserId = accountStore!!.account.userId
@@ -1204,21 +1136,21 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             mBoxBinding.editComment.text = null
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
-            getCommentAdapter(binding, boxBinding)!!.setHighlightCommentId(
+            getCommentAdapter()!!.setHighlightCommentId(
                 newComment.commentId,
                 true
             )
-            getCommentAdapter(binding, boxBinding)!!.setReplyTargetComment(0)
-            getCommentAdapter(binding, boxBinding)!!.addComment(newComment)
+            getCommentAdapter()!!.setReplyTargetComment(0)
+            getCommentAdapter()!!.addComment(newComment)
             // make sure it's scrolled into view
-            scrollToCommentId(binding, boxBinding, fakeCommentId)
-            checkEmptyView(binding, boxBinding)
+            scrollToCommentId(fakeCommentId)
+            checkEmptyView()
         }
     }
 
-    private fun getCurrentPosition(binding: ReaderActivityCommentListBinding): Int {
+    private fun getCurrentPosition(): Int {
         if (hasCommentAdapter()) {
-            val layoutManager = binding.recyclerView.layoutManager as LinearLayoutManager?
+            val layoutManager = mBinding.recyclerView.layoutManager as LinearLayoutManager?
             return layoutManager?.findFirstVisibleItemPosition() ?: 0
         } else {
             return 0
