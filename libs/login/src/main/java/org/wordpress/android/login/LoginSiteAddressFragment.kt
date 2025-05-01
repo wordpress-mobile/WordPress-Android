@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.runtime.clearCompositionErrors
 import dagger.android.support.AndroidSupportInjection
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -197,6 +198,8 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         requestedSiteAddress = loginSiteAddressValidator?.cleanedSiteAddress
 
         val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
+
+        viewModel.runApiDiscovery(cleanedUrl)
 
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
         dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
