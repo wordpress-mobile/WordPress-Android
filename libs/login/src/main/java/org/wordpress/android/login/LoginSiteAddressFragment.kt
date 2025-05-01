@@ -134,7 +134,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(LoginSiteAddressViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[LoginSiteAddressViewModel::class.java]
 
         if (savedInstanceState != null) {
             requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
