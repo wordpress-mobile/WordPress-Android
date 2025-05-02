@@ -38,10 +38,6 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
-    lint {
-        disable("FlowOperatorInvokedInComposition")
-    }
 }
 
 static def loadDeveloperProperties(File defaultsFile, File developerFile) {
