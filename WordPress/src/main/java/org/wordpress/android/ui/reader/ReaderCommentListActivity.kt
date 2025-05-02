@@ -118,19 +118,19 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     private var source: String? = null
 
     @Inject
-    var accountStore: AccountStore? = null
+    lateinit var accountStore: AccountStore
 
     @Inject
-    var uiHelpers: UiHelpers? = null
+    lateinit var uiHelpers: UiHelpers
 
     @Inject
-    var viewModelFactory: ViewModelProvider.Factory? = null
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    var readerTracker: ReaderTracker? = null
+    lateinit var readerTracker: ReaderTracker
 
     @Inject
-    var siteStore: SiteStore? = null
+    lateinit var siteStore: SiteStore
 
     private var viewModel: ReaderCommentListViewModel? = null
     private var conversationViewModel: ConversationNotificationsViewModel? = null
