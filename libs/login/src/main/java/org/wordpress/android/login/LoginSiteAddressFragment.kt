@@ -38,7 +38,12 @@ import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.login.viewmodel.LoginSiteAddressViewModel
+import org.wordpress.android.util.ToastUtils
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
@@ -130,11 +135,30 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         super.onAttach(context)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this, viewModelFactory)[LoginSiteAddressViewModel::class.java]
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeState()
+    }
+
+    private fun observeState() {
+        viewModel.stateFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach(::onStateUpdated)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun onStateUpdated(state: String) {
+        ToastUtils.showToast(requireContext(), state)
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProvider(this, viewModelFactory)[LoginSiteAddressViewModel::class.java]
 
         if (savedInstanceState != null) {
             requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
@@ -202,10 +226,11 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         // No further actions are taken
         viewModel.runApiDiscovery(cleanedUrl)
 
-        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
-        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
-
-        startProgress()
+        // TODO: use the FF
+//        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
+//        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
+//
+//        startProgress()
     }
 
     override fun onEditorCommit() {
