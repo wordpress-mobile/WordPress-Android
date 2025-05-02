@@ -73,6 +73,7 @@ import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNa
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils.setupUserSuggestions
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.EditTextUtils
@@ -707,7 +708,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             boxBinding.editComment.postDelayed({
                 val isFocusableInTouchMode = boxBinding.editComment.isFocusableInTouchMode
                 boxBinding.editComment.isFocusableInTouchMode = true
-                EditTextUtils.showSoftInput(boxBinding.editComment)
+                ActivityUtils.showKeyboard(boxBinding.editComment)
 
                 boxBinding.editComment.isFocusableInTouchMode = isFocusableInTouchMode
                 setupReplyToComment()
