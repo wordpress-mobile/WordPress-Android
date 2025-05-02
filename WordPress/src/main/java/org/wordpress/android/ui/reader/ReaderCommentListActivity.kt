@@ -275,7 +275,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     boxBinding.editComment.selectionEnd,
                     blogId
                 )
-                CollapseFullScreenDialogFragment.Builder(this@ReaderCommentListActivity)
+                CollapseFullScreenDialogFragment.Builder(this)
                     .setTitle(R.string.comment)
                     .setOnCollapseListener(this)
                     .setOnConfirmListener(this)
@@ -972,7 +972,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         binding.progressLoading.visibility = View.GONE
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UpdateCommentsStarted?) {
         isUpdatingComments = true
@@ -1122,7 +1122,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     boxBinding.btnSubmitReply.isEnabled = true
                     getCommentAdapter().removeComment(fakeCommentId)
                     ToastUtils.showToast(
-                        this@ReaderCommentListActivity, R.string.reader_toast_err_comment_failed,
+                        this,
+                        R.string.reader_toast_err_comment_failed,
                         ToastUtils.Duration.LONG
                     )
                 }
@@ -1164,6 +1165,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun setRefreshing(refreshing: Boolean) {
         if (swipeToRefreshHelper != null) {
             swipeToRefreshHelper!!.isRefreshing = refreshing
