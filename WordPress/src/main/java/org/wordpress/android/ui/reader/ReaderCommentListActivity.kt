@@ -163,7 +163,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             it.setDisplayHomeAsUpEnabled(true)
         }
 
-        initViewModels(savedInstanceState)
+        restoreState(savedInstanceState)
+        initViewModels()
 
         if (conversationViewModel != null) {
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
@@ -301,10 +302,32 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
+    private fun restoreState(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
+            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
+            restorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+            hasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
+            interceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+            source = savedInstanceState.getString(ReaderConstants.ARG_SOURCE)
+        } else {
+            blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
+            postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
+            if (intent.hasExtra(ReaderConstants.ARG_DIRECT_OPERATION)) {
+                directOperation = BundleCompat.getSerializable(
+                    intent.extras!!,
+                    ReaderConstants.ARG_DIRECT_OPERATION,
+                    DirectOperation::class.java
+                )
+            }
+            commentId = intent.getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0)
+            interceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
+            source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
+        }
+    }
+
     @Suppress("LongMethod")
-    private fun initViewModels(
-        savedInstanceState: Bundle?
-    ) {
+    private fun initViewModels() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ReaderCommentListViewModel::class.java]
         viewModel!!.scrollTo.observe(
             this
@@ -390,28 +413,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 }
                 Unit
             }
-        }
-
-        if (savedInstanceState != null) {
-            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
-            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
-            restorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
-            hasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
-            interceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
-            source = savedInstanceState.getString(ReaderConstants.ARG_SOURCE)
-        } else {
-            blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
-            postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
-            if (intent.hasExtra(ReaderConstants.ARG_DIRECT_OPERATION)) {
-                directOperation = BundleCompat.getSerializable(
-                    intent.extras!!,
-                    ReaderConstants.ARG_DIRECT_OPERATION,
-                    DirectOperation::class.java
-                )
-            }
-            commentId = intent.getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0)
-            interceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
-            source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         }
 
         conversationViewModel!!.start(
