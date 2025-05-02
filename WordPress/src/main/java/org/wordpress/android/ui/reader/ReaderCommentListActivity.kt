@@ -461,7 +461,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     // get the updated post and pass it to the adapter
                     val post = ReaderPostTable.getBlogPost(blogId, postId, false)
                     if (post != null) {
-                        getCommentAdapter()!!.setPost(post)
+                        getCommentAdapter().setPost(post)
                         readerPost = post
                     }
                 }
@@ -623,14 +623,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         undoMessage: Int,
         tracker: AnalyticsTracker.Stat
     ) {
-        getCommentAdapter()!!.removeComment(comment.commentId)
+        getCommentAdapter().removeComment(comment.commentId)
         checkEmptyView()
 
         val snackbar = make(
             binding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG
         ).setAction(
             R.string.undo
-        ) { _: View? -> getCommentAdapter()!!.refreshComments() }
+        ) { _: View? -> getCommentAdapter().refreshComments() }
 
         snackbar.addCallback(object : BaseCallback<Snackbar?>() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -665,10 +665,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
         if (!event.isSuccess) {
             ToastUtils.showToast(this@ReaderCommentListActivity, R.string.comment_moderation_error)
-            getCommentAdapter()!!.refreshComments()
+            getCommentAdapter().refreshComments()
         } else {
             // we do try to remove the comment in case you did PTR and it appeared in the list again
-            getCommentAdapter()!!.removeComment(event.commentId)
+            getCommentAdapter().removeComment(event.commentId)
         }
         checkEmptyView()
     }
@@ -723,11 +723,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
-        getCommentAdapter()?.let { adapter ->
+        getCommentAdapter().also { adapter ->
             adapter.setHighlightCommentId(replyToCommentId, false)
             adapter.setReplyTargetComment(replyToCommentId)
             adapter.notifyDataSetChanged()
         }
+
         if (replyToCommentId != 0L) {
             scrollToCommentId(replyToCommentId)
 
@@ -803,7 +804,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         return (commentAdapter != null)
     }
 
-    private fun getCommentAdapter(): ReaderCommentAdapter? {
+    private fun getCommentAdapter(): ReaderCommentAdapter {
         if (commentAdapter == null && readerPost != null) {
             commentAdapter = ReaderCommentAdapter(
                 WPActivityUtils.getThemedContext(this),
@@ -865,7 +866,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 }
             }
         }
-        return commentAdapter
+        return commentAdapter!!
     }
 
     private fun doDirectOperation() {
@@ -890,7 +891,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
 
             DirectOperation.COMMENT_LIKE -> {
-                getCommentAdapter()!!.setHighlightCommentId(
+                getCommentAdapter().setHighlightCommentId(
                     commentId,
                     false
                 )
@@ -938,11 +939,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     private fun likeComment(comment: ReaderComment) {
         val wpComUserId = accountStore.account.userId
         if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-            && getCommentAdapter()!!.refreshComment(
+            && getCommentAdapter().refreshComment(
                 commentId
             )
         ) {
-            getCommentAdapter()!!.setAnimateLikeCommentId(
+            getCommentAdapter().setAnimateLikeCommentId(
                 commentId
             )
 
@@ -1025,7 +1026,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     private fun checkEmptyView() {
         val isEmpty = hasCommentAdapter()
-                && getCommentAdapter()!!.isEmpty
+                && getCommentAdapter().isEmpty
                 && !isSubmittingComment
         if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
             binding.textEmpty.setText(R.string.no_network_message)
@@ -1043,14 +1044,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      */
     private fun refreshComments() {
         AppLog.d(AppLog.T.READER, "reader comments > refreshComments")
-        getCommentAdapter()!!.refreshComments()
+        getCommentAdapter().refreshComments()
     }
 
     /*
      * scrolls the passed comment to the top of the listView
      */
     private fun scrollToCommentId(id: Long) {
-        val position = getCommentAdapter()!!.positionOfCommentId(id)
+        val position = getCommentAdapter().positionOfCommentId(id)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, false)
         }
@@ -1060,7 +1061,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      * Smoothly scrolls the passed comment to the top of the listView
      */
     private fun smoothScrollToCommentId(id: Long) {
-        val position = getCommentAdapter()!!.positionOfCommentId(id)
+        val position = getCommentAdapter().positionOfCommentId(id)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, true)
         }
@@ -1107,19 +1108,19 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 if (succeeded) {
                     boxBinding.btnSubmitReply.isEnabled = false
                     // stop highlighting the fake comment and replace it with the real one
-                    getCommentAdapter()!!.setHighlightCommentId(0, false)
-                    getCommentAdapter()!!.setReplyTargetComment(0)
-                    getCommentAdapter()!!.replaceComment(
+                    getCommentAdapter().setHighlightCommentId(0, false)
+                    getCommentAdapter().setReplyTargetComment(0)
+                    getCommentAdapter().replaceComment(
                         fakeCommentId,
                         newComment
                     )
-                    getCommentAdapter()!!.refreshPost()
+                    getCommentAdapter().refreshPost()
                     setReplyToCommentId(0, false)
                     boxBinding.editComment.autoSaveTextHelper.clearSavedText(boxBinding.editComment)
                 } else {
                     boxBinding.editComment.setText(commentText)
                     boxBinding.btnSubmitReply.isEnabled = true
-                    getCommentAdapter()!!.removeComment(fakeCommentId)
+                    getCommentAdapter().removeComment(fakeCommentId)
                     ToastUtils.showToast(
                         this@ReaderCommentListActivity, R.string.reader_toast_err_comment_failed,
                         ToastUtils.Duration.LONG
@@ -1142,12 +1143,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             boxBinding.editComment.text = null
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
-            getCommentAdapter()!!.setHighlightCommentId(
+            getCommentAdapter().setHighlightCommentId(
                 newComment.commentId,
                 true
             )
-            getCommentAdapter()!!.setReplyTargetComment(0)
-            getCommentAdapter()!!.addComment(newComment)
+            getCommentAdapter().setReplyTargetComment(0)
+            getCommentAdapter().addComment(newComment)
             // make sure it's scrolled into view
             scrollToCommentId(fakeCommentId)
             checkEmptyView()
