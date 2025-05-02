@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
@@ -695,6 +697,16 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
                 LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+
+        // In the background, run the API discovery test to see if we can add this site for the REST API
+        try {
+            String authorizationUrl = mViewModel.runApiDiscoveryTest(inputSiteAddress);
+            Log.d("WP_RS", "Found authorization URL: " + authorizationUrl);
+            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL);
+        } catch (Exception ex) {
+            Log.e("WP_RS", "Unable to find authorization URL:" + ex.getMessage());
+            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED);
+        }
     }
 
     @Override public void gotRestEndpoint(String inputSiteAddress, String endpointAddress) {
