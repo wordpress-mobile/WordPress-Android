@@ -957,8 +957,13 @@
 
     <!-- Experimental Features -->
     <string name="experimental_features_screen_title">Experimental Features</string>
+    <string name="disable_experimental_block_editor">Disable experimental block editor</string>
+    <string name="disable_experimental_block_editor_description">Opt out of additional block types and settings</string>
+    <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
     <string name="experimental_block_editor">Experimental block editor</string>
+    <string name="experimental_block_editor_description">Access additional block types and settings</string>
     <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
+    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
     <string name="experimental_block_editor_plugins">Experimental block editor plugins</string>
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
