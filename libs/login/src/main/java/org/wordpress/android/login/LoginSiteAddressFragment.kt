@@ -41,6 +41,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.login.viewmodel.LoginSiteAddressViewModel
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
@@ -225,10 +226,10 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
 
         // This work is in progress so, uncomment the line only if you want to run the discovery REST api process
-        viewModel.runApiDiscovery(cleanedUrl)
+//        viewModel.runApiDiscovery(cleanedUrl)
 
-//        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
-//        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
+        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
+        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
 
         startProgress()
     }
@@ -336,9 +337,10 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
                 connectSiteInfoCalculatedHasJetpack
             )
         } else {
-//            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress)
-            // TODO: use the FF
-            mLoginListener.gotRestEndpoint(inputSiteAddress, endpointAddress)
+            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress)
+
+            // This work is in progress so, uncomment the line only if you want to run the discovery REST api process
+//            mLoginListener.gotRestEndpoint(inputSiteAddress, endpointAddress)
         }
     }
 

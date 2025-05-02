@@ -2,8 +2,6 @@ package org.wordpress.android.login
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import app.cash.turbine.test
 import com.sun.jna.Pointer
 import org.junit.Assert.assertEquals
@@ -11,12 +9,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
@@ -27,9 +22,9 @@ import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
 
-private val TEST_URL = "https://www.test.com"
-private val TEST_URL_AUTH = "https://www.test.com/auth"
-private val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=null"
+private const val TEST_URL = "https://www.test.com"
+private const val TEST_URL_AUTH = "https://www.test.com/auth"
+private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=null"
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
