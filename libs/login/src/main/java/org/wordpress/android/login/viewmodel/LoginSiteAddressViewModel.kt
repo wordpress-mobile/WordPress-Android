@@ -1,6 +1,5 @@
 package org.wordpress.android.login.viewmodel
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

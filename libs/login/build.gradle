@@ -34,6 +34,10 @@ android {
     buildFeatures {
         buildConfig true
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 static def loadDeveloperProperties(File defaultsFile, File developerFile) {
@@ -87,4 +91,7 @@ dependencies {
     testImplementation libs.androidx.arch.core.testing
     testImplementation libs.robolectric
     testImplementation libs.assertj.core
+    testImplementation libs.turbine
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockito.kotlin
 }
