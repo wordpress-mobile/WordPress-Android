@@ -18,7 +18,6 @@ import dagger.android.support.AndroidSupportInjection
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.MemorizingTrustManager
 import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
@@ -43,7 +42,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.login.viewmodel.LoginSiteAddressViewModel
-import org.wordpress.android.util.ToastUtils
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
@@ -146,14 +144,18 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     }
 
     private fun observeState() {
-        viewModel.stateFlow
+        viewModel.authorizationUrlFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach(::onStateUpdated)
+            .onEach(::onAuthorizationUrlUpdated)
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun onStateUpdated(state: String) {
-        handleDiscoverySuccess(state)
+    private fun onAuthorizationUrlUpdated(authorizationUrl: String) {
+        endProgress()
+        if (authorizationUrl.isNotEmpty()) {
+            handleDiscoverySuccess(authorizationUrl)
+            viewModel.consumeAuthorizationUrl()
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -222,15 +224,13 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
 
         val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
 
-        // This work is in progress as right now we are just testing the API discovery through the RS library
-        // No further actions are taken
+        // This work is in progress so, uncomment the line only if you want to run the discovery REST api process
         viewModel.runApiDiscovery(cleanedUrl)
 
-        // TODO: use the FF
 //        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
 //        dispatcher?.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl))
-//
-//        startProgress()
+
+        startProgress()
     }
 
     override fun onEditorCommit() {

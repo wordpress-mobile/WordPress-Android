@@ -14,19 +14,23 @@ import javax.inject.Inject
 class LoginSiteAddressViewModel @Inject constructor(
     private val wpLoginClient: WpLoginClient
 ) : ViewModel() {
-    private val mutableStateFlow = MutableStateFlow("")
-    val stateFlow get() = mutableStateFlow.asStateFlow()
+    private val mutableAuthorizationUrlFlow = MutableStateFlow("")
+    val authorizationUrlFlow get() = mutableAuthorizationUrlFlow.asStateFlow()
 
     fun runApiDiscovery(url: String) {
         viewModelScope.launch {
             try {
                 val urlDiscovery = wpLoginClient.apiDiscovery(url)
                 val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-                Log.d("WP_RS", "Found authorization URL: $authorizationUrl")
-                mutableStateFlow.update { authorizationUrl.orEmpty() }
+                mutableAuthorizationUrlFlow.update { authorizationUrl.orEmpty() }
+                Log.d("WP_RS", "Found authorization for $url URL: $authorizationUrl")
             } catch (throwable: Throwable) {
-                Log.e("WP_RS", "VM: Error during API discovery", throwable)
+                Log.e("WP_RS", "VM: Error during API discovery for $url", throwable)
             }
         }
+    }
+
+    fun consumeAuthorizationUrl() {
+        mutableAuthorizationUrlFlow.update { "" }
     }
 }
