@@ -303,14 +303,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     }
 
     private fun restoreState(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
-            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
-            restorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
-            hasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
-            interceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
-            source = savedInstanceState.getString(ReaderConstants.ARG_SOURCE)
-        } else {
+        savedInstanceState?.let { state ->
+            blogId = state.getLong(ReaderConstants.ARG_BLOG_ID)
+            postId = state.getLong(ReaderConstants.ARG_POST_ID)
+            restorePosition = state.getInt(ReaderConstants.KEY_RESTORE_POSITION)
+            hasUpdatedComments = state.getBoolean(KEY_HAS_UPDATED_COMMENTS)
+            interceptedUri = state.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+            source = state.getString(ReaderConstants.ARG_SOURCE)
+        } ?: {
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
             postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
             if (intent.hasExtra(ReaderConstants.ARG_DIRECT_OPERATION)) {
