@@ -138,9 +138,9 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     private lateinit var binding: ReaderActivityCommentListBinding
     private lateinit var boxBinding: ReaderIncludeCommentBoxBinding
 
-    @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ReaderActivityCommentListBinding.inflate(layoutInflater)
         boxBinding = binding.layoutCommentBox
         setContentView(binding.root)
@@ -173,6 +173,53 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
         }
 
+        if (!loadPost()) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_get_post)
+            finish()
+            return
+        }
+
+        val spacingHorizontal = 0
+        val spacingVertical = DisplayUtils.dpToPx(this, 1)
+        binding.recyclerView.addItemDecoration(
+            RecyclerItemDecoration(
+                spacingHorizontal,
+                spacingVertical
+            )
+        )
+        binding.recyclerView.adapter = getCommentAdapter()
+
+        initCommentBox()
+
+        savedInstanceState?.let {
+            setReplyToCommentId(
+                it.getLong(KEY_REPLY_TO_COMMENT_ID),
+                false
+            )
+        }
+
+        // update the post and its comments upon creation
+        updateOnResume = (savedInstanceState == null)
+
+        if (source != null) {
+            readerTracker.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, readerPost,
+                source!!
+            )
+        }
+
+        // reattach listeners to collapsible reply dialog
+        (supportFragmentManager.findFragmentByTag(
+            CollapseFullScreenDialogFragment.TAG
+        ) as? CollapseFullScreenDialogFragment)?.let { fragment ->
+            if (fragment.isAdded) {
+                fragment.setOnCollapseListener(this)
+                fragment.setOnConfirmListener(this)
+            }
+        }
+    }
+
+    private fun initCommentBox() {
         boxBinding.editComment.initializeWithPrefix('@')
         boxBinding.editComment.autoSaveTextHelper.uniqueId =
             String.format(Locale.US, "%d%d", postId, blogId)
@@ -209,39 +256,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             true
         }
         boxBinding.btnSubmitReply.redirectContextClickToLongPressListener()
-
-        if (!loadPost()) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_get_post)
-            finish()
-            return
-        }
-
-        val spacingHorizontal = 0
-        val spacingVertical = DisplayUtils.dpToPx(this, 1)
-        binding.recyclerView.addItemDecoration(
-            RecyclerItemDecoration(
-                spacingHorizontal,
-                spacingVertical
-            )
-        )
-        binding.recyclerView.adapter = getCommentAdapter()
-
-        savedInstanceState?.let {
-            setReplyToCommentId(
-                it.getLong(KEY_REPLY_TO_COMMENT_ID),
-                false
-            )
-        }
-
-        // update the post and its comments upon creation
-        updateOnResume = (savedInstanceState == null)
-
-        if (source != null) {
-            readerTracker.trackPost(
-                AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, readerPost,
-                source!!
-            )
-        }
 
         if (readerPost != null) {
             suggestionServiceConnectionManager = SuggestionServiceConnectionManager(this, blogId)
@@ -283,16 +297,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 true
             }
             boxBinding.buttonExpand.redirectContextClickToLongPressListener()
-        }
-
-        // reattach listeners to collapsible reply dialog
-        (supportFragmentManager.findFragmentByTag(
-            CollapseFullScreenDialogFragment.TAG
-        ) as? CollapseFullScreenDialogFragment)?.let { fragment ->
-            if (fragment.isAdded) {
-                fragment.setOnCollapseListener(this)
-                fragment.setOnConfirmListener(this)
-            }
         }
     }
 
@@ -472,11 +476,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         super.onResume()
         EventBus.getDefault().register(this)
 
-            refreshComments()
+        refreshComments()
 
-            if (updateOnResume && NetworkUtils.isNetworkAvailable(this)) {
-                updatePostAndComments()
-                updateOnResume = false
+        if (updateOnResume && NetworkUtils.isNetworkAvailable(this)) {
+            updatePostAndComments()
+            updateOnResume = false
         }
     }
 
@@ -814,7 +818,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 )
             }
             // adapter calls this when user taps share icon
-            commentAdapter!!.setCommentMenuActionListener { comment: ReaderComment, action: ReaderCommentMenuActionType ->
+            commentAdapter!!.setCommentMenuActionListener { comment: ReaderComment,
+                                                            action: ReaderCommentMenuActionType ->
                 performCommentAction(
                     comment,
                     action
@@ -865,93 +870,91 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     @Suppress("LongMethod")
     private fun doDirectOperation() {
-        if (directOperation != null) {
-            when (directOperation) {
-                DirectOperation.COMMENT_JUMP -> if (commentAdapter != null) {
-                    commentAdapter!!.setHighlightCommentId(mCommentId, false)
+        when (directOperation) {
+            DirectOperation.COMMENT_JUMP -> if (commentAdapter != null) {
+                commentAdapter!!.setHighlightCommentId(mCommentId, false)
 
-                    // clear up the direct operation vars. Only performing it once.
-                    directOperation = null
-                    mCommentId = 0
-                }
+                // clear up the direct operation vars. Only performing it once.
+                directOperation = null
+                mCommentId = 0
+            }
 
-                DirectOperation.COMMENT_REPLY -> {
-                    setReplyToCommentId(
-                        mCommentId,
-                        accountStore.hasAccessToken()
+            DirectOperation.COMMENT_REPLY -> {
+                setReplyToCommentId(
+                    mCommentId,
+                    accountStore.hasAccessToken()
+                )
+
+                // clear up the direct operation vars. Only performing it once.
+                directOperation = null
+                mCommentId = 0
+            }
+
+            DirectOperation.COMMENT_LIKE -> {
+                getCommentAdapter()!!.setHighlightCommentId(
+                    mCommentId,
+                    false
+                )
+                if (!accountStore.hasAccessToken()) {
+                    make(
+                        binding.coordinatorLayout,
+                        R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                        Snackbar.LENGTH_INDEFINITE
                     )
-
-                    // clear up the direct operation vars. Only performing it once.
-                    directOperation = null
-                    mCommentId = 0
-                }
-
-                DirectOperation.COMMENT_LIKE -> {
-                    getCommentAdapter()!!.setHighlightCommentId(
-                        mCommentId,
-                        false
+                        .setAction(R.string.sign_in, mSignInClickListener)
+                        .show()
+                } else if (readerPost != null) {
+                    val comment = ReaderCommentTable.getComment(
+                        readerPost!!.blogId,
+                        readerPost!!.postId,
+                        mCommentId
                     )
-                    if (!accountStore.hasAccessToken()) {
-                        make(
-                            binding.coordinatorLayout,
-                            R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                            Snackbar.LENGTH_INDEFINITE
+                    if (comment == null) {
+                        ToastUtils.showToast(
+                            this@ReaderCommentListActivity,
+                            R.string.reader_toast_err_comment_not_found
                         )
-                            .setAction(R.string.sign_in, mSignInClickListener)
-                            .show()
-                    } else if (readerPost != null) {
-                        val comment = ReaderCommentTable.getComment(
-                            readerPost!!.blogId,
-                            readerPost!!.postId,
-                            mCommentId
+                    } else if (comment.isLikedByCurrentUser) {
+                        ToastUtils.showToast(
+                            this@ReaderCommentListActivity,
+                            R.string.reader_toast_err_already_liked
                         )
-                        if (comment == null) {
-                            ToastUtils.showToast(
-                                this@ReaderCommentListActivity,
-                                R.string.reader_toast_err_comment_not_found
+                    } else {
+                        val wpComUserId = accountStore.account.userId
+                        if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
+                            && getCommentAdapter()!!.refreshComment(
+                                mCommentId
                             )
-                        } else if (comment.isLikedByCurrentUser) {
-                            ToastUtils.showToast(
-                                this@ReaderCommentListActivity,
-                                R.string.reader_toast_err_already_liked
+                        ) {
+                            getCommentAdapter()!!.setAnimateLikeCommentId(
+                                mCommentId
+                            )
+
+                            readerTracker.trackPost(
+                                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
+                                readerPost
+                            )
+                            readerTracker.trackPost(
+                                AnalyticsTracker.Stat.COMMENT_LIKED,
+                                readerPost,
+                                AnalyticsCommentActionSource.READER.toString()
                             )
                         } else {
-                            val wpComUserId = accountStore.account.userId
-                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-                                && getCommentAdapter()!!.refreshComment(
-                                    mCommentId
-                                )
-                            ) {
-                                getCommentAdapter()!!.setAnimateLikeCommentId(
-                                    mCommentId
-                                )
-
-                                readerTracker.trackPost(
-                                    AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
-                                    readerPost
-                                )
-                                readerTracker.trackPost(
-                                    AnalyticsTracker.Stat.COMMENT_LIKED,
-                                    readerPost,
-                                    AnalyticsCommentActionSource.READER.toString()
-                                )
-                            } else {
-                                ToastUtils.showToast(
-                                    this@ReaderCommentListActivity,
-                                    R.string.reader_toast_err_generic
-                                )
-                            }
+                            ToastUtils.showToast(
+                                this@ReaderCommentListActivity,
+                                R.string.reader_toast_err_generic
+                            )
                         }
-
-                        // clear up the direct operation vars. Only performing it once.
-                        directOperation = null
                     }
-                }
 
-                else -> {}
+                    // clear up the direct operation vars. Only performing it once.
+                    directOperation = null
+                }
             }
-        } else {
-            mCommentId = 0
+
+            else -> {
+                mCommentId = 0
+            }
         }
     }
 
