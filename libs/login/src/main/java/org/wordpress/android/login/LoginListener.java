@@ -63,6 +63,7 @@ public interface LoginListener {
     void gotWpcomSiteInfo(String siteAddress);
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
     void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
+    void gotRestEndpoint(String inputSiteAddress, String endpointAddress);
     void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);
     void helpSiteAddress(String url);
     void helpFindingSiteAddress(String username, SiteStore siteStore);

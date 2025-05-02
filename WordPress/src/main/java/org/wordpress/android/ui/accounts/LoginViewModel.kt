@@ -33,9 +33,4 @@ class LoginViewModel @Inject constructor(private val buildConfigWrapper: BuildCo
     } else {
         AuthEmailPayloadScheme.WORDPRESS
     }
-
-    fun runApiDiscoveryTest(input: String) = runBlocking {
-        val urlDiscovery = WpLoginClient().apiDiscovery(input)
-        urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-    }
 }

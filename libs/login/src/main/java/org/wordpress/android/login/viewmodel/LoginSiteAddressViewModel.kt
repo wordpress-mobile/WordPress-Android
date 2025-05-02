@@ -22,7 +22,7 @@ class LoginSiteAddressViewModel @Inject constructor(
             try {
                 val urlDiscovery = wpLoginClient.apiDiscovery(url)
                 val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-                Log.d("WP_RS", "VM: Found authorization URL: $authorizationUrl")
+                Log.d("WP_RS", "Found authorization URL: $authorizationUrl")
                 mutableStateFlow.update { authorizationUrl.orEmpty() }
             } catch (throwable: Throwable) {
                 Log.e("WP_RS", "VM: Error during API discovery", throwable)

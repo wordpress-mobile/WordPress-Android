@@ -1154,9 +1154,7 @@ public final class AnalyticsTracker {
         VOICE_TO_CONTENT_BUTTON_DONE_TAPPED,
         VOICE_TO_CONTENT_BUTTON_UPGRADE_TAPPED,
         VOICE_TO_CONTENT_BUTTON_CLOSE_TAPPED,
-        VOICE_TO_CONTENT_BUTTON_RECORDING_LIMIT_REACHED,
-        BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
-        BACKGROUND_REST_AUTODISCOVERY_FAILED;
+        VOICE_TO_CONTENT_BUTTON_RECORDING_LIMIT_REACHED;
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.

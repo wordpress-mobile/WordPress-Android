@@ -697,15 +697,24 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
                 LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+    }
 
-        // In the background, run the API discovery test to see if we can add this site for the REST API
+    @Override public void gotRestEndpoint(String inputSiteAddress, String endpointAddress) {
+        CustomTabsIntent intent = new CustomTabsIntent.Builder()
+                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
+                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
+                .setUrlBarHidingEnabled(true)
+                .setInstantAppsEnabled(false)
+                .setShowTitle(false)
+                .build();
+
+        Uri loginUri = Uri.parse(endpointAddress);
         try {
-            String authorizationUrl = mViewModel.runApiDiscoveryTest(inputSiteAddress);
-            Log.d("WP_RS", "Found authorization URL: " + authorizationUrl);
-            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL);
-        } catch (Exception ex) {
-            Log.e("WP_RS", "Unable to find authorization URL:" + ex.getMessage());
-            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED);
+            intent.launchUrl(this, loginUri);
+        } catch (SecurityException | ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
     }
 

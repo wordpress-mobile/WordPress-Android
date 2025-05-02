@@ -153,7 +153,7 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
     }
 
     private fun onStateUpdated(state: String) {
-        ToastUtils.showToast(requireContext(), state)
+        handleDiscoverySuccess(state)
     }
 
     @Deprecated("Deprecated in Java")
@@ -336,7 +336,9 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
                 connectSiteInfoCalculatedHasJetpack
             )
         } else {
-            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress)
+//            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress)
+            // TODO: use the FF
+            mLoginListener.gotRestEndpoint(inputSiteAddress, endpointAddress)
         }
     }
 
