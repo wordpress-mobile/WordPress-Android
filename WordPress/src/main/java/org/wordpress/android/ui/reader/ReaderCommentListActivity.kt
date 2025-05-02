@@ -868,7 +868,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         return commentAdapter
     }
 
-    @Suppress("LongMethod")
     private fun doDirectOperation() {
         when (directOperation) {
             DirectOperation.COMMENT_JUMP -> if (commentAdapter != null) {
@@ -920,31 +919,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                             R.string.reader_toast_err_already_liked
                         )
                     } else {
-                        val wpComUserId = accountStore.account.userId
-                        if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-                            && getCommentAdapter()!!.refreshComment(
-                                commentId
-                            )
-                        ) {
-                            getCommentAdapter()!!.setAnimateLikeCommentId(
-                                commentId
-                            )
-
-                            readerTracker.trackPost(
-                                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
-                                readerPost
-                            )
-                            readerTracker.trackPost(
-                                AnalyticsTracker.Stat.COMMENT_LIKED,
-                                readerPost,
-                                AnalyticsCommentActionSource.READER.toString()
-                            )
-                        } else {
-                            ToastUtils.showToast(
-                                this@ReaderCommentListActivity,
-                                R.string.reader_toast_err_generic
-                            )
-                        }
+                        likeComment(comment)
                     }
 
                     // clear up the direct operation vars. Only performing it once.
@@ -952,9 +927,39 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 }
             }
 
-            else -> {
-                commentId = 0
+            DirectOperation.POST_LIKE -> {
+                // nothing special to do in this case
             }
+
+            null -> commentId = 0
+        }
+    }
+
+    private fun likeComment(comment: ReaderComment) {
+        val wpComUserId = accountStore.account.userId
+        if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
+            && getCommentAdapter()!!.refreshComment(
+                commentId
+            )
+        ) {
+            getCommentAdapter()!!.setAnimateLikeCommentId(
+                commentId
+            )
+
+            readerTracker.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
+                readerPost
+            )
+            readerTracker.trackPost(
+                AnalyticsTracker.Stat.COMMENT_LIKED,
+                readerPost,
+                AnalyticsCommentActionSource.READER.toString()
+            )
+        } else {
+            ToastUtils.showToast(
+                this@ReaderCommentListActivity,
+                R.string.reader_toast_err_generic
+            )
         }
     }
 
