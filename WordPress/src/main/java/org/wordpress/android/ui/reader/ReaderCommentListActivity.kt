@@ -112,7 +112,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     private var directOperation: DirectOperation? = null
     private var replyToCommentId: Long = 0
-    private var mCommentId: Long = 0
+    private var commentId: Long = 0
     private var restorePosition = 0
     private var interceptedUri: String? = null
     private var source: String? = null
@@ -408,7 +408,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     DirectOperation::class.java
                 )
             }
-            mCommentId = intent.getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0)
+            commentId = intent.getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0)
             interceptedUri = intent.getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI)
             source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         }
@@ -689,13 +689,13 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     @Suppress("deprecation")
     private fun setReplyToCommentId(
-        commentId: Long,
+        id: Long,
         doFocus: Boolean
     ) {
-        replyToCommentId = if (replyToCommentId == commentId) {
+        replyToCommentId = if (replyToCommentId == id) {
             0
         } else {
-            commentId
+            id
         }
         boxBinding.editComment.setHint(
             if (replyToCommentId == 0L)
@@ -811,9 +811,9 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             )
 
             // adapter calls this when user taps reply icon
-            commentAdapter!!.setReplyListener { commentId: Long ->
+            commentAdapter!!.setReplyListener { id: Long ->
                 setReplyToCommentId(
-                    commentId,
+                    id,
                     true
                 )
             }
@@ -836,10 +836,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 if (!isFinishing) {
                     if (isEmpty || !hasUpdatedComments) {
                         updateComments(readerPost!!, isEmpty, false)
-                    } else if (mCommentId > 0 || directOperation != null) {
-                        if (mCommentId > 0) {
+                    } else if (commentId > 0 || directOperation != null) {
+                        if (commentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(mCommentId)
+                            smoothScrollToCommentId(commentId)
                         }
 
                         doDirectOperation()
@@ -872,27 +872,27 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     private fun doDirectOperation() {
         when (directOperation) {
             DirectOperation.COMMENT_JUMP -> if (commentAdapter != null) {
-                commentAdapter!!.setHighlightCommentId(mCommentId, false)
+                commentAdapter!!.setHighlightCommentId(commentId, false)
 
                 // clear up the direct operation vars. Only performing it once.
                 directOperation = null
-                mCommentId = 0
+                commentId = 0
             }
 
             DirectOperation.COMMENT_REPLY -> {
                 setReplyToCommentId(
-                    mCommentId,
+                    commentId,
                     accountStore.hasAccessToken()
                 )
 
                 // clear up the direct operation vars. Only performing it once.
                 directOperation = null
-                mCommentId = 0
+                commentId = 0
             }
 
             DirectOperation.COMMENT_LIKE -> {
                 getCommentAdapter()!!.setHighlightCommentId(
-                    mCommentId,
+                    commentId,
                     false
                 )
                 if (!accountStore.hasAccessToken()) {
@@ -907,7 +907,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     val comment = ReaderCommentTable.getComment(
                         readerPost!!.blogId,
                         readerPost!!.postId,
-                        mCommentId
+                        commentId
                     )
                     if (comment == null) {
                         ToastUtils.showToast(
@@ -923,11 +923,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         val wpComUserId = accountStore.account.userId
                         if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
                             && getCommentAdapter()!!.refreshComment(
-                                mCommentId
+                                commentId
                             )
                         ) {
                             getCommentAdapter()!!.setAnimateLikeCommentId(
-                                mCommentId
+                                commentId
                             )
 
                             readerTracker.trackPost(
@@ -953,7 +953,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
 
             else -> {
-                mCommentId = 0
+                commentId = 0
             }
         }
     }
@@ -1044,8 +1044,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     /*
      * scrolls the passed comment to the top of the listView
      */
-    private fun scrollToCommentId(commentId: Long) {
-        val position = getCommentAdapter()!!.positionOfCommentId(commentId)
+    private fun scrollToCommentId(id: Long) {
+        val position = getCommentAdapter()!!.positionOfCommentId(id)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, false)
         }
@@ -1054,10 +1054,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     /*
      * Smoothly scrolls the passed comment to the top of the listView
      */
-    private fun smoothScrollToCommentId(
-        commentId: Long
-    ) {
-        val position = getCommentAdapter()!!.positionOfCommentId(commentId)
+    private fun smoothScrollToCommentId(id: Long) {
+        val position = getCommentAdapter()!!.positionOfCommentId(id)
         if (viewModel != null && position > -1) {
             viewModel!!.scrollToPosition(position, true)
         }
