@@ -164,7 +164,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
 
         restoreState(savedInstanceState)
-        initViewModels()
+        initCommentListViewModel()
+        initConversationViewModel()
 
         if (conversationViewModel != null) {
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
@@ -181,12 +182,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             return
         }
 
-        val spacingHorizontal = 0
-        val spacingVertical = DisplayUtils.dpToPx(this, 1)
         binding.recyclerView.addItemDecoration(
             RecyclerItemDecoration(
-                spacingHorizontal,
-                spacingVertical
+                0,
+                DisplayUtils.dpToPx(this, 1)
             )
         )
         binding.recyclerView.adapter = getCommentAdapter()
@@ -326,8 +325,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
-    @Suppress("LongMethod")
-    private fun initViewModels() {
+    private fun initCommentListViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ReaderCommentListViewModel::class.java]
         viewModel!!.scrollTo.observe(
             this
@@ -354,7 +352,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 binding.appbarMain.post { binding.appbarMain.requestLayout() }
             }
         }
+    }
 
+    @Suppress("LongMethod")
+    private fun initConversationViewModel() {
         conversationViewModel = ViewModelProvider(
             this,
             viewModelFactory
