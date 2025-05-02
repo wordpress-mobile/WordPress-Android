@@ -619,7 +619,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         startActivity(intent)
     }
 
-    @Suppress("LongMethod")
     private fun moderateComment(
         comment: ReaderComment,
         newStatus: CommentStatus,
