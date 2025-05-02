@@ -687,7 +687,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)))
     }
 
-    @Suppress("deprecation")
     private fun setReplyToCommentId(
         id: Long,
         doFocus: Boolean
