@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent.Builder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -481,14 +482,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
 
-        CustomTabsIntent intent = new CustomTabsIntent.Builder()
-                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
-                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
-                .setUrlBarHidingEnabled(true)
-                .setInstantAppsEnabled(false)
-                .setShowTitle(false)
-                .build();
+        CustomTabsIntent intent = getCustomTabsIntent();
 
         Uri loginUri = mLoginHelper.getWpcomLoginUri();
         try {
@@ -497,6 +491,17 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
             AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
             ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
+    }
+
+    @NonNull private CustomTabsIntent getCustomTabsIntent() {
+        return new Builder()
+                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
+                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
+                .setUrlBarHidingEnabled(true)
+                .setInstantAppsEnabled(false)
+                .setShowTitle(false)
+                .build();
     }
 
     @Override
@@ -710,14 +715,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override public void gotRestEndpoint(String inputSiteAddress, String endpointAddress) {
-        CustomTabsIntent intent = new CustomTabsIntent.Builder()
-                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
-                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
-                .setUrlBarHidingEnabled(true)
-                .setInstantAppsEnabled(false)
-                .setShowTitle(false)
-                .build();
+        CustomTabsIntent intent = getCustomTabsIntent();
 
         Uri loginUri = Uri.parse(endpointAddress);
         try {

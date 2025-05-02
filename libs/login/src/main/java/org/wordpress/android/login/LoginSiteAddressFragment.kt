@@ -553,4 +553,3 @@ class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEd
         const val TAG: String = "login_site_address_fragment_tag"
     }
 }
-
