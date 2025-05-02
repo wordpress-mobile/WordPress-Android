@@ -237,7 +237,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         updateOnResume = (savedInstanceState == null)
 
         if (source != null) {
-            readerTracker!!.trackPost(
+            readerTracker.trackPost(
                 AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, readerPost,
                 source!!
             )
@@ -300,7 +300,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     private fun initViewModels(
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProvider(this, viewModelFactory!!)[ReaderCommentListViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[ReaderCommentListViewModel::class.java]
         viewModel!!.scrollTo.observe(
             this
         ) { scrollPositionEvent: Event<ScrollPosition?> ->
@@ -329,7 +329,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
         conversationViewModel = ViewModelProvider(
             this,
-            viewModelFactory!!
+            viewModelFactory
         )[ConversationNotificationsViewModel::class.java]
         conversationViewModel!!.snackbarEvents.observe(
             this
@@ -343,7 +343,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             snackbarMessageHolderEvent.applyIfNotHandled {
                 make(
                     binding.coordinatorLayout,
-                    uiHelpers!!.getTextOfUiString(
+                    uiHelpers.getTextOfUiString(
                         this@ReaderCommentListActivity,
                         message
                     ),
@@ -351,7 +351,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 )
                     .setAction(
                         if (buttonTitle != null)
-                            uiHelpers!!.getTextOfUiString(
+                            uiHelpers.getTextOfUiString(
                                 this@ReaderCommentListActivity,
                                 buttonTitle
                             )
@@ -439,7 +439,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             return@OnClickListener
         }
         if (interceptedUri != null) {
-            readerTracker!!.trackUri(
+            readerTracker.trackUri(
                 AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED,
                 interceptedUri!!
             )
@@ -568,7 +568,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     ) {
         when (action) {
             ReaderCommentMenuActionType.EDIT -> {
-                val postSite = siteStore!!.getSiteBySiteId(comment.blogId)
+                val postSite = siteStore.getSiteBySiteId(comment.blogId)
                 if (postSite != null) {
                     openCommentEditor(comment, postSite)
                 }
@@ -671,7 +671,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
 
     private fun shareComment(commentUrl: String) {
-        readerTracker!!.trackPost(
+        readerTracker.trackPost(
             AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_SHARED,
             readerPost
         )
@@ -762,7 +762,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             return false
         }
 
-        if (!accountStore!!.hasAccessToken()) {
+        if (!accountStore.hasAccessToken()) {
             boxBinding.layoutContainer.visibility = View.GONE
             showCommentsClosedMessage(false)
         } else if (readerPost!!.isCommentsOpen) {
@@ -878,7 +878,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 DirectOperation.COMMENT_REPLY -> {
                     setReplyToCommentId(
                         mCommentId,
-                        accountStore!!.hasAccessToken()
+                        accountStore.hasAccessToken()
                     )
 
                     // clear up the direct operation vars. Only performing it once.
@@ -891,7 +891,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         mCommentId,
                         false
                     )
-                    if (!accountStore!!.hasAccessToken()) {
+                    if (!accountStore.hasAccessToken()) {
                         make(
                             binding.coordinatorLayout,
                             R.string.reader_snackbar_err_cannot_like_post_logged_out,
@@ -916,7 +916,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                                 R.string.reader_toast_err_already_liked
                             )
                         } else {
-                            val wpComUserId = accountStore!!.account.userId
+                            val wpComUserId = accountStore.account.userId
                             if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
                                 && getCommentAdapter()!!.refreshComment(
                                     mCommentId
@@ -926,11 +926,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                                     mCommentId
                                 )
 
-                                readerTracker!!.trackPost(
+                                readerTracker.trackPost(
                                     AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
                                     readerPost
                                 )
-                                readerTracker!!.trackPost(
+                                readerTracker.trackPost(
                                     AnalyticsTracker.Stat.COMMENT_LIKED,
                                     readerPost,
                                     AnalyticsCommentActionSource.READER.toString()
@@ -1075,12 +1075,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
 
         if (replyToCommentId != 0L) {
-            readerTracker!!.trackPost(
+            readerTracker.trackPost(
                 AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_REPLIED_TO,
                 readerPost
             )
         } else {
-            readerTracker!!.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, readerPost)
+            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, readerPost)
         }
 
         boxBinding.btnSubmitReply.isEnabled = false
@@ -1122,7 +1122,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 checkEmptyView()
             }
 
-        val wpComUserId = accountStore!!.account.userId
+        val wpComUserId = accountStore.account.userId
         val newComment = ReaderCommentActions.submitPostComment(
             readerPost,
             fakeCommentId,
