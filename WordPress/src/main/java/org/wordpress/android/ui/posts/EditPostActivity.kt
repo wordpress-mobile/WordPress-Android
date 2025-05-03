@@ -422,6 +422,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
 
+    private val disableGutenbergKitFeatureConfig: ExperimentalFeature =
+        ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
     private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
     private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
         ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
@@ -521,7 +523,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "ComplexMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -533,7 +535,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        isGutenbergKitEditor = gutenbergKitFeatureConfig.isEnabled() || gutenbergKitFeature.isEnabled()
+        isGutenbergKitEditor = (gutenbergKitFeatureConfig.isEnabled() || gutenbergKitFeature.isEnabled())
+                && !disableGutenbergKitFeatureConfig.isEnabled()
 
         createEditShareMessageActivityResultLauncher()
 
