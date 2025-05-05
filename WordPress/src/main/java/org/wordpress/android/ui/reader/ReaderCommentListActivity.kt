@@ -307,7 +307,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             hasUpdatedComments = state.getBoolean(KEY_HAS_UPDATED_COMMENTS)
             interceptedUri = state.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             source = state.getString(ReaderConstants.ARG_SOURCE)
-        } ?: {
+        } ?: run {
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
             postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0)
             if (intent.hasExtra(ReaderConstants.ARG_DIRECT_OPERATION)) {
