@@ -15,8 +15,6 @@ import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import kotlin.text.RegexOption.IGNORE_CASE
-import androidx.core.net.toUri
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 
 class LoginViewModel @Inject constructor(
