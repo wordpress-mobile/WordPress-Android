@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.wordpress.android.login.viewmodel.LoginSiteAddressViewModel;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
@@ -450,11 +449,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginViewModel.class)
     abstract ViewModel loginViewModel(LoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginSiteAddressViewModel.class)
-    abstract ViewModel loginSiteAddressViewModel(LoginSiteAddressViewModel viewModel);
 
     @Binds
     @IntoMap
