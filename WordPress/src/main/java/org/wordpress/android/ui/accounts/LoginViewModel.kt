@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    fun runApiDiscoveryTest(url: String): String = runBlocking {
+    fun runApiDiscovery(url: String): String = runBlocking {
         try {
             val urlDiscovery = wpLoginClient.apiDiscovery(url)
             val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()

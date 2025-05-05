@@ -108,7 +108,7 @@ class LoginViewModelTest : BaseUnitTest() {
             )
         whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
 
-        val result = viewModel.runApiDiscoveryTest(TEST_URL)
+        val result = viewModel.runApiDiscovery(TEST_URL)
 
         assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
@@ -118,7 +118,7 @@ class LoginViewModelTest : BaseUnitTest() {
     fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
 
-        val result = viewModel.runApiDiscoveryTest(TEST_URL)
+        val result = viewModel.runApiDiscovery(TEST_URL)
 
         assertEquals("", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))

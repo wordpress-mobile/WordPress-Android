@@ -701,11 +701,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
 
         // In the background, run the API discovery test to see if we can add this site for the REST API
-        String authorizationUrl = mViewModel.runApiDiscoveryTest(inputSiteAddress);
-//            gotRestEndpoint(inputSiteAddress, authorizationUrl);
+        String authorizationUrl = mViewModel.runApiDiscovery(inputSiteAddress);
+//            launchApplicationPasswordFlow(authorizationUrl);
     }
 
-    public void gotRestEndpoint(String inputSiteAddress, String endpointAddress) {
+    public void launchApplicationPasswordFlow(String endpointAddress) {
         CustomTabsIntent intent = getCustomTabsIntent();
 
         Uri loginUri = Uri.parse(endpointAddress);

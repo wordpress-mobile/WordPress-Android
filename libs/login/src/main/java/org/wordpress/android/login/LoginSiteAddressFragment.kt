@@ -37,7 +37,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModelProvider
 
 class LoginSiteAddressFragment : LoginBaseDiscoveryFragment(), TextWatcher, OnEditorCommitListener,
     LoginBaseDiscoveryListener {
