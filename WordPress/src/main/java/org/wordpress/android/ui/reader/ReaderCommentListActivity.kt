@@ -375,13 +375,14 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     Snackbar.LENGTH_LONG
                 )
                     .setAction(
-                        if (buttonTitle != null)
+                        if (buttonTitle != null) {
                             uiHelpers.getTextOfUiString(
                                 this@ReaderCommentListActivity,
                                 buttonTitle
                             )
-                        else
+                        } else {
                             null
+                        }
                     ) { buttonAction.invoke() }
                     .show()
             }
