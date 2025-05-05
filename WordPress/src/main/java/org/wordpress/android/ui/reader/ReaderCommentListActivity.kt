@@ -133,8 +133,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     @Inject
     lateinit var siteStore: SiteStore
 
-    private var viewModel: ReaderCommentListViewModel? = null
-    private var conversationViewModel: ConversationNotificationsViewModel? = null
+    private lateinit var viewModel: ReaderCommentListViewModel
+    private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
     private lateinit var binding: ReaderActivityCommentListBinding
     private lateinit var boxBinding: ReaderIncludeCommentBoxBinding
@@ -167,13 +167,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         initCommentListViewModel()
         initConversationViewModel()
 
-        if (conversationViewModel != null) {
-            swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
-                binding.swipeToRefresh
-            ) {
-                conversationViewModel!!.onRefresh()
-                updatePostAndComments()
-            }
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
+            binding.swipeToRefresh
+        ) {
+            conversationViewModel.onRefresh()
+            updatePostAndComments()
         }
 
         if (!loadPost()) {
@@ -327,7 +325,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
     private fun initCommentListViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ReaderCommentListViewModel::class.java]
-        viewModel!!.scrollTo.observe(
+        viewModel.scrollTo.observe(
             this
         ) { scrollPositionEvent: Event<ScrollPosition?> ->
             val content = scrollPositionEvent.getContentIfNotHandled()
@@ -360,7 +358,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             this,
             viewModelFactory
         )[ConversationNotificationsViewModel::class.java]
-        conversationViewModel!!.snackbarEvents.observe(
+        conversationViewModel.snackbarEvents.observe(
             this
         ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
             val bottomSheet =
@@ -389,7 +387,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
         }
 
-        conversationViewModel!!.showBottomSheetEvent.observe(
+        conversationViewModel.showBottomSheetEvent.observe(
             this
         ) { event: Event<ShowBottomSheetData> ->
             event.applyIfNotHandled {
@@ -413,7 +411,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             }
         }
 
-        conversationViewModel!!.start(
+        conversationViewModel.start(
             blogId,
             postId,
             ThreadedCommentsActionSource.READER_THREADED_COMMENTS
@@ -500,8 +498,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         val inflater = menuInflater
         inflater.inflate(R.menu.threaded_comments_menu, menu)
 
-        if (conversationViewModel != null) {
-            conversationViewModel!!.updateFollowUiState.observe(
+            conversationViewModel.updateFollowUiState.observe(
                 this
             ) { uiState: FollowConversationUiState ->
                 val bellItem = menu.findItem(R.id.manage_notifications_item)
@@ -549,7 +546,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     )
                 }
             }
-        }
         return true
     }
 
@@ -843,9 +839,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
 
                         doDirectOperation()
                     } else if (restorePosition > 0) {
-                        if (viewModel != null) {
-                            viewModel!!.scrollToPosition(restorePosition, false)
-                        }
+                        viewModel.scrollToPosition(restorePosition, false)
                     }
                     restorePosition = 0
                     checkEmptyView()
@@ -1050,8 +1044,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      */
     private fun scrollToCommentId(id: Long) {
         val position = getCommentAdapter().positionOfCommentId(id)
-        if (viewModel != null && position > -1) {
-            viewModel!!.scrollToPosition(position, false)
+        if (position > -1) {
+            viewModel.scrollToPosition(position, false)
         }
     }
 
@@ -1060,8 +1054,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
      */
     private fun smoothScrollToCommentId(id: Long) {
         val position = getCommentAdapter().positionOfCommentId(id)
-        if (viewModel != null && position > -1) {
-            viewModel!!.scrollToPosition(position, true)
+        if (position > -1) {
+            viewModel.scrollToPosition(position, true)
         }
     }
 
