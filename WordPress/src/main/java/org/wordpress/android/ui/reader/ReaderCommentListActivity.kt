@@ -363,10 +363,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         conversationViewModel!!.snackbarEvents.observe(
             this
         ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
-            val fm =
-                supportFragmentManager
             val bottomSheet =
-                fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as CommentNotificationsBottomSheetFragment?
+                supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as CommentNotificationsBottomSheetFragment?
 
             if (bottomSheet != null) return@observe
             snackbarMessageHolderEvent.applyIfNotHandled {
@@ -395,9 +393,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             this
         ) { event: Event<ShowBottomSheetData> ->
             event.applyIfNotHandled {
-                val fm = supportFragmentManager
                 var bottomSheet =
-                    fm.findFragmentByTag(
+                    supportFragmentManager.findFragmentByTag(
                         NOTIFICATIONS_BOTTOM_SHEET_TAG
                     ) as CommentNotificationsBottomSheetFragment?
                 if (show && bottomSheet == null) {
@@ -406,7 +403,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                         false
                     )
                     bottomSheet.show(
-                        fm,
+                        supportFragmentManager,
                         NOTIFICATIONS_BOTTOM_SHEET_TAG
                     )
                 } else if (!show && bottomSheet != null) {
