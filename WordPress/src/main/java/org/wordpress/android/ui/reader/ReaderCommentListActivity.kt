@@ -362,7 +362,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             this
         ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
             val bottomSheet =
-                supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as CommentNotificationsBottomSheetFragment?
+                supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as
+                        CommentNotificationsBottomSheetFragment?
 
             if (bottomSheet != null) return@observe
             snackbarMessageHolderEvent.applyIfNotHandled {
@@ -499,54 +500,54 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         val inflater = menuInflater
         inflater.inflate(R.menu.threaded_comments_menu, menu)
 
-            conversationViewModel.updateFollowUiState.observe(
-                this
-            ) { uiState: FollowConversationUiState ->
-                val bellItem = menu.findItem(R.id.manage_notifications_item)
-                val followItem = menu.findItem(R.id.follow_item)
-                if (bellItem != null && followItem != null) {
-                    val shimmerView =
-                        followItem.actionView!!.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
-                    val followText =
-                        followItem.actionView!!.findViewById<TextView>(R.id.follow_button)
+        conversationViewModel.updateFollowUiState.observe(
+            this
+        ) { uiState: FollowConversationUiState ->
+            val bellItem = menu.findItem(R.id.manage_notifications_item)
+            val followItem = menu.findItem(R.id.follow_item)
+            if (bellItem != null && followItem != null) {
+                val shimmerView =
+                    followItem.actionView!!.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+                val followText =
+                    followItem.actionView!!.findViewById<TextView>(R.id.follow_button)
 
-                    followItem.actionView!!.setOnClickListener(
-                        if (uiState.onFollowTapped != null)
-                            View.OnClickListener { uiState.onFollowTapped.invoke() }
-                        else
-                            null
-                    )
+                followItem.actionView!!.setOnClickListener(
+                    if (uiState.onFollowTapped != null)
+                        View.OnClickListener { uiState.onFollowTapped.invoke() }
+                    else
+                        null
+                )
 
-                    bellItem.setOnMenuItemClickListener {
-                        uiState.onManageNotificationsTapped.invoke()
-                        true
-                    }
-
-                    followItem.actionView!!.isEnabled = uiState.flags.isMenuEnabled
-                    followText.isEnabled = uiState.flags.isMenuEnabled
-                    bellItem.setEnabled(uiState.flags.isMenuEnabled)
-
-                    if (uiState.flags.showMenuShimmer) {
-                        if (!shimmerView.isShimmerVisible) {
-                            shimmerView.showShimmer(true)
-                        } else if (!shimmerView.isShimmerStarted) {
-                            shimmerView.startShimmer()
-                        }
-                    } else {
-                        shimmerView.hideShimmer()
-                    }
-
-                    followItem.setVisible(uiState.flags.isFollowMenuVisible)
-                    bellItem.setVisible(uiState.flags.isBellMenuVisible)
-
-                    setResult(
-                        RESULT_OK, Intent().putExtra(
-                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
-                            uiState.flags
-                        )
-                    )
+                bellItem.setOnMenuItemClickListener {
+                    uiState.onManageNotificationsTapped.invoke()
+                    true
                 }
+
+                followItem.actionView!!.isEnabled = uiState.flags.isMenuEnabled
+                followText.isEnabled = uiState.flags.isMenuEnabled
+                bellItem.setEnabled(uiState.flags.isMenuEnabled)
+
+                if (uiState.flags.showMenuShimmer) {
+                    if (!shimmerView.isShimmerVisible) {
+                        shimmerView.showShimmer(true)
+                    } else if (!shimmerView.isShimmerStarted) {
+                        shimmerView.startShimmer()
+                    }
+                } else {
+                    shimmerView.hideShimmer()
+                }
+
+                followItem.setVisible(uiState.flags.isFollowMenuVisible)
+                bellItem.setVisible(uiState.flags.isBellMenuVisible)
+
+                setResult(
+                    RESULT_OK, Intent().putExtra(
+                        FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
+                        uiState.flags
+                    )
+                )
             }
+        }
         return true
     }
 
@@ -1063,7 +1064,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
     /*
      * submit the text typed into the comment box as a comment on the current post
      */
-    @Suppress("LongMethod")
     private fun submitComment() {
         val commentText = EditTextUtils.getText(boxBinding.editComment)
         if (TextUtils.isEmpty(commentText)) {
@@ -1091,39 +1091,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         // and reflect it in the adapter before the API call returns
         val fakeCommentId = ReaderCommentActions.generateFakeCommentId()
 
-        val actionListener =
-            CommentActionListener { succeeded: Boolean, newComment: ReaderComment? ->
-                if (isFinishing) {
-                    return@CommentActionListener
-                }
-                isSubmittingComment = false
-                boxBinding.editComment.isEnabled = true
-                if (succeeded) {
-                    boxBinding.btnSubmitReply.isEnabled = false
-                    // stop highlighting the fake comment and replace it with the real one
-                    getCommentAdapter().setHighlightCommentId(0, false)
-                    getCommentAdapter().setReplyTargetComment(0)
-                    getCommentAdapter().replaceComment(
-                        fakeCommentId,
-                        newComment
-                    )
-                    getCommentAdapter().refreshPost()
-                    setReplyToCommentId(0, false)
-                    boxBinding.editComment.autoSaveTextHelper.clearSavedText(boxBinding.editComment)
-                } else {
-                    boxBinding.editComment.setText(commentText)
-                    boxBinding.btnSubmitReply.isEnabled = true
-                    getCommentAdapter().removeComment(fakeCommentId)
-                    ToastUtils.showToast(
-                        this,
-                        R.string.reader_toast_err_comment_failed,
-                        ToastUtils.Duration.LONG
-                    )
-                }
-                checkEmptyView()
-            }
-
         val wpComUserId = accountStore.account.userId
+        val actionListener = getCommentActionListener(fakeCommentId, commentText)
         val newComment = ReaderCommentActions.submitPostComment(
             readerPost,
             fakeCommentId,
@@ -1145,6 +1114,39 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             getCommentAdapter().addComment(newComment)
             // make sure it's scrolled into view
             scrollToCommentId(fakeCommentId)
+            checkEmptyView()
+        }
+    }
+
+    private fun getCommentActionListener(fakeCommentId: Long, commentText: String): CommentActionListener {
+        return CommentActionListener { succeeded: Boolean, newComment: ReaderComment? ->
+            if (isFinishing) {
+                return@CommentActionListener
+            }
+            isSubmittingComment = false
+            boxBinding.editComment.isEnabled = true
+            if (succeeded) {
+                boxBinding.btnSubmitReply.isEnabled = false
+                // stop highlighting the fake comment and replace it with the real one
+                getCommentAdapter().setHighlightCommentId(0, false)
+                getCommentAdapter().setReplyTargetComment(0)
+                getCommentAdapter().replaceComment(
+                    fakeCommentId,
+                    newComment
+                )
+                getCommentAdapter().refreshPost()
+                setReplyToCommentId(0, false)
+                boxBinding.editComment.autoSaveTextHelper.clearSavedText(boxBinding.editComment)
+            } else {
+                boxBinding.editComment.setText(commentText)
+                boxBinding.btnSubmitReply.isEnabled = true
+                getCommentAdapter().removeComment(fakeCommentId)
+                ToastUtils.showToast(
+                    this,
+                    R.string.reader_toast_err_comment_failed,
+                    ToastUtils.Duration.LONG
+                )
+            }
             checkEmptyView()
         }
     }
