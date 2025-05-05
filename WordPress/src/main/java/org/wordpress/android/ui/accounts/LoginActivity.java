@@ -705,7 +705,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 //            launchApplicationPasswordFlow(authorizationUrl);
     }
 
-    public void launchApplicationPasswordFlow(String endpointAddress) {
+    public void launchApplicationPasswordFlow(@NonNull String endpointAddress) {
         CustomTabsIntent intent = getCustomTabsIntent();
 
         Uri loginUri = Uri.parse(endpointAddress);
