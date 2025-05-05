@@ -42,6 +42,7 @@ class LoginViewModel @Inject constructor(
         AuthEmailPayloadScheme.WORDPRESS
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun runApiDiscoveryTest(url: String): String = runBlocking {
         try {
             val urlDiscovery = wpLoginClient.apiDiscovery(url)
