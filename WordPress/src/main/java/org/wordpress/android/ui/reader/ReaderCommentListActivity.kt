@@ -352,7 +352,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
     }
 
-    @Suppress("LongMethod")
     private fun initConversationViewModel() {
         conversationViewModel = ViewModelProvider(
             this,
@@ -361,11 +360,9 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         conversationViewModel.snackbarEvents.observe(
             this
         ) { snackbarMessageHolderEvent: Event<SnackbarMessageHolder> ->
-            val bottomSheet =
-                supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as
-                        CommentNotificationsBottomSheetFragment?
-
+            val bottomSheet = getBottomSheetFragment()
             if (bottomSheet != null) return@observe
+
             snackbarMessageHolderEvent.applyIfNotHandled {
                 make(
                     binding.coordinatorLayout,
@@ -393,10 +390,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             this
         ) { event: Event<ShowBottomSheetData> ->
             event.applyIfNotHandled {
-                var bottomSheet =
-                    supportFragmentManager.findFragmentByTag(
-                        NOTIFICATIONS_BOTTOM_SHEET_TAG
-                    ) as CommentNotificationsBottomSheetFragment?
+                var bottomSheet = getBottomSheetFragment()
                 if (show && bottomSheet == null) {
                     bottomSheet = newInstance(
                         isReceivingNotifications,
@@ -418,6 +412,11 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             postId,
             ThreadedCommentsActionSource.READER_THREADED_COMMENTS
         )
+    }
+
+    private fun getBottomSheetFragment(): CommentNotificationsBottomSheetFragment? {
+        return supportFragmentManager.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as
+                CommentNotificationsBottomSheetFragment?
     }
 
     override fun onCollapse(result: Bundle?) {
