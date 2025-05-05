@@ -17,11 +17,12 @@ import javax.inject.Inject
 import kotlin.text.RegexOption.IGNORE_CASE
 import androidx.core.net.toUri
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 
 class LoginViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
-    private val appSecrets: AppSecrets
+    private val wpComLoginHelper: WPcomLoginHelper
 ) : ViewModel() {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
@@ -47,17 +48,10 @@ class LoginViewModel @Inject constructor(
         try {
             val urlDiscovery = wpLoginClient.apiDiscovery(url)
             val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-            val authorizationUrlComplete = if (authorizationUrl.isNullOrEmpty()) {
-                authorizationUrl
-            } else {
-                authorizationUrl.toUri().buildUpon().apply {
-                    appendQueryParameter("app_name", "android-jetpack-client")
-                    appendQueryParameter("success_url", appSecrets.redirectUri)
-                }.build().toString()
-            }
+            val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
             Log.d("WP_RS", "Found authorization for $url URL: $authorizationUrlComplete")
             AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-            authorizationUrlComplete.orEmpty()
+            authorizationUrlComplete
         } catch (throwable: Throwable) {
             Log.e("WP_RS", "VM: Error during API discovery for $url", throwable)
             AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
