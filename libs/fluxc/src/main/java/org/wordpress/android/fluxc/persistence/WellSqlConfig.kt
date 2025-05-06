@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 206
+        return 207
     }
 
     override fun getDbName(): String {
@@ -2065,6 +2065,11 @@ open class WellSqlConfig : DefaultWellConfig {
                             FOREIGN KEY (LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE
                         )
                     """.trimIndent())
+                }
+
+                206 -> {
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USER_NAME TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD TEXT")
                 }
             }
         }

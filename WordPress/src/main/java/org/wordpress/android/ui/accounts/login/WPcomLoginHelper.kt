@@ -14,6 +14,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -21,7 +22,8 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    private val appSecrets: AppSecrets
+    private val appSecrets: AppSecrets,
+    private val siteSqlUtils: SiteSqlUtils
 ) {
     private val context: CoroutineContext = Dispatchers.IO
 
@@ -52,11 +54,28 @@ class WPcomLoginHelper @Inject constructor(
         if (data == null || data == processedAppPasswordData) {
             return false
         }
+
+        // TODO: remove the following line
+        // jetpack://wpcom-authorize?site_url=https%3A%2F%2Fvanilla.wpmt.co&user_login=admin&password=zwaL%201G1j%20rNzS%20Jc7W%20REUP%20d7H0
+        val siteUrl = data.toUri().getQueryParameter("site_url")
         val user = data.toUri().getQueryParameter("user_login")
         val password = data.toUri().getQueryParameter("password")
 
         if (user.isNullOrEmpty() || password.isNullOrEmpty() ) {
             return false
+        }
+
+        runBlocking {
+            // TODO update login url
+            val site = siteSqlUtils.getSites().firstOrNull { it.url == siteUrl }
+            if (site != null) {
+                site.apiRestUsername = user
+                site.apiRestPassword = password
+                siteSqlUtils.insertOrUpdateSite(site)
+                Log.e("WP_RS", "Saved application password credentials for: $siteUrl")
+            } else {
+                Log.e("WP_RS", "Cannot save aplication password credentials for: $siteUrl")
+            }
         }
 
         processedAppPasswordData = data
