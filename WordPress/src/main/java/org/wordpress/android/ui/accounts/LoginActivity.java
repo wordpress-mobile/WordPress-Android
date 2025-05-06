@@ -166,7 +166,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         //      FULL = WPAndroid
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
-        if ((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY)) {
+        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY))
+            || mLoginHelper.isApplicationPasswordRedirect()) {
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }
@@ -706,7 +707,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         // In the background, run the API discovery test to see if we can add this site for the REST API
         mViewModel.runApiDiscovery(inputSiteAddress);
     }
-    
+
     @Override
     public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
                                           final SelfSignedSSLCallback callback) {

@@ -66,7 +66,6 @@ class WPcomLoginHelper @Inject constructor(
         }
 
         runBlocking {
-            // TODO update login url
             val site = siteSqlUtils.getSites().firstOrNull { it.url == siteUrl }
             if (site != null) {
                 site.apiRestUsername = user
@@ -81,6 +80,8 @@ class WPcomLoginHelper @Inject constructor(
         processedAppPasswordData = data
         return true
     }
+
+    fun isApplicationPasswordRedirect(): Boolean = processedAppPasswordData != null
 
     fun isLoggedIn(): Boolean {
         return accountStore.hasAccessToken()

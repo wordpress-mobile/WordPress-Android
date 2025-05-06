@@ -211,6 +211,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun runApplicationPasswordDiscovery(site: SiteModel) {
+        // If the site is already authorized, no need to run the discovery
         if (!site.apiRestPassword.isNullOrEmpty()) {
             return
         }
