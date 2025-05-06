@@ -704,22 +704,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
 
         // In the background, run the API discovery test to see if we can add this site for the REST API
-        String authorizationUrl = mViewModel.runApiDiscovery(inputSiteAddress);
-//            launchApplicationPasswordFlow(authorizationUrl);
+        mViewModel.runApiDiscovery(inputSiteAddress);
     }
-
-    public void launchApplicationPasswordFlow(@NonNull String endpointAddress) {
-        CustomTabsIntent intent = getCustomTabsIntent();
-
-        Uri loginUri = Uri.parse(endpointAddress);
-        try {
-            intent.launchUrl(this, loginUri);
-        } catch (SecurityException | ActivityNotFoundException e) {
-            AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
-            ActivityLauncher.openUrlExternal(this, loginUri.toString());
-        }
-    }
-
+    
     @Override
     public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
                                           final SelfSignedSSLCallback callback) {

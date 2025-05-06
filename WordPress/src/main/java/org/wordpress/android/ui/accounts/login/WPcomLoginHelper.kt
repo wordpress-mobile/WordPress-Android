@@ -72,7 +72,7 @@ class WPcomLoginHelper @Inject constructor(
                 site.apiRestUsername = user
                 site.apiRestPassword = password
                 siteSqlUtils.insertOrUpdateSite(site)
-                Log.e("WP_RS", "Saved application password credentials for: $siteUrl")
+                Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
             } else {
                 Log.e("WP_RS", "Cannot save aplication password credentials for: $siteUrl")
             }
