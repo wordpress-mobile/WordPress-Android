@@ -88,6 +88,7 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
+    private val _onShowApplicationPasswordLoginDialog = SingleLiveEvent<Event<String>>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -124,6 +125,8 @@ class MySiteViewModel @Inject constructor(
     )
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
+
+    val onShowApplicationPasswordLoginDialog = _onShowApplicationPasswordLoginDialog as LiveData<Event<String>>
 
     val refresh =
         merge(
@@ -219,6 +222,7 @@ class MySiteViewModel @Inject constructor(
                 val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
             } catch (throwable: Throwable) {
                 Log.e("WP_RS", "VM: Error during API discovery for ${site.url}", throwable)
                 AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
