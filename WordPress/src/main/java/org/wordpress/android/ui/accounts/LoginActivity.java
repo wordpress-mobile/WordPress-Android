@@ -149,8 +149,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         super.onCreate(savedInstanceState);
 
         // Attempt Login if this activity was created in response to a user confirming login, and if
-        // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
-        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
+        // successful clear the intent so we don't reuse the OAuth code or the application password
+        // if the activity is recreated
+        final String intentDatastring = getIntent().getDataString();
+        final boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intentDatastring)
+                                       || mLoginHelper.tryLoginWithApplicationPassword(intentDatastring);
         if (loginProcessed) {
             getIntent().setData(null);
         }

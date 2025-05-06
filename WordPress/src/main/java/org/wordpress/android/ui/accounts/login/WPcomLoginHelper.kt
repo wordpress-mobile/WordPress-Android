@@ -28,6 +28,7 @@ class WPcomLoginHelper @Inject constructor(
     val wpcomLoginUri = loginClient.loginUri(appSecrets.redirectUri)
     private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
     private var processedAuthData: String? = null
+    private var processedAppPasswordData: String? = null
 
     @Suppress("ReturnCount")
     fun tryLoginWithDataString(data: String?): Boolean {
@@ -35,7 +36,7 @@ class WPcomLoginHelper @Inject constructor(
             return false
         }
 
-        val code = this.codeFromAuthorizationUri(data) ?: return false
+        val code = data.toUri().getQueryParameter("code") ?: return false
 
         runBlocking {
             val tokenResult = loginClient.exchangeAuthCodeForToken(code)
@@ -44,6 +45,21 @@ class WPcomLoginHelper @Inject constructor(
         }
 
         processedAuthData = data
+        return true
+    }
+
+    fun tryLoginWithApplicationPassword(data: String?): Boolean {
+        if (data == null || data == processedAppPasswordData) {
+            return false
+        }
+        val user = data.toUri().getQueryParameter("user_login")
+        val password = data.toUri().getQueryParameter("password")
+
+        if (user.isNullOrEmpty() || password.isNullOrEmpty() ) {
+            return false
+        }
+
+        processedAppPasswordData = data
         return true
     }
 
@@ -57,10 +73,6 @@ class WPcomLoginHelper @Inject constructor(
 
     fun bindCustomTabsService(context: Context) {
         customTabsServiceConnection.bind(context)
-    }
-
-    private fun codeFromAuthorizationUri(string: String): String? {
-        return Uri.parse(string).getQueryParameter("code")
     }
 
     fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
@@ -87,7 +99,7 @@ class ServiceConnection(
 
         val session = client.newSession(CustomTabsCallback())
         session?.mayLaunchUrl(uri, null, null)
-        session?.mayLaunchUrl(Uri.parse("https://wordpress.com/log-in/"), null, null)
+        session?.mayLaunchUrl("https://wordpress.com/log-in/".toUri(), null, null)
 
         this.session = session
     }
