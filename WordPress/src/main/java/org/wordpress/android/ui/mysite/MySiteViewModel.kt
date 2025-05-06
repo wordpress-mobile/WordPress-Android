@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.mysite
 
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,6 +24,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -49,6 +52,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -76,7 +80,9 @@ class MySiteViewModel @Inject constructor(
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
     private val accountDataViewModelSlice: AccountDataViewModelSlice,
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
-    private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice
+    private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
+    private val wpLoginClient: WpLoginClient,
+    private val wpComLoginHelper: WPcomLoginHelper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -195,8 +201,28 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
+            runApplicationPasswordDiscovery(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
+        }
+    }
+
+    private fun runApplicationPasswordDiscovery(site: SiteModel) {
+        if (!site.apiRestPassword.isNullOrEmpty()) {
+            return
+        }
+        viewModelScope.launch {
+            try {
+                delay(3000L) // Let time to the user to settle down on the screen
+                val urlDiscovery = wpLoginClient.apiDiscovery(site.url)
+                val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
+                val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
+                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+            } catch (throwable: Throwable) {
+                Log.e("WP_RS", "VM: Error during API discovery for ${site.url}", throwable)
+                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+            }
         }
     }
 
