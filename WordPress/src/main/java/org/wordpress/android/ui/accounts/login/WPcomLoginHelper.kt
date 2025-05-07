@@ -101,7 +101,7 @@ class WPcomLoginHelper @Inject constructor(
         } else {
             authorizationUrl.toUri().buildUpon().apply {
                 appendQueryParameter("app_name", "android-jetpack-client")
-                appendQueryParameter("success_url", appSecrets.redirectUri)
+                appendQueryParameter("success_url", "jetpack://app-pass-authorize")
             }.build().toString()
         }
     }
