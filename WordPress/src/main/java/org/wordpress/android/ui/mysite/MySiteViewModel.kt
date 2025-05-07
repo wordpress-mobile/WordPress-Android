@@ -214,12 +214,17 @@ class MySiteViewModel @Inject constructor(
     fun runApplicationPasswordDiscovery(preferences: SharedPreferences) {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
-//        if (!site.apiRestPassword.isNullOrEmpty()) {
-//            return
-//        }
+        if (!site.apiRestPassword.isNullOrEmpty()) {
+            return
+        }
+        val firstTimeSiteOpen = !preferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
+        if (firstTimeSiteOpen) {
+            setSiteAsAlreadyOpened(site.url, preferences)
+            return
+        }
         viewModelScope.launch {
             try {
-                delay(3000L) // Let time to the user to settle down on the screen
+                delay(2000L) // Let time to the user to settle down on the screen
 
                 // If the user has dismissed the authorization dialog, we don't want to show it again
                 val dismissedAuthorizationDialog = preferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
@@ -237,6 +242,12 @@ class MySiteViewModel @Inject constructor(
                 Log.e("WP_RS", "VM: Error during API discovery for ${site.url}", throwable)
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
             }
+        }
+    }
+
+    private fun setSiteAsAlreadyOpened(siteUrl: String, preferences: SharedPreferences) {
+        viewModelScope.launch {
+            preferences.edit { putBoolean("$SITE_ALREADY_OPENED_PREFIX$siteUrl", true) }
         }
     }
 
@@ -510,6 +521,7 @@ class MySiteViewModel @Inject constructor(
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
-        private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "DISMISSED_AUTHORIZATION_DIALOG_"
+        private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
+        private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
     }
 }
