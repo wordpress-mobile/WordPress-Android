@@ -21,12 +21,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -85,7 +84,7 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val wpLoginClient: WpLoginClient,
-    private val wpComLoginHelper: WPcomLoginHelper
+    private val wpComLoginHelper: ApplicationPasswordLoginHelper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -215,9 +214,9 @@ class MySiteViewModel @Inject constructor(
     fun runApplicationPasswordDiscovery(preferences: SharedPreferences) {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
-        if (!site.apiRestPassword.isNullOrEmpty()) {
-            return
-        }
+//        if (!site.apiRestPassword.isNullOrEmpty()) {
+//            return
+//        }
         viewModelScope.launch {
             try {
                 delay(3000L) // Let time to the user to settle down on the screen

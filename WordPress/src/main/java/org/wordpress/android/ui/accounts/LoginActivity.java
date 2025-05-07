@@ -61,6 +61,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
@@ -152,8 +153,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         // successful clear the intent so we don't reuse the OAuth code or the application password
         // if the activity is recreated
         final String intentDatastring = getIntent().getDataString();
-        final boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intentDatastring)
-                                       || mLoginHelper.tryLoginWithApplicationPassword(intentDatastring);
+        final boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intentDatastring);
+
         if (loginProcessed) {
             getIntent().setData(null);
         }
@@ -167,12 +168,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
         if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY))) {
-            this.loggedInAndFinish(new ArrayList<Integer>(), true);
-            return;
-        }
-
-        if (mLoginHelper.isApplicationPasswordRedirect()) {
-            ToastUtils.showToast(this, "Login successful!");
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }
@@ -708,9 +703,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
                 LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
-
-        // In the background, run the API discovery test to see if we can add this site for the REST API
-        mViewModel.runApiDiscovery(inputSiteAddress);
     }
 
     @Override

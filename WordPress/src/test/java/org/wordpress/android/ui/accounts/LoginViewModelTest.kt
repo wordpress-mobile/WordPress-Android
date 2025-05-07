@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError
-import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpLoginClient
@@ -43,7 +43,7 @@ class LoginViewModelTest : BaseUnitTest() {
     lateinit var wpLoginClient: WpLoginClient
 
     @Mock
-    lateinit var wpComLoginHelper: WPcomLoginHelper
+    lateinit var wpComLoginHelper: ApplicationPasswordLoginHelper
 
     @Mock
     lateinit var wpApiDetails: WpApiDetails

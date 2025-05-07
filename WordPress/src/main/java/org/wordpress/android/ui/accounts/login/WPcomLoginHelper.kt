@@ -22,15 +22,13 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    private val appSecrets: AppSecrets,
-    private val siteSqlUtils: SiteSqlUtils
+    appSecrets: AppSecrets,
 ) {
     private val context: CoroutineContext = Dispatchers.IO
 
     val wpcomLoginUri = loginClient.loginUri(appSecrets.redirectUri)
     private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
     private var processedAuthData: String? = null
-    private var processedAppPasswordData: String? = null
 
     @Suppress("ReturnCount")
     fun tryLoginWithDataString(data: String?): Boolean {
@@ -49,39 +47,6 @@ class WPcomLoginHelper @Inject constructor(
         processedAuthData = data
         return true
     }
-
-    fun tryLoginWithApplicationPassword(data: String?): Boolean {
-        if (data == null || data == processedAppPasswordData) {
-            return false
-        }
-
-        // TODO: remove the following line
-        // jetpack://wpcom-authorize?site_url=https%3A%2F%2Fvanilla.wpmt.co&user_login=admin&password=zwaL%201G1j%20rNzS%20Jc7W%20REUP%20d7H0
-        val siteUrl = data.toUri().getQueryParameter("site_url")
-        val user = data.toUri().getQueryParameter("user_login")
-        val password = data.toUri().getQueryParameter("password")
-
-        if (user.isNullOrEmpty() || password.isNullOrEmpty() ) {
-            return false
-        }
-
-        runBlocking {
-            val site = siteSqlUtils.getSites().firstOrNull { it.url == siteUrl }
-            if (site != null) {
-                site.apiRestUsername = user
-                site.apiRestPassword = password
-                siteSqlUtils.insertOrUpdateSite(site)
-                Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
-            } else {
-                Log.e("WP_RS", "Cannot save aplication password credentials for: $siteUrl")
-            }
-        }
-
-        processedAppPasswordData = data
-        return true
-    }
-
-    fun isApplicationPasswordRedirect(): Boolean = processedAppPasswordData != null
 
     fun isLoggedIn(): Boolean {
         return accountStore.hasAccessToken()
