@@ -211,6 +211,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount", "TooGenericExceptionCaught")
     fun runApplicationPasswordDiscovery(preferences: SharedPreferences) {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
@@ -224,10 +225,11 @@ class MySiteViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                delay(2000L) // Let time to the user to settle down on the screen
+                delay(TWO_SECONDS) // Let time to the user to settle down on the screen
 
                 // If the user has dismissed the authorization dialog, we don't want to show it again
-                val dismissedAuthorizationDialog = preferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
+                val dismissedAuthorizationDialog =
+                    preferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
                 if (dismissedAuthorizationDialog) {
                     return@launch
                 }
@@ -523,5 +525,6 @@ class MySiteViewModel @Inject constructor(
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
         private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
         private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
+        private const val TWO_SECONDS = 2000L
     }
 }

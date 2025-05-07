@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -18,10 +17,8 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("WP_RS", "Intent: " + intent.dataString)
-
-        val intent = getIntent()
-        val credentialsStored = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(intent.getDataString())
+        val credentialsStored =
+            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(intent.dataString)
 
         if (credentialsStored) {
             // TODO:; show the site URL

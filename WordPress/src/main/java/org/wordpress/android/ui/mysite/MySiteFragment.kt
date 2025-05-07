@@ -482,10 +482,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 try {
                     intent.launchUrl(activity, loginUri)
                 } catch (e: SecurityException) {
-                    AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error opening login uri in CustomTabsIntent, attempting external browser",
+                        e
+                    )
                     ActivityLauncher.openUrlExternal(activity, loginUri.toString())
                 } catch (e: ActivityNotFoundException) {
-                    AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error opening login uri in CustomTabsIntent, attempting external browser",
+                        e
+                    )
                     ActivityLauncher.openUrlExternal(activity, loginUri.toString())
                 }
                 dialog.dismiss()
@@ -494,7 +502,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, which ->
-                viewModel.onApplicationPasswordLoginDialogDismissed(PreferenceUtils.getFluxCPreferences(requireContext()))
+                viewModel.onApplicationPasswordLoginDialogDismissed(
+                    PreferenceUtils.getFluxCPreferences(requireContext())
+                )
                 dialog.dismiss()
             }
             .setCancelable(false) // This allows the user to dismiss the dialog by tapping outside it
@@ -507,8 +517,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val activity = requireActivity()
         return CustomTabsIntent.Builder()
             .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-            .setStartAnimations(requireActivity(), R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
-            .setExitAnimations(activity, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
+            .setStartAnimations(
+                requireActivity(),
+                R.anim.activity_slide_in_from_right,
+                R.anim.activity_slide_out_to_left
+            )
+            .setExitAnimations(
+                activity,
+                R.anim.activity_slide_in_from_left,
+                R.anim.activity_slide_out_to_right
+            )
             .setUrlBarHidingEnabled(true)
             .setInstantAppsEnabled(false)
             .setShowTitle(false)

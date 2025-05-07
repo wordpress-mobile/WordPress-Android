@@ -61,7 +61,6 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
@@ -167,7 +166,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         //      FULL = WPAndroid
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
-        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY))) {
+        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL
+                                             || loginMode == LoginMode.JETPACK_LOGIN_ONLY))) {
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }
