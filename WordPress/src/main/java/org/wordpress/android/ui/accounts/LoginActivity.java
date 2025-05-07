@@ -149,10 +149,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         super.onCreate(savedInstanceState);
 
         // Attempt Login if this activity was created in response to a user confirming login, and if
-        // successful clear the intent so we don't reuse the OAuth code or the application password
-        // if the activity is recreated
-        final String intentDatastring = getIntent().getDataString();
-        final boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intentDatastring);
+        // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
+        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
 
         if (loginProcessed) {
             getIntent().setData(null);
@@ -166,8 +164,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         //      FULL = WPAndroid
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
-        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL
-                                             || loginMode == LoginMode.JETPACK_LOGIN_ONLY))) {
+        if ((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY)) {
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }

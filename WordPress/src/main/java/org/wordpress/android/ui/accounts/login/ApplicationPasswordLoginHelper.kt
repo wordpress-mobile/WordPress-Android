@@ -45,6 +45,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return if (authorizationUrl.isNullOrEmpty()) {
             authorizationUrl.orEmpty()
         } else {
+            // TODO: Add clientID
             authorizationUrl.toUri().buildUpon().apply {
                 appendQueryParameter("app_name", "android-jetpack-client")
                 appendQueryParameter("success_url", "jetpack://app-pass-authorize")

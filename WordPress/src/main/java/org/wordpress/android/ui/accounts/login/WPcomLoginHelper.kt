@@ -58,17 +58,6 @@ class WPcomLoginHelper @Inject constructor(
     fun bindCustomTabsService(context: Context) {
         customTabsServiceConnection.bind(context)
     }
-
-    fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
-        return if (authorizationUrl.isNullOrEmpty()) {
-            authorizationUrl.orEmpty()
-        } else {
-            authorizationUrl.toUri().buildUpon().apply {
-                appendQueryParameter("app_name", "android-jetpack-client")
-                appendQueryParameter("success_url", "jetpack://app-pass-authorize")
-            }.build().toString()
-        }
-    }
 }
 
 class ServiceConnection(
