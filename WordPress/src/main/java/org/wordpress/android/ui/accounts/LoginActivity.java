@@ -166,8 +166,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         //      FULL = WPAndroid
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
-        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY))
-            || mLoginHelper.isApplicationPasswordRedirect()) {
+        if (((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY))) {
+            this.loggedInAndFinish(new ArrayList<Integer>(), true);
+            return;
+        }
+
+        if (mLoginHelper.isApplicationPasswordRedirect()) {
+            ToastUtils.showToast(this, "Login successful!");
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }

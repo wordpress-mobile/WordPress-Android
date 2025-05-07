@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.mysite
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.StringRes
@@ -20,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
@@ -55,6 +57,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
+import androidx.core.content.edit
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -204,13 +207,13 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
-            runApplicationPasswordDiscovery(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
     }
 
-    private fun runApplicationPasswordDiscovery(site: SiteModel) {
+    fun runApplicationPasswordDiscovery(preferences: SharedPreferences) {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
         if (!site.apiRestPassword.isNullOrEmpty()) {
             return
@@ -218,16 +221,29 @@ class MySiteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 delay(3000L) // Let time to the user to settle down on the screen
+
+                // If the user has dismissed the authorization dialog, we don't want to show it again
+                val dismissedAuthorizationDialog = preferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
+                if (dismissedAuthorizationDialog) {
+                    return@launch
+                }
+
                 val urlDiscovery = wpLoginClient.apiDiscovery(site.url)
                 val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
                 val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
-                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
             } catch (throwable: Throwable) {
                 Log.e("WP_RS", "VM: Error during API discovery for ${site.url}", throwable)
-                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
             }
+        }
+    }
+
+    fun onApplicationPasswordLoginDialogDismissed(preferences: SharedPreferences) {
+        viewModelScope.launch {
+            preferences.edit { putBoolean(DISMISSED_AUTHORIZATION_DIALOG_PREFIX, true) }
         }
     }
 
@@ -495,5 +511,6 @@ class MySiteViewModel @Inject constructor(
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
+        private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "DISMISSED_AUTHORIZATION_DIALOG_"
     }
 }

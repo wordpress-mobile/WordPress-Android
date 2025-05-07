@@ -90,6 +90,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
 import androidx.core.net.toUri
+import org.wordpress.android.fluxc.utils.PreferenceUtils
 
 @Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
@@ -164,17 +165,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
-        // TODO: this is the place
 
-//        dialogViewModel.showDialog(requireActivity().supportFragmentManager,
-//            BasicDialogViewModel.BasicDialogModel(
-//                "tag",
-//                "Title",
-//                "Message",
-//                "Yes",
-//                "No",
-//                null
-//            ))
+        viewModel.runApplicationPasswordDiscovery(PreferenceUtils.getFluxCPreferences(requireContext()))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -459,18 +451,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         viewModel.onShowApplicationPasswordLoginDialog.observeEvent(viewLifecycleOwner) {
-            val intent = getCustomTabsIntent()
-            val loginUri = it.toUri()
-            val activity = requireActivity()
-            try {
-                intent.launchUrl(activity, loginUri)
-            } catch (e: SecurityException) {
-                AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
-                ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-            } catch (e: ActivityNotFoundException) {
-                AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
-                ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-            }
+            showApplicationPasswordDialog(it)
         }
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
@@ -488,6 +469,38 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.isRefreshingOrLoading.observe(viewLifecycleOwner) {
             swipeToRefreshHelper.isRefreshing = it
         }
+    }
+
+    private fun showApplicationPasswordDialog(url: String) {
+        val builder = android.app.AlertDialog.Builder(requireContext())
+        builder.setTitle("Application Password")
+            .setMessage("Would you like to authenticate this site using Applictaion Password?")
+            .setPositiveButton("Yes") { dialog, which ->
+                val intent = getCustomTabsIntent()
+                val loginUri = url.toUri()
+                val activity = requireActivity()
+                try {
+                    intent.launchUrl(activity, loginUri)
+                } catch (e: SecurityException) {
+                    AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
+                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+                } catch (e: ActivityNotFoundException) {
+                    AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e)
+                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+                }
+                dialog.dismiss()
+            }
+            .setNeutralButton("Later") { dialog, which ->
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, which ->
+                viewModel.onApplicationPasswordLoginDialogDismissed(PreferenceUtils.getFluxCPreferences(requireContext()))
+                dialog.dismiss()
+            }
+            .setCancelable(false) // This allows the user to dismiss the dialog by tapping outside it
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun getCustomTabsIntent(): CustomTabsIntent {
