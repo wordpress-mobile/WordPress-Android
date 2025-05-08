@@ -57,6 +57,7 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
 import androidx.core.content.edit
+import kotlinx.coroutines.withContext
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -212,7 +213,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ReturnCount", "TooGenericExceptionCaught")
     fun runApplicationPasswordDiscovery() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         val site = selectedSiteRepository.getSelectedSite() ?: return
@@ -225,26 +225,33 @@ class MySiteViewModel @Inject constructor(
             setSiteAsAlreadyOpened(site.url)
             return
         }
-        viewModelScope.launch(bgDispatcher) {
-            try {
-                // If the user has dismissed the authorization dialog, we don't want to show it again
-                val dismissedAuthorizationDialog =
-                    sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
-                if (dismissedAuthorizationDialog) {
-                    return@launch
+        viewModelScope.launch {
+            // If the user has dismissed the authorization dialog, we don't want to show it again
+            val hasDismissedAuthorizationDialog =
+                sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
+            if (!hasDismissedAuthorizationDialog) {
+                val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+                if (authorizationUrlComplete.isNotEmpty()) {
+                    _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
                 }
-
-                val urlDiscovery = wpLoginClient.apiDiscovery(site.url)
-                val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-                val authorizationUrlComplete =
-                    applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
-            } catch (throwable: Throwable) {
-                Log.e("WP_RS", "VM: Error during API discovery for ${site.url}", throwable)
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
             }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
+        try {
+            val urlDiscovery = wpLoginClient.apiDiscovery(siteUrl)
+            val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
+            val authorizationUrlComplete =
+                applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+            Log.d("WP_RS", "Found authorization for ${siteUrl} URL: $authorizationUrlComplete")
+            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+            authorizationUrlComplete
+        } catch (throwable: Throwable) {
+            Log.e("WP_RS", "VM: Error during API discovery for ${siteUrl}", throwable)
+            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+            ""
         }
     }
 
