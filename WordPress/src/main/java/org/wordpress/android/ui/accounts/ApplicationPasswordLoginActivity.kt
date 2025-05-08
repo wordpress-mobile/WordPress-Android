@@ -20,13 +20,15 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
+            val dataString = intent.dataString.orEmpty()
             val credentialsStored =
-                applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(intent.dataString.orEmpty())
+                applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(dataString)
 
             if (credentialsStored) {
-                // TODO:; show the site URL
-                // TODO: don's show the dialog over and over again
-                ToastUtils.showToast(this@ApplicationPasswordLoginActivity, "Application password credentials stored")
+                ToastUtils.showToast(
+                    this@ApplicationPasswordLoginActivity,
+                    "Application password credentials stored for ${applicationPasswordLoginHelper.getSiteUrlFromUrl(dataString)}"
+                )
                 intent.setData(null)
             }
 

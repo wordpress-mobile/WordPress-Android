@@ -217,9 +217,9 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
-        if (!site.apiRestPassword.isNullOrEmpty()) {
-            return
-        }
+//        if (!site.apiRestPassword.isNullOrEmpty()) {
+//            return
+//        }
         val firstTimeSiteOpen = !sharedPreferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
         if (firstTimeSiteOpen) {
             setSiteAsAlreadyOpened(site.url)

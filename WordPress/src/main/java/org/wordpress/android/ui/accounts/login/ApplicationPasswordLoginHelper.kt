@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.modules.BG_THREAD
@@ -47,11 +44,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
+    fun getSiteUrlFromUrl(url: String): String {
+        return uriLoginWrapper.parseUriLogin(url).siteUrl.orEmpty()
+    }
+
     fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
         return if (authorizationUrl.isNullOrEmpty()) {
             authorizationUrl.orEmpty()
         } else {
-            // TODO: Add clientID
             authorizationUrl.toUri().buildUpon().apply {
                 appendQueryParameter("app_name", "android-jetpack-client")
                 appendQueryParameter("success_url", "jetpack://app-pass-authorize")

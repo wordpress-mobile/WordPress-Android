@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.net.Uri
-import androidx.core.net.toUri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
@@ -118,16 +115,17 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site does not store credentials`() = runTest {
-        val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
-        whenever(siteSqlUtils.getSites()).thenReturn(listOf())
+    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site does not store credentials`() =
+        runTest {
+            val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
+            whenever(siteSqlUtils.getSites()).thenReturn(listOf())
 
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+            val result = helper.storeApplicationPasswordCredentialsFrom(data)
 
-        assertFalse(result)
-        verify(siteSqlUtils).getSites()
-        verify(siteSqlUtils, times(0)).insertOrUpdateSite(any())
-    }
+            assertFalse(result)
+            verify(siteSqlUtils).getSites()
+            verify(siteSqlUtils, times(0)).insertOrUpdateSite(any())
+        }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with null authorizationUrl returns empty string`() {
