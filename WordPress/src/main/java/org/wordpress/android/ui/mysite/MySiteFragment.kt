@@ -90,7 +90,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
 import androidx.core.net.toUri
-import org.wordpress.android.fluxc.utils.PreferenceUtils
 
 @Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),

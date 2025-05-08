@@ -236,7 +236,8 @@ class MySiteViewModel @Inject constructor(
 
                 val urlDiscovery = wpLoginClient.apiDiscovery(site.url)
                 val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-                val authorizationUrlComplete = applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                val authorizationUrlComplete =
+                    applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
@@ -525,6 +526,5 @@ class MySiteViewModel @Inject constructor(
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
         private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
         private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
-        private const val TWO_SECONDS = 2000L
     }
 }

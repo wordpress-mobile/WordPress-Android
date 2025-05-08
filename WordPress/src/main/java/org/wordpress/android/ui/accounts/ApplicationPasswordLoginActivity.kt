@@ -22,7 +22,6 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
         if (credentialsStored) {
             // TODO:; show the site URL
-            // TODO: clientID
             // TODO: don's show the dialog over and over again
             ToastUtils.showToast(this, "Application password credentials stored")
             intent.setData(null)
