@@ -166,7 +166,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupObservers()
         }
 
-        viewModel.runApplicationPasswordDiscovery(PreferenceUtils.getFluxCPreferences(requireContext()))
+        viewModel.runApplicationPasswordDiscovery()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -502,9 +502,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, which ->
-                viewModel.onApplicationPasswordLoginDialogDismissed(
-                    PreferenceUtils.getFluxCPreferences(requireContext())
-                )
+                viewModel.onApplicationPasswordLoginDialogDismissed()
                 dialog.dismiss()
             }
             .setCancelable(false) // This allows the user to dismiss the dialog by tapping outside it

@@ -84,7 +84,8 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val wpLoginClient: WpLoginClient,
-    private val wpComLoginHelper: ApplicationPasswordLoginHelper
+    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
+    private val sharedPreferences: SharedPreferences
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -212,15 +213,15 @@ class MySiteViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
-    fun runApplicationPasswordDiscovery(preferences: SharedPreferences) {
+    fun runApplicationPasswordDiscovery() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
         if (!site.apiRestPassword.isNullOrEmpty()) {
             return
         }
-        val firstTimeSiteOpen = !preferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
+        val firstTimeSiteOpen = !sharedPreferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
         if (firstTimeSiteOpen) {
-            setSiteAsAlreadyOpened(site.url, preferences)
+            setSiteAsAlreadyOpened(site.url)
             return
         }
         viewModelScope.launch {
@@ -229,14 +230,14 @@ class MySiteViewModel @Inject constructor(
 
                 // If the user has dismissed the authorization dialog, we don't want to show it again
                 val dismissedAuthorizationDialog =
-                    preferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
+                    sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
                 if (dismissedAuthorizationDialog) {
                     return@launch
                 }
 
                 val urlDiscovery = wpLoginClient.apiDiscovery(site.url)
                 val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-                val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                val authorizationUrlComplete = applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for ${site.url} URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
@@ -247,15 +248,15 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun setSiteAsAlreadyOpened(siteUrl: String, preferences: SharedPreferences) {
+    private fun setSiteAsAlreadyOpened(siteUrl: String) {
         viewModelScope.launch {
-            preferences.edit { putBoolean("$SITE_ALREADY_OPENED_PREFIX$siteUrl", true) }
+            sharedPreferences.edit { putBoolean("$SITE_ALREADY_OPENED_PREFIX$siteUrl", true) }
         }
     }
 
-    fun onApplicationPasswordLoginDialogDismissed(preferences: SharedPreferences) {
+    fun onApplicationPasswordLoginDialogDismissed() {
         viewModelScope.launch {
-            preferences.edit { putBoolean(DISMISSED_AUTHORIZATION_DIALOG_PREFIX, true) }
+            sharedPreferences.edit { putBoolean(DISMISSED_AUTHORIZATION_DIALOG_PREFIX, true) }
         }
     }
 
