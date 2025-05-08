@@ -332,7 +332,7 @@ class BloggingRemindersViewModel @Inject constructor(
             Screen.PROLOGUE,
             Screen.PROLOGUE_SETTINGS,
             Screen.NOTIFICATIONS_PERMISSION,
-            Screen.SELECTION -> analyticsTracker.trackFlowDismissed(screen)
+            Screen.SELECTION -> screen?.let { analyticsTracker.trackFlowDismissed(it) }
             Screen.EPILOGUE -> analyticsTracker.trackFlowCompleted()
             null -> Unit // Do nothing
         }
