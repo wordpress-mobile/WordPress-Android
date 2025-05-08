@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
+import com.sun.jna.Pointer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -18,6 +19,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -62,6 +64,8 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
 import java.util.Date
 
@@ -70,7 +74,7 @@ private const val TEST_SITE_NAME = "My Site"
 private const val TEST_SITE_ID = 1
 private const val TEST_SITE_ICON = "http://site.com/icon.jpg"
 private const val TEST_URL_AUTH = "https://www.test.com/auth"
-private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=null"
+private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=callback://callback"
 private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
 private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
 private const val FIRST_TIME_SITE_OPENED_SP_TAG = "$SITE_ALREADY_OPENED_PREFIX$TEST_URL"
@@ -170,6 +174,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
+    private lateinit var showApplicationPasswordLoginDialog: MutableList<String>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private val localHomepageId = 1
     private lateinit var siteTest: SiteModel
@@ -242,6 +247,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         textInputDialogModels = mutableListOf()
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
+        showApplicationPasswordLoginDialog = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
         launch(testDispatcher()) {
             viewModel.uiModel.observeForever {
@@ -256,6 +262,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
+            }
+        }
+        viewModel.onShowApplicationPasswordLoginDialog.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                showApplicationPasswordLoginDialog.add(it)
             }
         }
 
@@ -612,7 +623,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site first time opened, when calling api discovery, then do nothing`() = runTest {
+    fun `given site first time opened, when calling api discovery, then save it a already opened`() = runTest {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
         whenever(sharedPreferences.getBoolean(
             eq(FIRST_TIME_SITE_OPENED_SP_TAG),
@@ -651,6 +662,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             eq(FIRST_TIME_SITE_OPENED_SP_TAG),
             eq(false)
         )
+        verify(sharedPreferences).getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false)
+        )
         verify(wpLoginClient, times(0)).apiDiscovery(any())
     }
 
@@ -666,38 +681,53 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
 
-//    @Test
-//    fun `given login scenario, when api discovery is success, then return the authentication url`() = runTest {
-//        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-//            .thenReturn(
-//                AutoDiscoveryAttemptSuccess(
-//                    ParsedUrl(Pointer.createConstant(1)),
-//                    ParsedUrl(Pointer.createConstant(1)),
-//                    wpApiDetails
-//                )
-//            )
-//        whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
-//        whenever(applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(any()))
-//            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
-//
-//        val result = viewModel.runApplicationPasswordDiscovery()
-//
-//        assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
-//        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-//    }
-//
-//    @Test
-//    fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
-//        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
-//
-//        val result = viewModel.runApplicationPasswordDiscovery()
-//
-//        assertEquals("", result)
-//        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-//    }
+    @Test
+    fun `given login scenario, when api discovery is success, then show discovery dialog`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(sharedPreferences.getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false))
+        ).thenReturn(false)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
+            .thenReturn(
+                AutoDiscoveryAttemptSuccess(
+                    ParsedUrl(Pointer.createConstant(1)),
+                    ParsedUrl(Pointer.createConstant(1)),
+                    wpApiDetails
+                )
+            )
+        whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
+        whenever(applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(any()))
+            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
 
-    // TODO: crash
+        viewModel.runApplicationPasswordDiscovery()
 
+        assertThat(showApplicationPasswordLoginDialog).containsOnly("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
+        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
+
+    @Test
+    fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(sharedPreferences.getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false))
+        ).thenReturn(false)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        assertThat(showApplicationPasswordLoginDialog).isEmpty()
+        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(

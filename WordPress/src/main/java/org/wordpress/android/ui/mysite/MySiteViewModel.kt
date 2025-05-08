@@ -214,6 +214,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     fun runApplicationPasswordDiscovery() {
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
         val site = selectedSiteRepository.getSelectedSite() ?: return
         // If the site is already authorized, no need to run the discovery
         if (!site.apiRestPassword.isNullOrEmpty()) {
@@ -224,10 +225,8 @@ class MySiteViewModel @Inject constructor(
             setSiteAsAlreadyOpened(site.url)
             return
         }
-        viewModelScope.launch {
+        viewModelScope.launch(bgDispatcher) {
             try {
-                delay(TWO_SECONDS) // Let time to the user to settle down on the screen
-
                 // If the user has dismissed the authorization dialog, we don't want to show it again
                 val dismissedAuthorizationDialog =
                     sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
