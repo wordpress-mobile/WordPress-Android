@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import android.net.Uri
 import androidx.core.net.toUri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import kotlin.test.assertEquals
@@ -22,7 +24,8 @@ private const val TEST_URL = "http://test.com"
 private const val TEST_USER = "testuser"
 private const val TEST_PASSWORD = "testpassword"
 
-class ApplicationPasswordLoginHelperTest {
+@ExperimentalCoroutinesApi
+class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
      @Mock
      lateinit var siteSqlUtils: SiteSqlUtils
 
@@ -34,7 +37,7 @@ class ApplicationPasswordLoginHelperTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        helper = ApplicationPasswordLoginHelper(siteSqlUtils, uriLoginWrapper)
+        helper = ApplicationPasswordLoginHelper(testDispatcher(), siteSqlUtils, uriLoginWrapper)
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD)
@@ -42,13 +45,13 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty data returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with empty data returns false`() = runTest {
         val result = helper.storeApplicationPasswordCredentialsFrom("")
         assertFalse(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with same data returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with same data returns false`() = runTest {
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
         helper.storeApplicationPasswordCredentialsFrom(data)
         val result = helper.storeApplicationPasswordCredentialsFrom(data)
@@ -56,7 +59,7 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null user name returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with null user name returns false`() = runTest {
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, null, TEST_PASSWORD)
@@ -67,7 +70,7 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing user name returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with missing user name returns false`() = runTest {
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, "", TEST_PASSWORD)
@@ -78,7 +81,7 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null password returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with null password returns false`() = runTest {
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, null)
@@ -89,7 +92,7 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing password returns false`() {
+    fun `storeApplicationPasswordCredentialsFrom with missing password returns false`() = runTest {
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, "")
@@ -100,7 +103,7 @@ class ApplicationPasswordLoginHelperTest {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with valid data stores credentials`() = runTest{
+    fun `storeApplicationPasswordCredentialsFrom with valid data stores credentials`() = runTest {
             val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
             val siteModel = SiteModel().apply {
                 url = TEST_URL

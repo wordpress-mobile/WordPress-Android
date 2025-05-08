@@ -3,11 +3,17 @@ package org.wordpress.android.ui.accounts.login
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.modules.BG_THREAD
 import javax.inject.Inject
+import javax.inject.Named
 
 class ApplicationPasswordLoginHelper @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteSqlUtils: SiteSqlUtils,
     private val uriLoginWrapper: UriLoginWrapper
 ) {
@@ -19,27 +25,26 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return false
         }
 
-        // Check if the url can be parsed
-        val uriLogin = uriLoginWrapper.parseUriLogin(url)
+        return withContext(bgDispatcher) {
+            val uriLogin = uriLoginWrapper.parseUriLogin(url)
 
-        if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
-            return false
-        }
-
-        runBlocking {
-            val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
-            if (site != null) {
-                site.apiRestUsername = uriLogin.user
-                site.apiRestPassword = uriLogin.password
-                siteSqlUtils.insertOrUpdateSite(site)
-                Log.d("WP_RS", "Saved application password credentials for: ${uriLogin.siteUrl}")
+            if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
+                false
             } else {
-                Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
+                val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
+                if (site != null) {
+                    site.apiRestUsername = uriLogin.user
+                    site.apiRestPassword = uriLogin.password
+                    siteSqlUtils.insertOrUpdateSite(site)
+                    Log.d("WP_RS", "Saved application password credentials for: ${uriLogin.siteUrl}")
+                    processedAppPasswordData = url
+                    true
+                } else {
+                    Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
+                    false
+                }
             }
         }
-
-        processedAppPasswordData = url
-        return true
     }
 
     fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
