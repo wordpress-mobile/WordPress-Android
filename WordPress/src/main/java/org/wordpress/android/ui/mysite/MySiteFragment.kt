@@ -502,7 +502,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, which ->
-                viewModel.onApplicationPasswordLoginDialogDismissed()
+                viewModel.onApplicationPasswordLoginDialogDismissed(url)
                 dialog.dismiss()
             }
             .setCancelable(false) // This allows the user to dismiss the dialog by tapping outside it

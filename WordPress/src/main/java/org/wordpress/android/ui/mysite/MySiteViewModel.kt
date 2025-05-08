@@ -254,9 +254,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun onApplicationPasswordLoginDialogDismissed() {
+    fun onApplicationPasswordLoginDialogDismissed(siteUrl: String) {
         viewModelScope.launch {
-            sharedPreferences.edit { putBoolean(DISMISSED_AUTHORIZATION_DIALOG_PREFIX, true) }
+            sharedPreferences.edit { putBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX$siteUrl", true) }
         }
     }
 

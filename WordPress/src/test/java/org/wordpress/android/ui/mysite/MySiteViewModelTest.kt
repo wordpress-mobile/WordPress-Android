@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.content.SharedPreferences
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,13 +9,16 @@ import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -30,6 +34,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -56,7 +61,20 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
+import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.WpApiDetails
 import java.util.Date
+
+private const val TEST_URL = "https://www.test.com"
+private const val TEST_SITE_NAME = "My Site"
+private const val TEST_SITE_ID = 1
+private const val TEST_SITE_ICON = "http://site.com/icon.jpg"
+private const val TEST_URL_AUTH = "https://www.test.com/auth"
+private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=null"
+private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
+private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
+private const val FIRST_TIME_SITE_OPENED_SP_TAG = "$SITE_ALREADY_OPENED_PREFIX$TEST_URL"
+private const val SKIPPED_SITE_SP_TAG = "$DISMISSED_AUTHORIZATION_DIALOG_PREFIX$TEST_URL"
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
@@ -131,6 +149,20 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dashboardItemsViewModelSlice: DashboardItemsViewModelSlice
 
+    @Mock
+    lateinit var wpLoginClient: WpLoginClient
+
+    @Mock
+    lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
+
+    @Mock
+    lateinit var wpApiDetails: WpApiDetails
+
+    @Mock
+    lateinit var sharedPreferences: SharedPreferences
+
+    @Mock
+    lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
@@ -139,12 +171,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
-    private val siteLocalId = 1
-    private val siteUrl = "http://site.com"
-    private val siteIcon = "http://site.com/icon.jpg"
-    private val siteName = "Site"
     private val localHomepageId = 1
-    private lateinit var site: SiteModel
+    private lateinit var siteTest: SiteModel
     private lateinit var homepage: PageModel
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
@@ -179,6 +207,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(dashboardItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
+        whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
+
         viewModel = MySiteViewModel(
             testDispatcher(),
             testDispatcher(),
@@ -202,7 +232,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             siteInfoHeaderCardViewModelSlice,
             accountDataViewModelSlice,
             dashboardCardsViewModelSlice,
-            dashboardItemsViewModelSlice
+            dashboardItemsViewModelSlice,
+            wpLoginClient,
+            applicationPasswordLoginHelper,
+            sharedPreferences
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -226,17 +259,18 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
         }
 
-        site = SiteModel()
-        site.id = siteLocalId
-        site.url = siteUrl
-        site.name = siteName
-        site.iconUrl = siteIcon
-        site.siteId = siteLocalId.toLong()
+        siteTest = SiteModel().apply {
+            id = TEST_SITE_ID
+            url = TEST_URL
+            name = TEST_SITE_NAME
+            iconUrl = TEST_SITE_ICON
+            siteId = TEST_SITE_ID.toLong()
+        }
 
-        homepage = PageModel(PostModel(), site, localHomepageId, "home", PUBLISHED, Date(), false, 0L, null, 0L)
+        homepage = PageModel(PostModel(), siteTest, localHomepageId, "home", PUBLISHED, Date(), false, 0L, null, 0L)
 
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(homePageDataLoader.loadHomepage(site)).thenReturn(homepage)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(homePageDataLoader.loadHomepage(siteTest)).thenReturn(homepage)
     }
 
     /* SITE STATE */
@@ -276,7 +310,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onSitePicked()
 
-        verify(dashboardCardsViewModelSlice, atLeastOnce()).buildCards(site)
+        verify(dashboardCardsViewModelSlice, atLeastOnce()).buildCards(siteTest)
     }
 
     @Test
@@ -285,7 +319,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onSitePicked()
 
-        verify(dashboardItemsViewModelSlice, atLeastOnce()).buildItems(site)
+        verify(dashboardItemsViewModelSlice, atLeastOnce()).buildItems(siteTest)
     }
 
     @Test
@@ -299,11 +333,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `handling successful login result opens stats screen`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
 
         viewModel.handleSuccessfulLoginResult()
 
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(siteTest))
     }
 
     /* EMPTY VIEW - ADD SITE */
@@ -349,8 +383,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given QS is not available for new site, when check and start QS is triggered, then QSP is not shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(false)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(isSiteTitleTaskCompleted = false, isNewSite = true)
@@ -360,8 +394,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given QS is not available for existing site, when check and start QS is triggered, then QSP is not shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(false)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(isSiteTitleTaskCompleted = false, isNewSite = false)
@@ -371,8 +405,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given new site, when check and start QS is triggered, then QSP is shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(true)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(false, isNewSite = true)
@@ -390,8 +424,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given existing site, when check and start QS is triggered, then QSP is shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(true)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(false, isNewSite = false)
@@ -416,13 +450,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when start QS is triggered, then QS starts`() {
-        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
+        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(siteTest.id)
 
         viewModel.startQuickStart()
 
         verify(quickStartUtilsWrapper)
-            .startQuickStart(site.id, false, quickStartRepository.quickStartType, quickStartTracker)
-        verify(dashboardCardsViewModelSlice).startQuickStart(site)
+            .startQuickStart(siteTest.id, false, quickStartRepository.quickStartType, quickStartTracker)
+        verify(dashboardCardsViewModelSlice).startQuickStart(siteTest)
     }
 
     @Test
@@ -474,7 +508,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onResume()
 
-        verify(dashboardCardsViewModelSlice).buildCards(site)
+        verify(dashboardCardsViewModelSlice).buildCards(siteTest)
         verify(dashboardItemsViewModelSlice).clearValue()
     }
 
@@ -484,7 +518,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.refresh()
 
-        verify(dashboardItemsViewModelSlice).buildItems(site)
+        verify(dashboardItemsViewModelSlice).buildItems(siteTest)
         verify(dashboardCardsViewModelSlice).clearValue()
     }
 
@@ -496,7 +530,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.refresh()
 
-        verify(dashboardCardsViewModelSlice).buildCards(site)
+        verify(dashboardCardsViewModelSlice).buildCards(siteTest)
         verify(dashboardItemsViewModelSlice).clearValue()
     }
 
@@ -506,7 +540,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.refresh()
 
-        verify(dashboardItemsViewModelSlice).buildItems(site)
+        verify(dashboardItemsViewModelSlice).buildItems(siteTest)
         verify(dashboardCardsViewModelSlice).clearValue()
     }
 
@@ -521,7 +555,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
         assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.OpenHomepage(site, homepageLocalId = localHomepageId, isNewSite = true)
+            SiteNavigationAction.OpenHomepage(siteTest, homepageLocalId = localHomepageId, isNewSite = true)
         )
     }
 
@@ -567,6 +601,104 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(dashboardItemsViewModelSlice).onCleared()
     }
 
+    @Test
+    fun `given no site selected, when calling api discovery, then do nothing`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
+        verify(sharedPreferences, times(0)).getBoolean(any(), any())
+    }
+
+    @Test
+    fun `given site first time opened, when calling api discovery, then do nothing`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(false)
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        verify(sharedPreferences).getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false)
+        )
+        verify(sharedPreferences).edit()
+        verify(sharedPreferencesEditor).putBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(true)
+        )
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
+    }
+
+    @Test
+    fun `given site skipped by the user, when calling api discovery, then do nothing`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(sharedPreferences.getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        verify(sharedPreferences).getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false)
+        )
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
+    }
+
+    @Test
+    fun `given site skipped by the user, when skipping, then save the preference`() = runTest {
+        viewModel.onApplicationPasswordLoginDialogDismissed(TEST_URL)
+
+        verify(sharedPreferences).edit()
+        verify(sharedPreferencesEditor).putBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(true)
+        )
+    }
+
+
+//    @Test
+//    fun `given login scenario, when api discovery is success, then return the authentication url`() = runTest {
+//        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
+//            .thenReturn(
+//                AutoDiscoveryAttemptSuccess(
+//                    ParsedUrl(Pointer.createConstant(1)),
+//                    ParsedUrl(Pointer.createConstant(1)),
+//                    wpApiDetails
+//                )
+//            )
+//        whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
+//        whenever(applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(any()))
+//            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
+//
+//        val result = viewModel.runApplicationPasswordDiscovery()
+//
+//        assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
+//        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+//    }
+//
+//    @Test
+//    fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
+//        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
+//
+//        val result = viewModel.runApplicationPasswordDiscovery()
+//
+//        assertEquals("", result)
+//        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+//    }
+
+    // TODO: crash
+
+
     @Suppress("LongParameterList")
     private fun initSelectedSite(
         isQuickStartInProgress: Boolean = false,
@@ -580,13 +712,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
 
         if (isSiteUsingWpComRestApi) {
-            site.setIsWPCom(true)
-            site.setIsJetpackConnected(true)
-            site.origin = SiteModel.ORIGIN_WPCOM_REST
+            siteTest.setIsWPCom(true)
+            siteTest.setIsJetpackConnected(true)
+            siteTest.origin = SiteModel.ORIGIN_WPCOM_REST
         }
-        onSiteSelected.value = siteLocalId
-        onSiteChange.value = site
-        selectedSite.value = SelectedSite(site)
+        onSiteSelected.value = TEST_SITE_ID
+        onSiteChange.value = siteTest
+        selectedSite.value = SelectedSite(siteTest)
     }
 
     fun ViewModel.invokeOnCleared() {
