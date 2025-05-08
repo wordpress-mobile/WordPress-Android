@@ -328,13 +328,15 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun onBottomSheetDismissed() {
-        when (val screen = selectedScreen.value) {
-            Screen.PROLOGUE,
-            Screen.PROLOGUE_SETTINGS,
-            Screen.NOTIFICATIONS_PERMISSION,
-            Screen.SELECTION -> analyticsTracker.trackFlowDismissed(screen)
-            Screen.EPILOGUE -> analyticsTracker.trackFlowCompleted()
-            null -> Unit // Do nothing
+        // We need to check nullability this way because of a compile Java type mismatch warning becoming an error
+        selectedScreen.value?.let {
+            when (it) {
+                Screen.PROLOGUE,
+                Screen.PROLOGUE_SETTINGS,
+                Screen.NOTIFICATIONS_PERMISSION,
+                Screen.SELECTION -> analyticsTracker.trackFlowDismissed(it)
+                Screen.EPILOGUE -> analyticsTracker.trackFlowCompleted()
+            }
         }
     }
 
