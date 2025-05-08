@@ -59,6 +59,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
+import kotlin.test.assertNotNull
 
 @Suppress("LargeClass")
 @InternalCoroutinesApi
@@ -311,7 +312,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val promptId = 123
 
         action!!.onClickAction?.invoke(promptId, BloggingPromptAttribution.BLOGANUARY)
-        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
+        val createPostWithBloggingPromptValue = viewModel.createPostWithBloggingPrompt.value
+        assertNotNull(createPostWithBloggingPromptValue)
+        assertThat(createPostWithBloggingPromptValue).isEqualTo(promptId)
     }
 
     @Test
