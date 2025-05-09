@@ -8,6 +8,7 @@ import androidx.browser.customtabs.CustomTabsCallback
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsServiceConnection
 import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
@@ -20,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    appSecrets: AppSecrets
+    private val appSecrets: AppSecrets
 ) {
     private val context: CoroutineContext = Dispatchers.IO
 
@@ -60,6 +61,17 @@ class WPcomLoginHelper @Inject constructor(
 
     private fun codeFromAuthorizationUri(string: String): String? {
         return Uri.parse(string).getQueryParameter("code")
+    }
+
+    fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
+        return if (authorizationUrl.isNullOrEmpty()) {
+            authorizationUrl.orEmpty()
+        } else {
+            authorizationUrl.toUri().buildUpon().apply {
+                appendQueryParameter("app_name", "android-jetpack-client")
+                appendQueryParameter("success_url", appSecrets.redirectUri)
+            }.build().toString()
+        }
     }
 }
 

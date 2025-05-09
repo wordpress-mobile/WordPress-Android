@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
@@ -481,14 +479,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
 
-        CustomTabsIntent intent = new CustomTabsIntent.Builder()
-                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
-                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
-                .setUrlBarHidingEnabled(true)
-                .setInstantAppsEnabled(false)
-                .setShowTitle(false)
-                .build();
+        CustomTabsIntent intent = getCustomTabsIntent();
 
         Uri loginUri = mLoginHelper.getWpcomLoginUri();
         try {
@@ -497,6 +488,17 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
             AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
             ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
+    }
+
+    @NonNull private CustomTabsIntent getCustomTabsIntent() {
+        return new CustomTabsIntent.Builder()
+                .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+                .setStartAnimations(this, R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left)
+                .setExitAnimations(this, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right)
+                .setUrlBarHidingEnabled(true)
+                .setInstantAppsEnabled(false)
+                .setShowTitle(false)
+                .build();
     }
 
     @Override
@@ -699,13 +701,19 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
 
         // In the background, run the API discovery test to see if we can add this site for the REST API
+        String authorizationUrl = mViewModel.runApiDiscovery(inputSiteAddress);
+//            launchApplicationPasswordFlow(authorizationUrl);
+    }
+
+    public void launchApplicationPasswordFlow(@NonNull String endpointAddress) {
+        CustomTabsIntent intent = getCustomTabsIntent();
+
+        Uri loginUri = Uri.parse(endpointAddress);
         try {
-            String authorizationUrl = mViewModel.runApiDiscoveryTest(inputSiteAddress);
-            Log.d("WP_RS", "Found authorization URL: " + authorizationUrl);
-            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL);
-        } catch (Exception ex) {
-            Log.e("WP_RS", "Unable to find authorization URL:" + ex.getMessage());
-            AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED);
+            intent.launchUrl(this, loginUri);
+        } catch (SecurityException | ActivityNotFoundException e) {
+            AppLog.e(AppLog.T.UTILS, "Error opening login uri in CustomTabsIntent, attempting external browser", e);
+            ActivityLauncher.openUrlExternal(this, loginUri.toString());
         }
     }
 
