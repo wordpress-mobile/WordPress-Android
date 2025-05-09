@@ -18,7 +18,10 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        tryToSaveCredentialsAndRunMain()
+    }
 
+    private fun tryToSaveCredentialsAndRunMain() {
         lifecycleScope.launch {
             val dataString = intent.dataString.orEmpty()
             val credentialsStored =
@@ -27,12 +30,14 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
             if (credentialsStored) {
                 ToastUtils.showToast(
                     this@ApplicationPasswordLoginActivity,
-                    "Application password credentials stored for ${applicationPasswordLoginHelper.getSiteUrlFromUrl(dataString)}"
+                    "Application password credentials stored for " +
+                            applicationPasswordLoginHelper.getSiteUrlFromUrl(dataString)
                 )
                 intent.setData(null)
             }
 
-            val mainActivityIntent = Intent(this@ApplicationPasswordLoginActivity, WPMainActivity::class.java)
+            val mainActivityIntent =
+                Intent(this@ApplicationPasswordLoginActivity, WPMainActivity::class.java)
             mainActivityIntent.setFlags(
                 (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         or Intent.FLAG_ACTIVITY_CLEAR_TASK)

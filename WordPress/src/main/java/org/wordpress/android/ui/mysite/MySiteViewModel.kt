@@ -229,7 +229,7 @@ class MySiteViewModel @Inject constructor(
             val hasDismissedAuthorizationDialog =
                 sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
 
-            //If the site is already authorized, no need to run the discovery
+            // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
                 !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
@@ -238,7 +238,6 @@ class MySiteViewModel @Inject constructor(
 
             if (!hasDismissedAuthorizationDialog) {
                 val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-                // This is work in progress, we are not showing the dialog to final users yet
                 if (authorizationUrlComplete.isNotEmpty()) {
                     _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
                 }
