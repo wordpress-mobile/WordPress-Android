@@ -506,7 +506,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.onApplicationPasswordLoginDialogDismissed(url)
                 dialog.dismiss()
             }
-            .setCancelable(false) // This prevents the user from dismissing the dialog by tapping outside or pressing the back button it
+            .setCancelable(false)
 
         val dialog = builder.create()
         dialog.show()

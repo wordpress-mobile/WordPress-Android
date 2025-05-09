@@ -23,7 +23,6 @@ class LoginViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
 
-
     private lateinit var viewModel: LoginViewModel
 
     @Before
