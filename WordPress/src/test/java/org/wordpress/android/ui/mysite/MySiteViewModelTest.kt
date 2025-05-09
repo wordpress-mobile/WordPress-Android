@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -168,6 +169,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
+    @Mock
+    lateinit var siteSqlUtils: SiteSqlUtils
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -240,7 +244,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardItemsViewModelSlice,
             wpLoginClient,
             applicationPasswordLoginHelper,
-            sharedPreferences
+            sharedPreferences,
+            siteSqlUtils
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -623,7 +628,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site first time opened, when calling api discovery, then save it a already opened`() = runTest {
+    fun `given site first time opened, when calling api discovery, then save it as already opened`() = runTest {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
         whenever(sharedPreferences.getBoolean(
             eq(FIRST_TIME_SITE_OPENED_SP_TAG),
@@ -666,6 +671,37 @@ class MySiteViewModelTest : BaseUnitTest() {
             eq(SKIPPED_SITE_SP_TAG),
             eq(false)
         )
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
+    }
+
+    @Test
+    fun `given site already authenticated, when calling api discovery, then do nothing`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(sharedPreferences.getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(siteSqlUtils.getSiteWithLocalId(eq(siteTest.localId()))
+        ).thenReturn(SiteModel().apply {
+            apiRestUsername = "user"
+            apiRestPassword = "password"
+        })
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        verify(sharedPreferences).getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false)
+        )
+        verify(sharedPreferences).getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false)
+        )
+        verify(siteSqlUtils).getSiteWithLocalId(eq(siteTest.localId()))
         verify(wpLoginClient, times(0)).apiDiscovery(any())
     }
 

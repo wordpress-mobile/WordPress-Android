@@ -58,6 +58,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import androidx.core.content.edit
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -86,7 +87,8 @@ class MySiteViewModel @Inject constructor(
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val wpLoginClient: WpLoginClient,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val siteSqlUtils: SiteSqlUtils,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -216,21 +218,27 @@ class MySiteViewModel @Inject constructor(
     fun runApplicationPasswordDiscovery() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         val site = selectedSiteRepository.getSelectedSite() ?: return
-        // If the site is already authorized, no need to run the discovery
-//        if (!site.apiRestPassword.isNullOrEmpty()) {
-//            return
-//        }
+
         val firstTimeSiteOpen = !sharedPreferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
         if (firstTimeSiteOpen) {
             setSiteAsAlreadyOpened(site.url)
             return
         }
         viewModelScope.launch {
-            // If the user has dismissed the authorization dialog, we don't want to show it again
+            // If the user has dismissed the authorization dialog, no need to show it again
             val hasDismissedAuthorizationDialog =
                 sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
+
+            //If the site is already authorized, no need to run the discovery
+            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
+            if (storedSite != null &&
+                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                return@launch
+            }
+
             if (!hasDismissedAuthorizationDialog) {
                 val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+                // This is work in progress, we are not showing the dialog to final users yet
                 if (authorizationUrlComplete.isNotEmpty()) {
                     _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
                 }

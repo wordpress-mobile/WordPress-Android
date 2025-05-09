@@ -471,6 +471,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showApplicationPasswordDialog(url: String) {
+        // This is in progress, so texts are not finals and we are not translating them yet.
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setTitle("Application Password")
             .setMessage("Would you like to authenticate this site using Applictaion Password?")
