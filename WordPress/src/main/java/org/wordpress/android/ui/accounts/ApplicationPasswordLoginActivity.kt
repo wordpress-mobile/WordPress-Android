@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -30,8 +31,10 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
             if (credentialsStored) {
                 ToastUtils.showToast(
                     this@ApplicationPasswordLoginActivity,
-                    "Application password credentials stored for " +
-                            applicationPasswordLoginHelper.getSiteUrlFromUrl(dataString)
+                    getString(
+                        R.string.application_password_credentials_stored,
+                        applicationPasswordLoginHelper.getSiteUrlFromUrl(dataString)
+                    )
                 )
                 intent.setData(null)
             }
