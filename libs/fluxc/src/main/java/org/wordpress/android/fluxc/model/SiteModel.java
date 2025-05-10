@@ -414,6 +414,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return mIsVisible;
     }
 
+    @Deprecated
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
     }
