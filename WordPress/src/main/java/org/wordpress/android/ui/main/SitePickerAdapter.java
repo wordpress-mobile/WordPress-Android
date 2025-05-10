@@ -153,11 +153,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              String lastSearch,
                              boolean isInSearchMode,
                              @NonNull OnDataLoadedListener dataLoadedListener,
-                             SitePickerMode sitePickerMode,
-                             boolean isInEditMode
+                             SitePickerMode sitePickerMode
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                null, null, null, sitePickerMode, isInEditMode, false);
+                null, null, null, sitePickerMode, false, false);
     }
 
     public SitePickerAdapter(Context context,
