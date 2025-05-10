@@ -406,14 +406,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mDisplayName = displayName;
     }
 
-    /*
-     * Site visibility is no longer a feature on wp.com
+    /**
+     * @deprecated Site visibility is no longer a feature on wp.com
      */
     @Deprecated
     public boolean isVisible() {
         return mIsVisible;
     }
 
+    /**
+     * @deprecated Site visibility is no longer a feature on wp.com
+     */
     @Deprecated
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
