@@ -167,36 +167,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 null,
                 ignoreSitesIds,
                 SitePickerMode.DEFAULT_MODE,
-                false,
                 false
-        );
-    }
-
-    public SitePickerAdapter(Context context,
-                             @LayoutRes int itemLayoutResourceId,
-                             int currentLocalBlogId,
-                             String lastSearch,
-                             boolean isInSearchMode,
-                             @NonNull OnDataLoadedListener dataLoadedListener,
-                             @NonNull ViewHolderHandler<?> headerHandler,
-                             @Nullable ViewHolderHandler<?> footerHandler,
-                             ArrayList<Integer> ignoreSitesIds,
-                             SitePickerMode sitePickerMode,
-                             boolean showAndReturn
-    ) {
-        this(
-                context,
-                itemLayoutResourceId,
-                currentLocalBlogId,
-                lastSearch,
-                isInSearchMode,
-                dataLoadedListener,
-                headerHandler,
-                footerHandler,
-                ignoreSitesIds,
-                sitePickerMode,
-                false,
-                showAndReturn
         );
     }
 
@@ -210,7 +181,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @Nullable ViewHolderHandler<?> footerHandler,
                              @Nullable ArrayList<Integer> ignoreSitesIds,
                              SitePickerMode sitePickerMode,
-                             boolean isInEditMode,
                              boolean showAndReturn
     ) {
         super();
