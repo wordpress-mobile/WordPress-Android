@@ -201,63 +201,6 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testWPComSiteVisibility() throws DuplicateSiteException {
-        WellSqlTestUtils.setupWordPressComAccount();
-
-        // Should not cause any errors
-        mSiteStore.isWPComSiteVisibleByLocalId(45);
-        mSiteSqlUtils.setSiteVisibility(null, true);
-
-        SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
-        mSiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
-
-        // Attempt to use with id of self-hosted site
-        mSiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
-        // The self-hosted site should not be affected
-        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
-
-
-        SiteModel wpComSite = generateWPComSite();
-        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
-
-        // Attempt to use with legitimate .com site
-        mSiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
-        assertFalse(mSiteStore.getSiteByLocalId(wpComSite.getId()).isVisible());
-        assertFalse(mSiteStore.isWPComSiteVisibleByLocalId(wpComSite.getId()));
-    }
-
-    @Test
-    public void testSetAllWPComSitesVisibility() throws DuplicateSiteException {
-        WellSqlTestUtils.setupWordPressComAccount();
-
-        SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
-        mSiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
-
-        // Attempt to use with id of self-hosted site
-        for (SiteModel site : mSiteStore.getWPComSites()) {
-            mSiteSqlUtils.setSiteVisibility(site, false);
-        }
-        // The self-hosted site should not be affected
-        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
-
-        SiteModel wpComSite1 = generateWPComSite();
-        SiteModel wpComSite2 = generateWPComSite();
-        wpComSite2.setId(44);
-        wpComSite2.setSiteId(284);
-
-        mSiteSqlUtils.insertOrUpdateSite(wpComSite1);
-        mSiteSqlUtils.insertOrUpdateSite(wpComSite2);
-
-        // Attempt to use with legitimate .com site
-        for (SiteModel site : mSiteStore.getWPComSites()) {
-            mSiteSqlUtils.setSiteVisibility(site, false);
-        }
-        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
-        assertFalse(mSiteStore.getSiteByLocalId(wpComSite1.getId()).isVisible());
-        assertFalse(mSiteStore.getSiteByLocalId(wpComSite2.getId()).isVisible());
-    }
-
-    @Test
     public void testGetIdForIdMethods() throws DuplicateSiteException {
         WellSqlTestUtils.setupWordPressComAccount();
 
@@ -610,11 +553,11 @@ public class SiteStoreUnitTest {
         WellSqlTestUtils.setupWordPressComAccount();
 
         List<SiteModel> siteList = new ArrayList<>();
-        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(4, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(5, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true));
+        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true));
+        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true));
+        siteList.add(generateTestSite(4, "https://pony4.com", "https://pony4.com/xmlrpc.php", true));
+        siteList.add(generateTestSite(5, "https://pony5.com", "https://pony5.com/xmlrpc.php", true));
 
         SitesModel sites = new SitesModel(siteList);
 
@@ -687,9 +630,9 @@ public class SiteStoreUnitTest {
     @Test
     public void testUpdateSiteUniqueConstraintFail() throws DuplicateSiteException {
         // Create 2 test sites
-        SiteModel site1 = generateTestSite(0, "https://pony1.com", "https://pony1.com/xmlrpc.php", false, true);
+        SiteModel site1 = generateTestSite(0, "https://pony1.com", "https://pony1.com/xmlrpc.php", false);
         mSiteSqlUtils.insertOrUpdateSite(site1);
-        SiteModel site2 = generateTestSite(0, "https://pony2.com", "https://pony2.com/xmlrpc.php", false, true);
+        SiteModel site2 = generateTestSite(0, "https://pony2.com", "https://pony2.com/xmlrpc.php", false);
         mSiteSqlUtils.insertOrUpdateSite(site2);
 
         // Update the second site and reuse the site url and id from the first
