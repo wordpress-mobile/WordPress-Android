@@ -153,23 +153,23 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              String lastSearch,
                              boolean isInSearchMode,
                              @NonNull OnDataLoadedListener dataLoadedListener,
-                             SitePickerMode sitePickerMode
-    ) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                null, null, null, sitePickerMode, false, false);
-    }
-
-    public SitePickerAdapter(Context context,
-                             @LayoutRes int itemLayoutResourceId,
-                             int currentLocalBlogId,
-                             String lastSearch,
-                             boolean isInSearchMode,
-                             @NonNull OnDataLoadedListener dataLoadedListener,
                              @NonNull ViewHolderHandler<?> headerHandler,
                              @Nullable ArrayList<Integer> ignoreSitesIds
     ) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false, false);
+        this(
+                context,
+                itemLayoutResourceId,
+                currentLocalBlogId,
+                lastSearch,
+                isInSearchMode,
+                dataLoadedListener,
+                headerHandler,
+                null,
+                ignoreSitesIds,
+                SitePickerMode.DEFAULT_MODE,
+                false,
+                false
+        );
     }
 
     public SitePickerAdapter(Context context,
@@ -184,8 +184,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              SitePickerMode sitePickerMode,
                              boolean showAndReturn
     ) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, footerHandler, ignoreSitesIds, sitePickerMode, false, showAndReturn);
+        this(
+                context,
+                itemLayoutResourceId,
+                currentLocalBlogId,
+                lastSearch,
+                isInSearchMode,
+                dataLoadedListener,
+                headerHandler,
+                footerHandler,
+                ignoreSitesIds,
+                sitePickerMode,
+                false,
+                showAndReturn
+        );
     }
 
     public SitePickerAdapter(Context context,
