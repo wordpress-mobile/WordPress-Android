@@ -407,7 +407,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     /**
-     * @deprecated Site visibility is no longer a feature on wp.com
+     * @deprecated Hiding sites is no longer a feature on wp.com
      */
     @Deprecated
     public boolean isVisible() {
@@ -415,7 +415,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     /**
-     * @deprecated Site visibility is no longer a feature on wp.com
+     * @deprecated Hiding sites is no longer a feature on wp.com
      */
     @Deprecated
     public void setIsVisible(boolean visible) {
