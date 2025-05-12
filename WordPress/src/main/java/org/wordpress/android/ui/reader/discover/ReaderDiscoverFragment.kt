@@ -152,7 +152,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         viewModel.start(parentViewModel)
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("LongMethod")
     private fun handleNavigation(event: ReaderNavigationEvents) = when (event) {
         is ShowPostDetail -> {
             ReaderActivityLauncher.showReaderPostDetail(

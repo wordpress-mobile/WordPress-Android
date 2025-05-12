@@ -41,6 +41,7 @@ object ReaderActivityLauncher {
         )
     }
 
+    @Suppress("LongParameterList")
     fun showReaderPostDetail(
         context: Context,
         isFeed: Boolean,
@@ -57,12 +58,12 @@ object ReaderActivityLauncher {
                 postId = postId,
                 directOperation = directOperation,
                 isRelatedPost = isRelatedPost,
-                interceptedUri = null
             )
         context.startActivity(intent)
     }
 
     @JvmStatic
+    @Suppress("LongParameterList")
     fun buildReaderPostDetailIntent(
         context: Context,
         isFeed: Boolean,
@@ -70,7 +71,7 @@ object ReaderActivityLauncher {
         postId: Long,
         directOperation: DirectOperation?,
         isRelatedPost: Boolean,
-        interceptedUri: String?
+        interceptedUri: String? = null
     ): Intent {
         val intent = Intent(context, ReaderPostPagerActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed)
@@ -125,9 +126,13 @@ object ReaderActivityLauncher {
      * show a list of posts in a specific blog or feed
      */
     @JvmStatic
+    @Suppress("LongParameterList")
     fun showReaderBlogOrFeedPreview(
-        context: Context, siteId: Long, feedId: Long,
-        isFollowed: Boolean?, source: String,
+        context: Context,
+        siteId: Long,
+        feedId: Long,
+        isFollowed: Boolean?,
+        source: String,
         readerTracker: ReaderTracker
     ) {
         if (siteId == 0L && feedId == 0L) {
@@ -280,6 +285,7 @@ object ReaderActivityLauncher {
      * @param commentId       specific comment id to perform an action on
      * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
+    @Suppress("LongParameterList")
     fun showReaderComments(
         context: Context,
         blogId: Long,
@@ -323,9 +329,15 @@ object ReaderActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION)
     }
 
+    @Suppress("LongParameterList")
     private fun buildShowReaderCommentsIntent(
-        context: Context, blogId: Long, postId: Long,
-        directOperation: DirectOperation?, commentId: Long, interceptedUri: String?, source: String?
+        context: Context,
+        blogId: Long,
+        postId: Long,
+        directOperation: DirectOperation?,
+        commentId: Long,
+        interceptedUri: String?,
+        source: String?
     ): Intent {
         val intent = Intent(
             context,
@@ -400,6 +412,7 @@ object ReaderActivityLauncher {
     }
 
     @JvmStatic
+    @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
         imageUrl: String?,

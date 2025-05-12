@@ -1590,9 +1590,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel.post?.let {
                 context?.let { nonNullContext ->
                     ReaderActivityLauncher.showReaderComments(
-                        nonNullContext, it.blogId, it.postId,
-                        directOperation, commentId.toLong(), viewModel.interceptedUri,
-                        DIRECT_OPERATION.sourceDescription
+                        context = nonNullContext,
+                        blogId = it.blogId,
+                        postId = it.postId,
+                        directOperation = directOperation,
+                        commentId = commentId.toLong(),
+                        interceptedUri = viewModel.interceptedUri,
+                        source = DIRECT_OPERATION.sourceDescription
                     )
                 }
             }
