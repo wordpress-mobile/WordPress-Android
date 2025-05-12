@@ -16,6 +16,7 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import kotlin.text.RegexOption.IGNORE_CASE
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
+import rs.wordpress.api.kotlin.ApiDiscoveryResult
 
 class LoginViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -41,19 +42,20 @@ class LoginViewModel @Inject constructor(
         AuthEmailPayloadScheme.WORDPRESS
     }
 
-    @Suppress("TooGenericExceptionCaught")
     fun runApiDiscovery(url: String): String = runBlocking {
-        try {
-            val urlDiscovery = wpLoginClient.apiDiscovery(url)
-            val authorizationUrl = urlDiscovery.apiDetails.findApplicationPasswordsAuthenticationUrl()
-            val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-            Log.d("WP_RS", "Found authorization for $url URL: $authorizationUrlComplete")
-            AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-            authorizationUrlComplete
-        } catch (throwable: Throwable) {
-            Log.e("WP_RS", "VM: Error during API discovery for $url", throwable)
-            AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-            ""
+        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(url)) {
+            is ApiDiscoveryResult.Success -> {
+                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
+                val authorizationUrlComplete = wpComLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                Log.d("WP_RS", "Found authorization for $url URL: $authorizationUrlComplete")
+                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                authorizationUrlComplete
+            }
+            else -> {
+                Log.e("WP_RS", "VM: Error during API discovery for $url: $urlDiscoveryResult")
+                AnalyticsTracker.track(AnalyticsTracker.Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+                ""
+            }
         }
     }
 }
