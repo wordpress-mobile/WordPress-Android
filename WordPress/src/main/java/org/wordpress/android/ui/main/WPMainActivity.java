@@ -1715,10 +1715,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
-        // Make selected site visible
-        selectedSite.setIsVisible(true);
-        mSelectedSiteRepository.updateSite(selectedSite);
-
         // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
     }

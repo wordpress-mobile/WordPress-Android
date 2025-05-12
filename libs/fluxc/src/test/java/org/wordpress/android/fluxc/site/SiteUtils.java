@@ -12,17 +12,15 @@ public class SiteUtils {
     private static final String ZENDESK_ADDON_SCAN_DAILY = "jetpack_addon_scan_daily";
 
     public static SiteModel generateWPComSite() {
-        return generateTestSite(556, "", "", true, true);
+        return generateTestSite(556, "", "", true);
     }
 
-    public static SiteModel generateTestSite(long remoteId, String url, String xmlRpcUrl, boolean isWPCom,
-                                             boolean isVisible) {
+    public static SiteModel generateTestSite(long remoteId, String url, String xmlRpcUrl, boolean isWPCom) {
         SiteModel example = new SiteModel();
         example.setUrl(url);
         example.setXmlRpcUrl(xmlRpcUrl);
         example.setSiteId(remoteId);
         example.setIsWPCom(isWPCom);
-        example.setIsVisible(isVisible);
         if (isWPCom) {
             example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         } else {
@@ -37,7 +35,6 @@ public class SiteUtils {
         example.setIsWPCom(false);
         example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
-        example.setIsVisible(true);
         example.setUrl("http://some.url");
         example.setXmlRpcUrl("http://some.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_XMLRPC);
@@ -51,7 +48,6 @@ public class SiteUtils {
         example.setIsWPCom(false);
         example.setIsJetpackInstalled(true);
         example.setIsJetpackConnected(true);
-        example.setIsVisible(true);
         example.setUsername("ponyuser");
         example.setPassword("ponypass");
         example.setUrl("http://jetpack.url");
@@ -66,7 +62,6 @@ public class SiteUtils {
         example.setIsWPCom(false);
         example.setIsJetpackInstalled(true);
         example.setIsJetpackConnected(true);
-        example.setIsVisible(true);
         example.setUrl("http://jetpack2.url");
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
@@ -80,7 +75,6 @@ public class SiteUtils {
         example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
         example.setIsJetpackCPConnected(true);
-        example.setIsVisible(true);
         example.setUrl("http://jetpackcp.url");
         example.setXmlRpcUrl("http://jetpackcp.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
@@ -93,7 +87,6 @@ public class SiteUtils {
         example.setIsWPCom(false);
         example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
-        example.setIsVisible(true);
         example.setUrl("http://jetpack2.url");
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_XMLRPC);
