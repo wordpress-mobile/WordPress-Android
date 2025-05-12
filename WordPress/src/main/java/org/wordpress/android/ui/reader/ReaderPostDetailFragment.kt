@@ -1310,12 +1310,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showRelatedPostDetail(postId: Long, blogId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(
-            requireActivity(),
-            false,
-            blogId,
-            postId, null,
-            0,
-            true, null
+            context = requireActivity(),
+            isFeed = false,
+            blogId = blogId,
+            postId = postId,
+            directOperation = null,
+            isRelatedPost = true,
+            interceptedUri = null
         )
     }
 

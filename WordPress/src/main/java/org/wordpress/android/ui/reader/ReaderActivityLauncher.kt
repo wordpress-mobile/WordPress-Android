@@ -37,7 +37,6 @@ object ReaderActivityLauncher {
             blogId = blogId,
             postId = postId,
             directOperation = null,
-            commentId = 0,
             isRelatedPost = false,
             interceptedUri = null
         )
@@ -49,14 +48,18 @@ object ReaderActivityLauncher {
         blogId: Long,
         postId: Long,
         directOperation: DirectOperation?,
-        commentId: Int,
         isRelatedPost: Boolean,
         interceptedUri: String?
     ) {
         val intent =
             buildReaderPostDetailIntent(
-                context, isFeed, blogId, postId, directOperation, commentId, isRelatedPost,
-                interceptedUri
+                context = context,
+                isFeed = isFeed,
+                blogId = blogId,
+                postId = postId,
+                directOperation = directOperation,
+                isRelatedPost = isRelatedPost,
+                interceptedUri = interceptedUri
             )
         context.startActivity(intent)
     }
@@ -68,7 +71,6 @@ object ReaderActivityLauncher {
         blogId: Long,
         postId: Long,
         directOperation: DirectOperation?,
-        commentId: Int,
         isRelatedPost: Boolean,
         interceptedUri: String?
     ): Intent {
@@ -77,7 +79,6 @@ object ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId)
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true)
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
