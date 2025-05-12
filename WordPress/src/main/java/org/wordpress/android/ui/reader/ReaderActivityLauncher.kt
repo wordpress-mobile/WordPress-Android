@@ -465,6 +465,7 @@ object ReaderActivityLauncher {
         }
     }
 
+    @Suppress("SwallowedException")
     fun sharePost(context: Context, post: ReaderPost) {
         val url = (if (post.hasShortUrl()) post.shortUrl else post.url)
         try {
