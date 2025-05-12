@@ -31,7 +31,16 @@ object ReaderActivityLauncher {
      */
     @JvmStatic
     fun showReaderPostDetail(context: Context, blogId: Long, postId: Long) {
-        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null)
+        showReaderPostDetail(
+            context = context,
+            isFeed = false,
+            blogId = blogId,
+            postId = postId,
+            directOperation = null,
+            commentId = 0,
+            isRelatedPost = false,
+            interceptedUri = null
+        )
     }
 
     fun showReaderPostDetail(
@@ -122,11 +131,11 @@ object ReaderActivityLauncher {
         }
 
         readerTracker.trackBlog(
-            AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
-            siteId,
-            feedId,
-            isFollowed,
-            source
+            stat = AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
+            blogId = siteId,
+            feedId = feedId,
+            isFollowed = isFollowed,
+            source = source
         )
         val intent = Intent(context, ReaderPostListActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SOURCE, source)
@@ -152,12 +161,12 @@ object ReaderActivityLauncher {
             return
         }
         showReaderBlogOrFeedPreview(
-            context,
-            post.blogId,
-            post.feedId,
-            post.isFollowedByCurrentUser,
-            source,
-            readerTracker
+            context = context,
+            siteId = post.blogId,
+            feedId = post.feedId,
+            isFollowed = post.isFollowedByCurrentUser,
+            source = source,
+            readerTracker = readerTracker
         )
     }
 
@@ -168,12 +177,12 @@ object ReaderActivityLauncher {
         readerTracker: ReaderTracker
     ) {
         showReaderBlogOrFeedPreview(
-            context,
-            siteId,
-            0,
-            isFollowed,
-            source,
-            readerTracker
+            context = context,
+            siteId = siteId,
+            feedId = 0,
+            isFollowed = isFollowed,
+            source = source,
+            readerTracker = readerTracker
         )
     }
 
@@ -223,7 +232,15 @@ object ReaderActivityLauncher {
         postId: Long,
         source: String?
     ) {
-        showReaderComments(context, blogId, postId, null, 0, null, source)
+        showReaderComments(
+            context = context,
+            blogId = blogId,
+            postId = postId,
+            directOperation = null,
+            commentId = 0,
+            interceptedUri = null,
+            source = source
+        )
     }
 
 
@@ -239,13 +256,13 @@ object ReaderActivityLauncher {
         source: String?
     ) {
         showReaderComments(
-            context,
-            blogId,
-            postId,
-            DirectOperation.COMMENT_JUMP,
-            commentId,
-            null,
-            source
+            context = context,
+            blogId = blogId,
+            postId = postId,
+            directOperation = DirectOperation.COMMENT_JUMP,
+            commentId = commentId,
+            interceptedUri = null,
+            source = source
         )
     }
 
@@ -269,13 +286,13 @@ object ReaderActivityLauncher {
         source: String?
     ) {
         val intent = buildShowReaderCommentsIntent(
-            context,
-            blogId,
-            postId,
-            directOperation,
-            commentId,
-            interceptedUri,
-            source
+            context = context,
+            blogId = blogId,
+            postId = postId,
+            directOperation = directOperation,
+            commentId = commentId,
+            interceptedUri = interceptedUri,
+            source = source
         )
         context.startActivity(intent)
     }
