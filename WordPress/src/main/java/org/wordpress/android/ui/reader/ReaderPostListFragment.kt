@@ -468,11 +468,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
 
             is ShowNoSitesToReblog -> {
-                ReaderActivityLauncher.showNoSiteToReblog(activity)
+                ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
             }
 
             is ShowBookmarkedTab -> {
-                ActivityLauncher.viewSavedPostsListInReader(activity)
+                ActivityLauncher.viewSavedPostsListInReader(requireActivity())
             }
 
             is ShowBookmarkedSavedOnlyLocallyDialog -> {
@@ -489,7 +489,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             is ShowReportUser -> {
                 ReaderActivityLauncher.openUrl(
-                    context,
+                    requireActivity(),
                     ReaderUtils.getReportUserUrl(
                         navTarget.url,
                         navTarget.authorId
@@ -2043,7 +2043,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 override fun onSiteClicked(site: ReaderSiteModel) {
                     lastTappedSiteSearchResult = site
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                        activity,
+                        requireActivity(),
                         site.siteId,
                         site.feedId,
                         site.isFollowing,
@@ -2539,7 +2539,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostListType.TAG_FOLLOWED,
                 ReaderPostListType.TAG_PREVIEW -> {
                     ReaderActivityLauncher.showReaderPostPagerForTag(
-                        activity,
+                        requireActivity(),
                         currentTag,
                         type,
                         post.blogId,
@@ -2549,7 +2549,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
                 ReaderPostListType.BLOG_PREVIEW -> {
                     ReaderActivityLauncher.showReaderPostPagerForBlog(
-                        activity,
+                        requireActivity(),
                         post.blogId,
                         post.postId
                     )
@@ -2557,7 +2557,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
                 ReaderPostListType.SEARCH_RESULTS -> {
                     readerTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post)
-                    ReaderActivityLauncher.showReaderPostDetail(activity, post.blogId, post.postId)
+                    ReaderActivityLauncher.showReaderPostDetail(requireActivity(), post.blogId, post.postId)
                 }
 
                 ReaderPostListType.TAGS_FEED -> {}
@@ -2591,7 +2591,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (discoverData.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.blogId != 0L && discoverData.postId != 0L) {
                     ReaderActivityLauncher.showReaderPostDetail(
-                        activity,
+                        requireActivity(),
                         discoverData.blogId,
                         discoverData.postId
                     )
@@ -2601,7 +2601,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
-                    ReaderActivityLauncher.openUrl(activity, discoverData.permaLink)
+                    ReaderActivityLauncher.openUrl(requireActivity(), discoverData.permaLink)
                 }
             }
         }
@@ -2609,7 +2609,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun handleCrossPostSelected(post: ReaderPost) {
         ReaderActivityLauncher.showReaderPostDetail(
-            activity,
+            requireActivity(),
             post.xpostBlogId,
             post.xpostPostId
         )
@@ -2709,7 +2709,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             ReaderPostCardActionType.VISIT_SITE -> {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                ReaderActivityLauncher.openPost(context, post)
+                ReaderActivityLauncher.openPost(requireActivity(), post)
             }
 
             ReaderPostCardActionType.LIKE -> postListViewModel.onLikeButtonClicked(

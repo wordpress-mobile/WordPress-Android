@@ -755,7 +755,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             is BloggingPromptCardNavigationAction.ViewAnswers -> {
                 ReaderActivityLauncher.showReaderTagPreview(
-                    activity,
+                    requireActivity(),
                     action.readerTag,
                     ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
                     readerTracker,
