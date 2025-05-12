@@ -164,13 +164,11 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderBlogPreview(
-        context: Context, post: ReaderPost?,
+        context: Context,
+        post: ReaderPost,
         source: String,
         readerTracker: ReaderTracker
     ) {
-        if (post == null) {
-            return
-        }
         showReaderBlogOrFeedPreview(
             context = context,
             siteId = post.blogId,
@@ -183,8 +181,10 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderBlogPreview(
-        context: Context, siteId: Long,
-        isFollowed: Boolean?, source: String,
+        context: Context,
+        siteId: Long,
+        isFollowed: Boolean?,
+        source: String,
         readerTracker: ReaderTracker
     ) {
         showReaderBlogOrFeedPreview(
@@ -201,14 +201,15 @@ object ReaderActivityLauncher {
      * show a list of posts with a specific tag
      */
     fun showReaderTagPreview(
-        context: Context, tag: ReaderTag,
+        context: Context,
+        tag: ReaderTag,
         source: String,
         readerTracker: ReaderTracker
     ) {
         readerTracker.trackTag(
-            AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
-            tag.tagSlug,
-            source
+            stat = AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
+            tag = tag.tagSlug,
+            source = source
         )
         val intent = createReaderTagPreviewIntent(context, tag, source)
         context.startActivity(intent)
@@ -441,7 +442,13 @@ object ReaderActivityLauncher {
 
         if (context is Activity && sourceView != null) {
             val options =
-                ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0)
+                ActivityOptionsCompat.makeScaleUpAnimation(
+                    sourceView,
+                    startX,
+                    startY,
+                    0,
+                    0
+                )
             @Suppress("DEPRECATION")
             ActivityCompat.startActivity(context, intent, options.toBundle())
         } else {
