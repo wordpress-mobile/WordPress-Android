@@ -38,7 +38,6 @@ object ReaderActivityLauncher {
             postId = postId,
             directOperation = null,
             isRelatedPost = false,
-            interceptedUri = null
         )
     }
 
@@ -49,7 +48,6 @@ object ReaderActivityLauncher {
         postId: Long,
         directOperation: DirectOperation?,
         isRelatedPost: Boolean,
-        interceptedUri: String?
     ) {
         val intent =
             buildReaderPostDetailIntent(
@@ -59,7 +57,7 @@ object ReaderActivityLauncher {
                 postId = postId,
                 directOperation = directOperation,
                 isRelatedPost = isRelatedPost,
-                interceptedUri = interceptedUri
+                interceptedUri = null
             )
         context.startActivity(intent)
     }

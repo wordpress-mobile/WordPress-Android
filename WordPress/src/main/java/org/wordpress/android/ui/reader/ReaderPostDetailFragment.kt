@@ -1316,7 +1316,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId = postId,
             directOperation = null,
             isRelatedPost = true,
-            interceptedUri = null
         )
     }
 

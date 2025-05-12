@@ -106,7 +106,6 @@ fun handlePostListAction(
                 postId = action.post.remotePostId,
                 directOperation = ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP,
                 isRelatedPost = false,
-                interceptedUri = null
             )
         }
         is PostListAction.SharePost -> {
