@@ -1,233 +1,255 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.View;
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.text.TextUtils
+import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.reader.ReaderCommentListActivity
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.reader.ReaderSearchActivity
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.WPUrlUtils
+import java.util.EnumSet
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity;
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint;
-import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.WPUrlUtils;
-
-import java.util.EnumSet;
-
-import static org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT;
-
-public class ReaderActivityLauncher {
+object ReaderActivityLauncher {
     /*
      * show a single reader post in the detail view - simply calls showReaderPostPager
      * with a single post
      */
-    public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null);
+    @JvmStatic
+    fun showReaderPostDetail(context: Context, blogId: Long, postId: Long) {
+        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null)
     }
 
-    public static void showReaderPostDetail(Context context,
-                                            boolean isFeed,
-                                            long blogId,
-                                            long postId,
-                                            DirectOperation directOperation,
-                                            int commentId,
-                                            boolean isRelatedPost,
-                                            String interceptedUri) {
-        Intent intent =
-                buildReaderPostDetailIntent(context, isFeed, blogId, postId, directOperation, commentId, isRelatedPost,
-                        interceptedUri);
-        context.startActivity(intent);
+    fun showReaderPostDetail(
+        context: Context,
+        isFeed: Boolean,
+        blogId: Long,
+        postId: Long,
+        directOperation: DirectOperation?,
+        commentId: Int,
+        isRelatedPost: Boolean,
+        interceptedUri: String?
+    ) {
+        val intent =
+            buildReaderPostDetailIntent(
+                context, isFeed, blogId, postId, directOperation, commentId, isRelatedPost,
+                interceptedUri
+            )
+        context.startActivity(intent)
     }
 
-    @NonNull
-    public static Intent buildReaderPostDetailIntent(Context context, boolean isFeed, long blogId, long postId,
-                                                      DirectOperation directOperation, int commentId,
-                                                      boolean isRelatedPost, String interceptedUri) {
-        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        return intent;
+    @JvmStatic
+    fun buildReaderPostDetailIntent(
+        context: Context?, isFeed: Boolean, blogId: Long, postId: Long,
+        directOperation: DirectOperation?, commentId: Int,
+        isRelatedPost: Boolean, interceptedUri: String?
+    ): Intent {
+        val intent = Intent(context, ReaderPostPagerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed)
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
+        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId)
+        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true)
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
+        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
+        return intent
     }
 
     /*
      * show pager view of posts with a specific tag - passed blogId/postId is the post
      * to select after the pager is populated
      */
-    public static void showReaderPostPagerForTag(Context context,
-                                                 ReaderTag tag,
-                                                 ReaderPostListType postListType,
-                                                 long blogId,
-                                                 long postId) {
+    fun showReaderPostPagerForTag(
+        context: Context,
+        tag: ReaderTag?,
+        postListType: ReaderPostListType?,
+        blogId: Long,
+        postId: Long
+    ) {
         if (tag == null) {
-            return;
+            return
         }
 
-        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
-        intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        context.startActivity(intent);
+        val intent = Intent(context, ReaderPostPagerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType)
+        intent.putExtra(ReaderConstants.ARG_TAG, tag)
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
+        context.startActivity(intent)
     }
 
     /*
      * show pager view of posts in a specific blog
      */
-    public static void showReaderPostPagerForBlog(Context context,
-                                                  long blogId,
-                                                  long postId) {
-        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        context.startActivity(intent);
+    fun showReaderPostPagerForBlog(
+        context: Context,
+        blogId: Long,
+        postId: Long
+    ) {
+        val intent = Intent(context, ReaderPostPagerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
+        context.startActivity(intent)
     }
 
     /*
      * show a list of posts in a specific blog or feed
      */
-    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId,
-                                                   @Nullable Boolean isFollowed, String source,
-                                                   ReaderTracker readerTracker) {
-        if (siteId == 0 && feedId == 0) {
-            return;
+    @JvmStatic
+    fun showReaderBlogOrFeedPreview(
+        context: Context, siteId: Long, feedId: Long,
+        isFollowed: Boolean?, source: String,
+        readerTracker: ReaderTracker
+    ) {
+        if (siteId == 0L && feedId == 0L) {
+            return
         }
 
         readerTracker.trackBlog(
-                AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
-                siteId,
-                feedId,
-                isFollowed,
-                source
-        );
-        Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
+            AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
+            siteId,
+            feedId,
+            isFollowed,
+            source
+        )
+        val intent = Intent(context, ReaderPostListActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source)
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
-            intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
-            intent.putExtra(ReaderConstants.ARG_IS_FEED, true);
+            intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId)
+            intent.putExtra(ReaderConstants.ARG_IS_FEED, true)
         } else {
-            intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
+            intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId)
         }
 
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        context.startActivity(intent);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
+        context.startActivity(intent)
     }
 
-    public static void showReaderBlogPreview(Context context, ReaderPost post,
-                                             String source,
-                                             ReaderTracker readerTracker) {
+    @JvmStatic
+    fun showReaderBlogPreview(
+        context: Context, post: ReaderPost?,
+        source: String,
+        readerTracker: ReaderTracker
+    ) {
         if (post == null) {
-            return;
+            return
         }
         showReaderBlogOrFeedPreview(
-                context,
-                post.blogId,
-                post.feedId,
-                post.isFollowedByCurrentUser,
-                source,
-                readerTracker
-        );
+            context,
+            post.blogId,
+            post.feedId,
+            post.isFollowedByCurrentUser,
+            source,
+            readerTracker
+        )
     }
 
-    public static void showReaderBlogPreview(Context context, long siteId,
-                                             @Nullable Boolean isFollowed, String source,
-                                             ReaderTracker readerTracker) {
+    @JvmStatic
+    fun showReaderBlogPreview(
+        context: Context, siteId: Long,
+        isFollowed: Boolean?, source: String,
+        readerTracker: ReaderTracker
+    ) {
         showReaderBlogOrFeedPreview(
-                context,
-                siteId,
-                0,
-                isFollowed,
-                source,
-                readerTracker
-        );
+            context,
+            siteId,
+            0,
+            isFollowed,
+            source,
+            readerTracker
+        )
     }
 
     /*
      * show a list of posts with a specific tag
      */
-    public static void showReaderTagPreview(Context context, @NonNull ReaderTag tag,
-                                            String source,
-                                            ReaderTracker readerTracker) {
+    fun showReaderTagPreview(
+        context: Context, tag: ReaderTag,
+        source: String,
+        readerTracker: ReaderTracker
+    ) {
         readerTracker.trackTag(
-                AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
-                tag.getTagSlug(),
-                source
-        );
-        final Intent intent = createReaderTagPreviewIntent(context, tag, source);
-        context.startActivity(intent);
+            AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
+            tag.tagSlug,
+            source
+        )
+        val intent = createReaderTagPreviewIntent(context, tag, source)
+        context.startActivity(intent)
     }
 
-    @NonNull
-    public static Intent createReaderTagPreviewIntent(@NonNull final Context context,
-                                                      @NonNull final ReaderTag tag,
-                                                      @NonNull final String source) {
-        final Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
-        intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
-        return intent;
+    fun createReaderTagPreviewIntent(
+        context: Context,
+        tag: ReaderTag,
+        source: String
+    ): Intent {
+        val intent = Intent(context, ReaderPostListActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source)
+        intent.putExtra(ReaderConstants.ARG_TAG, tag)
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW)
+        return intent
     }
 
-    public static void showReaderSearch(Context context) {
-        context.startActivity(createReaderSearchIntent(context));
+    fun showReaderSearch(context: Context) {
+        context.startActivity(createReaderSearchIntent(context))
     }
 
-    public static Intent createReaderSearchIntent(@NonNull final Context context) {
-        return new Intent(context, ReaderSearchActivity.class);
+    fun createReaderSearchIntent(context: Context): Intent {
+        return Intent(context, ReaderSearchActivity::class.java)
     }
 
     /*
      * show comments for the passed Ids
      */
-    public static void showReaderComments(@NonNull Context context,
-                                          long blogId,
-                                          long postId,
-                                          String source) {
-        showReaderComments(context, blogId, postId, null, 0, null, source);
+    fun showReaderComments(
+        context: Context,
+        blogId: Long,
+        postId: Long,
+        source: String?
+    ) {
+        showReaderComments(context, blogId, postId, null, 0, null, source)
     }
 
 
     /*
      * show specific comment for the passed Ids
      */
-    public static void showReaderComments(
-        @NonNull Context context,
-        long blogId,
-        long postId,
-        long commentId,
-        String source
+    @JvmStatic
+    fun showReaderComments(
+        context: Context,
+        blogId: Long,
+        postId: Long,
+        commentId: Long,
+        source: String?
     ) {
         showReaderComments(
-                context,
-                blogId,
-                postId,
-                DirectOperation.COMMENT_JUMP,
-                commentId,
-                null,
-                source
-        );
+            context,
+            blogId,
+            postId,
+            DirectOperation.COMMENT_JUMP,
+            commentId,
+            null,
+            source
+        )
     }
 
     /**
@@ -240,70 +262,87 @@ public class ReaderActivityLauncher {
      * @param commentId       specific comment id to perform an action on
      * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
-    public static void showReaderComments(@NonNull Context context, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, String source) {
-        Intent intent = buildShowReaderCommentsIntent(
-                context,
-                blogId,
-                postId,
-                directOperation,
-                commentId,
-                interceptedUri,
-                source
-        );
-        context.startActivity(intent);
-    }
-
-    public static void showReaderCommentsForResult(
-            @NonNull Fragment fragment,
-            long blogId,
-            long postId,
-            String source
+    fun showReaderComments(
+        context: Context,
+        blogId: Long,
+        postId: Long,
+        directOperation: DirectOperation?,
+        commentId: Long,
+        interceptedUri: String?,
+        source: String?
     ) {
-        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source);
+        val intent = buildShowReaderCommentsIntent(
+            context,
+            blogId,
+            postId,
+            directOperation,
+            commentId,
+            interceptedUri,
+            source
+        )
+        context.startActivity(intent)
     }
 
-    public static void showReaderCommentsForResult(@NonNull Fragment fragment, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, String source) {
-        if (fragment.getContext() == null) {
-            return;
+    fun showReaderCommentsForResult(
+        fragment: Fragment,
+        blogId: Long,
+        postId: Long,
+        source: String?
+    ) {
+        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source)
+    }
+
+    fun showReaderCommentsForResult(
+        fragment: Fragment,
+        blogId: Long,
+        postId: Long,
+        directOperation: DirectOperation?,
+        commentId: Long,
+        interceptedUri: String?,
+        source: String?
+    ) {
+        if (fragment.context == null) {
+            return
         }
-        Intent intent = buildShowReaderCommentsIntent(
-                fragment.getContext(),
-                blogId,
-                postId,
-                directOperation,
-                commentId,
-                interceptedUri,
-                source
-        );
-        fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
+        val intent = buildShowReaderCommentsIntent(
+            fragment.context!!,
+            blogId,
+            postId,
+            directOperation,
+            commentId,
+            interceptedUri,
+            source
+        )
+        fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION)
     }
 
-    private static Intent buildShowReaderCommentsIntent(@NonNull Context context, long blogId, long postId,
-            DirectOperation directOperation, long commentId, String interceptedUri, String source) {
-        Intent intent = new Intent(
-                context,
-                ReaderCommentListActivity.class
-        );
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
+    private fun buildShowReaderCommentsIntent(
+        context: Context, blogId: Long, postId: Long,
+        directOperation: DirectOperation?, commentId: Long, interceptedUri: String?, source: String?
+    ): Intent {
+        val intent = Intent(
+            context,
+            ReaderCommentListActivity::class.java
+        )
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
+        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId)
+        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source)
 
-        return intent;
+        return intent
     }
 
     /*
      * show users who liked a post
      */
-    public static void showReaderLikingUsers(Context context, long blogId, long postId) {
-        Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        context.startActivity(intent);
+    @JvmStatic
+    fun showReaderLikingUsers(context: Context, blogId: Long, postId: Long) {
+        val intent = Intent(context, ReaderUserListActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId)
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId)
+        context.startActivity(intent)
     }
 
     /**
@@ -311,45 +350,126 @@ public class ReaderActivityLauncher {
      *
      * @param activity the calling activity
      */
-    public static void showNoSiteToReblog(Activity activity) {
-        Intent intent = new Intent(activity, NoSiteToReblogActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE);
+    fun showNoSiteToReblog(activity: Activity) {
+        val intent = Intent(activity, NoSiteToReblogActivity::class.java)
+        activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE)
     }
 
     /*
      * show followed tags & blogs
      */
-    public static void showReaderSubs(Context context) {
-        Intent intent = new Intent(context, ReaderSubsActivity.class);
-        context.startActivity(intent);
+    fun showReaderSubs(context: Context) {
+        val intent = Intent(context, ReaderSubsActivity::class.java)
+        context.startActivity(intent)
     }
 
-    public static void showReaderSubs(Context context, int selectPosition) {
-        context.startActivity(createIntentShowReaderSubs(context, selectPosition));
+    fun showReaderSubs(context: Context, selectPosition: Int) {
+        context.startActivity(createIntentShowReaderSubs(context, selectPosition))
     }
 
-    public static Intent createIntentShowReaderSubs(@NonNull final Context context, final int selectPosition) {
-        final Intent intent = new Intent(context, ReaderSubsActivity.class);
-        intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
-        return intent;
+    fun createIntentShowReaderSubs(context: Context, selectPosition: Int): Intent {
+        val intent = Intent(context, ReaderSubsActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition)
+        return intent
     }
 
-    public static void showReaderInterests(Activity activity) {
-        Intent intent = new Intent(activity, ReaderInterestsActivity.class);
-        intent.putExtra(READER_INTEREST_ENTRY_POINT, EntryPoint.SETTINGS);
-        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS);
+    @JvmStatic
+    fun showReaderInterests(activity: Activity) {
+        val intent = Intent(activity, ReaderInterestsActivity::class.java)
+        intent.putExtra(
+            ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT,
+            ReaderInterestsFragment.EntryPoint.SETTINGS
+        )
+        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS)
     }
 
     /*
      * play an external video
      */
-    public static void showReaderVideoViewer(Context context, String videoUrl) {
+    @JvmStatic
+    fun showReaderVideoViewer(context: Context?, videoUrl: String?) {
         if (context == null || TextUtils.isEmpty(videoUrl)) {
-            return;
+            return
         }
-        Intent intent = new Intent(context, ReaderVideoViewerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl);
-        context.startActivity(intent);
+        val intent = Intent(context, ReaderVideoViewerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl)
+        context.startActivity(intent)
+    }
+
+    fun showReaderPhotoViewer(
+        context: Context?,
+        imageUrl: String?,
+        content: String?,
+        sourceView: View?,
+        imageOptions: EnumSet<PhotoViewerOption?>?,
+        startX: Int,
+        startY: Int
+    ) {
+        if (context == null || TextUtils.isEmpty(imageUrl)) {
+            return
+        }
+
+        val isPrivate =
+            imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        val isGallery =
+            imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE)
+
+        val intent = Intent(context, ReaderPhotoViewerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
+        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
+        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
+        if (!TextUtils.isEmpty(content)) {
+            intent.putExtra(ReaderConstants.ARG_CONTENT, content)
+        }
+
+        if (context is Activity && sourceView != null) {
+            val options =
+                ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0)
+            ActivityCompat.startActivity(context, intent, options.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
+    }
+
+    fun openPost(context: Context?, post: ReaderPost) {
+        val url = post.url
+        if (WPUrlUtils.isWordPressCom(url) || (post.isWP && !post.isJetpack)) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+        } else {
+            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL)
+        }
+    }
+
+    @Throws(ActivityNotFoundException::class)
+    fun sharePost(context: Context, post: ReaderPost) {
+        val url = (if (post.hasShortUrl()) post.shortUrl else post.url)
+        ActivityLauncher.openShareIntent(context, url, post.title)
+    }
+
+    @JvmStatic
+    @JvmOverloads
+    fun openUrl(context: Context?, url: String, openUrlType: OpenUrlType = OpenUrlType.INTERNAL) {
+        if (context == null || TextUtils.isEmpty(url)) {
+            return
+        }
+
+        if (openUrlType == OpenUrlType.INTERNAL) {
+            openUrlInternal(context, url)
+        } else {
+            ActivityLauncher.openUrlExternal(context, url)
+        }
+    }
+
+    /*
+     * open the passed url in the app's internal WebView activity
+     */
+    private fun openUrlInternal(context: Context, url: String) {
+        // That won't work on wpcom sites with custom urls
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+        } else {
+            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL)
+        }
     }
 
     /*
@@ -357,86 +477,12 @@ public class ReaderActivityLauncher {
      * content of the post the image is in, used by the activity to show all images in
      * the post
      */
-    public enum PhotoViewerOption {
+    enum class PhotoViewerOption {
         IS_PRIVATE_IMAGE,
         IS_GALLERY_IMAGE
     }
 
-    public static void showReaderPhotoViewer(Context context,
-                                             String imageUrl,
-                                             String content,
-                                             View sourceView,
-                                             EnumSet<PhotoViewerOption> imageOptions,
-                                             int startX,
-                                             int startY) {
-        if (context == null || TextUtils.isEmpty(imageUrl)) {
-            return;
-        }
-
-        boolean isPrivate = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE);
-        boolean isGallery = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE);
-
-        Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
-        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
-        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery);
-        if (!TextUtils.isEmpty(content)) {
-            intent.putExtra(ReaderConstants.ARG_CONTENT, content);
-        }
-
-        if (context instanceof Activity && sourceView != null) {
-            Activity activity = (Activity) context;
-            ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
-    public enum OpenUrlType {
+    enum class OpenUrlType {
         INTERNAL, EXTERNAL
-    }
-
-    public static void openUrl(Context context, String url) {
-        openUrl(context, url, OpenUrlType.INTERNAL);
-    }
-
-    public static void openPost(Context context, ReaderPost post) {
-        String url = post.getUrl();
-        if (WPUrlUtils.isWordPressCom(url) || (post.isWP() && !post.isJetpack)) {
-            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
-        } else {
-            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
-        }
-    }
-
-    public static void sharePost(Context context, ReaderPost post) throws ActivityNotFoundException {
-        String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
-        ActivityLauncher.openShareIntent(context, url, post.getTitle());
-    }
-
-    public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (context == null || TextUtils.isEmpty(url)) {
-            return;
-        }
-
-        if (openUrlType == OpenUrlType.INTERNAL) {
-            openUrlInternal(context, url);
-        } else {
-            ActivityLauncher.openUrlExternal(context, url);
-        }
-    }
-
-    /*
-     * open the passed url in the app's internal WebView activity
-     */
-    private static void openUrlInternal(Context context, @NonNull String url) {
-        // That won't work on wpcom sites with custom urls
-        if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
-        } else {
-            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
-        }
     }
 }
