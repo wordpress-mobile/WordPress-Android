@@ -250,7 +250,7 @@ object ReaderActivityLauncher {
     }
 
     /**
-     * Show comments for passed Ids and directly perform an action on a specifc comment
+     * Show comments for passed Ids and directly perform an action on a specific comment
      *
      * @param context         context to use to start the activity
      * @param blogId          blog id
@@ -286,29 +286,17 @@ object ReaderActivityLauncher {
         postId: Long,
         source: String?
     ) {
-        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source)
-    }
-
-    fun showReaderCommentsForResult(
-        fragment: Fragment,
-        blogId: Long,
-        postId: Long,
-        directOperation: DirectOperation?,
-        commentId: Long,
-        interceptedUri: String?,
-        source: String?
-    ) {
         if (fragment.context == null) {
             return
         }
         val intent = buildShowReaderCommentsIntent(
-            fragment.requireContext(),
-            blogId,
-            postId,
-            directOperation,
-            commentId,
-            interceptedUri,
-            source
+            context = fragment.requireContext(),
+            blogId = blogId,
+            postId = postId,
+            directOperation = null,
+            commentId = 0L,
+            interceptedUri = null,
+            source = source
         )
         @Suppress("DEPRECATION")
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION)
@@ -361,10 +349,6 @@ object ReaderActivityLauncher {
         context.startActivity(intent)
     }
 
-    fun showReaderSubs(context: Context, selectPosition: Int) {
-        context.startActivity(createIntentShowReaderSubs(context, selectPosition))
-    }
-
     fun createIntentShowReaderSubs(context: Context, selectPosition: Int): Intent {
         val intent = Intent(context, ReaderSubsActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition)
@@ -394,6 +378,7 @@ object ReaderActivityLauncher {
         context.startActivity(intent)
     }
 
+    @JvmStatic
     fun showReaderPhotoViewer(
         context: Context?,
         imageUrl: String?,
