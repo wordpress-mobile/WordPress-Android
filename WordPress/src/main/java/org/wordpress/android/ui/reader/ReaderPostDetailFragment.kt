@@ -871,7 +871,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(requireContext(), post)
 
             is ReaderNavigationEvents.ShowReportPost ->
-                ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
+                ReaderActivityLauncher.openUrl(requireActivity(), readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
                 requireContext(),
@@ -1444,7 +1444,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
-            activity,
+            requireActivity(),
             imageUrl,
             postContent,
             sourceView,
@@ -1725,7 +1725,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             isFile(url) -> onFileDownloadClick(url)
             else -> {
                 val openUrlType = if (shouldOpenExternal(url)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
-                ReaderActivityLauncher.openUrl(activity, url, openUrlType)
+                ReaderActivityLauncher.openUrl(requireActivity(), url, openUrlType)
             }
         }
 

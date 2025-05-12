@@ -481,7 +481,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             is ShowReportPost -> {
                 ReaderActivityLauncher.openUrl(
-                    context,
+                    requireActivity(),
                     ReaderUtils.getReportPostUrl(navTarget.url),
                     OpenUrlType.INTERNAL
                 )
