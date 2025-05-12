@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -163,6 +162,10 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
+import androidx.core.view.size
+import androidx.core.view.get
+import androidx.core.view.isGone
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -318,8 +321,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
 
-                for (i in 0 until menu.size()) {
-                    val menuItem = menu.getItem(i)
+                for (i in 0 until menu.size) {
+                    val menuItem = menu[i]
                     menuItem.icon?.colorFilter = colorFilter
                 }
             }
@@ -360,7 +363,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val readingPreferences = getReadingPreferences()
         val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
         val customInflater = inflater.cloneInContext(contextThemeWrapper)
@@ -552,9 +555,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
-        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
-            ConversationNotificationsViewModel::class.java
-        )
+        conversationViewModel = ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
 
         initObservers(binding)
 
@@ -706,7 +707,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE && state.goingToShowFaces
+            val shouldSkipAnimation = likeFacesTrain.isGone && state.goingToShowFaces
 
             setupLikeFacesTrain(
                 state.engageItemsList,
@@ -1286,7 +1287,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * that the view is a child of mScrollView
      */
     private fun isVisibleAndScrolledIntoView(view: View?): Boolean {
-        if (view != null && view.visibility == View.VISIBLE) {
+        if (view != null && view.isVisible) {
             val scrollBounds = Rect()
             scrollView.getHitRect(scrollBounds)
             return view.getLocalVisibleRect(scrollBounds)
@@ -1743,6 +1744,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         val wasJsEnabled = readerWebView.settings.javaScriptEnabled
@@ -1775,7 +1777,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         // Open Stories links in external browser so they have more fullscreen play real estate
-        if (Uri.parse(url).queryParameterNames.any { it.contains("wp-story") }) {
+        if (url.toUri().queryParameterNames.any { it.contains("wp-story") }) {
             return true
         }
 
