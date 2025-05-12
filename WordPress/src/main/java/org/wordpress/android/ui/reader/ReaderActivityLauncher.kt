@@ -63,9 +63,14 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun buildReaderPostDetailIntent(
-        context: Context?, isFeed: Boolean, blogId: Long, postId: Long,
-        directOperation: DirectOperation?, commentId: Int,
-        isRelatedPost: Boolean, interceptedUri: String?
+        context: Context,
+        isFeed: Boolean,
+        blogId: Long,
+        postId: Long,
+        directOperation: DirectOperation?,
+        commentId: Int,
+        isRelatedPost: Boolean,
+        interceptedUri: String?
     ): Intent {
         val intent = Intent(context, ReaderPostPagerActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed)
@@ -386,8 +391,8 @@ object ReaderActivityLauncher {
      * play an external video
      */
     @JvmStatic
-    fun showReaderVideoViewer(context: Context?, videoUrl: String?) {
-        if (context == null || TextUtils.isEmpty(videoUrl)) {
+    fun showReaderVideoViewer(context: Context, videoUrl: String?) {
+        if (TextUtils.isEmpty(videoUrl)) {
             return
         }
         val intent = Intent(context, ReaderVideoViewerActivity::class.java)
@@ -397,22 +402,20 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderPhotoViewer(
-        context: Context?,
+        context: Context,
         imageUrl: String?,
         content: String?,
         sourceView: View?,
-        imageOptions: EnumSet<PhotoViewerOption>?,
+        imageOptions: EnumSet<PhotoViewerOption>,
         startX: Int,
         startY: Int
     ) {
-        if (context == null || TextUtils.isEmpty(imageUrl)) {
+        if (TextUtils.isEmpty(imageUrl)) {
             return
         }
 
-        val isPrivate =
-            imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE)
-        val isGallery =
-            imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE)
+        val isPrivate = imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        val isGallery = imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE)
 
         val intent = Intent(context, ReaderPhotoViewerActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
@@ -432,7 +435,7 @@ object ReaderActivityLauncher {
         }
     }
 
-    fun openPost(context: Context?, post: ReaderPost) {
+    fun openPost(context: Context, post: ReaderPost) {
         val url = post.url
         if (WPUrlUtils.isWordPressCom(url) || (post.isWP && !post.isJetpack)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
@@ -449,8 +452,8 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     @JvmOverloads
-    fun openUrl(context: Context?, url: String, openUrlType: OpenUrlType = OpenUrlType.INTERNAL) {
-        if (context == null || TextUtils.isEmpty(url)) {
+    fun openUrl(context: Context, url: String, openUrlType: OpenUrlType = OpenUrlType.INTERNAL) {
+        if (TextUtils.isEmpty(url)) {
             return
         }
 
