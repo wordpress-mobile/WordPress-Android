@@ -555,7 +555,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
-        conversationViewModel = ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
+        conversationViewModel =
+            ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
 
         initObservers(binding)
 
@@ -870,8 +871,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(requireContext(), post)
 
-            is ReaderNavigationEvents.ShowReportPost ->
-                ReaderActivityLauncher.openUrl(requireActivity(), readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
+            is ReaderNavigationEvents.ShowReportPost -> {
+                ReaderActivityLauncher.openUrl(
+                    requireActivity(),
+                    readerUtilsWrapper.getReportPostUrl(url),
+                    OpenUrlType.INTERNAL
+                )
+            }
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
                 requireContext(),
@@ -886,7 +892,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 this.source.sourceDescription
             )
 
-            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
+            is ReaderNavigationEvents.ShowNoSitesToReblog ->
+                ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
 
             is ReaderNavigationEvents.ShowSitePickerForResult ->
                 ActivityLauncher
@@ -895,11 +902,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.OpenEditorForReblog ->
                 ActivityLauncher.openEditorForReblog(requireActivity(), this.site, this.post, this.source)
 
-            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(requireActivity())
+            is ReaderNavigationEvents.ShowBookmarkedTab ->
+                ActivityLauncher.viewSavedPostsListInReader(requireActivity())
 
-            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog ->
+                showBookmarkSavedLocallyDialog(this)
 
-            is ReaderNavigationEvents.OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
+            is ReaderNavigationEvents.OpenUrl ->
+                ReaderActivityLauncher.openUrl(requireContext(), url)
 
             is ReaderNavigationEvents.ShowRelatedPostDetails ->
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
