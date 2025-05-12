@@ -22,8 +22,10 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressEr
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
 
@@ -98,15 +100,18 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is success, then return the authentication url`() = runTest {
+        val applicationPasswordsAuthenticationUrl = ParsedUrl.parse(TEST_URL_AUTH)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
             .thenReturn(
-                AutoDiscoveryAttemptSuccess(
-                    ParsedUrl(Pointer.createConstant(1)),
-                    ParsedUrl(Pointer.createConstant(1)),
-                    wpApiDetails
+                ApiDiscoveryResult.Success(
+                    success = AutoDiscoveryAttemptSuccess(
+                        ParsedUrl(Pointer.createConstant(1)),
+                        ParsedUrl(Pointer.createConstant(1)),
+                        apiDetails = wpApiDetails,
+                        applicationPasswordsAuthenticationUrl
+                    )
                 )
             )
-        whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
 
         val result = viewModel.runApiDiscovery(TEST_URL)
 
@@ -116,7 +121,13 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
+            .thenReturn(
+                ApiDiscoveryResult.FailureFindApiRoot(
+                    parsedSiteUrl = ParsedUrl.parse(TEST_URL),
+                    findApiRootFailure = FindApiRootFailure.RestApiDisabled,
+                )
+            )
 
         val result = viewModel.runApiDiscovery(TEST_URL)
 
