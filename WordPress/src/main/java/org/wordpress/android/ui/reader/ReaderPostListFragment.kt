@@ -2538,13 +2538,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             when (val type = getPostListType()) {
                 ReaderPostListType.TAG_FOLLOWED,
                 ReaderPostListType.TAG_PREVIEW -> {
-                    ReaderActivityLauncher.showReaderPostPagerForTag(
-                        requireActivity(),
-                        currentTag,
-                        type,
-                        post.blogId,
-                        post.postId
-                    )
+                    currentTag?.let { tag ->
+                        ReaderActivityLauncher.showReaderPostPagerForTag(
+                            requireActivity(),
+                            tag,
+                            type,
+                            post.blogId,
+                            post.postId
+                        )
+                    }
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> {

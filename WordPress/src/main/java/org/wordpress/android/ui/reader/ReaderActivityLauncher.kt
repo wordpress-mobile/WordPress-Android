@@ -92,15 +92,11 @@ object ReaderActivityLauncher {
      */
     fun showReaderPostPagerForTag(
         context: Context,
-        tag: ReaderTag?,
+        tag: ReaderTag,
         postListType: ReaderPostListType?,
         blogId: Long,
         postId: Long
     ) {
-        if (tag == null) {
-            return
-        }
-
         val intent = Intent(context, ReaderPostPagerActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType)
         intent.putExtra(ReaderConstants.ARG_TAG, tag)
