@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -456,15 +458,26 @@ object ReaderActivityLauncher {
         }
     }
 
-    @Throws(ActivityNotFoundException::class)
     fun sharePost(context: Context, post: ReaderPost) {
         val url = (if (post.hasShortUrl()) post.shortUrl else post.url)
-        ActivityLauncher.openShareIntent(context, url, post.title)
+        try {
+            ActivityLauncher.openShareIntent(context, url, post.title)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(
+                context,
+                R.string.reader_toast_err_share_intent,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     @JvmStatic
     @JvmOverloads
-    fun openUrl(context: Context, url: String, openUrlType: OpenUrlType = OpenUrlType.INTERNAL) {
+    fun openUrl(
+        context: Context,
+        url: String,
+        openUrlType: OpenUrlType = OpenUrlType.INTERNAL
+    ) {
         if (TextUtils.isEmpty(url)) {
             return
         }
