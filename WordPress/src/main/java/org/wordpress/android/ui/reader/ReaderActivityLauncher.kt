@@ -93,7 +93,7 @@ object ReaderActivityLauncher {
     fun showReaderPostPagerForTag(
         context: Context,
         tag: ReaderTag,
-        postListType: ReaderPostListType?,
+        postListType: ReaderPostListType,
         blogId: Long,
         postId: Long
     ) {
