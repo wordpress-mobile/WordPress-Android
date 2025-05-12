@@ -415,8 +415,8 @@ object ReaderActivityLauncher {
     @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
-        imageUrl: String?,
-        content: String?,
+        imageUrl: String,
+        content: String,
         sourceView: View?,
         imageOptions: EnumSet<PhotoViewerOption>,
         startX: Int,
