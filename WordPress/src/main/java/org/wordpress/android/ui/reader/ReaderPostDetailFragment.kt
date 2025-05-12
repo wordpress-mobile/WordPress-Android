@@ -1751,10 +1751,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun onBlogPreviewUrlClick(url: String) {
         val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
         if (siteId != 0L) {
+            val isFollowed = viewModel.post?.isFollowedByCurrentUser == true
             ReaderActivityLauncher.showReaderBlogPreview(
                 requireContext(),
                 siteId,
-                viewModel.post?.isFollowedByCurrentUser,
+                isFollowed,
                 ReaderTracker.SOURCE_POST_DETAIL,
                 readerTracker
             )

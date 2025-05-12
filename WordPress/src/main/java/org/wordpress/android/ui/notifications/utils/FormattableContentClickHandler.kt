@@ -85,11 +85,12 @@ class FormattableContentClickHandler @Inject constructor(
         postId: Long,
         source: String
     ) {
-        val post: ReaderPost? = ReaderPostTable.getBlogPost(siteId, postId, true)
+        val post = ReaderPostTable.getBlogPost(siteId, postId, true)
+        val isFollowed = post?.isFollowedByCurrentUser == true
         ReaderActivityLauncher.showReaderBlogPreview(
             activity,
             siteId,
-            post?.isFollowedByCurrentUser,
+            isFollowed,
             source,
             readerTracker
         )

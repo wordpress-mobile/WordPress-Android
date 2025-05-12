@@ -129,7 +129,7 @@ object ReaderActivityLauncher {
         context: Context,
         siteId: Long,
         feedId: Long,
-        isFollowed: Boolean?,
+        isFollowed: Boolean,
         source: String,
         readerTracker: ReaderTracker
     ) {
@@ -144,8 +144,10 @@ object ReaderActivityLauncher {
             isFollowed = isFollowed,
             source = source
         )
+
         val intent = Intent(context, ReaderPostListActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SOURCE, source)
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId)
@@ -154,7 +156,6 @@ object ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId)
         }
 
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
         context.startActivity(intent)
     }
 
@@ -179,7 +180,7 @@ object ReaderActivityLauncher {
     fun showReaderBlogPreview(
         context: Context,
         siteId: Long,
-        isFollowed: Boolean?,
+        isFollowed: Boolean,
         source: String,
         readerTracker: ReaderTracker
     ) {
