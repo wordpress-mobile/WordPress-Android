@@ -843,19 +843,22 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun ReaderNavigationEvents.handleNavigationEvent() {
+        if (!isAdded) {
+            return
+        }
         when (this) {
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
                 .showPreview(requireContext(), site, featuredImage)
 
             is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                context,
+                requireContext(),
                 this.tag,
                 ReaderTracker.SOURCE_POST_DETAIL,
                 readerTracker
             )
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                context,
+                requireContext(),
                 this.siteId,
                 this.feedId,
                 this.isFollowed,
@@ -863,15 +866,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 readerTracker
             )
 
-            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(requireContext(), post)
 
-            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(requireContext(), post)
 
             is ReaderNavigationEvents.ShowReportPost ->
                 ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
-                context,
+                requireContext(),
                 readerUtilsWrapper.getReportUserUrl(url, authorId),
                 OpenUrlType.INTERNAL
             )
@@ -883,16 +886,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 this.source.sourceDescription
             )
 
-            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
 
             is ReaderNavigationEvents.ShowSitePickerForResult ->
                 ActivityLauncher
                     .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
 
             is ReaderNavigationEvents.OpenEditorForReblog ->
-                ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+                ActivityLauncher.openEditorForReblog(requireActivity(), this.site, this.post, this.source)
 
-            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(requireActivity())
 
             is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
 
@@ -907,7 +910,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
-                    activity,
+                    requireActivity(),
                     this.siteId,
                     this.postId,
                     this.headerData,
@@ -1078,10 +1081,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                ReaderActivityLauncher.openPost(context, viewModel.post)
+                ReaderActivityLauncher.openPost(requireContext(), viewModel.post!!)
             } else if (interceptedUri != null) {
                 readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, interceptedUri)
-                ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
+                ReaderActivityLauncher.openUrl(requireActivity(), interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
             true
@@ -1096,7 +1099,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     SOURCE_POST_DETAIL_TOOLBAR,
                 )
             }
-            ReaderActivityLauncher.sharePost(context, viewModel.post)
+            ReaderActivityLauncher.sharePost(requireContext(), viewModel.post!!)
             true
         }
         R.id.menu_more -> {
@@ -1297,7 +1300,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showRelatedPostDetail(postId: Long, blogId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(
-            activity,
+            requireActivity(),
             false,
             blogId,
             postId, null,
@@ -1735,7 +1738,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
         if (siteId != 0L) {
             ReaderActivityLauncher.showReaderBlogPreview(
-                activity,
+                requireContext(),
                 siteId,
                 viewModel.post?.isFollowedByCurrentUser,
                 ReaderTracker.SOURCE_POST_DETAIL,
