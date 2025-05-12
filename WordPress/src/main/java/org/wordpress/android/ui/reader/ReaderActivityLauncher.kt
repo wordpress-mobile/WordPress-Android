@@ -405,7 +405,7 @@ object ReaderActivityLauncher {
      * play an external video
      */
     @JvmStatic
-    fun showReaderVideoViewer(context: Context, videoUrl: String?) {
+    fun showReaderVideoViewer(context: Context, videoUrl: String) {
         if (TextUtils.isEmpty(videoUrl)) {
             return
         }
