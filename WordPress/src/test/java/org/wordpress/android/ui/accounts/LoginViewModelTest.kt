@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts
 
-import com.sun.jna.Pointer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -8,9 +7,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -27,7 +26,6 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.FindApiRootFailure
 import uniffi.wp_api.ParsedUrl
-import uniffi.wp_api.WpApiDetails
 
 private const val TEST_URL = "https://www.test.com"
 private const val TEST_URL_AUTH = "https://www.test.com/auth"
@@ -46,9 +44,6 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var wpComLoginHelper: WPcomLoginHelper
-
-    @Mock
-    lateinit var wpApiDetails: WpApiDetails
 
     private lateinit var viewModel: LoginViewModel
 
@@ -100,18 +95,17 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is success, then return the authentication url`() = runTest {
-        val applicationPasswordsAuthenticationUrl = ParsedUrl.parse(TEST_URL_AUTH)
+        val authUrl = "$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"
+        val autoDiscoveryAttemptSuccess = mock(AutoDiscoveryAttemptSuccess::class.java)
+        val parsedUrl = mock(ParsedUrl::class.java)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
             .thenReturn(
                 ApiDiscoveryResult.Success(
-                    success = AutoDiscoveryAttemptSuccess(
-                        ParsedUrl(Pointer.createConstant(1)),
-                        ParsedUrl(Pointer.createConstant(1)),
-                        apiDetails = wpApiDetails,
-                        applicationPasswordsAuthenticationUrl
-                    )
+                    success = autoDiscoveryAttemptSuccess
                 )
             )
+        whenever(parsedUrl.url()).thenReturn(authUrl)
+        whenever(autoDiscoveryAttemptSuccess.applicationPasswordsAuthenticationUrl).thenReturn(parsedUrl)
 
         val result = viewModel.runApiDiscovery(TEST_URL)
 
@@ -121,11 +115,12 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is fails, then return empty authentication url`() = runTest {
+        val parsedSiteUrl = mock(ParsedUrl::class.java)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
             .thenReturn(
                 ApiDiscoveryResult.FailureFindApiRoot(
-                    parsedSiteUrl = ParsedUrl.parse(TEST_URL),
-                    findApiRootFailure = FindApiRootFailure.RestApiDisabled,
+                    parsedSiteUrl,
+                    findApiRootFailure = FindApiRootFailure.RestApiDisabled
                 )
             )
 
