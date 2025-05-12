@@ -15,10 +15,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.reader.ReaderCommentListActivity
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
-import org.wordpress.android.ui.reader.ReaderSearchActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -305,7 +302,7 @@ object ReaderActivityLauncher {
             return
         }
         val intent = buildShowReaderCommentsIntent(
-            fragment.context!!,
+            fragment.requireContext(),
             blogId,
             postId,
             directOperation,
@@ -313,6 +310,7 @@ object ReaderActivityLauncher {
             interceptedUri,
             source
         )
+        @Suppress("DEPRECATION")
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION)
     }
 
@@ -346,7 +344,7 @@ object ReaderActivityLauncher {
     }
 
     /**
-     * Presents the [ReaderPostNoSiteToReblog] activity
+     * Presents the [NoSiteToReblogActivity]
      *
      * @param activity the calling activity
      */
@@ -401,7 +399,7 @@ object ReaderActivityLauncher {
         imageUrl: String?,
         content: String?,
         sourceView: View?,
-        imageOptions: EnumSet<PhotoViewerOption?>?,
+        imageOptions: EnumSet<PhotoViewerOption>?,
         startX: Int,
         startY: Int
     ) {
@@ -425,6 +423,7 @@ object ReaderActivityLauncher {
         if (context is Activity && sourceView != null) {
             val options =
                 ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0)
+            @Suppress("DEPRECATION")
             ActivityCompat.startActivity(context, intent, options.toBundle())
         } else {
             context.startActivity(intent)
