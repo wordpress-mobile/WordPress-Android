@@ -48,7 +48,6 @@ object SiteRecordUtil {
 
         for (i in currentSites.indices) {
             if (currentSites[i].siteId != anotherSites[i].siteId ||
-                currentSites[i].isHidden != anotherSites[i].isHidden ||
                 currentSites[i].isRecentPick != anotherSites[i].isRecentPick
             ) return false
         }

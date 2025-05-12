@@ -445,10 +445,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun newPostSetup(title: String? = null, content: String? = null) {
         isNewPost = true
-        if (!siteModel.isVisible) {
-            showErrorAndFinish(R.string.error_blog_hidden)
-            return
-        }
         // Create a new post
         editPostRepository.set {
             val post = postStore.instantiatePostModel(
