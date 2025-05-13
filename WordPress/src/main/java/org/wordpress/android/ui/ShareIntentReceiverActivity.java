@@ -79,14 +79,14 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
 
     private void refreshContent() {
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
+            List<SiteModel> sites = mSiteStore.getSites();
             downloadExternalMedia();
-            if (visibleSites.size() == 0) {
-                ToastUtils.showToast(this, R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
+            if (sites.isEmpty()) {
+                ToastUtils.showToast(this, R.string.cant_share_no_blog, ToastUtils.Duration.LONG);
                 finish();
-            } else if (visibleSites.size() == 1 && isSharingText()) {
+            } else if (sites.size() == 1 && isSharingText()) {
                 // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
-                share(ShareAction.SHARE_TO_POST, visibleSites.get(0).getId());
+                share(ShareAction.SHARE_TO_POST, sites.get(0).getId());
             } else {
                 // display a fragment with list of sites and list of actions the user can perform
                 initShareFragment();

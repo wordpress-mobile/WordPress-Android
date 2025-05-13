@@ -1236,37 +1236,6 @@ open class SiteStore @Inject constructor(
     }
 
     /**
-     * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
-     */
-    val visibleSites: List<SiteModel>
-        get() = siteSqlUtils.getVisibleSites()
-
-    /**
-     * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
-     */
-    val visibleSitesCount: Int
-        get() = siteSqlUtils.getVisibleSites().size
-
-    /**
-     * Returns all visible .COM sites as [SiteModel]s.
-     */
-    val visibleSitesAccessedViaWPCom: List<SiteModel>
-        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.asModel
-
-    /**
-     * Returns the number of visible .COM sites.
-     */
-    val visibleSitesAccessedViaWPComCount: Int
-        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.count().toInt()
-
-    /**
-     * Checks whether the .COM site with the given (local) id is visible.
-     */
-    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return siteSqlUtils.isWPComSiteVisibleByLocalId(id)
-    }
-
-    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
