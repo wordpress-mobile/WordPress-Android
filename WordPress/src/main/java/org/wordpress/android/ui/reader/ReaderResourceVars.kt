@@ -15,26 +15,25 @@ internal class ReaderResourceVars(context: Context) {
     val marginMediumPx: Int
 
     val isWideDisplay: Boolean
-
+    val textColor: String
     val fullSizeImageWidthPx: Int
-    val featuredImageHeightPx: Int
+    private val featuredImageHeightPx: Int
 
     val videoWidthPx: Int
     val videoHeightPx: Int
 
-    val linkColorStr: String
-    val greyMediumDarkStr: String
-    val greyLightStr: String
-    val greyExtraLightStr: String
-    val textColor: String
-    val greyDisabledStr: String
+    private val linkColorStr: String
+    private val greyMediumDarkStr: String
+    private val greyLightStr: String
+    private val greyExtraLightStr: String
+    private val greyDisabledStr: String
 
     init {
         val resources = context.resources
 
         val displayWidthPx = DisplayUtils.getWindowPixelWidth(context)
 
-        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) > 640
+        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) >= MIN_WIDE_DISPLAY_WIDTH_DP
 
         val marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large)
         val detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin)
@@ -95,6 +94,11 @@ internal class ReaderResourceVars(context: Context) {
 
         // 16:9 ratio (YouTube standard)
         videoWidthPx = fullSizeImageWidthPx - (marginLargePx * 2)
-        videoHeightPx = (videoWidthPx * 0.5625f).toInt()
+        videoHeightPx = (videoWidthPx * RATIO_16_9).toInt()
+    }
+
+    companion object {
+        private const val MIN_WIDE_DISPLAY_WIDTH_DP = 641
+        private const val RATIO_16_9 = 0.5625f
     }
 }
