@@ -82,14 +82,14 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
     }
 
     private void displayAccounts() {
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        List<SiteModel> sites = mSiteStore.getSites();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
         listView.setVerticalFadingEdgeEnabled(false);
         listView.setVerticalScrollBarEnabled(true);
 
-        if (sites.size() > 0) {
+        if (!sites.isEmpty()) {
             blogNames = new String[sites.size()];
             siteIds = new int[sites.size()];
             blogUrls = new String[sites.size()];

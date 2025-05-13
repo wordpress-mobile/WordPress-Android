@@ -1236,13 +1236,6 @@ open class SiteStore @Inject constructor(
     }
 
     /**
-     * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
-     */
-    @Deprecated(message = "Site visibility is no longer a feature", ReplaceWith("sites"))
-    val visibleSites: List<SiteModel>
-        get() = siteSqlUtils.getVisibleSites()
-
-    /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSitesCount: Int
