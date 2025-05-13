@@ -293,6 +293,7 @@ class ReaderPostRenderer constructor(
     /*
      * Strips inline styles from post content
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun removeInlineStyles(content: String): String {
         if (content.isEmpty()) {
             return content
@@ -305,6 +306,7 @@ class ReaderPostRenderer constructor(
                 .select("body")
                 .html()
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.READER, e)
             content
         }
     }
@@ -383,38 +385,48 @@ class ReaderPostRenderer constructor(
             .append(contentTextProperties)
             .append("margin: 0px; padding: 0px; margin-right: 1px; }")
             .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
-            .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }") // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
+            .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+            // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
             // gallery as those will be handled with the .tiled-gallery rules bellow.
             .append(
                 (" p, div" + (if (renderAsTiledGallery) ":not(.$galleryOnlyClass)" else "")
                         + ", li { line-height: 1.6em; font-size: 100%; }")
             )
-            .append(" h1, h2, h3 { line-height: 1.6em; }") // Counteract pre-defined height/width styles, expect for:
+            .append(" h1, h2, h3 { line-height: 1.6em; }")
+            // Counteract pre-defined height/width styles, expect for:
             // 1. Story blocks, which set their own mobile-friendly size we shouldn't override.
             // 2. The tiled-gallery divs when rendering as tiled gallery, as those will be handled
             // with the .tiled-gallery rules below.
             .append(
                 (" p, div:not(.wp-story-container.*)" + (if (renderAsTiledGallery) ":not(.tiled-gallery.*)" else "")
                         + ", dl, table { width: auto !important; height: auto !important; }")
-            ) // make sure long strings don't force the user to scroll horizontally
-            .append(" body, p, div, a { word-wrap: break-word; }") // change horizontal line color
+            )
+            // make sure long strings don't force the user to scroll horizontally
+            .append(" body, p, div, a { word-wrap: break-word; }")
+            // change horizontal line color
             .append(" .reader-full-post__story-content hr { background-color: transparent; ")
-            .append("border-color: var(--color-neutral-50); }") // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
+            .append("border-color: var(--color-neutral-50); }")
+            // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
             .append(" p { margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
             .append(" margin-bottom: ").append(resourceVars.mMarginMediumPx).append("px; }")
-            .append(" p:first-child { margin-top: 0px; }") // add background color, fontsize and padding to pre blocks, and wrap the text
+            .append(" p:first-child { margin-top: 0px; }")
+            // add background color, fontsize and padding to pre blocks, and wrap the text
             // so the user can see full block.
             .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
             .append(" background-color: var(--color-neutral-20);")
             .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
-            .append(" line-height: 1.2em; font-size: 14px; }") // add a left border to blockquotes
+            .append(" line-height: 1.2em; font-size: 14px; }")
+            // add a left border to blockquotes
             .append(" .reader-full-post__story-content blockquote { color: var(--color-neutral-0); ")
             .append(" padding-left: 32px; ")
             .append(" margin-left: 0px; ")
-            .append(" border-left: 3px solid var(--color-neutral-50); }") // show links in the same color they are elsewhere in the app
-            .append(" a { text-decoration: underline; color: var(--main-link-color); }") // make sure images aren't wider than the display, strictly enforced for images without size
+            .append(" border-left: 3px solid var(--color-neutral-50); }")
+            // show links in the same color they are elsewhere in the app
+            .append(" a { text-decoration: underline; color: var(--main-link-color); }")
+            // make sure images aren't wider than the display, strictly enforced for images without size
             .append(" img { max-width: 100%; width: auto; height: auto; }")
-            .append(" img.size-none { max-width: 100% !important; height: auto !important; }") // center large/medium images, provide a small bottom margin, and add a background color
+            .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
+            // center large/medium images, provide a small bottom margin, and add a background color
             // so the user sees something while they're loading
             .append(" img.size-full, img.size-large, img.size-medium {")
             .append(" display: block; margin-left: auto; margin-right: auto;")
@@ -593,6 +605,7 @@ class ReaderPostRenderer constructor(
         return attachmentSizes!!.getImageSize(imageUrl)
     }
 
+    @Suppress("ReturnCount")
     private fun getImageSizeFromQueryParams(imageUrl: String): ImageSizeMap.ImageSize? {
         if (imageUrl.contains("w=")) {
             val uri = imageUrl.replace("&#038;", "&").toUri()
