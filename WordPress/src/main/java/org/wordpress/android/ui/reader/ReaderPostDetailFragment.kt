@@ -162,10 +162,9 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
-import androidx.core.view.size
-import androidx.core.view.get
 import androidx.core.view.isGone
 import androidx.core.net.toUri
+import androidx.core.view.forEach
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -321,9 +320,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
 
-                for (i in 0 until menu.size) {
-                    val menuItem = menu[i]
-                    menuItem.icon?.colorFilter = colorFilter
+                menu.forEach {
+                    it.icon?.colorFilter = colorFilter
                 }
             }
         }
