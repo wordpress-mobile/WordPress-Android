@@ -1747,16 +1747,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             return;
         }
 
-        // Else select the first visible site in the list
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
-        if (sites.size() != 0) {
-            setSelectedSite(sites.get(0));
-            return;
-        }
-
-        // Else select the first in the list
-        sites = mSiteStore.getSites();
-        if (sites.size() != 0) {
+        // Else select the first site in the list
+        List<SiteModel> sites = mSiteStore.getSites();
+        if (!sites.isEmpty()) {
             setSelectedSite(sites.get(0));
         }
 

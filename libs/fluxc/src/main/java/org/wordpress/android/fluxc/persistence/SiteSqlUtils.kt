@@ -93,6 +93,7 @@ class SiteSqlUtils
             .endWhere()
             .asModel
 
+    @Deprecated(message = "Site visibility is no longer a feature", ReplaceWith("getSites"))
     fun getVisibleSites(): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where()
