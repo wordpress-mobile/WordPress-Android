@@ -70,7 +70,7 @@ class ReaderPostRenderer(
 
     init {
         @Suppress("MagicNumber")
-        minFullSizeWidthDp = pxToDp(resourceVars.mFullSizeImageWidthPx / 3)
+        minFullSizeWidthDp = pxToDp(resourceVars.fullSizeImageWidthPx / 3)
         minMidSizeWidthDp = minFullSizeWidthDp / 2
 
         // enable JavaScript in the webView, otherwise videos and other embedded content won't
@@ -85,7 +85,7 @@ class ReaderPostRenderer(
 
         scope.launch {
             val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
-            if (resourceVars.mIsWideDisplay && !hasTiledGallery) {
+            if (resourceVars.isWideDisplay && !hasTiledGallery) {
                 resizeImages()
             }
 
@@ -98,7 +98,7 @@ class ReaderPostRenderer(
                 content = renderBuilder.toString(),
                 jsToInject = jsToInject,
                 hasTiledGallery = hasTiledGallery,
-                isWideDisplay = resourceVars.mIsWideDisplay
+                isWideDisplay = resourceVars.isWideDisplay
             )
 
             withContext(Dispatchers.Main) {
@@ -242,16 +242,16 @@ class ReaderPostRenderer(
         val newHeight: Int
         if (width > 0 && height > 0) {
             if (height > width) {
-                newHeight = resourceVars.mFullSizeImageWidthPx
+                newHeight = resourceVars.fullSizeImageWidthPx
                 val ratio = (width.toFloat() / height.toFloat())
                 newWidth = (newHeight * ratio).toInt()
             } else {
                 val ratio = (height.toFloat() / width.toFloat())
-                newWidth = resourceVars.mFullSizeImageWidthPx
+                newWidth = resourceVars.fullSizeImageWidthPx
                 newHeight = (newWidth * ratio).toInt()
             }
         } else {
-            newWidth = resourceVars.mFullSizeImageWidthPx
+            newWidth = resourceVars.fullSizeImageWidthPx
             newHeight = 0
         }
 
@@ -329,11 +329,11 @@ class ReaderPostRenderer(
         val newWidth: Int
         if (width > 0 && height > 0) {
             val ratio = (height.toFloat() / width.toFloat())
-            newWidth = resourceVars.mVideoWidthPx
+            newWidth = resourceVars.videoWidthPx
             newHeight = (newWidth * ratio).toInt()
         } else {
-            newWidth = resourceVars.mVideoWidthPx
-            newHeight = resourceVars.mVideoHeightPx
+            newWidth = resourceVars.videoWidthPx
+            newHeight = resourceVars.videoHeightPx
         }
 
         val newTag = ("<iframe src='" + src + "'"
@@ -413,14 +413,14 @@ class ReaderPostRenderer(
             .append(" .reader-full-post__story-content hr { background-color: transparent; ")
             .append("border-color: var(--color-neutral-50); }")
             // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-            .append(" p { margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
-            .append(" margin-bottom: ").append(resourceVars.mMarginMediumPx).append("px; }")
+            .append(" p { margin-top: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px; }")
             .append(" p:first-child { margin-top: 0px; }")
             // add background color, fontsize and padding to pre blocks, and wrap the text
             // so the user can see full block.
             .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
             .append(" background-color: var(--color-neutral-20);")
-            .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
+            .append(" padding: ").append(resourceVars.marginMediumPx).append("px; ")
             .append(" line-height: 1.2em; font-size: 14px; }")
             // add a left border to blockquotes
             .append(" .reader-full-post__story-content blockquote { color: var(--color-neutral-0); ")
@@ -437,7 +437,7 @@ class ReaderPostRenderer(
             .append(" img.size-full, img.size-large, img.size-medium {")
             .append(" display: block; margin-left: auto; margin-right: auto;")
             .append(" background-color: var(--color-neutral-0);")
-            .append(" margin-bottom: ").append(resourceVars.mMarginMediumPx).append("px; }")
+            .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px; }")
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
@@ -517,11 +517,11 @@ class ReaderPostRenderer(
             .append(" .wp-caption .wp-caption-text {")
             .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
             .append(" text-align: center;")
-            .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
+            .append(" padding: ").append(resourceVars.marginMediumPx).append("px; ")
             .append(" color: var(--color-neutral-0); }")
             // attribution for Discover posts
             .append(" div#discover { ")
-            .append(" margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
+            .append(" margin-top: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" font-family: sans-serif;")
             .append(" }")
             // horizontally center iframes
