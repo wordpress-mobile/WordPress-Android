@@ -82,7 +82,7 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
             List<SiteModel> sites = mSiteStore.getSites();
             downloadExternalMedia();
             if (sites.isEmpty()) {
-                ToastUtils.showToast(this, R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
+                ToastUtils.showToast(this, R.string.cant_share_no_blog, ToastUtils.Duration.LONG);
                 finish();
             } else if (sites.size() == 1 && isSharingText()) {
                 // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
