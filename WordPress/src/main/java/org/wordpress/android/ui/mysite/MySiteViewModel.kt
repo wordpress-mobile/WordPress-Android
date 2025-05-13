@@ -247,23 +247,38 @@ class MySiteViewModel @Inject constructor(
     }
 
     private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
-        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-            is ApiDiscoveryResult.Success -> {
-                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
-                val authorizationUrlComplete =
-                    applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                authorizationUrlComplete
-            }
+        try {
+            getAuthorizationUrlCompleteInternal(siteUrl)
+        } catch (throwable: Throwable) {
+            handleAuthenticationDiscoveryError(siteUrl, throwable)
+        }
+    }
 
-            is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
-            is ApiDiscoveryResult.FailureFindApiRoot,
-            is ApiDiscoveryResult.FailureParseSiteUrl -> {
-                Log.e("WP_RS", "VM: Error during API discovery for $siteUrl")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-                ""
-            }
+    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
+        Log.e("WP_RS", "VM: Error during API discovery for $siteUrl", throwable)
+        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        return ""
+    }
+
+    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
+            when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
+                is ApiDiscoveryResult.Success -> {
+                    val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
+                    val authorizationUrlComplete =
+                        applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                    Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
+                    AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                    authorizationUrlComplete
+                }
+
+                is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
+                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
+
+                is ApiDiscoveryResult.FailureFindApiRoot ->
+                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
+
+                is ApiDiscoveryResult.FailureParseSiteUrl ->
+                    handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
         }
     }
 

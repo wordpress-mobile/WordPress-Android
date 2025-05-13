@@ -64,8 +64,10 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
+import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
 import java.util.Date
@@ -162,6 +164,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var wpApiDetails: WpApiDetails
+
+    @Mock
+    lateinit var authParsedUrl: ParsedUrl
 
     @Mock
     lateinit var sharedPreferences: SharedPreferences
@@ -730,19 +735,46 @@ class MySiteViewModelTest : BaseUnitTest() {
         ).thenReturn(false)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
             .thenReturn(
-                AutoDiscoveryAttemptSuccess(
-                    ParsedUrl(Pointer.createConstant(1)),
-                    ParsedUrl(Pointer.createConstant(1)),
-                    wpApiDetails
+                ApiDiscoveryResult.Success(
+                    AutoDiscoveryAttemptSuccess(
+                        ParsedUrl(Pointer.createConstant(1)),
+                        ParsedUrl(Pointer.createConstant(1)),
+                        wpApiDetails,
+                        authParsedUrl
+                    )
                 )
             )
-        whenever(wpApiDetails.findApplicationPasswordsAuthenticationUrl()).thenReturn(TEST_URL_AUTH)
+        whenever(authParsedUrl.url()).thenReturn(TEST_URL_AUTH)
         whenever(applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(any()))
             .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
 
         viewModel.runApplicationPasswordDiscovery()
 
         assertThat(showApplicationPasswordLoginDialog).containsOnly("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
+        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
+
+    @Test
+    fun `given login scenario, when api discovery is failed, then show nothing`() = runTest {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(sharedPreferences.getBoolean(
+            eq(FIRST_TIME_SITE_OPENED_SP_TAG),
+            eq(false))
+        ).thenReturn(true)
+        whenever(sharedPreferences.getBoolean(
+            eq(SKIPPED_SITE_SP_TAG),
+            eq(false))
+        ).thenReturn(false)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
+            .thenReturn(
+                ApiDiscoveryResult.FailureParseSiteUrl(
+                    ParseUrlException.Generic("")
+                )
+            )
+
+        viewModel.runApplicationPasswordDiscovery()
+
+        assertThat(showApplicationPasswordLoginDialog).isEmpty()
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 
