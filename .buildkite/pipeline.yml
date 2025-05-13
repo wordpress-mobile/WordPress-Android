@@ -46,6 +46,10 @@ steps:
 
       - label: "🕵️ detekt"
         command: |
+          if .buildkite/commands/should-skip-job.sh --job-type validation; then
+            exit 0
+          fi
+
           ./gradlew detekt
         plugins: [$CI_TOOLKIT]
         artifact_paths:
