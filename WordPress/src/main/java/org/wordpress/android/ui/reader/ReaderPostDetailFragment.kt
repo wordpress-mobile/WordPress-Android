@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -163,6 +162,9 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
+import androidx.core.view.isGone
+import androidx.core.net.toUri
+import androidx.core.view.forEach
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -318,9 +320,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
 
-                for (i in 0 until menu.size()) {
-                    val menuItem = menu.getItem(i)
-                    menuItem.icon?.colorFilter = colorFilter
+                menu.forEach {
+                    it.icon?.colorFilter = colorFilter
                 }
             }
         }
@@ -360,7 +361,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val readingPreferences = getReadingPreferences()
         val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
         val customInflater = inflater.cloneInContext(contextThemeWrapper)
@@ -552,9 +553,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
-        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
-            ConversationNotificationsViewModel::class.java
-        )
+        conversationViewModel =
+            ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
 
         initObservers(binding)
 
@@ -706,7 +706,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE && state.goingToShowFaces
+            val shouldSkipAnimation = likeFacesTrain.isGone && state.goingToShowFaces
 
             setupLikeFacesTrain(
                 state.engageItemsList,
@@ -842,19 +842,22 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun ReaderNavigationEvents.handleNavigationEvent() {
+        if (!isAdded) {
+            return
+        }
         when (this) {
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
                 .showPreview(requireContext(), site, featuredImage)
 
             is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                context,
+                requireContext(),
                 this.tag,
                 ReaderTracker.SOURCE_POST_DETAIL,
                 readerTracker
             )
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                context,
+                requireContext(),
                 this.siteId,
                 this.feedId,
                 this.isFollowed,
@@ -862,15 +865,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 readerTracker
             )
 
-            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(requireContext(), post)
 
-            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(requireContext(), post)
 
-            is ReaderNavigationEvents.ShowReportPost ->
-                ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
+            is ReaderNavigationEvents.ShowReportPost -> {
+                ReaderActivityLauncher.openUrl(
+                    requireActivity(),
+                    readerUtilsWrapper.getReportPostUrl(url),
+                    OpenUrlType.INTERNAL
+                )
+            }
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
-                context,
+                requireContext(),
                 readerUtilsWrapper.getReportUserUrl(url, authorId),
                 OpenUrlType.INTERNAL
             )
@@ -882,20 +890,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 this.source.sourceDescription
             )
 
-            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+            is ReaderNavigationEvents.ShowNoSitesToReblog ->
+                ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
 
             is ReaderNavigationEvents.ShowSitePickerForResult ->
                 ActivityLauncher
                     .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
 
             is ReaderNavigationEvents.OpenEditorForReblog ->
-                ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+                ActivityLauncher.openEditorForReblog(requireActivity(), this.site, this.post, this.source)
 
-            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+            is ReaderNavigationEvents.ShowBookmarkedTab ->
+                ActivityLauncher.viewSavedPostsListInReader(requireActivity())
 
-            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog ->
+                showBookmarkSavedLocallyDialog(this)
 
-            is ReaderNavigationEvents.OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
+            is ReaderNavigationEvents.OpenUrl ->
+                ReaderActivityLauncher.openUrl(requireContext(), url)
 
             is ReaderNavigationEvents.ShowRelatedPostDetails ->
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
@@ -906,7 +918,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
-                    activity,
+                    requireActivity(),
                     this.siteId,
                     this.postId,
                     this.headerData,
@@ -1077,10 +1089,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                ReaderActivityLauncher.openPost(context, viewModel.post)
+                ReaderActivityLauncher.openPost(requireContext(), viewModel.post!!)
             } else if (interceptedUri != null) {
                 readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, interceptedUri)
-                ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
+                ReaderActivityLauncher.openUrl(requireActivity(), interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
             true
@@ -1095,7 +1107,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     SOURCE_POST_DETAIL_TOOLBAR,
                 )
             }
-            ReaderActivityLauncher.sharePost(context, viewModel.post)
+            ReaderActivityLauncher.sharePost(requireContext(), viewModel.post!!)
             true
         }
         R.id.menu_more -> {
@@ -1286,7 +1298,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * that the view is a child of mScrollView
      */
     private fun isVisibleAndScrolledIntoView(view: View?): Boolean {
-        if (view != null && view.visibility == View.VISIBLE) {
+        if (view != null && view.isVisible) {
             val scrollBounds = Rect()
             scrollView.getHitRect(scrollBounds)
             return view.getLocalVisibleRect(scrollBounds)
@@ -1296,12 +1308,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showRelatedPostDetail(postId: Long, blogId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(
-            activity,
-            false,
-            blogId,
-            postId, null,
-            0,
-            true, null
+            context = requireActivity(),
+            isFeed = false,
+            blogId = blogId,
+            postId = postId,
+            directOperation = null,
+            isRelatedPost = true,
         )
     }
 
@@ -1432,7 +1444,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return false
         }
 
-        val postContent = viewModel.post?.text
+        val postContent = viewModel.post?.text.orEmpty()
         val isPrivatePost = viewModel.post?.isPrivate == true
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
@@ -1440,7 +1452,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
-            activity,
+            requireActivity(),
             imageUrl,
             postContent,
             sourceView,
@@ -1576,9 +1588,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel.post?.let {
                 context?.let { nonNullContext ->
                     ReaderActivityLauncher.showReaderComments(
-                        nonNullContext, it.blogId, it.postId,
-                        directOperation, commentId.toLong(), viewModel.interceptedUri,
-                        DIRECT_OPERATION.sourceDescription
+                        context = nonNullContext,
+                        blogId = it.blogId,
+                        postId = it.postId,
+                        directOperation = directOperation,
+                        commentId = commentId.toLong(),
+                        interceptedUri = viewModel.interceptedUri,
+                        source = DIRECT_OPERATION.sourceDescription
                     )
                 }
             }
@@ -1721,7 +1737,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             isFile(url) -> onFileDownloadClick(url)
             else -> {
                 val openUrlType = if (shouldOpenExternal(url)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
-                ReaderActivityLauncher.openUrl(activity, url, openUrlType)
+                ReaderActivityLauncher.openUrl(requireActivity(), url, openUrlType)
             }
         }
 
@@ -1733,16 +1749,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun onBlogPreviewUrlClick(url: String) {
         val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
         if (siteId != 0L) {
+            val isFollowed = viewModel.post?.isFollowedByCurrentUser == true
             ReaderActivityLauncher.showReaderBlogPreview(
-                activity,
+                requireContext(),
                 siteId,
-                viewModel.post?.isFollowedByCurrentUser,
+                isFollowed,
                 ReaderTracker.SOURCE_POST_DETAIL,
                 readerTracker
             )
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         val wasJsEnabled = readerWebView.settings.javaScriptEnabled
@@ -1775,7 +1793,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         // Open Stories links in external browser so they have more fullscreen play real estate
-        if (Uri.parse(url).queryParameterNames.any { it.contains("wp-story") }) {
+        if (url.toUri().queryParameterNames.any { it.contains("wp-story") }) {
             return true
         }
 

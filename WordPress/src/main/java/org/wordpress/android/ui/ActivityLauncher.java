@@ -350,7 +350,6 @@ public class ActivityLauncher {
                 blogId,
                 postId,
                 null,
-                0,
                 false,
                 uri.toString()
         );
