@@ -93,16 +93,6 @@ class SiteSqlUtils
             .endWhere()
             .asModel
 
-    @Deprecated(message = "Site visibility is no longer a feature", ReplaceWith("getSites"))
-    fun getVisibleSites(): List<SiteModel> {
-        return WellSql.select(SiteModel::class.java)
-                .where()
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .equals(SiteModelTable.IS_DELETED, false)
-                .endWhere()
-                .asModel
-    }
-
     /**
      * Inserts the given SiteModel into the DB, or updates an existing entry where sites match.
      *
