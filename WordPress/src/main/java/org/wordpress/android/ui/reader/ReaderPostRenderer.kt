@@ -38,7 +38,7 @@ import androidx.core.net.toUri
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
-class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
+class ReaderPostRenderer constructor(
     webView: ReaderWebView,
     post: ReaderPost,
     private val cssProvider: ReaderCssProvider,
@@ -53,7 +53,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     private var renderBuilder: StringBuilder? = null
 
     /*
-      * returns the HTML that was last rendered, will be null prior to rendering
+      * contains the HTML that was last rendered, will be null prior to rendering
       */
     private var renderedHtml: String? = null
 
@@ -67,12 +67,14 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
 
         // enable JavaScript in the webView, otherwise videos and other embedded content won't
         // work - note that the content is scrubbed on the backend so this is considered safe
+        @SuppressLint("SetJavaScriptEnabled")
         webView.settings.javaScriptEnabled = true
         setWebViewMessageHandler(webView)
     }
 
+    @Suppress("DEPRECATION")
     fun beginRender() {
-        val handler = Handler()
+        val handler = Handler() // TODO replace this
         renderBuilder = StringBuilder(postContent)
 
         object : Thread() {
@@ -165,7 +167,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         // https://code.google.com/p/android/issues/detail?id=4401
         // also important to use null as the baseUrl since onPageFinished
         // doesn't appear to fire when it's set to an actual url
-        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+        webView.loadDataWithBaseURL(
+            null,
+            htmlContent,
+            "text/html",
+            "UTF-8",
+            null
+        )
     }
 
     /*
@@ -221,7 +229,11 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         }
     }
 
-    private fun makeFullSizeImageTag(imageUrl: String, width: Int, height: Int): String {
+    private fun makeFullSizeImageTag(
+        imageUrl: String,
+        width: Int,
+        height: Int
+    ): String {
         val newWidth: Int
         val newHeight: Int
         if (width > 0 && height > 0) {
@@ -300,7 +312,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     /*
      * replace the passed iframe tag with one that's correctly sized for the device
      */
-    private fun replaceIframeTag(tag: String, src: String) {
+    private fun replaceIframeTag(
+        tag: String,
+        src: String
+    ) {
         val width = ReaderHtmlUtils.getWidthAttrValue(tag)
         val height = ReaderHtmlUtils.getHeightAttrValue(tag)
 
@@ -334,8 +349,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
      */
     @SuppressLint("WeakPrng")
     private fun formatPostContentForWebView(
-        content: String, jsToInject: Set<String>,
-        hasTiledGallery: Boolean, isWideDisplay: Boolean
+        content: String,
+        jsToInject: Set<String>,
+        hasTiledGallery: Boolean,
+        isWideDisplay: Boolean
     ): String {
         val renderAsTiledGallery = hasTiledGallery && isWideDisplay
 
@@ -550,7 +567,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             .append("} ")
     }
 
-    private fun getImageSize(imageTag: String, imageUrl: String): ImageSizeMap.ImageSize? {
+    private fun getImageSize(
+        imageTag: String,
+        imageUrl: String
+    ): ImageSizeMap.ImageSize? {
         getImageSizeFromAttachments(imageUrl)?.let { imageSize ->
             return imageSize
         } ?: run {
