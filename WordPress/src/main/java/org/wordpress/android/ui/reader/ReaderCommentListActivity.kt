@@ -150,7 +150,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             override fun handleOnBackPressed() {
                 (supportFragmentManager.findFragmentByTag(
                     CollapseFullScreenDialogFragment.TAG
-                ) as? CollapseFullScreenDialogFragment)?.collapse() ?: {
+                ) as? CollapseFullScreenDialogFragment)?.collapse() ?: run {
                     onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             }
