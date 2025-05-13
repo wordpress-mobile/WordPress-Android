@@ -267,13 +267,6 @@ class SiteSqlUtils
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .equals(SiteModelTable.IS_DELETED, false)
                 .endGroup().endWhere()
-    val visibleSitesAccessedViaWPCom: SelectQuery<SiteModel>
-        get() = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .equals(SiteModelTable.IS_DELETED, false)
-                .endGroup().endWhere()
 
     fun getPostFormats(site: SiteModel): List<PostFormatModel> {
         return WellSql.select(PostFormatModel::class.java)
