@@ -54,7 +54,7 @@ class ReaderPostRenderer(
     private val minMidSizeWidthDp: Int
     private val weakWebView: WeakReference<ReaderWebView> = WeakReference(webView)
 
-    private var renderBuilder: StringBuilder? = null
+    private var renderBuilder = StringBuilder()
 
     /*
       * contains the HTML that was last rendered, will be null prior to rendering
@@ -101,7 +101,7 @@ class ReaderPostRenderer(
 
             withContext(Dispatchers.Main) {
                 renderHtmlContent(htmlContent)
-                renderBuilder = null
+                renderBuilder.clear()
             }
         }
     }
@@ -200,13 +200,13 @@ class ReaderPostRenderer(
             "<img class='size-none' src='$imageUrl' />"
         }
 
-        val start = renderBuilder!!.indexOf(imageTag)
+        val start = renderBuilder.indexOf(imageTag)
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder")
             return
         }
 
-        renderBuilder!!.replace(start, start + imageTag.length, newImageTag)
+        renderBuilder.replace(start, start + imageTag.length, newImageTag)
     }
 
     private fun makeImageTag(
@@ -339,13 +339,13 @@ class ReaderPostRenderer(
                 + " width='" + pxToDp(newWidth) + "'"
                 + " height='" + pxToDp(newHeight) + "' />")
 
-        val start = renderBuilder!!.indexOf(tag)
+        val start = renderBuilder.indexOf(tag)
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > iframe not found in builder")
             return
         }
 
-        renderBuilder!!.replace(start, start + tag.length, newTag)
+        renderBuilder.replace(start, start + tag.length, newTag)
     }
 
     /*
