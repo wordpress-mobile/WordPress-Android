@@ -57,11 +57,6 @@ class ReaderPostRenderer(
 
     private var renderBuilder = StringBuilder()
 
-    /*
-      * contains the HTML that was last rendered, will be null prior to rendering
-      */
-    private var renderedHtml: String? = null
-
     private var attachmentSizes: ImageSizeMap? = null
     private val readingPreferencesTheme: ThemeValues = from(webView.context, this.readingPreferences.theme)
     private var postMessageListener: ReaderPostMessageListener? = null
@@ -159,8 +154,6 @@ class ReaderPostRenderer(
      * called once the content is ready to be rendered in the webView
      */
     private fun renderHtmlContent(htmlContent: String) {
-        renderedHtml = htmlContent
-
         // make sure webView is still valid (containing fragment may have been detached)
         val webView = weakWebView.get()
         if (webView == null || webView.context == null || webView.isDestroyed) {
