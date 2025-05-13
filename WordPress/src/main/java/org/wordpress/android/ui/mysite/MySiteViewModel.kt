@@ -246,6 +246,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
         try {
             getAuthorizationUrlCompleteInternal(siteUrl)
