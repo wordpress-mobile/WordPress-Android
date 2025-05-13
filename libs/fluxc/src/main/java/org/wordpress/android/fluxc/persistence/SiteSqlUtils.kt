@@ -261,6 +261,7 @@ class SiteSqlUtils
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere()
+
     val sitesAccessedViaWPComRest: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()

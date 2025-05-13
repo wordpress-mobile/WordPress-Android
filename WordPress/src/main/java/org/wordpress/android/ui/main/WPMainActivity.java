@@ -1751,9 +1751,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         List<SiteModel> sites = mSiteStore.getSites();
         if (!sites.isEmpty()) {
             setSelectedSite(sites.get(0));
+        } else {
+            // Else no site selected
+            AppLog.w(T.MAIN, "No site selected");
         }
-
-        // Else no site selected
     }
 
     // FluxC events
