@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Handler
 import android.webkit.WebView
 import org.jsoup.Jsoup
@@ -27,6 +26,7 @@ import java.lang.ref.WeakReference
 import java.text.Bidi
 import java.util.Random
 import java.util.regex.Pattern
+import androidx.core.net.toUri
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -41,15 +41,14 @@ import java.util.regex.Pattern
 class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     webView: ReaderWebView,
     post: ReaderPost,
-    cssProvider: ReaderCssProvider,
-    readingPreferences:
-    ReaderReadingPreferences
+    private val cssProvider: ReaderCssProvider,
+    private val readingPreferences: ReaderReadingPreferences
 ) {
-    private val resourceVars: ReaderResourceVars
-    private val readerPost: ReaderPost
+    private val resourceVars: ReaderResourceVars = ReaderResourceVars(webView.context)
+    private val readerPost: ReaderPost = post
     private val minFullSizeWidthDp: Int
     private val minMidSizeWidthDp: Int
-    private val weakWebView: WeakReference<ReaderWebView>
+    private val weakWebView: WeakReference<ReaderWebView> = WeakReference(webView)
 
     private var renderBuilder: StringBuilder? = null
 
@@ -59,22 +58,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     private var renderedHtml: String? = null
 
     private var attachmentSizes: ImageSizeMap? = null
-    private val cssProvider: ReaderCssProvider
-    private val readingPreferences: ReaderReadingPreferences
-    private val readingPreferencesTheme: ThemeValues
+    private val readingPreferencesTheme: ThemeValues = from(webView.context, this.readingPreferences.theme)
     private var postMessageListener: ReaderPostMessageListener? = null
 
     init {
-        requireNotNull(webView) { "ReaderPostRenderer requires a webView" }
-        requireNotNull(post) { "ReaderPostRenderer requires a post" }
-
-        readerPost = post
-        weakWebView = WeakReference(webView)
-        resourceVars = ReaderResourceVars(webView.context)
-        this.cssProvider = cssProvider
-        this.readingPreferences = readingPreferences
-        readingPreferencesTheme = from(webView.context, this.readingPreferences.theme)
-
         minFullSizeWidthDp = pxToDp(resourceVars.mFullSizeImageWidthPx / 3)
         minMidSizeWidthDp = minFullSizeWidthDp / 2
 
@@ -150,7 +137,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     private fun injectJSForSpecificEmbedSupport(): Set<String> {
         val jsToInject: MutableSet<String> = HashSet()
         val embedListener =
-            HtmlScannerListener { tag, src ->
+            HtmlScannerListener { _, src ->
                 jsToInject.add(
                     src
                 )
@@ -295,7 +282,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
      * Strips inline styles from post content
      */
     private fun removeInlineStyles(content: String): String {
-        if (content.length == 0) {
+        if (content.isEmpty()) {
             return content
         }
 
@@ -345,6 +332,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
+    @SuppressLint("WeakPrng")
     private fun formatPostContentForWebView(
         content: String, jsToInject: Set<String>,
         hasTiledGallery: Boolean, isWideDisplay: Boolean
@@ -563,20 +551,22 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     private fun getImageSize(imageTag: String, imageUrl: String): ImageSizeMap.ImageSize? {
-        var size: ImageSizeMap.ImageSize? = getImageSizeFromAttachments(imageUrl)
-        if (size == null && imageTag.contains("data-orig-size=")) {
-            size = getImageOriginalSizeFromAttributes(imageTag)
+        getImageSizeFromAttachments(imageUrl)?.let { imageSize ->
+            return imageSize
+        } ?: run {
+            return if (imageTag.contains("data-orig-size=")) {
+                getImageOriginalSizeFromAttributes(imageTag)
+            } else if (imageUrl.contains("?")) {
+                getImageSizeFromQueryParams(imageUrl)
+            } else if (imageTag.contains("width=")) {
+                getImageSizeFromAttributes(imageTag)
+            } else {
+                null
+            }
         }
-        if (size == null && imageUrl.contains("?")) {
-            size = getImageSizeFromQueryParams(imageUrl)
-        }
-        if (size == null && imageTag.contains("width=")) {
-            size = getImageSizeFromAttributes(imageTag)
-        }
-        return size
     }
 
-    private fun getImageSizeFromAttachments(imageUrl: String): ImageSizeMap.ImageSize {
+    private fun getImageSizeFromAttachments(imageUrl: String): ImageSizeMap.ImageSize? {
         if (attachmentSizes == null) {
             attachmentSizes = ImageSizeMap(readerPost.text, readerPost.attachmentsJson)
         }
@@ -585,13 +575,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
 
     private fun getImageSizeFromQueryParams(imageUrl: String): ImageSizeMap.ImageSize? {
         if (imageUrl.contains("w=")) {
-            val uri = Uri.parse(imageUrl.replace("&#038;", "&"))
+            val uri = imageUrl.replace("&#038;", "&").toUri()
             return ImageSizeMap.ImageSize(
                 StringUtils.stringToInt(uri.getQueryParameter("w")),
                 StringUtils.stringToInt(uri.getQueryParameter("h"))
             )
         } else if (imageUrl.contains("resize=")) {
-            val uri = Uri.parse(imageUrl.replace("&#038;", "&"))
+            val uri = imageUrl.replace("&#038;", "&").toUri()
             val param = uri.getQueryParameter("resize")
             if (param != null) {
                 val sizes = param.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -651,13 +641,12 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             webView, JAVASCRIPT_MESSAGE_HANDLER, allowedOrigins
         ) { message: String? ->
             if (postMessageListener == null) {
-                return@createJsObject null
+                return@createJsObject
             }
             when (message) {
                 ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED -> postMessageListener!!.onArticleTextCopied()
                 ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED -> postMessageListener!!.onArticleTextHighlighted()
             }
-            null
         }
 
         // Set the tag that the JS object has been added, so we can check before adding it again
