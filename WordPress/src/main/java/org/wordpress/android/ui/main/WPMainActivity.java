@@ -1716,6 +1716,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
         // When we select a site, we want to update its information or options
+        mSelectedSiteRepository.updateSite(selectedSite);
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
     }
 
