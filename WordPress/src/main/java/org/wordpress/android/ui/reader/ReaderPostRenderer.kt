@@ -5,7 +5,6 @@ import android.webkit.WebView
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -65,7 +64,7 @@ class ReaderPostRenderer(
     private val readingPreferencesTheme: ThemeValues = from(webView.context, this.readingPreferences.theme)
     private var postMessageListener: ReaderPostMessageListener? = null
 
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     init {
         @Suppress("MagicNumber")
@@ -82,7 +81,7 @@ class ReaderPostRenderer(
     fun beginRender() {
         renderBuilder = StringBuilder(postContent)
 
-        scope.launch {
+        coroutineScope.launch {
             val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
             if (resourceVars.isWideDisplay && !hasTiledGallery) {
                 resizeImages()
@@ -112,7 +111,8 @@ class ReaderPostRenderer(
      */
     private fun resizeImages() {
         val imageListener =
-            HtmlScannerListener { imageTag, imageUrl -> // Exceptions which should keep their original tag attributes
+            HtmlScannerListener { imageTag, imageUrl ->
+                // Exceptions which should keep their original tag attributes
                 if (imageUrl.contains("wpcom-smileys") || imageTag.contains("wp-story")) {
                     return@HtmlScannerListener
                 }
