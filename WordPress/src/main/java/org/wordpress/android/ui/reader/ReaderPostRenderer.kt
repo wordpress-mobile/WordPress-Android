@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
-import android.os.Handler
 import android.webkit.WebView
+import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress.Companion.getContext
@@ -26,7 +31,6 @@ import java.lang.ref.WeakReference
 import java.text.Bidi
 import java.util.Random
 import java.util.regex.Pattern
-import androidx.core.net.toUri
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -38,7 +42,7 @@ import androidx.core.net.toUri
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
-class ReaderPostRenderer constructor(
+class ReaderPostRenderer(
     webView: ReaderWebView,
     post: ReaderPost,
     private val cssProvider: ReaderCssProvider,
@@ -61,6 +65,8 @@ class ReaderPostRenderer constructor(
     private val readingPreferencesTheme: ThemeValues = from(webView.context, this.readingPreferences.theme)
     private var postMessageListener: ReaderPostMessageListener? = null
 
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     init {
         minFullSizeWidthDp = pxToDp(resourceVars.mFullSizeImageWidthPx / 3)
         minMidSizeWidthDp = minFullSizeWidthDp / 2
@@ -72,36 +78,32 @@ class ReaderPostRenderer constructor(
         setWebViewMessageHandler(webView)
     }
 
-    @Suppress("DEPRECATION")
     fun beginRender() {
-        val handler = Handler() // TODO replace this
         renderBuilder = StringBuilder(postContent)
 
-        object : Thread() {
-            override fun run() {
-                val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
-
-                if (!(hasTiledGallery && resourceVars.mIsWideDisplay)) {
-                    resizeImages()
-                }
-
-                resizeIframes()
-
-                // Get the set of JS scripts to inject in our Webview to support some specific Embeds.
-                val jsToInject = injectJSForSpecificEmbedSupport()
-
-                val htmlContent =
-                    formatPostContentForWebView(
-                        renderBuilder.toString(),
-                        jsToInject,
-                        hasTiledGallery,
-                        resourceVars.mIsWideDisplay
-                    )
-
-                renderBuilder = null
-                handler.post { renderHtmlContent(htmlContent) }
+        scope.launch {
+            val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
+            if (resourceVars.mIsWideDisplay && !hasTiledGallery) {
+                resizeImages()
             }
-        }.start()
+
+            resizeIframes()
+
+            // inject the set of JS scripts to inject in our WebView to support some specific Embeds.
+            val jsToInject = injectJSForSpecificEmbedSupport()
+
+            val htmlContent = formatPostContentForWebView(
+                content = renderBuilder.toString(),
+                jsToInject = jsToInject,
+                hasTiledGallery = hasTiledGallery,
+                isWideDisplay = resourceVars.mIsWideDisplay
+            )
+
+            withContext(Dispatchers.Main) {
+                renderHtmlContent(htmlContent)
+                renderBuilder = null
+            }
+        }
     }
 
     /*
