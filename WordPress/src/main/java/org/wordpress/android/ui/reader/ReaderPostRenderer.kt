@@ -49,11 +49,10 @@ class ReaderPostRenderer(
 ) {
     private val resourceVars: ReaderResourceVars = ReaderResourceVars(webView.context)
     private val readerPost: ReaderPost = post
+    private val weakWebView: WeakReference<ReaderWebView> = WeakReference(webView)
 
     private val minFullSizeWidthDp: Int
     private val minMidSizeWidthDp: Int
-
-    private val weakWebView: WeakReference<ReaderWebView> = WeakReference(webView)
 
     private var renderBuilder = StringBuilder()
 
@@ -186,6 +185,7 @@ class ReaderPostRenderer(
         val isMidSize = hasWidth
                 && (origSize!!.width >= minMidSizeWidthDp)
                 && (origSize.width < minFullSizeWidthDp)
+
         val newImageTag = if (isFullSize) {
             makeFullSizeImageTag(imageUrl, origSize!!.width, origSize.height)
         } else if (isMidSize) {
@@ -704,8 +704,8 @@ class ReaderPostRenderer(
         private const val JAVASCRIPT_MESSAGE_HANDLER = "wvHandler"
         private const val JS_OBJECT_ADDED_TAG = "jsObjectAdded"
         private const val RANDOM_BOUND = 1000
+        // determine whether a tiled-gallery exists in the content
         fun hasTiledGallery(text: String): Boolean {
-            // determine whether a tiled-gallery exists in the content
             return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find()
         }
     }
