@@ -49,8 +49,10 @@ class ReaderPostRenderer(
 ) {
     private val resourceVars: ReaderResourceVars = ReaderResourceVars(webView.context)
     private val readerPost: ReaderPost = post
+
     private val minFullSizeWidthDp: Int
     private val minMidSizeWidthDp: Int
+
     private val weakWebView: WeakReference<ReaderWebView> = WeakReference(webView)
 
     private var renderBuilder = StringBuilder()
@@ -79,7 +81,7 @@ class ReaderPostRenderer(
     }
 
     fun beginRender() {
-        renderBuilder = StringBuilder(postContent)
+        renderBuilder = StringBuilder(getPostContent())
 
         coroutineScope.launch {
             val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
@@ -257,41 +259,43 @@ class ReaderPostRenderer(
         return makeImageTag(imageUrl, newWidth, newHeight, "size-full")
     }
 
-    private val postContent: String
-        /*
-              * returns the basic content of the post tweaked for use here
-              */
-        get() {
-            var content =
-                if (readerPost.shouldShowExcerpt()) readerPost.excerpt else readerPost.text
-            content = removeInlineStyles(content)
-
-            // some content (such as Vimeo embeds) don't have "http:" before links
-            content = content.replace("src=\"//", "src=\"http://")
-
-            // if this is a Discover post, add a link which shows the blog preview
-            if (readerPost.isDiscoverPost) {
-                val discoverData = readerPost.discoverData
-                if (discoverData != null && discoverData.blogId != 0L && discoverData.hasBlogName()) {
-                    val label = String.format(
-                        getContext()
-                            .getString(R.string.reader_discover_visit_blog),
-                        discoverData.blogName
-                    )
-                    val url =
-                        ReaderUtils.makeBlogPreviewUrl(
-                            discoverData.blogId
-                        )
-
-                    val htmlDiscover = ("<div id='discover'>"
-                            + "<a href='" + url + "'>" + label + "</a>"
-                            + "</div>")
-                    content += htmlDiscover
-                }
-            }
-
-            return content
+    /*
+     * returns the basic content of the post tweaked for use here
+     */
+    private fun getPostContent(): String {
+        var content = if (readerPost.shouldShowExcerpt()) {
+            readerPost.excerpt
+        } else {
+            readerPost.text
         }
+        content = removeInlineStyles(content)
+
+        // some content (such as Vimeo embeds) don't have "http:" before links
+        content = content.replace("src=\"//", "src=\"http://")
+
+        // if this is a Discover post, add a link which shows the blog preview
+        if (readerPost.isDiscoverPost) {
+            val discoverData = readerPost.discoverData
+            if (discoverData != null && discoverData.blogId != 0L && discoverData.hasBlogName()) {
+                val label = String.format(
+                    getContext()
+                        .getString(R.string.reader_discover_visit_blog),
+                    discoverData.blogName
+                )
+                val url =
+                    ReaderUtils.makeBlogPreviewUrl(
+                        discoverData.blogId
+                    )
+
+                val htmlDiscover = ("<div id='discover'>"
+                        + "<a href='" + url + "'>" + label + "</a>"
+                        + "</div>")
+                content += htmlDiscover
+            }
+        }
+
+        return content
+    }
 
     /*
      * Strips inline styles from post content
