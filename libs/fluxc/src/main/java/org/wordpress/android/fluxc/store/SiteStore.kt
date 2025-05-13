@@ -1236,12 +1236,6 @@ open class SiteStore @Inject constructor(
     }
 
     /**
-     * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
-     */
-    val visibleSitesCount: Int
-        get() = siteSqlUtils.getVisibleSites().size
-
-    /**
      * Returns all visible .COM sites as [SiteModel]s.
      */
     val visibleSitesAccessedViaWPCom: List<SiteModel>
