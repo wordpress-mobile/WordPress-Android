@@ -1248,13 +1248,6 @@ open class SiteStore @Inject constructor(
         get() = siteSqlUtils.visibleSitesAccessedViaWPCom.count().toInt()
 
     /**
-     * Checks whether the .COM site with the given (local) id is visible.
-     */
-    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return siteSqlUtils.isWPComSiteVisibleByLocalId(id)
-    }
-
-    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {

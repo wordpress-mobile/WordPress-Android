@@ -460,16 +460,6 @@ class SiteSqlUtils
         return localSites.size
     }
 
-    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .exists()
-    }
-
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
