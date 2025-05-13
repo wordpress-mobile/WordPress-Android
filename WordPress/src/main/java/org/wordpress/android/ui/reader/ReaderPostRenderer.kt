@@ -42,6 +42,7 @@ import java.util.regex.Pattern
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
+@SuppressLint("SetJavaScriptEnabled")
 class ReaderPostRenderer(
     webView: ReaderWebView,
     post: ReaderPost,
@@ -68,6 +69,7 @@ class ReaderPostRenderer(
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
+        @Suppress("MagicNumber")
         minFullSizeWidthDp = pxToDp(resourceVars.mFullSizeImageWidthPx / 3)
         minMidSizeWidthDp = minFullSizeWidthDp / 2
 
@@ -352,6 +354,7 @@ class ReaderPostRenderer(
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
     @SuppressLint("WeakPrng")
+    @Suppress("LongMethod")
     private fun formatPostContentForWebView(
         content: String,
         jsToInject: Set<String>,
@@ -361,7 +364,7 @@ class ReaderPostRenderer(
         val renderAsTiledGallery = hasTiledGallery && isWideDisplay
 
         // unique CSS class assigned to the gallery elements for easy selection
-        val galleryOnlyClass = "gallery-only-class" + Random().nextInt(1000)
+        val galleryOnlyClass = "gallery-only-class" + Random().nextInt(RANDOM_BOUND)
         val str = if (isRTL(content)) {
             "<!DOCTYPE html><html dir='rtl' lang=''><head><meta charset='UTF-8' />"
         } else {
@@ -704,6 +707,7 @@ class ReaderPostRenderer(
     companion object {
         private const val JAVASCRIPT_MESSAGE_HANDLER = "wvHandler"
         private const val JS_OBJECT_ADDED_TAG = "jsObjectAdded"
+        private const val RANDOM_BOUND = 1000
         fun hasTiledGallery(text: String): Boolean {
             // determine whether a tiled-gallery exists in the content
             return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find()
