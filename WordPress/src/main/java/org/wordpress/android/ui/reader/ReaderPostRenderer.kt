@@ -515,12 +515,15 @@ class ReaderPostRenderer(
             .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
             .append(" text-align: center;")
             .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
-            .append(" color: var(--color-neutral-0); }") // attribution for Discover posts
+            .append(" color: var(--color-neutral-0); }")
+            // attribution for Discover posts
             .append(" div#discover { ")
             .append(" margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
             .append(" font-family: sans-serif;")
-            .append(" }") // horizontally center iframes
-            .append(" iframe { display: block; margin: 0 auto; }") // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
+            .append(" }")
+            // horizontally center iframes
+            .append(" iframe { display: block; margin: 0 auto; }")
+            // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
             // http://bit.ly/2FUTvsP
             .append(" form, input, select, button textarea { display: none; }")
             .append(" div.feedflare { display: none; }")
@@ -673,8 +676,10 @@ class ReaderPostRenderer(
                 return@createJsObject
             }
             when (message) {
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED -> postMessageListener!!.onArticleTextCopied()
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED -> postMessageListener!!.onArticleTextHighlighted()
+                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED ->
+                    postMessageListener!!.onArticleTextCopied()
+                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED ->
+                    postMessageListener!!.onArticleTextHighlighted()
             }
         }
 
