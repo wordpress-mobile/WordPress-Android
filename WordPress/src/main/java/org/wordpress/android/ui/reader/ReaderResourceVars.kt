@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 /*
 * class which holds all resource-based variables used when rendering post detail
@@ -43,14 +44,14 @@ internal class ReaderResourceVars(context: Context) {
         marginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium)
 
         val onSurfaceColor =
-            context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface)
+            context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
 
         val onSurfaceHighType = ("rgba(" + Color.red(onSurfaceColor) + ", "
                 + Color.green(onSurfaceColor) + ", "
                 + Color.blue(onSurfaceColor) + ", "
                 + ResourcesCompat.getFloat(
             resources,
-            com.google.android.material.R.dimen.material_emphasis_high_type
+            MaterialR.dimen.material_emphasis_high_type
         )
                 + ")")
 
@@ -59,7 +60,7 @@ internal class ReaderResourceVars(context: Context) {
                 + Color.blue(onSurfaceColor) + ", "
                 + ResourcesCompat.getFloat(
             resources,
-            com.google.android.material.R.dimen.material_emphasis_medium
+            MaterialR.dimen.material_emphasis_medium
         )
                 + ")")
 
@@ -68,7 +69,7 @@ internal class ReaderResourceVars(context: Context) {
                 + Color.blue(onSurfaceColor) + ", "
                 + ResourcesCompat.getFloat(
             resources,
-            com.google.android.material.R.dimen.material_emphasis_disabled
+            MaterialR.dimen.material_emphasis_disabled
         )
                 + ")")
 
@@ -82,7 +83,7 @@ internal class ReaderResourceVars(context: Context) {
                 + Color.blue(onSurfaceColor) + ", "
                 + ResourcesCompat.getFloat(
             resources,
-            com.google.android.material.R.dimen.material_emphasis_disabled
+            MaterialR.dimen.material_emphasis_disabled
         )
                 + ")")
 
