@@ -585,17 +585,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public List<SiteModel> getBlogsForCurrentView() {
         if (mSitePickerMode.isReblogMode() || mSitePickerMode.isBloggingPromptsMode()) {
-            // If we are reblogging we only want to select or search into the WPCom visible sites.
-            return mSiteStore.getVisibleSitesAccessedViaWPCom();
+            // If we are reblogging we only want to select or search into the WPCom sites.
+            return mSiteStore.getSitesAccessedViaWPComRest();
         } else if (mIsInSearchMode) {
             return mSiteStore.getSites();
         }
         if (mShowSelfHostedSites) {
-            List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
+            List<SiteModel> out = mSiteStore.getSitesAccessedViaWPComRest();
             out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
             return out;
         } else {
-            return mSiteStore.getVisibleSitesAccessedViaWPCom();
+            return mSiteStore.getSitesAccessedViaWPComRest();
         }
     }
 

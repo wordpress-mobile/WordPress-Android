@@ -93,15 +93,6 @@ class SiteSqlUtils
             .endWhere()
             .asModel
 
-    fun getVisibleSites(): List<SiteModel> {
-        return WellSql.select(SiteModel::class.java)
-                .where()
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .equals(SiteModelTable.IS_DELETED, false)
-                .endWhere()
-                .asModel
-    }
-
     /**
      * Inserts the given SiteModel into the DB, or updates an existing entry where sites match.
      *
@@ -270,17 +261,11 @@ class SiteSqlUtils
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere()
+
     val sitesAccessedViaWPComRest: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .equals(SiteModelTable.IS_DELETED, false)
-                .endGroup().endWhere()
-    val visibleSitesAccessedViaWPCom: SelectQuery<SiteModel>
-        get() = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .equals(SiteModelTable.IS_VISIBLE, true)
                 .equals(SiteModelTable.IS_DELETED, false)
                 .endGroup().endWhere()
 
@@ -467,16 +452,6 @@ class SiteSqlUtils
             }
         }
         return localSites.size
-    }
-
-    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .exists()
     }
 
     /**

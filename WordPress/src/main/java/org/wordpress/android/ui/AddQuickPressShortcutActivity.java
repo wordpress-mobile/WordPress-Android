@@ -82,14 +82,14 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
     }
 
     private void displayAccounts() {
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        List<SiteModel> sites = mSiteStore.getSites();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
         listView.setVerticalFadingEdgeEnabled(false);
         listView.setVerticalScrollBarEnabled(true);
 
-        if (sites.size() > 0) {
+        if (!sites.isEmpty()) {
             blogNames = new String[sites.size()];
             siteIds = new int[sites.size()];
             blogUrls = new String[sites.size()];
@@ -180,7 +180,7 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
         switch (requestCode) {
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
-                    if (mSiteStore.getVisibleSitesCount() > 0) {
+                    if (mSiteStore.getSitesCount() > 0) {
                         displayAccounts();
                         break;
                     }
@@ -195,7 +195,7 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
         }
 
         public int getCount() {
-            return mSiteStore.getVisibleSitesCount();
+            return mSiteStore.getSitesCount();
         }
 
         public Object getItem(int position) {
