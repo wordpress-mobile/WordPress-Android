@@ -1444,7 +1444,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return false
         }
 
-        val postContent = viewModel.post?.text ?: ""
+        val postContent = viewModel.post?.text.orEmpty()
         val isPrivatePost = viewModel.post?.isPrivate == true
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
