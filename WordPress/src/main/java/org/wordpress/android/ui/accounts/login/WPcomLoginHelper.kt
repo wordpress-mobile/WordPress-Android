@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    private val appSecrets: AppSecrets
+    appSecrets: AppSecrets,
 ) {
     private val context: CoroutineContext = Dispatchers.IO
 
@@ -35,7 +35,7 @@ class WPcomLoginHelper @Inject constructor(
             return false
         }
 
-        val code = this.codeFromAuthorizationUri(data) ?: return false
+        val code = data.toUri().getQueryParameter("code") ?: return false
 
         runBlocking {
             val tokenResult = loginClient.exchangeAuthCodeForToken(code)
@@ -58,21 +58,6 @@ class WPcomLoginHelper @Inject constructor(
     fun bindCustomTabsService(context: Context) {
         customTabsServiceConnection.bind(context)
     }
-
-    private fun codeFromAuthorizationUri(string: String): String? {
-        return Uri.parse(string).getQueryParameter("code")
-    }
-
-    fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
-        return if (authorizationUrl.isNullOrEmpty()) {
-            authorizationUrl.orEmpty()
-        } else {
-            authorizationUrl.toUri().buildUpon().apply {
-                appendQueryParameter("app_name", "android-jetpack-client")
-                appendQueryParameter("success_url", appSecrets.redirectUri)
-            }.build().toString()
-        }
-    }
 }
 
 class ServiceConnection(
@@ -87,7 +72,7 @@ class ServiceConnection(
 
         val session = client.newSession(CustomTabsCallback())
         session?.mayLaunchUrl(uri, null, null)
-        session?.mayLaunchUrl(Uri.parse("https://wordpress.com/log-in/"), null, null)
+        session?.mayLaunchUrl("https://wordpress.com/log-in/".toUri(), null, null)
 
         this.session = session
     }
