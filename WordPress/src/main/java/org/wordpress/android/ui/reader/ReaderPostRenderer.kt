@@ -42,7 +42,6 @@ import java.util.regex.Pattern
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
-@SuppressLint("SetJavaScriptEnabled")
 class ReaderPostRenderer(
     webView: ReaderWebView,
     post: ReaderPost,
