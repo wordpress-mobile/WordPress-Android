@@ -376,6 +376,7 @@ class ReaderPostRenderer(
                 ("""<link rel="stylesheet" type="text/css"
           href="${cssProvider.getCssUrl()}">""")
             )
+
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
             .append("<style type='text/css'>")
@@ -564,20 +565,13 @@ class ReaderPostRenderer(
     private fun appendMappedColors(sb: StringBuilder) {
         sb.append(" :root { ")
             .append("--color-text: ").append(readingPreferencesTheme.cssTextColor).append("; ")
-            .append("--color-neutral-0: ").append(readingPreferencesTheme.cssTextMediumColor)
-            .append("; ")
-            .append("--color-neutral-5: ").append(readingPreferencesTheme.cssTextExtraLightColor)
-            .append("; ")
-            .append("--color-neutral-10: ").append(readingPreferencesTheme.cssTextDisabledColor)
-            .append("; ")
-            .append("--color-neutral-20: ").append(readingPreferencesTheme.cssTextExtraLightColor)
-            .append("; ")
-            .append("--color-neutral-50: ").append(readingPreferencesTheme.cssTextLightColor)
-            .append("; ")
-            .append("--color-neutral-70: ").append(readingPreferencesTheme.cssTextColor)
-            .append("; ")
-            .append("--main-link-color: ").append(readingPreferencesTheme.cssLinkColor)
-            .append("; ")
+            .append("--color-neutral-0: ").append(readingPreferencesTheme.cssTextMediumColor).append("; ")
+            .append("--color-neutral-5: ").append(readingPreferencesTheme.cssTextExtraLightColor).append("; ")
+            .append("--color-neutral-10: ").append(readingPreferencesTheme.cssTextDisabledColor).append("; ")
+            .append("--color-neutral-20: ").append(readingPreferencesTheme.cssTextExtraLightColor).append("; ")
+            .append("--color-neutral-50: ").append(readingPreferencesTheme.cssTextLightColor).append("; ")
+            .append("--color-neutral-70: ").append(readingPreferencesTheme.cssTextColor).append("; ")
+            .append("--main-link-color: ").append(readingPreferencesTheme.cssLinkColor).append("; ")
             .append("} ")
     }
 
