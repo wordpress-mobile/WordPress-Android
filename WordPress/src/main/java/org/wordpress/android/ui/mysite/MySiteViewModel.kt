@@ -246,14 +246,13 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
         when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
             is ApiDiscoveryResult.Success -> {
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
                 val authorizationUrlComplete =
                     applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for ${siteUrl} URL: $authorizationUrlComplete")
+                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -261,7 +260,7 @@ class MySiteViewModel @Inject constructor(
             is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
             is ApiDiscoveryResult.FailureFindApiRoot,
             is ApiDiscoveryResult.FailureParseSiteUrl -> {
-                Log.e("WP_RS", "VM: Error during API discovery for ${siteUrl}")
+                Log.e("WP_RS", "VM: Error during API discovery for $siteUrl")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
                 ""
             }
