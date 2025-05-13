@@ -1236,13 +1236,6 @@ open class SiteStore @Inject constructor(
     }
 
     /**
-     * Returns all visible .COM sites as [SiteModel]s.
-     */
-    @Deprecated("Site visibility is no longer a feature", ReplaceWith(""))
-    val visibleSitesAccessedViaWPCom: List<SiteModel>
-        get() = siteSqlUtils.sitesAccessedViaWPComRest.asModel
-
-    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
