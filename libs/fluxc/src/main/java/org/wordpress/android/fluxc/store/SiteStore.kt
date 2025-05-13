@@ -1242,12 +1242,6 @@ open class SiteStore @Inject constructor(
         get() = siteSqlUtils.visibleSitesAccessedViaWPCom.asModel
 
     /**
-     * Returns the number of visible .COM sites.
-     */
-    val visibleSitesAccessedViaWPComCount: Int
-        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.count().toInt()
-
-    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
