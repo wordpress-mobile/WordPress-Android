@@ -39,41 +39,44 @@ import java.util.regex.Pattern
  * http://developer.android.com/guide/webapps/targeting.html
  */
 class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
-    webView: ReaderWebView, post: ReaderPost, cssProvider: ReaderCssProvider,
-    readingPreferences: ReaderReadingPreferences
+    webView: ReaderWebView,
+    post: ReaderPost,
+    cssProvider: ReaderCssProvider,
+    readingPreferences:
+    ReaderReadingPreferences
 ) {
-    private val mResourceVars: ReaderResourceVars
-    private val mPost: ReaderPost
-    private val mMinFullSizeWidthDp: Int
-    private val mMinMidSizeWidthDp: Int
-    private val mWeakWebView: WeakReference<ReaderWebView>
+    private val resourceVars: ReaderResourceVars
+    private val readerPost: ReaderPost
+    private val minFullSizeWidthDp: Int
+    private val minMidSizeWidthDp: Int
+    private val weakWebView: WeakReference<ReaderWebView>
 
-    private var mRenderBuilder: StringBuilder? = null
+    private var renderBuilder: StringBuilder? = null
 
     /*
       * returns the HTML that was last rendered, will be null prior to rendering
       */
-    var renderedHtml: String? = null
-        private set
-    private var mAttachmentSizes: ImageSizeMap? = null
-    private val mCssProvider: ReaderCssProvider
-    private val mReadingPreferences: ReaderReadingPreferences
-    private val mReadingPreferencesTheme: ThemeValues
-    private var mPostMessageListener: ReaderPostMessageListener? = null
+    private var renderedHtml: String? = null
+
+    private var attachmentSizes: ImageSizeMap? = null
+    private val cssProvider: ReaderCssProvider
+    private val readingPreferences: ReaderReadingPreferences
+    private val readingPreferencesTheme: ThemeValues
+    private var postMessageListener: ReaderPostMessageListener? = null
 
     init {
         requireNotNull(webView) { "ReaderPostRenderer requires a webView" }
         requireNotNull(post) { "ReaderPostRenderer requires a post" }
 
-        mPost = post
-        mWeakWebView = WeakReference(webView)
-        mResourceVars = ReaderResourceVars(webView.context)
-        mCssProvider = cssProvider
-        mReadingPreferences = readingPreferences
-        mReadingPreferencesTheme = from(webView.context, mReadingPreferences.theme)
+        readerPost = post
+        weakWebView = WeakReference(webView)
+        resourceVars = ReaderResourceVars(webView.context)
+        this.cssProvider = cssProvider
+        this.readingPreferences = readingPreferences
+        readingPreferencesTheme = from(webView.context, this.readingPreferences.theme)
 
-        mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3)
-        mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2
+        minFullSizeWidthDp = pxToDp(resourceVars.mFullSizeImageWidthPx / 3)
+        minMidSizeWidthDp = minFullSizeWidthDp / 2
 
         // enable JavaScript in the webView, otherwise videos and other embedded content won't
         // work - note that the content is scrubbed on the backend so this is considered safe
@@ -83,13 +86,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
 
     fun beginRender() {
         val handler = Handler()
-        mRenderBuilder = StringBuilder(postContent)
+        renderBuilder = StringBuilder(postContent)
 
         object : Thread() {
             override fun run() {
-                val hasTiledGallery = hasTiledGallery(mRenderBuilder.toString())
+                val hasTiledGallery = hasTiledGallery(renderBuilder.toString())
 
-                if (!(hasTiledGallery && mResourceVars.mIsWideDisplay)) {
+                if (!(hasTiledGallery && resourceVars.mIsWideDisplay)) {
                     resizeImages()
                 }
 
@@ -100,13 +103,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
 
                 val htmlContent =
                     formatPostContentForWebView(
-                        mRenderBuilder.toString(),
+                        renderBuilder.toString(),
                         jsToInject,
                         hasTiledGallery,
-                        mResourceVars.mIsWideDisplay
+                        resourceVars.mIsWideDisplay
                     )
 
-                mRenderBuilder = null
+                renderBuilder = null
                 handler.post { renderHtmlContent(htmlContent) }
             }
         }.start()
@@ -123,8 +126,8 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
                 }
                 replaceImageTag(imageTag, imageUrl)
             }
-        val content = mRenderBuilder.toString()
-        val scanner = ReaderImageScanner(content, mPost.isPrivate)
+        val content = renderBuilder.toString()
+        val scanner = ReaderImageScanner(content, readerPost.isPrivate)
         scanner.beginScan(imageListener)
     }
 
@@ -139,7 +142,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
                     src
                 )
             }
-        val content = mRenderBuilder.toString()
+        val content = renderBuilder.toString()
         val scanner = ReaderIframeScanner(content)
         scanner.beginScan(iframeListener)
     }
@@ -152,7 +155,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
                     src
                 )
             }
-        val content = mRenderBuilder.toString()
+        val content = renderBuilder.toString()
         val scanner = ReaderEmbedScanner(content)
         scanner.beginScan(embedListener)
         return jsToInject
@@ -165,7 +168,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         renderedHtml = htmlContent
 
         // make sure webView is still valid (containing fragment may have been detached)
-        val webView = mWeakWebView.get()
+        val webView = weakWebView.get()
         if (webView == null || webView.context == null || webView.isDestroyed) {
             AppLog.w(AppLog.T.READER, "reader renderer > webView invalid")
             return
@@ -186,10 +189,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     private fun replaceImageTag(imageTag: String, imageUrl: String) {
         val origSize = getImageSize(imageTag, imageUrl)
         val hasWidth = (origSize != null && origSize.width > 0)
-        val isFullSize = hasWidth && (origSize!!.width >= mMinFullSizeWidthDp)
+        val isFullSize = hasWidth && (origSize!!.width >= minFullSizeWidthDp)
         val isMidSize = hasWidth
-                && (origSize!!.width >= mMinMidSizeWidthDp)
-                && (origSize.width < mMinFullSizeWidthDp)
+                && (origSize!!.width >= minMidSizeWidthDp)
+                && (origSize.width < minFullSizeWidthDp)
         val newImageTag = if (isFullSize) {
             makeFullSizeImageTag(imageUrl, origSize!!.width, origSize.height)
         } else if (isMidSize) {
@@ -200,13 +203,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             "<img class='size-none' src='$imageUrl' />"
         }
 
-        val start = mRenderBuilder!!.indexOf(imageTag)
+        val start = renderBuilder!!.indexOf(imageTag)
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder")
             return
         }
 
-        mRenderBuilder!!.replace(start, start + imageTag.length, newImageTag)
+        renderBuilder!!.replace(start, start + imageTag.length, newImageTag)
     }
 
     private fun makeImageTag(
@@ -216,7 +219,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         imageClass: String
     ): String {
         val newImageUrl = ReaderUtils.getResizedImageUrl(
-            imageUrl, width, height, mPost.isPrivate,
+            imageUrl, width, height, readerPost.isPrivate,
             false
         ) // don't use atomic proxy for WebView images
         return if (height > 0) {
@@ -236,16 +239,16 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         val newHeight: Int
         if (width > 0 && height > 0) {
             if (height > width) {
-                newHeight = mResourceVars.mFullSizeImageWidthPx
+                newHeight = resourceVars.mFullSizeImageWidthPx
                 val ratio = (width.toFloat() / height.toFloat())
                 newWidth = (newHeight * ratio).toInt()
             } else {
                 val ratio = (height.toFloat() / width.toFloat())
-                newWidth = mResourceVars.mFullSizeImageWidthPx
+                newWidth = resourceVars.mFullSizeImageWidthPx
                 newHeight = (newWidth * ratio).toInt()
             }
         } else {
-            newWidth = mResourceVars.mFullSizeImageWidthPx
+            newWidth = resourceVars.mFullSizeImageWidthPx
             newHeight = 0
         }
 
@@ -258,15 +261,15 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
               */
         get() {
             var content =
-                if (mPost.shouldShowExcerpt()) mPost.excerpt else mPost.text
+                if (readerPost.shouldShowExcerpt()) readerPost.excerpt else readerPost.text
             content = removeInlineStyles(content)
 
             // some content (such as Vimeo embeds) don't have "http:" before links
             content = content.replace("src=\"//", "src=\"http://")
 
             // if this is a Discover post, add a link which shows the blog preview
-            if (mPost.isDiscoverPost) {
-                val discoverData = mPost.discoverData
+            if (readerPost.isDiscoverPost) {
+                val discoverData = readerPost.discoverData
                 if (discoverData != null && discoverData.blogId != 0L && discoverData.hasBlogName()) {
                     val label = String.format(
                         getContext()
@@ -318,11 +321,11 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         val newWidth: Int
         if (width > 0 && height > 0) {
             val ratio = (height.toFloat() / width.toFloat())
-            newWidth = mResourceVars.mVideoWidthPx
+            newWidth = resourceVars.mVideoWidthPx
             newHeight = (newWidth * ratio).toInt()
         } else {
-            newWidth = mResourceVars.mVideoWidthPx
-            newHeight = mResourceVars.mVideoHeightPx
+            newWidth = resourceVars.mVideoWidthPx
+            newHeight = resourceVars.mVideoHeightPx
         }
 
         val newTag = ("<iframe src='" + src + "'"
@@ -330,13 +333,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
                 + " width='" + pxToDp(newWidth) + "'"
                 + " height='" + pxToDp(newHeight) + "' />")
 
-        val start = mRenderBuilder!!.indexOf(tag)
+        val start = renderBuilder!!.indexOf(tag)
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > iframe not found in builder")
             return
         }
 
-        mRenderBuilder!!.replace(start, start + tag.length, newTag)
+        renderBuilder!!.replace(start, start + tag.length, newTag)
     }
 
     /*
@@ -362,7 +365,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         sbHtml.append("<title>Reader Post</title>")
             .append(
                 ("""<link rel="stylesheet" type="text/css"
-          href="${mCssProvider.getCssUrl()}">""")
+          href="${cssProvider.getCssUrl()}">""")
             )
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
@@ -392,13 +395,13 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             .append(" body, p, div, a { word-wrap: break-word; }") // change horizontal line color
             .append(" .reader-full-post__story-content hr { background-color: transparent; ")
             .append("border-color: var(--color-neutral-50); }") // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-            .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
-            .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
+            .append(" p { margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
+            .append(" margin-bottom: ").append(resourceVars.mMarginMediumPx).append("px; }")
             .append(" p:first-child { margin-top: 0px; }") // add background color, fontsize and padding to pre blocks, and wrap the text
             // so the user can see full block.
             .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
             .append(" background-color: var(--color-neutral-20);")
-            .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
+            .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
             .append(" line-height: 1.2em; font-size: 14px; }") // add a left border to blockquotes
             .append(" .reader-full-post__story-content blockquote { color: var(--color-neutral-0); ")
             .append(" padding-left: 32px; ")
@@ -411,7 +414,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             .append(" img.size-full, img.size-large, img.size-medium {")
             .append(" display: block; margin-left: auto; margin-right: auto;")
             .append(" background-color: var(--color-neutral-0);")
-            .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
+            .append(" margin-bottom: ").append(resourceVars.mMarginMediumPx).append("px; }")
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
@@ -491,10 +494,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
             .append(" .wp-caption .wp-caption-text {")
             .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
             .append(" text-align: center;")
-            .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
+            .append(" padding: ").append(resourceVars.mMarginMediumPx).append("px; ")
             .append(" color: var(--color-neutral-0); }") // attribution for Discover posts
             .append(" div#discover { ")
-            .append(" margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
+            .append(" margin-top: ").append(resourceVars.mMarginMediumPx).append("px;")
             .append(" font-family: sans-serif;")
             .append(" }") // horizontally center iframes
             .append(" iframe { display: block; margin: 0 auto; }") // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
@@ -541,20 +544,20 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
 
     private fun appendMappedColors(sb: StringBuilder) {
         sb.append(" :root { ")
-            .append("--color-text: ").append(mReadingPreferencesTheme.cssTextColor).append("; ")
-            .append("--color-neutral-0: ").append(mReadingPreferencesTheme.cssTextMediumColor)
+            .append("--color-text: ").append(readingPreferencesTheme.cssTextColor).append("; ")
+            .append("--color-neutral-0: ").append(readingPreferencesTheme.cssTextMediumColor)
             .append("; ")
-            .append("--color-neutral-5: ").append(mReadingPreferencesTheme.cssTextExtraLightColor)
+            .append("--color-neutral-5: ").append(readingPreferencesTheme.cssTextExtraLightColor)
             .append("; ")
-            .append("--color-neutral-10: ").append(mReadingPreferencesTheme.cssTextDisabledColor)
+            .append("--color-neutral-10: ").append(readingPreferencesTheme.cssTextDisabledColor)
             .append("; ")
-            .append("--color-neutral-20: ").append(mReadingPreferencesTheme.cssTextExtraLightColor)
+            .append("--color-neutral-20: ").append(readingPreferencesTheme.cssTextExtraLightColor)
             .append("; ")
-            .append("--color-neutral-50: ").append(mReadingPreferencesTheme.cssTextLightColor)
+            .append("--color-neutral-50: ").append(readingPreferencesTheme.cssTextLightColor)
             .append("; ")
-            .append("--color-neutral-70: ").append(mReadingPreferencesTheme.cssTextColor)
+            .append("--color-neutral-70: ").append(readingPreferencesTheme.cssTextColor)
             .append("; ")
-            .append("--main-link-color: ").append(mReadingPreferencesTheme.cssLinkColor)
+            .append("--main-link-color: ").append(readingPreferencesTheme.cssLinkColor)
             .append("; ")
             .append("} ")
     }
@@ -574,10 +577,10 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     private fun getImageSizeFromAttachments(imageUrl: String): ImageSizeMap.ImageSize {
-        if (mAttachmentSizes == null) {
-            mAttachmentSizes = ImageSizeMap(mPost.text, mPost.attachmentsJson)
+        if (attachmentSizes == null) {
+            attachmentSizes = ImageSizeMap(readerPost.text, readerPost.attachmentsJson)
         }
-        return mAttachmentSizes!!.getImageSize(imageUrl)
+        return attachmentSizes!!.getImageSize(imageUrl)
     }
 
     private fun getImageSizeFromQueryParams(imageUrl: String): ImageSizeMap.ImageSize? {
@@ -631,9 +634,9 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     private val contentTextProperties: String
-        get() = ("font-family: " + mReadingPreferences.fontFamily.value + "; "
+        get() = ("font-family: " + readingPreferences.fontFamily.value + "; "
                 + "font-weight: 400; "
-                + "font-size: " + mReadingPreferences.fontSize.value + "px; ")
+                + "font-size: " + readingPreferences.fontSize.value + "px; ")
 
     private fun setWebViewMessageHandler(webView: WebView) {
         val tag = webView.getTag(JS_OBJECT_ADDED_TAG.hashCode())
@@ -647,12 +650,12 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
         createJsObject(
             webView, JAVASCRIPT_MESSAGE_HANDLER, allowedOrigins
         ) { message: String? ->
-            if (mPostMessageListener == null) {
+            if (postMessageListener == null) {
                 return@createJsObject null
             }
             when (message) {
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED -> mPostMessageListener!!.onArticleTextCopied()
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED -> mPostMessageListener!!.onArticleTextHighlighted()
+                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED -> postMessageListener!!.onArticleTextCopied()
+                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED -> postMessageListener!!.onArticleTextHighlighted()
             }
             null
         }
@@ -662,7 +665,7 @@ class ReaderPostRenderer @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     fun setPostMessageListener(listener: ReaderPostMessageListener?) {
-        mPostMessageListener = listener
+        postMessageListener = listener
     }
 
     interface ReaderPostMessageListener {
