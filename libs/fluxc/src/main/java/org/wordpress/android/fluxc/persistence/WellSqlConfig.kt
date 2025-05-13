@@ -2068,7 +2068,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
 
                 206 -> {
-                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USER_NAME TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USERNAME TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD TEXT")
                 }
             }
