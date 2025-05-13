@@ -565,6 +565,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setAuthHeader((String) mSettings.get("authHeader"))
                 .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
                 .setEditorSettings(editorSettings)
+                .setLocale((String) mSettings.get("locale"))
                 .build();
 
         mGutenbergView.start(config);
