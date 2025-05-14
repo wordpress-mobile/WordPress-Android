@@ -134,13 +134,6 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
                 || tagClass.contains("size-medium")))
     }
 
-    val largestImage: String?
-        /*
-             * same as above, but doesn't enforce the max width - will return the first image found if
-             * no images have their width set
-             */
-        get() = getLargestImage(-1)
-
     companion object {
         private val IMG_TAG_PATTERN: Pattern = Pattern.compile(
             "<img[^>]* src=\\\"([^\\\"]*)\\\"[^>]*>",
