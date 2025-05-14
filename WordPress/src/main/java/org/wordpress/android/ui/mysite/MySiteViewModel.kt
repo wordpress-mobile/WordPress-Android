@@ -218,6 +218,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
+            runApplicationPasswordDiscovery(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
@@ -475,6 +476,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordUiModel.value = null
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
