@@ -2,7 +2,6 @@
 
 package org.wordpress.android.ui.mysite
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.StringRes
@@ -56,11 +55,13 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
-import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
+import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
@@ -133,6 +134,8 @@ class MySiteViewModel @Inject constructor(
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
 
+    val applicationPasswordUiModel = MutableLiveData<MySiteCardAndItem.Card?>()
+
     private val _applicationPasswordUrlStateFlow = MutableStateFlow("")
     val applicationPasswordUrlStateFlow get() = _applicationPasswordUrlStateFlow.asStateFlow()
 
@@ -151,21 +154,24 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
+        applicationPasswordUiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel
     ) { siteInfoHeaderCard,
+        applicationPAsswordModel,
         accountData,
         dashboardCards,
         siteItems ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + dashboardCards)
+            SiteSelected(dashboardData = headerList + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + siteItems)
+            SiteSelected(dashboardData = headerList + siteItems)
         else
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard))
+            SiteSelected(dashboardData = headerList)
     }.distinctUntilChanged()
 
     init {
@@ -217,10 +223,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun runApplicationPasswordDiscovery() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-
+    private fun runApplicationPasswordDiscovery(site: SiteModel) {
         viewModelScope.launch {
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
@@ -230,8 +233,22 @@ class MySiteViewModel @Inject constructor(
             }
 
             val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-            if (authorizationUrlComplete.isNotEmpty()) {
-                _applicationPasswordUrlStateFlow.emit(authorizationUrlComplete)
+            if (authorizationUrlComplete.isEmpty()) {
+                applicationPasswordUiModel.postValue(null)
+            } else {
+                applicationPasswordUiModel.postValue(
+                    MySiteCardAndItem.Card.QuickLinksItem(
+                        listOf(
+                            QuickLinkItem(
+                                label = UiString.UiStringRes(R.string.application_password_title),
+                                icon = R.drawable.ic_lock_white_24dp,
+                                onClick = ListItemInteraction.create {
+                                    Log.d("WP_RS", "Clicked $authorizationUrlComplete")
+                                }
+                            )
+                        )
+                    )
+                )
             }
         }
     }
@@ -350,6 +367,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
+        applicationPasswordUiModel.value = null
         super.onCleared()
     }
 

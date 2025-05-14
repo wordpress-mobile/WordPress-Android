@@ -169,9 +169,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
-
-        // This is work in progress, we are not running the flow for regular users yet
-        viewModel.runApplicationPasswordDiscovery()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
