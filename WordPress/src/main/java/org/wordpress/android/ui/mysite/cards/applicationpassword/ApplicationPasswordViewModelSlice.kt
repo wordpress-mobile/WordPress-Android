@@ -16,7 +16,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -26,7 +25,6 @@ import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
-
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -48,8 +46,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    val _uiModel = MutableLiveData<MySiteCardAndItem.Card?>()
-    val uiModel: LiveData<MySiteCardAndItem.Card?> = _uiModel
+    val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
+    val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
     fun buildCard(siteModel: SiteModel) {
         buildApplicationPasswordDiscovery(siteModel)
@@ -60,11 +58,11 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         val cachedValue = siteURLCache[site.url]
         if (cachedValue == null) {
             // No cached value, set to null until get a response
-            _uiModel.postValue(null)
+            uiModelMutable.postValue(null)
         } else {
             // If cached value is empty, it means the site has no authentication URL
             if (cachedValue.isEmpty()) {
-                _uiModel.postValue(null)
+                uiModelMutable.postValue(null)
             } else {
                 postAuthenticationUrl(cachedValue)
             }
@@ -81,7 +79,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 
             val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
-                _uiModel.postValue(null)
+                uiModelMutable.postValue(null)
                 siteURLCache[site.url] = ""
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
@@ -91,7 +89,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private fun postAuthenticationUrl(authorizationUrlComplete: String) {
-        _uiModel.postValue(
+        uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
