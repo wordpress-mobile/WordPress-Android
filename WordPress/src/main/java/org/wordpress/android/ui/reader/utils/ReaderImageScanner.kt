@@ -97,10 +97,11 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
             }
 
             // Look through the srcset attribute (if set) for the largest available size of this image.
-            val bestFromSrcset = ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag)
-            if (bestFromSrcset != null && bestFromSrcset.width > currentMaxWidth) {
-                currentMaxWidth = bestFromSrcset.width
-                currentImageUrl = bestFromSrcset.url
+            ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag)?.let { bestFromSrcset ->
+                if (bestFromSrcset.width > currentMaxWidth) {
+                    currentMaxWidth = bestFromSrcset.width
+                    currentImageUrl = bestFromSrcset.url
+                }
             }
 
             // Check if the image tag's class suggests it's a good enough size.
