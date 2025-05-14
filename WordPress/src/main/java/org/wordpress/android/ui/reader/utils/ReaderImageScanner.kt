@@ -5,9 +5,9 @@ import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
 import java.util.regex.Pattern
 import kotlin.math.max
 
-class ReaderImageScanner(private val content: String?, private val isPrivate: Boolean) {
+class ReaderImageScanner(private val content: String, private val isPrivate: Boolean) {
     private val contentContainsImages =
-        content != null && content.contains("<img")
+        content.contains("<img")
 
     /*
     * start scanning the content for images and notify the passed listener about each one
