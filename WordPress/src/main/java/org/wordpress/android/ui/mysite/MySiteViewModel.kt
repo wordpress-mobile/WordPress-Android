@@ -3,7 +3,6 @@
 package org.wordpress.android.ui.mysite
 
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +14,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,7 +22,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -52,15 +49,9 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
-import rs.wordpress.api.kotlin.ApiDiscoveryResult
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -146,7 +137,7 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
-        applicationPasswordViewModelSlice.uiMode,
+        applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel

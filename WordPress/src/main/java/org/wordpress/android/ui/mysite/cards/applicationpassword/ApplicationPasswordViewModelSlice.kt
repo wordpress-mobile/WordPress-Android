@@ -18,9 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.Event
@@ -31,7 +29,6 @@ import javax.inject.Named
 
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
@@ -45,8 +42,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    fun site() = selectedSiteRepository.getSelectedSite()
-
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
@@ -54,7 +49,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val onSnackbarMessage = _onSnackbarMessage
 
     val _uiModel = MutableLiveData<MySiteCardAndItem.Card?>()
-    val uiMode: LiveData<MySiteCardAndItem.Card?> = _uiModel
+    val uiModel: LiveData<MySiteCardAndItem.Card?> = _uiModel
 
     fun buildCard(siteModel: SiteModel) {
         buildApplicationPasswordDiscovery(siteModel)
