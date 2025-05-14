@@ -26,8 +26,8 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
     }
 
     /*
-     * returns a list of image URLs in the content up to the max above a certain width - pass zero
-     * to include all images regardless of size
+     * returns a list of image URLs in the content up to the max above a certain width.
+     * pass zero as the count to include all images regardless of size.
      */
     @Suppress("NestedBlockDepth")
     fun getImageList(maxImageCount: Int, minImageWidth: Int): ReaderImageList {
