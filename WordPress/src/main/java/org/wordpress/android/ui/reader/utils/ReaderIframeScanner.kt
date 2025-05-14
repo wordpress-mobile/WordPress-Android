@@ -5,8 +5,6 @@ import java.util.regex.Pattern
 
 class ReaderIframeScanner(private val content: String) {
     fun beginScan(listener: HtmlScannerListener) {
-        requireNotNull(listener) { "HtmlScannerListener is required" }
-
         val matcher = IFRAME_TAG_PATTERN.matcher(content)
         while (matcher.find()) {
             val tag = matcher.group(0)
