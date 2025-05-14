@@ -1614,7 +1614,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerProgressBar.visibility = View.VISIBLE
         renderer = ReaderPostRenderer(
             readerWebView,
-            viewModel.post,
+            post,
             readerCssProvider,
             getReadingPreferences()
         ).also {

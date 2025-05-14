@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +66,7 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
         }
     }
 
+    @Nullable
     public ImageSize getImageSize(final String imageUrl) {
         if (imageUrl == null) {
             return null;
