@@ -1,94 +1,29 @@
 package org.wordpress.android.ui.reader
 
 import android.content.Context
-import android.graphics.Color
-import androidx.core.content.res.ResourcesCompat
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.HtmlUtils
-import org.wordpress.android.util.extensions.getColorFromAttribute
-import com.google.android.material.R as MaterialR
 
 /*
-* class which holds all resource-based variables used when rendering post detail
+* class which holds resource-based variables used when rendering post detail
 */
 internal class ReaderResourceVars(context: Context) {
     val marginMediumPx: Int
 
     val isWideDisplay: Boolean
-    val textColor: String
     val fullSizeImageWidthPx: Int
-    private val featuredImageHeightPx: Int
 
     val videoWidthPx: Int
     val videoHeightPx: Int
 
-    private val linkColorStr: String
-    private val greyMediumDarkStr: String
-    private val greyLightStr: String
-    private val greyExtraLightStr: String
-    private val greyDisabledStr: String
-
     init {
         val resources = context.resources
-
         val displayWidthPx = DisplayUtils.getWindowPixelWidth(context)
-
-        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) >= MIN_WIDE_DISPLAY_WIDTH_DP
-
         val marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large)
         val detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin)
 
-        featuredImageHeightPx =
-            resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
+        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) >= MIN_WIDE_DISPLAY_WIDTH_DP
         marginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium)
-
-        val onSurfaceColor =
-            context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
-
-        val onSurfaceHighType = ("rgba(" + Color.red(onSurfaceColor) + ", "
-                + Color.green(onSurfaceColor) + ", "
-                + Color.blue(onSurfaceColor) + ", "
-                + ResourcesCompat.getFloat(
-            resources,
-            MaterialR.dimen.material_emphasis_high_type
-        )
-                + ")")
-
-        greyMediumDarkStr = ("rgba(" + Color.red(onSurfaceColor) + ", "
-                + Color.green(onSurfaceColor) + ", "
-                + Color.blue(onSurfaceColor) + ", "
-                + ResourcesCompat.getFloat(
-            resources,
-            MaterialR.dimen.material_emphasis_medium
-        )
-                + ")")
-
-        greyLightStr = ("rgba(" + Color.red(onSurfaceColor) + ", "
-                + Color.green(onSurfaceColor) + ", "
-                + Color.blue(onSurfaceColor) + ", "
-                + ResourcesCompat.getFloat(
-            resources,
-            MaterialR.dimen.material_emphasis_disabled
-        )
-                + ")")
-
-        greyExtraLightStr = ("rgba(" + Color.red(onSurfaceColor) + ", "
-                + Color.green(onSurfaceColor) + ", "
-                + Color.blue(onSurfaceColor) + ", "
-                + ResourcesCompat.getFloat(resources, R.dimen.emphasis_low) + ")")
-
-        greyDisabledStr = ("rgba(" + Color.red(onSurfaceColor) + ", "
-                + Color.green(onSurfaceColor) + ", "
-                + Color.blue(onSurfaceColor) + ", "
-                + ResourcesCompat.getFloat(
-            resources,
-            MaterialR.dimen.material_emphasis_disabled
-        )
-                + ")")
-
-        textColor = onSurfaceHighType
-        linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_post_body_link)
 
         // full-size image width must take margin into account
         fullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2)
