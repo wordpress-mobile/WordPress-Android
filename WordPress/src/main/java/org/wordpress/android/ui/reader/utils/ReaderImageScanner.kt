@@ -5,9 +5,9 @@ import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
 import java.util.regex.Pattern
 import kotlin.math.max
 
-class ReaderImageScanner(private val mContent: String?, private val mIsPrivate: Boolean) {
-    private val mContentContainsImages =
-        mContent != null && mContent.contains("<img")
+class ReaderImageScanner(private val content: String?, private val isPrivate: Boolean) {
+    private val contentContainsImages =
+        content != null && content.contains("<img")
 
     /*
     * start scanning the content for images and notify the passed listener about each one
@@ -15,11 +15,11 @@ class ReaderImageScanner(private val mContent: String?, private val mIsPrivate: 
     fun beginScan(listener: HtmlScannerListener) {
         requireNotNull(listener) { "HtmlScannerListener is required" }
 
-        if (!mContentContainsImages) {
+        if (!contentContainsImages) {
             return
         }
 
-        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
+        val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
             val imageTag = imgMatcher.group(0)
             val imageUrl = imgMatcher.group(1)
@@ -32,13 +32,13 @@ class ReaderImageScanner(private val mContent: String?, private val mIsPrivate: 
      * to include all images regardless of size
      */
     fun getImageList(maxImageCount: Int, minImageWidth: Int): ReaderImageList {
-        val imageList = ReaderImageList(mIsPrivate)
+        val imageList = ReaderImageList(isPrivate)
 
-        if (!mContentContainsImages) {
+        if (!contentContainsImages) {
             return imageList
         }
 
-        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
+        val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
             val imageTag = imgMatcher.group(0)
             val imageUrl = imgMatcher.group(1)
@@ -75,14 +75,14 @@ class ReaderImageScanner(private val mContent: String?, private val mIsPrivate: 
      * for an image that may be large enough to be suitable as a featured image
      */
     fun getLargestImage(minImageWidth: Int): String? {
-        if (!mContentContainsImages) {
+        if (!contentContainsImages) {
             return null
         }
 
         var currentImageUrl: String? = null
         var currentMaxWidth = minImageWidth
 
-        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
+        val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
             val imageTag = imgMatcher.group(0)
             val imageUrl = imgMatcher.group(1)

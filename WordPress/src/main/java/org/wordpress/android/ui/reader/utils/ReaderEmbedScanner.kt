@@ -3,15 +3,15 @@ package org.wordpress.android.ui.reader.utils
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
 import java.util.regex.Pattern
 
-class ReaderEmbedScanner(private val mContent: String) {
-    private val mKnownEmbeds = HashMap<Pattern, String>()
+class ReaderEmbedScanner(private val content: String) {
+    private val knownEmbeds = HashMap<Pattern, String>()
 
     init {
-        mKnownEmbeds[Pattern.compile(
+        knownEmbeds[Pattern.compile(
             "<blockquote[^<>]class=\"instagram-",
             Pattern.CASE_INSENSITIVE
         )] = "https://platform.instagram.com/en_US/embeds.js"
-        mKnownEmbeds[Pattern.compile(
+        knownEmbeds[Pattern.compile(
             "<fb:post",
             Pattern.CASE_INSENSITIVE
         )] = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.8"
@@ -20,11 +20,11 @@ class ReaderEmbedScanner(private val mContent: String) {
     fun beginScan(listener: HtmlScannerListener) {
         requireNotNull(listener) { "HtmlScannerListener is required" }
 
-        for (pattern in mKnownEmbeds.keys) {
-            if (pattern.matcher(mContent).find()) {
+        for (pattern in knownEmbeds.keys) {
+            if (pattern.matcher(content).find()) {
                 // Use the onTagFound callback to pass a URL. Not super clean, but avoid clutter with more kind
                 // of listeners.
-                listener.onTagFound("", mKnownEmbeds[pattern])
+                listener.onTagFound("", knownEmbeds[pattern])
             }
         }
     }

@@ -3,11 +3,11 @@ package org.wordpress.android.ui.reader.utils
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
 import java.util.regex.Pattern
 
-class ReaderIframeScanner(private val mContent: String) {
+class ReaderIframeScanner(private val content: String) {
     fun beginScan(listener: HtmlScannerListener) {
         requireNotNull(listener) { "HtmlScannerListener is required" }
 
-        val matcher = IFRAME_TAG_PATTERN.matcher(mContent)
+        val matcher = IFRAME_TAG_PATTERN.matcher(content)
         while (matcher.find()) {
             val tag = matcher.group(0)
             val src = matcher.group(1)
@@ -21,7 +21,7 @@ class ReaderIframeScanner(private val mContent: String) {
              */
         get() {
             val matcher =
-                IFRAME_TAG_PATTERN.matcher(mContent)
+                IFRAME_TAG_PATTERN.matcher(content)
             while (matcher.find()) {
                 val src = matcher.group(1)
                 if (ReaderVideoUtils.canShowVideoThumbnail(src)) {
