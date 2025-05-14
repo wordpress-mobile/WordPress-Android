@@ -175,7 +175,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         whenever(applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(any()))
             .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
 
-        // Add site tp the cache
+        // Add site to the cache
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
         // call function again
