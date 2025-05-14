@@ -389,7 +389,6 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
-        applicationPasswordViewModelSlice.clearValue()
         applicationPasswordViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
@@ -402,7 +401,6 @@ class MySiteViewModel @Inject constructor(
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
-        applicationPasswordViewModelSlice.clearValue()
         applicationPasswordViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()

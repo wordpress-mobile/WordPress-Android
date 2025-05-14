@@ -39,6 +39,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 ) {
     lateinit var scope: CoroutineScope
 
+    private val siteURLCache = mutableMapOf<String, String>()
+
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
     }
@@ -59,6 +61,21 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
+        // Check if the site URL is already cached
+        val cachedValue = siteURLCache[site.url]
+        if (cachedValue == null) {
+            // No cached value, set to null until get a response
+            _uiModel.postValue(null)
+        } else {
+            // If cached value is empty, it means the site has no authentication URL
+            if (cachedValue.isEmpty()) {
+                _uiModel.postValue(null)
+            } else {
+                postAuthenticationUrl(cachedValue)
+            }
+            return
+        }
+
         scope.launch {
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
@@ -70,20 +87,26 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 _uiModel.postValue(null)
+                siteURLCache[site.url] = ""
             } else {
-                _uiModel.postValue(
-                    MySiteCardAndItem.Card.QuickLinksItem(
-                        listOf(
-                            QuickLinkItem(
-                                label = UiString.UiStringRes(R.string.application_password_title),
-                                icon = R.drawable.ic_lock_white_24dp,
-                                onClick = onClick(authorizationUrlComplete)
-                            )
-                        )
-                    )
-                )
+                postAuthenticationUrl(authorizationUrlComplete)
+                siteURLCache[site.url] = authorizationUrlComplete
             }
         }
+    }
+
+    private fun postAuthenticationUrl(authorizationUrlComplete: String) {
+        _uiModel.postValue(
+            MySiteCardAndItem.Card.QuickLinksItem(
+                listOf(
+                    QuickLinkItem(
+                        label = UiString.UiStringRes(R.string.application_password_title),
+                        icon = R.drawable.ic_lock_white_24dp,
+                        onClick = onClick(authorizationUrlComplete)
+                    )
+                )
+            )
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -130,13 +153,4 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             )
         )
     }
-
-    fun clearValue() {
-        _uiModel.postValue(null)
-    }
-
-    data class MoreClickWithTask(
-        val listActionType: ListItemAction,
-        val quickStartEvent: QuickStartEvent
-    )
 }
