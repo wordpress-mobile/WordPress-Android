@@ -544,14 +544,14 @@ class ReaderPostRenderer(
         contentCustomised =
             contentCustomised.replace("\\s*(background-color)\\s*:\\s*.+?\\s*;\\s*".toRegex(), "")
 
-        for (classToAmend in classAmendRegexes) {
+        classAmendRegexes.forEach { classToAmend ->
             contentCustomised = contentCustomised.replace(
                 classToAmend.toRegex(),
                 "$1 $galleryOnlyClass$2"
             )
         }
 
-        for (jsUrl in jsToInject) {
+        jsToInject.forEach { jsUrl ->
             sbHtml.append("<script src=\"").append(jsUrl)
                 .append("\" type=\"text/javascript\" async></script>")
         }
