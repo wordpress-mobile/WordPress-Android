@@ -115,7 +115,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given login scenario, when api discovery is fails, then show no card`() = runTest {
+    fun `given login scenario, when api discovery fails, then show no card`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
