@@ -57,6 +57,8 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
 import androidx.core.content.edit
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
@@ -95,7 +97,6 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
-    private val _onShowApplicationPasswordLoginDialog = SingleLiveEvent<Event<String>>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -133,7 +134,8 @@ class MySiteViewModel @Inject constructor(
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
 
-    val onShowApplicationPasswordLoginDialog = _onShowApplicationPasswordLoginDialog as LiveData<Event<String>>
+    private val _applicationPasswordUrlStateFlow = MutableStateFlow("")
+    val applicationPasswordUrlStateFlow get() = _applicationPasswordUrlStateFlow.asStateFlow()
 
     val refresh =
         merge(
@@ -240,7 +242,7 @@ class MySiteViewModel @Inject constructor(
             if (!hasDismissedAuthorizationDialog) {
                 val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
                 if (authorizationUrlComplete.isNotEmpty()) {
-                    _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
+                    _applicationPasswordUrlStateFlow.emit(authorizationUrlComplete)
                 }
             }
         }
