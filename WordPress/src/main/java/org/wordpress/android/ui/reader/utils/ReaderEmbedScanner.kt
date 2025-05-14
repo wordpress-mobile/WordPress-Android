@@ -1,31 +1,30 @@
-package org.wordpress.android.ui.reader.utils;
+package org.wordpress.android.ui.reader.utils
 
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
+import java.util.regex.Pattern
 
-public class ReaderEmbedScanner {
-    private final String mContent;
+class ReaderEmbedScanner(private val mContent: String) {
+    private val mKnownEmbeds = HashMap<Pattern, String>()
 
-    private final HashMap<Pattern, String> mKnownEmbeds = new HashMap<>();
-
-    public ReaderEmbedScanner(String contentOfPost) {
-        mContent = contentOfPost;
-        mKnownEmbeds.put(Pattern.compile("<blockquote[^<>]class=\"instagram-", Pattern.CASE_INSENSITIVE),
-                         "https://platform.instagram.com/en_US/embeds.js");
-        mKnownEmbeds.put(Pattern.compile("<fb:post", Pattern.CASE_INSENSITIVE),
-                         "https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.8");
+    init {
+        mKnownEmbeds[Pattern.compile(
+            "<blockquote[^<>]class=\"instagram-",
+            Pattern.CASE_INSENSITIVE
+        )] = "https://platform.instagram.com/en_US/embeds.js"
+        mKnownEmbeds[Pattern.compile(
+            "<fb:post",
+            Pattern.CASE_INSENSITIVE
+        )] = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.8"
     }
 
-    public void beginScan(ReaderHtmlUtils.HtmlScannerListener listener) {
-        if (listener == null) {
-            throw new IllegalArgumentException("HtmlScannerListener is required");
-        }
+    fun beginScan(listener: HtmlScannerListener) {
+        requireNotNull(listener) { "HtmlScannerListener is required" }
 
-        for (Pattern pattern : mKnownEmbeds.keySet()) {
+        for (pattern in mKnownEmbeds.keys) {
             if (pattern.matcher(mContent).find()) {
                 // Use the onTagFound callback to pass a URL. Not super clean, but avoid clutter with more kind
                 // of listeners.
-                listener.onTagFound("", mKnownEmbeds.get(pattern));
+                listener.onTagFound("", mKnownEmbeds[pattern])
             }
         }
     }

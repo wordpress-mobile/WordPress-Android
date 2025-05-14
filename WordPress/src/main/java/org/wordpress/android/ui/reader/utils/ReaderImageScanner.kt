@@ -1,44 +1,29 @@
-package org.wordpress.android.ui.reader.utils;
+package org.wordpress.android.ui.reader.utils
 
-import androidx.annotation.NonNull;
+import org.wordpress.android.ui.reader.models.ReaderImageList
+import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils.HtmlScannerListener
+import java.util.regex.Pattern
+import kotlin.math.max
 
-import org.wordpress.android.ui.reader.models.ReaderImageList;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class ReaderImageScanner {
-    private final String mContent;
-    private final boolean mIsPrivate;
-    private final boolean mContentContainsImages;
-
-    private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
-            "<img[^>]* src=\\\"([^\\\"]*)\\\"[^>]*>",
-            Pattern.CASE_INSENSITIVE);
-
-    public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
-        mContent = contentOfPost;
-        mIsPrivate = isPrivate;
-        mContentContainsImages = mContent != null && mContent.contains("<img");
-    }
+class ReaderImageScanner(private val mContent: String?, private val mIsPrivate: Boolean) {
+    private val mContentContainsImages =
+        mContent != null && mContent.contains("<img")
 
     /*
-     * start scanning the content for images and notify the passed listener about each one
-     */
-    public void beginScan(ReaderHtmlUtils.HtmlScannerListener listener) {
-        if (listener == null) {
-            throw new IllegalArgumentException("HtmlScannerListener is required");
-        }
+    * start scanning the content for images and notify the passed listener about each one
+    */
+    fun beginScan(listener: HtmlScannerListener) {
+        requireNotNull(listener) { "HtmlScannerListener is required" }
 
         if (!mContentContainsImages) {
-            return;
+            return
         }
 
-        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(0);
-            String imageUrl = imgMatcher.group(1);
-            listener.onTagFound(imageTag, imageUrl);
+            val imageTag = imgMatcher.group(0)
+            val imageUrl = imgMatcher.group(1)
+            listener.onTagFound(imageTag, imageUrl)
         }
     }
 
@@ -46,110 +31,120 @@ public class ReaderImageScanner {
      * returns a list of image URLs in the content up to the max above a certain width - pass zero
      * to include all images regardless of size
      */
-    public ReaderImageList getImageList(int maxImageCount, int minImageWidth) {
-        ReaderImageList imageList = new ReaderImageList(mIsPrivate);
+    fun getImageList(maxImageCount: Int, minImageWidth: Int): ReaderImageList {
+        val imageList = ReaderImageList(mIsPrivate)
 
         if (!mContentContainsImages) {
-            return imageList;
+            return imageList
         }
 
-        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(0);
-            String imageUrl = imgMatcher.group(1);
+            val imageTag = imgMatcher.group(0)
+            val imageUrl = imgMatcher.group(1)
 
             if (minImageWidth == 0) {
-                imageList.addImageUrl(imageUrl);
+                imageList.addImageUrl(imageUrl)
             } else {
-                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
-                                     ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+                val width = max(
+                    ReaderHtmlUtils.getWidthAttrValue(imageTag).toDouble(),
+                    ReaderHtmlUtils.getIntQueryParam(imageUrl, "w").toDouble()
+                ).toInt()
                 if (width >= minImageWidth) {
-                    imageList.addImageUrl(imageUrl);
-                    if (maxImageCount > 0 && imageList.size() >= maxImageCount) {
-                        break;
+                    imageList.addImageUrl(imageUrl)
+                    if (maxImageCount > 0 && imageList.size >= maxImageCount) {
+                        break
                     }
                 }
             }
         }
 
-        return imageList;
+        return imageList
     }
 
     /*
      * returns true if there at least `minImageCount` images in the post content that are at
      * least `minImageWidth` in size
      */
-    public boolean hasUsableImageCount(int minImageCount, int minImageWidth) {
-        return getImageList(minImageCount, minImageWidth).size() == minImageCount;
+    fun hasUsableImageCount(minImageCount: Int, minImageWidth: Int): Boolean {
+        return getImageList(minImageCount, minImageWidth).size == minImageCount
     }
 
     /*
      * used when a post doesn't have a featured image assigned, searches post's content
      * for an image that may be large enough to be suitable as a featured image
      */
-    public String getLargestImage(int minImageWidth) {
+    fun getLargestImage(minImageWidth: Int): String? {
         if (!mContentContainsImages) {
-            return null;
+            return null
         }
 
-        String currentImageUrl = null;
-        int currentMaxWidth = minImageWidth;
+        var currentImageUrl: String? = null
+        var currentMaxWidth = minImageWidth
 
-        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        val imgMatcher = IMG_TAG_PATTERN.matcher(mContent)
         while (imgMatcher.find()) {
-            String imageTag = imgMatcher.group(0);
-            String imageUrl = imgMatcher.group(1);
+            val imageTag = imgMatcher.group(0)
+            val imageUrl = imgMatcher.group(1)
 
             // Primary source: check the width attribute.
-            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
-                                 ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+            val width = max(
+                ReaderHtmlUtils.getWidthAttrValue(imageTag).toDouble(),
+                ReaderHtmlUtils.getIntQueryParam(imageUrl, "w").toDouble()
+            ).toInt()
             if (width > currentMaxWidth) {
-                currentImageUrl = imageUrl;
-                currentMaxWidth = width;
+                currentImageUrl = imageUrl
+                currentMaxWidth = width
             }
 
             // Look through the srcset attribute (if set) for the largest available size of this image.
-            SrcsetImage bestFromSrcset = ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag);
-            if (bestFromSrcset != null && bestFromSrcset.getWidth() > currentMaxWidth) {
-                currentMaxWidth = bestFromSrcset.getWidth();
-                currentImageUrl = bestFromSrcset.getUrl();
+            val bestFromSrcset = ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag)
+            if (bestFromSrcset != null && bestFromSrcset.width > currentMaxWidth) {
+                currentMaxWidth = bestFromSrcset.width
+                currentImageUrl = bestFromSrcset.url
             }
 
             // Check if the image tag's class suggests it's a good enough size.
             // Only do this if we don't already have a winner, since we can't be sure of the width
             // and shouldn't replace an image we know for sure is larger than [minImageWidth].
-            if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
-                currentImageUrl = imageUrl;
+            if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag!!)) {
+                currentImageUrl = imageUrl
             }
 
             // Look for a data-large-file attribute if set and use the associated url.
             // Only do this if we don't already have a winner, since we can't be sure of the width
             // and shouldn't replace an image we know for sure is larger than [minImageWidth].
             if (currentImageUrl == null) {
-                currentImageUrl = ReaderHtmlUtils.getLargeFileAttr(imageTag);
+                currentImageUrl = ReaderHtmlUtils.getLargeFileAttr(imageTag)
             }
         }
 
-        return currentImageUrl;
+        return currentImageUrl
     }
 
     /*
      * returns true if the passed image tag has a "size-" class attribute which would make it
      * suitable for use as a featured image
      */
-    private boolean hasSuitableClassForFeaturedImage(@NonNull String imageTag) {
-        String tagClass = ReaderHtmlUtils.getClassAttrValue(imageTag);
+    private fun hasSuitableClassForFeaturedImage(imageTag: String): Boolean {
+        val tagClass = ReaderHtmlUtils.getClassAttrValue(imageTag)
         return (tagClass != null
                 && (tagClass.contains("size-full")
-                    || tagClass.contains("size-large")
-                    || tagClass.contains("size-medium")));
+                || tagClass.contains("size-large")
+                || tagClass.contains("size-medium")))
     }
 
-    /*
-     * same as above, but doesn't enforce the max width - will return the first image found if
-     * no images have their width set
-     */
-    public String getLargestImage() {
-        return getLargestImage(-1);
+    val largestImage: String?
+        /*
+             * same as above, but doesn't enforce the max width - will return the first image found if
+             * no images have their width set
+             */
+        get() = getLargestImage(-1)
+
+    companion object {
+        private val IMG_TAG_PATTERN: Pattern = Pattern.compile(
+            "<img[^>]* src=\\\"([^\\\"]*)\\\"[^>]*>",
+            Pattern.CASE_INSENSITIVE
+        )
     }
 }
