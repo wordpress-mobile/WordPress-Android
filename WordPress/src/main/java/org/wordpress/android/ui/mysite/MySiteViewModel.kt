@@ -88,9 +88,6 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
-    private val wpLoginClient: WpLoginClient,
-    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val siteSqlUtils: SiteSqlUtils,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -133,9 +130,6 @@ class MySiteViewModel @Inject constructor(
     )
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
-
-    private val _applicationPasswordUrlStateFlow = MutableStateFlow("")
-    val applicationPasswordUrlStateFlow get() = _applicationPasswordUrlStateFlow.asStateFlow()
 
     val refresh =
         merge(
@@ -219,77 +213,6 @@ class MySiteViewModel @Inject constructor(
             buildDashboardOrSiteItems(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
-        }
-    }
-
-//    private fun runApplicationPasswordDiscovery(site: SiteModel) {
-//        viewModelScope.launch {
-//            // If the site is already authorized, no need to run the discovery
-//            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
-//            if (storedSite != null &&
-//                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
-//                return@launch
-//            }
-//
-//            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-//            if (authorizationUrlComplete.isEmpty()) {
-//                applicationPasswordUiModel.postValue(null)
-//            } else {
-//                applicationPasswordUiModel.postValue(
-//                    MySiteCardAndItem.Card.QuickLinksItem(
-//                        listOf(
-//                            QuickLinkItem(
-//                                label = UiString.UiStringRes(R.string.application_password_title),
-//                                icon = R.drawable.ic_lock_white_24dp,
-//                                onClick = ListItemInteraction.create {
-//                                    _onNavigation.postValue(
-//                                        Event(
-//                                            SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
-//                                        )
-//                                    )
-//                                }
-//                            )
-//                        )
-//                    )
-//                )
-//            }
-//        }
-//    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
-        try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
-        } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable)
-        }
-    }
-
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        Log.e("WP_RS", "VM: Error during API discovery for $siteUrl", throwable)
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return ""
-    }
-
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
-            when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-                is ApiDiscoveryResult.Success -> {
-                    val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
-                    val authorizationUrlComplete =
-                        applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                    Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
-                    AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                    authorizationUrlComplete
-                }
-
-                is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
-                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
-
-                is ApiDiscoveryResult.FailureFindApiRoot ->
-                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
-
-                is ApiDiscoveryResult.FailureParseSiteUrl ->
-                    handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
         }
     }
 

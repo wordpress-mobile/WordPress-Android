@@ -452,15 +452,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
 
-        viewModel.applicationPasswordUrlStateFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach { url ->
-                if (url.isNotEmpty()) {
-                    openApplicationPasswordLogin(url)
-                }
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
-
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
             var quickStartScrollPosition = it
             if (quickStartScrollPosition == -1) {
