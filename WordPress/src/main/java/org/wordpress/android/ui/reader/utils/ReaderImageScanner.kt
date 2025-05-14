@@ -13,8 +13,6 @@ class ReaderImageScanner(private val content: String?, private val isPrivate: Bo
     * start scanning the content for images and notify the passed listener about each one
     */
     fun beginScan(listener: HtmlScannerListener) {
-        requireNotNull(listener) { "HtmlScannerListener is required" }
-
         if (!contentContainsImages) {
             return
         }
