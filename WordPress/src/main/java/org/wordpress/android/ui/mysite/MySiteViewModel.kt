@@ -244,7 +244,11 @@ class MySiteViewModel @Inject constructor(
                                 label = UiString.UiStringRes(R.string.application_password_title),
                                 icon = R.drawable.ic_lock_white_24dp,
                                 onClick = ListItemInteraction.create {
-                                    Log.d("WP_RS", "Clicked $authorizationUrlComplete")
+                                    _onNavigation.postValue(
+                                        Event(
+                                            SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
+                                        )
+                                    )
                                 }
                             )
                         )
