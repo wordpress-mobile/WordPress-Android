@@ -90,7 +90,6 @@ class MySiteViewModel @Inject constructor(
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val wpLoginClient: WpLoginClient,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val sharedPreferences: SharedPreferences,
     private val siteSqlUtils: SiteSqlUtils,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -222,16 +221,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         val site = selectedSiteRepository.getSelectedSite() ?: return
 
-        val firstTimeSiteOpen = !sharedPreferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
-        if (firstTimeSiteOpen) {
-            setSiteAsAlreadyOpened(site.url)
-            return
-        }
         viewModelScope.launch {
-            // If the user has dismissed the authorization dialog, no need to show it again
-            val hasDismissedAuthorizationDialog =
-                sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
-
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
@@ -239,11 +229,9 @@ class MySiteViewModel @Inject constructor(
                 return@launch
             }
 
-            if (!hasDismissedAuthorizationDialog) {
-                val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-                if (authorizationUrlComplete.isNotEmpty()) {
-                    _applicationPasswordUrlStateFlow.emit(authorizationUrlComplete)
-                }
+            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+            if (authorizationUrlComplete.isNotEmpty()) {
+                _applicationPasswordUrlStateFlow.emit(authorizationUrlComplete)
             }
         }
     }
@@ -282,18 +270,6 @@ class MySiteViewModel @Inject constructor(
 
                 is ApiDiscoveryResult.FailureParseSiteUrl ->
                     handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
-        }
-    }
-
-    private fun setSiteAsAlreadyOpened(siteUrl: String) {
-        viewModelScope.launch {
-            sharedPreferences.edit { putBoolean("$SITE_ALREADY_OPENED_PREFIX$siteUrl", true) }
-        }
-    }
-
-    fun onApplicationPasswordLoginDialogDismissed(siteUrl: String) {
-        viewModelScope.launch {
-            sharedPreferences.edit { putBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX$siteUrl", true) }
         }
     }
 
@@ -555,13 +531,10 @@ class MySiteViewModel @Inject constructor(
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
-        private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
-        private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
     }
 }
