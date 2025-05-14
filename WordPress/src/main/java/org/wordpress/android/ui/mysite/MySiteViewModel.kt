@@ -59,9 +59,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
-import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
@@ -89,6 +87,7 @@ class MySiteViewModel @Inject constructor(
     private val accountDataViewModelSlice: AccountDataViewModelSlice,
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
+    private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
     private val wpLoginClient: WpLoginClient,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
@@ -119,6 +118,7 @@ class MySiteViewModel @Inject constructor(
 
     val onNavigation = merge(
         _onNavigation,
+        applicationPasswordViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
         dashboardCardsViewModelSlice.onNavigation,
         dashboardItemsViewModelSlice.onNavigation
@@ -133,8 +133,6 @@ class MySiteViewModel @Inject constructor(
     )
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
-
-    val applicationPasswordUiModel = MutableLiveData<MySiteCardAndItem.Card?>()
 
     private val _applicationPasswordUrlStateFlow = MutableStateFlow("")
     val applicationPasswordUrlStateFlow get() = _applicationPasswordUrlStateFlow.asStateFlow()
@@ -154,7 +152,7 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
-        applicationPasswordUiModel,
+        applicationPasswordViewModelSlice.uiMode,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel
@@ -177,6 +175,7 @@ class MySiteViewModel @Inject constructor(
     init {
         dispatcher.register(this)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
+        applicationPasswordViewModelSlice.initialize(viewModelScope)
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
@@ -218,45 +217,44 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
-            runApplicationPasswordDiscovery(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
     }
 
-    private fun runApplicationPasswordDiscovery(site: SiteModel) {
-        viewModelScope.launch {
-            // If the site is already authorized, no need to run the discovery
-            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
-            if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
-                return@launch
-            }
-
-            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-            if (authorizationUrlComplete.isEmpty()) {
-                applicationPasswordUiModel.postValue(null)
-            } else {
-                applicationPasswordUiModel.postValue(
-                    MySiteCardAndItem.Card.QuickLinksItem(
-                        listOf(
-                            QuickLinkItem(
-                                label = UiString.UiStringRes(R.string.application_password_title),
-                                icon = R.drawable.ic_lock_white_24dp,
-                                onClick = ListItemInteraction.create {
-                                    _onNavigation.postValue(
-                                        Event(
-                                            SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
-                                        )
-                                    )
-                                }
-                            )
-                        )
-                    )
-                )
-            }
-        }
-    }
+//    private fun runApplicationPasswordDiscovery(site: SiteModel) {
+//        viewModelScope.launch {
+//            // If the site is already authorized, no need to run the discovery
+//            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
+//            if (storedSite != null &&
+//                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+//                return@launch
+//            }
+//
+//            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+//            if (authorizationUrlComplete.isEmpty()) {
+//                applicationPasswordUiModel.postValue(null)
+//            } else {
+//                applicationPasswordUiModel.postValue(
+//                    MySiteCardAndItem.Card.QuickLinksItem(
+//                        listOf(
+//                            QuickLinkItem(
+//                                label = UiString.UiStringRes(R.string.application_password_title),
+//                                icon = R.drawable.ic_lock_white_24dp,
+//                                onClick = ListItemInteraction.create {
+//                                    _onNavigation.postValue(
+//                                        Event(
+//                                            SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
+//                                        )
+//                                    )
+//                                }
+//                            )
+//                        )
+//                    )
+//                )
+//            }
+//        }
+//    }
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
@@ -372,7 +370,6 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
-        applicationPasswordUiModel.value = null
         super.onCleared()
     }
 
@@ -469,6 +466,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordViewModelSlice.clearValue()
+        applicationPasswordViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
@@ -480,7 +479,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
-        applicationPasswordUiModel.value = null
+        applicationPasswordViewModelSlice.clearValue()
+        applicationPasswordViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
