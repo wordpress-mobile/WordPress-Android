@@ -18,14 +18,12 @@ class ReaderEmbedScanner(private val content: String) {
     }
 
     fun beginScan(listener: HtmlScannerListener) {
-        requireNotNull(listener) { "HtmlScannerListener is required" }
-
-        for (pattern in knownEmbeds.keys) {
-            if (pattern.matcher(content).find()) {
+        knownEmbeds.keys
+            .filter { it.matcher(content).find() }
+            .forEach {
                 // Use the onTagFound callback to pass a URL. Not super clean, but avoid clutter with more kind
                 // of listeners.
-                listener.onTagFound("", knownEmbeds[pattern])
+                listener.onTagFound("", knownEmbeds[it])
             }
-        }
     }
 }
