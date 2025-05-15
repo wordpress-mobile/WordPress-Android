@@ -16,6 +16,7 @@
 
 COMMON_PATTERNS=(
   "*.md"
+  "*.po"
   "*.pot"
   "*.txt"
   ".gitignore"
