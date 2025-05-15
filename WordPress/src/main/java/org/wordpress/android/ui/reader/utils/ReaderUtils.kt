@@ -487,7 +487,7 @@ object ReaderUtils {
     fun isTagManagedInFollowingTab(
         tag: ReaderTag,
         isTopLevelReader: Boolean,
-        recyclerView: FilteredRecyclerView?
+        recyclerView: FilteredRecyclerView
     ): Boolean {
         if (isTopLevelReader) {
             if (isDefaultInMemoryTag(tag)) {
@@ -495,9 +495,7 @@ object ReaderUtils {
             }
 
             val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
-
-            val tabsInitializingNow = recyclerView?.currentFilter == null
-
+            val tabsInitializingNow = recyclerView.currentFilter == null
             val tagIsFollowedSitesOrAFollowedTag =
                 tag.isFollowedSites || tag.tagType == ReaderTagType.FOLLOWED
 
@@ -505,7 +503,7 @@ object ReaderUtils {
                 false
             } else if (tabsInitializingNow) {
                 tagIsFollowedSitesOrAFollowedTag
-            } else if (recyclerView?.currentFilter is ReaderTag) {
+            } else if (recyclerView.currentFilter is ReaderTag) {
                 if (recyclerView.isValidFilter(tag)) {
                     tag.isFollowedSites
                 } else {
