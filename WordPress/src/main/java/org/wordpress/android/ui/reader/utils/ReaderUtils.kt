@@ -31,16 +31,17 @@ object ReaderUtils {
         isPrivateAtomic: Boolean
     ): String {
         return getResizedImageUrl(
-            imageUrl,
-            width,
-            height,
-            isPrivate,
-            isPrivateAtomic,
-            PhotonUtils.Quality.MEDIUM
+            imageUrl = imageUrl,
+            width = width,
+            height = height,
+            isPrivate = isPrivate,
+            isPrivateAtomic = isPrivateAtomic,
+            quality = PhotonUtils.Quality.MEDIUM
         )
     }
 
     @JvmStatic
+    @Suppress("LongParameterList")
     fun getResizedImageUrl(
         imageUrl: String,
         width: Int,
@@ -50,17 +51,21 @@ object ReaderUtils {
         quality: PhotonUtils.Quality
     ): String {
         val unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl)
-
-
         return if (isPrivate && !isPrivateAtomic) {
             getImageForDisplayWithoutPhoton(
+                imageUrl = unescapedUrl,
+                width = width,
+                height = height,
+                forceHttps = true
+            )
+        } else {
+            PhotonUtils.getPhotonImageUrl(
                 unescapedUrl,
                 width,
                 height,
-                true
+                quality,
+                isPrivateAtomic
             )
-        } else {
-            PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, isPrivateAtomic)
         }
     }
 
@@ -71,11 +76,11 @@ object ReaderUtils {
         siteAccessibilityInfo: SiteAccessibilityInfo
     ): String {
         return getResizedImageUrl(
-            imageUrl,
-            width,
-            height,
-            siteAccessibilityInfo,
-            PhotonUtils.Quality.MEDIUM
+            imageUrl = imageUrl,
+            width = width,
+            height = height,
+            siteAccessibilityInfo = siteAccessibilityInfo,
+            quality = PhotonUtils.Quality.MEDIUM
         )
     }
 
@@ -98,10 +103,10 @@ object ReaderUtils {
             )
         } else {
             getImageForDisplayWithoutPhoton(
-                unescapedUrl,
-                width,
-                height,
-                siteAccessibilityInfo.siteVisibility == SiteVisibility.PRIVATE
+                imageUrl = unescapedUrl,
+                width = width,
+                height = height,
+                forceHttps = siteAccessibilityInfo.siteVisibility == SiteVisibility.PRIVATE
             )
         }
     }
@@ -164,6 +169,7 @@ object ReaderUtils {
         }
     }
 
+    @Suppress("SwallowedException")
     private fun isValidUrlEncodedString(title: String): Boolean {
         try {
             URI.create(title)
@@ -182,20 +188,20 @@ object ReaderUtils {
         isLikedByCurrentUser: Boolean
     ): String {
         if (isLikedByCurrentUser) {
-            when (numLikes) {
-                1 -> return context.getString(R.string.reader_likes_only_you)
-                2 -> return context.getString(R.string.reader_likes_you_and_one)
+            return when (numLikes) {
+                1 -> context.getString(R.string.reader_likes_only_you)
+                2 -> context.getString(R.string.reader_likes_you_and_one)
                 else -> {
                     val youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi)
-                    return String.format(youAndMultiLikes, numLikes - 1)
+                    String.format(youAndMultiLikes, numLikes - 1)
                 }
             }
         } else {
-            if (numLikes == 1) {
-                return context.getString(R.string.reader_likes_one)
+            return if (numLikes == 1) {
+                context.getString(R.string.reader_likes_one)
             } else {
                 val likes = context.getString(R.string.reader_likes_multi)
-                return String.format(likes, numLikes)
+                String.format(likes, numLikes)
             }
         }
     }
@@ -205,12 +211,12 @@ object ReaderUtils {
      */
     @JvmStatic
     fun getShortLikeLabelText(context: Context, numLikes: Int): String {
-        when (numLikes) {
-            0 -> return context.getString(R.string.reader_short_like_count_none)
-            1 -> return context.getString(R.string.reader_short_like_count_one)
+        return when (numLikes) {
+            0 -> context.getString(R.string.reader_short_like_count_none)
+            1 -> context.getString(R.string.reader_short_like_count_one)
             else -> {
                 val count = FormatUtils.formatInt(numLikes)
-                return String.format(
+                String.format(
                     context.getString(R.string.reader_short_like_count_multi),
                     count
                 )
@@ -227,12 +233,12 @@ object ReaderUtils {
     }
 
     fun getTextForCommentSnippet(context: Context, numComments: Int): String {
-        when (numComments) {
-            0 -> return context.getString(R.string.comments)
-            1 -> return context.getString(R.string.reader_short_comment_count_one)
+        return when (numComments) {
+            0 -> context.getString(R.string.comments)
+            1 -> context.getString(R.string.reader_short_comment_count_one)
             else -> {
                 val count = FormatUtils.formatInt(numComments)
-                return String.format(
+                String.format(
                     context.getString(R.string.reader_short_comment_count_multi),
                     count
                 )
@@ -297,7 +303,11 @@ object ReaderUtils {
         tagName: String,
         tagType: ReaderTagType
     ): ReaderTag {
-        return getTagFromTagName(tagName, tagType, false)
+        return getTagFromTagName(
+            tagName = tagName,
+            tagType = tagType,
+            markDefaultIfInMemory = false
+        )
     }
 
     @JvmStatic
@@ -309,12 +319,13 @@ object ReaderUtils {
         val tag = ReaderTagTable.getTag(tagName, tagType)
         return tag
             ?: createTagFromTagName(
-                tagName,
-                tagType,
-                markDefaultIfInMemory
+                tagName = tagName,
+                tagType = tagType,
+                isDefaultInMemoryTag = markDefaultIfInMemory
             )
     }
 
+    @JvmOverloads
     @JvmStatic
     fun createTagFromTagName(
         tagName: String,
@@ -475,6 +486,7 @@ object ReaderUtils {
         return orderedTagList
     }
 
+    @Suppress("ReturnCount")
     fun isTagManagedInFollowingTab(
         tag: ReaderTag,
         isTopLevelReader: Boolean,
@@ -511,6 +523,7 @@ object ReaderUtils {
         }
     }
 
+    @Suppress("ReturnCount")
     fun getValidTagForSharedPrefs(
         tag: ReaderTag,
         isTopLevelReader: Boolean,
@@ -524,9 +537,9 @@ object ReaderUtils {
         val isValidFilter = recyclerView.isValidFilter(tag)
         val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
         if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(
-                tag,
-                isTopLevelReader,
-                recyclerView
+                tag = tag,
+                isTopLevelReader = isTopLevelReader,
+                recyclerView = recyclerView
             )
         ) {
             return defaultTag
