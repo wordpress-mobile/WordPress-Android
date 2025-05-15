@@ -1,96 +1,108 @@
-package org.wordpress.android.ui.reader.utils;
+package org.wordpress.android.ui.reader.utils
 
-import android.content.Context;
-import android.net.Uri;
-import android.text.TextUtils;
+import android.content.Context
+import android.net.Uri
+import android.text.TextUtils
+import org.apache.commons.text.StringEscapeUtils
+import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderCommentTable
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.FilteredRecyclerView
+import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.util.FormatUtils
+import org.wordpress.android.util.PhotonUtils
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.UrlUtils
+import java.net.URI
+import java.util.Collections
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderCommentTable;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
-import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-public class ReaderUtils {
-    @NonNull
-    public static String getResizedImageUrl(
-            @NonNull final String imageUrl,
-            int width,
-            int height,
-            boolean isPrivate,
-            boolean isPrivateAtomic) {
-        return getResizedImageUrl(imageUrl, width, height, isPrivate, isPrivateAtomic, PhotonUtils.Quality.MEDIUM);
+object ReaderUtils {
+    @JvmStatic
+    fun getResizedImageUrl(
+        imageUrl: String,
+        width: Int,
+        height: Int,
+        isPrivate: Boolean,
+        isPrivateAtomic: Boolean
+    ): String {
+        return getResizedImageUrl(
+            imageUrl,
+            width,
+            height,
+            isPrivate,
+            isPrivateAtomic,
+            PhotonUtils.Quality.MEDIUM
+        )
     }
 
-    @NonNull
-    public static String getResizedImageUrl(@NonNull final String imageUrl,
-                                            int width,
-                                            int height,
-                                            boolean isPrivate,
-                                            boolean isPrivateAtomic,
-                                            @NonNull PhotonUtils.Quality quality) {
-        final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
+    @JvmStatic
+    fun getResizedImageUrl(
+        imageUrl: String,
+        width: Int,
+        height: Int,
+        isPrivate: Boolean,
+        isPrivateAtomic: Boolean,
+        quality: PhotonUtils.Quality
+    ): String {
+        val unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl)
 
 
-        if (isPrivate && !isPrivateAtomic) {
-            return getImageForDisplayWithoutPhoton(unescapedUrl, width, height, true);
+        return if (isPrivate && !isPrivateAtomic) {
+            getImageForDisplayWithoutPhoton(
+                unescapedUrl,
+                width,
+                height,
+                true
+            )
         } else {
-            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, isPrivateAtomic);
+            PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, isPrivateAtomic)
         }
     }
 
-    @NonNull
-    public static String getResizedImageUrl(@NonNull final String imageUrl,
-                                            int width,
-                                            int height,
-                                            @NonNull SiteAccessibilityInfo siteAccessibilityInfo) {
-        return getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo, PhotonUtils.Quality.MEDIUM);
+    fun getResizedImageUrl(
+        imageUrl: String,
+        width: Int,
+        height: Int,
+        siteAccessibilityInfo: SiteAccessibilityInfo
+    ): String {
+        return getResizedImageUrl(
+            imageUrl,
+            width,
+            height,
+            siteAccessibilityInfo,
+            PhotonUtils.Quality.MEDIUM
+        )
     }
 
-    @NonNull
-    public static String getResizedImageUrl(@NonNull final String imageUrl,
-                                            int width,
-                                            int height,
-                                            @NonNull SiteAccessibilityInfo siteAccessibilityInfo,
-                                            @NonNull PhotonUtils.Quality quality) {
-        final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
+    fun getResizedImageUrl(
+        imageUrl: String,
+        width: Int,
+        height: Int,
+        siteAccessibilityInfo: SiteAccessibilityInfo,
+        quality: PhotonUtils.Quality
+    ): String {
+        val unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl)
 
-        if (siteAccessibilityInfo.isPhotonCapable()) {
-            return PhotonUtils.getPhotonImageUrl(
-                    unescapedUrl,
-                    width,
-                    height,
-                    quality,
-                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE_ATOMIC
-            );
+        return if (siteAccessibilityInfo.isPhotonCapable) {
+            PhotonUtils.getPhotonImageUrl(
+                unescapedUrl,
+                width,
+                height,
+                quality,
+                siteAccessibilityInfo.siteVisibility == SiteVisibility.PRIVATE_ATOMIC
+            )
         } else {
-            return getImageForDisplayWithoutPhoton(
-                    unescapedUrl,
-                    width,
-                    height,
-                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE
-            );
+            getImageForDisplayWithoutPhoton(
+                unescapedUrl,
+                width,
+                height,
+                siteAccessibilityInfo.siteVisibility == SiteVisibility.PRIVATE
+            )
         }
     }
 
@@ -99,34 +111,31 @@ public class ReaderUtils {
      * (i.e. a private post - images in private posts can't use photon
      * but these are usually wp images so they support the h= and w= query params)
      */
-    @NonNull
-    private static String getImageForDisplayWithoutPhoton(
-            @NonNull final String imageUrl,
-            int width,
-            int height,
-            boolean forceHttps
-    ) {
+    private fun getImageForDisplayWithoutPhoton(
+        imageUrl: String,
+        width: Int,
+        height: Int,
+        forceHttps: Boolean
+    ): String {
         if (TextUtils.isEmpty(imageUrl)) {
-            return "";
+            return ""
         }
-
-        final String query;
-        if (width > 0 && height > 0) {
-            query = "?w=" + width + "&h=" + height;
+        val query = if (width > 0 && height > 0) {
+            "?w=$width&h=$height"
         } else if (width > 0) {
-            query = "?w=" + width;
+            "?w=$width"
         } else if (height > 0) {
-            query = "?h=" + height;
+            "?h=$height"
         } else {
-            query = "";
+            ""
         }
 
-        if (forceHttps) {
+        return if (forceHttps) {
             // remove the existing query string, add the new one, and make sure the url is https:
-            return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
+            UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query
         } else {
             // remove the existing query string, add the new one
-            return UrlUtils.removeQuery(imageUrl) + query;
+            UrlUtils.removeQuery(imageUrl) + query
         }
     }
 
@@ -135,50 +144,58 @@ public class ReaderUtils {
      * https://git.io/JqUEP
      * http://stackoverflow.com/a/1612015/1673548
      */
-    @NonNull
-    public static String sanitizeWithDashes(@NonNull final String title) {
-        String trimmedTitle = title.trim();
-        if (isValidUrlEncodedString(trimmedTitle)) {
-            return trimmedTitle;
+    @JvmStatic
+    fun sanitizeWithDashes(title: String): String {
+        val trimmedTitle = title.trim { it <= ' ' }
+        return if (isValidUrlEncodedString(
+                trimmedTitle
+            )
+        ) {
+            trimmedTitle
         } else {
-            return trimmedTitle
-                    .replaceAll("&[^\\s]*;", "") // remove html entities
-                    .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
-                    .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
-                            "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
-                    .replaceAll("--", "-"); // reduce double dashes potentially added above
+            trimmedTitle
+                .replace("&[^\\s]*;".toRegex(), "") // remove html entities
+                .replace("[\\.\\s]+".toRegex(), "-") // replace periods and whitespace with a dash
+                .replace(
+                    "[^\\p{L}\\p{Nd}\\-]+".toRegex(),
+                    ""
+                ) // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                .replace("--".toRegex(), "-") // reduce double dashes potentially added above
         }
     }
 
-    private static boolean isValidUrlEncodedString(@NonNull String title) {
+    private fun isValidUrlEncodedString(title: String): Boolean {
         try {
-            URI.create(title);
-        } catch (IllegalArgumentException e) {
-            return false;
+            URI.create(title)
+        } catch (e: IllegalArgumentException) {
+            return false
         }
-        return true;
+        return true
     }
 
-    @NonNull /*
+    /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
-     */
-    public static String getLongLikeLabelText(@NonNull Context context, int numLikes, boolean isLikedByCurrentUser) {
+     */ @JvmStatic
+    fun getLongLikeLabelText(
+        context: Context,
+        numLikes: Int,
+        isLikedByCurrentUser: Boolean
+    ): String {
         if (isLikedByCurrentUser) {
-            switch (numLikes) {
-                case 1:
-                    return context.getString(R.string.reader_likes_only_you);
-                case 2:
-                    return context.getString(R.string.reader_likes_you_and_one);
-                default:
-                    String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
-                    return String.format(youAndMultiLikes, numLikes - 1);
+            when (numLikes) {
+                1 -> return context.getString(R.string.reader_likes_only_you)
+                2 -> return context.getString(R.string.reader_likes_you_and_one)
+                else -> {
+                    val youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi)
+                    return String.format(youAndMultiLikes, numLikes - 1)
+                }
             }
         } else {
             if (numLikes == 1) {
-                return context.getString(R.string.reader_likes_one);
+                return context.getString(R.string.reader_likes_one)
             } else {
-                String likes = context.getString(R.string.reader_likes_multi);
-                return String.format(likes, numLikes);
+                val likes = context.getString(R.string.reader_likes_multi)
+                return String.format(likes, numLikes)
             }
         }
     }
@@ -186,353 +203,367 @@ public class ReaderUtils {
     /*
      * short like text ("1 like," "5 likes," etc.)
      */
-    public static String getShortLikeLabelText(@NonNull Context context, int numLikes) {
-        switch (numLikes) {
-            case 0:
-                return context.getString(R.string.reader_short_like_count_none);
-            case 1:
-                return context.getString(R.string.reader_short_like_count_one);
-            default:
-                String count = FormatUtils.formatInt(numLikes);
-                return String.format(context.getString(R.string.reader_short_like_count_multi), count);
+    @JvmStatic
+    fun getShortLikeLabelText(context: Context, numLikes: Int): String {
+        when (numLikes) {
+            0 -> return context.getString(R.string.reader_short_like_count_none)
+            1 -> return context.getString(R.string.reader_short_like_count_one)
+            else -> {
+                val count = FormatUtils.formatInt(numLikes)
+                return String.format(
+                    context.getString(R.string.reader_short_like_count_multi),
+                    count
+                )
+            }
         }
     }
 
-    @NonNull
-    public static String getShortCommentLabelText(@NonNull Context context, int numComments) {
+    fun getShortCommentLabelText(context: Context, numComments: Int): String {
         if (numComments == 1) {
-            return context.getString(R.string.reader_short_comment_count_one);
+            return context.getString(R.string.reader_short_comment_count_one)
         }
-        String count = FormatUtils.formatInt(numComments);
-        return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        val count = FormatUtils.formatInt(numComments)
+        return String.format(context.getString(R.string.reader_short_comment_count_multi), count)
     }
 
-    @NonNull
-    public static String getTextForCommentSnippet(@NonNull Context context, int numComments) {
-        switch (numComments) {
-            case 0:
-                return context.getString(R.string.comments);
-            case 1:
-                return context.getString(R.string.reader_short_comment_count_one);
-            default:
-                String count = FormatUtils.formatInt(numComments);
-                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+    fun getTextForCommentSnippet(context: Context, numComments: Int): String {
+        when (numComments) {
+            0 -> return context.getString(R.string.comments)
+            1 -> return context.getString(R.string.reader_short_comment_count_one)
+            else -> {
+                val count = FormatUtils.formatInt(numComments)
+                return String.format(
+                    context.getString(R.string.reader_short_comment_count_multi),
+                    count
+                )
+            }
         }
     }
 
     /*
      * returns true if a ReaderPost and ReaderComment exist for the passed Ids
      */
-    public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
+    fun postAndCommentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
         return ReaderPostTable.postExists(blogId, postId)
-               && ReaderCommentTable.commentExists(blogId, postId, commentId);
+                && ReaderCommentTable.commentExists(blogId, postId, commentId)
     }
 
     /*
      * used by Discover site picks to add a "Visit [BlogName]" link which shows the
      * native blog preview for that blog
      */
-    @NonNull
-    public static String makeBlogPreviewUrl(long blogId) {
-        return "wordpress://blogpreview?blogId=" + blogId;
+    fun makeBlogPreviewUrl(blogId: Long): String {
+        return "wordpress://blogpreview?blogId=$blogId"
     }
 
-    public static boolean isBlogPreviewUrl(@NonNull String url) {
-        return url.startsWith("wordpress://blogpreview");
+    fun isBlogPreviewUrl(url: String): Boolean {
+        return url.startsWith("wordpress://blogpreview")
     }
 
-    public static long getBlogIdFromBlogPreviewUrl(@NonNull String url) {
+    fun getBlogIdFromBlogPreviewUrl(url: String): Long {
         if (isBlogPreviewUrl(url)) {
-            String strBlogId = Uri.parse(url).getQueryParameter("blogId");
-            return StringUtils.stringToLong(strBlogId);
+            val strBlogId = Uri.parse(url).getQueryParameter("blogId")
+            return StringUtils.stringToLong(strBlogId)
         } else {
-            return 0;
+            return 0
         }
     }
 
-    public static boolean isTagUrl(@NonNull String url) {
-        return url.matches("^https?://wordpress\\.com/tag/[^/]+$");
+    fun isTagUrl(url: String): Boolean {
+        return url.matches("^https?://wordpress\\.com/tag/[^/]+$".toRegex())
     }
 
-    @NonNull
-    public static String getTagFromTagUrl(@NonNull String url) {
-        if (isTagUrl(url)) {
-            return url.substring(url.lastIndexOf("/") + 1);
+    fun getTagFromTagUrl(url: String): String {
+        return if (isTagUrl(url)) {
+            url.substring(url.lastIndexOf("/") + 1)
         } else {
-            return "";
+            ""
         }
     }
 
     /*
      * returns a tag object from the passed endpoint if tag is in database, otherwise null
      */
-    @Nullable
-    public static ReaderTag getTagFromEndpoint(@NonNull String endpoint) {
-        return ReaderTagTable.getTagFromEndpoint(endpoint);
+    fun getTagFromEndpoint(endpoint: String): ReaderTag? {
+        return ReaderTagTable.getTagFromEndpoint(endpoint)
     }
 
     /*
      * returns a tag object from the passed tag name - first checks for it in the tag db
      * (so we can also get its title & endpoint), returns a new tag if that fails
      */
-    public static ReaderTag getTagFromTagName(
-            @NonNull String tagName,
-            @NonNull ReaderTagType tagType
-    ) {
-        return getTagFromTagName(tagName, tagType, false);
+    @JvmStatic
+    fun getTagFromTagName(
+        tagName: String,
+        tagType: ReaderTagType
+    ): ReaderTag {
+        return getTagFromTagName(tagName, tagType, false)
     }
 
-    @NonNull
-    public static ReaderTag getTagFromTagName(
-            @NonNull String tagName,
-            @NonNull ReaderTagType tagType,
-            boolean markDefaultIfInMemory) {
-        ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
-        if (tag != null) {
-            return tag;
-        } else {
-            return createTagFromTagName(tagName, tagType, markDefaultIfInMemory);
-        }
-    }
-
-    @NonNull
-    public static ReaderTag createTagFromTagName(@NonNull String tagName, @NonNull ReaderTagType tagType) {
-        return createTagFromTagName(tagName, tagType, false);
-    }
-
-    @NonNull
-    public static ReaderTag createTagFromTagName(
-            @NonNull String tagName,
-            @NonNull ReaderTagType tagType,
-            boolean isDefaultInMemoryTag
-    ) {
-        String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
-        String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
-        return new ReaderTag(
-                tagSlug,
-                tagDisplayName,
+    @JvmStatic
+    fun getTagFromTagName(
+        tagName: String,
+        tagType: ReaderTagType,
+        markDefaultIfInMemory: Boolean
+    ): ReaderTag {
+        val tag = ReaderTagTable.getTag(tagName, tagType)
+        return tag
+            ?: createTagFromTagName(
                 tagName,
-                null,
                 tagType,
-                isDefaultInMemoryTag
-        );
+                markDefaultIfInMemory
+            )
     }
 
-    /*
-     * returns the default tag, which is the one selected by default in the reader when
-     * the user hasn't already chosen one
-     */
-    @NonNull
-    public static ReaderTag getDefaultTag() {
-        ReaderTag defaultTag = getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT);
-        if (defaultTag == null) {
-            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT, true);
+    @JvmOverloads
+    fun createTagFromTagName(
+        tagName: String,
+        tagType: ReaderTagType,
+        isDefaultInMemoryTag: Boolean = false
+    ): ReaderTag {
+        val tagSlug = sanitizeWithDashes(tagName).lowercase()
+        val tagDisplayName = if (tagType == ReaderTagType.DEFAULT) tagName else tagSlug
+        return ReaderTag(
+            tagSlug,
+            tagDisplayName,
+            tagName,
+            null,
+            tagType,
+            isDefaultInMemoryTag
+        )
+    }
+
+    val defaultTag: ReaderTag
+        /*
+             * returns the default tag, which is the one selected by default in the reader when
+             * the user hasn't already chosen one
+             */
+        get() {
+            var defaultTag =
+                getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT)
+            if (defaultTag == null) {
+                defaultTag = getTagFromTagName(
+                    ReaderTag.TAG_TITLE_DEFAULT,
+                    ReaderTagType.DEFAULT,
+                    true
+                )
+            }
+            return defaultTag
         }
-        return defaultTag;
-    }
 
-    public static @NonNull ReaderTag getDefaultTagFromDbOrCreateInMemory(
-            @NonNull Context context,
-            @NonNull TagUpdateClientUtilsProvider clientUtilsProvider
-    ) {
+    fun getDefaultTagFromDbOrCreateInMemory(
+        context: Context,
+        clientUtilsProvider: TagUpdateClientUtilsProvider
+    ): ReaderTag {
         // getDefaultTag() tries to get the default tag from reader db by tag endpoint or tag name.
         // In case it cannot get the default tag from db, it creates it in memory with createTagFromTagName
-        ReaderTag tag = getDefaultTag();
+        val tag = defaultTag
 
-        if (tag.isDefaultInMemoryTag()) {
+        if (tag.isDefaultInMemoryTag) {
             // if the tag was created in memory from createTagFromTagName
             // we need to set some fields as below before to use it
-            tag.setTagTitle(context.getString(R.string.reader_subscribed_display_name));
-            tag.setTagDisplayName(context.getString(R.string.reader_subscribed_display_name));
+            tag.tagTitle =
+                context.getString(R.string.reader_subscribed_display_name)
+            tag.tagDisplayName =
+                context.getString(R.string.reader_subscribed_display_name)
 
-            String baseUrl = clientUtilsProvider.getTagUpdateEndpointURL();
+            var baseUrl = clientUtilsProvider.getTagUpdateEndpointURL()
 
             if (baseUrl.endsWith("/")) {
-                baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+                baseUrl = baseUrl.substring(0, baseUrl.length - 1)
             }
 
-            tag.setEndpoint(baseUrl + ReaderTag.FOLLOWING_PATH);
+            tag.endpoint = baseUrl + ReaderTag.FOLLOWING_PATH
         }
 
-        return tag;
+        return tag
     }
 
     /*
      * used when storing search results in the reader post table
      */
-    @NonNull
-    public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String trimQuery = query.trim();
-        String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
-        return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
+    @JvmStatic
+    fun getTagForSearchQuery(query: String): ReaderTag {
+        val trimQuery = query.trim { it <= ' ' }
+        val slug = sanitizeWithDashes(trimQuery)
+        return ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH)
     }
 
-    @NonNull
-    public static Map<String, TagInfo> getDefaultTagInfo() {
-        // Note that the following is the desired order in the tabs
-        // (see usage in prependDefaults)
-        Map<String, TagInfo> defaultTagInfo = new LinkedHashMap<>();
+    val defaultTagInfo: Map<String, TagInfo>
+        get() {
+            // Note that the following is the desired order in the tabs
+            // (see usage in prependDefaults)
+            val defaultTagInfo: MutableMap<String, TagInfo> =
+                LinkedHashMap()
 
-        defaultTagInfo.put(ReaderConstants.KEY_FOLLOWING, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH));
-        defaultTagInfo.put(ReaderConstants.KEY_DISCOVER, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH));
-        defaultTagInfo.put(ReaderConstants.KEY_LIKES, new TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH));
-        defaultTagInfo.put(ReaderConstants.KEY_SAVED, new TagInfo(ReaderTagType.BOOKMARKED, ""));
+            defaultTagInfo[ReaderConstants.KEY_FOLLOWING] =
+                TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH)
+            defaultTagInfo[ReaderConstants.KEY_DISCOVER] =
+                TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH)
+            defaultTagInfo[ReaderConstants.KEY_LIKES] =
+                TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH)
+            defaultTagInfo[ReaderConstants.KEY_SAVED] = TagInfo(ReaderTagType.BOOKMARKED, "")
 
-        return defaultTagInfo;
-    }
-
-    private static boolean putIfAbsentDone(
-            @NonNull Map<String, ReaderTag> defaultTags,
-            String key,
-            @NonNull ReaderTag tag
-    ) {
-        boolean insertionDone = false;
-
-        if (defaultTags.get(key) == null) {
-            defaultTags.put(key, tag);
-            insertionDone = true;
+            return defaultTagInfo
         }
 
-        return insertionDone;
+    private fun putIfAbsentDone(
+        defaultTags: MutableMap<String?, ReaderTag?>,
+        key: String?,
+        tag: ReaderTag
+    ): Boolean {
+        var insertionDone = false
+
+        if (defaultTags[key] == null) {
+            defaultTags[key] = tag
+            insertionDone = true
+        }
+
+        return insertionDone
     }
 
-    private static void prependDefaults(
-            @NonNull Map<String, ReaderTag> defaultTags,
-            @NonNull ReaderTagList orderedTagList,
-            @NonNull Map<String, TagInfo> defaultTagInfo
+    private fun prependDefaults(
+        defaultTags: Map<String?, ReaderTag?>,
+        orderedTagList: ReaderTagList,
+        defaultTagInfo: Map<String?, TagInfo>
     ) {
-        if (defaultTags.isEmpty()) return;
+        if (defaultTags.isEmpty()) return
 
-        List<String> reverseOrderedKeys = new ArrayList<>(defaultTagInfo.keySet());
-        Collections.reverse(reverseOrderedKeys);
+        val reverseOrderedKeys: List<String?> = ArrayList(defaultTagInfo.keys)
+        Collections.reverse(reverseOrderedKeys)
 
-        for (String key : reverseOrderedKeys) {
+        for (key in reverseOrderedKeys) {
             if (defaultTags.containsKey(key)) {
-                ReaderTag tag = defaultTags.get(key);
+                val tag = defaultTags[key]
 
-                orderedTagList.add(0, tag);
+                orderedTagList.add(0, tag)
             }
         }
     }
 
-    private static boolean defaultTagFoundAndAdded(
-            @NonNull Map<String, TagInfo> defaultTagInfos,
-            @NonNull ReaderTag tag,
-            @NonNull Map<String, ReaderTag> defaultTags
-    ) {
-        boolean foundAndAdded = false;
+    private fun defaultTagFoundAndAdded(
+        defaultTagInfos: Map<String?, TagInfo>,
+        tag: ReaderTag,
+        defaultTags: MutableMap<String?, ReaderTag?>
+    ): Boolean {
+        var foundAndAdded = false
 
-        for (String key : defaultTagInfos.keySet()) {
-            if (defaultTagInfos.get(key).isDesiredTag(tag)) {
+        for (key in defaultTagInfos.keys) {
+            if (defaultTagInfos[key]!!.isDesiredTag(tag)) {
                 if (putIfAbsentDone(defaultTags, key, tag)) {
-                    foundAndAdded = true;
+                    foundAndAdded = true
                 }
-                break;
+                break
             }
         }
 
-        return foundAndAdded;
+        return foundAndAdded
     }
 
-    @NonNull
-    public static ReaderTagList getOrderedTagsList(
-            @NonNull ReaderTagList tagList,
-            @NonNull Map<String, TagInfo> defaultTagInfos
-    ) {
-        ReaderTagList orderedTagList = new ReaderTagList();
-        Map<String, ReaderTag> defaultTags = new HashMap<>();
+    fun getOrderedTagsList(
+        tagList: ReaderTagList,
+        defaultTagInfos: Map<String?, TagInfo>
+    ): ReaderTagList {
+        val orderedTagList = ReaderTagList()
+        val defaultTags: MutableMap<String?, ReaderTag?> = HashMap()
 
-        for (ReaderTag tag : tagList) {
-            if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue;
+        for (tag in tagList) {
+            if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue
 
-            orderedTagList.add(tag);
+            orderedTagList.add(tag)
         }
-        prependDefaults(defaultTags, orderedTagList, defaultTagInfos);
+        prependDefaults(defaultTags, orderedTagList, defaultTagInfos)
 
-        return orderedTagList;
+        return orderedTagList
     }
 
-    public static boolean isTagManagedInFollowingTab(
-            @NonNull ReaderTag tag,
-            boolean isTopLevelReader,
-            @NonNull FilteredRecyclerView recyclerView
-    ) {
+    fun isTagManagedInFollowingTab(
+        tag: ReaderTag,
+        isTopLevelReader: Boolean,
+        recyclerView: FilteredRecyclerView
+    ): Boolean {
         if (isTopLevelReader) {
-            if (ReaderUtils.isDefaultInMemoryTag(tag)) {
-                return true;
+            if (isDefaultInMemoryTag(tag)) {
+                return true
             }
 
-            boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
+            val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
 
-            boolean tabsInitializingNow = recyclerView.getCurrentFilter() == null;
+            val tabsInitializingNow = recyclerView.currentFilter == null
 
-            boolean tagIsFollowedSitesOrAFollowedTag = tag.isFollowedSites() || tag.tagType == ReaderTagType.FOLLOWED;
+            val tagIsFollowedSitesOrAFollowedTag =
+                tag.isFollowedSites || tag.tagType == ReaderTagType.FOLLOWED
 
-            if (isSpecialTag) {
-                return false;
+            return if (isSpecialTag) {
+                false
             } else if (tabsInitializingNow) {
-                return tagIsFollowedSitesOrAFollowedTag;
-            } else if (recyclerView.getCurrentFilter() instanceof ReaderTag) {
+                tagIsFollowedSitesOrAFollowedTag
+            } else if (recyclerView.currentFilter is ReaderTag) {
                 if (recyclerView.isValidFilter(tag)) {
-                    return tag.isFollowedSites();
+                    tag.isFollowedSites
                 } else {
                     // If we reach here it means we are setting a followed tag or site in the Following tab
-                    return true;
+                    true
                 }
             } else {
-                return false;
+                false
             }
         } else {
-            return tag.isFollowedSites();
+            return tag.isFollowedSites
         }
     }
 
-    public static @NonNull ReaderTag getValidTagForSharedPrefs(
-            @NonNull ReaderTag tag,
-            boolean isTopLevelReader,
-            @NonNull FilteredRecyclerView recyclerView,
-            @NonNull ReaderTag defaultTag
-    ) {
+    fun getValidTagForSharedPrefs(
+        tag: ReaderTag,
+        isTopLevelReader: Boolean,
+        recyclerView: FilteredRecyclerView,
+        defaultTag: ReaderTag
+    ): ReaderTag {
         if (!isTopLevelReader) {
-            return tag;
+            return tag
         }
 
-        boolean isValidFilter = recyclerView.isValidFilter(tag);
-        boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
-        if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(tag, isTopLevelReader, recyclerView)) {
-            return defaultTag;
+        val isValidFilter = recyclerView.isValidFilter(tag)
+        val isSpecialTag = tag.isDiscover || tag.isPostsILike || tag.isBookmarked
+        if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(
+                tag,
+                isTopLevelReader,
+                recyclerView
+            )
+        ) {
+            return defaultTag
         }
 
-        return tag;
+        return tag
     }
 
-    public static boolean isDefaultInMemoryTag(@NonNull ReaderTag tag) {
-        return tag.isDefaultInMemoryTag();
+    fun isDefaultInMemoryTag(tag: ReaderTag): Boolean {
+        return tag.isDefaultInMemoryTag
     }
 
-    @NonNull
-    public static String getCommaSeparatedTagSlugs(@NonNull ReaderTagList tags) {
-        StringBuilder slugs = new StringBuilder();
-        for (ReaderTag tag : tags) {
-            if (slugs.length() > 0) {
-                slugs.append(",");
+    @JvmStatic
+    fun getCommaSeparatedTagSlugs(tags: ReaderTagList): String {
+        val slugs = StringBuilder()
+        for (tag in tags) {
+            if (slugs.length > 0) {
+                slugs.append(",")
             }
-            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-            slugs.append(tagNameForApi);
+            val tagNameForApi = sanitizeWithDashes(tag.tagSlug)
+            slugs.append(tagNameForApi)
         }
-        return slugs.toString();
+        return slugs.toString()
     }
 
-    @NonNull
-    public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NonNull String commaSeparatedTagSlugs) {
-        ReaderTagList tags = new ReaderTagList();
-        if (!commaSeparatedTagSlugs.trim().isEmpty()) {
-            for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
-                ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
-                tags.add(tag);
+    @JvmStatic
+    fun getTagsFromCommaSeparatedSlugs(commaSeparatedTagSlugs: String): ReaderTagList {
+        val tags = ReaderTagList()
+        if (!commaSeparatedTagSlugs.trim { it <= ' ' }.isEmpty()) {
+            for (slug in commaSeparatedTagSlugs.split(",".toRegex()).toTypedArray()) {
+                val tag = getTagFromTagName(slug, ReaderTagType.DEFAULT)
+                tags.add(tag)
             }
         }
-        return tags;
+        return tags
     }
 
     /**
@@ -540,26 +571,25 @@ public class ReaderUtils {
      * blogId will be empty for feeds and in some instances, it is explicitly
      * setting blogId equal to the feedId
      */
-    public static boolean isExternalFeed(long blogId, long feedId) {
-        return (blogId == 0 && feedId != 0) || blogId == feedId;
+    @JvmStatic
+    fun isExternalFeed(blogId: Long, feedId: Long): Boolean {
+        return (blogId == 0L && feedId != 0L) || blogId == feedId
     }
 
-    @NonNull
-    public static String getReportPostUrl(@NonNull String blogUrl) {
-        return "https://wordpress.com/abuse/?report_url=" + blogUrl;
+    fun getReportPostUrl(blogUrl: String): String {
+        return "https://wordpress.com/abuse/?report_url=$blogUrl"
     }
 
-    @NonNull
-    public static String getReportUserUrl(@NonNull String blogUrl, long userId) {
-        return getReportPostUrl(blogUrl) + "&report_user_id=" + userId;
+    fun getReportUserUrl(blogUrl: String, userId: Long): String {
+        return getReportPostUrl(blogUrl) + "&report_user_id=" + userId
     }
 
-    public static boolean postExists(long blogId, long postId) {
-        return ReaderPostTable.postExists(blogId, postId);
+    fun postExists(blogId: Long, postId: Long): Boolean {
+        return ReaderPostTable.postExists(blogId, postId)
     }
 
-    public static boolean commentExists(long blogId, long postId, long commentId) {
-        return ReaderCommentTable.commentExists(blogId, postId, commentId);
+    fun commentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
+        return ReaderCommentTable.commentExists(blogId, postId, commentId)
     }
 
     /**
@@ -567,7 +597,7 @@ public class ReaderUtils {
      *
      * @param authorBlogId site id of the post's author
      */
-    public static boolean isSelfHosted(long authorBlogId) {
-        return authorBlogId < 1;
+    fun isSelfHosted(authorBlogId: Long): Boolean {
+        return authorBlogId < 1
     }
 }
