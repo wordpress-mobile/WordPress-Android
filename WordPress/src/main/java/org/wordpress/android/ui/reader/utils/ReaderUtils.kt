@@ -315,7 +315,7 @@ object ReaderUtils {
             )
     }
 
-    @JvmOverloads
+    @JvmStatic
     fun createTagFromTagName(
         tagName: String,
         tagType: ReaderTagType,
@@ -406,8 +406,8 @@ object ReaderUtils {
     }
 
     private fun putIfAbsentDone(
-        defaultTags: MutableMap<String?, ReaderTag?>,
-        key: String?,
+        defaultTags: MutableMap<String, ReaderTag>,
+        key: String,
         tag: ReaderTag
     ): Boolean {
         var insertionDone = false
@@ -421,9 +421,9 @@ object ReaderUtils {
     }
 
     private fun prependDefaults(
-        defaultTags: Map<String?, ReaderTag?>,
+        defaultTags: Map<String, ReaderTag>,
         orderedTagList: ReaderTagList,
-        defaultTagInfo: Map<String?, TagInfo>
+        defaultTagInfo: Map<String, TagInfo>
     ) {
         if (defaultTags.isEmpty()) return
 
@@ -440,9 +440,9 @@ object ReaderUtils {
     }
 
     private fun defaultTagFoundAndAdded(
-        defaultTagInfos: Map<String?, TagInfo>,
+        defaultTagInfos: Map<String, TagInfo>,
         tag: ReaderTag,
-        defaultTags: MutableMap<String?, ReaderTag?>
+        defaultTags: MutableMap<String, ReaderTag>
     ): Boolean {
         var foundAndAdded = false
 
@@ -460,10 +460,10 @@ object ReaderUtils {
 
     fun getOrderedTagsList(
         tagList: ReaderTagList,
-        defaultTagInfos: Map<String?, TagInfo>
+        defaultTagInfos: Map<String, TagInfo>
     ): ReaderTagList {
         val orderedTagList = ReaderTagList()
-        val defaultTags: MutableMap<String?, ReaderTag?> = HashMap()
+        val defaultTags: MutableMap<String, ReaderTag> = HashMap()
 
         for (tag in tagList) {
             if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue
