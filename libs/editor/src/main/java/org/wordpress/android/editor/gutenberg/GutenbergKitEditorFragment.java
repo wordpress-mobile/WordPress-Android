@@ -334,8 +334,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override
-    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
-            EditorFragmentNotAddedException {
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) {
+        return getTitleAndContent(originalContent, false);
+    }
+
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
+            boolean completeComposition) {
+
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -345,7 +350,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 result[0] = new Pair<>(title, content);
                 latch.countDown();
             }
-        }, false);
+        }, completeComposition);
 
         try {
             latch.await();
