@@ -1968,7 +1968,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      * 2. Saves the post via [EditPostActivity.updateAndSavePostAsync];
      * 3. Invokes the listener method parameter
      */
-    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?, isFromBackPress: Boolean = false) {
+    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?,
+                                                   isFromBackPress: Boolean = false) {
         if (editorFragment == null) {
             return
         }

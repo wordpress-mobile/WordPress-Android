@@ -341,7 +341,6 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
             boolean completeComposition) throws EditorFragmentNotAddedException {
-
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
