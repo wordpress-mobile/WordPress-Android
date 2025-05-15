@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.utils;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -144,7 +143,6 @@ public class ReaderUtils {
         }
     }
 
-    @NonNull
     private static boolean isValidUrlEncodedString(String title) {
         try {
             URI.create(title);
@@ -194,13 +192,11 @@ public class ReaderUtils {
     }
 
     public static String getShortCommentLabelText(Context context, int numComments) {
-        switch (numComments) {
-            case 1:
-                return context.getString(R.string.reader_short_comment_count_one);
-            default:
-                String count = FormatUtils.formatInt(numComments);
-                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        if (numComments == 1) {
+            return context.getString(R.string.reader_short_comment_count_one);
         }
+        String count = FormatUtils.formatInt(numComments);
+        return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
     }
 
     public static String getTextForCommentSnippet(Context context, int numComments) {
@@ -228,7 +224,7 @@ public class ReaderUtils {
      * native blog preview for that blog
      */
     public static String makeBlogPreviewUrl(long blogId) {
-        return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+        return "wordpress://blogpreview?blogId=" + blogId;
     }
 
     public static boolean isBlogPreviewUrl(String url) {
@@ -253,16 +249,6 @@ public class ReaderUtils {
             return url.substring(url.lastIndexOf("/") + 1);
         } else {
             return "";
-        }
-    }
-
-    /*
-     * set the background of the passed view to the round ripple drawable - only works on
-     * Lollipop or later, does nothing on earlier Android versions
-     */
-    public static void setBackgroundToRoundRipple(View view) {
-        if (view != null) {
-            view.setBackgroundResource(R.drawable.ripple_oval);
         }
     }
 
@@ -349,7 +335,7 @@ public class ReaderUtils {
      * used when storing search results in the reader post table
      */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String trimQuery = query != null ? query.trim() : "";
+        String trimQuery = query.trim();
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
         return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
     }
@@ -508,7 +494,7 @@ public class ReaderUtils {
 
     public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NonNull String commaSeparatedTagSlugs) {
         ReaderTagList tags = new ReaderTagList();
-        if (!commaSeparatedTagSlugs.trim().equals("")) {
+        if (!commaSeparatedTagSlugs.trim().isEmpty()) {
             for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
                 ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
                 tags.add(tag);
