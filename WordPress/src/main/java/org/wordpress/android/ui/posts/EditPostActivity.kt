@@ -1551,8 +1551,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     editorPhotoPicker?.hidePhotoPicker()
                 }
                 else -> {
-                    // Pass true to indicate this is from back press
-                    savePostAndOptionallyFinish(doFinish = true, forceSave = false, isFromBackPress = true)
+                    savePostAndOptionallyFinish(doFinish = true, forceSave = false)
                 }
             }
         }
@@ -1948,13 +1947,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         )
     }
 
-    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?, isFromBackPress: Boolean = false) {
+    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?, isFinishing: Boolean = false) {
         if (editorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
         }
         storePostViewModel.updatePostObjectWithUIAsync(
-            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent, isFromBackPress) }
+            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent, isFinishing) }
         ) { _: PostImmutableModel?, result: UpdatePostResult ->
             storePostViewModel.isSavingPostOnEditorExit = false
             // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
@@ -1969,21 +1968,21 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      * 3. Invokes the listener method parameter
      */
     private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?,
-                                                   isFromBackPress: Boolean = false) {
+                                                   isFinishing: Boolean = false) {
         if (editorFragment == null) {
             return
         }
         storePostViewModel.isSavingPostOnEditorExit = true
         storePostViewModel.showSavingProgressDialog()
-        updateAndSavePostAsync(listener, isFromBackPress)
+        updateAndSavePostAsync(listener, isFinishing)
     }
 
-    private fun updateFromEditor(oldContent: String, isFromBackPress: Boolean = false): UpdateFromEditor {
+    private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
                 val titleAndContent: Pair<CharSequence, CharSequence> = if (it is GutenbergKitEditorFragment) {
-                    it.getTitleAndContent(oldContent, isFromBackPress)
+                    it.getTitleAndContent(oldContent, isFinishing)
                 } else {
                     it.getTitleAndContent(oldContent)
                 }
@@ -2378,7 +2377,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean, isFromBackPress: Boolean = false) {
+    private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
         if (editorFragment?.isAdded != true) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
@@ -2422,7 +2421,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
         // Convert the lambda to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda), isFromBackPress)
+        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda), doFinish)
     }
 
     // Helper function to convert a lambda to OnPostUpdatedFromUIListener
