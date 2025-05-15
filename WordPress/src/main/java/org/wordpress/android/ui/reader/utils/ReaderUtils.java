@@ -135,11 +135,11 @@ public class ReaderUtils {
             return trimmedTitle;
         } else {
             return trimmedTitle
-                        .replaceAll("&[^\\s]*;", "") // remove html entities
-                        .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
-                        .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
-                                "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
-                        .replaceAll("--", "-"); // reduce double dashes potentially added above
+                    .replaceAll("&[^\\s]*;", "") // remove html entities
+                    .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
+                    .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
+                            "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                    .replaceAll("--", "-"); // reduce double dashes potentially added above
         }
     }
 
@@ -241,7 +241,7 @@ public class ReaderUtils {
     }
 
     public static boolean isTagUrl(@NonNull String url) {
-        return (url != null && url.matches("^https?://wordpress\\.com/tag/[^/]+$"));
+        return url.matches("^https?://wordpress\\.com/tag/[^/]+$");
     }
 
     public static String getTagFromTagUrl(@NonNull String url) {
@@ -271,8 +271,8 @@ public class ReaderUtils {
     }
 
     public static ReaderTag getTagFromTagName(
-            @NonNull String tagName, @NonNull
-            ReaderTagType tagType,
+            @NonNull String tagName,
+            @NonNull ReaderTagType tagType,
             boolean markDefaultIfInMemory) {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
@@ -286,7 +286,11 @@ public class ReaderUtils {
         return createTagFromTagName(tagName, tagType, false);
     }
 
-    public static ReaderTag createTagFromTagName(@NonNull String tagName, @NonNull ReaderTagType tagType, boolean isDefaultInMemoryTag) {
+    public static ReaderTag createTagFromTagName(
+            @NonNull String tagName,
+            @NonNull ReaderTagType tagType,
+            boolean isDefaultInMemoryTag
+    ) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
         return new ReaderTag(
@@ -313,7 +317,7 @@ public class ReaderUtils {
 
     public static @NonNull ReaderTag getDefaultTagFromDbOrCreateInMemory(
             @NonNull Context context,
-            TagUpdateClientUtilsProvider clientUtilsProvider
+            @NonNull TagUpdateClientUtilsProvider clientUtilsProvider
     ) {
         // getDefaultTag() tries to get the default tag from reader db by tag endpoint or tag name.
         // In case it cannot get the default tag from db, it creates it in memory with createTagFromTagName
@@ -359,7 +363,11 @@ public class ReaderUtils {
         return defaultTagInfo;
     }
 
-    private static boolean putIfAbsentDone(Map<String, ReaderTag> defaultTags, String key, ReaderTag tag) {
+    private static boolean putIfAbsentDone(
+            @NonNull Map<String, ReaderTag> defaultTags,
+            String key,
+            @NonNull ReaderTag tag
+    ) {
         boolean insertionDone = false;
 
         if (defaultTags.get(key) == null) {
@@ -371,9 +379,9 @@ public class ReaderUtils {
     }
 
     private static void prependDefaults(
-            Map<String, ReaderTag> defaultTags,
-            ReaderTagList orderedTagList,
-            Map<String, TagInfo> defaultTagInfo
+            @NonNull Map<String, ReaderTag> defaultTags,
+            @NonNull ReaderTagList orderedTagList,
+            @NonNull Map<String, TagInfo> defaultTagInfo
     ) {
         if (defaultTags.isEmpty()) return;
 
@@ -390,9 +398,9 @@ public class ReaderUtils {
     }
 
     private static boolean defaultTagFoundAndAdded(
-            Map<String, TagInfo> defaultTagInfos,
-            ReaderTag tag,
-            Map<String, ReaderTag> defaultTags
+            @NonNull Map<String, TagInfo> defaultTagInfos,
+            @NonNull ReaderTag tag,
+            @NonNull Map<String, ReaderTag> defaultTags
     ) {
         boolean foundAndAdded = false;
 
@@ -408,7 +416,10 @@ public class ReaderUtils {
         return foundAndAdded;
     }
 
-    public static ReaderTagList getOrderedTagsList(ReaderTagList tagList, Map<String, TagInfo> defaultTagInfos) {
+    public static ReaderTagList getOrderedTagsList(
+            @NonNull ReaderTagList tagList,
+            @NonNull Map<String, TagInfo> defaultTagInfos
+    ) {
         ReaderTagList orderedTagList = new ReaderTagList();
         Map<String, ReaderTag> defaultTags = new HashMap<>();
 
@@ -423,32 +434,26 @@ public class ReaderUtils {
     }
 
     public static boolean isTagManagedInFollowingTab(
-            ReaderTag tag,
+            @NonNull ReaderTag tag,
             boolean isTopLevelReader,
-            FilteredRecyclerView recyclerView
+            @NonNull FilteredRecyclerView recyclerView
     ) {
         if (isTopLevelReader) {
             if (ReaderUtils.isDefaultInMemoryTag(tag)) {
                 return true;
             }
 
-            boolean isSpecialTag = tag != null
-                                   &&
-                                   (tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked());
+            boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
 
-            boolean tabsInitializingNow = recyclerView != null && recyclerView.getCurrentFilter() == null;
+            boolean tabsInitializingNow = recyclerView.getCurrentFilter() == null;
 
-            boolean tagIsFollowedSitesOrAFollowedTag = tag != null
-                                                       && (
-                                                               tag.isFollowedSites()
-                                                               || tag.tagType == ReaderTagType.FOLLOWED
-                                                       );
+            boolean tagIsFollowedSitesOrAFollowedTag = tag.isFollowedSites() || tag.tagType == ReaderTagType.FOLLOWED;
 
             if (isSpecialTag) {
                 return false;
             } else if (tabsInitializingNow) {
                 return tagIsFollowedSitesOrAFollowedTag;
-            } else if (recyclerView != null && recyclerView.getCurrentFilter() instanceof ReaderTag) {
+            } else if (recyclerView.getCurrentFilter() instanceof ReaderTag) {
                 if (recyclerView.isValidFilter(tag)) {
                     return tag.isFollowedSites();
                 } else {
@@ -459,21 +464,21 @@ public class ReaderUtils {
                 return false;
             }
         } else {
-            return tag != null && tag.isFollowedSites();
+            return tag.isFollowedSites();
         }
     }
 
     public static @NonNull ReaderTag getValidTagForSharedPrefs(
             @NonNull ReaderTag tag,
             boolean isTopLevelReader,
-            FilteredRecyclerView recyclerView,
+            @NonNull FilteredRecyclerView recyclerView,
             @NonNull ReaderTag defaultTag
     ) {
         if (!isTopLevelReader) {
             return tag;
         }
 
-        boolean isValidFilter = (recyclerView != null && recyclerView.isValidFilter(tag));
+        boolean isValidFilter = recyclerView.isValidFilter(tag);
         boolean isSpecialTag = tag.isDiscover() || tag.isPostsILike() || tag.isBookmarked();
         if (!isSpecialTag && !isValidFilter && isTagManagedInFollowingTab(tag, isTopLevelReader, recyclerView)) {
             return defaultTag;
@@ -482,11 +487,11 @@ public class ReaderUtils {
         return tag;
     }
 
-    public static boolean isDefaultInMemoryTag(ReaderTag tag) {
-        return tag != null && tag.isDefaultInMemoryTag();
+    public static boolean isDefaultInMemoryTag(@NonNull ReaderTag tag) {
+        return tag.isDefaultInMemoryTag();
     }
 
-    public static String getCommaSeparatedTagSlugs(ReaderTagList tags) {
+    public static String getCommaSeparatedTagSlugs(@NonNull ReaderTagList tags) {
         StringBuilder slugs = new StringBuilder();
         for (ReaderTag tag : tags) {
             if (slugs.length() > 0) {
@@ -510,19 +515,19 @@ public class ReaderUtils {
     }
 
     /**
-    * isExternalFeed identifies an external RSS feed
+     * isExternalFeed identifies an external RSS feed
      * blogId will be empty for feeds and in some instances, it is explicitly
      * setting blogId equal to the feedId
      */
     public static boolean isExternalFeed(long blogId, long feedId) {
-         return (blogId == 0 && feedId != 0) || blogId == feedId;
+        return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
 
-    public static String getReportPostUrl(String blogUrl) {
+    public static String getReportPostUrl(@NonNull String blogUrl) {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
     }
 
-    public static String getReportUserUrl(String blogUrl, long userId) {
+    public static String getReportUserUrl(@NonNull String blogUrl, long userId) {
         return getReportPostUrl(blogUrl) + "&report_user_id=" + userId;
     }
 
@@ -536,7 +541,8 @@ public class ReaderUtils {
 
     /**
      * Self-hosted sites have a site id of 0, but we use -1 to indicate a self-hosted site
-     * @param authorBlogId  site id of the post's author
+     *
+     * @param authorBlogId site id of the post's author
      */
     public static boolean isSelfHosted(long authorBlogId) {
         return authorBlogId < 1;
