@@ -334,12 +334,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override
-    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) {
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent)
+            throws EditorFragmentNotAddedException {
         return getTitleAndContent(originalContent, false);
     }
 
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
-            boolean completeComposition) {
+            boolean completeComposition) throws EditorFragmentNotAddedException {
 
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
