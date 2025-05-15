@@ -19,8 +19,8 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
 
         val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
-            val imageTag = imgMatcher.group(0)
-            val imageUrl = imgMatcher.group(1)
+            val imageTag = imgMatcher.group(0).orEmpty()
+            val imageUrl = imgMatcher.group(1).orEmpty()
             listener.onTagFound(imageTag, imageUrl)
         }
     }
@@ -39,8 +39,8 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
 
         val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
-            val imageTag = imgMatcher.group(0)
-            val imageUrl = imgMatcher.group(1)
+            val imageTag = imgMatcher.group(0).orEmpty()
+            val imageUrl = imgMatcher.group(1).orEmpty()
 
             if (minImageWidth == 0) {
                 imageList.addImageUrl(imageUrl)
@@ -83,8 +83,8 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
 
         val imgMatcher = IMG_TAG_PATTERN.matcher(content)
         while (imgMatcher.find()) {
-            val imageTag = imgMatcher.group(0)
-            val imageUrl = imgMatcher.group(1)
+            val imageTag = imgMatcher.group(0).orEmpty()
+            val imageUrl = imgMatcher.group(1).orEmpty()
 
             // Primary source: check the width attribute.
             val width = max(

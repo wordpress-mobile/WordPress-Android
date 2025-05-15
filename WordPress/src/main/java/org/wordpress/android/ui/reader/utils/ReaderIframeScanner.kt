@@ -7,8 +7,8 @@ class ReaderIframeScanner(private val content: String) {
     fun beginScan(listener: HtmlScannerListener) {
         val matcher = IFRAME_TAG_PATTERN.matcher(content)
         while (matcher.find()) {
-            val tag = matcher.group(0)
-            val src = matcher.group(1)
+            val tag = matcher.group(0).orEmpty()
+            val src = matcher.group(1).orEmpty()
             listener.onTagFound(tag, src)
         }
     }

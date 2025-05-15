@@ -23,7 +23,9 @@ class ReaderEmbedScanner(private val content: String) {
             .forEach {
                 // Use the onTagFound callback to pass a URL. Not super clean, but avoid clutter with more kind
                 // of listeners.
-                listener.onTagFound("", knownEmbeds[it])
+                knownEmbeds[it]?.let { url ->
+                    listener.onTagFound("", url)
+                }
             }
     }
 }
