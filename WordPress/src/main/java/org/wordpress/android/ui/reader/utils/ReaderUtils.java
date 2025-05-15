@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -32,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ReaderUtils {
+    @NonNull
     public static String getResizedImageUrl(
             @NonNull final String imageUrl,
             int width,
@@ -41,6 +43,7 @@ public class ReaderUtils {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, isPrivateAtomic, PhotonUtils.Quality.MEDIUM);
     }
 
+    @NonNull
     public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
@@ -57,6 +60,7 @@ public class ReaderUtils {
         }
     }
 
+    @NonNull
     public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
@@ -64,6 +68,7 @@ public class ReaderUtils {
         return getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo, PhotonUtils.Quality.MEDIUM);
     }
 
+    @NonNull
     public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
@@ -94,6 +99,7 @@ public class ReaderUtils {
      * (i.e. a private post - images in private posts can't use photon
      * but these are usually wp images so they support the h= and w= query params)
      */
+    @NonNull
     private static String getImageForDisplayWithoutPhoton(
             @NonNull final String imageUrl,
             int width,
@@ -129,6 +135,7 @@ public class ReaderUtils {
      * https://git.io/JqUEP
      * http://stackoverflow.com/a/1612015/1673548
      */
+    @NonNull
     public static String sanitizeWithDashes(@NonNull final String title) {
         String trimmedTitle = title.trim();
         if (isValidUrlEncodedString(trimmedTitle)) {
@@ -191,6 +198,7 @@ public class ReaderUtils {
         }
     }
 
+    @NonNull
     public static String getShortCommentLabelText(@NonNull Context context, int numComments) {
         if (numComments == 1) {
             return context.getString(R.string.reader_short_comment_count_one);
@@ -199,6 +207,7 @@ public class ReaderUtils {
         return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
     }
 
+    @NonNull
     public static String getTextForCommentSnippet(@NonNull Context context, int numComments) {
         switch (numComments) {
             case 0:
@@ -223,6 +232,7 @@ public class ReaderUtils {
      * used by Discover site picks to add a "Visit [BlogName]" link which shows the
      * native blog preview for that blog
      */
+    @NonNull
     public static String makeBlogPreviewUrl(long blogId) {
         return "wordpress://blogpreview?blogId=" + blogId;
     }
@@ -244,6 +254,7 @@ public class ReaderUtils {
         return url.matches("^https?://wordpress\\.com/tag/[^/]+$");
     }
 
+    @NonNull
     public static String getTagFromTagUrl(@NonNull String url) {
         if (isTagUrl(url)) {
             return url.substring(url.lastIndexOf("/") + 1);
@@ -255,6 +266,7 @@ public class ReaderUtils {
     /*
      * returns a tag object from the passed endpoint if tag is in database, otherwise null
      */
+    @Nullable
     public static ReaderTag getTagFromEndpoint(@NonNull String endpoint) {
         return ReaderTagTable.getTagFromEndpoint(endpoint);
     }
@@ -270,6 +282,7 @@ public class ReaderUtils {
         return getTagFromTagName(tagName, tagType, false);
     }
 
+    @NonNull
     public static ReaderTag getTagFromTagName(
             @NonNull String tagName,
             @NonNull ReaderTagType tagType,
@@ -282,10 +295,12 @@ public class ReaderUtils {
         }
     }
 
+    @NonNull
     public static ReaderTag createTagFromTagName(@NonNull String tagName, @NonNull ReaderTagType tagType) {
         return createTagFromTagName(tagName, tagType, false);
     }
 
+    @NonNull
     public static ReaderTag createTagFromTagName(
             @NonNull String tagName,
             @NonNull ReaderTagType tagType,
@@ -307,6 +322,7 @@ public class ReaderUtils {
      * returns the default tag, which is the one selected by default in the reader when
      * the user hasn't already chosen one
      */
+    @NonNull
     public static ReaderTag getDefaultTag() {
         ReaderTag defaultTag = getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT);
         if (defaultTag == null) {
@@ -344,12 +360,14 @@ public class ReaderUtils {
     /*
      * used when storing search results in the reader post table
      */
+    @NonNull
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
         String trimQuery = query.trim();
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
         return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
     }
 
+    @NonNull
     public static Map<String, TagInfo> getDefaultTagInfo() {
         // Note that the following is the desired order in the tabs
         // (see usage in prependDefaults)
@@ -416,6 +434,7 @@ public class ReaderUtils {
         return foundAndAdded;
     }
 
+    @NonNull
     public static ReaderTagList getOrderedTagsList(
             @NonNull ReaderTagList tagList,
             @NonNull Map<String, TagInfo> defaultTagInfos
@@ -491,6 +510,7 @@ public class ReaderUtils {
         return tag.isDefaultInMemoryTag();
     }
 
+    @NonNull
     public static String getCommaSeparatedTagSlugs(@NonNull ReaderTagList tags) {
         StringBuilder slugs = new StringBuilder();
         for (ReaderTag tag : tags) {
@@ -503,6 +523,7 @@ public class ReaderUtils {
         return slugs.toString();
     }
 
+    @NonNull
     public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NonNull String commaSeparatedTagSlugs) {
         ReaderTagList tags = new ReaderTagList();
         if (!commaSeparatedTagSlugs.trim().isEmpty()) {
@@ -523,10 +544,12 @@ public class ReaderUtils {
         return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
 
+    @NonNull
     public static String getReportPostUrl(@NonNull String blogUrl) {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
     }
 
+    @NonNull
     public static String getReportUserUrl(@NonNull String blogUrl, long userId) {
         return getReportPostUrl(blogUrl) + "&report_user_id=" + userId;
     }
