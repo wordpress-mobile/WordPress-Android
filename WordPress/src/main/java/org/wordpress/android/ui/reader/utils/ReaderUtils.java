@@ -129,11 +129,7 @@ public class ReaderUtils {
      * https://git.io/JqUEP
      * http://stackoverflow.com/a/1612015/1673548
      */
-    public static String sanitizeWithDashes(final String title) {
-        if (title == null) {
-            return "";
-        }
-
+    public static String sanitizeWithDashes(@NonNull final String title) {
         String trimmedTitle = title.trim();
         if (isValidUrlEncodedString(trimmedTitle)) {
             return trimmedTitle;
@@ -147,7 +143,7 @@ public class ReaderUtils {
         }
     }
 
-    private static boolean isValidUrlEncodedString(String title) {
+    private static boolean isValidUrlEncodedString(@NonNull String title) {
         try {
             URI.create(title);
         } catch (IllegalArgumentException e) {
@@ -156,10 +152,10 @@ public class ReaderUtils {
         return true;
     }
 
-    /*
+    @NonNull /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
      */
-    public static String getLongLikeLabelText(Context context, int numLikes, boolean isLikedByCurrentUser) {
+    public static String getLongLikeLabelText(@NonNull Context context, int numLikes, boolean isLikedByCurrentUser) {
         if (isLikedByCurrentUser) {
             switch (numLikes) {
                 case 1:
@@ -183,7 +179,7 @@ public class ReaderUtils {
     /*
      * short like text ("1 like," "5 likes," etc.)
      */
-    public static String getShortLikeLabelText(Context context, int numLikes) {
+    public static String getShortLikeLabelText(@NonNull Context context, int numLikes) {
         switch (numLikes) {
             case 0:
                 return context.getString(R.string.reader_short_like_count_none);
@@ -195,7 +191,7 @@ public class ReaderUtils {
         }
     }
 
-    public static String getShortCommentLabelText(Context context, int numComments) {
+    public static String getShortCommentLabelText(@NonNull Context context, int numComments) {
         if (numComments == 1) {
             return context.getString(R.string.reader_short_comment_count_one);
         }
@@ -203,7 +199,7 @@ public class ReaderUtils {
         return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
     }
 
-    public static String getTextForCommentSnippet(Context context, int numComments) {
+    public static String getTextForCommentSnippet(@NonNull Context context, int numComments) {
         switch (numComments) {
             case 0:
                 return context.getString(R.string.comments);
@@ -231,11 +227,11 @@ public class ReaderUtils {
         return "wordpress://blogpreview?blogId=" + blogId;
     }
 
-    public static boolean isBlogPreviewUrl(String url) {
-        return (url != null && url.startsWith("wordpress://blogpreview"));
+    public static boolean isBlogPreviewUrl(@NonNull String url) {
+        return url.startsWith("wordpress://blogpreview");
     }
 
-    public static long getBlogIdFromBlogPreviewUrl(String url) {
+    public static long getBlogIdFromBlogPreviewUrl(@NonNull String url) {
         if (isBlogPreviewUrl(url)) {
             String strBlogId = Uri.parse(url).getQueryParameter("blogId");
             return StringUtils.stringToLong(strBlogId);
@@ -244,11 +240,11 @@ public class ReaderUtils {
         }
     }
 
-    public static boolean isTagUrl(String url) {
+    public static boolean isTagUrl(@NonNull String url) {
         return (url != null && url.matches("^https?://wordpress\\.com/tag/[^/]+$"));
     }
 
-    public static String getTagFromTagUrl(String url) {
+    public static String getTagFromTagUrl(@NonNull String url) {
         if (isTagUrl(url)) {
             return url.substring(url.lastIndexOf("/") + 1);
         } else {
@@ -259,7 +255,7 @@ public class ReaderUtils {
     /*
      * returns a tag object from the passed endpoint if tag is in database, otherwise null
      */
-    public static ReaderTag getTagFromEndpoint(String endpoint) {
+    public static ReaderTag getTagFromEndpoint(@NonNull String endpoint) {
         return ReaderTagTable.getTagFromEndpoint(endpoint);
     }
 
@@ -267,11 +263,17 @@ public class ReaderUtils {
      * returns a tag object from the passed tag name - first checks for it in the tag db
      * (so we can also get its title & endpoint), returns a new tag if that fails
      */
-    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType) {
+    public static ReaderTag getTagFromTagName(
+            @NonNull String tagName,
+            @NonNull ReaderTagType tagType
+    ) {
         return getTagFromTagName(tagName, tagType, false);
     }
 
-    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType, boolean markDefaultIfInMemory) {
+    public static ReaderTag getTagFromTagName(
+            @NonNull String tagName, @NonNull
+            ReaderTagType tagType,
+            boolean markDefaultIfInMemory) {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
@@ -280,11 +282,11 @@ public class ReaderUtils {
         }
     }
 
-    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+    public static ReaderTag createTagFromTagName(@NonNull String tagName, @NonNull ReaderTagType tagType) {
         return createTagFromTagName(tagName, tagType, false);
     }
 
-    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType, boolean isDefaultInMemoryTag) {
+    public static ReaderTag createTagFromTagName(@NonNull String tagName, @NonNull ReaderTagType tagType, boolean isDefaultInMemoryTag) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
         return new ReaderTag(
