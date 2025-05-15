@@ -18,7 +18,6 @@ import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import java.net.URI
-import java.util.Collections
 import androidx.core.net.toUri
 
 object ReaderUtils {
@@ -438,13 +437,12 @@ object ReaderUtils {
     ) {
         if (defaultTags.isEmpty()) return
 
-        val reverseOrderedKeys: List<String?> = ArrayList(defaultTagInfo.keys)
-        Collections.reverse(reverseOrderedKeys)
+        val reverseOrderedKeys = ArrayList(defaultTagInfo.keys)
+        reverseOrderedKeys.reverse()
 
         for (key in reverseOrderedKeys) {
             if (defaultTags.containsKey(key)) {
                 val tag = defaultTags[key]
-
                 orderedTagList.add(0, tag)
             }
         }
@@ -509,7 +507,7 @@ object ReaderUtils {
             } else if (tabsInitializingNow) {
                 tagIsFollowedSitesOrAFollowedTag
             } else if (recyclerView?.currentFilter is ReaderTag) {
-                if (recyclerView.isValidFilter(tag) == true) {
+                if (recyclerView.isValidFilter(tag)) {
                     tag.isFollowedSites
                 } else {
                     // If we reach here it means we are setting a followed tag or site in the Following tab
@@ -555,7 +553,7 @@ object ReaderUtils {
     @JvmStatic
     fun getCommaSeparatedTagSlugs(tags: ReaderTagList): String {
         val slugs = StringBuilder()
-        for (tag in tags) {
+        tags.forEach { tag ->
             if (slugs.isNotEmpty()) {
                 slugs.append(",")
             }
@@ -569,7 +567,8 @@ object ReaderUtils {
     fun getTagsFromCommaSeparatedSlugs(commaSeparatedTagSlugs: String): ReaderTagList {
         val tags = ReaderTagList()
         if (commaSeparatedTagSlugs.trim().isNotEmpty()) {
-            for (slug in commaSeparatedTagSlugs.split(",".toRegex()).toTypedArray()) {
+            val slugs = commaSeparatedTagSlugs.split(",".toRegex())
+            slugs.forEach { slug ->
                 val tag = getTagFromTagName(slug, ReaderTagType.DEFAULT)
                 tags.add(tag)
             }
