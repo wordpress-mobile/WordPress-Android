@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
-import android.text.TextUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -121,7 +120,7 @@ object ReaderUtils {
         height: Int,
         forceHttps: Boolean
     ): String {
-        if (TextUtils.isEmpty(imageUrl)) {
+        if (imageUrl.isEmpty()) {
             return ""
         }
         val query = if (width > 0 && height > 0) {
