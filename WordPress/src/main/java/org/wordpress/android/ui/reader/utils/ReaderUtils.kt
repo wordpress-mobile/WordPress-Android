@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
-import android.net.Uri
 import android.text.TextUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
@@ -20,6 +19,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import java.net.URI
 import java.util.Collections
+import androidx.core.net.toUri
 
 object ReaderUtils {
     @JvmStatic
@@ -146,7 +146,7 @@ object ReaderUtils {
      */
     @JvmStatic
     fun sanitizeWithDashes(title: String): String {
-        val trimmedTitle = title.trim { it <= ' ' }
+        val trimmedTitle = title.trim()
         return if (isValidUrlEncodedString(
                 trimmedTitle
             )
@@ -262,7 +262,7 @@ object ReaderUtils {
 
     fun getBlogIdFromBlogPreviewUrl(url: String): Long {
         if (isBlogPreviewUrl(url)) {
-            val strBlogId = Uri.parse(url).getQueryParameter("blogId")
+            val strBlogId = url.toUri().getQueryParameter("blogId")
             return StringUtils.stringToLong(strBlogId)
         } else {
             return 0
@@ -333,23 +333,22 @@ object ReaderUtils {
         )
     }
 
-    val defaultTag: ReaderTag
-        /*
-             * returns the default tag, which is the one selected by default in the reader when
-             * the user hasn't already chosen one
-             */
-        get() {
-            var defaultTag =
-                getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT)
-            if (defaultTag == null) {
-                defaultTag = getTagFromTagName(
-                    ReaderTag.TAG_TITLE_DEFAULT,
-                    ReaderTagType.DEFAULT,
-                    true
-                )
-            }
-            return defaultTag
+    /*
+     * returns the default tag, which is the one selected by default in the reader when
+     * the user hasn't already chosen one
+     */
+    fun getDefaultTag(): ReaderTag {
+        var defaultTag =
+            getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT)
+        if (defaultTag == null) {
+            defaultTag = getTagFromTagName(
+                ReaderTag.TAG_TITLE_DEFAULT,
+                ReaderTagType.DEFAULT,
+                true
+            )
         }
+        return defaultTag
+    }
 
     fun getDefaultTagFromDbOrCreateInMemory(
         context: Context,
@@ -357,7 +356,7 @@ object ReaderUtils {
     ): ReaderTag {
         // getDefaultTag() tries to get the default tag from reader db by tag endpoint or tag name.
         // In case it cannot get the default tag from db, it creates it in memory with createTagFromTagName
-        val tag = defaultTag
+        val tag = getDefaultTag()
 
         if (tag.isDefaultInMemoryTag) {
             // if the tag was created in memory from createTagFromTagName
@@ -384,28 +383,27 @@ object ReaderUtils {
      */
     @JvmStatic
     fun getTagForSearchQuery(query: String): ReaderTag {
-        val trimQuery = query.trim { it <= ' ' }
+        val trimQuery = query.trim()
         val slug = sanitizeWithDashes(trimQuery)
         return ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH)
     }
 
-    val defaultTagInfo: Map<String, TagInfo>
-        get() {
-            // Note that the following is the desired order in the tabs
-            // (see usage in prependDefaults)
-            val defaultTagInfo: MutableMap<String, TagInfo> =
-                LinkedHashMap()
+    fun getDefaultTagInfo(): Map<String, TagInfo> {
+        // Note that the following is the desired order in the tabs
+        // (see usage in prependDefaults)
+        val defaultTagInfo: MutableMap<String, TagInfo> =
+            LinkedHashMap()
 
-            defaultTagInfo[ReaderConstants.KEY_FOLLOWING] =
-                TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH)
-            defaultTagInfo[ReaderConstants.KEY_DISCOVER] =
-                TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH)
-            defaultTagInfo[ReaderConstants.KEY_LIKES] =
-                TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH)
-            defaultTagInfo[ReaderConstants.KEY_SAVED] = TagInfo(ReaderTagType.BOOKMARKED, "")
+        defaultTagInfo[ReaderConstants.KEY_FOLLOWING] =
+            TagInfo(ReaderTagType.DEFAULT, ReaderTag.FOLLOWING_PATH)
+        defaultTagInfo[ReaderConstants.KEY_DISCOVER] =
+            TagInfo(ReaderTagType.DEFAULT, ReaderTag.DISCOVER_PATH)
+        defaultTagInfo[ReaderConstants.KEY_LIKES] =
+            TagInfo(ReaderTagType.DEFAULT, ReaderTag.LIKED_PATH)
+        defaultTagInfo[ReaderConstants.KEY_SAVED] = TagInfo(ReaderTagType.BOOKMARKED, "")
 
-            return defaultTagInfo
-        }
+        return defaultTagInfo
+    }
 
     private fun putIfAbsentDone(
         defaultTags: MutableMap<String?, ReaderTag?>,
@@ -537,7 +535,7 @@ object ReaderUtils {
         return tag
     }
 
-    fun isDefaultInMemoryTag(tag: ReaderTag): Boolean {
+    private fun isDefaultInMemoryTag(tag: ReaderTag): Boolean {
         return tag.isDefaultInMemoryTag
     }
 
@@ -545,7 +543,7 @@ object ReaderUtils {
     fun getCommaSeparatedTagSlugs(tags: ReaderTagList): String {
         val slugs = StringBuilder()
         for (tag in tags) {
-            if (slugs.length > 0) {
+            if (slugs.isNotEmpty()) {
                 slugs.append(",")
             }
             val tagNameForApi = sanitizeWithDashes(tag.tagSlug)
@@ -557,7 +555,7 @@ object ReaderUtils {
     @JvmStatic
     fun getTagsFromCommaSeparatedSlugs(commaSeparatedTagSlugs: String): ReaderTagList {
         val tags = ReaderTagList()
-        if (!commaSeparatedTagSlugs.trim { it <= ' ' }.isEmpty()) {
+        if (commaSeparatedTagSlugs.trim().isNotEmpty()) {
             for (slug in commaSeparatedTagSlugs.split(",".toRegex()).toTypedArray()) {
                 val tag = getTagFromTagName(slug, ReaderTagType.DEFAULT)
                 tags.add(tag)
