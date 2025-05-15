@@ -18,11 +18,11 @@ class ReaderUtilsWrapper @Inject constructor(
     private val contextProvider: ContextProvider,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 ) {
-    fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
+    fun getResizedImageUrl(imageUrl: String, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
         ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
 
     fun getResizedImageUrl(
-        imageUrl: String?,
+        imageUrl: String,
         width: Int,
         height: Int,
         siteAccessibilityInfo: SiteAccessibilityInfo

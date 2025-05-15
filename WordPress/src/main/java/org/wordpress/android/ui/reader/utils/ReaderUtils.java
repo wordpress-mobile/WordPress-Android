@@ -32,17 +32,21 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ReaderUtils {
-    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate,
-                                            boolean isPrivateAtomic) {
+    public static String getResizedImageUrl(
+            @NonNull final String imageUrl,
+            int width,
+            int height,
+            boolean isPrivate,
+            boolean isPrivateAtomic) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, isPrivateAtomic, PhotonUtils.Quality.MEDIUM);
     }
 
-    public static String getResizedImageUrl(final String imageUrl,
+    public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
                                             boolean isPrivate,
                                             boolean isPrivateAtomic,
-                                            PhotonUtils.Quality quality) {
+                                            @NonNull PhotonUtils.Quality quality) {
         final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
 
 
@@ -53,18 +57,18 @@ public class ReaderUtils {
         }
     }
 
-    public static String getResizedImageUrl(final String imageUrl,
+    public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
-                                            SiteAccessibilityInfo siteAccessibilityInfo) {
+                                            @NonNull SiteAccessibilityInfo siteAccessibilityInfo) {
         return getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo, PhotonUtils.Quality.MEDIUM);
     }
 
-    public static String getResizedImageUrl(final String imageUrl,
+    public static String getResizedImageUrl(@NonNull final String imageUrl,
                                             int width,
                                             int height,
-                                            SiteAccessibilityInfo siteAccessibilityInfo,
-                                            PhotonUtils.Quality quality) {
+                                            @NonNull SiteAccessibilityInfo siteAccessibilityInfo,
+                                            @NonNull PhotonUtils.Quality quality) {
         final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
 
         if (siteAccessibilityInfo.isPhotonCapable()) {
@@ -91,7 +95,7 @@ public class ReaderUtils {
      * but these are usually wp images so they support the h= and w= query params)
      */
     private static String getImageForDisplayWithoutPhoton(
-            final String imageUrl,
+            @NonNull final String imageUrl,
             int width,
             int height,
             boolean forceHttps
