@@ -345,7 +345,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 result[0] = new Pair<>(title, content);
                 latch.countDown();
             }
-        }, true);
+        }, false);
 
         try {
             latch.await();
