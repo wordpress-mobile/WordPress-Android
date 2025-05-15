@@ -150,9 +150,7 @@ object ReaderUtils {
     @JvmStatic
     fun sanitizeWithDashes(title: String): String {
         val trimmedTitle = title.trim()
-        return if (isValidUrlEncodedString(
-                trimmedTitle
-            )
+        return if (isValidUrlEncodedString(trimmedTitle)
         ) {
             trimmedTitle
         } else {
@@ -474,8 +472,9 @@ object ReaderUtils {
         val defaultTags: MutableMap<String, ReaderTag> = HashMap()
 
         for (tag in tagList) {
-            if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) continue
-
+            if (defaultTagFoundAndAdded(defaultTagInfos, tag, defaultTags)) {
+                continue
+            }
             orderedTagList.add(tag)
         }
         prependDefaults(defaultTags, orderedTagList, defaultTagInfos)
@@ -490,7 +489,7 @@ object ReaderUtils {
         recyclerView: FilteredRecyclerView
     ): Boolean {
         if (isTopLevelReader) {
-            if (isDefaultInMemoryTag(tag)) {
+            if (tag.isDefaultInMemoryTag) {
                 return true
             }
 
@@ -541,10 +540,6 @@ object ReaderUtils {
         }
 
         return tag
-    }
-
-    private fun isDefaultInMemoryTag(tag: ReaderTag): Boolean {
-        return tag.isDefaultInMemoryTag
     }
 
     @JvmStatic
