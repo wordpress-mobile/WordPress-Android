@@ -39,6 +39,10 @@ steps:
 
       - label: "🕵️ checkstyle"
         command: |
+          if .buildkite/commands/should-skip-job.sh --job-type validation; then
+            exit 0
+          fi
+
           ./gradlew checkstyle
         plugins: [$CI_TOOLKIT]
         artifact_paths:
