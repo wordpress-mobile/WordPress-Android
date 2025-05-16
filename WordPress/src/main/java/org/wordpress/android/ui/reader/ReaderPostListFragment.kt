@@ -2180,12 +2180,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return false
         }
 
-        var tagName = tagPreviewHistory.pop()
+        var tagName = tagPreviewHistory.pop().orEmpty()
         if (isCurrentTagName(tagName)) {
             if (tagPreviewHistory.empty()) {
                 return false
             }
-            tagName = tagPreviewHistory.pop()
+            tagName = tagPreviewHistory.pop().orEmpty()
         }
 
         val newTag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED)

@@ -65,9 +65,9 @@ class ReaderUtilsTest {
     @Test
     fun `isFollowing is based on currentTag status if is not top level reader`() {
         whenever(currentTag.isFollowedSites).thenReturn(true)
-        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, null)).isEqualTo(true)
+        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, filteredRecyclerView)).isEqualTo(true)
         whenever(currentTag.isFollowedSites).thenReturn(false)
-        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, null)).isEqualTo(false)
+        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, filteredRecyclerView)).isEqualTo(false)
     }
 
     @Test

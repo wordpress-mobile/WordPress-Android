@@ -18,15 +18,15 @@ class ReaderUtilsWrapper @Inject constructor(
     private val contextProvider: ContextProvider,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 ) {
-    fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
+    fun getResizedImageUrl(imageUrl: String, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String =
         ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
 
     fun getResizedImageUrl(
-        imageUrl: String?,
+        imageUrl: String,
         width: Int,
         height: Int,
         siteAccessibilityInfo: SiteAccessibilityInfo
-    ): String? = ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
+    ): String = ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
 
     fun getTagFromTagName(tagName: String, tagType: ReaderTagType): ReaderTag =
         ReaderUtils.getTagFromTagName(tagName, tagType)
@@ -55,7 +55,7 @@ class ReaderUtilsWrapper @Inject constructor(
         commentId: Long
     ) = ReaderUtils.commentExists(blogId, postId, commentId)
 
-    fun getTextForCommentSnippet(numComments: Int): String? = ReaderUtils.getTextForCommentSnippet(
+    fun getTextForCommentSnippet(numComments: Int): String = ReaderUtils.getTextForCommentSnippet(
         contextProvider.getContext(),
         numComments
     )
