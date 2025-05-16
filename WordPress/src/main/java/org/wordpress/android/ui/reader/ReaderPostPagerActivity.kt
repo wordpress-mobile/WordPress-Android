@@ -875,14 +875,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         AppLog.T.READER,
                         "reader pager > creating adapter"
                     )
-                    val adapter =
-                        PostPagerAdapter(idList)
+                    val adapter = PostPagerAdapter(idList)
                     viewPager.adapter = adapter
                     if (adapter.isValidPosition(newPosition)) {
-                        viewPager.currentItem = newPosition
+                        viewPager.setCurrentItem(newPosition, false)
                         trackPostAtPositionIfNeeded(newPosition)
                     } else if (adapter.isValidPosition(currentPosition)) {
-                        viewPager.currentItem = currentPosition
+                        viewPager.setCurrentItem(currentPosition, false)
                         trackPostAtPositionIfNeeded(currentPosition)
                     }
 
