@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
@@ -31,6 +33,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
     private val wpLoginClient: WpLoginClient,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -53,7 +56,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
-        buildApplicationPasswordDiscovery(siteModel)
+//        buildApplicationPasswordDiscovery(siteModel)
     }
 
     @Suppress("UnusedPrivateMember")
@@ -116,7 +119,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        Log.e("WP_RS", "VM: Error during API discovery for $siteUrl", throwable)
+        appLogWrapper.e(AppLog.T.API, "VM: Error during API discovery for $siteUrl - ${throwable.message}")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         return ""
     }
