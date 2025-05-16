@@ -52,11 +52,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
+    var buildCard = false
+
     @Suppress("UnusedParameter")
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
-//        buildApplicationPasswordDiscovery(siteModel)
+        if (buildCard) {
+            buildApplicationPasswordDiscovery(siteModel)
+        }
     }
 
     @Suppress("UnusedPrivateMember")

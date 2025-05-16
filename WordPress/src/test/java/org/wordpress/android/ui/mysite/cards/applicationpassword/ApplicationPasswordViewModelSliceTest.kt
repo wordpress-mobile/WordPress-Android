@@ -79,6 +79,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             appLogWrapper
         ).apply {
             initialize(testScope())
+            buildCard = true
         }
         siteTest = SiteModel().apply {
             id = TEST_SITE_ID
