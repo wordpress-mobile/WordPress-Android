@@ -38,19 +38,15 @@ class ImageSizeMap(private val postContent: String, private val jsonString: Stri
     }
 
     private fun parseJsonImage(jsonImage: JSONObject) {
-        val normUrl =
-            UrlUtils.normalizeUrl(
-                UrlUtils.removeQuery(
-                    JSONUtils.getString(
-                        jsonImage,
-                        "URL"
-                    )
-                )
-            )
+        val imageUrl = JSONUtils.getString(
+            jsonImage,
+            "URL"
+        )
+        val key = getKeyFromImageUrl(imageUrl)
 
         // make sure this image actually appears in the post content - it's possible for
         // an image to be in the attachments but not in the post itself
-        val path = normUrl.toUri().path
+        val path = key.toUri().path
         if (postContent.contains(path!!)) {
             var width = jsonImage.optInt("width")
             var height = jsonImage.optInt("height")
@@ -64,7 +60,7 @@ class ImageSizeMap(private val postContent: String, private val jsonString: Stri
                 height = sizes[1].toInt()
             }
 
-            this[normUrl] =
+            this[key] =
                 ImageSize(
                     width,
                     height
@@ -73,8 +69,10 @@ class ImageSizeMap(private val postContent: String, private val jsonString: Stri
     }
 
     fun getImageSize(imageUrl: String): ImageSize? {
-        return super.get(UrlUtils.normalizeUrl(UrlUtils.removeQuery(imageUrl)))
+        return get(getKeyFromImageUrl(imageUrl))
     }
+
+    private fun getKeyFromImageUrl(imageUrl: String) = UrlUtils.normalizeUrl(UrlUtils.removeQuery(imageUrl))
 
     class ImageSize(val width: Int, val height: Int)
 
