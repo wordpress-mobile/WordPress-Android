@@ -9,9 +9,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment.Companion.SOURCE
+import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment.Companion.SOURCE_SIGNUP_EPILOGUE
 import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val URL_TAG = "url"
+private const val SUCCESS_TAG = "success"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -52,12 +57,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     private fun trackSuccessful(siteUrl: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties[URL_TAG] = siteUrl
+        properties[SUCCESS_TAG] = "true"
         AnalyticsTracker.track(
             if (buildConfigWrapper.isJetpackApp) {
                 Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_JP
             } else {
                 Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_WP
-            }
+            },
+            properties
         )
         Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
     }
