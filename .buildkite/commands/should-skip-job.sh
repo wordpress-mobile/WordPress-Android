@@ -28,9 +28,14 @@ COMMON_PATTERNS=(
   "version.properties"
 )
 
+# Define constants for job types
+VALIDATION="validation"
+BUILD="build"
+LINT="lint"
+
 # Check if arguments are valid
 if [ -z "${1:-}" ] || [ "$1" != "--job-type" ] || [ -z "${2:-}" ]; then
-  echo "Error: Must specify --job-type [validation|build|lint]"
+  echo "Error: Must specify --job-type [$VALIDATION|$BUILD|$LINT]"
   buildkite-agent step cancel
   exit 15
 fi
@@ -38,7 +43,7 @@ fi
 # Function to display skip message and create annotation
 show_skip_message() {
   local job_type=$1
-  local message="Skipping ${BUILDKITE_LABEL:-Job} - no relevant files changed"
+  local message="Skipped ${BUILDKITE_LABEL:-Job} - no relevant files changed"
   local context="skip-$(echo "${BUILDKITE_LABEL:-$job_type}" | sed -E -e 's/[^[:alnum:]]+/-/g' | tr A-Z a-z)"
   
   echo "$message" | buildkite-agent annotate --style "info" --context "$context"
@@ -47,7 +52,7 @@ show_skip_message() {
 
 job_type="$2"
 case "$job_type" in
-  "validation")
+  $VALIDATION)
     # We should skip if changes are limited to documentation, tooling, non-code files, and localization files
     PATTERNS=("${COMMON_PATTERNS[@]}" "**/strings.xml")
     if pr_changed_files --all-match "${PATTERNS[@]}"; then
@@ -56,7 +61,7 @@ case "$job_type" in
     fi
     exit 1
     ;;
-  "build"|"lint")
+  $BUILD|$LINT)
     # We should skip if changes are limited to documentation, tooling, and non-code files
     # We'll let the job run (won't skip) if PR includes changes in localization files though
     PATTERNS=("${COMMON_PATTERNS[@]}")
@@ -67,7 +72,7 @@ case "$job_type" in
     exit 1
     ;;
   *)
-    echo "Error: Job type must be either 'validation', 'build', or 'lint'"
+    echo "Error: Job type must be either '$VALIDATION', '$BUILD', or '$LINT'"
     buildkite-agent step cancel
     exit 15
     ;;
