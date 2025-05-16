@@ -871,18 +871,15 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     if (isFinishing) {
                         return@runOnUiThread
                     }
-                    AppLog.d(
-                        AppLog.T.READER,
-                        "reader pager > creating adapter"
-                    )
-                    val adapter =
-                        PostPagerAdapter(idList)
+                    AppLog.d(AppLog.T.READER, "reader pager > creating adapter")
+                    val adapter = PostPagerAdapter(idList)
                     viewPager.adapter = adapter
+
                     if (adapter.isValidPosition(newPosition)) {
-                        viewPager.currentItem = newPosition
+                        viewPager.setCurrentItem(newPosition, false)
                         trackPostAtPositionIfNeeded(newPosition)
                     } else if (adapter.isValidPosition(currentPosition)) {
-                        viewPager.currentItem = currentPosition
+                        viewPager.setCurrentItem(currentPosition, false)
                         trackPostAtPositionIfNeeded(currentPosition)
                     }
 
@@ -1079,6 +1076,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 requestMorePosts()
             }
 
+            AppLog.i(AppLog.T.READER, "reader pager > creating fragment at position $position")
             return newInstance(
                 isFeed = isFeed,
                 blogId = idList[position].blogId,
