@@ -177,14 +177,15 @@ object ReaderUtils {
 
     /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
-     */ @JvmStatic
+     */
+    @JvmStatic
     fun getLongLikeLabelText(
         context: Context,
         numLikes: Int,
         isLikedByCurrentUser: Boolean
     ): String {
-        if (isLikedByCurrentUser) {
-            return when (numLikes) {
+        return if (isLikedByCurrentUser) {
+            when (numLikes) {
                 1 -> context.getString(R.string.reader_likes_only_you)
                 2 -> context.getString(R.string.reader_likes_you_and_one)
                 else -> {
@@ -192,13 +193,11 @@ object ReaderUtils {
                     String.format(youAndMultiLikes, numLikes - 1)
                 }
             }
+        } else if (numLikes == 1) {
+            context.getString(R.string.reader_likes_one)
         } else {
-            return if (numLikes == 1) {
-                context.getString(R.string.reader_likes_one)
-            } else {
-                val likes = context.getString(R.string.reader_likes_multi)
-                String.format(likes, numLikes)
-            }
+            val likes = context.getString(R.string.reader_likes_multi)
+            String.format(likes, numLikes)
         }
     }
 
@@ -221,11 +220,12 @@ object ReaderUtils {
     }
 
     fun getShortCommentLabelText(context: Context, numComments: Int): String {
-        if (numComments == 1) {
-            return context.getString(R.string.reader_short_comment_count_one)
+        return if (numComments == 1) {
+            context.getString(R.string.reader_short_comment_count_one)
+        } else {
+            val count = FormatUtils.formatInt(numComments)
+            String.format(context.getString(R.string.reader_short_comment_count_multi), count)
         }
-        val count = FormatUtils.formatInt(numComments)
-        return String.format(context.getString(R.string.reader_short_comment_count_multi), count)
     }
 
     fun getTextForCommentSnippet(context: Context, numComments: Int): String {
