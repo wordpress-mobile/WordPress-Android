@@ -160,7 +160,7 @@ object ReaderUtils {
                 .replace(
                     "[^\\p{L}\\p{Nd}\\-]+".toRegex(),
                     ""
-                ) // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                ) // remove remaining non-alphanumeric/non-dash chars (Unicode aware)
                 .replace("--".toRegex(), "-") // reduce double dashes potentially added above
         }
     }
@@ -169,10 +169,10 @@ object ReaderUtils {
     private fun isValidUrlEncodedString(title: String): Boolean {
         try {
             URI.create(title)
+            return true
         } catch (e: IllegalArgumentException) {
             return false
         }
-        return true
     }
 
     /*
