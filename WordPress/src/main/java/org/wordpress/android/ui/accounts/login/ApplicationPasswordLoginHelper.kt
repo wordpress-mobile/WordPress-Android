@@ -4,15 +4,20 @@ import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteSqlUtils: SiteSqlUtils,
-    private val uriLoginWrapper: UriLoginWrapper
+    private val uriLoginWrapper: UriLoginWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -35,6 +40,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     siteSqlUtils.insertOrUpdateSite(site)
                     Log.d("WP_RS", "Saved application password credentials for: ${uriLogin.siteUrl}")
                     processedAppPasswordData = url
+                    AnalyticsTracker.track(
+                        if (buildConfigWrapper.isJetpackApp) {
+                            Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_JP
+                        } else {
+                            Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_WP
+                        }
+                    )
                     true
                 } else {
                     Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
