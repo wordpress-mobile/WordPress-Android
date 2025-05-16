@@ -7,10 +7,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment.Companion.SOURCE
-import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment.Companion.SOURCE_SIGNUP_EPILOGUE
 import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 import javax.inject.Named
