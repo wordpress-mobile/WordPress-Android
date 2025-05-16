@@ -35,18 +35,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                 if (site != null) {
-                    site.apiRestUsername = uriLogin.user
-                    site.apiRestPassword = uriLogin.password
+                    site.apply {
+                        apiRestUsername = uriLogin.user
+                        apiRestPassword = uriLogin.password
+                    }
                     siteSqlUtils.insertOrUpdateSite(site)
-                    Log.d("WP_RS", "Saved application password credentials for: ${uriLogin.siteUrl}")
-                    processedAppPasswordData = url
-                    AnalyticsTracker.track(
-                        if (buildConfigWrapper.isJetpackApp) {
-                            Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_JP
-                        } else {
-                            Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_WP
-                        }
-                    )
+                    uriLogin.siteUrl?.let { trackSuccessful(it) }
+                    processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
                 } else {
                     Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
@@ -54,6 +49,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun trackSuccessful(siteUrl: String) {
+        AnalyticsTracker.track(
+            if (buildConfigWrapper.isJetpackApp) {
+                Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_JP
+            } else {
+                Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_WP
+            }
+        )
+        Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlFromUrl(url: String): String {
