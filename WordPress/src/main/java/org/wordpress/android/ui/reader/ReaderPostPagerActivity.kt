@@ -877,6 +877,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     )
                     val adapter = PostPagerAdapter(idList)
                     viewPager.adapter = adapter
+
+                    // set the current position without smooth scrolling - otherwise the previous post in
+                    // the list may briefly appear
                     if (adapter.isValidPosition(newPosition)) {
                         viewPager.setCurrentItem(newPosition, false)
                         trackPostAtPositionIfNeeded(newPosition)
