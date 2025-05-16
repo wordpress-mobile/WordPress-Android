@@ -59,9 +59,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         properties[SUCCESS_TAG] = "true"
         AnalyticsTracker.track(
             if (buildConfigWrapper.isJetpackApp) {
-                Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_JP
+                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
             } else {
-                Stat.APPLICATION_PASSWORD_LOGIN_SUCCESS_WP
+                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
             },
             properties
         )

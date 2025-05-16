@@ -1157,8 +1157,8 @@ public final class AnalyticsTracker {
         VOICE_TO_CONTENT_BUTTON_RECORDING_LIMIT_REACHED,
         BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
         BACKGROUND_REST_AUTODISCOVERY_FAILED,
-        APPLICATION_PASSWORD_LOGIN_SUCCESS_WP("wp_android_application_password_login"),
-        APPLICATION_PASSWORD_LOGIN_SUCCESS_JP("jp_android_application_password_login");
+        WP_ANDROID_APPLICATION_PASSWORD_LOGIN,
+        JP_ANDROID_APPLICATION_PASSWORD_LOGIN;
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.
