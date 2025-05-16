@@ -47,7 +47,7 @@ class ImageSizeMap(private val postContent: String, private val jsonString: Stri
         // make sure this image actually appears in the post content - it's possible for
         // an image to be in the attachments but not in the post itself
         val path = key.toUri().path
-        if (postContent.contains(path!!)) {
+        if (path != null && postContent.contains(path)) {
             var width = jsonImage.optInt("width")
             var height = jsonImage.optInt("height")
 
