@@ -54,7 +54,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 
     var buildCard = false
 
-    @Suppress("UnusedParameter")
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
@@ -63,7 +62,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         }
     }
 
-    @Suppress("UnusedPrivateMember")
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
         // Check if the site URL is already cached
         val cachedValue = siteURLCache[site.url]
