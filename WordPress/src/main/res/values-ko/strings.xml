@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 09:54:09+0000
+Translation-Revision-Date: 2025-05-13 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">인증 링크를 보낼 수 없음</string>
+    <string name="me_email_verification_resend">인증 링크 다시 보내기</string>
+    <string name="me_email_verification_sent_description">%s의 받은 편지함에서 확정 이메일 확인</string>
+    <string name="me_email_verification_sent">이메일 보냄</string>
+    <string name="me_email_verification_sending_description">인증 링크 보내기</string>
+    <string name="me_email_verification_sending">보내는 중…</string>
+    <string name="me_email_verification_verify_email_send_link">인증 링크 보내기</string>
+    <string name="me_email_verification_verify_email_description">이메일 주소를 인증하여 계정의 보안을 유지하며 모든 기능을 잠금 해제하세요.</string>
+    <string name="me_email_verification_verify_email">이메일 인증</string>
+    <string name="experimental_features_feedback_dialog_decline">지금 안 함</string>
+    <string name="experimental_features_feedback_dialog_message">실험 버전 편집기에 대한 피드백을 공유하시겠어요?</string>
+    <string name="experimental_features_feedback_dialog_title">피드백 공유</string>
+    <string name="experimental_block_editor_plugins">실험 버전 블록 편집기 플러그인</string>
+    <string name="experimental_block_editor_theme_styles_description">편집기에 테마 스타일 적용</string>
+    <string name="experimental_block_editor_description">추가 블록 유형 및 설정에 접근</string>
+    <string name="experimental_block_editor_note">실험 버전 블록 편집기가 향후 릴리스에서 기본값이 되며 비활성화하는 기능은 제거될 예정입니다.</string>
+    <string name="disable_experimental_block_editor_description">추가 블록 유형 및 설정 수신 거부</string>
+    <string name="disable_experimental_block_editor">실험 버전 블록 편집기 비활성화</string>
     <string name="avatar_update_email_unverified">아바타를 업데이트하려면 먼저 이메일 주소를 확인해야 합니다.</string>
     <string name="feedback_form_note_link_wordpress">커뮤니티 포럼\"을 사용해 주세요.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">플레이스홀더</string>

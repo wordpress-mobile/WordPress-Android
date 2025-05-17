@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-12 09:54:11+0000
+Translation-Revision-Date: 2025-05-13 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Impossibile inviare il link di verifica</string>
+    <string name="me_email_verification_resend">Invia nuovamente il link di verifica</string>
+    <string name="me_email_verification_sent_description">Controlla la tua casella di posta su %s per l\'email di conferma</string>
+    <string name="me_email_verification_sent">E-mail inviata</string>
+    <string name="me_email_verification_sending_description">Invio del link di verifica in corso</string>
+    <string name="me_email_verification_sending">Invio in corso…</string>
+    <string name="me_email_verification_verify_email_send_link">Invia il link di verifica</string>
+    <string name="me_email_verification_verify_email_description">Verifica il tuo indirizzo e-mail per proteggere il tuo account e sbloccare tutte le funzionalità</string>
+    <string name="me_email_verification_verify_email">Verifica la tua e-mail</string>
+    <string name="experimental_features_feedback_dialog_decline">Non ora</string>
+    <string name="experimental_features_feedback_dialog_message">Vuoi condividere un feedback sull\'editor sperimentale?</string>
+    <string name="experimental_features_feedback_dialog_title">Condividi un feedback</string>
+    <string name="experimental_block_editor_plugins">Plugin dell\'editor a blocchi sperimentale</string>
+    <string name="experimental_block_editor_theme_styles_description">Applica gli stili del tema all\'editor</string>
+    <string name="experimental_block_editor_description">Accedi a tipi di blocco e impostazioni aggiuntivi</string>
+    <string name="experimental_block_editor_note">L\'editor a blocchi sperimentale diventerà l\'editor predefinito in una prossima versione e verrà rimossa la possibilità di disattivarlo.</string>
+    <string name="disable_experimental_block_editor_description">Annulla l\'adesione a tipi di blocco e impostazioni aggiuntivi</string>
+    <string name="disable_experimental_block_editor">Disabilita l\'editor a blocchi sperimentale</string>
     <string name="avatar_update_email_unverified">Per aggiornare il tuo avatar devi prima verificare il tuo indirizzo e-mail.</string>
     <string name="feedback_form_note_link_wordpress">i forum della community.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">segnaposto</string>

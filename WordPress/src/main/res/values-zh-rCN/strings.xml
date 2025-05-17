@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 11:54:08+0000
+Translation-Revision-Date: 2025-05-13 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">无法发送验证链接</string>
+    <string name="me_email_verification_resend">重新发送验证链接</string>
+    <string name="me_email_verification_sent_description">请在您的 %s 收件箱中查看确认电子邮件</string>
+    <string name="me_email_verification_sent">电子邮件已发送</string>
+    <string name="me_email_verification_sending_description">正在发送验证链接</string>
+    <string name="me_email_verification_sending">正在发送…</string>
+    <string name="me_email_verification_verify_email_send_link">发送验证链接</string>
+    <string name="me_email_verification_verify_email_description">请验证您的电子邮件地址，以确保您的账户安全并解锁所有功能</string>
+    <string name="me_email_verification_verify_email">验证您的电子邮件地址</string>
+    <string name="experimental_features_feedback_dialog_decline">稍后再说</string>
+    <string name="experimental_features_feedback_dialog_message">您是否愿意分享关于实验性编辑器的反馈？</string>
+    <string name="experimental_features_feedback_dialog_title">分享反馈</string>
+    <string name="experimental_block_editor_plugins">实验性区块编辑器插件</string>
+    <string name="experimental_block_editor_theme_styles_description">将主题样式应用到编辑器</string>
+    <string name="experimental_block_editor_description">启用更多区块类型和设置</string>
+    <string name="experimental_block_editor_note">实验性区块编辑器将在今后的版本中成为默认设置，并且将无法禁用。</string>
+    <string name="disable_experimental_block_editor_description">停用更多区块类型和设置</string>
+    <string name="disable_experimental_block_editor">禁用实验性区块编辑器</string>
     <string name="avatar_update_email_unverified">要更新您的头像，请先验证您的电子邮件地址。</string>
     <string name="feedback_form_note_link_wordpress">社区论坛。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">占位符</string>
@@ -34,6 +52,7 @@ Language: zh_CN
     <string name="more_content_description_blogging_prompts">更多提示</string>
     <string name="more_content_description_promote_blaze">更多 Blaze</string>
     <string name="reader_toast_success_undo">博客已解封</string>
+    <string name="feedback_form_note_link_jetpack">“联系支持人员”界面。</string>
     <string name="feedback_form_note_text">请注意，这并非支持表单，我们将无法回复。 如果您需要帮助，请使用我们的“</string>
     <string name="experimental_block_editor_theme_styles">实验性区块编辑器样式</string>
     <string name="experimental_block_editor">实验性区块编辑器</string>

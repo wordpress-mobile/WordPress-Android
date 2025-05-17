@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-29 18:59:30+0000
+Translation-Revision-Date: 2025-05-08 08:39:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">No se ha podido enviar el enlace de verificación</string>
+    <string name="me_email_verification_resend">Reenviar el enlace de verificación</string>
+    <string name="me_email_verification_sent_description">Comprueba tu bandeja de entrada en %s para ver el correo electrónico de confirmación</string>
+    <string name="me_email_verification_sent">Correo electrónico enviado</string>
+    <string name="me_email_verification_sending_description">Enviando el enlace de verificación…</string>
+    <string name="me_email_verification_sending">Enviando…</string>
+    <string name="me_email_verification_verify_email_send_link">Enviar el enlace de verificación</string>
+    <string name="me_email_verification_verify_email_description">Verifica tu dirección de correo electrónico para asegurar tu cuenta y desbloquear todas las funciones</string>
+    <string name="me_email_verification_verify_email">Verifica tu correo electrónico</string>
+    <string name="experimental_features_feedback_dialog_decline">Ahora no</string>
+    <string name="experimental_features_feedback_dialog_message">¿Te apetece compartir impresiones sobre el editor experimental?</string>
+    <string name="experimental_features_feedback_dialog_title">Compartir comentarios</string>
+    <string name="experimental_block_editor_plugins">Plugins experimentales del editor de bloques</string>
+    <string name="experimental_block_editor_theme_styles_description">Aplicar estilos temáticos al editor</string>
+    <string name="experimental_block_editor_description">Accede a tipos de bloque y ajustes adicionales</string>
+    <string name="experimental_block_editor_note">El editor de bloques experimental se convertirá en el predeterminado en una futura versión y se eliminará la posibilidad de desactivarlo.</string>
+    <string name="disable_experimental_block_editor_description">Exclusión de tipos de bloque y ajustes adicionales</string>
+    <string name="disable_experimental_block_editor">Desactivar el editor de bloques experimental</string>
     <string name="avatar_update_email_unverified">Para actualizar tu avatar, primero tienes que verificar tu dirección de correo electrónico.</string>
     <string name="feedback_form_note_link_wordpress">foros de la comunidad.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">marcador de posición</string>
