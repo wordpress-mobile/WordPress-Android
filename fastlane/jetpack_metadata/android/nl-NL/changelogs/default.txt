@@ -1,0 +1,5 @@
+25.8:
+We hebben wat problemen met de experimentele editor opgelost.
+- Je kan groepblokken selecteren, doorlopen en bewerken, en ze zijn ook nog eens eenvoudiger te gebruiken.
+- Je content wordt niet gereset als je de oriëntatie van je apparaat verandert.
+- We hebben een irritante bug verholpen die de editor soms liet crashen wanneer wijzigingen werden opgeslagen.
