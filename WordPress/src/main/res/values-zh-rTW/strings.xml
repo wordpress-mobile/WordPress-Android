@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 09:54:09+0000
+Translation-Revision-Date: 2025-05-13 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">無法傳送驗證連結</string>
+    <string name="me_email_verification_resend">重新傳送驗證連結</string>
+    <string name="me_email_verification_sent_description">請至 %s 的收件匣，檢查是否收到確認電子郵件</string>
+    <string name="me_email_verification_sent">電子郵件已寄出！</string>
+    <string name="me_email_verification_sending_description">正在傳送驗證連結</string>
+    <string name="me_email_verification_sending">正在傳送…</string>
+    <string name="me_email_verification_verify_email_send_link">傳送驗證連結</string>
+    <string name="me_email_verification_verify_email_description">請驗證你的電子郵件地址，以保護帳號並解鎖所有功能</string>
+    <string name="me_email_verification_verify_email">驗證你的電子郵件地址</string>
+    <string name="experimental_features_feedback_dialog_decline">先不要</string>
+    <string name="experimental_features_feedback_dialog_message">你願意分享關於試用版編輯器的意見嗎？</string>
+    <string name="experimental_features_feedback_dialog_title">分享意見！</string>
+    <string name="experimental_block_editor_plugins">試用版區塊編輯器外掛程式</string>
+    <string name="experimental_block_editor_theme_styles_description">將佈景主題樣式套用至編輯器</string>
+    <string name="experimental_block_editor_description">存取額外的區塊類型和設定</string>
+    <string name="experimental_block_editor_note">試用版區塊編輯器將在未來版本中成為預設選項，屆時將無法停用。</string>
+    <string name="disable_experimental_block_editor_description">選擇不啟用額外區塊類型與設定</string>
+    <string name="disable_experimental_block_editor">停用試用版區塊編輯器</string>
     <string name="avatar_update_email_unverified">若想更新大頭貼，請先驗證電子郵件地址。</string>
     <string name="feedback_form_note_link_wordpress">社群論壇。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">預留位置</string>
@@ -882,7 +900,7 @@ Language: zh_TW
     <string name="my_site_todays_stats_get_more_views_message">有興趣培養你的讀者群嗎？ 查看我們的&lt;a href=\"%1$s\"&gt;頂尖秘訣&lt;/a&gt;。</string>
     <string name="stats_insights_views_and_visitors">瀏覽次數與訪客</string>
     <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">已移除特色圖片</string>
-    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">設為特色圖片</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">設定為精選圖片</string>
     <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">保留目前圖片</string>
     <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">取代特色圖片</string>
     <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">你已有特色圖片設定。  是否要取代為新圖片？</string>
@@ -1205,7 +1223,7 @@ Language: zh_TW
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">設為特色圖片</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">設定為精選圖片</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">移除特色圖片</string>
     <string name="fab_add_category_desc">建立分類</string>
     <string name="support_ticket_subject">Android 版 WordPress 支援</string>
@@ -3584,7 +3602,7 @@ Language: zh_TW
     <string name="my_site_btn_site_settings">網站設定</string>
     <string name="my_site_btn_blog_posts">文章</string>
     <string name="my_site_header_publish">發佈</string>
-    <string name="my_site_header_look_and_feel">外觀和風格</string>
+    <string name="my_site_header_look_and_feel">外觀與風格</string>
     <string name="my_site_header_configuration">組態</string>
     <string name="reader_label_new_posts_subtitle">點選以顯示</string>
     <string name="deselect_all">取消全選</string>

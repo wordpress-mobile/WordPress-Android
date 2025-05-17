@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-31 14:42:25+0000
+Translation-Revision-Date: 2025-05-13 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Tidak dapat mengirim tautan verifikasi</string>
+    <string name="me_email_verification_resend">Kirim ulang tautan verifikasi</string>
+    <string name="me_email_verification_sent_description">Periksa email konfirmasi di inbox Anda di %s</string>
+    <string name="me_email_verification_sent">Email terkirim</string>
+    <string name="me_email_verification_sending_description">Mengirim tautan verifikasi</string>
+    <string name="me_email_verification_sending">Mengirim…</string>
+    <string name="me_email_verification_verify_email_send_link">Kirim tautan verifikasi</string>
+    <string name="me_email_verification_verify_email_description">Verifikasi alamat email Anda untuk mengamankan akun dan mengakses semua fitur</string>
+    <string name="me_email_verification_verify_email">Verifikasi email Anda</string>
+    <string name="experimental_features_feedback_dialog_decline">Lain kali</string>
+    <string name="experimental_features_feedback_dialog_message">Apakah Anda bersedia untuk membagikan feedback tentang editor eksperimental?</string>
+    <string name="experimental_features_feedback_dialog_title">Bagikan feedback</string>
+    <string name="experimental_block_editor_plugins">Plugin editor blok eksperimental</string>
+    <string name="experimental_block_editor_theme_styles_description">Terapkan gaya tema pada editor</string>
+    <string name="experimental_block_editor_description">Akses jenis blok dan pengaturan lainnya</string>
+    <string name="experimental_block_editor_note">Editor blok eksperimental akan menjadi pengaturan asal di rilis mendatang dan fitur untuk menonaktifkannya akan dihapus.</string>
+    <string name="disable_experimental_block_editor_description">Tolak jenis blok dan pengaturan lainnya</string>
+    <string name="disable_experimental_block_editor">Nonaktifkan editor blok eksperimental</string>
     <string name="avatar_update_email_unverified">Untuk memperbarui avatar, alamat email Anda harus diverifikasi terlebih dahulu.</string>
     <string name="feedback_form_note_link_wordpress">forum komunitas.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>

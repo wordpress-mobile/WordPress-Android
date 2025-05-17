@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-06 14:18:56+0000
+Translation-Revision-Date: 2025-05-08 05:57:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: pl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="avatar_update_email_unverified">Aby zaktualizować swój awatar, musisz najpierw zweryfikować swój adres e-mail.</string>
+    <string name="feedback_form_note_link_wordpress">fora społecznościowe.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">symbol zastępczy</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Przełącz skrót %s</string>
     <string name="personalization_screen_card_accessibility_label">Przełącz %s kartę</string>
@@ -24,12 +26,20 @@ Language: pl
     <string name="me_btn_help_and_support">Pomoc i wsparcie</string>
     <string name="me_btn_experimental_features">Funkcje eksperymentalne</string>
     <string name="more_content_description_plans">Zaplanuj więcej</string>
+    <string name="more_content_description_pages">Więcej stron</string>
+    <string name="more_content_description_posts">Więcej wpisów</string>
     <string name="back">Cofnij</string>
+    <string name="feedback_form_note_text">Pamiętaj, że nie jest to formularz pomocy technicznej i nie będziemy mogli odpowiedzieć. Jeżeli potrzebujesz pomocy, skorzystaj z naszego \"</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">Z tej aplikacji</string>
+    <string name="reader_toast_success_undo">Blog odblokowany</string>
+    <string name="item_selected">Wybrano</string>
+    <string name="experimental_features_screen_title">Funkcje eksperymentalne</string>
     <string name="feedback_form_add_attachments">Dodaj załączniki</string>
     <string name="feedback_form_title">Uwagi</string>
     <string name="submit">Prześlij</string>
     <string name="close">Zamknij</string>
     <string name="sending">Wysyłanie</string>
+    <string name="send_feedback">Wyślij uwagi</string>
     <string name="voice_to_content_error_label">Błąd</string>
     <string name="voice_to_content_processing">Przetwarzanie</string>
     <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij, aby edytować</string>
@@ -849,8 +859,11 @@ Language: pl
     <string name="backup_download_complete_page_title">Twoja kopia zapasowa</string>
     <string name="backup_download_progress_footnote">Proszę czekać. Powiadomimy ciebie kiedy kopia zapasowa będzie gotowa.</string>
     <string name="backup_download_progress_icon_content_description">Tworzenie ikony kopii zapasowej gotowej do pobrania</string>
+    <string name="backup_download_progress_header">Obecnie tworzysz kopię zapasową witryny do pobrania</string>
     <string name="backup_download_progress_page_title">Pobierz kopię zapasową</string>
     <string name="backup_download_another_download_running">Trwa równoległe zadanie pobierania.</string>
+    <string name="backup_download_generic_failure">Wystąpił błąd podczas obsługi zapytania. Proszę spróbować później.</string>
+    <string name="backup_download_details_action_button_content_description">Utwórz przycisk kopii zapasowej do pobrania</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -1131,6 +1144,7 @@ Language: pl
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publikacji</string>
     <string name="prepublishing_nudges_back_button">Powrót</string>
+    <string name="prepublishing_tags_description">Tagi pomagają czytelnikom dowiedzieć się, o czym jest dany wpis</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
     <string name="reader_btn_done">Gotowe</string>
     <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>

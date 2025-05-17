@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-01 16:19:30+0000
+Translation-Revision-Date: 2025-05-13 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Verifizierungslink kann nicht gesendet werden</string>
+    <string name="me_email_verification_resend">Verifizierungslink erneut senden</string>
+    <string name="me_email_verification_sent_description">Suche in deinem Posteingang unter %s nach der Bestätigungs-E-Mail</string>
+    <string name="me_email_verification_sent">E-Mail gesendet</string>
+    <string name="me_email_verification_sending_description">Bestätigungslink wird gesendet</string>
+    <string name="me_email_verification_verify_email_send_link">Bestätigungslink senden</string>
+    <string name="me_email_verification_verify_email_description">Bitte bestätige deine E-Mail-Adresse, um dein Konto zu sichern und alle Funktionen freizuschalten</string>
+    <string name="experimental_features_feedback_dialog_decline">Nicht jetzt</string>
+    <string name="experimental_features_feedback_dialog_message">Hättest du einen Moment Zeit, um uns Feedback zum experimentellen Editor zu geben?</string>
+    <string name="experimental_block_editor_plugins">Plugins für den experimentellen Block-Editor</string>
+    <string name="experimental_block_editor_theme_styles_description">Theme-Stile auf den Editor anwenden</string>
+    <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
+    <string name="experimental_block_editor_note">Der experimentelle Block-Editor wird in einer zukünftigen Version zum Standard und die Möglichkeit, ihn zu deaktivieren, wird entfernt.</string>
+    <string name="disable_experimental_block_editor_description">Zusätzliche Blocktypen und -einstellungen ablehnen</string>
+    <string name="disable_experimental_block_editor">Experimentellen Block-Editor deaktivieren</string>
     <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
     <string name="feedback_form_note_link_wordpress">Community-Foren.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">Platzhalter</string>
@@ -1233,7 +1248,7 @@ Language: de
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">Für %s wurde eine URL festgelegt</string>
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">Für %s wurde keine URL festgelegt</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s wurde in normale Blöcke umgewandelt</string>
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s blockieren</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">Block %s</string>
     <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deckkraft</string>
     <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">Medien-Optionen</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Ungültige URL. Audiodatei nicht gefunden.</string>
@@ -1285,7 +1300,7 @@ Language: de
     <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Titel hinzufügen</string>
     <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wird geladen</string>
-    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link-Label</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link-Beschriftung</string>
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Textfarbe</string>
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s Link</string>
     <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Innenabstand</string>

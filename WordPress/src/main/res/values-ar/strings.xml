@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-03 15:54:08+0000
+Translation-Revision-Date: 2025-05-12 14:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">يتعذر إرسال رابط التحقق</string>
+    <string name="me_email_verification_resend">إعادة إرسال رابط التحقق</string>
+    <string name="me_email_verification_sent_description">تحقق من صندوق الوارد لديك في %s للحصول على رسالة التأكيد عبر البريد الإلكتروني</string>
+    <string name="me_email_verification_sent">تم إرسال رسالة البريد الإلكتروني</string>
+    <string name="me_email_verification_sending_description">جارِ إرسال رابط التحقق</string>
+    <string name="me_email_verification_sending">جارٍ الإرسال…</string>
+    <string name="me_email_verification_verify_email_send_link">إرسال رابط التحقق</string>
+    <string name="me_email_verification_verify_email_description">يُرجى التحقق من عنوان بريدك الإلكتروني لتأمين حسابك وفتح جميع الميزات</string>
+    <string name="me_email_verification_verify_email">التحقق من بريدك الإلكتروني</string>
+    <string name="experimental_features_feedback_dialog_decline">ليس الآن</string>
+    <string name="experimental_features_feedback_dialog_message">هل أنت مستعد لمشاركة ملاحظاتك حول المحرر التجريبي؟</string>
+    <string name="experimental_features_feedback_dialog_title">مشاركة الملاحظات</string>
+    <string name="experimental_block_editor_plugins">إضافات محرر المكوِّن التجريبي</string>
+    <string name="experimental_block_editor_theme_styles_description">تطبيق أنماط القالب على المحرر</string>
+    <string name="experimental_block_editor_description">الوصول إلى أنواع المكونات الأخرى وإعداداتها</string>
+    <string name="experimental_block_editor_note">سيصبح محرر المكوّنات التجريبي هو المحرر الافتراضي في الإصدارات المستقبلية وستتم إزالة إمكانية تعطيله.</string>
+    <string name="disable_experimental_block_editor_description">إلغاء الاشتراك في أنواع المكوّنات والإعدادات الإضافية</string>
+    <string name="disable_experimental_block_editor">تعطيل محرر المكوِّن التجريبي</string>
     <string name="avatar_update_email_unverified">لتحديث صورتك الرمزية، يتعين عليك التحقق من عنوان بريدك الإلكتروني أولاً.</string>
     <string name="feedback_form_note_link_wordpress">المنتديات المجتمعية.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">عنصر نائب</string>
