@@ -43,7 +43,9 @@ class SignatureUtils @Inject constructor(
         } ?: false
         if (allSignaturesMatch) {
             true
-        } else throw SignatureNotFoundException()
+        } else {
+            throw SignatureNotFoundException()
+        }
     } catch (exception: Exception) {
         throw SignatureNotFoundException()
     }
@@ -63,7 +65,9 @@ class SignatureUtils @Inject constructor(
             }
             return if (allSignaturesMatch) {
                 true
-            } else throw SignatureNotFoundException()
+            } else {
+                throw SignatureNotFoundException()
+            }
         } catch (exception: Exception) {
             throw SignatureNotFoundException()
         }
