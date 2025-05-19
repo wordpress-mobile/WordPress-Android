@@ -121,7 +121,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "VM: Error during API discovery for $siteUrl - ${throwable.message}")
+        appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         return ""
     }
