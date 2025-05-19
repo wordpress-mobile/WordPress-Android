@@ -4,15 +4,22 @@ import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val URL_TAG = "url"
+private const val SUCCESS_TAG = "success"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteSqlUtils: SiteSqlUtils,
-    private val uriLoginWrapper: UriLoginWrapper
+    private val uriLoginWrapper: UriLoginWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -30,11 +37,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                 if (site != null) {
-                    site.apiRestUsername = uriLogin.user
-                    site.apiRestPassword = uriLogin.password
+                    site.apply {
+                        apiRestUsername = uriLogin.user
+                        apiRestPassword = uriLogin.password
+                    }
                     siteSqlUtils.insertOrUpdateSite(site)
-                    Log.d("WP_RS", "Saved application password credentials for: ${uriLogin.siteUrl}")
-                    processedAppPasswordData = url
+                    uriLogin.siteUrl?.let { trackSuccessful(it) }
+                    processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
                 } else {
                     Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
@@ -42,6 +51,21 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun trackSuccessful(siteUrl: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties[URL_TAG] = siteUrl
+        properties[SUCCESS_TAG] = "true"
+        AnalyticsTracker.track(
+            if (buildConfigWrapper.isJetpackApp) {
+                Stat.JP_ANDROID_APPLICATION_PASSWORD_LOGIN
+            } else {
+                Stat.WP_ANDROID_APPLICATION_PASSWORD_LOGIN
+            },
+            properties
+        )
+        Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlFromUrl(url: String): String {
