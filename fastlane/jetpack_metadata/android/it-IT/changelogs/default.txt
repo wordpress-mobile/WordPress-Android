@@ -1,0 +1,5 @@
+25.8:
+Abbiamo apportato alcune correzioni all'editor sperimentale.
+- Puoi selezionare, spostare e modificare i blocchi Gruppo, che sono anche più facili da usare.
+- Il contenuto non verrà reimpostato quando modifichi l'orientamento del dispositivo.
+- Abbiamo corretto un fastidioso bug che a volte causava l'arresto anomalo dell'editor durante il salvataggio delle modifiche.

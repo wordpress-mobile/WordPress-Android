@@ -1,0 +1,5 @@
+25.8:
+Vi har gjort några korrigeringar i den experimentella redigeraren.
+- Du kan välja, navigera bland och redigera gruppblock – och de är också enklare att använda.
+- Ditt innehåll återställs inte när du ändrar enhetens orientering.
+- Vi har åtgärdat en irriterande bugg som ibland fick redigeraren att krascha när ändringar sparades.

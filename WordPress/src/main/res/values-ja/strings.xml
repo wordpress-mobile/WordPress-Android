@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 09:54:09+0000
+Translation-Revision-Date: 2025-05-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">認証リンクを送信できません</string>
+    <string name="me_email_verification_resend">認証リンクを再送</string>
+    <string name="me_email_verification_sent_description">%s の受信箱で確認メールを確認</string>
+    <string name="me_email_verification_sent">メールを送信しました</string>
+    <string name="me_email_verification_sending_description">認証リンクを送信しています</string>
+    <string name="me_email_verification_sending">送信中…</string>
+    <string name="me_email_verification_verify_email_send_link">認証リンクを送信</string>
+    <string name="me_email_verification_verify_email_description">アカウントを保護してすべての機能を利用するには、メールアドレスを確認してください</string>
+    <string name="me_email_verification_verify_email">メールアドレスを確認</string>
+    <string name="experimental_features_feedback_dialog_decline">後で</string>
+    <string name="experimental_features_feedback_dialog_message">試験用エディターのフィードバックを共有しますか ?</string>
+    <string name="experimental_features_feedback_dialog_title">フィードバックを共有</string>
+    <string name="experimental_block_editor_plugins">試験用のブロックエディタープラグイン</string>
+    <string name="experimental_block_editor_theme_styles_description">テーマスタイルをエディターに適用</string>
+    <string name="experimental_block_editor_description">追加のブロックタイプと設定にアクセス</string>
+    <string name="experimental_block_editor_note">試験用のブロックエディターは将来のリリースでデフォルトになり、無効化する機能は削除されます。</string>
+    <string name="disable_experimental_block_editor_description">追加のブロックタイプと設定をオプトアウト</string>
+    <string name="disable_experimental_block_editor">試験用のブロックエディターを無効化</string>
     <string name="avatar_update_email_unverified">アバターを更新するには、まずメールアドレスを確認する必要があります。</string>
     <string name="feedback_form_note_link_wordpress">コミュニティフォーラム。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">プレースホルダー</string>

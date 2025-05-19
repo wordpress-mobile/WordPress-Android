@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 14:54:08+0000
+Translation-Revision-Date: 2025-05-13 15:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Не удалось отправить ссылку для подтверждения</string>
+    <string name="me_email_verification_resend">Повторно отправить ссылку для подтверждения</string>
+    <string name="me_email_verification_sent_description">Проверьте почту по адресу %s, чтобы получить письмо с подтверждением</string>
+    <string name="me_email_verification_sent">Письмо отправлено</string>
+    <string name="me_email_verification_sending_description">Отправка ссылки для подтверждения</string>
+    <string name="me_email_verification_sending">Отправка…</string>
+    <string name="me_email_verification_verify_email_send_link">Отправить ссылку для подтверждения</string>
+    <string name="me_email_verification_verify_email_description">Подтвердите адрес электронной почты, чтобы защитить учётную запись и получить доступ ко всем функциям</string>
+    <string name="me_email_verification_verify_email">Подтвердить адрес электронной почты</string>
+    <string name="experimental_features_feedback_dialog_decline">Не сейчас</string>
+    <string name="experimental_features_feedback_dialog_message">Хотите поделиться отзывом об экспериментальном редакторе?</string>
+    <string name="experimental_features_feedback_dialog_title">Отправить отзыв</string>
+    <string name="experimental_block_editor_plugins">Плагины экспериментального редактора блоков</string>
+    <string name="experimental_block_editor_theme_styles_description">Применение стилей темы к редактору</string>
+    <string name="experimental_block_editor_description">Доступ к дополнительным типам блоков и настройкам</string>
+    <string name="experimental_block_editor_note">Экспериментальный редактор блоков станет редактором блоков по умолчанию в следующей версии, и его нельзя будет отключить.</string>
+    <string name="disable_experimental_block_editor_description">Отказаться от дополнительных типов блоков и настроек</string>
+    <string name="disable_experimental_block_editor">Отключить экспериментальный редактор блоков</string>
     <string name="avatar_update_email_unverified">Чтобы обновить аватар, необходимо подтвердить адрес электронной почты.</string>
     <string name="feedback_form_note_link_wordpress">форумы сообщества.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">заполнитель</string>
@@ -43,6 +61,7 @@ Language: ru
     <string name="dialog_confirm_autosave_dont_restore_button">Из этого приложения</string>
     <string name="dialog_confirm_autosave_restore_button">С другого устройства</string>
     <string name="item_selected">Выбрано</string>
+    <string name="send_feedback">Обратная связь</string>
     <string name="media_pager_remove_item_content_description">Удалить товар %1$d</string>
     <string name="feedback_form_add_attachments">Добавить вложения</string>
     <string name="feedback_form_unable_to_create_tempfile">Не удалось создать временный файл</string>

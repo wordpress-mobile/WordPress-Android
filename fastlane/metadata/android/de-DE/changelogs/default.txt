@@ -1,4 +1,5 @@
-25.7:
-Dieses Update enthält zwei Korrekturen am experimentellen Block-Editor:
-1. Du kannst Feedback zum Editor senden, während du ihn verwendest.
-2. Wir haben einen Fehler behoben, durch den die Codeansicht nicht richtig funktioniert hat
+25.8:
+Wir haben einige Korrekturen am experimentellen Editor vorgenommen.
+- Du kannst Gruppenblöcke auswählen, durchblättern und bearbeiten – und sie sind auch benutzerfreundlicher.
+- Deine Inhalte werden nicht zurückgesetzt, wenn du die Ausrichtung deines Geräts änderst.
+- Wir haben einen lästigen Fehler behoben, der gelegentlich Abstürze des Editors beim Speichern verursacht hat.

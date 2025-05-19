@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-06 14:09:07+0000
+Translation-Revision-Date: 2025-05-13 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Impossible d’envoyer le lien de vérification</string>
+    <string name="me_email_verification_resend">Renvoyer le lien de vérification</string>
+    <string name="me_email_verification_sent_description">Consulter l’e-mail de confirmation dans votre boîte de réception sur %s</string>
+    <string name="me_email_verification_sent">E-mail envoyé</string>
+    <string name="me_email_verification_sending_description">Envoi du lien de vérification</string>
+    <string name="me_email_verification_sending">Envoi en cours…</string>
+    <string name="me_email_verification_verify_email_send_link">Envoyer le lien de vérification</string>
+    <string name="me_email_verification_verify_email_description">Veuillez confirmer votre adresse e-mail pour sécuriser votre compte et débloquer toutes les fonctionnalités</string>
+    <string name="me_email_verification_verify_email">Confirmer votre adresse e-mail</string>
+    <string name="experimental_features_feedback_dialog_decline">Pas maintenant</string>
+    <string name="experimental_features_feedback_dialog_message">Souhaitez-vous partager des commentaires sur l’éditeur expérimental ?</string>
+    <string name="experimental_features_feedback_dialog_title">Partager des commentaires</string>
+    <string name="experimental_block_editor_plugins">Extensions de l’éditeur de blocs expérimental</string>
+    <string name="experimental_block_editor_theme_styles_description">Appliquer des styles de thème à l’éditeur</string>
+    <string name="experimental_block_editor_description">Accéder à des types de blocs et réglages supplémentaires</string>
+    <string name="experimental_block_editor_note">L’éditeur de blocs expérimental deviendra l’option par défaut dans une prochaine version et il ne sera plus possible de le désactiver.</string>
+    <string name="disable_experimental_block_editor_description">Se désabonner des types et réglages de blocs supplémentaires</string>
+    <string name="disable_experimental_block_editor">Désactiver l’éditeur de blocs expérimental</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">texte indicatif</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
@@ -3673,7 +3691,7 @@ Language: fr
     <string name="error_load_comment">Ne peut pas charger le commentaire</string>
     <string name="error_edit_comment">Une erreur s\'est produite lors de la modification du commentaire</string>
     <string name="error_moderate_comment">Une erreur s\'est produite lors de la modération</string>
-    <string name="error_generic">Une erreur s\'est produite</string>
+    <string name="error_generic">Une erreur s‘est produite</string>
     <string name="error_refresh_comments">Les commentaires ne peuvent être actualisés pour l\'instant</string>
     <string name="error_refresh_pages" tools:ignore="UnusedResources">Les pages ne peuvent pas être actualisées pour l\'instant </string>
     <string name="error_refresh_posts">Les articles ne peuvent pas être actualisés pour l\'instant</string>

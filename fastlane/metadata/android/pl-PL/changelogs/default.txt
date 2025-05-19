@@ -1,0 +1,5 @@
+25.8:
+Wprowadziliśmy kilka poprawek do edytora eksperymentalnego.
+- Możesz łatwiej wybierać, przenosić i edytować bloki grup.
+- Twoja zawartość nie będzie resetowana po zmianie orientacji urządzenia.
+- Naprawiliśmy uciążliwy błąd, który czasami powodował awarię edytora podczas zapisywania zmian.
