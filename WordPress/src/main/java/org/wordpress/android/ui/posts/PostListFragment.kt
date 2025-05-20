@@ -125,6 +125,8 @@ class PostListFragment : ViewPagerFragment() {
             photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
         )
 
+        viewModel.fetchPostsFromWordPressRsClient()
+
         initObservers()
     }
 

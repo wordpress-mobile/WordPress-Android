@@ -49,6 +49,11 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ParsedUrl
+import uniffi.wp_api.PostListParams
+import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
@@ -155,6 +160,30 @@ class PostListViewModel @Inject constructor(
              * request to fetch ids of all posts on the site.
              */
             initList(dataSource, lifecycleOwner.lifecycle)
+        }
+    }
+
+    fun fetchPostsFromWordPressRsClient() = launch {
+        // These credentials are from a dummy site, so it's safe to check them in during testing
+        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+            username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
+        )
+        // This is the url from api discovery process and should be stored somewhere
+        val apiRootUrl = ParsedUrl.parse("https://remote-wildfowl-pollan.jurassic.ninja/wp-json")
+
+        val client = WpApiClient(apiRootUrl, authProvider)
+        val postListResponse = client.request { requestBuilder ->
+            requestBuilder.posts().listWithEditContext(params = PostListParams(page = 2u))
+        }
+        when (postListResponse) {
+            is WpRequestResult.WpRequestSuccess -> AppLog.i(
+                AppLog.T.POSTS,
+                "Fetched posts from wordpress-rs: ${postListResponse.data.data}"
+            )
+            else -> AppLog.e(
+                AppLog.T.POSTS,
+                "Failed to fetch posts from wordpress-rs: $postListResponse"
+            )
         }
     }
 
