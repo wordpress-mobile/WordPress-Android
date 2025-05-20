@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 16:54:08+0000
+Translation-Revision-Date: 2025-05-13 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">לא ניתן לשלוח את הקישור לאימות</string>
+    <string name="me_email_verification_resend">לשלוח מחדש את הקישור לאימות</string>
+    <string name="me_email_verification_sent_description">יש לבדוק את תיבת הדואר הנכנס בכתובת %s לאימייל האישור</string>
+    <string name="me_email_verification_sent">האימייל נשלח</string>
+    <string name="me_email_verification_sending_description">שולח קישור לאימות באימייל</string>
+    <string name="me_email_verification_sending">שולח…</string>
+    <string name="me_email_verification_verify_email_send_link">לשלוח מחדש קישור לאימות</string>
+    <string name="me_email_verification_verify_email_description">עליך לאמת את כתובת האימייל שלך כדי לאבטח את החשבון ולגשת לכל האפשרויות</string>
+    <string name="me_email_verification_verify_email">לאמת את כתובת האימייל שלך</string>
+    <string name="experimental_features_feedback_dialog_decline">לא עכשיו</string>
+    <string name="experimental_features_feedback_dialog_message">האם ברצונך לשתף משוב על העורך הניסיוני?</string>
+    <string name="experimental_features_feedback_dialog_title">לשלוח משוב</string>
+    <string name="experimental_block_editor_plugins">תוספים לעורך הבלוקים הניסיוני</string>
+    <string name="experimental_block_editor_theme_styles_description">להחיל את סגנונות התבנית בעורך</string>
+    <string name="experimental_block_editor_description">לגשת להגדרות נוספות ולסוגי בלוקים נוספים</string>
+    <string name="experimental_block_editor_note">עורך הבלוקים הניסיוני יהפוך לברירת המחדל בגרסה עתידית והאפשרות להשבית אותו תוסר.</string>
+    <string name="disable_experimental_block_editor_description">לבטל את הגישה להגדרות נוספות ולסוגי בלוקים נוספים</string>
+    <string name="disable_experimental_block_editor">להשבית את עורך הבלוקים הניסיוני</string>
     <string name="avatar_update_email_unverified">כדי לעדכן את צלמית המשתמש, עליך לאמת את כתובת האימייל שלך תחילה.</string>
     <string name="feedback_form_note_link_wordpress">בפורומים של הקהילה.</string>
     <string name="feedback_form_note_link_jetpack">המסך \'לפנות לתמיכה\'.</string>

@@ -1,4 +1,5 @@
-25.7:
-Desta vez, fizemos apenas duas correções no editor de blocos experimental:
-1. Você pode enviar feedback sobre o editor enquanto está nele.
-2. Corrigimos um bug onde a visualização de código não funcionava corretamente
+25.8:
+Fizemos algumas correções no editor experimental.
+- Você pode selecionar, mover e editar blocos de grupo, que também estão mais fáceis de usar.
+- O conteúdo não será redefinido quando você alterar a orientação do dispositivo.
+- Corrigimos um bug que algumas vezes fazia o editor travar ao salvar as alterações.

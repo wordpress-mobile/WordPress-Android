@@ -1,0 +1,5 @@
+25.8:
+Hemos hecho algunas correcciones en el editor experimental.
+- Puedes elegir, mover y editar bloques de grupo, que también son más fáciles de usar.
+- Tu contenido no se restablecerá cuando cambies la orientación de tu dispositivo.
+- Hemos corregido un error molesto que a veces provocaba que el editor fallara al guardar los cambios.
