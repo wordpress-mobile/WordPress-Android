@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
@@ -465,6 +466,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun openApplicationPasswordLogin(url: String) {
+        Log.d("DEBUG_TAG", "Opening card for $url")
         val intent = getCustomTabsIntent()
         val loginUri = url.toUri()
         val activity = requireActivity()

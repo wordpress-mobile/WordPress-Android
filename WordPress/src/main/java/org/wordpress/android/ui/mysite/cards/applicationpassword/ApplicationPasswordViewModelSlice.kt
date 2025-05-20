@@ -52,7 +52,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
-    var buildCard = false
+    var buildCard = true
 
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
@@ -68,12 +68,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         if (cachedValue == null) {
             // No cached value, set to null until get a response
             uiModelMutable.postValue(null)
+            Log.d("DEBUG_TAG", "Cache miss for ${site.url}, set to null")
         } else {
             // If cached value is empty, it means the site has no authentication URL
             if (cachedValue.isEmpty()) {
                 uiModelMutable.postValue(null)
+                Log.d("DEBUG_TAG", "Cache empty for ${site.url}, set to null")
             } else {
                 postAuthenticationUrl(cachedValue)
+                Log.d("DEBUG_TAG", "Cache hit for ${site.url}, set to $cachedValue")
             }
             return
         }
@@ -83,6 +86,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
                 !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                Log.d("DEBUG_TAG", "Site already authenticated ${site.url}, no need to run discovery")
                 return@launch
             }
 
@@ -90,10 +94,14 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
                 siteURLCache[site.url] = ""
+                Log.d("DEBUG_TAG", "Site not authenticable ${site.url}, set to null")
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
                 siteURLCache[site.url] = authorizationUrlComplete
+                Log.d("DEBUG_TAG", "Site authenticable ${site.url}, set to $authorizationUrlComplete")
             }
+
+            Log.d("DEBUG_TAG", "----------------------")
         }
     }
 
@@ -116,6 +124,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         try {
             getAuthorizationUrlCompleteInternal(siteUrl)
         } catch (throwable: Throwable) {
+            Log.d("DEBUG_TAG", "Error 1 on $siteUrl")
             handleAuthenticationDiscoveryError(siteUrl, throwable)
         }
     }
@@ -132,19 +141,26 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
                 val authorizationUrlComplete =
                     applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                Log.d("DEBUG_TAG", "Got URL for site $siteUrl: $authorizationUrl")
                 Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
 
-            is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
+            is ApiDiscoveryResult.FailureFetchAndParseApiRoot -> {
+                Log.d("DEBUG_TAG", "Failed discovery for $siteUrl")
                 handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
+            }
 
-            is ApiDiscoveryResult.FailureFindApiRoot ->
+            is ApiDiscoveryResult.FailureFindApiRoot -> {
+                Log.d("DEBUG_TAG", "Failed discovery for $siteUrl")
                 handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
+            }
 
-            is ApiDiscoveryResult.FailureParseSiteUrl ->
+            is ApiDiscoveryResult.FailureParseSiteUrl -> {
+                Log.d("DEBUG_TAG", "Failed discovery for $siteUrl")
                 handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
+            }
         }
     }
 
