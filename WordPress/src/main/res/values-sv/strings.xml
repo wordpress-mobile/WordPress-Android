@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-11 13:54:10+0000
+Translation-Revision-Date: 2025-05-13 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Det gick inte att skicka verifieringslänken</string>
+    <string name="me_email_verification_resend">Skicka verifieringslänken igen</string>
+    <string name="me_email_verification_sent_description">Kontrollera din inkorg på %s för att se bekräftelsemeddelandet</string>
+    <string name="me_email_verification_sent">E-postmeddelandet skickades</string>
+    <string name="me_email_verification_sending_description">Skickar verifieringslänk</string>
+    <string name="me_email_verification_sending">Skickar…</string>
+    <string name="me_email_verification_verify_email_send_link">Skicka verifieringslänk</string>
+    <string name="me_email_verification_verify_email_description">Verifiera din e-postadress för att säkra ditt konto och låsa upp alla funktioner</string>
+    <string name="me_email_verification_verify_email">Verifiera din e-postadress</string>
+    <string name="experimental_features_feedback_dialog_decline">Inte nu</string>
+    <string name="experimental_features_feedback_dialog_message">Är du villig att dela feedback om den experimentella redigeraren?</string>
+    <string name="experimental_features_feedback_dialog_title">Dela feedback</string>
+    <string name="experimental_block_editor_plugins">Tillägg för den experimentella blockredigeraren</string>
+    <string name="experimental_block_editor_theme_styles_description">Tillämpa temastilar på redigeraren</string>
+    <string name="experimental_block_editor_description">Få åtkomst till ytterligare blocktyper och inställningar</string>
+    <string name="experimental_block_editor_note">Den experimentella blockredigeraren kommer att bli standard i en framtida version och möjligheten att inaktivera den kommer att tas bort.</string>
+    <string name="disable_experimental_block_editor_description">Tacka nej till ytterligare blocktyper och inställningar</string>
+    <string name="disable_experimental_block_editor">Inaktivera den experimentella blockredigeraren</string>
     <string name="avatar_update_email_unverified">För att uppdatera din profilbild måste du först verifiera din e-postadress.</string>
     <string name="feedback_form_note_link_wordpress">community-forum.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">platshållare</string>

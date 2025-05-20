@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-12-18 18:23:26+0000
+Translation-Revision-Date: 2025-02-27 18:53:56+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: hr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="website">Web stranica</string>
+    <string name="contact_info">Kontakt podaci</string>
+    <string name="nickname">Nadimak</string>
+    <string name="name">Ime</string>
+    <string name="no_users">Nema korisnika</string>
+    <string name="about_the_user">O korisniku</string>
+    <string name="back">Natrag</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">Od ove aplikacije</string>
+    <string name="dialog_confirm_autosave_restore_button">Sa drugog uređaja</string>
     <string name="send_feedback">Pošaljite povratne informacije</string>
     <string name="feedback_form_title">Povratne informacije</string>
     <string name="submit">Pošalji</string>
     <string name="close">Zatvoriti</string>
     <string name="sending">Šaljem</string>
     <string name="voice_to_content_done_label">Završeno</string>
+    <string name="voice_to_content_recording_label">Snimanje</string>
+    <string name="voice_to_content_begin_recording_label">Započni snimanje</string>
+    <string name="in_app_update_restart">Ponovo pokreni</string>
+    <string name="reader_tags_feed_see_more_from_tag">Više od %s</string>
+    <string name="reader_tags_display_name">Oznake</string>
+    <string name="reader_dropdown_menu_tags">Vaše oznake:</string>
+    <string name="stats_subscribers_marker_view_singular">Pretplatnik</string>
+    <string name="stats_subscribers_marker_view_plural">Pretplatnici</string>
+    <string name="notifications_tab_title_subscribers">Pretplatnici</string>
+    <string name="subscribers">Pretplatnici</string>
+    <string name="stats_view_emails">E-pošta</string>
+    <string name="stats_view_subscribers">Pretplatnici</string>
+    <string name="stats_view_total_subscribers">Svi pretplatnici</string>
+    <string name="stats_name_label">Ime</string>
+    <string name="stats_publicize_subscribers_label">Pretplatnici</string>
+    <string name="stats_subscriber_label">Pretplatnik</string>
+    <string name="site_picker_all_sites">Sve web stranice</string>
+    <string name="reader_preferences_font_size_large">Veliko</string>
+    <string name="reader_preferences_font_size_normal">Normalan</string>
+    <string name="reader_preferences_font_size_small">Mali</string>
+    <string name="reader_preferences_font_size_extra_small">Ekstra mali</string>
+    <string name="reader_preferences_screen_font_size_label">Veličina fonta</string>
+    <string name="reader_preferences_screen_font_family_label">Font</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="button_read">Pročitaj</string>
+    <string name="notifications_unread_content_description">Nepročitano</string>
     <string name="label_done_button">Gotovo</string>
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>

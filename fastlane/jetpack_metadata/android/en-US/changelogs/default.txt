@@ -1,3 +1,4 @@
-Just two fixes to the experimental block editor this time:
-1. You can send feedback about the editor while you're using it.
-2. We fixed a bug where the code view didn't work properly
+We made some fixes to the experimental editor.
+- You can select, move through, and edit group blocks—and they’re easier to use, too.
+- Your content won’t reset when you change your device’s orientation.
+- We fixed a pesky bug that sometimes made the editor crash when saving changes.

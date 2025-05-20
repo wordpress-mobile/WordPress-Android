@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-06 10:54:11+0000
+Translation-Revision-Date: 2025-05-13 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Doğrulama bağlantısı gönderilemiyor</string>
+    <string name="me_email_verification_resend">Doğrulama bağlantısını yeniden gönder</string>
+    <string name="me_email_verification_sent_description">Onay e-postası için %s adresinden gelen kutunuzu kontrol edin</string>
+    <string name="me_email_verification_sent">E-posta gönderildi</string>
+    <string name="me_email_verification_sending_description">Doğrulama bağlantısı gönderiliyor</string>
+    <string name="me_email_verification_sending">Gönderiliyor…</string>
+    <string name="me_email_verification_verify_email_send_link">Doğrulama bağlantısı gönder</string>
+    <string name="me_email_verification_verify_email_description">Lütfen hesabınızın güvenliğini sağlamak ve tüm özelliklerin kilidini açmak için e-posta adresinizi doğrulayın</string>
+    <string name="me_email_verification_verify_email">E-posta adresinizi doğrulayın</string>
+    <string name="experimental_features_feedback_dialog_decline">Şimdi değil</string>
+    <string name="experimental_features_feedback_dialog_message">Deneysel düzenleyicide geri bildirim paylaşmak istiyor musunuz?</string>
+    <string name="experimental_features_feedback_dialog_title">Görüşlerinizi paylaşın</string>
+    <string name="experimental_block_editor_plugins">Deneysel blok düzenleyici eklentileri</string>
+    <string name="experimental_block_editor_theme_styles_description">Düzenleyiciye tema stilleri uygulayın</string>
+    <string name="experimental_block_editor_description">Ek blok türlerine ve ayarlarına erişin</string>
+    <string name="experimental_block_editor_note">Deneysel blok düzenleyici gelecekteki bir sürümde varsayılan olacak ve bunu devre dışı bırakma özelliği kaldırılacak.</string>
+    <string name="disable_experimental_block_editor_description">Ek blok türlerini ve ayarlarını devre dışı bırakın</string>
+    <string name="disable_experimental_block_editor">Deneysel blok düzenleyiciyi devre dışı bırakın</string>
     <string name="avatar_update_email_unverified">Avatarınızı güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="feedback_form_note_link_wordpress">topluluk forumları.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>
@@ -34,6 +52,7 @@ Language: tr
     <string name="more_content_description_blogging_prompts">İstemler daha fazla</string>
     <string name="more_content_description_promote_blaze">Blaze daha fazla</string>
     <string name="reader_toast_success_undo">Blogun engeli kaldırıldı</string>
+    <string name="feedback_form_note_link_jetpack">Destek iletişim ekranı.</string>
     <string name="feedback_form_note_text">Bunun bir destek formu olmadığını ve yanıt veremeyeceğimizi lütfen unutmayın. Desteğe ihtiyacınız olursa lütfen şunu kullanın: \"</string>
     <string name="experimental_block_editor_theme_styles">Deneysel blok düzenleyici stilleri</string>
     <string name="experimental_block_editor">Deneysel blok düzenleyici</string>
@@ -42,6 +61,7 @@ Language: tr
     <string name="dialog_confirm_autosave_dont_restore_button">Bu uygulamadan</string>
     <string name="dialog_confirm_autosave_restore_button">Başka cihaz</string>
     <string name="item_selected">Seçildi</string>
+    <string name="send_feedback">Geri bildirim gönder</string>
     <string name="media_pager_remove_item_content_description">%1$d ürününü kaldırın</string>
     <string name="feedback_form_add_attachments">Ekleri ekleyin</string>
     <string name="feedback_form_unable_to_create_tempfile">Geçici dosya oluşturulamıyor</string>

@@ -4990,4 +4990,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
+    <string name="application_password_title">Authenticate using Application Password</string>
 </resources>

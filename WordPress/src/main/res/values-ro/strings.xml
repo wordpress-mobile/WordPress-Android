@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-23 08:29:50+0000
+Translation-Revision-Date: 2025-05-08 10:05:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Nu pot să trimit legătura de verificare</string>
+    <string name="me_email_verification_resend">Retrimite legătura de verificare</string>
+    <string name="me_email_verification_sent_description">Verifică emailurile primite la %s și caută emailul de confirmare</string>
+    <string name="me_email_verification_sent">Am trimis emailul</string>
+    <string name="me_email_verification_sending_description">Trimit legătura de verificare</string>
+    <string name="me_email_verification_sending">Trimit…</string>
+    <string name="me_email_verification_verify_email_send_link">Trimite legătura de verificare</string>
+    <string name="me_email_verification_verify_email_description">Te rog să-ți confirmi adresa de email pentru a securiza contul și debloca toate funcționalitățile</string>
+    <string name="me_email_verification_verify_email">Confirmă-ți adresa de email</string>
+    <string name="experimental_features_feedback_dialog_decline">Nu acum</string>
+    <string name="experimental_features_feedback_dialog_message">Vrei să-ți împărtășești impresiile despre editorul experimental?</string>
+    <string name="experimental_features_feedback_dialog_title">Împărtășește impresiile</string>
+    <string name="experimental_block_editor_plugins">Module pentru editorul de blocuri experimental</string>
+    <string name="experimental_block_editor_theme_styles_description">Aplică stilurile temei în editor</string>
+    <string name="experimental_block_editor_description">Ai acces la tipuri de blocuri și setări suplimentare</string>
+    <string name="experimental_block_editor_note">Editorul de blocuri experimental va deveni implicit într-o versiune viitoare și posibilitatea de a-l dezactiva va fi înlăturată.</string>
+    <string name="disable_experimental_block_editor_description">Renunță la tipuri de bloc și setările suplimentare</string>
+    <string name="disable_experimental_block_editor">Dezactivează editorul de blocuri experimental</string>
     <string name="avatar_update_email_unverified">Pentru a-ți actualiza avatarul, mai întâi trebuie să-ți confirmi adresa de email.</string>
     <string name="feedback_form_note_link_wordpress">forumuri pentru comunitate.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">substituent</string>
@@ -874,7 +892,7 @@ Language: ro
     <string name="photo_picker_media_thumbnail_content_description">Miniatura media</string>
     <string name="stats_insights_popular_title">🔥 Cea mai populară oră</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="scan_vault_press_active_on_site_button_text">Du-te la Panou control</string>
+    <string name="scan_vault_press_active_on_site_button_text">Mergi la Panou control</string>
     <string name="scan_vault_press_active_on_site_subtitle">Site-ul este deja protejat de VaultPress. Mai jos găsești o legătură la panoul de control VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">Site-ul folosește VaultPress</string>
     <string name="locale_picker_current_language">Limba curentă:</string>
@@ -2464,7 +2482,7 @@ Language: ro
     <string name="menu_debug">Meniu de depanare</string>
     <string name="change_password_dialog_message">Schimb parola…</string>
     <string name="change_password_dialog_hint">Parola ar trebui să aibă cel puțin șase caractere. Pentru a o face mai puternică, folosește majuscule și minuscule, cifre și simboluri, cum ar fi ! \" ? $ % ^ &amp;amp; ).</string>
-    <string name="change_password_confirmation">Parolă schimbată cu succes</string>
+    <string name="change_password_confirmation">Am schimbat cu succes parola</string>
     <string name="change_password">Schimbă parola</string>
     <string name="support_identity_input_dialog_name_label">Nume</string>
     <string name="history_no_title">(fără titlu)</string>
@@ -2705,7 +2723,7 @@ Language: ro
     <string name="media_grid_item_image_desc">previzualizare media, nume fișier %s</string>
     <string name="invite_user_delete_desc">înlătură %s</string>
     <string name="profile_picture">poza de profil a lui %s</string>
-    <string name="comment_checkmark_desc">bifează marcajul</string>
+    <string name="comment_checkmark_desc">bifă</string>
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Înregistrare cu Google…</string>
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
@@ -3062,7 +3080,7 @@ Language: ro
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
     <string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>
     <string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlu articolului.</string>
-    <string name="post_settings_post_format">Format de articol</string>
+    <string name="post_settings_post_format">Format articol</string>
     <string name="post_settings_tags">Etichete</string>
     <string name="post_settings_slug">Descriptor</string>
     <string name="post_settings_excerpt">Rezumat</string>
@@ -3614,7 +3632,7 @@ Language: ro
     <string name="reader_empty_posts_request_failed">Nu se pot regăsi articole</string>
     <string name="error_notification_open">Nu pot deschide notificarea</string>
     <string name="stats_search_terms_unknown_search_terms">Termeni de căutare necunoscuți</string>
-    <string name="stats_view_search_terms">Termeni căutați</string>
+    <string name="stats_view_search_terms">Termeni de căutare</string>
     <string name="stats_view_authors">Autori</string>
     <string name="pages_fetching">Se aduc pagini…</string>
     <string name="posts_fetching">Se aduc articole…</string>

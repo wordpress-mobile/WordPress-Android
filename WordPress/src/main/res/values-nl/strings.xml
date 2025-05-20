@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-28 23:07:46+0000
+Translation-Revision-Date: 2025-05-08 06:13:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="me_email_verification_generic_error">Kan geen verificatie link verzenden</string>
+    <string name="me_email_verification_resend">Verificatielink opnieuw verzenden</string>
+    <string name="me_email_verification_sent_description">Controleer je inbox op %s voor de bevestiging e-mail</string>
+    <string name="me_email_verification_sent">E-mail verzonden</string>
+    <string name="me_email_verification_sending_description">Verificatie link aan het verzenden</string>
+    <string name="me_email_verification_sending">Aan het verzenden…</string>
+    <string name="me_email_verification_verify_email_send_link">Link voor verificatie verzenden</string>
+    <string name="me_email_verification_verify_email_description">Verifieer je e-mailadres om je account te beveiligen en alle functies te ontgrendelen</string>
+    <string name="me_email_verification_verify_email">Verifieer je e-mail</string>
+    <string name="experimental_features_feedback_dialog_decline">Niet nu</string>
+    <string name="experimental_features_feedback_dialog_message">Weet je het zeker dat je feedback wil geven over de experimentele editor?</string>
+    <string name="experimental_features_feedback_dialog_title">Feedback delen</string>
+    <string name="experimental_block_editor_plugins">Experimentele blok-editor plugins</string>
+    <string name="experimental_block_editor_theme_styles_description">Themastijlen toepassen op de editor</string>
+    <string name="experimental_block_editor_description">Toegang tot extra bloktypen en instellingen</string>
+    <string name="experimental_block_editor_note">De experimentele blok-editor wordt de standaard in een toekomstige release en de mogelijkheid om deze uit te schakelen wordt verwijderd.</string>
+    <string name="disable_experimental_block_editor_description">Afmelden voor extra bloktypen en instellingen</string>
+    <string name="disable_experimental_block_editor">Experimentele blok-editor uitschakelen</string>
     <string name="avatar_update_email_unverified">Om je avatar te updaten, moet je eerst je e-mailadres verifiëren.</string>
     <string name="feedback_form_note_link_wordpress">community forums</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">plaatshouder</string>

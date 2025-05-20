@@ -164,9 +164,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
-
-        // This is work in progress, we are not running the flow for regular users yet
-//        viewModel.runApplicationPasswordDiscovery()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -450,10 +447,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
 
-        viewModel.onShowApplicationPasswordLoginDialog.observeEvent(viewLifecycleOwner) {
-            showApplicationPasswordDialog(it)
-        }
-
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
             var quickStartScrollPosition = it
             if (quickStartScrollPosition == -1) {
@@ -471,45 +464,27 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun showApplicationPasswordDialog(url: String) {
-        // This is in progress, so texts are not finals and we are not translating them yet.
-        val builder = android.app.AlertDialog.Builder(requireContext())
-        builder.setTitle("Application Password")
-            .setMessage("Would you like to authenticate this site using Applictaion Password?")
-            .setPositiveButton("Yes") { dialog, which ->
-                val intent = getCustomTabsIntent()
-                val loginUri = url.toUri()
-                val activity = requireActivity()
-                try {
-                    intent.launchUrl(activity, loginUri)
-                } catch (e: SecurityException) {
-                    AppLog.e(
-                        AppLog.T.UTILS,
-                        "Error opening login uri in CustomTabsIntent, attempting external browser",
-                        e
-                    )
-                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-                } catch (e: ActivityNotFoundException) {
-                    AppLog.e(
-                        AppLog.T.UTILS,
-                        "Error opening login uri in CustomTabsIntent, attempting external browser",
-                        e
-                    )
-                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-                }
-                dialog.dismiss()
-            }
-            .setNeutralButton("Later") { dialog, which ->
-                dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, which ->
-                viewModel.onApplicationPasswordLoginDialogDismissed(url)
-                dialog.dismiss()
-            }
-            .setCancelable(false)
-
-        val dialog = builder.create()
-        dialog.show()
+    private fun openApplicationPasswordLogin(url: String) {
+        val intent = getCustomTabsIntent()
+        val loginUri = url.toUri()
+        val activity = requireActivity()
+        try {
+            intent.launchUrl(activity, loginUri)
+        } catch (e: SecurityException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        } catch (e: ActivityNotFoundException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        }
     }
 
     private fun getCustomTabsIntent(): CustomTabsIntent {
@@ -803,6 +778,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             requireActivity(),
             action.site
         )
+
+        is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
+            openApplicationPasswordLogin(action.url)
+        }
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
