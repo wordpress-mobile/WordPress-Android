@@ -27,6 +27,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.AppInitializer
 import org.wordpress.android.fluxc.action.EditorSettingsAction
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -44,6 +45,9 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Mock
     lateinit var gutenbergKitFeature: GutenbergKitFeature
+
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Mock
     lateinit var context: Context
@@ -85,6 +89,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
             dispatcher,
             siteSettingsInterfaceFactory,
             appPrefsWrapper,
+            experimentalFeatures,
         )
         selectedSiteRepository.gutenbergKitFeature = gutenbergKitFeature
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
