@@ -22,6 +22,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.encryption.EncryptionUtils
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
@@ -34,6 +35,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
+    private val encryptionUtils: EncryptionUtils
 ) {
     lateinit var scope: CoroutineScope
 
@@ -52,7 +54,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
-    var buildCard = false
+    var buildCard = true
 
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
@@ -82,7 +84,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                !storedSite.apiRestUsername.isNullOrEmpty() && storedSite.apiRestPassword != null) {
                 return@launch
             }
 
