@@ -1,5 +1,6 @@
 package org.wordpress.android.util.encryption
 
+import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,12 +18,12 @@ import javax.inject.Singleton
 private const val KEY_STORE_ALIAS = "AndroidJPSecretKey"
 private const val PROVIDER_NAME = "AndroidKeyStore"
 private const val CIPHER_TRANSFORMATION_TYPE = "AES/GCM/NoPadding"
+private const val IV_TAG = "shared_iv_tag"
 
 @Singleton
 class EncryptionUtils @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
-    private var iv: ByteArray? = null
     private val secretKey by lazy {
         initSecretKey()
     }
@@ -41,14 +42,13 @@ class EncryptionUtils @Inject constructor(
         return keyGenerator.generateKey()
     }
 
-   suspend fun encrypt(data: String): ByteArray = withContext(bgDispatcher) {
+   suspend fun encrypt(data: String): Pair<ByteArray, ByteArray> = withContext(bgDispatcher) {
        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-       iv = cipher.iv // Initialization vector
-       cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+       Pair(cipher.doFinal(data.toByteArray(Charsets.UTF_8)), cipher.iv)
     }
 
-    suspend fun decrypt(encryptedData: ByteArray): String = withContext(bgDispatcher) {
+    suspend fun decrypt(encryptedData: ByteArray, iv: ByteArray): String = withContext(bgDispatcher) {
         val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
         val spec = GCMParameterSpec(128, iv)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)

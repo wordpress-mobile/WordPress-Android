@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.encryption.EncryptionUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -33,12 +34,15 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
      @Mock
      lateinit var buildConfigWrapper: BuildConfigWrapper
 
+     @Mock
+     lateinit var encryptionUtils: EncryptionUtils
+
     private lateinit var helper: ApplicationPasswordLoginHelper
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        helper = ApplicationPasswordLoginHelper(testDispatcher(), siteSqlUtils, uriLoginWrapper, buildConfigWrapper)
+        helper = ApplicationPasswordLoginHelper(testDispatcher(), siteSqlUtils, uriLoginWrapper, buildConfigWrapper, encryptionUtils)
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD)
