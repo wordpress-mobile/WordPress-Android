@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.items.SHARING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_MONITORING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
+import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
@@ -45,6 +46,9 @@ class SiteListItemBuilderTest {
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var peopleUtilsWrapper: PeopleUtilsWrapper
 
     @Mock
     lateinit var themeBrowserUtils: ThemeBrowserUtils
@@ -73,7 +77,8 @@ class SiteListItemBuilderTest {
             themeBrowserUtils,
             jetpackFeatureRemovalPhaseHelper,
             siteMonitoringFeatureConfig,
-            selfHostedUsersFeatureConfig
+            selfHostedUsersFeatureConfig,
+            peopleUtilsWrapper
         )
     }
 
