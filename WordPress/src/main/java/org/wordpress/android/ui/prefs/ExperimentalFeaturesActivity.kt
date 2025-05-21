@@ -61,6 +61,11 @@ enum class ExperimentalFeature(val prefKey: String, val labelResId: Int, val des
         "experimental_block_editor_theme_styles",
         R.string.experimental_block_editor_theme_styles,
         R.string.experimental_block_editor_theme_styles_description
+    ),
+    EXPERIMENTAL_SUBSCRIBERS_FEATURE(
+        "experimental_subscribers_feature",
+        R.string.experimental_subscribers_feature,
+        R.string.experimental_subscribers_feature_description
     );
 
     fun isEnabled() : Boolean {
