@@ -32,8 +32,8 @@ import org.wordpress.android.ui.compose.unit.Margin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExperimentalFeaturesScreen(
-    features: Map<Feature, Boolean>,
-    onFeatureToggled: (feature: Feature, enabled: Boolean) -> Unit,
+    features: Map<ExperimentalFeatures.Feature, Boolean>,
+    onFeatureToggled: (feature: ExperimentalFeatures.Feature, enabled: Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -91,9 +91,9 @@ fun ExperimentalFeaturesScreen(
 
 @Composable
 fun FeatureToggle(
-    feature: Feature,
+    feature: ExperimentalFeatures.Feature,
     enabled: Boolean,
-    onChange: (Feature, Boolean) -> Unit,
+    onChange: (ExperimentalFeatures.Feature, Boolean) -> Unit,
 ) {
     ListItem(
         headlineContent = {
@@ -145,7 +145,7 @@ fun FeedbackDialog(onDismiss: () -> Unit, onSendFeedback: () -> Unit) {
 fun ExperimentalFeaturesScreenPreview() {
     AppThemeM3 {
         val featuresStatusAlternated = remember {
-            Feature.entries.toTypedArray().mapIndexed { index, feature ->
+            ExperimentalFeatures.Feature.entries.toTypedArray().mapIndexed { index, feature ->
                 feature to (index % 2 == 0)
             }.toMap()
         }

@@ -12,37 +12,38 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExperimentalFeaturesViewModel @Inject constructor(
+    private val experimentalFeatures: ExperimentalFeatures,
     private val gutenbergKitFeature: GutenbergKitFeature
 ) : ViewModel() {
-    private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
-    val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
+    private val _switchStates = MutableStateFlow<Map<ExperimentalFeatures.Feature, Boolean>>(emptyMap())
+    val switchStates: StateFlow<Map<ExperimentalFeatures.Feature, Boolean>> = _switchStates.asStateFlow()
 
     init {
-        val initialStates = Feature.entries
+        val initialStates = ExperimentalFeatures.Feature.entries
             .filter { feature ->
                 shouldShowFeature(feature)
             }.associateWith { feature ->
-                feature.isEnabled()
+                experimentalFeatures.isEnabled(feature)
             }
         _switchStates.value = initialStates
     }
 
-    private fun shouldShowFeature(feature: Feature): Boolean {
+    private fun shouldShowFeature(feature: ExperimentalFeatures.Feature): Boolean {
         // only show subscribers in debug builds
-        return if (BuildConfig.DEBUG.not() && feature == Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
+        return if (BuildConfig.DEBUG.not() && feature == ExperimentalFeatures.Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
             false
         } else if (gutenbergKitFeature.isEnabled()) {
-            feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
+            feature != ExperimentalFeatures.Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {
-            feature != Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+            feature != ExperimentalFeatures.Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
         }
     }
 
-    fun onFeatureToggled(feature: Feature, enabled: Boolean) {
+    fun onFeatureToggled(feature: ExperimentalFeatures.Feature, enabled: Boolean) {
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
                 this[feature] = enabled
-                feature.setEnabled(enabled)
+                experimentalFeatures.setEnabled(feature, enabled)
             }
         }
     }
