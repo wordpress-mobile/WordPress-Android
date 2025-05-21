@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people.utils;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import com.android.volley.VolleyError;
@@ -615,12 +614,10 @@ public class PeopleUtils {
      * Returns the title of the people screen. If the experimental subscribers feature is enabled,
      * the title will be "Users". Otherwise, it will be "People".
      */
-    @NonNull
     public static @StringRes int getPeopleScreenTitleRes() {
         return getTitleBasedOnFeatureFlag(R.string.users, R.string.people);
     }
 
-    @NonNull
     public static @StringRes int getPeopleInviteScreenTitleRes() {
         return getTitleBasedOnFeatureFlag(R.string.invite_users, R.string.invite_people);
     }
