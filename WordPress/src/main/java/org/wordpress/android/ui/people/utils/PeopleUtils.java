@@ -625,11 +625,13 @@ public class PeopleUtils {
         return getTitleBasedOnFeatureFlag(R.string.invite_users, R.string.invite_people);
     }
 
-    private static @StringRes int getTitleBasedOnFeatureFlag(@StringRes int enabledTitle, @StringRes int disabledTitle) {
+    private static @StringRes int getTitleBasedOnFeatureFlag(
+            @StringRes int usersTitle,
+            @StringRes int peopleTitle) {
         if (ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE.isEnabled()) {
-            return enabledTitle;
+            return usersTitle;
         } else {
-            return disabledTitle;
+            return peopleTitle;
         }
     }
 }
