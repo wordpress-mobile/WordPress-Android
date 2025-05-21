@@ -45,8 +45,13 @@ import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.wordpress.android.BuildConfig
 
-enum class ExperimentalFeature(val prefKey: String, val labelResId: Int, val descriptionResId: Int) {
+enum class ExperimentalFeature(
+    private val prefKey: String,
+    val labelResId: Int,
+    val descriptionResId: Int
+) {
     DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
         "disable_experimental_block_editor",
         R.string.disable_experimental_block_editor,
@@ -87,16 +92,22 @@ class FeatureViewModel @Inject constructor(
     init {
         val initialStates = ExperimentalFeature.entries
             .filter { feature ->
-                if (gutenbergKitFeature.isEnabled()) {
-                    feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
-                } else {
-                    feature != ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
-                }
-            }
-            .associate { feature ->
-                feature to feature.isEnabled()
+                shouldShowFeature(feature)
+            }.associateWith {
+                feature -> feature.isEnabled()
             }
         _switchStates.value = initialStates
+    }
+
+    private fun shouldShowFeature(feature: ExperimentalFeature): Boolean {
+        // only show subscribers in debug builds
+        return if (BuildConfig.DEBUG.not() && feature == ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
+            false
+        } else if (gutenbergKitFeature.isEnabled()) {
+            feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
+        } else {
+            feature != ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+        }
     }
 
     fun onFeatureToggled(feature: ExperimentalFeature, enabled: Boolean) {
