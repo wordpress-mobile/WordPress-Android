@@ -1,15 +1,20 @@
 package org.wordpress.android.ui.people.utils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -604,5 +609,18 @@ public class PeopleUtils {
         void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors);
 
         void onError();
+    }
+
+    /**
+     * Returns the title of the people screen. If the experimental subscribers feature is enabled,
+     * the title will be "Users". Otherwise, it will be "People".
+     */
+    @NonNull
+    public static @StringRes int getPeopleScreenTitleRes() {
+        if (ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE.isEnabled()) {
+            return R.string.users;
+        } else {
+            return R.string.people;
+        }
     }
 }

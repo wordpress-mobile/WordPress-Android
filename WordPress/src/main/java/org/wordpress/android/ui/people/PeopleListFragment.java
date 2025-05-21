@@ -41,6 +41,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -117,7 +118,7 @@ public class PeopleListFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.people);
+            actionBar.setTitle(PeopleUtils.getPeopleScreenTitleRes());
         }
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
@@ -264,7 +265,7 @@ public class PeopleListFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // important for accessibility - talkback
-        getActivity().setTitle(R.string.people);
+        getActivity().setTitle(PeopleUtils.getPeopleScreenTitleRes());
     }
 
     @Override

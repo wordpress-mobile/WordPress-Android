@@ -95,4 +95,6 @@ class PeopleUtilsWrapper @Inject constructor() {
         wpComBlogId: Long,
         callback: InvitationsSendCallback
     ) = PeopleUtils.sendInvitations(usernames, role, message, wpComBlogId, callback)
+
+    fun getPeopleScreenTitleRes() = PeopleUtils.getPeopleScreenTitleRes()
 }
