@@ -617,19 +617,19 @@ public class PeopleUtils {
      */
     @NonNull
     public static @StringRes int getPeopleScreenTitleRes() {
-        if (ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE.isEnabled()) {
-            return R.string.users;
-        } else {
-            return R.string.people;
-        }
+        return getTitleBasedOnFeatureFlag(R.string.users, R.string.people);
     }
 
     @NonNull
     public static @StringRes int getPeopleInviteScreenTitleRes() {
+        return getTitleBasedOnFeatureFlag(R.string.invite_users, R.string.invite_people);
+    }
+
+    private static @StringRes int getTitleBasedOnFeatureFlag(@StringRes int enabledTitle, @StringRes int disabledTitle) {
         if (ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE.isEnabled()) {
-            return R.string.invite_users;
+            return enabledTitle;
         } else {
-            return R.string.invite_people;
+            return disabledTitle;
         }
     }
 }
