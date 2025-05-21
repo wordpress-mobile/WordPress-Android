@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs
+package org.wordpress.android.ui.prefs.experimentalfeatures
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
@@ -29,100 +29,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.extensions.setContent
-import javax.inject.Inject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import org.wordpress.android.BuildConfig
-
-enum class ExperimentalFeature(
-    private val prefKey: String,
-    val labelResId: Int,
-    val descriptionResId: Int
-) {
-    DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
-        "disable_experimental_block_editor",
-        R.string.disable_experimental_block_editor,
-        R.string.disable_experimental_block_editor_description
-    ),
-    EXPERIMENTAL_BLOCK_EDITOR(
-        "experimental_block_editor",
-        R.string.experimental_block_editor,
-        R.string.experimental_block_editor_description
-    ),
-    EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES(
-        "experimental_block_editor_theme_styles",
-        R.string.experimental_block_editor_theme_styles,
-        R.string.experimental_block_editor_theme_styles_description
-    ),
-    EXPERIMENTAL_SUBSCRIBERS_FEATURE(
-        "experimental_subscribers_feature",
-        R.string.experimental_subscribers_feature,
-        R.string.experimental_subscribers_feature_description
-    );
-
-    fun isEnabled() : Boolean {
-        return AppPrefs.getExperimentalFeatureConfig(prefKey)
-    }
-
-    fun setEnabled(isEnabled: Boolean) {
-        AppPrefs.setExperimentalFeatureConfig(isEnabled, prefKey)
-    }
-}
-
-@HiltViewModel
-class FeatureViewModel @Inject constructor(
-    private val gutenbergKitFeature: GutenbergKitFeature
-) : ViewModel() {
-    private val _switchStates = MutableStateFlow<Map<ExperimentalFeature, Boolean>>(emptyMap())
-    val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
-
-    init {
-        val initialStates = ExperimentalFeature.entries
-            .filter { feature ->
-                shouldShowFeature(feature)
-            }.associateWith {
-                feature -> feature.isEnabled()
-            }
-        _switchStates.value = initialStates
-    }
-
-    private fun shouldShowFeature(feature: ExperimentalFeature): Boolean {
-        // only show subscribers in debug builds
-        return if (BuildConfig.DEBUG.not() && feature == ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
-            false
-        } else if (gutenbergKitFeature.isEnabled()) {
-            feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
-        } else {
-            feature != ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
-        }
-    }
-
-    fun onFeatureToggled(feature: ExperimentalFeature, enabled: Boolean) {
-        _switchStates.update { currentStates ->
-            currentStates.toMutableMap().apply {
-                this[feature] = enabled
-                feature.setEnabled(enabled)
-            }
-        }
-    }
-}
 
 @AndroidEntryPoint
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
-    private val viewModel: FeatureViewModel by viewModels()
+    private val viewModel: ExperimentalFeaturesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
