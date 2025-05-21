@@ -623,4 +623,13 @@ public class PeopleUtils {
             return R.string.people;
         }
     }
+
+    @NonNull
+    public static @StringRes int getPeopleInviteScreenTitleRes() {
+        if (ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE.isEnabled()) {
+            return R.string.invite_users;
+        } else {
+            return R.string.invite_people;
+        }
+    }
 }

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SELF_HOSTED
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
+import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -45,6 +46,7 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
+    private val peopleUtilsWrapper: PeopleUtilsWrapper,
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -137,7 +139,7 @@ class SiteListItemBuilder @Inject constructor(
         return if (site.hasCapabilityListUsers) {
             ListItem(
                 R.drawable.ic_user_white_24dp,
-                UiStringRes(R.string.people),
+                UiStringRes(peopleUtilsWrapper.getPeopleScreenTitleRes()),
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
             )
