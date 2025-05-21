@@ -28,12 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExperimentalFeaturesScreen(
-    features: Map<ExperimentalFeatures.Feature, Boolean>,
-    onFeatureToggled: (feature: ExperimentalFeatures.Feature, enabled: Boolean) -> Unit,
+    features: Map<Feature, Boolean>,
+    onFeatureToggled: (feature: Feature, enabled: Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -91,9 +92,9 @@ fun ExperimentalFeaturesScreen(
 
 @Composable
 fun FeatureToggle(
-    feature: ExperimentalFeatures.Feature,
+    feature: Feature,
     enabled: Boolean,
-    onChange: (ExperimentalFeatures.Feature, Boolean) -> Unit,
+    onChange: (Feature, Boolean) -> Unit,
 ) {
     ListItem(
         headlineContent = {
