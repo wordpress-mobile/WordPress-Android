@@ -137,7 +137,7 @@ android {
         buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "true"
         buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "true"
         buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "true"
-        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "true"
+        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_ONE", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_TWO", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
