@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettings
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeature
+import org.wordpress.android.ui.prefs.experimentalfeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.mapSafe
@@ -136,7 +136,7 @@ class SelectedSiteRepository @Inject constructor(
         }
 
         // Fetch the site's editor theme and settings
-        if (ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled() || gutenbergKitFeature.isEnabled()) {
+        if (Feature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled() || gutenbergKitFeature.isEnabled()) {
             fetchEditorSettings(selectedSite)
         } else {
             fetchEditorTheme(selectedSite)

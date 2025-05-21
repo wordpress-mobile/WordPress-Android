@@ -198,7 +198,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeature
+import org.wordpress.android.ui.prefs.experimentalfeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -422,11 +422,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
 
-    private val disableGutenbergKitFeatureConfig: ExperimentalFeature =
-        ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
-    private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
-    private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
-        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+    private val disableGutenbergKitFeatureConfig: Feature =
+        Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+    private val gutenbergKitFeatureConfig: Feature = Feature.EXPERIMENTAL_BLOCK_EDITOR
+    private val gutenbergKitThemeStylesConfig: Feature =
+        Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel

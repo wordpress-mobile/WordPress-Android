@@ -14,11 +14,11 @@ import javax.inject.Inject
 internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val gutenbergKitFeature: GutenbergKitFeature
 ) : ViewModel() {
-    private val _switchStates = MutableStateFlow<Map<ExperimentalFeature, Boolean>>(emptyMap())
-    val switchStates: StateFlow<Map<ExperimentalFeature, Boolean>> = _switchStates.asStateFlow()
+    private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
+    val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
     init {
-        val initialStates = ExperimentalFeature.entries
+        val initialStates = Feature.entries
             .filter { feature ->
                 shouldShowFeature(feature)
             }.associateWith { feature ->
@@ -27,18 +27,18 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         _switchStates.value = initialStates
     }
 
-    private fun shouldShowFeature(feature: ExperimentalFeature): Boolean {
+    private fun shouldShowFeature(feature: Feature): Boolean {
         // only show subscribers in debug builds
-        return if (BuildConfig.DEBUG.not() && feature == ExperimentalFeature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
+        return if (BuildConfig.DEBUG.not() && feature == Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
             false
         } else if (gutenbergKitFeature.isEnabled()) {
-            feature != ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
+            feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {
-            feature != ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+            feature != Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
         }
     }
 
-    fun onFeatureToggled(feature: ExperimentalFeature, enabled: Boolean) {
+    fun onFeatureToggled(feature: Feature, enabled: Boolean) {
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
                 this[feature] = enabled
