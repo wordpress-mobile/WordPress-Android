@@ -968,6 +968,8 @@
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
+    <string name="experimental_subscribers_feature">Experimental subscribers</string>
+    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers (work in progress)</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
