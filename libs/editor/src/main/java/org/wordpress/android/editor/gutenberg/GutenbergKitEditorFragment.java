@@ -646,10 +646,12 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     boolean isSiteHostedMediaFile(@NonNull String urlString) {
         String siteURL = (String) mSettings.get("siteURL");
         Set<String> mediaExtensions = new HashSet<>(Arrays.asList(
-                "jpg", "jpeg", "png", "gif", "bmp", "webp",
-                "mp4", "mov", "avi", "mkv",
-                "mp3", "wav", "flac"
-        ));
+                // Image formats
+                "jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "ico", "tiff", "tif", "heic", "heif",
+                // Video formats
+                "mp4", "mov", "avi", "mkv", "webm", "m4v", "mpeg", "mpg", "3gp", "flv", "wmv", "mts", "m2ts",
+                // Audio formats
+                "mp3", "wav", "flac", "aac", "m4a", "ogg", "wma", "aiff", "mid", "midi"));
 
         try {
             URL url = new URL(urlString);
