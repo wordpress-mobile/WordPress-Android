@@ -56,6 +56,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     var buildCard = true
 
     fun buildCard(siteModel: SiteModel) {
+        // TODO: this TODO willprevent the CI to pass. Remove the following line to merge
+        scope.launch { applicationPasswordLoginHelper.printCredentials() }
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
         if (buildCard) {

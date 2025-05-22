@@ -2,10 +2,14 @@ package org.wordpress.android.util.encryption
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
+import java.security.Key
+import java.security.KeyStore
 import java.util.Base64
+import java.util.Enumeration
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -23,8 +27,19 @@ private const val T_LENGTH = 128
 class EncryptionUtils @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
-    private val secretKey by lazy {
-        initSecretKey()
+    private val secretKey: Key by lazy {
+        getKeyFromStore() ?: initSecretKey()
+    }
+
+    private fun getKeyFromStore(): Key? {
+        return try {
+            val ks: KeyStore = KeyStore.getInstance(PROVIDER_NAME).apply {
+                load(null)
+            }
+            ks.getKey(KEY_STORE_ALIAS, "".toCharArray())
+        } catch (throwable: Throwable) {
+            null
+        }
     }
 
     private fun initSecretKey(): SecretKey {
