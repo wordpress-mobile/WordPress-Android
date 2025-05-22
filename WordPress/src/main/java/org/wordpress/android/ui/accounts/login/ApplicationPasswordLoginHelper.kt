@@ -42,13 +42,23 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     val encryptedUserPair = encryptionUtils.encrypt(uriLogin.user)
                     val encryptedPasswordPair = encryptionUtils.encrypt(uriLogin.password)
                     site.apply {
-                        apiRestUsername = "TestUserName"
+                        apiRestUsername = uriLogin.user
                         apiRestPassword = encryptedPasswordPair.first
                         apiRestIV = encryptedPasswordPair.second
                     }
-                    siteSqlUtils.insertOrUpdateSite(site)
+                    try {
+                        val inserted = siteSqlUtils.insertOrUpdateSite(site)
+                        Log.d("WP_RS", "Inserted site: $inserted")
+                    } catch (e: Exception) {
+                        Log.e("WP_RS", "Error inserting", e)
+                    }
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
+                    // TODO: Following lines are for PR review and testing. This TODO won't pass the CI and it0s a reminder to remove the lines
+                    val siteUpdated = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
+                    Log.d("WP_RS", "Original : ${uriLogin.password}")
+                    Log.d("WP_RS", "Encrypted: ${siteUpdated?.apiRestPassword}")
+                    Log.d("WP_RS", "Decrypted: ${encryptionUtils.decrypt(siteUpdated?.apiRestPassword!!, siteUpdated?.apiRestIV!!)}")
                     true
                 } else {
                     Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")

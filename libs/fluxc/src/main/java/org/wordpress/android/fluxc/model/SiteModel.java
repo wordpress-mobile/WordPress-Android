@@ -103,9 +103,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column
     private String mApiRestUsername;
     @Column
-    private byte[] mApiRestPassword;
+    private String mApiRestPassword;
     @Column
-    private byte[] mApiRestIV;
+    private String mApiRestIV;
     @Column(name = "XMLRPC_URL")
     private String mXmlRpcUrl;
     @Column
@@ -372,19 +372,19 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mApiRestUsername = apiRestUsername;
     }
 
-    public byte[] getApiRestPassword() {
+    public String getApiRestPassword() {
         return mApiRestPassword;
     }
 
-    public void setApiRestPassword(byte[] apiRestPassword) {
+    public void setApiRestPassword(String apiRestPassword) {
         mApiRestPassword = apiRestPassword;
     }
 
-    public byte[] getApiRestIV() {
+    public String getApiRestIV() {
         return mApiRestIV;
     }
 
-    public void setApiRestIV(byte[] apiRestIV) {
+    public void setApiRestIV(String apiRestIV) {
         mApiRestIV = apiRestIV;
     }
 

@@ -6,6 +6,7 @@ import android.security.keystore.KeyProperties
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
+import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -42,17 +43,23 @@ class EncryptionUtils @Inject constructor(
         return keyGenerator.generateKey()
     }
 
-   suspend fun encrypt(data: String): Pair<ByteArray, ByteArray> = withContext(bgDispatcher) {
+   suspend fun encrypt(data: String): Pair<String, String> = withContext(bgDispatcher) {
        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-       Pair(cipher.doFinal(data.toByteArray(Charsets.UTF_8)), cipher.iv)
+       val encryptedString = Base64.getEncoder().encodeToString(
+           cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+       )
+       val ivString = Base64.getEncoder().encodeToString(cipher.iv)
+       Pair(encryptedString, ivString)
     }
 
-    suspend fun decrypt(encryptedData: ByteArray, iv: ByteArray): String = withContext(bgDispatcher) {
+    suspend fun decrypt(encryptedData: String, iv: String): String = withContext(bgDispatcher) {
+        val dataBytes = Base64.getDecoder().decode(encryptedData)
+        val ivBytes = Base64.getDecoder().decode(iv)
         val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
-        val spec = GCMParameterSpec(128, iv)
+        val spec = GCMParameterSpec(128, ivBytes)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
-        val decryptedData = cipher.doFinal(encryptedData)
+        val decryptedData = cipher.doFinal(dataBytes)
         String(decryptedData)
     }
 }

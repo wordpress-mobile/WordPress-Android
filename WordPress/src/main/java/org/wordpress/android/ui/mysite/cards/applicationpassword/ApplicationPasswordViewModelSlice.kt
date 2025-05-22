@@ -35,7 +35,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
-    private val encryptionUtils: EncryptionUtils
 ) {
     lateinit var scope: CoroutineScope
 
@@ -84,7 +83,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && storedSite.apiRestPassword != null) {
+                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
                 return@launch
             }
 
