@@ -732,7 +732,7 @@
         <!--People Management-->
         <activity
             android:name=".ui.people.PeopleManagementActivity"
-            android:label="@string/people"
+            android:label="@string/users"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
         <activity

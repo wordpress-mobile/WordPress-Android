@@ -37,7 +37,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 ExperimentalFeaturesScreen(
                     features = features,
                     onFeatureToggled = { feature, enabled ->
-                        if (feature == ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR && !enabled) {
+                        if (feature == ExperimentalFeatures.Feature.EXPERIMENTAL_BLOCK_EDITOR && !enabled) {
                             showDialog.value = true
                         }
                         viewModel.onFeatureToggled(feature, enabled)

@@ -2721,7 +2721,6 @@
     <string name="themes_empty_list">No themes matching your search</string>
 
     <!--People Management-->
-    <string name="people">People</string>
     <string name="users">Users</string>
     <string name="user">User</string>
     <string name="no_users">No users</string>
@@ -2732,7 +2731,7 @@
     <string name="subscriber_remove_confirmation_message">If removed, this subscriber will stop receiving notifications about this site, unless they re-subscribe.\n\nWould you still like to remove this subscriber?</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
-    <string name="invite_people">Invite People</string>
+    <string name="invite_users">Invite users</string>
     <string name="invite_names_title">Usernames or emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
