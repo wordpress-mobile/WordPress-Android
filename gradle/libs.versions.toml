@@ -12,7 +12,7 @@ androidx-arch-core = '2.2.0'
 androidx-browser = '1.8.0'
 androidx-camera = '1.4.2'
 androidx-cardview = '1.0.0'
-androidx-compose-bom = '2025.05.00'
+androidx-compose-bom = '2025.05.01'
 androidx-compose-material3 = '1.3.2'
 androidx-constraintlayout-compose = '1.1.1'
 androidx-constraintlayout-main = '2.2.1'
@@ -106,7 +106,7 @@ wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-db86370a4ce7ae45e210e57a0403cc70ce70f167'
 wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
-zendesk = '5.4.0'
+zendesk = '5.5.0'
 
 [libraries]
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
