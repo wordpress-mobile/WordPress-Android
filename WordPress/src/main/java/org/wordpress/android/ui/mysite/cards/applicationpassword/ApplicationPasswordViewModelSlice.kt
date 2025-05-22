@@ -22,7 +22,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.encryption.EncryptionUtils
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
@@ -53,6 +52,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
+    // TODO: this TODO willprevent the CI to pass. Remove it after set buildCard to false
     var buildCard = true
 
     fun buildCard(siteModel: SiteModel) {

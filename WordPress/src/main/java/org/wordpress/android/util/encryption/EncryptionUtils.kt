@@ -1,6 +1,5 @@
 package org.wordpress.android.util.encryption
 
-import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,11 +14,10 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-
 private const val KEY_STORE_ALIAS = "AndroidJPSecretKey"
 private const val PROVIDER_NAME = "AndroidKeyStore"
 private const val CIPHER_TRANSFORMATION_TYPE = "AES/GCM/NoPadding"
-private const val IV_TAG = "shared_iv_tag"
+private const val T_LENGTH = 128
 
 @Singleton
 class EncryptionUtils @Inject constructor(
@@ -68,7 +66,7 @@ class EncryptionUtils @Inject constructor(
         val dataBytes = Base64.getDecoder().decode(encryptedData)
         val ivBytes = Base64.getDecoder().decode(iv)
         val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
-        val spec = GCMParameterSpec(128, ivBytes)
+        val spec = GCMParameterSpec(T_LENGTH, ivBytes)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
         val decryptedData = cipher.doFinal(dataBytes)
         String(decryptedData)

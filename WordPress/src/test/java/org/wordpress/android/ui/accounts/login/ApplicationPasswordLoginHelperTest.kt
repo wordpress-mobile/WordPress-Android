@@ -42,7 +42,13 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        helper = ApplicationPasswordLoginHelper(testDispatcher(), siteSqlUtils, uriLoginWrapper, buildConfigWrapper, encryptionUtils)
+        helper = ApplicationPasswordLoginHelper(
+            testDispatcher(),
+            siteSqlUtils,
+            uriLoginWrapper,
+            buildConfigWrapper,
+            encryptionUtils
+        )
         whenever(uriLoginWrapper.parseUriLogin(any()))
             .thenReturn(
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD)
