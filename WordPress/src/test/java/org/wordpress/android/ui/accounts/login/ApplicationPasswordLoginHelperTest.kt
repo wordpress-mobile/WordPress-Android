@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -22,6 +23,8 @@ import kotlin.test.assertTrue
 private const val TEST_URL = "http://test.com"
 private const val TEST_USER = "testuser"
 private const val TEST_PASSWORD = "testpassword"
+private const val ENCRYPTED = "encrypted"
+private const val IV = "iv"
 
 @ExperimentalCoroutinesApi
 class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
@@ -118,14 +121,25 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
             val siteModel = SiteModel().apply {
                 url = TEST_URL
+                apiRestUsername = ENCRYPTED
+                apiRestUsernameIV = IV
+                apiRestPassword = ENCRYPTED
+                apiRestPasswordIV = IV
             }
         whenever(siteSqlUtils.getSites()).thenReturn(listOf(siteModel))
+        whenever(encryptionUtils.encrypt(any()))
+            .thenReturn(
+                Pair(
+                    ENCRYPTED,
+                    IV
+                )
+            )
 
         val result = helper.storeApplicationPasswordCredentialsFrom(data)
 
         assertTrue(result)
         verify(siteSqlUtils).getSites()
-        verify(siteSqlUtils).insertOrUpdateSite(siteModel)
+        verify(siteSqlUtils).insertOrUpdateSite(eq(siteModel))
     }
 
     @Test
