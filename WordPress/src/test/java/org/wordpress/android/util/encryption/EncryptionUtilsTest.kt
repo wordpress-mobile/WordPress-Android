@@ -3,14 +3,11 @@ package org.wordpress.android.util.encryption
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.BaseUnitTest
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
 @ExperimentalCoroutinesApi
-@RunWith(RobolectricTestRunner::class)
 class EncryptionUtilsTest : BaseUnitTest() {
     @Test
     fun `given string, when encrypted, the decryption must return the original string`() = runTest {
@@ -18,9 +15,9 @@ class EncryptionUtilsTest : BaseUnitTest() {
         val data = "Original String"
 
         val encrypted = encryptionUtils.encrypt(data)
-        val decrypted = encryptionUtils.decrypt(encrypted)
+        val decrypted = encryptionUtils.decrypt(encrypted.first, encrypted.second)
 
-        assertNotEquals(data, encrypted)
+        assertNotEquals(data, encrypted.first)
         assertEquals(data, decrypted)
     }
 }
