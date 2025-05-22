@@ -137,7 +137,7 @@ class SiteListItemBuilder @Inject constructor(
         return if (site.hasCapabilityListUsers) {
             ListItem(
                 R.drawable.ic_user_white_24dp,
-                UiStringRes(R.string.people),
+                UiStringRes(R.string.users),
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
             )
