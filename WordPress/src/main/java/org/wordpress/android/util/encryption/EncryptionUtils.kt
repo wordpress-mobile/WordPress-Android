@@ -43,16 +43,31 @@ class EncryptionUtils @Inject constructor(
         return keyGenerator.generateKey()
     }
 
-   suspend fun encrypt(data: String): Pair<String, String> = withContext(bgDispatcher) {
+    /**
+     * Encrypts a user name and password
+     * @param userName The userName to encrypt
+     * @param password The data to encrypt
+     * @return Triple of encrypted user name, encrypted password, and IV. All in Base64
+     */
+   suspend fun encryptCredentials(userName: String, password: String): Triple<String, String, String> = withContext(bgDispatcher) {
        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-       val encryptedString = Base64.getEncoder().encodeToString(
-           cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+       val encryptedUserName = Base64.getEncoder().encodeToString(
+           cipher.doFinal(userName.toByteArray(Charsets.UTF_8))
+       )
+        val encryptedPassword = Base64.getEncoder().encodeToString(
+           cipher.doFinal(password.toByteArray(Charsets.UTF_8))
        )
        val ivString = Base64.getEncoder().encodeToString(cipher.iv)
-       Pair(encryptedString, ivString)
+        Triple(encryptedUserName, encryptedPassword, ivString)
     }
 
+    /**
+     * Decrypts a string
+     * @param encryptedData The encrypted data in Base64 to decrypt
+     * @param iv The initialization vector in Base64 used for encryption
+     * @return The decrypted data
+     */
     suspend fun decrypt(encryptedData: String, iv: String): String = withContext(bgDispatcher) {
         val dataBytes = Base64.getDecoder().decode(encryptedData)
         val ivBytes = Base64.getDecoder().decode(iv)
