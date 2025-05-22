@@ -44,22 +44,18 @@ class EncryptionUtils @Inject constructor(
     }
 
     /**
-     * Encrypts a user name and password
-     * @param userName The userName to encrypt
-     * @param password The data to encrypt
-     * @return Triple of encrypted user name, encrypted password, and IV. All in Base64
+     * Encrypts a String
+     * @param data The data to encrypt
+     * @return Pair of encrypted data and IV. All in Base64
      */
-   suspend fun encryptCredentials(userName: String, password: String): Triple<String, String, String> = withContext(bgDispatcher) {
+   suspend fun encrypt(data: String): Pair<String, String> = withContext(bgDispatcher) {
        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_TYPE)
        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-       val encryptedUserName = Base64.getEncoder().encodeToString(
-           cipher.doFinal(userName.toByteArray(Charsets.UTF_8))
-       )
-        val encryptedPassword = Base64.getEncoder().encodeToString(
-           cipher.doFinal(password.toByteArray(Charsets.UTF_8))
+       val encryptedData = Base64.getEncoder().encodeToString(
+           cipher.doFinal(data.toByteArray(Charsets.UTF_8))
        )
        val ivString = Base64.getEncoder().encodeToString(cipher.iv)
-        Triple(encryptedUserName, encryptedPassword, ivString)
+        Pair(encryptedData, ivString)
     }
 
     /**

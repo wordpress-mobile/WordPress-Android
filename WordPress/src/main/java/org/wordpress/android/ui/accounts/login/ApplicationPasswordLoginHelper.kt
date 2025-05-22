@@ -39,20 +39,23 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                 if (site != null) {
-                    val encryptedTriple = encryptionUtils.encryptCredentials(uriLogin.user, uriLogin.password)
+                    val encryptedUsername = encryptionUtils.encrypt(uriLogin.user)
+                    val encryptedPassword = encryptionUtils.encrypt(uriLogin.password)
                     site.apply {
-                        apiRestUsername = encryptedTriple.first
-                        apiRestPassword = encryptedTriple.second
-                        apiRestIV = encryptedTriple.third
+                        apiRestUsername = encryptedUsername.first
+                        apiRestUsernameIV = encryptedUsername.second
+                        apiRestPassword = encryptedPassword.first
+                        apiRestPassordIV = encryptedPassword.second
                     }
+                    siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
 
-                    // TODO: Following lines are for PR review and testing. This TODO won't pass the CI and it0s a reminder to remove the lines
+                    // TODO: Following lines are for PR review and testing. This TODO won't pass the CI and it's a reminder to remove the lines
                     val siteUpdated = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
-                    Log.d("WP_RS", "Original : ${uriLogin.password}")
+                    Log.d("WP_RS", "Original : ${uriLogin?.user} - ${uriLogin.password}")
                     Log.d("WP_RS", "Encrypted: ${siteUpdated?.apiRestUsername} - ${siteUpdated?.apiRestPassword}")
-                    Log.d("WP_RS", "Decrypted: ${encryptionUtils.decrypt(siteUpdated?.apiRestUsername!!, siteUpdated?.apiRestIV!!)} - ${encryptionUtils.decrypt(siteUpdated?.apiRestPassword!!, siteUpdated?.apiRestIV!!)}")
+                    Log.d("WP_RS", "Decrypted: ${encryptionUtils.decrypt(siteUpdated?.apiRestUsername!!, siteUpdated?.apiRestUsernameIV!!)} - ${encryptionUtils.decrypt(siteUpdated?.apiRestPassword!!, siteUpdated?.apiRestPassordIV!!)}")
                     // -----------
                     true
                 } else {
