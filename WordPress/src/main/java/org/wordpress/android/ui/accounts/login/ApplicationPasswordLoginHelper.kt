@@ -45,7 +45,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         apiRestUsername = encryptedUsername.first
                         apiRestUsernameIV = encryptedUsername.second
                         apiRestPassword = encryptedPassword.first
-                        apiRestPassordIV = encryptedPassword.second
+                        apiRestPasswordIV = encryptedPassword.second
                     }
                     siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
@@ -55,7 +55,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     val siteUpdated = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                     Log.d("WP_RS", "Original : ${uriLogin?.user} - ${uriLogin.password}")
                     Log.d("WP_RS", "Encrypted: ${siteUpdated?.apiRestUsername} - ${siteUpdated?.apiRestPassword}")
-                    Log.d("WP_RS", "Decrypted: ${encryptionUtils.decrypt(siteUpdated?.apiRestUsername!!, siteUpdated?.apiRestUsernameIV!!)} - ${encryptionUtils.decrypt(siteUpdated?.apiRestPassword!!, siteUpdated?.apiRestPassordIV!!)}")
+                    Log.d("WP_RS", "Decrypted: ${encryptionUtils.decrypt(siteUpdated?.apiRestUsername!!, siteUpdated?.apiRestUsernameIV!!)} - ${encryptionUtils.decrypt(siteUpdated?.apiRestPassword!!, siteUpdated?.apiRestPasswordIV!!)}")
                     // -----------
                     true
                 } else {

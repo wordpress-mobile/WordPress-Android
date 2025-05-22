@@ -108,7 +108,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mApiRestUsernameIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
 
     @Column
-    private String mApiRestPassordIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
+    private String mApiRestPasswordIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
     @Column(name = "XMLRPC_URL")
     private String mXmlRpcUrl;
     @Column
@@ -391,12 +391,12 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mApiRestUsernameIV = apiRestUsernameIV;
     }
 
-    public String getApiRestPassordIV() {
-        return mApiRestPassordIV;
+    public String getApiRestPasswordIV() {
+        return mApiRestPasswordIV;
     }
 
-    public void setApiRestPassordIV(String apiRestPassordIV) {
-        mApiRestPassordIV = apiRestPassordIV;
+    public void setApiRestPasswordIV(String apiRestPasswordIV) {
+        mApiRestPasswordIV = apiRestPasswordIV;
     }
 
     public String getXmlRpcUrl() {
