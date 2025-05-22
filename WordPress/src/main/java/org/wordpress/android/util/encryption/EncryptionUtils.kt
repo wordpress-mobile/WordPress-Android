@@ -2,14 +2,12 @@ package org.wordpress.android.util.encryption
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
 import java.security.Key
 import java.security.KeyStore
 import java.util.Base64
-import java.util.Enumeration
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -31,13 +29,14 @@ class EncryptionUtils @Inject constructor(
         getKeyFromStore() ?: initSecretKey()
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun getKeyFromStore(): Key? {
         return try {
             val ks: KeyStore = KeyStore.getInstance(PROVIDER_NAME).apply {
                 load(null)
             }
             ks.getKey(KEY_STORE_ALIAS, "".toCharArray())
-        } catch (throwable: Throwable) {
+        } catch (ignore: Throwable) {
             null
         }
     }
