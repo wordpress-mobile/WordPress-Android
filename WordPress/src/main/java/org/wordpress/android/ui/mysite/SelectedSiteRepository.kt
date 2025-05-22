@@ -12,8 +12,9 @@ import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettings
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeature
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
@@ -24,6 +25,7 @@ class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
 
@@ -136,7 +138,8 @@ class SelectedSiteRepository @Inject constructor(
         }
 
         // Fetch the site's editor theme and settings
-        if (ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR.isEnabled() || gutenbergKitFeature.isEnabled()) {
+        if (experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
+            gutenbergKitFeature.isEnabled()) {
             fetchEditorSettings(selectedSite)
         } else {
             fetchEditorTheme(selectedSite)

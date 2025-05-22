@@ -198,9 +198,10 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeature
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
@@ -421,12 +422,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
-
-    private val disableGutenbergKitFeatureConfig: ExperimentalFeature =
-        ExperimentalFeature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
-    private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
-    private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
-        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -531,8 +527,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        isGutenbergKitEditor = (gutenbergKitFeatureConfig.isEnabled() || gutenbergKitFeature.isEnabled())
-                && !disableGutenbergKitFeatureConfig.isEnabled()
+        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
+                gutenbergKitFeature.isEnabled()
+        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+        isGutenbergKitEditor = isGutenbergEnabled && !isGutenbergDisabled
 
         createEditShareMessageActivityResultLauncher()
 
@@ -2532,7 +2530,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
+                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
                 // Limited to Simple sites until application passwords are supported
                 "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
                 "locale" to wpcomLocaleSlug,
