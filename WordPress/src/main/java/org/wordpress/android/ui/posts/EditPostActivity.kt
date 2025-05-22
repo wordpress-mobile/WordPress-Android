@@ -2498,8 +2498,23 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
+            val authorizationData = createGutenbergWebViewAuthorizationData()
+            val settings = createGutenbergSettings()
+
+            return GutenbergKitEditorFragment.newInstance(
+                getContext(),
+                isNewPost,
+                authorizationData,
+                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings,
+                site.isPrivate || site.isComingSoon,
+                site.isPrivateWPComAtomic
+            )
+        }
+
+        private fun createGutenbergWebViewAuthorizationData(): GutenbergWebViewAuthorizationData {
             val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
+            return GutenbergWebViewAuthorizationData(
                 siteModel.url,
                 isWpCom,
                 accountStore.account.userId,
@@ -2513,7 +2528,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 userAgent.toString(),
                 isJetpackSsoEnabled
             )
+        }
 
+        private fun createGutenbergSettings(): Map<String, Any?> {
+            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
             val authToken = accountStore.accessToken
@@ -2523,7 +2541,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            val settings = mutableMapOf<String, Any?>(
+            return mutableMapOf(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
@@ -2547,16 +2565,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         }
                     )
                 )
-            )
-
-            return GutenbergKitEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings,
-                site.isPrivate || site.isComingSoon,
-                site.isPrivateWPComAtomic
             )
         }
 
