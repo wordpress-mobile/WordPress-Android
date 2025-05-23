@@ -113,6 +113,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="sending">Sending</string>
     <string name="item_selected">Selected</string>
+    <string name="coming_soon">Coming soon!</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>

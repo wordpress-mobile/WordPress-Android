@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -716,6 +717,11 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
+    }
+
+    public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
+        // TODO - subscribers screen
+        Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show();
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
