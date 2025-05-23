@@ -139,7 +139,9 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildSubscribersItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         // TODO verify if this site capability is necessary
-        return if (site.hasCapabilityListUsers && experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)) {
+        return if (site.hasCapabilityListUsers &&
+            experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)
+        ) {
             ListItem(
                 R.drawable.ic_mail_white_24dp,
                 UiStringRes(R.string.subscribers),
