@@ -81,6 +81,7 @@ class SiteItemsBuilderTest {
             addPlanItem = false,
             addPagesItem = true,
             addAdminItem = true,
+            addSubscribersItem = true,
             addPeopleItem = true,
             addPluginItem = true,
             addShareItem = true,
@@ -106,6 +107,7 @@ class SiteItemsBuilderTest {
             COMMENTS_ITEM,
             TRAFFIC_HEADER,
             STATS_ITEM,
+            SUBSCRIBERS_ITEM,
             MANAGE_HEADER,
             ACTIVITY_ITEM,
             BACKUP_ITEM,
@@ -236,6 +238,7 @@ class SiteItemsBuilderTest {
         addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
         addAdminItem: Boolean = false,
+        addSubscribersItem: Boolean = false,
         addPeopleItem: Boolean = false,
         addPluginItem: Boolean = false,
         addShareItem: Boolean = false,
@@ -292,6 +295,11 @@ class SiteItemsBuilderTest {
         if (addAdminItem) {
             whenever(siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                 ADMIN_ITEM
+            )
+        }
+        if (addSubscribersItem) {
+            whenever(siteListItemBuilder.buildSubscribersItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                SUBSCRIBERS_ITEM
             )
         }
         if (addPeopleItem) {
