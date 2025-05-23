@@ -2,9 +2,7 @@
 
 package org.wordpress.android.ui.mysite
 
-import android.content.SharedPreferences
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +14,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,7 +22,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -53,13 +49,9 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
-import androidx.core.content.edit
-import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import rs.wordpress.api.kotlin.ApiDiscoveryResult
+import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -86,16 +78,12 @@ class MySiteViewModel @Inject constructor(
     private val accountDataViewModelSlice: AccountDataViewModelSlice,
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
-    private val wpLoginClient: WpLoginClient,
-    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val sharedPreferences: SharedPreferences,
-    private val siteSqlUtils: SiteSqlUtils,
+    private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
-    private val _onShowApplicationPasswordLoginDialog = SingleLiveEvent<Event<String>>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -118,6 +106,7 @@ class MySiteViewModel @Inject constructor(
 
     val onNavigation = merge(
         _onNavigation,
+        applicationPasswordViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
         dashboardCardsViewModelSlice.onNavigation,
         dashboardItemsViewModelSlice.onNavigation
@@ -132,8 +121,6 @@ class MySiteViewModel @Inject constructor(
     )
 
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
-
-    val onShowApplicationPasswordLoginDialog = _onShowApplicationPasswordLoginDialog as LiveData<Event<String>>
 
     val refresh =
         merge(
@@ -150,26 +137,30 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
+        applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel
     ) { siteInfoHeaderCard,
+        applicationPAsswordModel,
         accountData,
         dashboardCards,
         siteItems ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + dashboardCards)
+            SiteSelected(dashboardData = headerList + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + siteItems)
+            SiteSelected(dashboardData = headerList + siteItems)
         else
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard))
+            SiteSelected(dashboardData = headerList)
     }.distinctUntilChanged()
 
     init {
         dispatcher.register(this)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
+        applicationPasswordViewModelSlice.initialize(viewModelScope)
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
@@ -213,85 +204,6 @@ class MySiteViewModel @Inject constructor(
             buildDashboardOrSiteItems(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
-        }
-    }
-
-    fun runApplicationPasswordDiscovery() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-
-        val firstTimeSiteOpen = !sharedPreferences.getBoolean("$SITE_ALREADY_OPENED_PREFIX${site.url}", false)
-        if (firstTimeSiteOpen) {
-            setSiteAsAlreadyOpened(site.url)
-            return
-        }
-        viewModelScope.launch {
-            // If the user has dismissed the authorization dialog, no need to show it again
-            val hasDismissedAuthorizationDialog =
-                sharedPreferences.getBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX${site.url}", false)
-
-            // If the site is already authorized, no need to run the discovery
-            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
-            if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
-                return@launch
-            }
-
-            if (!hasDismissedAuthorizationDialog) {
-                val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
-                if (authorizationUrlComplete.isNotEmpty()) {
-                    _onShowApplicationPasswordLoginDialog.value = Event(authorizationUrlComplete)
-                }
-            }
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
-        try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
-        } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable)
-        }
-    }
-
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        Log.e("WP_RS", "VM: Error during API discovery for $siteUrl", throwable)
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return ""
-    }
-
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
-            when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-                is ApiDiscoveryResult.Success -> {
-                    val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
-                    val authorizationUrlComplete =
-                        applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                    Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
-                    AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                    authorizationUrlComplete
-                }
-
-                is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
-                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
-
-                is ApiDiscoveryResult.FailureFindApiRoot ->
-                    handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
-
-                is ApiDiscoveryResult.FailureParseSiteUrl ->
-                    handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
-        }
-    }
-
-    private fun setSiteAsAlreadyOpened(siteUrl: String) {
-        viewModelScope.launch {
-            sharedPreferences.edit { putBoolean("$SITE_ALREADY_OPENED_PREFIX$siteUrl", true) }
-        }
-    }
-
-    fun onApplicationPasswordLoginDialogDismissed(siteUrl: String) {
-        viewModelScope.launch {
-            sharedPreferences.edit { putBoolean("$DISMISSED_AUTHORIZATION_DIALOG_PREFIX$siteUrl", true) }
         }
     }
 
@@ -468,6 +380,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
@@ -479,6 +392,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
@@ -553,13 +467,10 @@ class MySiteViewModel @Inject constructor(
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
-        private const val DISMISSED_AUTHORIZATION_DIALOG_PREFIX = "dismissed_authorization_dialog_"
-        private const val SITE_ALREADY_OPENED_PREFIX = "site_already_opened_"
     }
 }

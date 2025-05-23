@@ -236,7 +236,7 @@
             android:label="@string/me_btn_app_settings"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".ui.prefs.ExperimentalFeaturesActivity"
+            android:name=".ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity"
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
@@ -732,7 +732,7 @@
         <!--People Management-->
         <activity
             android:name=".ui.people.PeopleManagementActivity"
-            android:label="@string/people"
+            android:label="@string/users"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
         <activity

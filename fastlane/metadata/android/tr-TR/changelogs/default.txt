@@ -1,0 +1,5 @@
+25.8:
+Deneysel düzenleyicide bazı düzeltmeler yaptık.
+- Grup bloklarını seçebilir, bunlar arasında gezinebilir ve bunları düzenleyebilirsiniz, grup bloklarının kullanımı da daha kolaydır.
+- Cihazınızın yönlendirmesini değiştirdiğinizde içeriğiniz sıfırlanmayacaktır.
+- Değişiklikleri kaydederken bazen düzenleyicinin çökmesine neden olan sinir bozucu bir hatayı düzelttik.

@@ -117,7 +117,7 @@ public class PeopleListFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.people);
+            actionBar.setTitle(R.string.users);
         }
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
@@ -264,7 +264,7 @@ public class PeopleListFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // important for accessibility - talkback
-        getActivity().setTitle(R.string.people);
+        getActivity().setTitle(R.string.users);
     }
 
     @Override

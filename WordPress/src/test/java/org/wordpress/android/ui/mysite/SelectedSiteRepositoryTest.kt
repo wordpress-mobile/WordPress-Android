@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -27,6 +25,8 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.AppInitializer
 import org.wordpress.android.fluxc.action.EditorSettingsAction
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -46,13 +46,10 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     lateinit var gutenbergKitFeature: GutenbergKitFeature
 
     @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Mock
     lateinit var context: Context
-
-    @Mock
-    lateinit var sharedPreferences: SharedPreferences
-
-    @Mock
-    lateinit var editor: Editor
 
     private lateinit var siteModel: SiteModel
     private var siteIconProgressBarVisible: Boolean = false
@@ -72,9 +69,6 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
             set(null, context)
         }
 
-        // Mock shared preferences
-        whenever(context.getSharedPreferences(any(), any())).thenReturn(sharedPreferences)
-
         // Mock AppPrefsWrapper
         whenever(appPrefsWrapper.setSelectedSite(any())).then { }
 
@@ -85,6 +79,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
             dispatcher,
             siteSettingsInterfaceFactory,
             appPrefsWrapper,
+            experimentalFeatures,
         )
         selectedSiteRepository.gutenbergKitFeature = gutenbergKitFeature
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
@@ -279,12 +274,9 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `Should fetch EditorSettings when ExperimentalBlockEditor is enabled`() {
-        // Mocking via the specific key is required as ExperimentalFeature currently relies upon AppPrefs rather than
-        // AppPrefsWrapper, making mocking a bit more difficult
-        whenever(sharedPreferences.getBoolean(
-            eq("EXPERIMENTAL_FEATURE_CONFIGexperimental_block_editor"),
-            eq(false)
-        )).thenReturn(true)
+        whenever(
+            experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)
+        ).thenReturn(true)
         initializeSiteAndSiteSettings()
 
         selectedSiteRepository.updateSiteSettingsIfNecessary()

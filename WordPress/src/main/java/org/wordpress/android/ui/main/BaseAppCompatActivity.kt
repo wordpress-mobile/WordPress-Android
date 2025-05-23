@@ -24,7 +24,7 @@ import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
-import org.wordpress.android.ui.prefs.ExperimentalFeaturesActivity
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSubsActivity

@@ -92,6 +92,8 @@ sealed class SiteNavigationAction {
 
     data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
     data class OpenSiteMonitoring(val site: SiteModel) : SiteNavigationAction()
+
+    data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

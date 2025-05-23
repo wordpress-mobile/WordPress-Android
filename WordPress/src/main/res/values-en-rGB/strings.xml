@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-08-26 07:46:36+0000
+Translation-Revision-Date: 2025-04-06 13:19:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
+    <string name="feedback_form_note_link_wordpress">community forums.</string>
+    <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
+    <string name="personalization_screen_shortcuts_accessibility_label">Toggle %s shortcut</string>
+    <string name="personalization_screen_card_accessibility_label">Toggle %s card</string>
+    <string name="user_avatar_content_description">Avatar for user %s</string>
+    <string name="user_row_content_description">Show detail for user %s</string>
+    <string name="biographical_info_empty">None given</string>
+    <string name="biographical_info">Biographical Info</string>
+    <string name="about_the_user">About the user</string>
+    <string name="website">Website</string>
+    <string name="contact_info">Contact info</string>
+    <string name="nickname">Nickname</string>
+    <string name="name">Name</string>
+    <string name="no_users">No users</string>
+    <string name="user">User</string>
+    <string name="users">Users</string>
+    <string name="me_btn_help_and_support">Help &amp; Support</string>
+    <string name="me_btn_experimental_features">Experimental Features</string>
+    <string name="more_content_description_plans">Plans more</string>
+    <string name="more_content_description_recent_activity">Recent activity more</string>
+    <string name="more_content_description_pages">Pages more</string>
+    <string name="more_content_description_posts">Posts more</string>
+    <string name="more_content_description_quick_start">Quick start more</string>
+    <string name="more_content_description_today_stats">Today\'s stats more</string>
+    <string name="more_content_description_blogging_prompts">Prompts more</string>
+    <string name="more_content_description_promote_blaze">Blaze more</string>
+    <string name="reader_toast_success_undo">Blog unblocked</string>
+    <string name="feedback_form_note_link_jetpack">Contact Support screen.</string>
+    <string name="feedback_form_note_text">Please note this is not a support form, and we will not be able to reply. If you need assistance, please use our \"</string>
+    <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
+    <string name="experimental_block_editor">Experimental block editor</string>
+    <string name="experimental_features_screen_title">Experimental Features</string>
+    <string name="back">Back</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">From this app</string>
+    <string name="dialog_confirm_autosave_restore_button">From another device</string>
+    <string name="item_selected">Selected</string>
+    <string name="send_feedback">Send feedback</string>
     <string name="media_pager_remove_item_content_description">Remove item %1$d</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
@@ -1759,6 +1797,7 @@ Language: en_GB
     <string name="me">Me</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
+    <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_back_button">Back</string>

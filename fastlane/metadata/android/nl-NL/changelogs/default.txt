@@ -1,3 +1,4 @@
-25.7: slechts twee oplossingen voor de experimentele blok-editor deze keer:
-1. je kunt feedback over de editor verzenden terwijl je het gebruikt. 
-2. we hebben een bug opgelost waarbij de code weergave niet goed werkte
+25.8: We hebben enkele oplossingen gemaakt voor de experimentele editor. 
+- Je kunt groep blokken selecteren, erdoorheen bewegen en bewerken—en ze zijn ook gemakkelijker te gebruiken. 
+- Je inhoud wordt niet gereset wanneer je de oriëntatie van je apparaat wijzigt. 
+- We hebben een vervelende bug opgelost die er soms voor zorgde dat de editor crashte bij het opslaan van wijzigingen.
