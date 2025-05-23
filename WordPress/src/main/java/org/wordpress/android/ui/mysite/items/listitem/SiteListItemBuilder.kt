@@ -138,7 +138,7 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildSubscribersItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (site.hasCapabilityListUsers &&
+        return if (site.hasCapabilityListSubscribers &&
             experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)
         ) {
             ListItem(
