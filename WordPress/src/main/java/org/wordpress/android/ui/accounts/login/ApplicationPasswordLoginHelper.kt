@@ -50,43 +50,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
-
-                    // TODO: Following lines are for PR review and testing.
-                    //  This TODO won't pass the CI and it's a reminder to remove the lines
-                    Log.d("WP_RS", "Original : ${uriLogin?.user} - ${uriLogin.password}")
-                    // -----------
                     true
                 } else {
                     Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
                     false
                 }
             }
-        }
-    }
-
-    // TODO: this todo is preventing the CI to pass. Remove the following function before merge
-    suspend fun printCredentials() {
-        withContext(bgDispatcher) {
-            siteSqlUtils.getSites().forEach {
-                if (!it.apiRestUsername.isNullOrEmpty() && !it.apiRestPassword.isNullOrEmpty()) {
-                    Log.d("WP_RS", "Encrypted: ${it.apiRestUsername} - ${it.apiRestPassword}")
-                    Log.d(
-                        "WP_RS",
-                        "Decrypted: ${
-                            encryptionUtils.decrypt(
-                                it.apiRestUsername,
-                                it.apiRestUsernameIV!!
-                            )
-                        } - ${
-                            encryptionUtils.decrypt(
-                                it.apiRestPassword,
-                                it.apiRestPasswordIV!!
-                            )
-                        }"
-                    )
-                }
-            }
-
         }
     }
 

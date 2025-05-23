@@ -52,12 +52,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
-    // TODO: this TODO willprevent the CI to pass. Remove it after set buildCard to false
-    var buildCard = true
+    var buildCard = false
 
     fun buildCard(siteModel: SiteModel) {
-        // TODO: this TODO willprevent the CI to pass. Remove the following line to merge
-        scope.launch { applicationPasswordLoginHelper.printCredentials() }
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
         if (buildCard) {
