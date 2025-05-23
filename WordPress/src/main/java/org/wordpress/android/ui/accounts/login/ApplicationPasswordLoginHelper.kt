@@ -9,6 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.encryption.EncryptionUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -20,6 +21,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val encryptionUtils: EncryptionUtils
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -37,9 +39,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                 if (site != null) {
+                    val encryptedUsername = encryptionUtils.encrypt(uriLogin.user)
+                    val encryptedPassword = encryptionUtils.encrypt(uriLogin.password)
                     site.apply {
-                        apiRestUsername = uriLogin.user
-                        apiRestPassword = uriLogin.password
+                        apiRestUsername = encryptedUsername.first
+                        apiRestUsernameIV = encryptedUsername.second
+                        apiRestPassword = encryptedPassword.first
+                        apiRestPasswordIV = encryptedPassword.second
                     }
                     siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
