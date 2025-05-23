@@ -31,14 +31,10 @@ class EncryptionUtils @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun getKeyFromStore(): Key? {
-        return try {
-            val ks: KeyStore = KeyStore.getInstance(PROVIDER_NAME).apply {
-                load(null)
-            }
-            ks.getKey(KEY_STORE_ALIAS, "".toCharArray())
-        } catch (ignore: Throwable) {
-            null
+        val ks: KeyStore = KeyStore.getInstance(PROVIDER_NAME).apply {
+            load(null)
         }
+        return ks.getKey(KEY_STORE_ALIAS, "".toCharArray())
     }
 
     private fun initSecretKey(): SecretKey {
