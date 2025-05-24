@@ -84,7 +84,6 @@ class SiteItemsBuilder @Inject constructor(
                 showFocusPoint = showStatsFocusPoint,
                 listItemAction = ListItemAction.STATS
             ),
-            // TODO verify whether this is JP-dependant
             siteListItemBuilder.buildSubscribersItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildBlazeItemIfAvailable(params.isBlazeEligible, params.onClick)
         )
