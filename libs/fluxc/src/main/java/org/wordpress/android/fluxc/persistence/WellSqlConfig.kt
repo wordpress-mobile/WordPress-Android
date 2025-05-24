@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 207
+        return 208
     }
 
     override fun getDbName(): String {
@@ -2070,6 +2070,11 @@ open class WellSqlConfig : DefaultWellConfig {
                 206 -> {
                     db.execSQL("ALTER TABLE SiteModel ADD API_REST_USERNAME TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD TEXT")
+                }
+
+                207 -> {
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USERNAME_IV TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD_IV TEXT")
                 }
             }
         }
