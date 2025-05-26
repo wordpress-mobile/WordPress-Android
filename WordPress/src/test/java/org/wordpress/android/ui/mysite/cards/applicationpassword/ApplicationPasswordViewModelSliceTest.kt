@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
@@ -61,6 +62,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var siteTest: SiteModel
 
     private var applicationPasswordCard: MySiteCardAndItem.Card? = null
@@ -76,10 +80,11 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteSqlUtils,
             wpLoginClient,
-            appLogWrapper
+            appLogWrapper,
+            experimentalFeatures
         ).apply {
             initialize(testScope())
-            buildCard = true
+            whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
         }
         siteTest = SiteModel().apply {
             id = TEST_SITE_ID
