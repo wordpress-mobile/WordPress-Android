@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -19,6 +20,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
@@ -34,6 +37,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
+    private val experimentalFeatures: ExperimentalFeatures
 ) {
     lateinit var scope: CoroutineScope
 
@@ -52,15 +56,16 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem.Card?>()
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
-    var buildCard = false
-
     fun buildCard(siteModel: SiteModel) {
         // This is hidden for regular users.
         // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
-        if (buildCard) {
+        if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
         }
     }
+
+    private fun shouldBuildCard(): Boolean =
+        experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)
 
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
         // Check if the site URL is already cached
