@@ -1,8 +1,6 @@
 package org.wordpress.android.login
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,24 +15,10 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import dagger.android.support.AndroidSupportInjection
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.network.HTTPAuthManager
-import org.wordpress.android.fluxc.network.MemorizingTrustManager
 import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked
-import org.wordpress.android.login.LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener
-import org.wordpress.android.login.LoginListener.SelfSignedSSLCallback
-import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.UrlUtils
@@ -45,23 +29,11 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
     private var requestedSiteAddress: String? = null
 
-    private var connectSiteInfoUrl: String? = null
-    private var connectSiteInfoUrlRedirect: String? = null
-    private var connectSiteInfoCalculatedHasJetpack = false
-
     private var loginSiteAddressValidator: LoginSiteAddressValidator? = null
 
     @JvmField
     @Inject
     var accountStore: AccountStore? = null
-
-    @JvmField
-    @Inject
-    var httpAuthManager: HTTPAuthManager? = null
-
-    @JvmField
-    @Inject
-    var memorizingTrustManager: MemorizingTrustManager? = null
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -123,11 +95,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
         if (savedInstanceState != null) {
             requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
-            connectSiteInfoUrl = savedInstanceState.getString(KEY_SITE_INFO_URL)
-            connectSiteInfoUrlRedirect =
-                savedInstanceState.getString(KEY_SITE_INFO_URL_AFTER_REDIRECTS)
-            connectSiteInfoCalculatedHasJetpack =
-                savedInstanceState.getBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK)
         } else {
             mAnalyticsListener.trackUrlFormViewed()
         }
@@ -156,12 +123,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         super.onSaveInstanceState(outState)
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, requestedSiteAddress)
-        outState.putString(KEY_SITE_INFO_URL, connectSiteInfoUrl)
-        outState.putString(KEY_SITE_INFO_URL_AFTER_REDIRECTS, connectSiteInfoUrlRedirect)
-        outState.putBoolean(
-            KEY_SITE_INFO_CALCULATED_HAS_JETPACK,
-            connectSiteInfoCalculatedHasJetpack
-        )
     }
 
     override fun onDestroyView() {
@@ -169,6 +130,42 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         siteAddressInput = null
 
         super.onDestroyView()
+    }
+
+    override fun onEditorCommit() {
+        if (bottomButton.isEnabled) {
+            discover()
+        }
+    }
+
+    override fun afterTextChanged(s: Editable) {
+        siteAddressInput?.let { siteAddressInput ->
+            loginSiteAddressValidator?.setAddress(EditTextUtils.getText(siteAddressInput.editText))
+        }
+    }
+
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            siteAddressInput?.setError(null)
+    }
+
+    private fun showError(messageId: Int) {
+        val message = getString(messageId)
+        mAnalyticsListener.trackFailure(message)
+        siteAddressInput?.setError(message)
+    }
+
+    override fun endProgress() {
+        super.endProgress()
+        requestedSiteAddress = null
+    }
+
+    private fun showSiteAddressHelp() {
+        LoginSiteAddressHelpDialogFragment().show(
+            parentFragmentManager,
+            LoginSiteAddressHelpDialogFragment.TAG
+        )
     }
 
     private fun discover() {
@@ -193,67 +190,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         startProgress()
     }
 
-    override fun onEditorCommit() {
-        if (bottomButton.isEnabled) {
-            discover()
-        }
-    }
-
-    override fun afterTextChanged(s: Editable) {
-        siteAddressInput?.let { siteAddressInput ->
-            loginSiteAddressValidator?.setAddress(EditTextUtils.getText(siteAddressInput.editText))
-        }
-    }
-
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-        connectSiteInfoUrl = null
-        connectSiteInfoUrlRedirect = null
-        connectSiteInfoCalculatedHasJetpack = false
-    }
-
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            siteAddressInput?.setError(null)
-    }
-
-    private fun showError(messageId: Int) {
-        val message = getString(messageId)
-        mAnalyticsListener.trackFailure(message)
-        siteAddressInput?.setError(message)
-    }
-
-    override fun endProgress() {
-        super.endProgress()
-        requestedSiteAddress = null
-    }
-
-    private fun showSiteAddressHelp() {
-        LoginSiteAddressHelpDialogFragment().show(
-            parentFragmentManager,
-            LoginSiteAddressHelpDialogFragment.TAG
-        )
-    }
-
-    @Suppress("DEPRECATION")
-    @Deprecated("Deprecated")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == LoginHttpAuthDialogFragment.DO_HTTP_AUTH &&
-            resultCode == Activity.RESULT_OK && data != null) {
-            val url = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_URL)
-            val httpUsername = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_USERNAME)
-            val httpPassword = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_PASSWORD)
-            httpAuthManager?.addHTTPAuthCredentials(
-                httpUsername.orEmpty(),
-                httpPassword.orEmpty(),
-                url.orEmpty(),
-                null
-            )
-            discover()
-        }
-    }
-
-
     private fun stripKnownPaths(url: String): String {
         val cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(url)
 
@@ -274,17 +210,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     companion object {
         private const val KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS"
 
-        private const val KEY_SITE_INFO_URL = "url"
-        private const val KEY_SITE_INFO_URL_AFTER_REDIRECTS = "url_after_redirects"
-        private const val KEY_SITE_INFO_EXISTS = "exists"
-        private const val KEY_SITE_INFO_HAS_JETPACK = "has_jetpack"
-        private const val KEY_SITE_INFO_IS_JETPACK_ACTIVE = "is_jetpack_active"
-        private const val KEY_SITE_INFO_IS_JETPACK_CONNECTED = "is_jetpack_connected"
-        private const val KEY_SITE_INFO_IS_WORDPRESS = "is_wordpress"
-        private const val KEY_SITE_INFO_IS_WPCOM = "is_wp_com"
-        private const val KEY_SITE_INFO_CALCULATED_HAS_JETPACK = "login_calculated_has_jetpack"
-
-        const val TAG: String = "login_site_address_fragment_tag"
+        const val TAG: String = "login_site_application_password_fragment_tag"
     }
 }
 
