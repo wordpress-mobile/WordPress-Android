@@ -114,7 +114,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.discoveryURL.collect { url ->
                     if (url.isEmpty()) {
-                        showError(R.string.error_generic) // TODO create a non-generic error
+                        showError(R.string.application_password_not_supported_error)
                         return@collect
                     } else {
                         activityNavigator.openApplicationPasswordLogin(requireActivity(), url)
