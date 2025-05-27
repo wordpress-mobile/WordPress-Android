@@ -14,9 +14,11 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.login.viewmodel.LoginSiteApplicationPasswordViewModel
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
 import org.wordpress.android.util.EditTextUtils
@@ -30,6 +32,10 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     private var requestedSiteAddress: String? = null
 
     private var loginSiteAddressValidator: LoginSiteAddressValidator? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: LoginSiteApplicationPasswordViewModel
 
     @JvmField
     @Inject
@@ -111,6 +117,8 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
                 siteAddressInput?.setError(null)
             }
         }
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[LoginSiteApplicationPasswordViewModel::class.java]
     }
 
     override fun onResume() {
