@@ -8,10 +8,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.launch
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.login.LoginBaseFormFragment
@@ -93,9 +102,8 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         loginSiteAddressValidator.isValid.observe(viewLifecycleOwner) { enabled ->
             bottomButton.isEnabled = enabled
@@ -109,6 +117,25 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         }
 
         viewModel = ViewModelProvider(this, viewModelFactory)[LoginSiteApplicationPasswordViewModel::class.java]
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.discoveryURL.collect { url ->
+                    Toast.makeText(requireContext(), url, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        viewModel.loadingStateFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle,  Lifecycle.State.STARTED)
+            .onEach({ loading ->
+                if (loading) {
+                    startProgress()
+                } else {
+                    endProgressIfNeeded()
+                }
+            })
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onResume() {
@@ -164,8 +191,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         val cleanedUrl = loginSiteAddressValidator.cleanedSiteAddress
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
         viewModel.runApiDiscovery(cleanedUrl)
-
-        startProgress()
     }
 
     companion object {
