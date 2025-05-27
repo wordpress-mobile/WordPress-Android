@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.applicationpassword
 
-import com.sun.jna.Pointer
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -11,7 +10,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -23,12 +21,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import rs.wordpress.api.kotlin.ApiDiscoveryResult
-import rs.wordpress.api.kotlin.WpLoginClient
-import uniffi.wp_api.AutoDiscoveryAttemptSuccess
-import uniffi.wp_api.ParseUrlException
-import uniffi.wp_api.ParsedUrl
-import uniffi.wp_api.WpApiDetails
 import kotlin.test.assertNotNull
 
 private const val TEST_URL = "https://www.test.com"

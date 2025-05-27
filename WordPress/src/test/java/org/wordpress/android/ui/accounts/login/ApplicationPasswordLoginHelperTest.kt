@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
 import com.sun.jna.Pointer
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -28,7 +27,6 @@ import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 private const val TEST_URL = "http://test.com"
