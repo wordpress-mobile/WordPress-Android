@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.launch
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
@@ -40,7 +38,8 @@ import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
 
-class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener>(), TextWatcher, OnEditorCommitListener {
+class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener>(), TextWatcher,
+    OnEditorCommitListener {
     private var siteAddressInput: WPLoginInputRow? = null
 
     private var loginSiteAddressValidator = LoginSiteAddressValidator()
@@ -211,7 +210,9 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         }
     }
 
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        // Stub
+    }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             siteAddressInput?.setError(null)
