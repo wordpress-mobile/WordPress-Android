@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,15 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.login.LoginBaseFormFragment
 import org.wordpress.android.login.LoginListener
@@ -29,15 +24,12 @@ import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
 import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener>(), TextWatcher, OnEditorCommitListener {
     private var siteAddressInput: WPLoginInputRow? = null
 
-    private var requestedSiteAddress: String? = null
-
-    private var loginSiteAddressValidator: LoginSiteAddressValidator? = null
+    private var loginSiteAddressValidator = LoginSiteAddressValidator()
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -92,7 +84,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
     override fun onHelp() {
         if (mLoginListener != null) {
-            mLoginListener.helpSiteAddress(requestedSiteAddress.orEmpty())
+            mLoginListener.helpSiteAddress(loginSiteAddressValidator.cleanedSiteAddress)
         }
     }
 
@@ -105,18 +97,10 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (savedInstanceState != null) {
-            requestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS)
-        } else {
-            mAnalyticsListener.trackUrlFormViewed()
-        }
-
-        loginSiteAddressValidator = LoginSiteAddressValidator()
-
-        loginSiteAddressValidator?.isValid?.observe(viewLifecycleOwner) { enabled ->
+        loginSiteAddressValidator.isValid.observe(viewLifecycleOwner) { enabled ->
             bottomButton.isEnabled = enabled
         }
-        loginSiteAddressValidator?.errorMessageResId?.observe(viewLifecycleOwner) { resId ->
+        loginSiteAddressValidator.errorMessageResId.observe(viewLifecycleOwner) { resId ->
             if (resId != null) {
                 showError(resId)
             } else {
@@ -133,14 +117,8 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         mAnalyticsListener.siteAddressFormScreenResumed()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putString(KEY_REQUESTED_SITE_ADDRESS, requestedSiteAddress)
-    }
-
     override fun onDestroyView() {
-        loginSiteAddressValidator?.dispose()
+        loginSiteAddressValidator.dispose()
         siteAddressInput = null
 
         super.onDestroyView()
@@ -154,7 +132,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
     override fun afterTextChanged(s: Editable) {
         siteAddressInput?.let { siteAddressInput ->
-            loginSiteAddressValidator?.setAddress(EditTextUtils.getText(siteAddressInput.editText))
+            loginSiteAddressValidator.setAddress(EditTextUtils.getText(siteAddressInput.editText))
         }
     }
 
@@ -170,11 +148,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         siteAddressInput?.setError(message)
     }
 
-    override fun endProgress() {
-        super.endProgress()
-        requestedSiteAddress = null
-    }
-
     private fun showSiteAddressHelp() {
         LoginSiteAddressHelpDialogFragment().show(
             parentFragmentManager,
@@ -188,37 +161,14 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         }
         mAnalyticsListener.trackSubmitClicked()
 
-        requestedSiteAddress = loginSiteAddressValidator?.cleanedSiteAddress
-
-        val cleanedUrl = stripKnownPaths(requestedSiteAddress.orEmpty())
-
+        val cleanedUrl = loginSiteAddressValidator.cleanedSiteAddress
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
-
         viewModel.runApiDiscovery(cleanedUrl)
 
         startProgress()
     }
 
-    private fun stripKnownPaths(url: String): String {
-        val cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(url)
-
-        // Make sure to use a valid URL so that DiscoveryUtils#stripKnownPaths is able to strip paths
-        val scheme = cleanedXmlrpcSuffix.toUri().scheme
-        val urlWithScheme = if (scheme == null) {
-            UrlUtils.addUrlSchemeIfNeeded(cleanedXmlrpcSuffix, false)
-        } else {
-            cleanedXmlrpcSuffix
-        }
-
-        val cleanedUrl = DiscoveryUtils.stripKnownPaths(urlWithScheme.orEmpty())
-
-        // Revert the scheme changes
-        return if (scheme == null) UrlUtils.removeScheme(cleanedUrl) else cleanedUrl
-    }
-
     companion object {
-        private const val KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS"
-
         const val TAG: String = "login_site_application_password_fragment_tag"
     }
 }
