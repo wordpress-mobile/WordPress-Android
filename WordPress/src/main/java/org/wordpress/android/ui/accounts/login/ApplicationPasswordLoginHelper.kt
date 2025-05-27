@@ -44,7 +44,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             is ApiDiscoveryResult.Success -> {
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
                 val authorizationUrlComplete =
-                    appendParamsToRestAuthorizationUrl(authorizationUrl)
+                    uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
@@ -120,17 +120,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url).siteUrl.orEmpty()
     }
 
-    private fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
-        return if (authorizationUrl.isNullOrEmpty()) {
-            authorizationUrl.orEmpty()
-        } else {
-            authorizationUrl.toUri().buildUpon().apply {
-                appendQueryParameter("app_name", "android-jetpack-client")
-                appendQueryParameter("success_url", "jetpack://app-pass-authorize")
-            }.build().toString()
-        }
-    }
-
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
@@ -142,6 +131,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 uri.getQueryParameter("user_login"),
                 uri.getQueryParameter("password")
             )
+        }
+
+        fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
+            return if (authorizationUrl.isNullOrEmpty()) {
+                authorizationUrl.orEmpty()
+            } else {
+                authorizationUrl.toUri().buildUpon().apply {
+                    appendQueryParameter("app_name", "android-jetpack-client")
+                    appendQueryParameter("success_url", "jetpack://app-pass-authorize")
+                }.build().toString()
+            }
         }
     }
 
