@@ -797,7 +797,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun setupEditor() {
         if (isGutenbergKitEditor) {
-            GutenbergWebViewPool.getPreloadedWebView(getContext())
+            GutenbergWebViewPool.getPreloadedWebView(this)
         }
         // Check whether to show the visual editor
 

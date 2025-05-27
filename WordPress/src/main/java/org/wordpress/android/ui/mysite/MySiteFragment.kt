@@ -643,6 +643,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.isNewSite
         )
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+        is SiteNavigationAction.OpenSubscribers -> {
+            ActivityLauncher.viewCurrentBlogSubscribers(requireActivity(), action.site)
+        }
         is SiteNavigationAction.OpenPeople -> {
             ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
         }

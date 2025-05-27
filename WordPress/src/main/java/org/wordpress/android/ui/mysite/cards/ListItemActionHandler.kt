@@ -29,6 +29,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
             ListItemAction.PAGES -> SiteNavigationAction.OpenPages(selectedSite)
             ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
+            ListItemAction.SUBSCRIBERS -> SiteNavigationAction.OpenSubscribers(selectedSite)
             ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
             ListItemAction.SELF_HOSTED_USERS -> SiteNavigationAction.OpenSelfHostedUsers(selectedSite)
             ListItemAction.SHARING -> SiteNavigationAction.OpenSharing(selectedSite)
