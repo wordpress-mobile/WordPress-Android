@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +14,8 @@ import androidx.activity.result.launch
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -31,6 +34,8 @@ import org.wordpress.android.login.LoginSiteAddressValidator
 import org.wordpress.android.login.R
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
@@ -121,7 +126,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.discoveryURL.collect { url ->
-                    Toast.makeText(requireContext(), url, Toast.LENGTH_SHORT).show()
+                    openApplicationPasswordLogin(url)
                 }
             }
         }
@@ -136,6 +141,49 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
                 }
             })
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun openApplicationPasswordLogin(url: String) {
+        val intent = getCustomTabsIntent()
+        val loginUri = url.toUri()
+        val activity = requireActivity()
+        try {
+            intent.launchUrl(activity, loginUri)
+        } catch (e: SecurityException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        } catch (e: ActivityNotFoundException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        }
+    }
+
+    private fun getCustomTabsIntent(): CustomTabsIntent {
+        val activity = requireActivity()
+        return CustomTabsIntent.Builder()
+            .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+            .setStartAnimations(
+                requireActivity(),
+                org.wordpress.android.R.anim.activity_slide_in_from_right,
+                org.wordpress.android.R.anim.activity_slide_out_to_left
+            )
+            .setExitAnimations(
+                activity,
+                org.wordpress.android.R.anim.activity_slide_in_from_left,
+                org.wordpress.android.R.anim.activity_slide_out_to_right
+            )
+            .setUrlBarHidingEnabled(true)
+            .setInstantAppsEnabled(false)
+            .setShowTitle(false)
+            .build()
     }
 
     override fun onResume() {
