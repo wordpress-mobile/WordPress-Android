@@ -2,18 +2,17 @@ package org.wordpress.android.util
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -26,7 +25,6 @@ import javax.inject.Inject
  * https://developer.android.com/guide/topics/resources/app-languages
  */
 class PerAppLocaleManager @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
@@ -49,22 +47,7 @@ class PerAppLocaleManager @Inject constructor(
         // on pre-Android 13 devices
         val appLocale = LocaleListCompat.forLanguageTags(languageCode.replace("_", "-"))
         AppCompatDelegate.setApplicationLocales(appLocale)
-    }
-
-    /**
-     * Previously the app locale was stored in SharedPreferences, so here we migrate to AndroidX per-app language prefs.
-     * This was added in our Jan 2025 release and can be removed after a few subsequent releases.
-     */
-    fun performMigrationIfNecessary() {
-        val previousLanguage = appPrefsWrapper.getPrefString(OLD_LOCALE_PREF_KEY_STRING, "")
-        if (previousLanguage?.isNotEmpty() == true) {
-            appLogWrapper.d(
-                AppLog.T.SETTINGS,
-                "PerAppLocaleManager: performing migration to AndroidX per-app language prefs"
-            )
-            setCurrentLocaleByLanguageCode(previousLanguage)
-            appPrefsWrapper.removePref(OLD_LOCALE_PREF_KEY_STRING)
-        }
+        appLogWrapper.d(AppLog.T.SETTINGS, "Language changed to $languageCode")
     }
 
     /**
@@ -76,7 +59,7 @@ class PerAppLocaleManager @Inject constructor(
     fun openAppLanguageSettings(context: Context) {
         Intent().also { intent ->
             intent.setAction(Settings.ACTION_APP_LOCALE_SETTINGS)
-            intent.setData(Uri.parse("package:" + context.packageName))
+            intent.setData(("package:" + context.packageName).toUri())
             context.startActivity(intent)
         }
     }
@@ -115,10 +98,5 @@ class PerAppLocaleManager @Inject constructor(
     @Suppress("unused")
     fun resetApplicationLocale() {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
-    }
-
-    companion object {
-        // Key previously used for saving the language selection to shared preferences
-        private const val OLD_LOCALE_PREF_KEY_STRING: String = "language-pref"
     }
 }

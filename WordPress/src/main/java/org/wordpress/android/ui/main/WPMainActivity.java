@@ -369,8 +369,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            mPerAppLocaleManager.performMigrationIfNecessary();
-
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
                 && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
