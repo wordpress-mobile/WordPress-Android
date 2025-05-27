@@ -1,4 +1,4 @@
-package org.wordpress.android.login
+package org.wordpress.android.ui.accounts.login.applicationpassword
 
 import android.content.Context
 import android.os.Bundle
@@ -16,9 +16,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.AndroidSupportInjection
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.login.viewmodel.LoginSiteApplicationPasswordViewModel
+import org.wordpress.android.login.LoginBaseFormFragment
+import org.wordpress.android.login.LoginListener
+import org.wordpress.android.login.LoginMode
+import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment
+import org.wordpress.android.login.LoginSiteAddressValidator
+import org.wordpress.android.login.R
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
 import org.wordpress.android.util.EditTextUtils
@@ -90,9 +96,9 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         }
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     @Deprecated("Deprecated in Java")
@@ -188,12 +194,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
         mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
 
-        // TODO discover
-        Toast.makeText(
-            requireContext(),
-            "DISCOVER",
-            Toast.LENGTH_LONG
-        ).show()
+        viewModel.runApiDiscovery(cleanedUrl)
 
         startProgress()
     }

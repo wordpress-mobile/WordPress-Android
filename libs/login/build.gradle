@@ -57,10 +57,6 @@ dependencies {
 
     implementation libs.androidx.constraintlayout.main
     implementation libs.google.material
-    implementation(libs.androidx.lifecycle.viewmodel.main)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-    implementation(libs.wordpress.rs.android)
 
     implementation libs.androidx.core.main
 

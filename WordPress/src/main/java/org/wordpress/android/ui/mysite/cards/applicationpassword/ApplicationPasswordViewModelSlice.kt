@@ -34,8 +34,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
-    private val wpLoginClient: WpLoginClient,
-    private val appLogWrapper: AppLogWrapper,
     private val experimentalFeatures: ExperimentalFeatures
 ) {
     lateinit var scope: CoroutineScope
@@ -118,37 +116,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
         try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
+            applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
         } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable)
-        }
-    }
-
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return ""
-    }
-
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
-        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-            is ApiDiscoveryResult.Success -> {
-                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
-                val authorizationUrlComplete =
-                    applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                authorizationUrlComplete
-            }
-
-            is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
-
-            is ApiDiscoveryResult.FailureFindApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
-
-            is ApiDiscoveryResult.FailureParseSiteUrl ->
-                handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
+            applicationPasswordLoginHelper.handleAuthenticationDiscoveryError(siteUrl, throwable)
         }
     }
 

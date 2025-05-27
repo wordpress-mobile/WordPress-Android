@@ -3,7 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.wordpress.android.login.viewmodel.LoginSiteApplicationPasswordViewModel;
+import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordViewModel;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;

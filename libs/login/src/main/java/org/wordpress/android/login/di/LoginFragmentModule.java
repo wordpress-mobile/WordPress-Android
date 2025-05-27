@@ -8,7 +8,6 @@ import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
-import org.wordpress.android.login.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
@@ -39,9 +38,6 @@ public abstract class LoginFragmentModule {
 
     @ContributesAndroidInjector
     abstract LoginSiteAddressFragment loginSiteAddressFragment();
-
-    @ContributesAndroidInjector
-    abstract LoginSiteApplicationPasswordFragment loginSiteApplicationPasswordFragment();
 
     @ContributesAndroidInjector
     abstract LoginSiteAddressHelpDialogFragment loginSiteAddressHelpDialogFragment();
