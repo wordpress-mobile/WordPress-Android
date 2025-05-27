@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
-import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,8 +11,6 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -26,14 +23,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.login.LoginBaseFormFragment
 import org.wordpress.android.login.LoginListener
-import org.wordpress.android.login.LoginMode
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment
 import org.wordpress.android.login.LoginSiteAddressValidator
 import org.wordpress.android.login.R
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.util.EditTextUtils
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
@@ -48,9 +43,11 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LoginSiteApplicationPasswordViewModel
 
-    @JvmField
     @Inject
-    var accountStore: AccountStore? = null
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     @LayoutRes
     override fun getContentLayout(): Int = R.layout.login_site_address_screen
@@ -120,7 +117,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
                         showError(R.string.error_generic) // TODO create a non-generic error
                         return@collect
                     } else {
-                        openApplicationPasswordLogin(url)
+                        activityNavigator.openApplicationPasswordLogin(requireActivity(), url)
                     }
                 }
             }
@@ -128,57 +125,14 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
         viewModel.loadingStateFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle,  Lifecycle.State.STARTED)
-            .onEach({ loading ->
+            .onEach { loading ->
                 if (loading) {
                     startProgress()
                 } else {
                     endProgressIfNeeded()
                 }
-            })
+            }
             .launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun openApplicationPasswordLogin(url: String) {
-        val intent = getCustomTabsIntent()
-        val loginUri = url.toUri()
-        val activity = requireActivity()
-        try {
-            intent.launchUrl(activity, loginUri)
-        } catch (e: SecurityException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-        } catch (e: ActivityNotFoundException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-        }
-    }
-
-    private fun getCustomTabsIntent(): CustomTabsIntent {
-        val activity = requireActivity()
-        return CustomTabsIntent.Builder()
-            .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-            .setStartAnimations(
-                requireActivity(),
-                org.wordpress.android.R.anim.activity_slide_in_from_right,
-                org.wordpress.android.R.anim.activity_slide_out_to_left
-            )
-            .setExitAnimations(
-                activity,
-                org.wordpress.android.R.anim.activity_slide_in_from_left,
-                org.wordpress.android.R.anim.activity_slide_out_to_right
-            )
-            .setUrlBarHidingEnabled(true)
-            .setInstantAppsEnabled(false)
-            .setShowTitle(false)
-            .build()
     }
 
     override fun onResume() {

@@ -1,8 +1,12 @@
 package org.wordpress.android.ui
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.TaskStackBuilder
+import androidx.core.net.toUri
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -29,6 +33,7 @@ import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -207,5 +212,46 @@ class ActivityNavigator @Inject constructor() {
         url: String
     ) {
         WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+    }
+
+    fun openApplicationPasswordLogin(activity: Activity, url: String) {
+        val intent = getCustomTabsIntent(activity)
+        val loginUri = url.toUri()
+        try {
+            intent.launchUrl(activity, loginUri)
+        } catch (e: SecurityException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        } catch (e: ActivityNotFoundException) {
+            AppLog.e(
+                AppLog.T.UTILS,
+                "Error opening login uri in CustomTabsIntent, attempting external browser",
+                e
+            )
+            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        }
+    }
+
+    private fun getCustomTabsIntent(activity: Activity): CustomTabsIntent {
+        return CustomTabsIntent.Builder()
+            .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+            .setStartAnimations(
+                activity,
+                R.anim.activity_slide_in_from_right,
+                R.anim.activity_slide_out_to_left
+            )
+            .setExitAnimations(
+                activity,
+                R.anim.activity_slide_in_from_left,
+                R.anim.activity_slide_out_to_right
+            )
+            .setUrlBarHidingEnabled(true)
+            .setInstantAppsEnabled(false)
+            .setShowTitle(false)
+            .build()
     }
 }
