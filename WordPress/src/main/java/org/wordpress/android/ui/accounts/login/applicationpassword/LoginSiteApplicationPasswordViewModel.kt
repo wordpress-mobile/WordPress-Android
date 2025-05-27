@@ -24,9 +24,7 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
         _loadingStateFlow.value = true
         viewModelScope.launch {
             val discoveryUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
-            if (discoveryUrl.isNotEmpty()) {
-                _discoveryURL.emit(discoveryUrl)
-            }
+            _discoveryURL.emit(discoveryUrl)
             _loadingStateFlow.value = false
         }
     }

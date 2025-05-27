@@ -53,34 +53,17 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     var accountStore: AccountStore? = null
 
     @LayoutRes
-    override fun getContentLayout(): Int {
-        return R.layout.login_site_address_screen
-    }
+    override fun getContentLayout(): Int = R.layout.login_site_address_screen
 
     @LayoutRes
-    override fun getProgressBarText(): Int {
-        return R.string.login_checking_site_address
-    }
+    override fun getProgressBarText(): Int = R.string.login_checking_site_address
 
     override fun setupLabel(label: TextView) {
-        if (mLoginListener.loginMode == LoginMode.SHARE_INTENT) {
-            label.setText(R.string.enter_site_address_share_intent)
-        } else {
-            label.setText(R.string.enter_site_address)
-        }
+        label.setText(R.string.enter_site_address)
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        requireActivity().setTitle(R.string.site_address_login_title)
-        val siteAddressInput: WPLoginInputRow = rootView.findViewById(R.id.login_site_address_row)
-        this.siteAddressInput = siteAddressInput
-        siteAddressInput.addTextChangedListener(this)
-        siteAddressInput.setOnEditorCommitListener(this)
-
-        rootView.findViewById<View>(R.id.login_site_address_help_button).setOnClickListener {
-            mAnalyticsListener.trackShowHelpClick()
-            showSiteAddressHelp()
-        }
+        // Stub
     }
 
     override fun setupBottomButton(button: Button) {
@@ -91,9 +74,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         actionBar.setTitle(R.string.log_in)
     }
 
-    override fun getEditTextToFocusOnStart(): EditText? {
-        return siteAddressInput?.editText
-    }
+    override fun getEditTextToFocusOnStart(): EditText? = siteAddressInput?.editText
 
     override fun onHelp() {
         if (mLoginListener != null) {
@@ -108,6 +89,16 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().setTitle(R.string.site_address_login_title)
+        this.siteAddressInput = view.findViewById(R.id.login_site_address_row)
+        siteAddressInput?.addTextChangedListener(this)
+        siteAddressInput?.setOnEditorCommitListener(this)
+
+        view.findViewById<View>(R.id.login_site_address_help_button).setOnClickListener {
+            mAnalyticsListener.trackShowHelpClick()
+            showSiteAddressHelp()
+        }
 
         loginSiteAddressValidator.isValid.observe(viewLifecycleOwner) { enabled ->
             bottomButton.isEnabled = enabled
@@ -125,7 +116,12 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.discoveryURL.collect { url ->
-                    openApplicationPasswordLogin(url)
+                    if (url.isEmpty()) {
+                        showError(R.string.error_generic) // TODO create a non-generic error
+                        return@collect
+                    } else {
+                        openApplicationPasswordLogin(url)
+                    }
                 }
             }
         }
@@ -187,15 +183,13 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
 
     override fun onResume() {
         super.onResume()
-
         mAnalyticsListener.siteAddressFormScreenResumed()
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
         loginSiteAddressValidator.dispose()
         siteAddressInput = null
-
-        super.onDestroyView()
     }
 
     override fun onEditorCommit() {
@@ -215,7 +209,7 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            siteAddressInput?.setError(null)
+        siteAddressInput?.setError(null)
     }
 
     private fun showError(messageId: Int) {
