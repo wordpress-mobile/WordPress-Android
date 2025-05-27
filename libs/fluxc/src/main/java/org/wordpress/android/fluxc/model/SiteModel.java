@@ -591,6 +591,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mHasCapabilityListUsers = capabilityListUsers;
     }
 
+    /**
+     * This may change, but for now the newsletter subscribers feature requires a
+     * WP.com or Atomic site with user list capabilities.
+     */
+    public boolean getHasCapabilityListSubscribers() {
+        return getHasCapabilityListUsers() && (isWPCom() || isWPComAtomic());
+    }
+
     public boolean getHasCapabilityManageCategories() {
         return mHasCapabilityManageCategories;
     }
