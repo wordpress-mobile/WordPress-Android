@@ -31,7 +31,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
     private val experimentalFeatures: ExperimentalFeatures
@@ -88,7 +87,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 return@launch
             }
 
-            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
                 siteURLCache[site.url] = ""
@@ -113,14 +112,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         )
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
-        try {
-            applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
-        } catch (throwable: Throwable) {
-            applicationPasswordLoginHelper.handleAuthenticationDiscoveryError(siteUrl, throwable)
-        }
-    }
 
     private fun onClick(authorizationUrlComplete: String) = ListItemInteraction.create {
         _onNavigation.postValue(

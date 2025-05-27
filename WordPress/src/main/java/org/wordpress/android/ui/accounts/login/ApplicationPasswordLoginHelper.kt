@@ -31,7 +31,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 ) {
     private var processedAppPasswordData: String? = null
 
-    suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun getAuthorizationUrlComplete(siteUrl: String): String =
+        try {
+            getAuthorizationUrlCompleteInternal(siteUrl)
+        } catch (throwable: Throwable) {
+            handleAuthenticationDiscoveryError(siteUrl, throwable)
+        }
+
+    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
         when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
             is ApiDiscoveryResult.Success -> {
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
@@ -53,7 +61,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
-    fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
+    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
         appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         return ""
