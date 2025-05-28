@@ -72,7 +72,6 @@ class SiteSqlUtils
                 .decryptAPIRestCredentials()
     }
 
-    // TODO check
     fun getSitesWith(field: String?, value: Boolean): SelectQuery<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where().equals(field, value).endWhere()
