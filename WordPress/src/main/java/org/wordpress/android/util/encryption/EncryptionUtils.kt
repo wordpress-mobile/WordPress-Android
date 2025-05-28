@@ -29,7 +29,6 @@ class EncryptionUtils @Inject constructor(
         getKeyFromStore() ?: initSecretKey()
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun getKeyFromStore(): Key? {
         val ks: KeyStore = KeyStore.getInstance(PROVIDER_NAME).apply {
             load(null)
