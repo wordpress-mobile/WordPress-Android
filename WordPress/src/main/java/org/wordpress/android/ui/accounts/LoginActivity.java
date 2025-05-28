@@ -41,6 +41,7 @@ import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
+import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
@@ -70,6 +71,8 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
@@ -144,6 +147,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
+    @Inject ExperimentalFeatures mExperimentalFeatures;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +201,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
-                    showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
+                    if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
+                        showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteAddressFragment.TAG);
+                    } else {
+                        showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
+                    }
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
@@ -563,7 +572,12 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
     @Override
     public void loginViaSiteAddress() {
-        LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
+        final Fragment loginSiteAddressFragment;
+        if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
+            loginSiteAddressFragment = new LoginSiteApplicationPasswordFragment();
+        } else {
+            loginSiteAddressFragment = new LoginSiteAddressFragment();
+        }
         slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
     }
 

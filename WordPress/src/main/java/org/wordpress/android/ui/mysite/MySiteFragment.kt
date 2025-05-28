@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,7 +9,6 @@ import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -89,7 +87,6 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 @Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
@@ -464,49 +461,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun openApplicationPasswordLogin(url: String) {
-        val intent = getCustomTabsIntent()
-        val loginUri = url.toUri()
-        val activity = requireActivity()
-        try {
-            intent.launchUrl(activity, loginUri)
-        } catch (e: SecurityException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-        } catch (e: ActivityNotFoundException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-        }
-    }
-
-    private fun getCustomTabsIntent(): CustomTabsIntent {
-        val activity = requireActivity()
-        return CustomTabsIntent.Builder()
-            .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
-            .setStartAnimations(
-                requireActivity(),
-                R.anim.activity_slide_in_from_right,
-                R.anim.activity_slide_out_to_left
-            )
-            .setExitAnimations(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.activity_slide_out_to_right
-            )
-            .setUrlBarHidingEnabled(true)
-            .setInstantAppsEnabled(false)
-            .setShowTitle(false)
-            .build()
-    }
-
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         activity?.let { parent ->
             snackbarSequencer.enqueue(
@@ -783,7 +737,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
-            openApplicationPasswordLogin(action.url)
+            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
         }
     }
 
