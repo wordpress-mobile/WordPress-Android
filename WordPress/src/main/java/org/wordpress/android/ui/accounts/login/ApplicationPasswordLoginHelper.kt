@@ -94,7 +94,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
                 } else {
-                    Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
+                    appLogWrapper.e(
+                        AppLog.T.DB,
+                        "WP_RS: Cannot save application password credentials for: ${uriLogin.siteUrl}"
+                    )
                     false
                 }
             }
@@ -113,7 +116,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             },
             properties
         )
-        Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
+        appLogWrapper.e(AppLog.T.DB, "WP_RS: Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlFromUrl(url: String): String {
