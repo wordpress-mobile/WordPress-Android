@@ -74,7 +74,7 @@ class NotificationStore @Inject constructor(
 
         companion object {
             private val reverseMap = values().associateBy(DeviceRegistrationErrorType::name)
-            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: GENERIC_ERROR
+            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: GENERIC_ERROR
         }
     }
 
@@ -147,7 +147,7 @@ class NotificationStore @Inject constructor(
 
         companion object {
             private val reverseMap = values().associateBy(NotificationErrorType::name)
-            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: GENERIC_ERROR
+            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: GENERIC_ERROR
         }
     }
 

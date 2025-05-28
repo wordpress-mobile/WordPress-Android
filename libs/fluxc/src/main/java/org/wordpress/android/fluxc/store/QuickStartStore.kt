@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.util.AppLog
+import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +20,7 @@ class QuickStartStore @Inject constructor(
     private val quickStartSqlUtils: QuickStartSqlUtils,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    interface QuickStartTask {
+    interface QuickStartTask: Serializable {
         val string: String
         val taskType: QuickStartTaskType
         val order: Int

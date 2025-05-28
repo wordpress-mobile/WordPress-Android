@@ -81,9 +81,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             WeakReference<StatsPullToRefreshListener.PullToRefreshEmitterListener>? = null
 
     override fun setPullToRefreshReceiver(
-        pullToRefreshEmitterListener: StatsPullToRefreshListener.PullToRefreshEmitterListener
+        emitterListener: StatsPullToRefreshListener.PullToRefreshEmitterListener
     ) {
-        currentStatsPullToRefreshListener = WeakReference(pullToRefreshEmitterListener)
+        currentStatsPullToRefreshListener = WeakReference(emitterListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

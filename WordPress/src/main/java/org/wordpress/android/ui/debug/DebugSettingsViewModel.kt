@@ -132,7 +132,6 @@ class DebugSettingsViewModel
         return when (this) {
             FeatureFlagConfigDao.FeatureFlagValueSource.BUILD_CONFIG -> "Local value"
             FeatureFlagConfigDao.FeatureFlagValueSource.REMOTE -> "Remote Value"
-            else -> null
         }
     }
 
