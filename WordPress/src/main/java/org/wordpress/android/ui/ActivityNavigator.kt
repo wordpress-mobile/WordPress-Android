@@ -214,25 +214,28 @@ class ActivityNavigator @Inject constructor() {
         WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun openApplicationPasswordLogin(activity: Activity, url: String) {
         val intent = getCustomTabsIntent(activity)
         val loginUri = url.toUri()
         try {
             intent.launchUrl(activity, loginUri)
-        } catch (e: SecurityException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
-        } catch (e: ActivityNotFoundException) {
-            AppLog.e(
-                AppLog.T.UTILS,
-                "Error opening login uri in CustomTabsIntent, attempting external browser",
-                e
-            )
-            ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+        } catch (e: RuntimeException) {
+            when (e) {
+                is ActivityNotFoundException,
+                is SecurityException -> {
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error opening login URI in CustomTabsIntent, attempting external browser",
+                        e
+                    )
+                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+                }
+
+                else -> {
+                    throw e
+                }
+            }
         }
     }
 
