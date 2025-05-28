@@ -194,7 +194,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusList,
                            final int offset) {
         List<Object> params =
-                createFetchPostListParameters(site.getSelfHostedSiteId(), SiteModelExtensionsKt.getUserNameProcessed(site), SiteModelExtensionsKt.getPasswordProcessed(site),
+                createFetchPostListParameters(site.getSelfHostedSiteId(),
+                        SiteModelExtensionsKt.getUserNameProcessed(site),
+                        SiteModelExtensionsKt.getPasswordProcessed(site),
                         getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,

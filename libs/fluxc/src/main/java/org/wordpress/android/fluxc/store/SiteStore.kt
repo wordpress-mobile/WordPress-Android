@@ -1219,13 +1219,13 @@ open class SiteStore @Inject constructor(
      * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPC: List<SiteModel>
-        get() = siteSqlUtils.sitesAccessedViaXMLRPC.asModel
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC
 
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPCCount: Int
-        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count()
 
     /**
      * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or

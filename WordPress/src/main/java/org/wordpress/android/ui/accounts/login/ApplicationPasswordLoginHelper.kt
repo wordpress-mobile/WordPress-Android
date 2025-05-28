@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.fluxc.encryption.EncryptionUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject

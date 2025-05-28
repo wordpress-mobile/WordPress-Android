@@ -261,22 +261,19 @@ class SiteSqlUtils
                 }).execute()
     }
 
-    // TODO: check
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
                 .endGroup().endWhere()
 
-    /**
-     * @return A selectQuery to get all the sites accessed via the XMLRPC, this includes: pure self hosted sites,
-     * but also Jetpack sites connected via XMLRPC.
-     */
-    val sitesAccessedViaXMLRPC: SelectQuery<SiteModel>
+    val sitesAccessedViaXMLRPC: List<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere()
+            .asModel
+            .decryptAPIRestCredentials()
 
     val sitesAccessedViaWPComRest: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
