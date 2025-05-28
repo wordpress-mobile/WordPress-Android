@@ -199,7 +199,8 @@ class SiteSqlUtils
                 // 4. DB site is XML-RPC, new site is XML-RPC:
                 // An existing self-hosted site was logged-into again, and we couldn't identify it by URL or
                 // by WP.com site ID + URL --> proceed
-                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST && finalSiteModel.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST &&
+                    finalSiteModel.origin == SiteModel.ORIGIN_WPCOM_REST) {
                     AppLog.d(
                         DB,
                         "Duplicate WPCom sites with same URLs, it could be an Identity Crisis, insert both sites"

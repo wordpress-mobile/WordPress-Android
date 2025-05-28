@@ -673,8 +673,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     ActivityUtils.hideKeyboard(getActivity());
                     if (userEmail == null || userEmail.isEmpty()) {
                         mLoginListener.helpNoJetpackScreen(lastAddedXMLRPCSite.getUrl(),
-                                lastAddedXMLRPCSite.getXmlRpcUrl(), SiteModelExtensionsKt.getUserNameProcessed(lastAddedXMLRPCSite),
-                                SiteModelExtensionsKt.getPasswordProcessed(lastAddedXMLRPCSite), mAccountStore.getAccount().getAvatarUrl(),
+                                lastAddedXMLRPCSite.getXmlRpcUrl(),
+                                SiteModelExtensionsKt.getUserNameProcessed(lastAddedXMLRPCSite),
+                                SiteModelExtensionsKt.getPasswordProcessed(lastAddedXMLRPCSite),
+                                mAccountStore.getAccount().getAvatarUrl(),
                                 false);
                     } else {
                         mLoginListener.gotWpcomEmail(userEmail, true, null);

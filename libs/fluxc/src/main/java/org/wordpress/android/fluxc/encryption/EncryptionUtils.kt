@@ -2,8 +2,6 @@ package org.wordpress.android.fluxc.encryption
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import java.security.Key
 import java.security.KeyStore
 import java.util.Base64
@@ -12,7 +10,6 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 private const val KEY_STORE_ALIAS = "AndroidJPSecretKey"

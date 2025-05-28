@@ -155,7 +155,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_status");
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         List<Object> params =
-                createFetchPostListParameters(site.getSelfHostedSiteId(), SiteModelExtensionsKt.getUserNameProcessed(site), SiteModelExtensionsKt.getPasswordProcessed(site), false,
+                createFetchPostListParameters(site.getSelfHostedSiteId(),
+                        SiteModelExtensionsKt.getUserNameProcessed(site),
+                        SiteModelExtensionsKt.getPasswordProcessed(site), false,
                         offset, pageSize, listDescriptor.getStatusList(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue(),
                         listDescriptor.getSearchQuery());

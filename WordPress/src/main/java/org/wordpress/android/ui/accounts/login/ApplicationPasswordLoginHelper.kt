@@ -25,7 +25,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val encryptionUtils: EncryptionUtils,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
 ) {
