@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.fluxc.encryption.EncryptionUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
@@ -49,9 +48,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
      @Mock
      lateinit var buildConfigWrapper: BuildConfigWrapper
 
-     @Mock
-     lateinit var encryptionUtils: EncryptionUtils
-
     @Mock
     lateinit var wpLoginClient: WpLoginClient
 
@@ -78,7 +74,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             siteSqlUtils,
             uriLoginWrapper,
             buildConfigWrapper,
-            encryptionUtils,
             wpLoginClient,
             appLogWrapper
         )
@@ -162,13 +157,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 apiRestPasswordIV = IV
             }
         whenever(siteSqlUtils.getSites()).thenReturn(listOf(siteModel))
-        whenever(encryptionUtils.encrypt(any()))
-            .thenReturn(
-                Pair(
-                    ENCRYPTED,
-                    IV
-                )
-            )
 
         val result = helper.storeApplicationPasswordCredentialsFrom(data)
 
