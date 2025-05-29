@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -66,10 +68,10 @@ fun VoiceToContentScreen(
     val configuration = LocalConfiguration.current
     val windowInfo = LocalWindowInfo.current
     val localDensity = LocalDensity.current
-    val screenHeight = with(localDensity) {
-        val containerWidthInPixels = windowInfo.containerSize.width
-        containerWidthInPixels.toDp()
-    }
+//    val screenHeight = with(localDensity) {
+//        val containerWidthInPixels = windowInfo.containerSize.width
+//        containerWidthInPixels.toDp()
+//    }
     val isRecording by viewModel.isRecording.collectAsState()
 
     DisposableEffect(Unit) {
@@ -81,21 +83,22 @@ fun VoiceToContentScreen(
     }
 
     // Adjust the bottom sheet height based on orientation
-    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        screenHeight // Full height in landscape
-    } else {
-        screenHeight * 0.6f // 60% height in portrait
-    }
+//    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//        screenHeight // Full height in landscape
+//    } else {
+//        screenHeight
+//    }
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(bottomSheetHeight),
+            .wrapContentHeight(),
         color = MaterialTheme.colorScheme.surface
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .wrapContentHeight()
                 .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
                 .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
         ) {
