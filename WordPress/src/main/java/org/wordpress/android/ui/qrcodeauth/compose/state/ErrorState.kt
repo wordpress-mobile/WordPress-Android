@@ -15,14 +15,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorPrimaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorSecondaryActionButton
-import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
-import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
@@ -47,7 +47,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error): Unit = with(uiState) {
         Subtitle(text = uiStringText(subtitle), color = MaterialTheme.colorScheme.error)
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
-                PrimaryButton(
+                PrimaryButtonM3(
                     text = uiStringText(actionButton.label),
                     onClick = { actionButton.clickAction.invoke() },
                     modifier = Modifier
@@ -56,7 +56,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error): Unit = with(uiState) {
             }
         }
         secondaryActionButton?.let { actionButton ->
-            SecondaryButton(
+            SecondaryButtonM3(
                 text = uiStringText(actionButton.label),
                 onClick = { actionButton.clickAction.invoke() },
                 modifier = Modifier
