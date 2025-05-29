@@ -65,13 +65,6 @@ fun VoiceToContentScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
-    val configuration = LocalConfiguration.current
-    val windowInfo = LocalWindowInfo.current
-    val localDensity = LocalDensity.current
-//    val screenHeight = with(localDensity) {
-//        val containerWidthInPixels = windowInfo.containerSize.width
-//        containerWidthInPixels.toDp()
-//    }
     val isRecording by viewModel.isRecording.collectAsState()
 
     DisposableEffect(Unit) {
@@ -81,13 +74,6 @@ fun VoiceToContentScreen(
             }
         }
     }
-
-    // Adjust the bottom sheet height based on orientation
-//    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//        screenHeight // Full height in landscape
-//    } else {
-//        screenHeight
-//    }
 
     Surface(
         modifier = Modifier
