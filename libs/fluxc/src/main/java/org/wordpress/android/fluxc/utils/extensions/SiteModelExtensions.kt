@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
  */
 fun SiteModel.getUserNameProcessed(): String {
     return if (apiRestUsername.isNullOrEmpty()) {
-        username
+        username.orEmpty()
     } else {
         apiRestUsername
     }
@@ -18,7 +18,7 @@ fun SiteModel.getUserNameProcessed(): String {
  */
 fun SiteModel.getPasswordProcessed(): String {
     return if (apiRestPassword.isNullOrEmpty()) {
-        password
+        password.orEmpty()
     } else {
         apiRestPassword
     }
