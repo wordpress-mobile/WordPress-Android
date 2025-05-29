@@ -247,7 +247,7 @@ fun RecordingPanel(model: VoiceToContentUiState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(IntrinsicSize.Max)
-                            .padding(48.dp)
+                            .padding(24.dp)
                     ) {
                         ScrollingWaveformVisualizer(recordingUpdate = recordingUpdate)
                     }
