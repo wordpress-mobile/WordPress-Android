@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,9 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,13 +61,6 @@ fun VoiceToContentScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
-    val configuration = LocalConfiguration.current
-    val windowInfo = LocalWindowInfo.current
-    val localDensity = LocalDensity.current
-    val screenHeight = with(localDensity) {
-        val containerWidthInPixels = windowInfo.containerSize.width
-        containerWidthInPixels.toDp()
-    }
     val isRecording by viewModel.isRecording.collectAsState()
 
     DisposableEffect(Unit) {
@@ -80,22 +71,16 @@ fun VoiceToContentScreen(
         }
     }
 
-    // Adjust the bottom sheet height based on orientation
-    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        screenHeight // Full height in landscape
-    } else {
-        screenHeight * 0.6f // 60% height in portrait
-    }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(bottomSheetHeight),
+            .wrapContentHeight(),
         color = MaterialTheme.colorScheme.surface
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .wrapContentHeight()
                 .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
                 .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
         ) {
@@ -258,7 +243,7 @@ fun RecordingPanel(model: VoiceToContentUiState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(IntrinsicSize.Max)
-                            .padding(48.dp)
+                            .padding(24.dp)
                     ) {
                         ScrollingWaveformVisualizer(recordingUpdate = recordingUpdate)
                     }
