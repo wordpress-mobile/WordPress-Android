@@ -3,6 +3,8 @@ package org.wordpress.android.ui.barcodescanner
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.common.Barcode
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class GoogleMLKitCodeScanner @Inject constructor(
@@ -10,6 +12,7 @@ class GoogleMLKitCodeScanner @Inject constructor(
     private val errorMapper: GoogleCodeScannerErrorMapper,
     private val barcodeFormatMapper: GoogleBarcodeFormatMapper,
     private val inputImageProvider: MediaImageProvider,
+    private val appLogWrapper: AppLogWrapper
 ) : CodeScanner {
     private var barcodeFound = false
     @androidx.camera.core.ExperimentalGetImage
@@ -26,15 +29,20 @@ class GoogleMLKitCodeScanner @Inject constructor(
             // There will be a good chance that the same barcode gets identified multiple times and as a result
             // success callback will be called multiple times.
             if (!barcodeList.isNullOrEmpty() && !barcodeFound) {
+                appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: success")
                 barcodeFound = true
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
             }
         }
         barcodeTask.addOnFailureListener { exception ->
+            appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: failure - ${exception.message}")
             callback.run(CodeScannerStatus.Failure(
                 error = exception.message,
                 type = errorMapper.mapGoogleMLKitScanningErrors(exception)
             ))
+        }
+        barcodeTask.addOnCanceledListener {
+            appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: canceled")
         }
     }
 
