@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,18 +15,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
+import org.wordpress.android.ui.compose.components.text.SubtitleM3
+import org.wordpress.android.ui.compose.components.text.TitleM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
-import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
-import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
-import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
-import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
 @Composable
 fun ContentState(uiState: QRCodeAuthUiState.Content): Unit = with(uiState) {
@@ -50,15 +50,21 @@ fun ContentState(uiState: QRCodeAuthUiState.Content): Unit = with(uiState) {
             )
         }
         title?.let {
-            Title(text = uiStringText(it))
+            TitleM3(
+                text = uiStringText(it),
+                textAlign = TextAlign.Center
+            )
         }
         subtitle?.let {
-            Subtitle(text = uiStringText(it), color = MaterialTheme.colorScheme.onBackground)
+            SubtitleM3(
+                text = uiStringText(it),
+                textAlign = TextAlign.Center
+            )
         }
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 actionButton.label?.let { label ->
-                    PrimaryButton(
+                    PrimaryButtonM3(
                         text = uiStringText(label),
                         onClick = { actionButton.clickAction?.invoke() },
                         enabled = actionButton.isEnabled,
@@ -71,7 +77,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content): Unit = with(uiState) {
         secondaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 actionButton.label?.let { label ->
-                    SecondaryButton(
+                    SecondaryButtonM3(
                         text = uiStringText(label),
                         onClick = { actionButton.clickAction?.invoke() },
                         enabled = actionButton.isEnabled,

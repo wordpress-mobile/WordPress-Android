@@ -30,6 +30,7 @@ fun PrimaryButtonM3(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     isInProgress: Boolean = false,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         contentColor = AppColor.White,
@@ -49,7 +50,7 @@ fun PrimaryButtonM3(
 ) {
     Button(
         onClick = onClick,
-        enabled = !isInProgress,
+        enabled = !isInProgress && enabled,
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,

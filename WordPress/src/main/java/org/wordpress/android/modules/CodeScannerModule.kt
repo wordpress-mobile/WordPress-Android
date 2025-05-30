@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.barcodescanner.CodeScanner
 import org.wordpress.android.ui.barcodescanner.GoogleBarcodeFormatMapper
 import org.wordpress.android.ui.barcodescanner.GoogleCodeScannerErrorMapper
@@ -23,12 +24,14 @@ class CodeScannerModule {
         googleCodeScannerErrorMapper: GoogleCodeScannerErrorMapper,
         barcodeFormatMapper: GoogleBarcodeFormatMapper,
         inputImageProvider: MediaImageProvider,
+        appLogWrapper: AppLogWrapper
     ): CodeScanner {
         return GoogleMLKitCodeScanner(
             barcodeScanner,
             googleCodeScannerErrorMapper,
             barcodeFormatMapper,
             inputImageProvider,
+            appLogWrapper
         )
     }
 
