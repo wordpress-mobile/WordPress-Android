@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import androidx.camera.core.Preview as CameraPreview
 
-private const val TIMEOUT_MS = 5000L // TODO increase this to at least 15 seconds
+private const val TIMEOUT_MS = 15_000L
 
 @Composable
 fun BarcodeScanner(
