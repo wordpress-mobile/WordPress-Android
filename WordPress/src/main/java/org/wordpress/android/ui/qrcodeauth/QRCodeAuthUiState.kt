@@ -100,7 +100,7 @@ sealed class QRCodeAuthUiState {
             override val primaryActionButton: ErrorPrimaryActionButton,
             override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
-            override val type = NO_INTERNET
+            override val type = QRCodeAuthUiStateType.TIMEOUT
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_subtitle)
 
