@@ -62,8 +62,10 @@ fun BarcodeScanner(
                     .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
-                    // this is called repeatedly when the scanner captures an image regardless of whether it's
-                    // a code, so we can use this to detect when the scan has taken too long and time out
+                    // This is called repeatedly as the scanner looks for a QR code, so we can use it
+                    // to detect when the scan has taken too long and time out. This is important
+                    // because some Samsung devices fail to detect the QR code, so we can timeout
+                    // and let them know they can use their camera app to scan it instead.
                     val endTime = System.nanoTime()
                     val elapsedTimeMs = (endTime - startTime) / 1_000_000
                     if (elapsedTimeMs > TIMEOUT_MS) {
