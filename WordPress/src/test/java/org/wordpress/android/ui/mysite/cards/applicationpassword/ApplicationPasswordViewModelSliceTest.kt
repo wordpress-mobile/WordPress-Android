@@ -103,8 +103,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     fun `given site already authenticated, when calling api discovery, then show no card`() = runTest {
         whenever(siteSqlUtils.getSiteWithLocalId(eq(siteTest.localId()))
         ).thenReturn(SiteModel().apply {
-            apiRestUsername = "user"
-            apiRestPassword = "password"
+            apiRestUsernameEncrypted = "user"
+            apiRestPasswordEncrypted = "password"
         })
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
