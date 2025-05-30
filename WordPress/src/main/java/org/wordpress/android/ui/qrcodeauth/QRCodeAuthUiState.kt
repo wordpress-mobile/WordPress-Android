@@ -96,7 +96,7 @@ sealed class QRCodeAuthUiState {
             override val image = R.drawable.img_illustration_cloud_off_152dp
         }
 
-        data class Timeout(
+        data class ScanTimeout(
             override val primaryActionButton: ErrorPrimaryActionButton,
             override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {

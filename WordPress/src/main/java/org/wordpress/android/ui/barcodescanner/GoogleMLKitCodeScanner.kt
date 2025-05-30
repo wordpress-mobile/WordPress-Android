@@ -33,7 +33,6 @@ class GoogleMLKitCodeScanner @Inject constructor(
             if (!barcodeList.isNullOrEmpty() && !barcodeFound) {
                 appLogWrapper.d(AppLog.T.UTILS, "$TAG: success")
                 barcodeFound = true
-                barcodeScanner.close()
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
             }
         }

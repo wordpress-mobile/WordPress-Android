@@ -70,7 +70,7 @@ fun BarcodeScanner(
                         onScannedResult.run(
                             CodeScannerStatus.Failure(
                                 error = "Timeout",
-                                type = CodeScanningErrorType.Timeout
+                                type = CodeScanningErrorType.ScanTimeout
                             )
                         )
                         return@setAnalyzer

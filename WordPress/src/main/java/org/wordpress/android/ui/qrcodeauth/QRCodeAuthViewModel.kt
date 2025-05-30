@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QRLOGIN_VERIFY_FAILED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.API_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.DATA_INVALID
@@ -19,12 +20,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.NOT_AUTHORIZED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.REST_INVALID_PARAM
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.TIMEOUT
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
 import org.wordpress.android.ui.barcodescanner.BarcodeScanningTracker
 import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
+import org.wordpress.android.ui.barcodescanner.CodeScanningErrorType
 import org.wordpress.android.ui.barcodescanner.ScanningSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
@@ -124,6 +125,7 @@ class QRCodeAuthViewModel @Inject constructor(
             else -> updateUiStateAndLaunchScanner()
         }
     }
+
     fun handleScanningResult(status: CodeScannerStatus) {
         when (status) {
             is CodeScannerStatus.Success -> onScanSuccess(status.code)
@@ -142,7 +144,15 @@ class QRCodeAuthViewModel @Inject constructor(
 
     fun onScanFailure(status: CodeScannerStatus.Failure) {
         barcodeScanningTracker.trackScanFailure(ScanningSource.QRCODE_LOGIN, status.type)
-        postActionEvent(FinishActivity)
+        if (status.type == CodeScanningErrorType.ScanTimeout) {
+            onScanTimeout()
+        } else {
+            postActionEvent(FinishActivity)
+        }
+    }
+
+    private fun onScanTimeout() {
+        postUiState(uiStateMapper.mapToTimeout(this::onScanAgainClicked, this::onCancelClicked))
     }
 
     private fun onExit() {
@@ -241,8 +251,9 @@ class QRCodeAuthViewModel @Inject constructor(
         INVALID_RESPONSE,
         REST_INVALID_PARAM,
         API_ERROR,
-        DATA_INVALID,
-        TIMEOUT -> uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked)
+        DATA_INVALID -> uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked)
+
+        QRCodeAuthErrorType.TIMEOUT -> uiStateMapper.mapToTimeout(this::onScanAgainClicked, this::onCancelClicked)
     }
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
