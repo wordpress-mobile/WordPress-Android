@@ -42,8 +42,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
     fun buildCard(siteModel: SiteModel) {
-        // This is hidden for regular users.
-        // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
         if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
         }
@@ -72,7 +70,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
+                !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
+                ) {
                 return@launch
             }
 

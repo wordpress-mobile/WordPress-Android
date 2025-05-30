@@ -12,6 +12,7 @@ import com.wellsql.generated.RoleModelTable
 import com.wellsql.generated.SiteModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.fluxc.encryption.EncryptionUtils
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostFormatModel
@@ -32,7 +33,9 @@ import javax.inject.Singleton
 
 @Singleton
 class SiteSqlUtils
-@Inject constructor() {
+@Inject constructor(
+    private val encryptionUtils: EncryptionUtils
+) {
     object DuplicateSiteException : Exception() {
         private const val serialVersionUID = -224883903136726226L
     }
@@ -43,25 +46,30 @@ class SiteSqlUtils
             .endWhere()
             .asModel
             .firstOrNull()
+            ?.decryptAPIRestCredentials()
 
     fun getSitesWithLocalId(id: Int): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where().equals(SiteModelTable.ID, id).endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getSitesWithRemoteId(id: Long): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where().equals(SiteModelTable.SITE_ID, id).endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getWpComSites(): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where().equals(SiteModelTable.IS_WPCOM, true).endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getWpComAtomicSites(): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
                 .where().equals(SiteModelTable.IS_WPCOM_ATOMIC, true).endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getSitesWith(field: String?, value: Boolean): SelectQuery<SiteModel> {
@@ -77,6 +85,7 @@ class SiteSqlUtils
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endGroup().endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getSitesByNameOrUrlMatching(searchString: String?): List<SiteModel> {
@@ -84,6 +93,7 @@ class SiteSqlUtils
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endWhere().asModel
+                .decryptAPIRestCredentials()
     }
 
     fun getSites(): List<SiteModel> =
@@ -92,6 +102,7 @@ class SiteSqlUtils
             .equals(SiteModelTable.IS_DELETED, false)
             .endWhere()
             .asModel
+            .decryptAPIRestCredentials()
 
     /**
      * Inserts the given SiteModel into the DB, or updates an existing entry where sites match.
@@ -111,17 +122,19 @@ class SiteSqlUtils
             return 0
         }
 
+        val finalSiteModel = site.encryptAPIRestCredentials()
+
         // If we're inserting or updating a WP.com REST API site, validate that we actually have a WordPress.com
         // AccountModel present
         // This prevents a late UPDATE_SITES action from re-populating the database after sign out from WordPress.com
-        if (site.isUsingWpComRestApi) {
+        if (finalSiteModel.isUsingWpComRestApi) {
             val accountModel = WellSql.select(AccountModel::class.java)
                     .where()
                     .not().equals(AccountModelTable.USER_ID, 0)
                     .endWhere()
                     .asModel
             if (accountModel.isEmpty()) {
-                AppLog.w(DB, "Can't insert WP.com site " + site.url + ", missing user account")
+                AppLog.w(DB, "Can't insert WP.com site " + finalSiteModel.url + ", missing user account")
                 return 0
             }
         }
@@ -129,31 +142,31 @@ class SiteSqlUtils
         // If the site already exist and has an id, we want to update it.
         var siteResult = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
-                .equals(SiteModelTable.ID, site.id)
+                .equals(SiteModelTable.ID, finalSiteModel.id)
                 .endGroup().endWhere().asModel
         if (!siteResult.isEmpty()) {
-            AppLog.d(DB, "Site found by (local) ID: " + site.id)
+            AppLog.d(DB, "Site found by (local) ID: " + finalSiteModel.id)
         }
 
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            if (site.siteId > 0) {
+            if (finalSiteModel.siteId > 0) {
                 // For WordPress.com and Jetpack sites, the WP.com ID is a unique enough identifier
                 siteResult = WellSql.select(SiteModel::class.java)
                         .where().beginGroup()
-                        .equals(SiteModelTable.SITE_ID, site.siteId)
+                        .equals(SiteModelTable.SITE_ID, finalSiteModel.siteId)
                         .endGroup().endWhere().asModel
                 if (!siteResult.isEmpty()) {
-                    AppLog.d(DB, "Site found by SITE_ID: " + site.siteId)
+                    AppLog.d(DB, "Site found by SITE_ID: " + finalSiteModel.siteId)
                 }
             } else {
                 siteResult = WellSql.select(SiteModel::class.java)
                         .where().beginGroup()
-                        .equals(SiteModelTable.SITE_ID, site.siteId)
-                        .equals(SiteModelTable.URL, site.url)
+                        .equals(SiteModelTable.SITE_ID, finalSiteModel.siteId)
+                        .equals(SiteModelTable.URL, finalSiteModel.url)
                         .endGroup().endWhere().asModel
                 if (!siteResult.isEmpty()) {
-                    AppLog.d(DB, "Site found by SITE_ID: " + site.siteId + " and URL: " + site.url)
+                    AppLog.d(DB, "Site found by SITE_ID: " + finalSiteModel.siteId + " and URL: " + finalSiteModel.url)
                 }
             }
         }
@@ -161,8 +174,8 @@ class SiteSqlUtils
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
         if (siteResult.isEmpty()) {
-            val forcedHttpXmlRpcUrl = "http://" + UrlUtils.removeScheme(site.xmlRpcUrl)
-            val forcedHttpsXmlRpcUrl = "https://" + UrlUtils.removeScheme(site.xmlRpcUrl)
+            val forcedHttpXmlRpcUrl = "http://" + UrlUtils.removeScheme(finalSiteModel.xmlRpcUrl)
+            val forcedHttpsXmlRpcUrl = "https://" + UrlUtils.removeScheme(finalSiteModel.xmlRpcUrl)
             siteResult = WellSql.select(SiteModel::class.java)
                     .where()
                     .beginGroup()
@@ -172,7 +185,7 @@ class SiteSqlUtils
                     .endWhere()
                     .asModel
             if (siteResult.isNotEmpty()) {
-                AppLog.d(DB, "Site found using XML-RPC url: " + site.xmlRpcUrl)
+                AppLog.d(DB, "Site found using XML-RPC url: " + finalSiteModel.xmlRpcUrl)
                 // Four possibilities here:
                 // 1. DB site is WP.com, new site is WP.com with different siteIds:
                 // The site could be having an "Identity Crisis", while this should be fixed on the site itself,
@@ -185,7 +198,8 @@ class SiteSqlUtils
                 // 4. DB site is XML-RPC, new site is XML-RPC:
                 // An existing self-hosted site was logged-into again, and we couldn't identify it by URL or
                 // by WP.com site ID + URL --> proceed
-                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST && site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST &&
+                    finalSiteModel.origin == SiteModel.ORIGIN_WPCOM_REST) {
                     AppLog.d(
                         DB,
                         "Duplicate WPCom sites with same URLs, it could be an Identity Crisis, insert both sites"
@@ -199,21 +213,21 @@ class SiteSqlUtils
         }
         return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
-            AppLog.d(DB, "Inserting site: " + site.url)
-            WellSql.insert(site).asSingleTransaction(true).execute()
+            AppLog.d(DB, "Inserting site: " + finalSiteModel.url)
+            WellSql.insert(finalSiteModel).asSingleTransaction(true).execute()
             1
         } else {
             // Update old site
-            AppLog.d(DB, "Updating site: " + site.url)
+            AppLog.d(DB, "Updating site: " + finalSiteModel.url)
             val oldId = siteResult[0].id
             try {
                 WellSql.update(SiteModel::class.java).whereId(oldId)
-                        .put(site, UpdateAllExceptId(SiteModel::class.java)).execute()
+                        .put(finalSiteModel, UpdateAllExceptId(SiteModel::class.java)).execute()
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
                         DB,
-                        "Error while updating site: siteId=${site.siteId} url=${site.url} " +
-                                "xmlrpc=${site.xmlRpcUrl}",
+                        "Error while updating site: siteId=${finalSiteModel.siteId} url=${finalSiteModel.url} " +
+                                "xmlrpc=${finalSiteModel.xmlRpcUrl}",
                         e
                 )
                 throw DuplicateSiteException
@@ -252,15 +266,13 @@ class SiteSqlUtils
                 .equals(SiteModelTable.IS_WPCOM, true)
                 .endGroup().endWhere()
 
-    /**
-     * @return A selectQuery to get all the sites accessed via the XMLRPC, this includes: pure self hosted sites,
-     * but also Jetpack sites connected via XMLRPC.
-     */
-    val sitesAccessedViaXMLRPC: SelectQuery<SiteModel>
+    val sitesAccessedViaXMLRPC: List<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere()
+            .asModel
+            .decryptAPIRestCredentials()
 
     val sitesAccessedViaWPComRest: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
@@ -473,7 +485,7 @@ class SiteSqlUtils
     private fun toSiteModel(cursor: Cursor): SiteModel {
         val siteModel = SiteModel()
         siteModel.id = cursor.getInt(cursor.getColumnIndexOrThrow(SiteModelTable.ID))
-        return siteModel
+        return siteModel.decryptAPIRestCredentials()
     }
 
     /**
@@ -518,5 +530,43 @@ class SiteSqlUtils
         } else {
             result[0].selfHostedSiteId
         }
+    }
+
+    @Suppress("ReturnCount")
+    private fun SiteModel.encryptAPIRestCredentials(): SiteModel {
+        // If already encrypted, do nothing
+        if (!apiRestUsernameEncrypted.isNullOrEmpty() && !apiRestPasswordEncrypted.isNullOrEmpty()) {
+            return this
+        }
+        // If the plain credentials are empty, there's nothing to encrypt
+        if (apiRestUsernamePlain.isNullOrEmpty() || apiRestPasswordPlain.isNullOrEmpty()) {
+            return this
+        }
+        val userNameEncryption = encryptionUtils.encrypt(apiRestUsernamePlain)
+        apiRestUsernameEncrypted = userNameEncryption.first
+        apiRestUsernameIV = userNameEncryption.second
+        val passwordEncryption = encryptionUtils.encrypt(apiRestPasswordPlain)
+        apiRestPasswordEncrypted = passwordEncryption.first
+        apiRestPasswordIV = passwordEncryption.second
+        return this
+    }
+
+    private fun List<SiteModel>.decryptAPIRestCredentials(): List<SiteModel> {
+        return this.map { it.decryptAPIRestCredentials() }
+    }
+
+    @Suppress("ReturnCount")
+    private fun SiteModel.decryptAPIRestCredentials(): SiteModel {
+        // If already decrypted, do nothing
+        if (!apiRestUsernamePlain.isNullOrEmpty() && !apiRestPasswordPlain.isNullOrEmpty()) {
+            return this
+        }
+        // If the encrypted credentials are empty, there's nothing to decrypt
+        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty()) {
+            return this
+        }
+        apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
+        apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        return this
     }
 }
