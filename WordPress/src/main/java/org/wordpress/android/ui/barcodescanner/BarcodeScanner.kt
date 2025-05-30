@@ -22,8 +22,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.camera.core.Preview as CameraPreview
+
+private const val TIMEOUT_MS = 5000L
 
 @Composable
 fun BarcodeScanner(
@@ -35,6 +36,7 @@ fun BarcodeScanner(
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
+    val startTime = System.nanoTime()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -60,6 +62,14 @@ fun BarcodeScanner(
                     .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
+                    // note this is called repeatedly when the scanner captures any image regardless of whether
+                    // it's a code. we can use this to detect when the scan has taken too long and time out
+                    val endTime = System.nanoTime()
+                    val elapsedTimeMs = (endTime - startTime) / 1_000_000
+                    if (elapsedTimeMs > TIMEOUT_MS) {
+                        onScannedResult.run(CodeScannerStatus.Timeout)
+                        return@setAnalyzer
+                    }
                     val callback = object : CodeScannerCallback {
                         override fun run(status: CodeScannerStatus?) {
                             status?.let { onScannedResult.run(it) }
