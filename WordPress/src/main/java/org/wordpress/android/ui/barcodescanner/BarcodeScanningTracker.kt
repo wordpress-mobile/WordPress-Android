@@ -17,16 +17,6 @@ class BarcodeScanningTracker @Inject constructor(
         )
     }
 
-    fun trackScanTimeout(source: ScanningSource) {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.BARCODE_SCANNING_FAILURE,
-            mapOf(
-                KEY_SCANNING_SOURCE to source.source,
-                KEY_SCANNING_FAILURE_REASON to "timeout",
-            )
-        )
-    }
-
     fun trackSuccess(source: ScanningSource) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.BARCODE_SCANNING_SUCCESS,
