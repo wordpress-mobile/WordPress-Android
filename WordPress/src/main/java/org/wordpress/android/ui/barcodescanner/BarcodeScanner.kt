@@ -22,7 +22,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.camera.core.Preview as CameraPreview
 
 @Composable
