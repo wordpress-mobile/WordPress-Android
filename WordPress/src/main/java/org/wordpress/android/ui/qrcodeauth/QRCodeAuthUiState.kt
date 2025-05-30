@@ -32,11 +32,11 @@ const val BLURRED_ALPHA = 0.75f
 sealed class QRCodeAuthUiState {
     open val type: QRCodeAuthUiStateType? = null
 
-    object Scanning : QRCodeAuthUiState() {
+    data object Scanning : QRCodeAuthUiState() {
         override val type = SCANNING
     }
 
-    object Loading : QRCodeAuthUiState() {
+    data object Loading : QRCodeAuthUiState() {
         override val type = LOADING
     }
 
@@ -200,12 +200,12 @@ sealed class QRCodeAuthUiState {
             override val label: UiString = UiStringRes(R.string.cancel)
         }
 
-        object AuthenticatingPrimaryActionButton : ActionButton() {
+        data object AuthenticatingPrimaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_primary_action)
             override val isEnabled = false
         }
 
-        object AuthenticatingSecondaryActionButton : ActionButton() {
+        data object AuthenticatingSecondaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.cancel)
             override val isEnabled = false
         }
@@ -214,7 +214,7 @@ sealed class QRCodeAuthUiState {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_dismiss)
         }
 
-        object DoneSecondaryActionButton : ActionButton() {
+        data object DoneSecondaryActionButton : ActionButton() {
             override val isVisible = false
         }
 

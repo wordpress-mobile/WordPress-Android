@@ -32,9 +32,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
@@ -161,7 +159,7 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
-        postActionEvent(LaunchDismissDialog(ShowDismissDialog))
+        postActionEvent(FinishActivity)
     }
 
     private fun onCancelClicked() {
@@ -346,7 +344,6 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     companion object {
-        const val TAG_DISMISS_DIALOG = "TAG_DISMISS_DIALOG"
         const val TOKEN_KEY = "token"
         const val DATA_KEY = "data"
         const val BROWSER_KEY = "browser"

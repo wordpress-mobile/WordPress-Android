@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import androidx.camera.core.Preview as CameraPreview
 
-private const val TIMEOUT_MS = 5000L
+private const val TIMEOUT_MS = 5000L // TODO increase this to at least 15 seconds
 
 @Composable
 fun BarcodeScanner(
@@ -45,7 +45,7 @@ fun BarcodeScanner(
             factory = { context ->
                 val previewView = PreviewView(context)
                 val preview = CameraPreview.Builder().build()
-                preview.setSurfaceProvider(previewView.surfaceProvider)
+                preview.surfaceProvider = previewView.surfaceProvider
                 val selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
                 val imageAnalysis = ImageAnalysis.Builder()
                     .setResolutionSelector(ResolutionSelector.Builder()
@@ -62,14 +62,14 @@ fun BarcodeScanner(
                     .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
-                    // note this is called repeatedly when the scanner captures any image regardless of whether
-                    // it's a code, so we can use this to detect when the scan has taken too long and time out
+                    // this is called repeatedly when the scanner captures an image regardless of whether it's
+                    // a code, so we can use this to detect when the scan has taken too long and time out
                     val endTime = System.nanoTime()
                     val elapsedTimeMs = (endTime - startTime) / 1_000_000
                     if (elapsedTimeMs > TIMEOUT_MS) {
                         onScannedResult.run(
                             CodeScannerStatus.Failure(
-                                error = "Timeout",
+                                error = "ScanTimeout",
                                 type = CodeScanningErrorType.ScanTimeout
                             )
                         )

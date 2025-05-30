@@ -33,7 +33,6 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.DEEP_LINK_URI_KEY
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.IS_DEEP_LINK_KEY
@@ -106,25 +105,9 @@ class QRCodeAuthFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
         when (actionEvent) {
-            is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
             is LaunchScanner -> launchScanner()
             is FinishActivity -> requireActivity().finish()
         }
-    }
-
-    private fun launchDismissDialog(model: QRCodeAuthDialogModel) {
-        dialogViewModel.showDialog(
-            requireActivity().supportFragmentManager,
-            BasicDialogModel(
-                model.tag,
-                getString(model.title),
-                getString(model.message),
-                getString(model.positiveButtonLabel),
-                model.negativeButtonLabel?.let { label -> getString(label) },
-                model.cancelButtonLabel?.let { label -> getString(label) },
-                false
-            )
-        )
     }
 
     private fun launchScanner() {
@@ -157,7 +140,6 @@ private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         modifier = Modifier.fillMaxSize()
     ) {
         val uiState by viewModel.uiState.collectAsState()
-        @Suppress("UnnecessaryVariable") // See: https://stackoverflow.com/a/69558316/4129245
         when (val state = uiState) {
             is Content -> ContentState(state)
             is Error -> ErrorState(state)
