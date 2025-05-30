@@ -532,9 +532,10 @@ class SiteSqlUtils
         }
     }
 
+    @Suppress("ReturnCount")
     private fun SiteModel.encryptAPIRestCredentials(): SiteModel {
         // If already encrypted, do nothing
-        if (!apiRestUsernameEncrypted.isNullOrEmpty() && !apiRestUsernameEncrypted.isNullOrEmpty()) {
+        if (!apiRestUsernameEncrypted.isNullOrEmpty() && !apiRestPasswordEncrypted.isNullOrEmpty()) {
             return this
         }
         // If the plain credentials are empty, there's nothing to encrypt
@@ -554,6 +555,7 @@ class SiteSqlUtils
         return this.map { it.decryptAPIRestCredentials() }
     }
 
+    @Suppress("ReturnCount")
     private fun SiteModel.decryptAPIRestCredentials(): SiteModel {
         // If already decrypted, do nothing
         if (!apiRestUsernamePlain.isNullOrEmpty() && !apiRestPasswordPlain.isNullOrEmpty()) {
