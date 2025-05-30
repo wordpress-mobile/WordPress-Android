@@ -21,8 +21,6 @@ sealed class CodeScannerStatus : Parcelable {
         val type: CodeScanningErrorType
     ) : CodeScannerStatus()
     @Parcelize
-    data object Timeout : CodeScannerStatus()
-    @Parcelize
     data object NavigateUp : CodeScannerStatus()
     @Parcelize
     data object Exit : CodeScannerStatus()
@@ -77,6 +75,8 @@ sealed class CodeScanningErrorType : Parcelable {
     object PermissionDenied : CodeScanningErrorType()
     @Parcelize
     object ResourceExhausted : CodeScanningErrorType()
+    @Parcelize
+    object Timeout : CodeScanningErrorType()
     @Parcelize
     object UnAuthenticated : CodeScanningErrorType()
     @Parcelize

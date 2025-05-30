@@ -17,7 +17,6 @@ class GoogleMLKitCodeScanner @Inject constructor(
     private var barcodeFound = false
     @androidx.camera.core.ExperimentalGetImage
     override fun startScan(imageProxy: ImageProxy, callback: CodeScannerCallback) {
-        val startTime = System.nanoTime()
         val barcodeTask = barcodeScanner.process(
             inputImageProvider.provideImage(imageProxy),
         )
@@ -36,16 +35,6 @@ class GoogleMLKitCodeScanner @Inject constructor(
                 barcodeFound = true
                 barcodeScanner.close()
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
-            } else {
-                val endTime = System.nanoTime()
-                val diffMs = (endTime - startTime) / 1_000_000
-                if (diffMs > TIMEOUT_MS) {
-                    appLogWrapper.w(AppLog.T.UTILS, "$TAG: timeout")
-                    barcodeScanner.close()
-                    callback.run(
-                        CodeScannerStatus.Timeout
-                    )
-                }
             }
         }
         barcodeTask.addOnFailureListener { exception ->
@@ -76,6 +65,5 @@ class GoogleMLKitCodeScanner @Inject constructor(
 
     companion object {
         private const val TAG = "GoogleMLKitCodeScanner"
-        private const val TIMEOUT_MS = 5000L
     }
 }

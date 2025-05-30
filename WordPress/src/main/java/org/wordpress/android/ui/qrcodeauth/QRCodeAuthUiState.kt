@@ -95,6 +95,18 @@ sealed class QRCodeAuthUiState {
             @DrawableRes
             override val image = R.drawable.img_illustration_cloud_off_152dp
         }
+
+        data class Timeout(
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
+        ) : Error() {
+            override val type = NO_INTERNET
+            override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_title)
+            override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_subtitle)
+
+            @DrawableRes
+            override val image = R.drawable.img_illustration_empty_results_216dp
+        }
     }
 
     sealed class Content : QRCodeAuthUiState() {

@@ -63,11 +63,16 @@ fun BarcodeScanner(
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
                     // note this is called repeatedly when the scanner captures any image regardless of whether
-                    // it's a code. we can use this to detect when the scan has taken too long and time out
+                    // it's a code, so we can use this to detect when the scan has taken too long and time out
                     val endTime = System.nanoTime()
                     val elapsedTimeMs = (endTime - startTime) / 1_000_000
                     if (elapsedTimeMs > TIMEOUT_MS) {
-                        onScannedResult.run(CodeScannerStatus.Timeout)
+                        onScannedResult.run(
+                            CodeScannerStatus.Failure(
+                                error = "Timeout",
+                                type = CodeScanningErrorType.Timeout
+                            )
+                        )
                         return@setAnalyzer
                     }
                     val callback = object : CodeScannerCallback {

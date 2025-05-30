@@ -130,7 +130,6 @@ class QRCodeAuthViewModel @Inject constructor(
             is CodeScannerStatus.Failure -> onScanFailure(status)
             is CodeScannerStatus.Exit -> onExit()
             is CodeScannerStatus.NavigateUp -> onBackPressed()
-            is CodeScannerStatus.Timeout -> onScanTimeout()
         }
     }
 
@@ -143,11 +142,6 @@ class QRCodeAuthViewModel @Inject constructor(
 
     fun onScanFailure(status: CodeScannerStatus.Failure) {
         barcodeScanningTracker.trackScanFailure(ScanningSource.QRCODE_LOGIN, status.type)
-        postActionEvent(FinishActivity)
-    }
-
-    private fun onScanTimeout() {
-        barcodeScanningTracker.trackScanTimeout(ScanningSource.QRCODE_LOGIN)
         postActionEvent(FinishActivity)
     }
 
