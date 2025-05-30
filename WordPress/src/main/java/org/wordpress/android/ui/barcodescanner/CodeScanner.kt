@@ -21,6 +21,8 @@ sealed class CodeScannerStatus : Parcelable {
         val type: CodeScanningErrorType
     ) : CodeScannerStatus()
     @Parcelize
+    data object Timeout : CodeScannerStatus()
+    @Parcelize
     data object NavigateUp : CodeScannerStatus()
     @Parcelize
     data object Exit : CodeScannerStatus()

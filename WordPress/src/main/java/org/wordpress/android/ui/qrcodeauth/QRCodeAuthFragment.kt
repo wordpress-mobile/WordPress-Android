@@ -86,6 +86,7 @@ class QRCodeAuthFragment : Fragment() {
         qrCodeAuthViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, qrCodeAuthViewModel::onDialogInteraction)
     }
+
     private fun initViewModel(savedInstanceState: Bundle?) {
         val (uri, isDeepLink) = requireActivity().intent?.extras?.let {
             val uri = it.getString(DEEP_LINK_URI_KEY, null)
