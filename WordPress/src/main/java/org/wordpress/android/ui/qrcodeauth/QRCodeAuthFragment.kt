@@ -31,7 +31,6 @@ import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.DEEP_LINK_URI_KEY
