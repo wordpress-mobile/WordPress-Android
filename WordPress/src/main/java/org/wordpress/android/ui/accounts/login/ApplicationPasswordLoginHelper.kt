@@ -80,8 +80,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
                 if (site != null) {
                     site.apply {
-                        apiRestUsername = uriLogin.user
-                        apiRestPassword = uriLogin.password
+                        apiRestUsernamePlain = uriLogin.user
+                        apiRestPasswordPlain = uriLogin.password
                     }
                     siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }

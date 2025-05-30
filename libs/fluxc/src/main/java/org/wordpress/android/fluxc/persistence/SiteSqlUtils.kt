@@ -533,14 +533,19 @@ class SiteSqlUtils
     }
 
     private fun SiteModel.encryptAPIRestCredentials(): SiteModel {
-        if (apiRestUsername.isNullOrEmpty() || apiRestPassword.isNullOrEmpty()) {
+        // If already encrypted, do nothing
+        if (!apiRestUsernameEncrypted.isNullOrEmpty() && !apiRestUsernameEncrypted.isNullOrEmpty()) {
             return this
         }
-        val userNameEncryption = encryptionUtils.encrypt(this.apiRestUsername)
-        apiRestUsername = userNameEncryption.first
+        // If the plain credentials are empty, there's nothing to encrypt
+        if (apiRestUsernamePlain.isNullOrEmpty() || apiRestPasswordPlain.isNullOrEmpty()) {
+            return this
+        }
+        val userNameEncryption = encryptionUtils.encrypt(apiRestUsernamePlain)
+        apiRestUsernameEncrypted = userNameEncryption.first
         apiRestUsernameIV = userNameEncryption.second
-        val passwordEncryption = encryptionUtils.encrypt(this.apiRestPassword)
-        apiRestPassword = passwordEncryption.first
+        val passwordEncryption = encryptionUtils.encrypt(apiRestPasswordPlain)
+        apiRestPasswordEncrypted = passwordEncryption.first
         apiRestPasswordIV = passwordEncryption.second
         return this
     }
@@ -550,11 +555,16 @@ class SiteSqlUtils
     }
 
     private fun SiteModel.decryptAPIRestCredentials(): SiteModel {
-        if (apiRestUsername.isNullOrEmpty() || apiRestPassword.isNullOrEmpty()) {
+        // If already decrypted, do nothing
+        if (!apiRestUsernamePlain.isNullOrEmpty() && !apiRestPasswordPlain.isNullOrEmpty()) {
             return this
         }
-        apiRestUsername = encryptionUtils.decrypt(apiRestUsername, apiRestUsernameIV)
-        apiRestPassword = encryptionUtils.decrypt(apiRestPassword, apiRestPasswordIV)
+        // If the encrypted credentials are empty, there's nothing to decrypt
+        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty()) {
+            return this
+        }
+        apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
+        apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
         return this
     }
 }

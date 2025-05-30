@@ -6,10 +6,10 @@ import org.wordpress.android.fluxc.model.SiteModel
  * Returns either the XML-RPC username or the API REST one if available
  */
 fun SiteModel.getUserNameProcessed(): String {
-    return if (apiRestUsername.isNullOrEmpty()) {
+    return if (apiRestUsernamePlain.isNullOrEmpty()) {
         username.orEmpty()
     } else {
-        apiRestUsername
+        apiRestUsernamePlain
     }
 }
 
@@ -17,10 +17,10 @@ fun SiteModel.getUserNameProcessed(): String {
  * Returns either the XML-RPC password or the API REST one if available
  */
 fun SiteModel.getPasswordProcessed(): String {
-    return if (apiRestPassword.isNullOrEmpty()) {
+    return if (apiRestPasswordPlain.isNullOrEmpty()) {
         password.orEmpty()
     } else {
-        apiRestPassword
+        apiRestPasswordPlain
     }
 }
 

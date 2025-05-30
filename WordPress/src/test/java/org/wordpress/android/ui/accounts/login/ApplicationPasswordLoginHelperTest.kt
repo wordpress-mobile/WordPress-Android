@@ -149,8 +149,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
             val siteModel = SiteModel().apply {
                 url = TEST_URL
-                apiRestUsername = TEST_USER
-                apiRestPassword = TEST_PASSWORD
+                apiRestUsernameEncrypted = TEST_USER
+                apiRestPasswordEncrypted = TEST_PASSWORD
             }
         whenever(siteSqlUtils.getSites()).thenReturn(listOf(siteModel))
 
