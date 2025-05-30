@@ -70,7 +70,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
+                !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
+                ) {
                 return@launch
             }
 
