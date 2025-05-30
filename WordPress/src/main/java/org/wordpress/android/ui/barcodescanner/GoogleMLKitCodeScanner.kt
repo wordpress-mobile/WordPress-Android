@@ -36,7 +36,8 @@ class GoogleMLKitCodeScanner @Inject constructor(
                 barcodeFound = true
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
             } else {
-                val diffMs = (System.nanoTime() - startTime) / 10000000
+                val endTime = System.nanoTime()
+                val diffMs = (endTime - startTime) / 1_000_000
                 if (diffMs > TIMEOUT_MS) {
                     appLogWrapper.w(AppLog.T.UTILS, "$TAG: timeout")
                     barcodeScanner.close()
