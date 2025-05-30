@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -672,8 +673,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     ActivityUtils.hideKeyboard(getActivity());
                     if (userEmail == null || userEmail.isEmpty()) {
                         mLoginListener.helpNoJetpackScreen(lastAddedXMLRPCSite.getUrl(),
-                                lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
-                                lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl(),
+                                lastAddedXMLRPCSite.getXmlRpcUrl(),
+                                SiteModelExtensionsKt.getUserNameProcessed(lastAddedXMLRPCSite),
+                                SiteModelExtensionsKt.getPasswordProcessed(lastAddedXMLRPCSite),
+                                mAccountStore.getAccount().getAvatarUrl(),
                                 false);
                     } else {
                         mLoginListener.gotWpcomEmail(userEmail, true, null);

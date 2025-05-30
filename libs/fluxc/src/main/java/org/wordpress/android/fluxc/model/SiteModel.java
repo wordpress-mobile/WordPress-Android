@@ -100,10 +100,12 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mUsername;
     @Column
     private String mPassword;
-    @Column
-    private String mApiRestUsername;
-    @Column
-    private String mApiRestPassword;
+    @Column(name = "API_REST_USERNAME")
+    private String mApiRestUsernameEncrypted;
+    private String mApiRestUsernamePlain;
+    @Column(name = "API_REST_PASSWORD")
+    private String mApiRestPasswordEncrypted;
+    private String mApiRestPasswordPlain;
     @Column
     private String mApiRestUsernameIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
 
@@ -367,20 +369,36 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mPassword = password;
     }
 
-    public String getApiRestUsername() {
-        return mApiRestUsername;
+    public String getApiRestUsernameEncrypted() {
+        return mApiRestUsernameEncrypted;
     }
 
-    public void setApiRestUsername(String apiRestUsername) {
-        mApiRestUsername = apiRestUsername;
+    public void setApiRestUsernameEncrypted(String apiRestUsernameEncrypted) {
+        mApiRestUsernameEncrypted = apiRestUsernameEncrypted;
     }
 
-    public String getApiRestPassword() {
-        return mApiRestPassword;
+    public String getApiRestUsernamePlain() {
+        return mApiRestUsernamePlain;
     }
 
-    public void setApiRestPassword(String apiRestPassword) {
-        mApiRestPassword = apiRestPassword;
+    public void setApiRestUsernamePlain(String apiRestUsernamePlain) {
+        mApiRestUsernamePlain = apiRestUsernamePlain;
+    }
+
+    public String getApiRestPasswordEncrypted() {
+        return mApiRestPasswordEncrypted;
+    }
+
+    public void setApiRestPasswordEncrypted(String apiRestPasswordEncrypted) {
+        mApiRestPasswordEncrypted = apiRestPasswordEncrypted;
+    }
+
+    public String getApiRestPasswordPlain() {
+        return mApiRestPasswordPlain;
+    }
+
+    public void setApiRestPasswordPlain(String apiRestPasswordPlain) {
+        mApiRestPasswordPlain = apiRestPasswordPlain;
     }
 
     public String getApiRestUsernameIV() {
