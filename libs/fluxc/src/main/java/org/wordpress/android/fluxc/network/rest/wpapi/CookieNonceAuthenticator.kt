@@ -10,6 +10,8 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
@@ -61,8 +63,8 @@ class CookieNonceAuthenticator @Inject constructor(
         val response = makeAuthenticatedWPAPIRequest(
             siteUrl = site.url,
             wpApiUrl = site.wpApiRestUrl,
-            username = site.username,
-            password = site.password
+            username = site.getUserNameProcessed(),
+            password = site.getPasswordProcessed()
         ) { _, nonce ->
             fetchMethod(nonce)
         }

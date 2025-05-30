@@ -25,6 +25,8 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.SiteUtils
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.MapUtils
 import java.util.ArrayList
 import javax.inject.Inject
@@ -42,8 +44,8 @@ class SiteXMLRPCClient @Inject constructor(
     fun fetchProfile(site: SiteModel) {
         val params: MutableList<Any> = ArrayList()
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.getUserNameProcessed())
+        params.add(site.getPasswordProcessed())
         val request = xmlrpcRequestBuilder.buildGetRequest(site.xmlRpcUrl, GET_PROFILE, params, Map::class.java,
                 { response ->
                     val updatedSite = profileResponseToAccountModel(response, site)
@@ -87,7 +89,7 @@ class SiteXMLRPCClient @Inject constructor(
 
     suspend fun fetchSite(site: SiteModel): SiteModel {
         val params = listOf(
-                site.selfHostedSiteId, site.username, site.password,
+                site.selfHostedSiteId, site.getUserNameProcessed(), site.getPasswordProcessed(),
                 arrayOf(
                         "software_version",
                         "post_thumbnail",
@@ -115,7 +117,7 @@ class SiteXMLRPCClient @Inject constructor(
     }
 
     suspend fun fetchPostFormats(site: SiteModel): FetchedPostFormatsPayload {
-        val params = listOf(site.selfHostedSiteId, site.username, site.password)
+        val params = listOf(site.selfHostedSiteId, site.getUserNameProcessed(), site.getPasswordProcessed())
         val response = xmlrpcRequestBuilder.syncGetRequest(
                 this,
                 site.xmlRpcUrl,

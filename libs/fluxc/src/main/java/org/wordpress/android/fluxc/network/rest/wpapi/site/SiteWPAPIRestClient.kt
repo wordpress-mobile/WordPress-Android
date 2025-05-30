@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
@@ -92,8 +94,8 @@ class SiteWPAPIRestClient @Inject constructor(
         return fetchWPAPISite(
             payload = FetchWPAPISitePayload(
                 url = site.url,
-                username = site.username,
-                password = site.password,
+                username = site.getUserNameProcessed(),
+                password = site.getPasswordProcessed(),
             )
         )
     }

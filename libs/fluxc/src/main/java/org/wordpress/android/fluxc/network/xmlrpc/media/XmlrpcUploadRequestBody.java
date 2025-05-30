@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,8 +55,8 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
         // TODO: we should use the XMLRPCSerializer instead of doing this
         mPrependString = String.format(Locale.ENGLISH, PREPEND_XML_FORMAT,
                 site.getSelfHostedSiteId(),
-                StringEscapeUtils.escapeXml(site.getUsername()),
-                StringEscapeUtils.escapeXml(site.getPassword()),
+                StringEscapeUtils.escapeXml(SiteModelExtensionsKt.getUserNameProcessed(site)),
+                StringEscapeUtils.escapeXml(SiteModelExtensionsKt.getPasswordProcessed(site)),
                 StringEscapeUtils.escapeXml(media.getFileName()),
                 StringEscapeUtils.escapeXml(media.getMimeType()),
                 media.getPostId());

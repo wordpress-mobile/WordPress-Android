@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.encryption.EncryptionUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
@@ -32,8 +31,6 @@ import kotlin.test.assertTrue
 private const val TEST_URL = "http://test.com"
 private const val TEST_USER = "testuser"
 private const val TEST_PASSWORD = "testpassword"
-private const val ENCRYPTED = "encrypted"
-private const val IV = "iv"
 
 private const val TEST_URL_AUTH = "https://www.test.com/auth"
 private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&success_url=callback://callback"
@@ -48,9 +45,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
      @Mock
      lateinit var buildConfigWrapper: BuildConfigWrapper
-
-     @Mock
-     lateinit var encryptionUtils: EncryptionUtils
 
     @Mock
     lateinit var wpLoginClient: WpLoginClient
@@ -78,7 +72,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             siteSqlUtils,
             uriLoginWrapper,
             buildConfigWrapper,
-            encryptionUtils,
             wpLoginClient,
             appLogWrapper
         )
@@ -156,19 +149,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
             val siteModel = SiteModel().apply {
                 url = TEST_URL
-                apiRestUsername = ENCRYPTED
-                apiRestUsernameIV = IV
-                apiRestPassword = ENCRYPTED
-                apiRestPasswordIV = IV
+                apiRestUsernameEncrypted = TEST_USER
+                apiRestPasswordEncrypted = TEST_PASSWORD
             }
         whenever(siteSqlUtils.getSites()).thenReturn(listOf(siteModel))
-        whenever(encryptionUtils.encrypt(any()))
-            .thenReturn(
-                Pair(
-                    ENCRYPTED,
-                    IV
-                )
-            )
 
         val result = helper.storeApplicationPasswordCredentialsFrom(data)
 
