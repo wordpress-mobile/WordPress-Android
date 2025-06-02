@@ -147,7 +147,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
         }
 
-        if(getMainPageIndex() != getPosition(ME)) {
+        if (getMainPageIndex() != getPosition(ME)) {
             setImageViewSelected(getPosition(ME), false)
         }
 
@@ -187,6 +187,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                     }
 
                     override fun onResourceReady(resource: android.graphics.drawable.Drawable, model: Any?) {
+                        gravatarLoaded = true
                         ImageViewCompat.setImageTintList(imgIcon, null)
                         if (resource is BitmapDrawable) {
                             var bitmap = resource.bitmap
@@ -318,7 +319,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
-            if(it.isSelected) {
+            if (it.isSelected) {
                 val pop = AnimationUtils.loadAnimation(it.context, R.anim.bottom_nav_icon_pop)
                 it.startAnimation(pop)
             }
