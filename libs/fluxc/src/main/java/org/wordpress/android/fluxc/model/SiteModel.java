@@ -106,7 +106,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mApiRestUsernameEncrypted;
     @Nullable
     private String mApiRestUsernamePlain;
-    @Nullableverify
+    @Nullable
     @Column(name = "API_REST_PASSWORD")
     private String mApiRestPasswordEncrypted;
     @Nullable
