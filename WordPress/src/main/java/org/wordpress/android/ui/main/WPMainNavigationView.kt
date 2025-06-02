@@ -96,6 +96,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         get() = getPageForItemId(navigationBarView.selectedItemId)
         set(pageType) = updateCurrentPosition(pages().indexOf(pageType))
 
+    private var gravatarLoaded = false
+
     interface OnPageListener {
         fun onPageChanged(position: Int)
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
@@ -168,6 +170,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 ImageType.USER,
                 object : ImageManager.RequestListener<android.graphics.drawable.Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
+                        gravatarLoaded = false
                         val appLogMessage = "onLoadFailed while loading Gravatar image!"
                         if (e == null) {
                             AppLog.e(
@@ -304,11 +307,13 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
         getImageViewForPosition(position)?.let {
-            if(position == getPosition(ME)) {
-                if(!isSelected){
+            // Only change the saturation if we have loaded a Gravatar image
+            if (position == getPosition(ME) && gravatarLoaded) {
+                if (!isSelected) {
                     it.colorFilter = disabledColorFilter
-                } else
+                } else {
                     it.colorFilter = enabledColorFilter
+                }
             }
 
             it.isSelected = isSelected
