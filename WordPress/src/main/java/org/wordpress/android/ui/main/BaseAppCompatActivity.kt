@@ -41,7 +41,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // apply insets for Android 15+ edge-to-edge
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
-            excludedActivities.contains(this.localClassName).not()
+            !isExcludedActivity(this)
         ) {
             applyInsetOffsets()
         }
@@ -66,6 +66,9 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         }
     }
 }
+
+private fun isExcludedActivity(activity: BaseAppCompatActivity) =
+    excludedActivities.contains(activity::class.java.name)
 
 /**
  * Activities that are excluded from the edge-to-edge offset. Note that many of these excluded activities are
