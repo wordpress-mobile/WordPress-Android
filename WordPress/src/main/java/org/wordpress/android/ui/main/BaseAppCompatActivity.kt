@@ -1,5 +1,5 @@
 /**
- * This suppression is so we can include deprecated activities (CommentDetailActivity)
+ * This suppression is so we can include deprecated activities (CommentsDetailActivity)
  */
 @file:Suppress("DEPRECATION")
 
