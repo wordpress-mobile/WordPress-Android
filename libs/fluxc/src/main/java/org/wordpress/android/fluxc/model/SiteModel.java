@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
@@ -100,15 +101,20 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mUsername;
     @Column
     private String mPassword;
+    @Nullable
     @Column(name = "API_REST_USERNAME")
     private String mApiRestUsernameEncrypted;
+    @Nullable
     private String mApiRestUsernamePlain;
+    @Nullable
     @Column(name = "API_REST_PASSWORD")
     private String mApiRestPasswordEncrypted;
+    @Nullable
     private String mApiRestPasswordPlain;
+    @Nullable
     @Column
     private String mApiRestUsernameIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
-
+    @Nullable
     @Column
     private String mApiRestPasswordIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
     @Column(name = "XMLRPC_URL")
