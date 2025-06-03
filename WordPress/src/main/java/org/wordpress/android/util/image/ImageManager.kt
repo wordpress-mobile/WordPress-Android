@@ -443,12 +443,18 @@ class ImageManager @Inject constructor(
      * Loads the Bitmap into the ImageView.
      */
     @JvmOverloads
-    fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ScaleType = CENTER) {
+    fun load(
+        imageView: ImageView,
+        bitmap: Bitmap,
+        scaleType: ScaleType = CENTER,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
         val context = imageView.context
         if (!context.isAvailable()) return
         Glide.with(context)
             .load(bitmap)
             .applyScaleType(scaleType)
+            .attachRequestListener(requestListener)
             .into(imageView)
             .clearOnDetach()
     }
