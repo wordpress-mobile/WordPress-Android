@@ -32,11 +32,11 @@ const val BLURRED_ALPHA = 0.75f
 sealed class QRCodeAuthUiState {
     open val type: QRCodeAuthUiStateType? = null
 
-    object Scanning : QRCodeAuthUiState() {
+    data object Scanning : QRCodeAuthUiState() {
         override val type = SCANNING
     }
 
-    object Loading : QRCodeAuthUiState() {
+    data object Loading : QRCodeAuthUiState() {
         override val type = LOADING
     }
 
@@ -94,6 +94,18 @@ sealed class QRCodeAuthUiState {
 
             @DrawableRes
             override val image = R.drawable.img_illustration_cloud_off_152dp
+        }
+
+        data class ScanTimeout(
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
+        ) : Error() {
+            override val type = QRCodeAuthUiStateType.TIMEOUT
+            override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_title)
+            override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_subtitle)
+
+            @DrawableRes
+            override val image = R.drawable.img_illustration_empty_results_216dp
         }
     }
 
@@ -188,12 +200,12 @@ sealed class QRCodeAuthUiState {
             override val label: UiString = UiStringRes(R.string.cancel)
         }
 
-        object AuthenticatingPrimaryActionButton : ActionButton() {
+        data object AuthenticatingPrimaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_primary_action)
             override val isEnabled = false
         }
 
-        object AuthenticatingSecondaryActionButton : ActionButton() {
+        data object AuthenticatingSecondaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.cancel)
             override val isEnabled = false
         }
@@ -202,7 +214,7 @@ sealed class QRCodeAuthUiState {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_dismiss)
         }
 
-        object DoneSecondaryActionButton : ActionButton() {
+        data object DoneSecondaryActionButton : ActionButton() {
             override val isVisible = false
         }
 

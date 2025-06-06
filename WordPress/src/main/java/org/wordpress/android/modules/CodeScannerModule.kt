@@ -27,11 +27,11 @@ class CodeScannerModule {
         appLogWrapper: AppLogWrapper
     ): CodeScanner {
         return GoogleMLKitCodeScanner(
-            barcodeScanner,
-            googleCodeScannerErrorMapper,
-            barcodeFormatMapper,
-            inputImageProvider,
-            appLogWrapper
+            barcodeScanner = barcodeScanner,
+            errorMapper = googleCodeScannerErrorMapper,
+            barcodeFormatMapper = barcodeFormatMapper,
+            inputImageProvider = inputImageProvider,
+            appLogWrapper = appLogWrapper
         )
     }
 

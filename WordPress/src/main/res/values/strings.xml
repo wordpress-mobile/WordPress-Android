@@ -4486,6 +4486,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_done_subtitle">Tap dismiss and head back to your web browser to continue.</string>
     <string name="qrcode_auth_flow_dismiss">Dismiss</string>
     <string name="qrcode_auth_flow_scan_again">Scan Again</string>
+    <string name="qrcode_auth_flow_timeout_title">Scan timed out</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Please try again or use your camera app to scan the code.</string>
     <string name="qrcode_auth_flow_error_no_connection_title">No connection</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">An active internet connection is required to scan log in codes</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Could not validate the log in code</string>
