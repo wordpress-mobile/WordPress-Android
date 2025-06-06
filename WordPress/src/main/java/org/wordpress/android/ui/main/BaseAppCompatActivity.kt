@@ -1,3 +1,8 @@
+/**
+ * This suppression is so we can include deprecated activities (CommentsDetailActivity)
+ */
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.main
 
 import android.os.Build
@@ -10,6 +15,7 @@ import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
+import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
@@ -41,7 +47,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // apply insets for Android 15+ edge-to-edge
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
-            excludedActivities.contains(this.localClassName).not()
+            !isExcludedActivity(this)
         ) {
             applyInsetOffsets()
         }
@@ -66,6 +72,9 @@ open class BaseAppCompatActivity : AppCompatActivity() {
         }
     }
 }
+
+private fun isExcludedActivity(activity: BaseAppCompatActivity) =
+    excludedActivities.contains(activity::class.java.name)
 
 /**
  * Activities that are excluded from the edge-to-edge offset. Note that many of these excluded activities are
@@ -98,6 +107,7 @@ private val excludedActivities = listOf(
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping
     // their editors
+    CommentsDetailActivity::class.java.name,
     EditPostActivity::class.java.name,
     NotificationsDetailActivity::class.java.name,
     ReaderCommentListActivity::class.java.name,
