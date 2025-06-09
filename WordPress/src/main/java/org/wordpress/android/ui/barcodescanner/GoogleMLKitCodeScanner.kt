@@ -17,7 +17,9 @@ class GoogleMLKitCodeScanner @Inject constructor(
     private var barcodeFound = false
     @androidx.camera.core.ExperimentalGetImage
     override fun startScan(imageProxy: ImageProxy, callback: CodeScannerCallback) {
-        val barcodeTask = barcodeScanner.process(inputImageProvider.provideImage(imageProxy))
+        val barcodeTask = barcodeScanner.process(
+            inputImageProvider.provideImage(imageProxy),
+        )
         barcodeTask.addOnCompleteListener {
             // We must call image.close() on received images when finished using them.
             // Otherwise, new images may not be received or the camera may stall.
@@ -29,20 +31,20 @@ class GoogleMLKitCodeScanner @Inject constructor(
             // There will be a good chance that the same barcode gets identified multiple times and as a result
             // success callback will be called multiple times.
             if (!barcodeList.isNullOrEmpty() && !barcodeFound) {
-                appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: success")
+                appLogWrapper.d(AppLog.T.UTILS, "$TAG: success")
                 barcodeFound = true
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
             }
         }
         barcodeTask.addOnFailureListener { exception ->
-            appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: failure - ${exception.message}")
+            appLogWrapper.e(AppLog.T.UTILS, "$TAG: failure - ${exception.message}")
             callback.run(CodeScannerStatus.Failure(
                 error = exception.message,
                 type = errorMapper.mapGoogleMLKitScanningErrors(exception)
             ))
         }
         barcodeTask.addOnCanceledListener {
-            appLogWrapper.d(AppLog.T.UTILS, "GoogleMLKitCodeScanner: canceled")
+            appLogWrapper.d(AppLog.T.UTILS, "$TAG: canceled")
         }
     }
 
@@ -58,5 +60,9 @@ class GoogleMLKitCodeScanner @Inject constructor(
                 type = CodeScanningErrorType.Other(Throwable("Empty raw value"))
             )
         }
+    }
+
+    companion object {
+        private const val TAG = "GoogleMLKitCodeScanner"
     }
 }
