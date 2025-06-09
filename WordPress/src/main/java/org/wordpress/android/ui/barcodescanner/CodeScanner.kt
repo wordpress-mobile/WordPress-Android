@@ -76,6 +76,8 @@ sealed class CodeScanningErrorType : Parcelable {
     @Parcelize
     object ResourceExhausted : CodeScanningErrorType()
     @Parcelize
+    object ScanTimeout : CodeScanningErrorType()
+    @Parcelize
     object UnAuthenticated : CodeScanningErrorType()
     @Parcelize
     object UnAvailable : CodeScanningErrorType()

@@ -11,6 +11,7 @@ enum class QRCodeAuthUiStateType(val label: String) {
     INVALID_DATA("invalid_data"),
     AUTHENTICATION_FAILED("authentication_failed"),
     EXPIRED_TOKEN("expired_token"),
+    TIMEOUT("timeout"),
     NO_INTERNET("no_internet");
 
     override fun toString() = label
@@ -19,7 +20,7 @@ enum class QRCodeAuthUiStateType(val label: String) {
         @JvmStatic
         fun fromString(strSource: String?): QRCodeAuthUiStateType? {
             if (strSource != null) {
-                for (source in values()) {
+                for (source in entries) {
                     if (source.name.equals(strSource, ignoreCase = true)) {
                         return source
                     }

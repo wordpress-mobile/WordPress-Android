@@ -24,6 +24,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import androidx.camera.core.Preview as CameraPreview
 
+private const val TIMEOUT_MS = 15_000L
+
 @Composable
 fun BarcodeScanner(
     codeScanner: CodeScanner,
@@ -34,6 +36,7 @@ fun BarcodeScanner(
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
+    val startTime = System.nanoTime()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -42,7 +45,7 @@ fun BarcodeScanner(
             factory = { context ->
                 val previewView = PreviewView(context)
                 val preview = CameraPreview.Builder().build()
-                preview.setSurfaceProvider(previewView.surfaceProvider)
+                preview.surfaceProvider = previewView.surfaceProvider
                 val selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
                 val imageAnalysis = ImageAnalysis.Builder()
                     .setResolutionSelector(ResolutionSelector.Builder()
@@ -59,6 +62,21 @@ fun BarcodeScanner(
                     .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
+                    // This is called repeatedly as the scanner looks for a QR code, so we can use it
+                    // to detect when the scan has taken too long and time out. This is important
+                    // because some Samsung devices fail to detect the QR code, so we can timeout
+                    // and let them know they can use their camera app to scan it instead.
+                    val endTime = System.nanoTime()
+                    val elapsedTimeMs = (endTime - startTime) / 1_000_000
+                    if (elapsedTimeMs > TIMEOUT_MS) {
+                        onScannedResult.run(
+                            CodeScannerStatus.Failure(
+                                error = "ScanTimeout",
+                                type = CodeScanningErrorType.ScanTimeout
+                            )
+                        )
+                        return@setAnalyzer
+                    }
                     val callback = object : CodeScannerCallback {
                         override fun run(status: CodeScannerStatus?) {
                             status?.let { onScannedResult.run(it) }
