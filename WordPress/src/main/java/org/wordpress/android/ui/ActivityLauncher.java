@@ -122,6 +122,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.subscribers.SubscribersActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -720,8 +721,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
-        // TODO - subscribers screen
-        Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+        // TODO AnalyticsTracker.track(Stat.?);
+        Intent intent = new Intent(context, SubscribersActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
@@ -1332,6 +1335,7 @@ public class ActivityLauncher {
         intent.putExtra(FeedbackFormActivity.EXTRA_FEEDBACK_PREFIX, feedbackPrefix);
         context.startActivity(intent);
     }
+
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {

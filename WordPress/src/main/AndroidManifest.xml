@@ -411,6 +411,10 @@
                 android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
 
+        <activity android:name=".ui.subscribers.SubscribersActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/subscribers"/>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
