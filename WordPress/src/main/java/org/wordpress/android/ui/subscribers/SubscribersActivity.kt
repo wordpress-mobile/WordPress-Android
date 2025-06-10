@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewScreen
+import org.wordpress.android.ui.dataview.DummyDataViewItem
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -21,7 +22,23 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 setContent {
                     DataViewScreen(
                         titleRes = R.string.app_name,
-                        items = listOf("Item 1", "Item 2", "Item 3"),
+                        items = listOf(
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem,
+                            DummyDataViewItem
+                        ),
                         onSearchQueryChange = {},
                         onFilterClick = {}
                     )

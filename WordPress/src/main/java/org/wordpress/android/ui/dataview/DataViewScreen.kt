@@ -4,11 +4,9 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -23,7 +21,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun DataViewScreen(
-    items: List<String>,
+    items: List<DataViewItem>,
     @StringRes titleRes: Int,
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: () -> Unit,
@@ -46,19 +44,12 @@ fun DataViewScreen(
             // List
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(items) { item ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Text(
-                            text = item,
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
+                    DataViewItemCard(
+                        item
+                    )
                 }
             }
         }
@@ -145,7 +136,7 @@ private fun Screen(
                     title = { Text(stringResource(id = titleRes)) },
                     navigationIcon = {
                         IconButton(onClick = onCloseClick) {
-                            Icon(Icons.Filled.Close, stringResource(R.string.close))
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                         }
                     },
                 )
@@ -164,11 +155,26 @@ private fun Screen(
 
 @Preview(showBackground = true)
 @Composable
-fun SearchableListScreenPreview() {
+fun DataViewScreenPreview() {
+    val items = listOf(
+        DummyDataViewItem,
+        DummyDataViewItem,
+        DummyDataViewItem,
+        DummyDataViewItem,
+        DummyDataViewItem,
+        DummyDataViewItem,
+    )
     DataViewScreen(
         titleRes = R.string.app_name,
-        items = listOf("Item 1", "Item 2", "Item 3"),
+        items = items,
         onSearchQueryChange = {},
         onFilterClick = {}
     )
 }
+
+// TODO: remove this when actual data is available
+val DummyDataViewItem = DataViewItem(
+    title = "Title",
+    subtitle = "Subtitle",
+    date = "2023-01-01",
+)
