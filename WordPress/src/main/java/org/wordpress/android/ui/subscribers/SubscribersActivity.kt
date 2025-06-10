@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import org.wordpress.android.R
+import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.dataview.DummyDataViewItem
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -21,7 +22,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     DataViewScreen(
-                        titleRes = R.string.app_name,
+                        titleRes = R.string.subscribers,
                         items = listOf(
                             DummyDataViewItem,
                             DummyDataViewItem,
@@ -39,11 +40,17 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             DummyDataViewItem,
                             DummyDataViewItem
                         ),
+                        onItemClick = {},
                         onSearchQueryChange = {},
-                        onFilterClick = {}
+                        onFilterClick = {},
+                        onBackClick = { finish() }
                     )
                 }
             }
         )
+    }
+
+    private fun onItemClick(item: DataViewItem) {
+        // TODO
     }
 }

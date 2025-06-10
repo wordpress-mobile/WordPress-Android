@@ -35,11 +35,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun DataViewItemCard(
     item: DataViewItem,
+    onItemClick: (DataViewItem) -> Unit,
     fallbackImageRes: Int = R.drawable.ic_user_placeholder_primary_24
 ) = Card(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(8.dp),
+        .clickable { onItemClick(item) },
     shape = RoundedCornerShape(4.dp),
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -53,7 +54,6 @@ fun DataViewItemCard(
         RemoteImage(
             imageUrl = item.imageUrl,
             fallbackImageRes = fallbackImageRes,
-            onClick = {}
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column(
@@ -76,7 +76,7 @@ fun DataViewItemCard(
                 )
             }
         }
-        item.date?.let { date ->
+        item.dateLine?.let { date ->
             Text(
                 text = date,
                 style = MaterialTheme.typography.bodySmall,
@@ -90,18 +90,16 @@ fun DataViewItemCard(
 private fun RemoteImage(
     imageUrl: String?,
     fallbackImageRes: Int,
-    onClick: () -> Unit = {},
 ) {
     val modifier = Modifier
         .padding(end = 16.dp)
         .size(dimensionResource(R.dimen.jp_migration_user_avatar_size))
         .clip(CircleShape)
         .background(MaterialTheme.colorScheme.surface)
-        .clickable { onClick() }
     if (imageUrl.isNullOrBlank()) {
         Image(
             painter = painterResource(id = fallbackImageRes),
-            contentDescription = null, // TODO
+            contentDescription = null,
             modifier = modifier
         )
     } else {
@@ -111,7 +109,7 @@ private fun RemoteImage(
                 .error(fallbackImageRes)
                 .crossfade(true)
                 .build(),
-            contentDescription = null, // TODO
+            contentDescription = null,
             modifier = modifier
         )
     }
@@ -121,7 +119,7 @@ private fun RemoteImage(
 @Composable
 fun ProfileCardPreview() {
     AppThemeM3 {
-        DataViewItemCard(DummyDataViewItem)
-        DataViewItemCard(DummyDataViewItem)
+        DataViewItemCard(DummyDataViewItem, onItemClick = {})
+        DataViewItemCard(DummyDataViewItem, onItemClick = {})
     }
 }

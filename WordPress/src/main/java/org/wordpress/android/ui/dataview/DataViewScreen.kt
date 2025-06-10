@@ -23,12 +23,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun DataViewScreen(
     items: List<DataViewItem>,
     @StringRes titleRes: Int,
+    onItemClick: (DataViewItem) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val searchQuery by remember { mutableStateOf("") }
-
     val content = @Composable {
         Column(
             modifier = modifier
@@ -36,19 +36,18 @@ fun DataViewScreen(
                 .padding(16.dp)
         ) {
             SearchAndFilterBar(
-                searchQuery = searchQuery,
                 onSearchQueryChange = onSearchQueryChange,
                 onFilterClick = onFilterClick
             )
 
-            // List
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(items) { item ->
                     DataViewItemCard(
-                        item
+                        item,
+                        onItemClick
                     )
                 }
             }
@@ -58,16 +57,16 @@ fun DataViewScreen(
     Screen(
         titleRes = titleRes,
         content = content,
-        onCloseClick = {}
+        onBackClick = onBackClick
     )
 }
 
 @Composable
 private fun SearchAndFilterBar(
-    searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: () -> Unit
 ) {
+    var searchQuery by remember { mutableStateOf("") }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,6 +78,7 @@ private fun SearchAndFilterBar(
         OutlinedTextField(
             value = searchQuery,
             onValueChange = {
+                searchQuery = it
                 onSearchQueryChange(it)
             },
             modifier = Modifier
@@ -127,7 +127,7 @@ private fun SearchAndFilterBar(
 private fun Screen(
     @StringRes titleRes: Int,
     content: @Composable () -> Unit,
-    onCloseClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     AppThemeM3 {
         Scaffold(
@@ -135,7 +135,7 @@ private fun Screen(
                 TopAppBar(
                     title = { Text(stringResource(id = titleRes)) },
                     navigationIcon = {
-                        IconButton(onClick = onCloseClick) {
+                        IconButton(onClick = onBackClick) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                         }
                     },
@@ -168,13 +168,16 @@ fun DataViewScreenPreview() {
         titleRes = R.string.app_name,
         items = items,
         onSearchQueryChange = {},
-        onFilterClick = {}
+        onFilterClick = {},
+        onItemClick = {},
+        onBackClick = {}
     )
 }
 
 // TODO: remove this when actual data is available
 val DummyDataViewItem = DataViewItem(
+    id = 1L,
     title = "Title",
     subtitle = "Subtitle",
-    date = "2023-01-01",
+    dateLine = "2023-01-01",
 )
