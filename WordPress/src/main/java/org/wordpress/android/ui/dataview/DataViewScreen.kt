@@ -25,11 +25,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun DataViewScreen(
     items: List<DataViewItem>,
     @StringRes titleRes: Int,
-    onItemClick: (DataViewItem) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: () -> Unit,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
 ) {
     val content = @Composable {
         Column(
@@ -47,10 +47,13 @@ fun DataViewScreen(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(items) { item ->
-                    DataViewItemCard(
-                        item,
-                        onItemClick
-                    )
+                    // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
+                    onRenderItem?.invoke(item) ?: run {
+                        DataViewItemCard(
+                            item = item,
+                            onItemClick = {}
+                        )
+                    }
                 }
             }
         }
@@ -173,9 +176,14 @@ fun DataViewScreenPreview() {
     DataViewScreen(
         titleRes = R.string.app_name,
         items = items,
+        onRenderItem = { item ->
+            DataViewItemCard(
+                item = item,
+                onItemClick = {}
+            )
+        },
         onSearchQueryChange = {},
         onFilterClick = {},
-        onItemClick = {},
         onBackClick = {}
     )
 }

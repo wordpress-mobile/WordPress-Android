@@ -32,6 +32,11 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+/**
+ * Provides a basic card for displaying a [DataViewItem]. More complex use cases may require extending
+ * from [DataViewItem] and adding a custom renderer for it. This is the purpose of [onRenderItem] in
+ * [DataViewScreen].
+ */
 @Composable
 fun DataViewItemCard(
     item: DataViewItem,

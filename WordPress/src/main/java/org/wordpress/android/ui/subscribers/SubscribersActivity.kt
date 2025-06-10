@@ -40,7 +40,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             DummyDataViewItem,
                             DummyDataViewItem
                         ),
-                        onItemClick = {},
                         onSearchQueryChange = {},
                         onFilterClick = {},
                         onBackClick = { finish() }
