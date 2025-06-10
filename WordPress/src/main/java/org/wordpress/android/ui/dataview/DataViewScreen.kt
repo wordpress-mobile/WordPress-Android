@@ -143,22 +143,21 @@ private fun SearchAndFilterBar(
                 contentDescription = stringResource(R.string.filter),
                 tint = MaterialTheme.colorScheme.primary
             )
-        }
-
-        DropdownMenu(
-            expanded = filtersExpanded,
-            onDismissRequest = {
-                filtersExpanded = false
-            }
-        ) {
-            filters.forEach { filter ->
-                DropdownMenuItem(
-                    text = { Text(filter.title) },
-                    onClick = {
-                        onFilterClick(filter)
-                        filtersExpanded = false
-                    }
-                )
+            DropdownMenu(
+                expanded = filtersExpanded,
+                onDismissRequest = {
+                    filtersExpanded = false
+                }
+            ) {
+                filters.forEach { filter ->
+                    DropdownMenuItem(
+                        text = { Text(filter.title) },
+                        onClick = {
+                            onFilterClick(filter)
+                            filtersExpanded = false
+                        }
+                    )
+                }
             }
         }
     }
