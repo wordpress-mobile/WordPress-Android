@@ -21,12 +21,20 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+/**
+ * Provides a basic screen for displaying a list of [DataViewItem]s
+ * which includes search and filter functionality. More complex use
+ * cases may require extending DataViewItem and passing a custom renderer
+ * via [onRenderItem]
+ */
 @Composable
 fun DataViewScreen(
-    items: List<DataViewItem>,
     @StringRes titleRes: Int,
+    items: List<DataViewItem>,
+    filters: List<DataViewFilterItem>,
     onSearchQueryChange: (String) -> Unit,
-    onFilterClick: () -> Unit,
+    onItemClick: (DataViewItem) -> Unit,
+    onFilterClick: (DataViewFilterItem) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
@@ -39,7 +47,8 @@ fun DataViewScreen(
         ) {
             SearchAndFilterBar(
                 onSearchQueryChange = onSearchQueryChange,
-                onFilterClick = onFilterClick
+                onFilterClick = onFilterClick,
+                filters = filters
             )
 
             LazyColumn(
@@ -51,7 +60,9 @@ fun DataViewScreen(
                     onRenderItem?.invoke(item) ?: run {
                         DataViewItemCard(
                             item = item,
-                            onItemClick = {}
+                            onItemClick = {
+                                onItemClick(item)
+                            }
                         )
                     }
                 }
@@ -69,9 +80,12 @@ fun DataViewScreen(
 @Composable
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
-    onFilterClick: () -> Unit
+    onFilterClick: (DataViewFilterItem) -> Unit,
+    filters: List<DataViewFilterItem>
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var filtersExpanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,11 +103,11 @@ private fun SearchAndFilterBar(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            placeholder = { Text("Search...") },
+            placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = stringResource(R.string.search)
                 )
             },
             trailingIcon = {
@@ -117,7 +131,9 @@ private fun SearchAndFilterBar(
 
         // Filter Button
         IconButton(
-            onClick = onFilterClick,
+            onClick = {
+                filtersExpanded = !filtersExpanded
+            },
             modifier = Modifier
                 .size(48.dp)
                 .padding(4.dp)
@@ -127,6 +143,23 @@ private fun SearchAndFilterBar(
                 contentDescription = stringResource(R.string.filter),
                 tint = MaterialTheme.colorScheme.primary
             )
+        }
+
+        DropdownMenu(
+            expanded = filtersExpanded,
+            onDismissRequest = {
+                filtersExpanded = false
+            }
+        ) {
+            filters.forEach { filter ->
+                DropdownMenuItem(
+                    text = { Text(filter.title) },
+                    onClick = {
+                        onFilterClick(filter)
+                        filtersExpanded = false
+                    }
+                )
+            }
         }
     }
 }
@@ -183,8 +216,10 @@ fun DataViewScreenPreview() {
             )
         },
         onSearchQueryChange = {},
+        onItemClick = {},
         onFilterClick = {},
-        onBackClick = {}
+        onBackClick = {},
+        filters = emptyList()
     )
 }
 

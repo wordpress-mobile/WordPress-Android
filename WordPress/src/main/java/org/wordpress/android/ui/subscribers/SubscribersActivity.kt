@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import org.wordpress.android.R
+import org.wordpress.android.ui.dataview.DataViewFilterItem
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.dataview.DummyDataViewItem
@@ -40,8 +41,23 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             DummyDataViewItem,
                             DummyDataViewItem
                         ),
+                        filters = listOf(
+                            DataViewFilterItem(
+                                id = ID_FILTER_EMAIL,
+                                title = getString(R.string.subscribers_filter_email_subscription)
+                            ),
+                            DataViewFilterItem(
+                                id = ID_FILER__TYPE,
+                                title = getString(R.string.subscribers_filter_subscription_type)
+                            )
+                        ),
                         onSearchQueryChange = {},
-                        onFilterClick = {},
+                        onItemClick = { item ->
+                            onItemClick(item)
+                        },
+                        onFilterClick = { filter ->
+                            onFilterClick(filter)
+                        },
                         onBackClick = { finish() }
                     )
                 }
@@ -51,5 +67,14 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
     private fun onItemClick(item: DataViewItem) {
         // TODO
+    }
+
+    private fun onFilterClick(filter: DataViewFilterItem) {
+        // TODO
+    }
+
+    companion object {
+        private const val ID_FILTER_EMAIL = 1L
+        private const val ID_FILER__TYPE = 2L
     }
 }

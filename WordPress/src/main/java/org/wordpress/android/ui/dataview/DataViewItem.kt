@@ -10,3 +10,11 @@ data class DataViewItem(
     val dateLine: String? = null,
     val imageUrl: String? = null,
 )
+
+/**
+ * Represents a single filter for displaying in a [DataViewItemCard].
+ */
+data class DataViewFilterItem(
+    val id: Long,
+    val title: String,
+)
