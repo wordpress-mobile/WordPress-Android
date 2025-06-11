@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -197,17 +198,9 @@ private fun Screen(
 @Preview(showBackground = true)
 @Composable
 fun DataViewScreenPreview() {
-    val items = listOf(
-        DummyDataViewItem,
-        DummyDataViewItem,
-        DummyDataViewItem,
-        DummyDataViewItem,
-        DummyDataViewItem,
-        DummyDataViewItem,
-    )
     DataViewScreen(
         titleRes = R.string.app_name,
-        items = items,
+        items = getDummyData(),
         onRenderItem = { item ->
             DataViewItemCard(
                 item = item,
@@ -221,11 +214,3 @@ fun DataViewScreenPreview() {
         filters = emptyList()
     )
 }
-
-// TODO: remove this when actual data is available
-val DummyDataViewItem = DataViewItem(
-    id = 1L,
-    title = "Title",
-    subtitle = "Subtitle",
-    dateLine = "2023-01-01",
-)

@@ -8,7 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewFilterItem
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewScreen
-import org.wordpress.android.ui.dataview.DummyDataViewItem
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -24,23 +24,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 setContent {
                     DataViewScreen(
                         titleRes = R.string.subscribers,
-                        items = listOf(
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem,
-                            DummyDataViewItem
-                        ),
+                        items = getDummyData(),
                         filters = listOf(
                             DataViewFilterItem(
                                 id = ID_FILTER_EMAIL,

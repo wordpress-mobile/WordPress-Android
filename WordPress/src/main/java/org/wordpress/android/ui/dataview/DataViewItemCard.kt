@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 
 /**
  * Provides a basic card for displaying a [DataViewItem]. More complex use cases may require extending
@@ -124,7 +125,8 @@ private fun RemoteImage(
 @Composable
 fun ProfileCardPreview() {
     AppThemeM3 {
-        DataViewItemCard(DummyDataViewItem, onItemClick = {})
-        DataViewItemCard(DummyDataViewItem, onItemClick = {})
+        getDummyData().forEach { item ->
+            DataViewItemCard(item, onItemClick = {})
+        }
     }
 }
