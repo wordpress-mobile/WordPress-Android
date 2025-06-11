@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
@@ -28,7 +29,7 @@ class SubscribersViewModel @Inject constructor(
     val uiState: StateFlow<DataViewUiState> = _uiState
 
     private val _subscribers = MutableStateFlow<List<DataViewItem>>(emptyList())
-    val subscribers: StateFlow<List<DataViewItem>> = _subscribers
+    val subscribers = _subscribers.asStateFlow()
 
     fun getFilters(context: Context) =
         listOf(

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.subscribers
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
@@ -10,7 +11,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.dataview.DataViewScreen
-import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -43,8 +43,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     DataViewScreen(
-                        titleRes = R.string.subscribers,
-                        items = getDummyData(),
+                        title = getString(R.string.subscribers),
+                        items = viewModel.subscribers.collectAsState(),
                         filters = viewModel.getFilters(this@SubscribersActivity),
                         onSearchQueryChange = { query ->
                             viewModel.onSearchQueryChange(query)

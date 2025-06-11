@@ -1,26 +1,43 @@
 package org.wordpress.android.ui.dataview
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -30,8 +47,8 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
  */
 @Composable
 fun DataViewScreen(
-    @StringRes titleRes: Int,
-    items: List<DataViewItem>,
+    title: String,
+    items: State<List<DataViewItem>>,
     filters: List<DataViewFilterItem>,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
@@ -56,7 +73,7 @@ fun DataViewScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(items) { item ->
+                items(items.value) { item ->
                     // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
                     onRenderItem?.invoke(item) ?: run {
                         DataViewItemCard(
@@ -72,7 +89,7 @@ fun DataViewScreen(
     }
 
     Screen(
-        titleRes = titleRes,
+        title = title,
         content = content,
         onBackClick = onBackClick
     )
@@ -167,7 +184,7 @@ private fun SearchAndFilterBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Screen(
-    @StringRes titleRes: Int,
+    title: String,
     content: @Composable () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -175,7 +192,7 @@ private fun Screen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(id = titleRes)) },
+                    title = { Text(title) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
@@ -193,24 +210,4 @@ private fun Screen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DataViewScreenPreview() {
-    DataViewScreen(
-        titleRes = R.string.app_name,
-        items = getDummyData(),
-        onRenderItem = { item ->
-            DataViewItemCard(
-                item = item,
-                onItemClick = {}
-            )
-        },
-        onSearchQueryChange = {},
-        onItemClick = {},
-        onFilterClick = {},
-        onBackClick = {},
-        filters = emptyList()
-    )
 }
