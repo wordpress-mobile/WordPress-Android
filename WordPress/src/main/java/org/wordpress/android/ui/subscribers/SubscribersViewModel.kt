@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewFilterItem
 import org.wordpress.android.ui.dataview.DataViewItem
+import org.wordpress.android.ui.dataview.DataViewUiState
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -48,13 +49,6 @@ class SubscribersViewModel @Inject constructor(
         launch {
             fetchData()
         }
-    }
-
-    enum class DataViewUiState {
-        LOADING,
-        LOADED,
-        EMPTY,
-        OFFLINE
     }
 
     private suspend fun fetchData() {

@@ -37,6 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.EmptyContentM3
+import org.wordpress.android.ui.compose.components.ProgressDialog
+import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 /**
@@ -48,6 +51,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun DataViewScreen(
     title: String,
+    uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
     filters: List<DataViewFilterItem>,
     onSearchQueryChange: (String) -> Unit,
@@ -69,21 +73,27 @@ fun DataViewScreen(
                 filters = filters
             )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                items(items.value) { item ->
-                    // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
-                    onRenderItem?.invoke(item) ?: run {
-                        DataViewItemCard(
-                            item = item,
-                            onItemClick = {
-                                onItemClick(item)
+            when (uiState.value) {
+                DataViewUiState.LOADING -> ProgressDialog(ProgressDialogState())
+                DataViewUiState.EMPTY -> EmptyDataView()
+                DataViewUiState.OFFLINE -> OfflineDataView()
+                DataViewUiState.LOADED ->
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(items.value) { item ->
+                            // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
+                            onRenderItem?.invoke(item) ?: run {
+                                DataViewItemCard(
+                                    item = item,
+                                    onItemClick = {
+                                        onItemClick(item)
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
-                }
             }
         }
     }
@@ -179,6 +189,24 @@ private fun SearchAndFilterBar(
             }
         }
     }
+}
+
+@Composable
+private fun EmptyDataView() {
+    EmptyContentM3(
+        title = stringResource(R.string.empty_list_default),
+        image = R.drawable.img_illustration_empty_results_216dp,
+        imageContentDescription = stringResource(R.string.empty_list_default)
+    )
+}
+
+@Composable
+private fun OfflineDataView() {
+    EmptyContentM3(
+        title = stringResource(R.string.no_network_title),
+        image = R.drawable.img_illustration_cloud_off_152dp,
+        imageContentDescription = stringResource(R.string.no_network_message)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

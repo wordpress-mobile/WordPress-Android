@@ -44,6 +44,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 setContent {
                     DataViewScreen(
                         title = getString(R.string.subscribers),
+                        uiState = viewModel.uiState.collectAsState(),
                         items = viewModel.subscribers.collectAsState(),
                         filters = viewModel.getFilters(this@SubscribersActivity),
                         onSearchQueryChange = { query ->
