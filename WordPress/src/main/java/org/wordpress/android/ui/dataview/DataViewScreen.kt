@@ -59,7 +59,7 @@ fun DataViewScreen(
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
     supportedFilters: List<DataViewItemFilter>,
-    currentFilter: DataViewItemFilter? = null,
+    currentFilter: DataViewItemFilter?,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
@@ -171,7 +171,7 @@ private fun SearchAndFilterBar(
             ) {
                 supportedFilters.forEach { filter ->
                     DropdownMenuItem(
-                        text = { Text(filter.title) },
+                        text = { Text(stringResource(filter.titleRes)) },
                         trailingIcon = {
                             if (filter == currentFilter) {
                                 Icon(
@@ -305,6 +305,7 @@ private fun LoadedPreview() {
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
         items = remember { mutableStateOf(getDummyDataViewItems()) },
         supportedFilters = emptyList(),
+        currentFilter = null,
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -321,6 +322,7 @@ private fun LoadingPreview() {
         uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
+        currentFilter = null,
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -337,6 +339,7 @@ private fun EmptyPreview() {
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
+        currentFilter = null,
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -353,6 +356,7 @@ private fun EmptySearchPreview() {
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
+        currentFilter = null,
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -369,6 +373,7 @@ private fun OfflinePreview() {
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
+        currentFilter = null,
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
