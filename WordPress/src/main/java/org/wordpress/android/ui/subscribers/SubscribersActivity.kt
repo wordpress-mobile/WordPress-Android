@@ -5,19 +5,18 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.dataview.DataViewFilterItem
-import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersViewModel
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
+@AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
     private var site: SiteModel? = null
@@ -46,22 +45,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     DataViewScreen(
                         titleRes = R.string.subscribers,
                         items = getDummyData(),
-                        filters = listOf(
-                            DataViewFilterItem(
-                                id = ID_FILTER_EMAIL,
-                                title = getString(R.string.subscribers_filter_email_subscription)
-                            ),
-                            DataViewFilterItem(
-                                id = ID_FILER__TYPE,
-                                title = getString(R.string.subscribers_filter_subscription_type)
-                            )
-                        ),
-                        onSearchQueryChange = {},
+                        filters = viewModel.getFilters(this@SubscribersActivity),
+                        onSearchQueryChange = { query ->
+                            viewModel.onSearchQueryChange(query)
+                        },
                         onItemClick = { item ->
-                            onItemClick(item)
+                            viewModel.onItemClick(item)
                         },
                         onFilterClick = { filter ->
-                            onFilterClick(filter)
+                            viewModel.onFilterClick(filter)
                         },
                         onBackClick = { finish() }
                     )
@@ -70,16 +62,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
         )
     }
 
-    private fun onItemClick(item: DataViewItem) {
-        // TODO
-    }
-
-    private fun onFilterClick(filter: DataViewFilterItem) {
-        // TODO
-    }
-
-    companion object {
-        private const val ID_FILTER_EMAIL = 1L
-        private const val ID_FILER__TYPE = 2L
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(WordPress.SITE, site)
     }
 }
