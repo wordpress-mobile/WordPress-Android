@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewItem
+import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewUiState
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.util.AppLog
@@ -80,9 +80,9 @@ class SubscribersViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
     }
 
-    @Suppress("unused")
+    // TODO don't write the query string to the log
     fun onSearchQueryChange(query: String) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed")
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed: $query")
     }
 
     companion object {
