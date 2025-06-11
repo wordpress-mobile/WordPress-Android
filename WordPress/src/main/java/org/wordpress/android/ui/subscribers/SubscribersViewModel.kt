@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.subscribers
 
-import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -34,18 +33,20 @@ class SubscribersViewModel @Inject constructor(
     private val _subscribers = MutableStateFlow<List<DataViewItem>>(emptyList())
     val subscribers = _subscribers.asStateFlow()
 
-    private var searchQuery: String = ""
-    private var itemFilter: DataViewItemFilter? = null
+    private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
+    val itemFilter = _itemFilter.asStateFlow()
 
-    fun getFilters(context: Context) =
+    private var searchQuery: String = ""
+
+    fun getSupportedFilters() =
         listOf(
             DataViewItemFilter(
                 id = ID_FILTER_EMAIL,
-                title = context.getString(R.string.subscribers_filter_email_subscription)
+                titleRes = R.string.subscribers_filter_email_subscription
             ),
             DataViewItemFilter(
                 id = ID_FILTER__TYPE,
-                title = context.getString(R.string.subscribers_filter_subscription_type)
+                titleRes = R.string.subscribers_filter_subscription_type
             )
         )
 
@@ -93,7 +94,7 @@ class SubscribersViewModel @Inject constructor(
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
         launch {
-            itemFilter = filter
+            _itemFilter.value = filter
             fetchData()
         }
     }
