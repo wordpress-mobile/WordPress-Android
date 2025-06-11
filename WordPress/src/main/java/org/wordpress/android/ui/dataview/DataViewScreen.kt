@@ -57,10 +57,10 @@ fun DataViewScreen(
     title: String,
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
-    filters: List<DataViewFilterItem>,
+    filters: List<DataViewItemFilter>,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
-    onFilterClick: (DataViewFilterItem) -> Unit,
+    onFilterClick: (DataViewItemFilter) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
@@ -95,8 +95,8 @@ fun DataViewScreen(
 @Composable
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
-    onFilterClick: (DataViewFilterItem) -> Unit,
-    filters: List<DataViewFilterItem>
+    onFilterClick: (DataViewItemFilter) -> Unit,
+    filters: List<DataViewItemFilter>
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var filtersExpanded by remember { mutableStateOf(false) }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.dataview
 
 object DummyDataViewItems {
+    @Suppress("MagicNumber")
     fun getDummyDataViewItems(): List<DataViewItem> {
         val items = ArrayList<DataViewItem>()
         fun addWithId(id: Long) {

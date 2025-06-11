@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.dataview.DataViewFilterItem
+import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewUiState
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
@@ -34,12 +34,12 @@ class SubscribersViewModel @Inject constructor(
 
     fun getFilters(context: Context) =
         listOf(
-            DataViewFilterItem(
+            DataViewItemFilter(
                 id = ID_FILTER_EMAIL,
                 title = context.getString(R.string.subscribers_filter_email_subscription)
             ),
-            DataViewFilterItem(
-                id = ID_FILER__TYPE,
+            DataViewItemFilter(
+                id = ID_FILTER__TYPE,
                 title = context.getString(R.string.subscribers_filter_subscription_type)
             )
         )
@@ -51,6 +51,7 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private suspend fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
@@ -75,17 +76,18 @@ class SubscribersViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$TAG item clicked: $item")
     }
 
-    fun onFilterClick(filter: DataViewFilterItem) {
+    fun onFilterClick(filter: DataViewItemFilter) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
     }
 
+    @Suppress("unused")
     fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed")
     }
 
     companion object {
         private const val ID_FILTER_EMAIL = 1L
-        private const val ID_FILER__TYPE = 2L
+        private const val ID_FILTER__TYPE = 2L
         private const val TAG = "SubscribersViewModel"
     }
 }
