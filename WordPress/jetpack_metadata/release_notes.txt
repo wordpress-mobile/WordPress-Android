@@ -1,4 +1,2 @@
-We made some fixes to the experimental editor.
-- You can select, move through, and edit group blocks—and they’re easier to use, too.
-- Your content won’t reset when you change your device’s orientation.
-- We fixed a pesky bug that sometimes made the editor crash when saving changes.
+* Fixed an issue where the me icon had the wrong tint color in dark mode
+* Adds a warning for the user if the QR code scan is too long
