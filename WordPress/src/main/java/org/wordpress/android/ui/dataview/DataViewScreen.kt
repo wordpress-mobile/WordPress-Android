@@ -100,7 +100,7 @@ private fun SearchAndFilterBar(
     filters: List<DataViewItemFilter>
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var filtersExpanded by remember { mutableStateOf(false) }
+    var filterMenuExpanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -148,7 +148,7 @@ private fun SearchAndFilterBar(
         // Filter Button
         IconButton(
             onClick = {
-                filtersExpanded = !filtersExpanded
+                filterMenuExpanded = !filterMenuExpanded
             },
             modifier = Modifier
                 .size(48.dp)
@@ -160,9 +160,9 @@ private fun SearchAndFilterBar(
                 tint = MaterialTheme.colorScheme.primary
             )
             DropdownMenu(
-                expanded = filtersExpanded,
+                expanded = filterMenuExpanded,
                 onDismissRequest = {
-                    filtersExpanded = false
+                    filterMenuExpanded = false
                 }
             ) {
                 filters.forEach { filter ->
@@ -170,7 +170,7 @@ private fun SearchAndFilterBar(
                         text = { Text(filter.title) },
                         onClick = {
                             onFilterClick(filter)
-                            filtersExpanded = false
+                            filterMenuExpanded = false
                         }
                     )
                 }

@@ -3,10 +3,12 @@ package org.wordpress.android.ui.subscribers
 import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
@@ -32,6 +34,9 @@ class SubscribersViewModel @Inject constructor(
     private val _subscribers = MutableStateFlow<List<DataViewItem>>(emptyList())
     val subscribers = _subscribers.asStateFlow()
 
+    private var searchQuery: String = ""
+    private var itemFilter: DataViewItemFilter? = null
+
     fun getFilters(context: Context) =
         listOf(
             DataViewItemFilter(
@@ -55,39 +60,64 @@ class SubscribersViewModel @Inject constructor(
     private suspend fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
-            _uiState.value = DataViewUiState.LOADING
+            updateUiState(DataViewUiState.LOADING)
             delay(1000L)
             val items = getDummyDataViewItems()
             _subscribers.value = items
             if (items.isEmpty()) {
-                appLogWrapper.d(AppLog.T.MAIN, "$TAG empty")
-                _uiState.value = DataViewUiState.EMPTY
+                if (searchQuery.isNotEmpty()) {
+                    appLogWrapper.d(AppLog.T.MAIN, "$TAG empty search")
+                    updateUiState(DataViewUiState.EMPTY_SEARCH)
+                } else {
+                    appLogWrapper.d(AppLog.T.MAIN, "$TAG empty subscribers")
+                    updateUiState(DataViewUiState.EMPTY)
+                }
             } else {
                 appLogWrapper.d(AppLog.T.MAIN, "$TAG loaded")
-                _uiState.value = DataViewUiState.LOADED
+                updateUiState(DataViewUiState.LOADED)
             }
         } else {
             appLogWrapper.d(AppLog.T.MAIN, "$TAG offline")
-            _uiState.value = DataViewUiState.OFFLINE
+            updateUiState(DataViewUiState.OFFLINE)
         }
+    }
+
+    private fun updateUiState(state: DataViewUiState) {
+        _uiState.value = state
     }
 
     fun onItemClick(item: DataViewItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG item clicked: $item")
     }
 
-    fun onFilterClick(filter: DataViewItemFilter) {
+    fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
+        launch {
+            itemFilter = filter
+            fetchData()
+        }
     }
 
-    // TODO don't write the query string to the log
+    @OptIn(FlowPreview::class)
     fun onSearchQueryChange(query: String) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed: $query")
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed")
+        val searchFlow = MutableStateFlow(query)
+        launch {
+            searchFlow
+                .debounce(SEARCH_DELAY_MS)
+                .collect {
+                    searchQuery = it
+                    appLogWrapper.d(AppLog.T.MAIN, "$TAG searching")
+                    delay(SEARCH_DELAY_MS)
+                    fetchData()
+                }
+        }
     }
 
-    companion object {
-        private const val ID_FILTER_EMAIL = 1L
-        private const val ID_FILTER__TYPE = 2L
-        private const val TAG = "SubscribersViewModel"
-    }
+companion object {
+    private const val ID_FILTER_EMAIL = 1L
+    private const val ID_FILTER__TYPE = 2L
+    private const val SEARCH_DELAY_MS = 500L
+    private const val TAG = "SubscribersViewModel"
+}
 }
