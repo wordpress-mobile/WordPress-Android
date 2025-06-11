@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
@@ -57,7 +58,8 @@ fun DataViewScreen(
     title: String,
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
-    filters: List<DataViewItemFilter>,
+    supportedFilters: List<DataViewItemFilter>,
+    currentFilter: DataViewItemFilter? = null,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
@@ -77,7 +79,8 @@ fun DataViewScreen(
                 SearchAndFilterBar(
                     onSearchQueryChange = onSearchQueryChange,
                     onFilterClick = onFilterClick,
-                    filters = filters
+                    supportedFilters = supportedFilters,
+                    currentFilter = currentFilter
                 )
 
                 when (uiState.value) {
@@ -97,7 +100,8 @@ fun DataViewScreen(
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
-    filters: List<DataViewItemFilter>
+    currentFilter: DataViewItemFilter? = null,
+    supportedFilters: List<DataViewItemFilter>
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var filterMenuExpanded by remember { mutableStateOf(false) }
@@ -165,9 +169,17 @@ private fun SearchAndFilterBar(
                     filterMenuExpanded = false
                 }
             ) {
-                filters.forEach { filter ->
+                supportedFilters.forEach { filter ->
                     DropdownMenuItem(
                         text = { Text(filter.title) },
+                        trailingIcon = {
+                            if (filter == currentFilter) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        },
                         onClick = {
                             onFilterClick(filter)
                             filterMenuExpanded = false
@@ -292,7 +304,7 @@ private fun LoadedPreview() {
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
         items = remember { mutableStateOf(getDummyDataViewItems()) },
-        filters = emptyList(),
+        supportedFilters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -308,7 +320,7 @@ private fun LoadingPreview() {
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
         items = remember { mutableStateOf(emptyList()) },
-        filters = emptyList(),
+        supportedFilters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -324,7 +336,7 @@ private fun EmptyPreview() {
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
         items = remember { mutableStateOf(emptyList()) },
-        filters = emptyList(),
+        supportedFilters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -340,7 +352,7 @@ private fun EmptySearchPreview() {
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
-        filters = emptyList(),
+        supportedFilters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -356,7 +368,7 @@ private fun OfflinePreview() {
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
         items = remember { mutableStateOf(emptyList()) },
-        filters = emptyList(),
+        supportedFilters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },

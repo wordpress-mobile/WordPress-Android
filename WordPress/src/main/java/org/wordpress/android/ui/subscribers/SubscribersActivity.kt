@@ -46,7 +46,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         title = getString(R.string.subscribers),
                         uiState = viewModel.uiState.collectAsState(),
                         items = viewModel.subscribers.collectAsState(),
-                        filters = viewModel.getFilters(this@SubscribersActivity),
+                        supportedFilters = viewModel.getFilters(this@SubscribersActivity),
+                        currentFilter = viewModel.itemFilter.collectAsState().value,
                         onSearchQueryChange = { query ->
                             viewModel.onSearchQueryChange(query)
                         },
