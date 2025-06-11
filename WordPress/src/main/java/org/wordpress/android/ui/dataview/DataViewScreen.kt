@@ -44,13 +44,13 @@ import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
  * which includes search and filter functionality. More complex use
- * cases may require extending DataViewItem and passing a custom renderer
- * via [onRenderItem]
+ * cases may require extending DataViewItem and passing a custom
+ * renderer via [onRenderItem].
  */
 @Composable
 fun DataViewScreen(
@@ -65,47 +65,30 @@ fun DataViewScreen(
     modifier: Modifier = Modifier,
     onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
 ) {
-    val content = @Composable {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            SearchAndFilterBar(
-                onSearchQueryChange = onSearchQueryChange,
-                onFilterClick = onFilterClick,
-                filters = filters
-            )
-
-            when (uiState.value) {
-                DataViewUiState.LOADING -> LoadingDataView()
-                DataViewUiState.EMPTY -> EmptyDataView()
-                DataViewUiState.OFFLINE -> OfflineDataView()
-                DataViewUiState.LOADED ->
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        items(items.value) { item ->
-                            // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
-                            onRenderItem?.invoke(item) ?: run {
-                                DataViewItemCard(
-                                    item = item,
-                                    onItemClick = {
-                                        onItemClick(item)
-                                    }
-                                )
-                            }
-                        }
-                    }
-            }
-        }
-    }
-
     Screen(
         title = title,
-        content = content,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        content = {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                SearchAndFilterBar(
+                    onSearchQueryChange = onSearchQueryChange,
+                    onFilterClick = onFilterClick,
+                    filters = filters
+                )
+
+                when (uiState.value) {
+                    DataViewUiState.LOADING -> LoadingDataView()
+                    DataViewUiState.EMPTY -> EmptyDataView()
+                    DataViewUiState.OFFLINE -> OfflineDataView()
+                    DataViewUiState.LOADED -> LoadedDataView(items, onItemClick, onRenderItem)
+                }
+            }
+        }
+
     )
 }
 
@@ -196,6 +179,30 @@ private fun SearchAndFilterBar(
 }
 
 @Composable
+private fun LoadedDataView(
+    items: State<List<DataViewItem>>,
+    onItemClick: (DataViewItem) -> Unit,
+    onRenderItem: @Composable ((DataViewItem) -> Unit)?
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        items(items.value) { item ->
+            // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
+            onRenderItem?.invoke(item) ?: run {
+                DataViewItemCard(
+                    item = item,
+                    onItemClick = {
+                        onItemClick(item)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun LoadingDataView() {
     ProgressDialog(ProgressDialogState())
 }
@@ -208,7 +215,7 @@ private fun EmptyDataView() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmptyContentM3(
-            title = stringResource(R.string.empty_list_default),
+            title = stringResource(R.string.reader_empty_search_title),
             image = R.drawable.img_illustration_empty_results_216dp,
             imageContentDescription = stringResource(R.string.empty_list_default),
         )
@@ -268,7 +275,7 @@ private fun LoadedPreview() {
     DataViewScreen(
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
-        items = remember { mutableStateOf(getDummyData()) },
+        items = remember { mutableStateOf(getDummyDataViewItems()) },
         filters = emptyList(),
         onSearchQueryChange = { },
         onItemClick = {},

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.dataview
 
 object DummyDataViewItems {
-    fun getDummyData(): List<DataViewItem> {
+    fun getDummyDataViewItems(): List<DataViewItem> {
         val items = ArrayList<DataViewItem>()
         fun addWithId(id: Long) {
             items.add(

@@ -13,7 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewFilterItem
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewUiState
-import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -56,7 +56,7 @@ class SubscribersViewModel @Inject constructor(
             appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
             _uiState.value = DataViewUiState.LOADING
             delay(1000L)
-            val items = getDummyData()
+            val items = getDummyDataViewItems()
             _subscribers.value = items
             if (items.isEmpty()) {
                 appLogWrapper.d(AppLog.T.MAIN, "$TAG empty")
