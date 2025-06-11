@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.dataview
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -35,12 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyData
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -74,7 +78,7 @@ fun DataViewScreen(
             )
 
             when (uiState.value) {
-                DataViewUiState.LOADING -> ProgressDialog(ProgressDialogState())
+                DataViewUiState.LOADING -> LoadingDataView()
                 DataViewUiState.EMPTY -> EmptyDataView()
                 DataViewUiState.OFFLINE -> OfflineDataView()
                 DataViewUiState.LOADED ->
@@ -192,21 +196,38 @@ private fun SearchAndFilterBar(
 }
 
 @Composable
+private fun LoadingDataView() {
+    ProgressDialog(ProgressDialogState())
+}
+
+@Composable
 private fun EmptyDataView() {
-    EmptyContentM3(
-        title = stringResource(R.string.empty_list_default),
-        image = R.drawable.img_illustration_empty_results_216dp,
-        imageContentDescription = stringResource(R.string.empty_list_default)
-    )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EmptyContentM3(
+            title = stringResource(R.string.empty_list_default),
+            image = R.drawable.img_illustration_empty_results_216dp,
+            imageContentDescription = stringResource(R.string.empty_list_default),
+        )
+    }
 }
 
 @Composable
 private fun OfflineDataView() {
-    EmptyContentM3(
-        title = stringResource(R.string.no_network_title),
-        image = R.drawable.img_illustration_cloud_off_152dp,
-        imageContentDescription = stringResource(R.string.no_network_message)
-    )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EmptyContentM3(
+            title = stringResource(R.string.no_network_title),
+            image = R.drawable.img_illustration_cloud_off_152dp,
+            imageContentDescription = stringResource(R.string.no_network_message)
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -238,4 +259,68 @@ private fun Screen(
             }
         }
     }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun LoadedPreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
+        items = remember { mutableStateOf(getDummyData()) },
+        filters = emptyList(),
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun LoadingPreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
+        items = remember { mutableStateOf(emptyList()) },
+        filters = emptyList(),
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun EmptyPreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
+        items = remember { mutableStateOf(emptyList()) },
+        filters = emptyList(),
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun OfflinePreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
+        items = remember { mutableStateOf(emptyList()) },
+        filters = emptyList(),
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
 }
