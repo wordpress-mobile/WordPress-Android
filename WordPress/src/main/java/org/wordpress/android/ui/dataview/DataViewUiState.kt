@@ -4,5 +4,6 @@ enum class DataViewUiState {
     LOADING,
     LOADED,
     EMPTY,
+    EMPTY_SEARCH,
     OFFLINE
 }

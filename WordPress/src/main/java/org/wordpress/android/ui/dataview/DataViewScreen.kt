@@ -83,6 +83,7 @@ fun DataViewScreen(
                 when (uiState.value) {
                     DataViewUiState.LOADING -> LoadingDataView()
                     DataViewUiState.EMPTY -> EmptyDataView()
+                    DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
                     DataViewUiState.OFFLINE -> OfflineDataView()
                     DataViewUiState.LOADED -> LoadedDataView(items, onItemClick, onRenderItem)
                 }
@@ -215,9 +216,24 @@ private fun EmptyDataView() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmptyContentM3(
-            title = stringResource(R.string.reader_empty_search_title),
+            title = stringResource(R.string.subscribers_empty),
+            image = R.drawable.img_jetpack_empty_state,
+            imageContentDescription = stringResource(R.string.subscribers_empty),
+        )
+    }
+}
+
+@Composable
+private fun EmptySearchDataView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EmptyContentM3(
+            title = stringResource(R.string.subscribers_empty_search),
             image = R.drawable.img_illustration_empty_results_216dp,
-            imageContentDescription = stringResource(R.string.empty_list_default),
+            imageContentDescription = stringResource(R.string.subscribers_empty_search),
         )
     }
 }
@@ -232,7 +248,7 @@ private fun OfflineDataView() {
         EmptyContentM3(
             title = stringResource(R.string.no_network_title),
             image = R.drawable.img_illustration_cloud_off_152dp,
-            imageContentDescription = stringResource(R.string.no_network_message)
+            imageContentDescription = stringResource(R.string.no_network_title)
         )
     }
 }
@@ -307,6 +323,22 @@ private fun EmptyPreview() {
     DataViewScreen(
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
+        items = remember { mutableStateOf(emptyList()) },
+        filters = emptyList(),
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun EmptySearchPreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
         filters = emptyList(),
         onSearchQueryChange = { },
