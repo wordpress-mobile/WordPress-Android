@@ -1,2 +1,2 @@
-* Fixed an issue where the me icon had the wrong tint color in dark mode
-* Adds a warning for the user if the QR code scan is too long
+- The “me” icon is now the correct color when you’re in dark mode.
+- We’ve added a warning that tells you if your QR code scan was unsuccessful. No waiting, no guesswork, no problem.
