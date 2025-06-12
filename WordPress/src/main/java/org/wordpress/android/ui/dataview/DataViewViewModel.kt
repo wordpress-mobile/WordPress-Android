@@ -36,6 +36,7 @@ open class DataViewViewModel @Inject constructor(
     val itemFilter = _itemFilter.asStateFlow()
 
     private var searchQuery: String = ""
+    private var offset = 0
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
@@ -50,8 +51,10 @@ open class DataViewViewModel @Inject constructor(
             appLogWrapper.d(AppLog.T.MAIN, "$logTag fetching")
             updateUiState(DataViewUiState.LOADING)
             launch {
+                // simulate network delay
                 delay(1000L)
                 val items = performNetworkRequest(
+                    offset = offset,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
@@ -75,12 +78,21 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    fun refreshData() {
+    fun onRefreshData() {
+        offset = 0
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
+        fetchData()
+    }
+
+    fun onFetchMoreData() {
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
+        offset += PAGE_SIZE
         fetchData()
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag filter clicked: $filter")
+        offset = 0
         launch {
             _itemFilter.value = if (filter == _itemFilter.value) {
                 null
@@ -102,6 +114,7 @@ open class DataViewViewModel @Inject constructor(
                     searchQuery = it
                     appLogWrapper.d(AppLog.T.MAIN, "$logTag searching")
                     delay(SEARCH_DELAY_MS)
+                    offset = 0
                     fetchData()
                 }
         }
@@ -115,6 +128,7 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(
+        offset: Int = 0,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
     ): List<DataViewItem> {
@@ -140,5 +154,6 @@ open class DataViewViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L
+        const val PAGE_SIZE = 25
     }
 }

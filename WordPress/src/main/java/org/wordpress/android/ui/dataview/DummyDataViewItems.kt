@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.dataview
 
+import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
+
 /**
  * Returns a list of "dummy" [DataViewItem]s for use in Compose previews
  */
@@ -17,7 +19,7 @@ object DummyDataViewItems {
                 )
             )
         }
-        repeat(25) { id ->
+        repeat(PAGE_SIZE) { id ->
             addWithId(id.toLong())
         }
         return items

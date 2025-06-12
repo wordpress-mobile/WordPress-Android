@@ -49,7 +49,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         supportedFilters = viewModel.getSupportedFilters(),
                         currentFilter = viewModel.itemFilter.collectAsState().value,
                         onRefresh = {
-                            viewModel.refreshData()
+                            viewModel.onRefreshData()
+                        },
+                        onFetchMore = {
+                            viewModel.onFetchMoreData()
                         },
                         onSearchQueryChange = { query ->
                             viewModel.onSearchQueryChange(query)

@@ -66,6 +66,7 @@ fun DataViewScreen(
     onFilterClick: (DataViewItemFilter) -> Unit,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
+    onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
     onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
 ) {
@@ -91,7 +92,12 @@ fun DataViewScreen(
                     DataViewUiState.EMPTY -> EmptyDataView()
                     DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
                     DataViewUiState.OFFLINE -> OfflineDataView()
-                    DataViewUiState.LOADED -> LoadedDataView(items, onItemClick, onRenderItem)
+                    DataViewUiState.LOADED -> LoadedDataView(
+                        items = items,
+                        onItemClick = onItemClick,
+                        onFetchMore = onFetchMore,
+                        onRenderItem = onRenderItem
+                    )
                 }
             }
         }
@@ -198,6 +204,7 @@ private fun SearchAndFilterBar(
 private fun LoadedDataView(
     items: State<List<DataViewItem>>,
     onItemClick: (DataViewItem) -> Unit,
+    onFetchMore: () -> Unit,
     onRenderItem: @Composable ((DataViewItem) -> Unit)?
 ) {
     LazyColumn(
@@ -213,6 +220,9 @@ private fun LoadedDataView(
                         onItemClick(item)
                     }
                 )
+            }
+            if (items.value.last() == item) {
+                onFetchMore()
             }
         }
     }
@@ -340,6 +350,7 @@ private fun LoadedPreview() {
         supportedFilters = emptyList(),
         currentFilter = null,
         onRefresh = { },
+        onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -358,6 +369,7 @@ private fun LoadingPreview() {
         supportedFilters = emptyList(),
         currentFilter = null,
         onRefresh = { },
+        onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -376,6 +388,7 @@ private fun EmptyPreview() {
         supportedFilters = emptyList(),
         currentFilter = null,
         onRefresh = { },
+        onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -394,6 +407,7 @@ private fun EmptySearchPreview() {
         supportedFilters = emptyList(),
         currentFilter = null,
         onRefresh = { },
+        onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -412,6 +426,7 @@ private fun OfflinePreview() {
         supportedFilters = emptyList(),
         currentFilter = null,
         onRefresh = { },
+        onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },

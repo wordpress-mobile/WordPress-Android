@@ -37,6 +37,7 @@ class SubscribersViewModel @Inject constructor(
     }
 
     override suspend fun performNetworkRequest(
+        offset: Int,
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> {
