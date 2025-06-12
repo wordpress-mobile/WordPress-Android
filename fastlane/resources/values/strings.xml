@@ -113,6 +113,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="sending">Sending</string>
     <string name="item_selected">Selected</string>
+    <string name="coming_soon">Coming soon!</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -590,7 +591,7 @@
     <string name="share_intent_pick_site">Pick site</string>
     <string name="share_intent_adding_to">Adding to</string>
     <string name="share_action">Share</string>
-    <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
+    <string name="cant_share_no_blog">You can\'t share to WordPress without a blog</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
@@ -968,6 +969,10 @@
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
+    <string name="experimental_subscribers_feature">Experimental subscribers</string>
+    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers (work in progress)</string>
+    <string name="experimental_application_password_feature">Application Password log in</string>
+    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites.</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -2108,7 +2113,6 @@
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
-    <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
@@ -2720,7 +2724,6 @@
     <string name="themes_empty_list">No themes matching your search</string>
 
     <!--People Management-->
-    <string name="people">People</string>
     <string name="users">Users</string>
     <string name="user">User</string>
     <string name="no_users">No users</string>
@@ -2731,7 +2734,7 @@
     <string name="subscriber_remove_confirmation_message">If removed, this subscriber will stop receiving notifications about this site, unless they re-subscribe.\n\nWould you still like to remove this subscriber?</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
-    <string name="invite_people">Invite People</string>
+    <string name="invite_users">Invite users</string>
     <string name="invite_names_title">Usernames or emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
@@ -4483,6 +4486,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_done_subtitle">Tap dismiss and head back to your web browser to continue.</string>
     <string name="qrcode_auth_flow_dismiss">Dismiss</string>
     <string name="qrcode_auth_flow_scan_again">Scan Again</string>
+    <string name="qrcode_auth_flow_timeout_title">Scan timed out</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Please try again or use your camera app to scan the code.</string>
     <string name="qrcode_auth_flow_error_no_connection_title">No connection</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">An active internet connection is required to scan log in codes</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Could not validate the log in code</string>
@@ -4988,4 +4993,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
+
+    <!-- Application Password authentication -->
+    <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
+    <string name="application_password_title">Authenticate using Application Password</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
 </resources>
