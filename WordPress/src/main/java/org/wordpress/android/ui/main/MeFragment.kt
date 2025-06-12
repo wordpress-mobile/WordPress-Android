@@ -107,7 +107,7 @@ import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LargeClass")
 class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Suppress("DEPRECATION")
     private var disconnectProgressDialog: ProgressDialog? = null
