@@ -3443,6 +3443,10 @@ Language: de
     <string name="privacy_private">Deine Website ist nur für dich und freigegebene Nutzer sichtbar.</string>
     <string name="privacy_public_not_indexed">Deine Website ist für alle sichtbar. Suchmaschinen werden aufgefordert, sie nicht zu indexieren.</string>
     <string name="privacy_public">Deine Website ist für alle sichtbar. Suchmaschinen dürfen sie indexieren.</string>
+    <string name="about_me_hint">Ein paar Infos über dich …</string>
+    <string name="about_me">Über mich</string>
+    <string name="public_display_name_hint">Wenn du keinen Anzeigenamen festlegst, wird standardmäßig dein Benutzername verwendet.</string>
+    <string name="public_display_name">Öffentlich angezeigter Name</string>
     <string name="last_name">Nachname</string>
     <string name="first_name">Vorname</string>
     <string name="my_profile">Mein Profil</string>

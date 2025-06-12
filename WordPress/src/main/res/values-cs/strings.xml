@@ -2863,6 +2863,10 @@ Language: cs_CZ
     <string name="privacy_private">Váš web je viditelný pouze pro vás a pro vámi schválené uživatele</string>
     <string name="privacy_public_not_indexed">Váš web je viditelný pro všechny, ale žádá vyhledávače aby jej neindexovali</string>
     <string name="privacy_public">Váš web je viditelný pro všechny a může být indexován vyhledávači</string>
+    <string name="about_me_hint">Osobní informace</string>
+    <string name="public_display_name_hint">Zobrazované jméno bude vaše uživatelské jméno, pokud nenastavíte jiné</string>
+    <string name="about_me">O mně</string>
+    <string name="public_display_name">Veřejně zobrazovat jako</string>
     <string name="my_profile">Můj profil</string>
     <string name="first_name">Jméno</string>
     <string name="last_name">Příjmení</string>

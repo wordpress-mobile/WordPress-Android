@@ -478,6 +478,10 @@ Language: ms
     <string name="privacy_private">Laman anda adalah kelihatan hanya kepada anda dan pengguna yang anda luluskan</string>
     <string name="privacy_public_not_indexed">Laman anda adalah kelihatan kepada semua tetapi meminta enjin carian untuk tidak mengindeksnya</string>
     <string name="privacy_public">Laman anda adalah kelihata kepada semua dan mungkin diindeks oleh enjin carian</string>
+    <string name="about_me_hint">Beberapa perkataan mengenai anda…</string>
+    <string name="about_me">Mengenai saya</string>
+    <string name="public_display_name_hint">Nama paparan akan kembali kepada nama pengguna anda jika ia tidak ditetapkan</string>
+    <string name="public_display_name">Nama paparan umum</string>
     <string name="last_name">Nama akhir</string>
     <string name="first_name">Nama pertama</string>
     <string name="my_profile">Profil Saya</string>

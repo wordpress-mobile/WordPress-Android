@@ -3443,6 +3443,10 @@ Language: es
     <string name="privacy_private">Tu sitio es visible únicamente por ti y por lo usuarios que apruebes</string>
     <string name="privacy_public_not_indexed">Tu sitio es visible para todos pero pide a los motores de búsqueda no ser indexado</string>
     <string name="privacy_public">Tu sitio es visible para todos y puede ser indexado por motores de búsqueda</string>
+    <string name="about_me_hint">Algunas palabras sobre ti…</string>
+    <string name="about_me">Sobre mí</string>
+    <string name="public_display_name_hint">El nombre público mostrará por defecto el nombre de usuario si no está establecido</string>
+    <string name="public_display_name">Nombre que se mostrará públicamente</string>
     <string name="last_name">Apellidos</string>
     <string name="first_name">Nombre</string>
     <string name="my_profile">Mi perfil</string>

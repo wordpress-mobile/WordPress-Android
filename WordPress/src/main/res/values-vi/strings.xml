@@ -2568,6 +2568,10 @@ Language: vi_VN
     <string name="privacy_private">Chỉ bạn và những người mà bạn duyệt mới có thể xem blog</string>
     <string name="privacy_public_not_indexed">Mọi người đều có thể xem blog nhưng các cỗ máy tìm kiếm không được phép lập chỉ mục</string>
     <string name="privacy_public">Mọi người đều có thể xem blog và các cỗ máy tìm kiếm được phép lập chỉ mục</string>
+    <string name="about_me_hint">Một vài từ mô tả về bạn…</string>
+    <string name="about_me">Giới thiệu bản thân</string>
+    <string name="public_display_name_hint"> Nếu không được đặt, tên hiển thị sẽ mặc định là tên người dùng của bạn</string>
+    <string name="public_display_name">Tên hiển thị công khai</string>
     <string name="my_profile">Hồ sơ của tôi</string>
     <string name="last_name">Tên</string>
     <string name="first_name">Họ</string>

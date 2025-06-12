@@ -3404,6 +3404,10 @@ Language: sq_AL
     <string name="privacy_private">Sajti juaj është i dukshëm vetëm për ju dhe për përdorues që miratoni</string>
     <string name="privacy_public_not_indexed">Sajti juaj është i dukshëm për këdo, por kërkon që motorët e kërkimeve të mos e indeksojnë</string>
     <string name="privacy_public">Sajti juaj është i dukshëm për këdo dhe mund të indeksohet nga motorë kërkimesh</string>
+    <string name="about_me_hint">Pak fjalë rreth jush…</string>
+    <string name="about_me">Rreth meje</string>
+    <string name="public_display_name_hint">Nëse nuk caktohet një i tillë, si emër ekrani do të përdoret emri juaj i përdoruesit</string>
+    <string name="public_display_name">Emri i shfaqur botërisht</string>
     <string name="last_name">Mbiemri</string>
     <string name="first_name">Emri</string>
     <string name="my_profile">Profili Im</string>

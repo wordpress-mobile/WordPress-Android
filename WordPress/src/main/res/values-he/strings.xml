@@ -3398,6 +3398,10 @@ Language: he_IL
     <string name="privacy_private">האתר גלוי רק לך ולמשתמשים שאישרת</string>
     <string name="privacy_public_not_indexed">האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</string>
     <string name="privacy_public">האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</string>
+    <string name="about_me_hint">תיאור אישי בכמה מילים…</string>
+    <string name="about_me">מי אני</string>
+    <string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
+    <string name="public_display_name">שם תצוגה ציבורי</string>
     <string name="last_name">שם משפחה</string>
     <string name="first_name">שם פרטי</string>
     <string name="my_profile">הפרופיל שלי</string>

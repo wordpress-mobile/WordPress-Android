@@ -3443,6 +3443,10 @@ Language: id
     <string name="privacy_private">Situs Anda hanya dapat dilihat oleh Anda dan pengguna yang Anda setujui</string>
     <string name="privacy_public_not_indexed">Situs Anda dapat dilihat oleh semua orang, tetapi meminta mesin pencari untuk tidak mengindeks.</string>
     <string name="privacy_public">Situs Anda dapat dilihat oleh semua orang dan mungkin diindeks berdasarkan mesin pencarian.</string>
+    <string name="about_me_hint">Beberapa kata tentang Anda…</string>
+    <string name="about_me">Tentang saya</string>
+    <string name="public_display_name_hint">Nama tampilan secara default akan menjadi nama pengguna Anda bila tidak diatur</string>
+    <string name="public_display_name">Nama tampilan publik</string>
     <string name="last_name">Nama belakang</string>
     <string name="first_name">Nama depan</string>
     <string name="my_profile">Profil Saya</string>

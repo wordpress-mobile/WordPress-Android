@@ -3440,6 +3440,10 @@ Language: ar
     <string name="privacy_private">سيكون موقعك مرئيًّا لك وللمستخدمين الذين توافق عليهم فقط</string>
     <string name="privacy_public_not_indexed">سيكون موقعك مرئيًّا للجميع مع مطالبة محركات البحث بعدم فهرسته في الوقت نفسه</string>
     <string name="privacy_public">سيكون موقعك مرئيًّا للجميع ويمكن فهرسته بواسطة محركات البحث</string>
+    <string name="about_me_hint">كلمات قليلة عنك…</string>
+    <string name="public_display_name_hint">سيكون اسم العرض افتراضيًا لاسم المستخدم الخاص بك إذا لم يتم تعيينه</string>
+    <string name="about_me">نبذة عني</string>
+    <string name="public_display_name">اسم العرض العام</string>
     <string name="my_profile">ملفي الشخصي</string>
     <string name="first_name">الاسم الأول</string>
     <string name="last_name">اسم العائلة</string>

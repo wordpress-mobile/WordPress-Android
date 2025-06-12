@@ -1046,6 +1046,10 @@ Language: sk
     <string name="privacy_private">Vaša stránka je viditeľná iba pre vás a vami schválených používateľov</string>
     <string name="privacy_public_not_indexed">Vaša stránka je viditeľná každému, ale indexovanie vyhľadávačmi nie je povolené</string>
     <string name="privacy_public">Vaša strána je viditeľná každému a môže byť indexovaná vyhľadávačmi</string>
+    <string name="about_me_hint">Pár slov o vás…</string>
+    <string name="public_display_name_hint">V prípade, že nemáte nastavené zobrazovacie meno, bude použité vaše užívateľské meno</string>
+    <string name="about_me">O mne</string>
+    <string name="public_display_name">Pre návštevníkov zobrazovať meno</string>
     <string name="my_profile">Profil</string>
     <string name="first_name">Meno</string>
     <string name="last_name">Priezvisko</string>

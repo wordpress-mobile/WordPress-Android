@@ -3437,6 +3437,10 @@ Language: fr
     <string name="privacy_private">Votre site est visible uniquement pour vous et les utilisateurs que vous approuvez</string>
     <string name="privacy_public_not_indexed">Votre site est visible par tous, mais demande aux moteurs de recherche de ne pas l\'indexer</string>
     <string name="privacy_public">Votre site est visible par tous et peut être indexé par les moteurs de recherche</string>
+    <string name="about_me_hint">Quelques mots à propos de vous…</string>
+    <string name="about_me">À propos de moi</string>
+    <string name="public_display_name_hint">Le nom affiché par défaut est votre identifiant s\'il n\'est pas défini.</string>
+    <string name="public_display_name">Public</string>
     <string name="last_name">Nom</string>
     <string name="first_name">Prénom</string>
     <string name="my_profile">Mon profil</string>

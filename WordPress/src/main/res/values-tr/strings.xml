@@ -3443,6 +3443,10 @@ Language: tr
     <string name="privacy_private">Siteniz yalnızca siz ve onay verdiğiniz kullanıcılar tarafından görülebilir</string>
     <string name="privacy_public_not_indexed">Siteniz herkes tarafından görüntülenebilir, ancak arama motorlarından kendisini dizine eklememesini ister</string>
     <string name="privacy_public">Siteniz herkes tarafından görülebilir ve arama motorları tarafından dizine eklenebilir</string>
+    <string name="about_me_hint">Hakkınızda birkaç sözcük…</string>
+    <string name="about_me">Hakkımda</string>
+    <string name="public_display_name_hint">Ayarlanmazsa, görüntülenecek ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
+    <string name="public_display_name">Herkese açık görüntülenecek ad</string>
     <string name="last_name">Soyad</string>
     <string name="first_name">Ad</string>
     <string name="my_profile">Profilim</string>

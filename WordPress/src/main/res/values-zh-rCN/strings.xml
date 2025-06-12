@@ -3443,6 +3443,10 @@ Language: zh_CN
     <string name="privacy_private">您的站点仅对您以及您审核通过的用户可见</string>
     <string name="privacy_public_not_indexed">您的站点对所有人可见，但要求搜索引擎不将其编入索引</string>
     <string name="privacy_public">您的站点对所有人可见，并且可以被搜索引擎编入索引</string>
+    <string name="about_me_hint">有关您的一些字词…</string>
+    <string name="about_me">关于我</string>
+    <string name="public_display_name_hint">显示名称（如果未设置）将默认为您的用户名</string>
+    <string name="public_display_name">公开显示名称</string>
     <string name="last_name">姓氏</string>
     <string name="first_name">名字</string>
     <string name="my_profile">我的个人资料</string>

@@ -3429,6 +3429,10 @@ Language: sv_SE
     <string name="privacy_private">Din webbplats är bara synlig för dig själv och användare som du godkänner</string>
     <string name="privacy_public_not_indexed">Din webbplats är synlig för alla, men begär att sökmotorerna inte ska indexera den</string>
     <string name="privacy_public">Din webbplats är synlig för alla och kan indexeras av sökmotorer</string>
+    <string name="about_me_hint">Ett par ord om dig själv…</string>
+    <string name="about_me">Om mig</string>
+    <string name="public_display_name_hint">Om det inte anges något annat kommer visningsnamnet som standard att vara ditt användarnamn</string>
+    <string name="public_display_name">Offentligt visningsnamn</string>
     <string name="last_name">Efternamn</string>
     <string name="first_name">Förnamn</string>
     <string name="my_profile">Min profil</string>

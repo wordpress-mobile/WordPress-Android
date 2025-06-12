@@ -3429,6 +3429,10 @@ Language: ja_JP
     <string name="privacy_private">サイトはあなたと、承認したユーザーのみが表示できます</string>
     <string name="privacy_public_not_indexed">誰でもサイトを閲覧することができますが、検索エンジンにはインデックスしないよう要求します</string>
     <string name="privacy_public">誰でもサイトを閲覧することができ、検索エンジンにインデックスされる可能性があります</string>
+    <string name="about_me_hint">簡単な自己紹介</string>
+    <string name="about_me">自己紹介</string>
+    <string name="public_display_name_hint">表示名が設定されていない場合、デフォルトでユーザー名が指定されます</string>
+    <string name="public_display_name">公開表示名</string>
     <string name="last_name">姓</string>
     <string name="first_name">名</string>
     <string name="my_profile">プロフィール</string>

@@ -3443,6 +3443,10 @@ Language: ru
     <string name="privacy_private">Ваш сайт доступен только вам и выбранным вами пользователям.</string>
     <string name="privacy_public_not_indexed">Ваш сайт доступен всем посетителям, но для него выбран параметр «Попросить поисковые системы не индексировать сайт».</string>
     <string name="privacy_public">Ваш сайт доступен всем и может индексироваться поисковыми системами.</string>
+    <string name="about_me_hint">Несколько слов о себе…</string>
+    <string name="about_me">Обо мне</string>
+    <string name="public_display_name_hint">Если отображаемое имя не задано, вместо него по умолчанию используется имя пользователя.</string>
+    <string name="public_display_name">Отображаемое для всех имя</string>
     <string name="last_name">Фамилия</string>
     <string name="first_name">Имя</string>
     <string name="my_profile">Мой профиль</string>

@@ -421,6 +421,10 @@ Language: bg
     <string name="privacy_private">Вашият сайт е видим за вас и одобрените от вас потребители</string>
     <string name="privacy_public_not_indexed">Сайтът ви се вижда от всички, но не позволява на търсачките да го индексират</string>
     <string name="privacy_public">Вашият сайт е видим от всички и може да бъде индексиран от търсачките</string>
+    <string name="about_me_hint">Няколко думи за вас…</string>
+    <string name="about_me">За мен</string>
+    <string name="public_display_name_hint">Потребителското ви име ще стане официално име ако такова не е специално зададено</string>
+    <string name="public_display_name">Публично име</string>
     <string name="my_profile">Моят профил</string>
     <string name="last_name">Фамилия</string>
     <string name="first_name">Собствено име</string>
