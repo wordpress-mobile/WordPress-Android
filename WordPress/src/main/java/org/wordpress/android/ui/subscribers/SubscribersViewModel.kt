@@ -14,6 +14,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewUiState
+import org.wordpress.android.ui.dataview.DataViewViewModelInterface
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -26,7 +27,7 @@ class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher), DataViewViewModelInterface {
     private val _uiState = MutableStateFlow(DataViewUiState.EMPTY)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -38,8 +39,59 @@ class SubscribersViewModel @Inject constructor(
 
     private var searchQuery: String = ""
 
-    fun getSupportedFilters() =
-        listOf(
+    init {
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG init")
+        launch {
+            fetchData()
+        }
+    }
+
+    @Suppress("MagicNumber")
+    override fun fetchData() {
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
+            updateUiState(DataViewUiState.LOADING)
+            launch {
+                delay(1000L)
+                val items = getDummyDataViewItems()
+                _subscribers.value = items
+                if (items.isEmpty()) {
+                    if (searchQuery.isNotEmpty()) {
+                        appLogWrapper.d(AppLog.T.MAIN, "$TAG empty search")
+                        updateUiState(DataViewUiState.EMPTY_SEARCH)
+                    } else {
+                        appLogWrapper.d(AppLog.T.MAIN, "$TAG empty subscribers")
+                        updateUiState(DataViewUiState.EMPTY)
+                    }
+                } else {
+                    appLogWrapper.d(AppLog.T.MAIN, "$TAG loaded")
+                    updateUiState(DataViewUiState.LOADED)
+                }
+            }
+        } else {
+            appLogWrapper.d(AppLog.T.MAIN, "$TAG offline")
+            updateUiState(DataViewUiState.OFFLINE)
+        }
+    }
+
+    override fun refreshData() {
+        fetchData()
+    }
+
+    override fun onItemClick(item: DataViewItem) {
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG item clicked: $item")
+    }
+
+    override fun onFilterClick(filter: DataViewItemFilter?) {
+        appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
+        launch {
+            _itemFilter.value = filter
+            fetchData()
+        }
+    }
+
+    override fun getSupportedFilters(): List<DataViewItemFilter> {
+        return listOf(
             DataViewItemFilter(
                 id = ID_FILTER_EMAIL,
                 titleRes = R.string.subscribers_filter_email_subscription
@@ -49,58 +101,10 @@ class SubscribersViewModel @Inject constructor(
                 titleRes = R.string.subscribers_filter_subscription_type
             )
         )
-
-    init {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG init")
-        launch {
-            fetchData()
-        }
-    }
-
-    @Suppress("MagicNumber")
-    private suspend fun fetchData() {
-        if (networkUtilsWrapper.isNetworkAvailable()) {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
-            updateUiState(DataViewUiState.LOADING)
-            delay(1000L)
-            val items = getDummyDataViewItems()
-            _subscribers.value = items
-            if (items.isEmpty()) {
-                if (searchQuery.isNotEmpty()) {
-                    appLogWrapper.d(AppLog.T.MAIN, "$TAG empty search")
-                    updateUiState(DataViewUiState.EMPTY_SEARCH)
-                } else {
-                    appLogWrapper.d(AppLog.T.MAIN, "$TAG empty subscribers")
-                    updateUiState(DataViewUiState.EMPTY)
-                }
-            } else {
-                appLogWrapper.d(AppLog.T.MAIN, "$TAG loaded")
-                updateUiState(DataViewUiState.LOADED)
-            }
-        } else {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG offline")
-            updateUiState(DataViewUiState.OFFLINE)
-        }
-    }
-
-    private fun updateUiState(state: DataViewUiState) {
-        _uiState.value = state
-    }
-
-    fun onItemClick(item: DataViewItem) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG item clicked: $item")
-    }
-
-    fun onFilterClick(filter: DataViewItemFilter?) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
-        launch {
-            _itemFilter.value = filter
-            fetchData()
-        }
     }
 
     @OptIn(FlowPreview::class)
-    fun onSearchQueryChange(query: String) {
+    override fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed")
         val searchFlow = MutableStateFlow(query)
         launch {
@@ -115,7 +119,11 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
-companion object {
+    private fun updateUiState(state: DataViewUiState) {
+        _uiState.value = state
+    }
+
+    companion object {
     private const val ID_FILTER_EMAIL = 1L
     private const val ID_FILTER__TYPE = 2L
     private const val SEARCH_DELAY_MS = 500L
