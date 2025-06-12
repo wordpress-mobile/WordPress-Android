@@ -45,7 +45,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     DataViewScreen(
                         title = getString(R.string.subscribers),
                         uiState = viewModel.uiState.collectAsState(),
-                        items = viewModel.subscribers.collectAsState(),
+                        items = viewModel.items.collectAsState(),
                         supportedFilters = viewModel.getSupportedFilters(),
                         currentFilter = viewModel.itemFilter.collectAsState().value,
                         onRefresh = {
