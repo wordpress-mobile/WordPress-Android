@@ -122,7 +122,7 @@ private fun RemoteImage(
 
 @Preview(showBackground = true)
 @Composable
-fun ProfileCardPreview() {
+fun DataViewItemCardPreview() {
     AppThemeM3 {
         getDummyDataViewItems().forEach { item ->
             DataViewItemCard(item, onItemClick = {})
