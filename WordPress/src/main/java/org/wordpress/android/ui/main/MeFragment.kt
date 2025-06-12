@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.core.view.isVisible
@@ -23,9 +24,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.gravatar.quickeditor.GravatarQuickEditor
+import com.gravatar.quickeditor.ui.editor.AboutEditorResult
+import com.gravatar.quickeditor.ui.editor.AboutInputField
 import com.gravatar.quickeditor.ui.editor.AuthenticationMethod
-import com.gravatar.quickeditor.ui.editor.AvatarPickerContentLayout
+import com.gravatar.quickeditor.ui.editor.AvatarPickerResult
 import com.gravatar.quickeditor.ui.editor.GravatarQuickEditorParams
+import com.gravatar.quickeditor.ui.editor.QuickEditorScopeOption
 import com.gravatar.services.AvatarService
 import com.gravatar.services.GravatarResult
 import com.gravatar.types.Email
@@ -206,41 +210,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
-            if (accountStore.account.emailVerified) {
-                if (gravatarQuickEditorFeatureConfig.isEnabled()) {
-                    GravatarQuickEditor.show(
-                        fragment = this@MeFragment,
-                        gravatarQuickEditorParams = GravatarQuickEditorParams {
-                            email = Email(accountStore.account.email)
-                            avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
-                        },
-                        authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
-                        onAvatarSelected = {
-                            loadAvatar(null, true)
-                        },
-                    )
-                } else {
-                    showPhotoPickerForGravatar()
-                }
-            } else {
-                view?.let { view ->
-                    sequencer.enqueue(
-                        SnackbarItem(
-                            Info(
-                                view,
-                                UiString.UiStringRes(R.string.avatar_update_email_unverified),
-                                Snackbar.LENGTH_LONG
-                            ),
-                            null,
-                            null
-                        )
-                    )
-                }
-            }
+            showAvatarPicker()
         }
         avatarContainer.setOnClickListener(showPickerListener)
         rowMyProfile.setOnClickListener {
-            ActivityLauncher.viewMyProfile(activity)
+            AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE)
+            showProfileEditor()
         }
         rowAccountSettings.setOnClickListener {
             ActivityLauncher.viewAccountSettings(activity)
@@ -306,6 +281,80 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     emailVerificationViewModel.onSendVerificationLinkClick()
                 }
             )
+        }
+    }
+
+    private fun MeFragmentBinding.showAvatarPicker() {
+        withVeryfiedEmail(unverifiedEmailMessageRes = R.string.avatar_update_email_unverified) {
+            if (gravatarQuickEditorFeatureConfig.isEnabled()) {
+                showQuickEditor(scope = QuickEditorScopeOption.avatarPicker())
+            } else {
+                showPhotoPickerForGravatar()
+            }
+        }
+    }
+
+    private fun MeFragmentBinding.showProfileEditor() {
+        withVeryfiedEmail(unverifiedEmailMessageRes = R.string.about_update_email_unverified) {
+            showQuickEditor(
+                scope = QuickEditorScopeOption.aboutEditor {
+                    fields = setOf(
+                        AboutInputField.FirstName,
+                        AboutInputField.LastName,
+                        AboutInputField.DisplayName,
+                        AboutInputField.AboutMe
+                    )
+                }
+            )
+        }
+    }
+
+    private fun MeFragmentBinding.showQuickEditor(
+        scope: QuickEditorScopeOption
+    ) {
+        GravatarQuickEditor.show(
+            fragment = this@MeFragment,
+            gravatarQuickEditorParams = GravatarQuickEditorParams {
+                email = Email(accountStore.account.email)
+                scopeOption = scope
+            },
+            authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+            updateHandler = { event ->
+                when (event) {
+                    AvatarPickerResult -> {
+                        loadAvatar(null, true)
+                    }
+
+                    is AboutEditorResult -> {
+                        meDisplayName.text = event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                    }
+
+                    else -> Unit
+                }
+            },
+        )
+    }
+
+    private fun withVeryfiedEmail(
+        @StringRes unverifiedEmailMessageRes: Int,
+        action: () -> Unit,
+    ) {
+        if (accountStore.account.emailVerified) {
+            action()
+        } else {
+            view?.let { view ->
+                sequencer.enqueue(
+                    SnackbarItem(
+                        Info(
+                            view,
+                            UiString.UiStringRes(unverifiedEmailMessageRes),
+                            Snackbar.LENGTH_LONG
+                        ),
+                        null,
+                        null
+                    )
+                )
+            }
         }
     }
 
