@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.dataview
 
+/**
+ * Returns a list of "dummy" [DataViewItem]s for use in Compose previews
+ */
 object DummyDataViewItems {
     @Suppress("MagicNumber")
     fun getDummyDataViewItems(): List<DataViewItem> {
