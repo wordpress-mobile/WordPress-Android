@@ -50,7 +50,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         currentFilter = viewModel.itemFilter.collectAsState().value,
                         onRefresh = {
                             viewModel.refreshData()
-                                    },
+                        },
                         onSearchQueryChange = { query ->
                             viewModel.onSearchQueryChange(query)
                         },

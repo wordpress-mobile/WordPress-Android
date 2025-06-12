@@ -16,6 +16,10 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+/**
+ * Provides a basic view model for displaying, fetching, and searching
+ * a list of [DataViewItem]s
+ */
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
@@ -34,7 +38,7 @@ open class DataViewViewModel @Inject constructor(
     private var searchQuery: String = ""
 
     init {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG init")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
             fetchData()
         }
@@ -43,7 +47,7 @@ open class DataViewViewModel @Inject constructor(
     @Suppress("MagicNumber")
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG fetching")
+            appLogWrapper.d(AppLog.T.MAIN, "$logTag fetching")
             updateUiState(DataViewUiState.LOADING)
             launch {
                 delay(1000L)
@@ -54,19 +58,19 @@ open class DataViewViewModel @Inject constructor(
                 _items.value = items
                 if (items.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
-                        appLogWrapper.d(AppLog.T.MAIN, "$TAG empty search")
+                        appLogWrapper.d(AppLog.T.MAIN, "$logTag empty search")
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
                     } else {
-                        appLogWrapper.d(AppLog.T.MAIN, "$TAG empty subscribers")
+                        appLogWrapper.d(AppLog.T.MAIN, "$logTag empty subscribers")
                         updateUiState(DataViewUiState.EMPTY)
                     }
                 } else {
-                    appLogWrapper.d(AppLog.T.MAIN, "$TAG loaded")
+                    appLogWrapper.d(AppLog.T.MAIN, "$logTag loaded")
                     updateUiState(DataViewUiState.LOADED)
                 }
             }
         } else {
-            appLogWrapper.d(AppLog.T.MAIN, "$TAG offline")
+            appLogWrapper.d(AppLog.T.MAIN, "$logTag offline")
             updateUiState(DataViewUiState.OFFLINE)
         }
     }
@@ -76,7 +80,7 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag filter clicked: $filter")
         launch {
             _itemFilter.value = if (filter == _itemFilter.value) {
                 null
@@ -89,14 +93,14 @@ open class DataViewViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     fun onSearchQueryChange(query: String) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG search query changed")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag search query changed")
         val searchFlow = MutableStateFlow(query)
         launch {
             searchFlow
                 .debounce(SEARCH_DELAY_MS)
                 .collect {
                     searchQuery = it
-                    appLogWrapper.d(AppLog.T.MAIN, "$TAG searching")
+                    appLogWrapper.d(AppLog.T.MAIN, "$logTag searching")
                     delay(SEARCH_DELAY_MS)
                     fetchData()
                 }
@@ -128,11 +132,13 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to handle item clicks
      */
     open fun onItemClick(item: DataViewItem) {
-        appLogWrapper.d(AppLog.T.MAIN, "$TAG item clicked: $item")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag item clicked: $item")
     }
+
+    private val logTag
+        get() = this::class.java.simpleName
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L
-        private const val TAG = "DataViewViewModel"
     }
 }
