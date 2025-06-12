@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,8 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
-import org.wordpress.android.ui.compose.components.ProgressDialog
-import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
@@ -217,7 +216,17 @@ private fun LoadedDataView(
 
 @Composable
 private fun LoadingDataView() {
-    ProgressDialog(ProgressDialogState())
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(48.dp),
+            strokeWidth = 3.dp
+        )
+    }
 }
 
 @Composable
