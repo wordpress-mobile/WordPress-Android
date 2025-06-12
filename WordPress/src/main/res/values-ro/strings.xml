@@ -3443,10 +3443,6 @@ Language: ro
     <string name="privacy_private">Site-ul tău este vizibil doar pentru tine și pentru utilizatorii pe care i-ai aprobat</string>
     <string name="privacy_public_not_indexed">Site-ul tău este vizibil pentru toată lumea, dar cere motoarelor de căutare să nu-l indexeze</string>
     <string name="privacy_public">Site-ul tău este vizibil pentru toată lumea și poate fi indexat de motoarele de căutare</string>
-    <string name="about_me_hint">Câteva cuvinte despre tine…</string>
-    <string name="about_me">Despre mine</string>
-    <string name="public_display_name_hint">Numele afișat va fi implicit numele utilizator dacă nu este setat</string>
-    <string name="public_display_name">Numele afișat public</string>
     <string name="last_name">Nume</string>
     <string name="first_name">Prenume</string>
     <string name="my_profile">Profilul meu</string>

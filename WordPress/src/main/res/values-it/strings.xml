@@ -3429,10 +3429,6 @@ Language: it
     <string name="privacy_private">Il tuo sito è visibile solo a te e agli utenti che approvi</string>
     <string name="privacy_public_not_indexed">Il tuo sito è visibile a chiunque, ma chiede ai motori di ricerca di non indicizzarlo</string>
     <string name="privacy_public">Il tuo sito è visibile a chiunque e può essere indicizzato dai motori di ricerca</string>
-    <string name="about_me_hint">Alcune informazioni su di te…</string>
-    <string name="about_me">Informazioni su di me</string>
-    <string name="public_display_name_hint">Se non viene impostato, il nome visualizzato coinciderà con il nome utente per impostazione predefinita</string>
-    <string name="public_display_name">Nome visualizzato (pubblico)</string>
     <string name="last_name">Cognome</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">Impostazioni profilo</string>

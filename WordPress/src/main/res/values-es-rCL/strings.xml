@@ -3413,10 +3413,6 @@ Language: es_CL
     <string name="privacy_private">Tu sitio es visible sólo para ti y los usuarios que tu apruebes</string>
     <string name="privacy_public_not_indexed">Tu sitio es visible para todos, pero pide a los motores de búsqueda que no lo indexen</string>
     <string name="privacy_public">Tu sitio es visible para todos y puede ser indexado por los buscadores</string>
-    <string name="about_me_hint">Unas palabras sobre ti…</string>
-    <string name="about_me">Acerca</string>
-    <string name="public_display_name_hint">El nombre de la pantalla se mostrará por defecto en el usuario si no está configurado</string>
-    <string name="public_display_name">Nombre mostrado publicamente</string>
     <string name="last_name">Apellidos</string>
     <string name="first_name">Nombre</string>
     <string name="my_profile">Mi Perfil</string>

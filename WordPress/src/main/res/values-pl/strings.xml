@@ -3443,10 +3443,6 @@ Language: pl
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
     <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nieindeksowanie jej</string>
     <string name="privacy_public">Twoja witryna jest widoczna dla wszystkich i może być indeksowana przez wyszukiwarki</string>
-    <string name="about_me_hint">Kilka słów o sobie…</string>
-    <string name="about_me">O mnie</string>
-    <string name="public_display_name_hint">Jeśli jej nie określisz, to twoją nazwą wyświetlaną publicznie będzie nazwa użytkownika</string>
-    <string name="public_display_name">Nazwa wyświetlana publicznie</string>
     <string name="last_name">Nazwisko</string>
     <string name="first_name">Imię</string>
     <string name="my_profile">Mój profil</string>

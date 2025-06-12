@@ -3413,10 +3413,6 @@ Language: gl_ES
     <string name="privacy_private">O sitio só é visible para ti e para os usuarios autorizados</string>
     <string name="privacy_public_not_indexed">O sitio é visible para calquera, pero pídese aos motores de busca que non o indexen.</string>
     <string name="privacy_public">O sitio é visible para calquera e os motores de busca poden indexalo</string>
-    <string name="about_me_hint">Unhas palabras acerca de ti…</string>
-    <string name="about_me">Acerca de mi</string>
-    <string name="public_display_name_hint">Se non se define, o nome mostrado por defecto será o nome de usuario,</string>
-    <string name="public_display_name">Nome público</string>
     <string name="last_name">Apelido</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">O meu perfil</string>

@@ -1760,10 +1760,6 @@ Language: ku_TR
     <string name="privacy_private">Malpera te tenê ji bo te û bikarhênerên ku te pejirandine re xuyanbar e</string>
     <string name="privacy_public_not_indexed">Malpera te ji her kesî re xuyanbar e lê ji motorên lêgerînê daxwaze ku wê îndeks neke</string>
     <string name="privacy_public">Malpera te ji her kesî re xuyanbar e û ji aliyê motorên lêgerînê ve dikare bê îndekskirin</string>
-    <string name="about_me_hint">Çend gotin di derbarê te de…</string>
-    <string name="about_me">Derbarê min de</string>
-    <string name="public_display_name_hint">Heke neyê sazkirin, ew ê navê xuya bi bixweberî bibe navê bikarhêner</string>
-    <string name="public_display_name">Navê nîşandanê yê giştî</string>
     <string name="last_name">Paşnav</string>
     <string name="first_name">Nav</string>
     <string name="my_profile">Profîla Min</string>

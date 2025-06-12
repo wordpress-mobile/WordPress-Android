@@ -20,9 +20,6 @@ Language: th
     <string name="search">ค้นหา</string>
     <string name="disabled">ปิดการใช้งาน</string>
     <string name="site_settings_image_original_size">ขนาดต้นฉบับ</string>
-    <string name="about_me_hint">คำอธิบายสั้น ๆ เกี่ยวกับคุณ….</string>
-    <string name="about_me">เกี่ยวกับฉัน</string>
-    <string name="public_display_name">ชื่อที่ใช้แสดงในสาธารณะ</string>
     <string name="my_profile">ประวัติของฉัน</string>
     <string name="first_name">ชื่อ</string>
     <string name="last_name">นามสกุล</string>

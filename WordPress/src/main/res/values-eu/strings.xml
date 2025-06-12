@@ -288,8 +288,6 @@ Language: eu_ES
     <string name="search">Bilatu</string>
     <string name="disabled">Ezgaitu</string>
     <string name="site_settings_image_original_size">Jatorrizko neurria</string>
-    <string name="about_me">Niri buruz</string>
-    <string name="public_display_name">Publikoki erakusten den izena</string>
     <string name="my_profile">Nire profila</string>
     <string name="first_name">Izena</string>
     <string name="last_name">Abizena</string>

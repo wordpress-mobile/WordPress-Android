@@ -3443,10 +3443,6 @@ Language: nl
     <string name="privacy_private">Je site is alleen zichtbaar voor jou en gebruikers die je goedkeurt</string>
     <string name="privacy_public_not_indexed">Je site kan door iedereen worden bekeken, maar wordt niet geïndexeerd door zoekmachines</string>
     <string name="privacy_public">Je site kan door iedereen worden bekeken en kan worden geïndexeerd door zoekmachines</string>
-    <string name="about_me_hint">Enkele woorden over jou…</string>
-    <string name="about_me">Over mij</string>
-    <string name="public_display_name_hint">De weergavenaam is standaard je gebruikersnaam, tenzij hij anders is ingesteld</string>
-    <string name="public_display_name">Openbare weergavenaam</string>
     <string name="last_name">Achternaam</string>
     <string name="first_name">Voornaam</string>
     <string name="my_profile">Mijn profiel</string>
