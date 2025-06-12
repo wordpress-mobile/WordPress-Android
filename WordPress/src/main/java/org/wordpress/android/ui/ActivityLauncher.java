@@ -720,10 +720,14 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
-        // TODO AnalyticsTracker.track(Stat.?);
-        Intent intent = new Intent(context, SubscribersActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+        // for now we only show the subscribers screen for debug users since it's very much a WIP
+        if (BuildConfig.DEBUG) {
+            Intent intent = new Intent(context, SubscribersActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        } else {
+            ToastUtils.showToast(context, R.string.coming_soon, ToastUtils.Duration.LONG);
+        }
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {

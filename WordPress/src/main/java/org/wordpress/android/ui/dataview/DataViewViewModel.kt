@@ -49,10 +49,8 @@ open class DataViewViewModel @Inject constructor(
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             if (offset == 0) {
-                appLogWrapper.d(AppLog.T.MAIN, "$logTag refreshing")
                 updateUiState(DataViewUiState.LOADING)
             } else {
-                appLogWrapper.d(AppLog.T.MAIN, "$logTag loading more")
                 updateUiState(DataViewUiState.LOADING_MORE)
             }
 
@@ -67,19 +65,15 @@ open class DataViewViewModel @Inject constructor(
                 _items.value = items
                 if (items.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
-                        appLogWrapper.d(AppLog.T.MAIN, "$logTag empty search")
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
                     } else {
-                        appLogWrapper.d(AppLog.T.MAIN, "$logTag empty subscribers")
                         updateUiState(DataViewUiState.EMPTY)
                     }
                 } else {
-                    appLogWrapper.d(AppLog.T.MAIN, "$logTag loaded")
                     updateUiState(DataViewUiState.LOADED)
                 }
             }
         } else {
-            appLogWrapper.d(AppLog.T.MAIN, "$logTag offline")
             updateUiState(DataViewUiState.OFFLINE)
         }
     }
@@ -97,9 +91,10 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag filter clicked: $filter")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         offset = 0
         launch {
+            // reset the filter if it's already selected
             _itemFilter.value = if (filter == _itemFilter.value) {
                 null
             } else {
@@ -111,7 +106,7 @@ open class DataViewViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     fun onSearchQueryChange(query: String) {
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag search query changed")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
         val searchFlow = MutableStateFlow(query)
         launch {
             searchFlow
@@ -119,7 +114,6 @@ open class DataViewViewModel @Inject constructor(
                 .collect {
                     searchQuery = it
                     appLogWrapper.d(AppLog.T.MAIN, "$logTag searching")
-                    delay(SEARCH_DELAY_MS)
                     offset = 0
                     fetchData()
                 }
@@ -128,6 +122,7 @@ open class DataViewViewModel @Inject constructor(
 
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
     }
 
     /**
@@ -152,7 +147,7 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to handle item clicks
      */
     open fun onItemClick(item: DataViewItem) {
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag item clicked: $item")
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onItemClick: ${item.id}")
     }
 
     private val logTag
