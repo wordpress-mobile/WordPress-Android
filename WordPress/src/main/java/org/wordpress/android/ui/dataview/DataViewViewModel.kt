@@ -48,8 +48,14 @@ open class DataViewViewModel @Inject constructor(
     @Suppress("MagicNumber")
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            appLogWrapper.d(AppLog.T.MAIN, "$logTag fetching")
-            updateUiState(DataViewUiState.LOADING)
+            if (offset == 0) {
+                appLogWrapper.d(AppLog.T.MAIN, "$logTag refreshing")
+                updateUiState(DataViewUiState.LOADING)
+            } else {
+                appLogWrapper.d(AppLog.T.MAIN, "$logTag loading more")
+                updateUiState(DataViewUiState.LOADING_MORE)
+            }
+
             launch {
                 // simulate network delay
                 delay(1000L)

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.dataview
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -92,11 +93,13 @@ fun DataViewScreen(
                     DataViewUiState.EMPTY -> EmptyDataView()
                     DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
                     DataViewUiState.OFFLINE -> OfflineDataView()
+                    DataViewUiState.LOADING_MORE,
                     DataViewUiState.LOADED -> LoadedDataView(
                         items = items,
                         onItemClick = onItemClick,
                         onFetchMore = onFetchMore,
-                        onRenderItem = onRenderItem
+                        onRenderItem = onRenderItem,
+                        showProgress = uiState.value == DataViewUiState.LOADING_MORE
                     )
                 }
             }
@@ -205,25 +208,36 @@ private fun LoadedDataView(
     items: State<List<DataViewItem>>,
     onItemClick: (DataViewItem) -> Unit,
     onFetchMore: () -> Unit,
-    onRenderItem: @Composable ((DataViewItem) -> Unit)?
+    onRenderItem: @Composable ((DataViewItem) -> Unit)?,
+    showProgress: Boolean = false
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        items(items.value) { item ->
-            // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
-            onRenderItem?.invoke(item) ?: run {
-                DataViewItemCard(
-                    item = item,
-                    onItemClick = {
-                        onItemClick(item)
-                    }
-                )
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            items(items.value) { item ->
+                // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
+                onRenderItem?.invoke(item) ?: run {
+                    DataViewItemCard(
+                        item = item,
+                        onItemClick = {
+                            onItemClick(item)
+                        }
+                    )
+                }
+                if (items.value.last() == item) {
+                    onFetchMore()
+                }
             }
-            if (items.value.last() == item) {
-                onFetchMore()
-            }
+        }
+        if (showProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 }
@@ -237,8 +251,7 @@ private fun LoadingDataView() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .size(48.dp),
-            strokeWidth = 3.dp
+                .size(48.dp)
         )
     }
 }
