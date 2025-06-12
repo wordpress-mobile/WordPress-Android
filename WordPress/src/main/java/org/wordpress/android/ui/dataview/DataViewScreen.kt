@@ -28,6 +28,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -63,12 +66,14 @@ fun DataViewScreen(
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
     onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
 ) {
     Screen(
         title = title,
         onBackClick = onBackClick,
+        onRefresh = onRefresh,
         content = {
             Column(
                 modifier = modifier
@@ -279,6 +284,7 @@ private fun OfflineDataView() {
 private fun Screen(
     title: String,
     content: @Composable () -> Unit,
+    onRefresh: () -> Unit,
     onBackClick: () -> Unit
 ) {
     AppThemeM3 {
@@ -294,12 +300,31 @@ private fun Screen(
                 )
             },
         ) { contentPadding ->
-            Column(
+            val refreshState = remember { mutableStateOf(false) }
+            val pullToRefreshState = rememberPullToRefreshState()
+
+            PullToRefreshBox(
                 modifier = Modifier
-                    .imePadding()
-                    .padding(contentPadding)
+                    .fillMaxSize(),
+                isRefreshing = refreshState.value,
+                state = pullToRefreshState,
+                onRefresh = onRefresh,
+                indicator = {
+                    PullToRefreshDefaults.Indicator(
+                        state = pullToRefreshState,
+                        isRefreshing = refreshState.value,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
+                }
             ) {
-                content()
+                Column(
+                    modifier = Modifier
+                        .imePadding()
+                        .padding(contentPadding)
+                ) {
+                    content()
+                }
             }
         }
     }
@@ -315,6 +340,7 @@ private fun LoadedPreview() {
         items = remember { mutableStateOf(getDummyDataViewItems()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        onRefresh = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -332,6 +358,7 @@ private fun LoadingPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        onRefresh = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -349,6 +376,7 @@ private fun EmptyPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        onRefresh = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -366,6 +394,7 @@ private fun EmptySearchPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        onRefresh = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
@@ -383,6 +412,7 @@ private fun OfflinePreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        onRefresh = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },

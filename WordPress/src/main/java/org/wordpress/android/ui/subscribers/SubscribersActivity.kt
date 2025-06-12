@@ -48,6 +48,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         items = viewModel.subscribers.collectAsState(),
                         supportedFilters = viewModel.getSupportedFilters(),
                         currentFilter = viewModel.itemFilter.collectAsState().value,
+                        onRefresh = {
+                            viewModel.refreshData()
+                                    },
                         onSearchQueryChange = { query ->
                             viewModel.onSearchQueryChange(query)
                         },
@@ -57,7 +60,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         onFilterClick = { filter ->
                             viewModel.onFilterClick(filter)
                         },
-                        onBackClick = { finish() }
+                        onBackClick = {
+                            finish()
+                        }
                     )
                 }
             }

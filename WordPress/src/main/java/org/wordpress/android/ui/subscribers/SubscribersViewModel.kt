@@ -85,7 +85,11 @@ class SubscribersViewModel @Inject constructor(
     override fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$TAG filter clicked: $filter")
         launch {
-            _itemFilter.value = filter
+            _itemFilter.value = if (filter == _itemFilter.value) {
+                null
+            } else {
+                filter
+            }
             fetchData()
         }
     }
