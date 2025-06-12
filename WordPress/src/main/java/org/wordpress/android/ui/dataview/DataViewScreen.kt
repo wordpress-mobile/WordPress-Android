@@ -52,8 +52,7 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
  * which includes search and filter functionality. More complex use
- * cases may require extending DataViewItem and passing a custom
- * renderer via [onRenderItem].
+ * cases may require passing a custom renderer via [onRenderItem].
  */
 @Composable
 fun DataViewScreen(

@@ -34,9 +34,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
 /**
- * Provides a basic card for displaying a [DataViewItem]. More complex use cases may require extending
- * from [DataViewItem] and adding a custom renderer for it. This is the purpose of onRenderItem in
- * [DataViewScreen].
+ * Provides a basic card for displaying a single [DataViewItem]. More complex use cases
+ * may require using onRenderItem in [DataViewScreen] to provide a custom renderer.
  */
 @Composable
 fun DataViewItemCard(

@@ -17,8 +17,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 /**
- * Provides a basic view model for displaying, fetching, and searching
- * a list of [DataViewItem]s
+ * Provides a basic view model for displaying, fetching, filtering,
+ * and searching a list of [DataViewItem]s
  */
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(

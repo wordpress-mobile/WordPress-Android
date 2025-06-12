@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.dataview
 
 /**
- * Represents a basic item for displaying in a [DataViewItemCard].
+ * Represents a basic model for data to be displayed in a [DataViewItemCard].
  */
 data class DataViewItem(
     val id: Long,
