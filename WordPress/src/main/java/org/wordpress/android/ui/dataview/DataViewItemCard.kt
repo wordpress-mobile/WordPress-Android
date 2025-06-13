@@ -62,11 +62,7 @@ fun DataViewItemCard(
             Spacer(modifier = Modifier.width(8.dp))
         }
         item.fields.forEach { field ->
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
+            Column() {
                 Row() {
                     val style = when (field.fieldType) {
                         DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
@@ -92,10 +88,10 @@ fun DataViewItemCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                field.subValue?.let { subvalue ->
+                field.subValue?.let { subValue ->
                     Row() {
                         Text(
-                            text = subvalue,
+                            text = subValue,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 2,

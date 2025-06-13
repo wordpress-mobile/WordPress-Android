@@ -52,8 +52,7 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
- * which includes search and filter functionality. More complex use
- * cases may require passing a custom renderer via [onRenderItem].
+ * which includes search and filter functionality.
  */
 @Composable
 fun DataViewScreen(
@@ -69,7 +68,6 @@ fun DataViewScreen(
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
-    onRenderItem: @Composable ((DataViewItem) -> Unit)? = null,
 ) {
     Screen(
         title = title,
@@ -98,7 +96,6 @@ fun DataViewScreen(
                         items = items,
                         onItemClick = onItemClick,
                         onFetchMore = onFetchMore,
-                        onRenderItem = onRenderItem,
                         showProgress = uiState.value == DataViewUiState.LOADING_MORE
                     )
                 }
@@ -208,7 +205,6 @@ private fun LoadedDataView(
     items: State<List<DataViewItem>>,
     onItemClick: (DataViewItem) -> Unit,
     onFetchMore: () -> Unit,
-    onRenderItem: @Composable ((DataViewItem) -> Unit)?,
     showProgress: Boolean = false
 ) {
     Box(
@@ -220,15 +216,12 @@ private fun LoadedDataView(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(items.value) { item ->
-                // if onRenderItem is provided, use it, otherwise use the default DataViewItemCard
-                onRenderItem?.invoke(item) ?: run {
-                    DataViewItemCard(
-                        item = item,
-                        onItemClick = {
-                            onItemClick(item)
-                        }
-                    )
-                }
+                DataViewItemCard(
+                    item = item,
+                    onItemClick = {
+                        onItemClick(item)
+                    }
+                )
                 if (items.value.last() == item) {
                     onFetchMore()
                 }
