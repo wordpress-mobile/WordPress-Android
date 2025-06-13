@@ -57,13 +57,12 @@ open class DataViewViewModel @Inject constructor(
             launch {
                 // simulate network delay
                 delay(1000L)
-                val items = performNetworkRequest(
+                _items.value = performNetworkRequest(
                     offset = offset,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
-                _items.value = items
-                if (items.isEmpty()) {
+                if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
                     } else {
@@ -79,9 +78,11 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onRefreshData() {
-        offset = 0
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
-        fetchData()
+        if (_uiState.value == DataViewUiState.LOADED) {
+            offset = 0
+            appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
+            fetchData()
+        }
     }
 
     fun onFetchMoreData() {
