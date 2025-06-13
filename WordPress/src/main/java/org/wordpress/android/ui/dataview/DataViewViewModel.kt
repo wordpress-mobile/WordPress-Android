@@ -85,9 +85,11 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onFetchMoreData() {
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
-        offset += PAGE_SIZE
-        fetchData()
+        if (_uiState.value != DataViewUiState.LOADING_MORE) {
+            appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
+            offset += PAGE_SIZE
+            fetchData()
+        }
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
