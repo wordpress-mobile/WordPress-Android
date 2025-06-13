@@ -14,14 +14,12 @@ object DummyDataViewItems {
             val id = (index + startIndex).toLong()
             val fields = listOf(
                 DataViewItemField(
-                    titleResId = R.string.title,
                     value = "Title $id",
                     subValue = "Subtitle $id",
                     fieldType = DataViewFieldType.TITLE,
                 ),
                 DataViewItemField(
-                    titleResId = R.string.publish_date,
-                    value = "2023-01-01",
+                    value = "2023-01-$id",
                     fieldType = DataViewFieldType.DATE,
                 ),
             )

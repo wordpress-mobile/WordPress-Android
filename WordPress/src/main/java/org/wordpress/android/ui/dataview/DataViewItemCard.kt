@@ -63,41 +63,34 @@ fun DataViewItemCard(
         }
         item.fields.forEach { field ->
             Column() {
-                Row() {
-                    val style = when (field.fieldType) {
-                        DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
-                        DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
-                        DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
-                    }
-                    val color = when (field.fieldType) {
-                        DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
-                        DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurfaceVariant
-                        DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
-                    }
-                    val fontWeight = when (field.fieldType) {
-                        DataViewFieldType.TITLE -> FontWeight.Bold
-                        DataViewFieldType.TEXT -> FontWeight.Normal
-                        DataViewFieldType.DATE -> FontWeight.Normal
-                    }
+                val style = when (field.fieldType) {
+                    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
+                    DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
+                }
+                val color = when (field.fieldType) {
+                    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
+                    DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
+                }
+                val fontWeight = when (field.fieldType) {
+                    DataViewFieldType.TITLE -> FontWeight.Bold
+                    DataViewFieldType.DATE -> FontWeight.Normal
+                }
+                Text(
+                    text = field.value,
+                    style = style,
+                    color = color,
+                    fontWeight = fontWeight,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                field.subValue?.let { subValue ->
                     Text(
-                        text = field.value,
-                        style = style,
-                        color = color,
-                        fontWeight = fontWeight,
-                        maxLines = 1,
+                        text = subValue,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                }
-                field.subValue?.let { subValue ->
-                    Row() {
-                        Text(
-                            text = subValue,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
                 }
             }
         }
