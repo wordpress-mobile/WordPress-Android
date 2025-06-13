@@ -41,7 +41,6 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 fun DataViewItemCard(
     item: DataViewItem,
     onItemClick: (DataViewItem) -> Unit,
-    fallbackImageRes: Int = R.drawable.ic_user_placeholder_primary_24
 ) = Card(
     modifier = Modifier
         .fillMaxWidth()
@@ -56,37 +55,45 @@ fun DataViewItemCard(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RemoteImage(
-            imageUrl = item.imageUrl,
-            fallbackImageRes = fallbackImageRes,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        item.image?.let { image ->
+            RemoteImage(
+                imageUrl = image.imageUrl,
+                fallbackImageRes = image.fallbackImageRes,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            item.subtitle?.let { subtitle ->
+            item.fields.forEach { field ->
+                val style = when (field.fieldType) {
+                    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
+                    DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
+                    DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
+                }
+                val color = when (field.fieldType) {
+                    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
+                    DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurfaceVariant
+                    DataViewFieldType.DATE -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
                 Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = field.value,
+                    style = style,
+                    color = color,
+                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                field.subValue?.let { subtitle ->
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
-        }
-        item.dateLine?.let { date ->
-            Text(
-                text = date,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.dataview
 
+import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
 
 /**
@@ -9,19 +10,30 @@ object DummyDataViewItems {
     @Suppress("MagicNumber")
     fun getDummyDataViewItems(startIndex: Int = 0): List<DataViewItem> {
         val items = ArrayList<DataViewItem>()
-        fun addWithId(id: Long) {
-            items.add(
-                DataViewItem(
-                    id = id,
-                    title = "Title $id",
-                    subtitle = "Subtitle $id",
-                    dateLine = "2023-01-01",
-                )
-            )
-        }
         repeat(PAGE_SIZE) { index ->
             val id = (index + startIndex).toLong()
-            addWithId(id)
+            val fields = listOf(
+                DataViewItemField(
+                    titleResId = R.string.title,
+                    value = "Title $id",
+                    subValue = "Subtitle $id",
+                    fieldType = DataViewFieldType.TITLE,
+                ),
+                DataViewItemField(
+                    titleResId = R.string.publish_date,
+                    value = "2023-01-01",
+                    fieldType = DataViewFieldType.DATE,
+                ),
+            )
+            val item = DataViewItem(
+                id = id,
+                image = DataViewItemImage(
+                    imageUrl = null,
+                    fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
+                ),
+                fields = fields,
+            )
+            items.add(item)
         }
         return items
     }
