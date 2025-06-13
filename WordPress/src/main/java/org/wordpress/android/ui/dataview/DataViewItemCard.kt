@@ -61,10 +61,14 @@ fun DataViewItemCard(
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        var modifier = Modifier.weight(1f)
-        item.fields.forEach { field ->
+        item.fields.forEachIndexed { index, field ->
+            var modifier = if (index == 0) {
+                Modifier.weight(1f)
+            } else {
+                Modifier
+            }
             Column(
-                modifier = modifier,
+                modifier = modifier
             ) {
                 modifier = Modifier
                 val style = when (field.fieldType) {
