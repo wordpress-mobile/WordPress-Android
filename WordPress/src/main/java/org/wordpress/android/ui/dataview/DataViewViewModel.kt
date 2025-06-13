@@ -35,6 +35,7 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
+    private val searchQueryFlow = MutableStateFlow("")
     private var searchQuery: String = ""
     private var offset = 0
 
@@ -114,9 +115,9 @@ open class DataViewViewModel @Inject constructor(
     @OptIn(FlowPreview::class)
     fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
-        val searchFlow = MutableStateFlow(query)
         launch {
-            searchFlow
+            searchQueryFlow.value = query
+            searchQueryFlow
                 .debounce(SEARCH_DELAY_MS)
                 .collect {
                     searchQuery = it
