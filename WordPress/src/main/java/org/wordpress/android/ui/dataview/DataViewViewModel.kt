@@ -96,15 +96,13 @@ open class DataViewViewModel @Inject constructor(
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         offset = 0
-        launch {
-            // reset the filter if it's already selected
-            _itemFilter.value = if (filter == _itemFilter.value) {
-                null
-            } else {
-                filter
-            }
-            fetchData()
+        // clear the filter if it's already selected
+        _itemFilter.value = if (filter == _itemFilter.value) {
+            null
+        } else {
+            filter
         }
+        fetchData()
     }
 
     @OptIn(FlowPreview::class)
