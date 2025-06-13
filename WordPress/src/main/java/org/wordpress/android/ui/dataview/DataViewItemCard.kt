@@ -62,7 +62,7 @@ fun DataViewItemCard(
             Spacer(modifier = Modifier.width(8.dp))
         }
         item.fields.forEachIndexed { index, field ->
-            var modifier = if (index == 0) {
+            val modifier = if (index == 0) {
                 Modifier.weight(1f)
             } else {
                 Modifier
@@ -70,7 +70,6 @@ fun DataViewItemCard(
             Column(
                 modifier = modifier
             ) {
-                modifier = Modifier
                 val style = when (field.fieldType) {
                     DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
                     DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
