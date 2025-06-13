@@ -176,8 +176,6 @@ class AnalyticsTrackerNosaraTest {
         Stat.PAGES_SEARCH_ACCESSED to "site_pages_search_accessed",
         Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED to "site_pages_edit_homepage_info_pressed",
         Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED to "site_pages_edit_homepage_item_pressed",
-        Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED to "signup_email_epilogue_gallery_picked",
-        Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW to "signup_email_epilogue_shot_new",
         Stat.SIGNUP_EMAIL_EPILOGUE_UNCHANGED to "signup_epilogue_unchanged",
         Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED to "signup_epilogue_update_display_name_failed",
         Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED to "signup_epilogue_update_display_name_succeeded",
