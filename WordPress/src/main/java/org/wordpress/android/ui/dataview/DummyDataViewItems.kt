@@ -15,12 +15,13 @@ object DummyDataViewItems {
             val fields = listOf(
                 DataViewItemField(
                     value = "Title $id",
-                    subValue = "Subtitle $id",
-                    fieldType = DataViewFieldType.TITLE,
+                    valueType = DataViewFieldType.TITLE,
+                    subValue = "Blah $id blah $id blah $id blah $id blah $id blah $id blah $id blah $id blah $id",
+                    subValueType = DataViewFieldType.SUBTITLE,
                 ),
                 DataViewItemField(
                     value = "2023-01-$id",
-                    fieldType = DataViewFieldType.DATE,
+                    valueType = DataViewFieldType.DATE,
                 ),
             )
             val item = DataViewItem(

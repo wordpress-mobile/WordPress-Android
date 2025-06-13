@@ -5,6 +5,7 @@ package org.wordpress.android.ui.dataview
  */
 data class DataViewItemField(
     val value: String,
+    val valueType: DataViewFieldType,
     val subValue: String? = null,
-    val fieldType: DataViewFieldType
+    val subValueType: DataViewFieldType = DataViewFieldType.SUBTITLE,
 )

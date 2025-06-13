@@ -70,31 +70,20 @@ fun DataViewItemCard(
             Column(
                 modifier = modifier
             ) {
-                val style = when (field.fieldType) {
-                    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
-                    DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
-                }
-                val color = when (field.fieldType) {
-                    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
-                    DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
-                }
-                val fontWeight = when (field.fieldType) {
-                    DataViewFieldType.TITLE -> FontWeight.Bold
-                    DataViewFieldType.DATE -> FontWeight.Normal
-                }
                 Text(
                     text = field.value,
-                    style = style,
-                    color = color,
-                    fontWeight = fontWeight,
+                    style = styleFor(field.valueType),
+                    color = colorFor(field.valueType),
+                    fontWeight = fontWeightFor(field.valueType),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 field.subValue?.let { subValue ->
                     Text(
                         text = subValue,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = styleFor(field.subValueType),
+                        color = colorFor(field.subValueType),
+                        fontWeight = fontWeightFor(field.subValueType),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -102,6 +91,30 @@ fun DataViewItemCard(
             }
         }
     }
+}
+
+@Composable
+private fun colorFor(type: DataViewFieldType) = when (type) {
+    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
+    DataViewFieldType.SUBTITLE -> MaterialTheme.colorScheme.onSurface
+    DataViewFieldType.DATE -> MaterialTheme.colorScheme.onSurface
+    DataViewFieldType.EMAIL -> MaterialTheme.colorScheme.primary
+}
+
+@Composable
+private fun fontWeightFor(type: DataViewFieldType) = when (type) {
+    DataViewFieldType.TITLE -> FontWeight.Bold
+    DataViewFieldType.SUBTITLE -> FontWeight.Normal
+    DataViewFieldType.DATE -> FontWeight.Thin
+    DataViewFieldType.EMAIL -> FontWeight.Normal
+}
+
+@Composable
+private fun styleFor(type: DataViewFieldType) = when (type) {
+    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
+    DataViewFieldType.SUBTITLE -> MaterialTheme.typography.titleMedium
+    DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
+    DataViewFieldType.EMAIL -> MaterialTheme.typography.bodyMedium
 }
 
 @Composable
