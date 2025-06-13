@@ -41,7 +41,7 @@ class SubscribersViewModel @Inject constructor(
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> {
-        return getDummyDataViewItems()
+        return getDummyDataViewItems(offset)
     }
 
     companion object {

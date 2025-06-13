@@ -48,20 +48,26 @@ open class DataViewViewModel @Inject constructor(
     @Suppress("MagicNumber")
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            if (offset == 0) {
-                updateUiState(DataViewUiState.LOADING)
-            } else {
+            val isLoadingMore = offset > 0
+            if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
+            } else {
+                updateUiState(DataViewUiState.LOADING)
             }
 
             launch {
                 // simulate network delay
                 delay(1000L)
-                _items.value = performNetworkRequest(
+                val items = performNetworkRequest(
                     offset = offset,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
+                if (isLoadingMore) {
+                    _items.value += items
+                } else {
+                    _items.value = items
+                }
                 if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)

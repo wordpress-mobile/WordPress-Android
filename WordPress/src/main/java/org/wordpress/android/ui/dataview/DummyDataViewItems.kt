@@ -7,7 +7,7 @@ import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
  */
 object DummyDataViewItems {
     @Suppress("MagicNumber")
-    fun getDummyDataViewItems(): List<DataViewItem> {
+    fun getDummyDataViewItems(startIndex: Int = 0): List<DataViewItem> {
         val items = ArrayList<DataViewItem>()
         fun addWithId(id: Long) {
             items.add(
@@ -19,8 +19,9 @@ object DummyDataViewItems {
                 )
             )
         }
-        repeat(PAGE_SIZE) { id ->
-            addWithId(id.toLong())
+        repeat(PAGE_SIZE) { index ->
+            val id = (index + startIndex).toLong()
+            addWithId(id)
         }
         return items
     }
