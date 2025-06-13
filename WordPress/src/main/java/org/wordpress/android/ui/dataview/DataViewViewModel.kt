@@ -20,6 +20,7 @@ import javax.inject.Named
  * Provides a basic view model for displaying, fetching, filtering,
  * and searching a list of [DataViewItem]s
  */
+@OptIn(FlowPreview::class)
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
@@ -35,7 +36,7 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
-    private val searchQueryFlow = MutableStateFlow("")
+    private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
     private var offset = 0
 
@@ -43,6 +44,15 @@ open class DataViewViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
             fetchData()
+            debouncedQuery
+                .debounce(SEARCH_DELAY_MS)
+                .collect { query ->
+                    if (searchQuery != query) {
+                        searchQuery = query
+                        offset = 0
+                        fetchData()
+                    }
+                }
         }
     }
 
@@ -112,20 +122,9 @@ open class DataViewViewModel @Inject constructor(
         fetchData()
     }
 
-    @OptIn(FlowPreview::class)
     fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
-        launch {
-            searchQueryFlow.value = query
-            searchQueryFlow
-                .debounce(SEARCH_DELAY_MS)
-                .collect {
-                    searchQuery = it
-                    appLogWrapper.d(AppLog.T.MAIN, "$logTag searching")
-                    offset = 0
-                    fetchData()
-                }
-        }
+        debouncedQuery.value = query
     }
 
     private fun updateUiState(state: DataViewUiState) {
