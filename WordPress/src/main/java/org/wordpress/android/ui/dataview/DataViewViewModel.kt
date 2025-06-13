@@ -26,7 +26,7 @@ open class DataViewViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MutableStateFlow(DataViewUiState.EMPTY)
+    private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
     private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())

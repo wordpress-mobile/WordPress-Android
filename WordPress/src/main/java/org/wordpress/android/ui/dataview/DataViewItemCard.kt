@@ -65,7 +65,7 @@ fun DataViewItemCard(
             val modifier = if (index == 0) {
                 Modifier.weight(1f)
             } else {
-                Modifier
+                Modifier.padding(start = 8.dp)
             }
             Column(
                 modifier = modifier
@@ -97,7 +97,7 @@ fun DataViewItemCard(
 private fun colorFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
     DataViewFieldType.SUBTITLE -> MaterialTheme.colorScheme.onSurface
-    DataViewFieldType.DATE -> MaterialTheme.colorScheme.onSurface
+    DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
     DataViewFieldType.EMAIL -> MaterialTheme.colorScheme.primary
 }
 
@@ -105,7 +105,7 @@ private fun colorFor(type: DataViewFieldType) = when (type) {
 private fun fontWeightFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TITLE -> FontWeight.Bold
     DataViewFieldType.SUBTITLE -> FontWeight.Normal
-    DataViewFieldType.DATE -> FontWeight.Thin
+    DataViewFieldType.DATE -> FontWeight.Normal
     DataViewFieldType.EMAIL -> FontWeight.Normal
 }
 
