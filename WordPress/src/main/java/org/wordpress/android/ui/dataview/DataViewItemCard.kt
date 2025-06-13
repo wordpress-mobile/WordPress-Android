@@ -34,8 +34,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
 /**
- * Provides a basic card for displaying a single [DataViewItem]. More complex use cases
- * may require using onRenderItem in [DataViewScreen] to provide a custom renderer.
+ * Provides a card for displaying a single [DataViewItem]
  */
 @Composable
 fun DataViewItemCard(
@@ -62,36 +61,47 @@ fun DataViewItemCard(
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            item.fields.forEach { field ->
-                val style = when (field.fieldType) {
-                    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
-                    DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
-                    DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
-                }
-                val color = when (field.fieldType) {
-                    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
-                    DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurfaceVariant
-                    DataViewFieldType.DATE -> MaterialTheme.colorScheme.onSurfaceVariant
-                }
-                Text(
-                    text = field.value,
-                    style = style,
-                    color = color,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                field.subValue?.let { subtitle ->
+        item.fields.forEach { field ->
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                Row() {
+                    val style = when (field.fieldType) {
+                        DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
+                        DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
+                        DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
+                    }
+                    val color = when (field.fieldType) {
+                        DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
+                        DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurfaceVariant
+                        DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
+                    }
+                    val fontWeight = when (field.fieldType) {
+                        DataViewFieldType.TITLE -> FontWeight.Bold
+                        DataViewFieldType.TEXT -> FontWeight.Normal
+                        DataViewFieldType.DATE -> FontWeight.Normal
+                    }
                     Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = field.value,
+                        style = style,
+                        color = color,
+                        fontWeight = fontWeight,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                }
+                field.subValue?.let { subvalue ->
+                    Row() {
+                        Text(
+                            text = subvalue,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }
