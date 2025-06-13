@@ -4998,7 +4998,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
-    <string name="subscribers_filter_subscription_type">Subscriptions type</string>\
+    <string name="subscribers_filter_subscription_type">Subscriptions type</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
 
