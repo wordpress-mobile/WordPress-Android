@@ -6,6 +6,7 @@ package org.wordpress.android.ui.dataview
 enum class DataViewFieldType {
     TITLE,
     SUBTITLE,
+    TEXT,
     DATE,
     EMAIL
 }

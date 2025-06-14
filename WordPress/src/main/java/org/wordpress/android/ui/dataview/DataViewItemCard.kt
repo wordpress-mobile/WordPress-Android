@@ -97,6 +97,7 @@ fun DataViewItemCard(
 private fun colorFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
     DataViewFieldType.SUBTITLE -> MaterialTheme.colorScheme.onSurface
+    DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurface
     DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
     DataViewFieldType.EMAIL -> MaterialTheme.colorScheme.primary
 }
@@ -105,6 +106,7 @@ private fun colorFor(type: DataViewFieldType) = when (type) {
 private fun fontWeightFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TITLE -> FontWeight.Bold
     DataViewFieldType.SUBTITLE -> FontWeight.Normal
+    DataViewFieldType.TEXT -> FontWeight.Normal
     DataViewFieldType.DATE -> FontWeight.Normal
     DataViewFieldType.EMAIL -> FontWeight.Normal
 }
@@ -113,6 +115,7 @@ private fun fontWeightFor(type: DataViewFieldType) = when (type) {
 private fun styleFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
     DataViewFieldType.SUBTITLE -> MaterialTheme.typography.titleMedium
+    DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
     DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
     DataViewFieldType.EMAIL -> MaterialTheme.typography.bodyMedium
 }
