@@ -8,4 +8,5 @@ data class DataViewItemField(
     val valueType: DataViewFieldType,
     val subValue: String? = null,
     val subValueType: DataViewFieldType = DataViewFieldType.SUBTITLE,
+    val weight: Float = 0f,
 )

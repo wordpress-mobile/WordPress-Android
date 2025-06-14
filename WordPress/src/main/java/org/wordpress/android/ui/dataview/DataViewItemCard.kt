@@ -62,10 +62,13 @@ fun DataViewItemCard(
             Spacer(modifier = Modifier.width(8.dp))
         }
         item.fields.forEachIndexed { index, field ->
-            val modifier = if (index == 0) {
-                Modifier.weight(1f)
+            val modifier = if (field.weight > 0f) {
+                Modifier.weight(field.weight)
             } else {
-                Modifier.padding(start = 8.dp)
+                Modifier
+            }
+            if (index > 0) {
+                modifier.padding(start = 8.dp)
             }
             Column(
                 modifier = modifier
