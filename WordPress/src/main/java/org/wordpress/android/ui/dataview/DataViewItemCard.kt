@@ -78,7 +78,7 @@ fun DataViewItemCard(
                     style = styleFor(field.valueType),
                     color = colorFor(field.valueType),
                     fontWeight = fontWeightFor(field.valueType),
-                    maxLines = 1,
+                    maxLines = maxLinesFor(field.valueType),
                     overflow = TextOverflow.Ellipsis,
                 )
                 field.subValue?.let { subValue ->
@@ -87,7 +87,7 @@ fun DataViewItemCard(
                         style = styleFor(field.subValueType),
                         color = colorFor(field.subValueType),
                         fontWeight = fontWeightFor(field.subValueType),
-                        maxLines = 2,
+                        maxLines = maxLinesFor(field.valueType),
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -121,6 +121,15 @@ private fun styleFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
     DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
     DataViewFieldType.EMAIL -> MaterialTheme.typography.bodyMedium
+}
+
+@Composable
+private fun maxLinesFor(type: DataViewFieldType) = when (type) {
+    DataViewFieldType.TITLE -> 1
+    DataViewFieldType.SUBTITLE -> 1
+    DataViewFieldType.TEXT -> 3
+    DataViewFieldType.DATE -> 1
+    DataViewFieldType.EMAIL -> 1
 }
 
 @Composable
