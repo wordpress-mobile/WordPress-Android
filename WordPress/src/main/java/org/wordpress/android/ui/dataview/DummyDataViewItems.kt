@@ -18,17 +18,17 @@ object DummyDataViewItems {
                     valueType = DataViewFieldType.TITLE,
                     subValue = "Subtitle $id",
                     subValueType = DataViewFieldType.SUBTITLE,
-                    weight = .5f,
+                    weight = .4f,
                 ),
                 DataViewItemField(
-                    value = "Text column",
+                    value = "Text column $id",
                     valueType = DataViewFieldType.TEXT,
-                    weight = .25f,
+                    weight = .3f,
                 ),
                 DataViewItemField(
                     value = "2023-01-$id",
                     valueType = DataViewFieldType.DATE,
-                    weight = .25f,
+                    weight = .3f,
                 ),
             )
             val item = DataViewItem(
