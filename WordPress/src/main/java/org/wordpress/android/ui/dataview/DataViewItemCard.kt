@@ -40,8 +40,9 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 fun DataViewItemCard(
     item: DataViewItem,
     onItemClick: (DataViewItem) -> Unit,
+    modifier: Modifier = Modifier
 ) = Card(
-    modifier = Modifier
+    modifier = modifier
         .fillMaxWidth()
         .clickable { onItemClick(item) },
     shape = RoundedCornerShape(4.dp),
@@ -62,16 +63,16 @@ fun DataViewItemCard(
             Spacer(modifier = Modifier.width(8.dp))
         }
         item.fields.forEachIndexed { index, field ->
-            val modifier = if (field.weight > 0f) {
+            val columnModifier = if (field.weight > 0f) {
                 Modifier.weight(field.weight)
             } else {
                 Modifier
             }
             if (index > 0) {
-                modifier.padding(start = 16.dp)
+                columnModifier.padding(start = 16.dp)
             }
             Column(
-                modifier = modifier
+                modifier = columnModifier
             ) {
                 Text(
                     text = field.value,
