@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -98,10 +97,10 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
@@ -122,6 +121,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.subscribers.SubscribersActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -719,9 +719,15 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
+    @SuppressWarnings("unused")
     public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
-        // TODO - subscribers screen
-        Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+        // for now we only show the subscribers screen for debug users since it's very much a WIP
+        if (BuildConfig.DEBUG) {
+            Intent intent = new Intent(context, SubscribersActivity.class);
+            context.startActivity(intent);
+        } else {
+            ToastUtils.showToast(context, R.string.coming_soon, ToastUtils.Duration.LONG);
+        }
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
@@ -1332,6 +1338,7 @@ public class ActivityLauncher {
         intent.putExtra(FeedbackFormActivity.EXTRA_FEEDBACK_PREFIX, feedbackPrefix);
         context.startActivity(intent);
     }
+
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {

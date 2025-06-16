@@ -114,6 +114,8 @@
     <string name="sending">Sending</string>
     <string name="item_selected">Selected</string>
     <string name="coming_soon">Coming soon!</string>
+    <string name="filter">Filter</string>
+    <string name="clear">Clear</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -4993,6 +4995,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
+
+    <!-- Subscribers -->
+    <string name="subscribers_filter_email_subscription">Email subscription</string>
+    <string name="subscribers_filter_subscription_type">Subscriptions type</string>
+    <string name="subscribers_empty">There are no subscribers</string>
+    <string name="subscribers_empty_search">No results found</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>

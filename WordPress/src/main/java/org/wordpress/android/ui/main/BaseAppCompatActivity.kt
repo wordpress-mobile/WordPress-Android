@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
+import org.wordpress.android.ui.subscribers.SubscribersActivity
 
 /**
  * Base class for all activities - initially created to handle insets for Android 15's edge-to-edge support,
@@ -100,6 +101,7 @@ private val excludedActivities = listOf(
     PurchaseDomainActivity::class.java.name,
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,
+    SubscribersActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
     // this is excluded because it explicitly enables edge-to-edge
