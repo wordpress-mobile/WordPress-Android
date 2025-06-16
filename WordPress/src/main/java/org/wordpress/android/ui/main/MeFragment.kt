@@ -27,6 +27,7 @@ import com.gravatar.quickeditor.GravatarQuickEditor
 import com.gravatar.quickeditor.ui.editor.AboutEditorResult
 import com.gravatar.quickeditor.ui.editor.AboutInputField
 import com.gravatar.quickeditor.ui.editor.AuthenticationMethod
+import com.gravatar.quickeditor.ui.editor.AvatarPickerAndAboutEditorConfiguration
 import com.gravatar.quickeditor.ui.editor.AvatarPickerResult
 import com.gravatar.quickeditor.ui.editor.GravatarQuickEditorParams
 import com.gravatar.quickeditor.ui.editor.QuickEditorScopeOption
@@ -287,7 +288,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.showAvatarPicker() {
         withVeryfiedEmail(unverifiedEmailMessageRes = R.string.avatar_update_email_unverified) {
             if (gravatarQuickEditorFeatureConfig.isEnabled()) {
-                showQuickEditor(scope = QuickEditorScopeOption.avatarPicker())
+                showQuickEditor(page = AvatarPickerAndAboutEditorConfiguration.Page.AvatarPicker)
             } else {
                 showPhotoPickerForGravatar()
             }
@@ -296,8 +297,19 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun MeFragmentBinding.showProfileEditor() {
         withVeryfiedEmail(unverifiedEmailMessageRes = R.string.about_update_email_unverified) {
-            showQuickEditor(
-                scope = QuickEditorScopeOption.aboutEditor {
+            showQuickEditor(page = AvatarPickerAndAboutEditorConfiguration.Page.AboutEditor)
+        }
+    }
+
+    private fun MeFragmentBinding.showQuickEditor(
+        page: AvatarPickerAndAboutEditorConfiguration.Page
+    ) {
+        GravatarQuickEditor.show(
+            fragment = this@MeFragment,
+            gravatarQuickEditorParams = GravatarQuickEditorParams {
+                email = Email(accountStore.account.email)
+                scopeOption = QuickEditorScopeOption.avatarAndAbout {
+                    initialPage = page
                     fields = setOf(
                         AboutInputField.FirstName,
                         AboutInputField.LastName,
@@ -305,18 +317,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                         AboutInputField.AboutMe
                     )
                 }
-            )
-        }
-    }
-
-    private fun MeFragmentBinding.showQuickEditor(
-        scope: QuickEditorScopeOption
-    ) {
-        GravatarQuickEditor.show(
-            fragment = this@MeFragment,
-            gravatarQuickEditorParams = GravatarQuickEditorParams {
-                email = Email(accountStore.account.email)
-                scopeOption = scope
             },
             authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
             updateHandler = { event ->
