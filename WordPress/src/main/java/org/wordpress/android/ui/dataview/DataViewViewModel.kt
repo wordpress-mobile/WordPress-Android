@@ -41,7 +41,7 @@ open class DataViewViewModel @Inject constructor(
 
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
-    private var offset = 0
+    private var page = 0
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
@@ -52,7 +52,7 @@ open class DataViewViewModel @Inject constructor(
                 .collect { query ->
                     if (searchQuery != query) {
                         searchQuery = query
-                        offset = 0
+                        page = 0
                         fetchData()
                     }
                 }
@@ -62,7 +62,7 @@ open class DataViewViewModel @Inject constructor(
     @Suppress("MagicNumber")
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            val isLoadingMore = offset > 0
+            val isLoadingMore = page > 0
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
             } else {
@@ -73,7 +73,7 @@ open class DataViewViewModel @Inject constructor(
                 // simulate network delay
                 delay(1000L)
                 val items = performNetworkRequest(
-                    offset = offset,
+                    page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
@@ -99,7 +99,7 @@ open class DataViewViewModel @Inject constructor(
 
     fun onRefreshData() {
         if (_uiState.value == DataViewUiState.LOADED) {
-            offset = 0
+            page = 0
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData()
         }
@@ -108,14 +108,14 @@ open class DataViewViewModel @Inject constructor(
     fun onFetchMoreData() {
         if (_uiState.value != DataViewUiState.LOADING_MORE) {
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
-            offset += PAGE_SIZE
+            page++
             fetchData()
         }
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
-        offset = 0
+        page = 0
         // clear the filter if it's already selected
         _itemFilter.value = if (filter == _itemFilter.value) {
             null
@@ -139,7 +139,8 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(
-        offset: Int = 0,
+        page: Int = 0,
+        pageSize: Int = DEFAULT_PAGE_SIZE,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
     ): List<DataViewItem> = withContext(ioDispatcher) {
@@ -165,6 +166,6 @@ open class DataViewViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L
-        const val PAGE_SIZE = 25
+        const val DEFAULT_PAGE_SIZE = 25
     }
 }
