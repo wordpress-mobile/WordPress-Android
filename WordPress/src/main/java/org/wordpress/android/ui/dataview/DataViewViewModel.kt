@@ -130,6 +130,8 @@ open class DataViewViewModel @Inject constructor(
         debouncedQuery.value = query
     }
 
+    fun getSiteId() = 0L // TODO
+
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")

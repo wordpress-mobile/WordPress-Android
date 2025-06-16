@@ -10,11 +10,11 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewViewModel
+import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.util.NetworkUtilsWrapper
-import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.SubscribersListParams
-import uniffi.wp_api.SubscribersRequestExecutor
 import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -49,27 +49,30 @@ class SubscribersViewModel @Inject constructor(
         pageSize: Int,
         searchQuery: String,
         filter: DataViewItemFilter?
-    ): List<DataViewItem> {
-        withContext(ioDispatcher) {
-            // These credentials are from a dummy site, so it's safe to check them in during testing
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
-            )
-            // This is the url from api discovery process and should be stored somewhere
-            val apiRootUrl = ParsedUrl.parse("https://remote-wildfowl-pollan.jurassic.ninja/wp-json")
+    ): List<DataViewItem> = withContext(ioDispatcher) {
+        // These credentials are from a dummy site, so it's safe to check them in during testing
+        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+            username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
+        )
+        // This is the url from api discovery process and should be stored somewhere
+        val apiRootUrl = ParsedUrl.parse("https://remote-wildfowl-pollan.jurassic.ninja/wp-json")
 
-            val client = WpApiClient(apiRootUrl, authProvider)
-            val params = SubscribersListParams(
-                page = 0u,
-                perPage = pageSize.toULong(),
-                search = searchQuery
+        val client = WpComApiClient(authProvider)
+        val params = SubscribersListParams(
+            page = 0u,
+            perPage = pageSize.toULong(),
+            search = searchQuery
+        )
+        client.request { requestBuilder ->
+            val response = requestBuilder.subscribers().listSubscribers(
+                wpComSiteId = getSiteId().toULong(),
+                params = params
             )
-            client.request { requestBuilder ->
-                SubscribersRequestExecutor.listSubscribers
-                requestBuilder.
-            }
-            // getDummyDataViewItems(offset)
+            val subscribers = response.data.subscribers
         }
+
+        val offset = page * pageSize
+        getDummyDataViewItems(offset)
     }
 
     companion object {
