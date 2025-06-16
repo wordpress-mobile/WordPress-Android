@@ -97,10 +97,10 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
@@ -719,19 +719,14 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
-    public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
-        Intent intent = new Intent(context, SubscribersActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-        // TODO replace the above with this so subscribers screen is hidden for non-debug users
+    public static void viewCurrentBlogSubscribers(@NonNull Context context) {
         // for now we only show the subscribers screen for debug users since it's very much a WIP
-        /*if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Intent intent = new Intent(context, SubscribersActivity.class);
-            intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         } else {
             ToastUtils.showToast(context, R.string.coming_soon, ToastUtils.Duration.LONG);
-        }*/
+        }
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {

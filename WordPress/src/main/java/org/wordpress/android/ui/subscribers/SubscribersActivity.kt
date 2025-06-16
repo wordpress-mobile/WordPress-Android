@@ -8,32 +8,15 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
-    private var site: SiteModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        site = if (savedInstanceState == null) {
-            intent.getSerializableExtraCompat(WordPress.SITE)
-        } else {
-            savedInstanceState.getSerializableCompat(WordPress.SITE)
-        }
-        if (site == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
-            finish()
-            return
-        }
 
         setContentView(
             ComposeView(this).apply {
@@ -70,10 +53,5 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             }
         )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
     }
 }
