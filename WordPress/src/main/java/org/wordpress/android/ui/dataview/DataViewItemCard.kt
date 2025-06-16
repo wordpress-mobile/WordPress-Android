@@ -68,7 +68,7 @@ fun DataViewItemCard(
                 Modifier
             }
             if (index > 0) {
-                modifier.padding(start = 8.dp)
+                modifier.padding(start = 16.dp)
             }
             Column(
                 modifier = modifier
