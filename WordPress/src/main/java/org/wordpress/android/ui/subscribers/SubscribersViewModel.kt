@@ -2,8 +2,10 @@ package org.wordpress.android.ui.subscribers
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemFilter
@@ -16,12 +18,14 @@ import javax.inject.Named
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper
 ) : DataViewViewModel(
-    mainDispatcher,
-    appLogWrapper,
-    networkUtilsWrapper
+    mainDispatcher = mainDispatcher,
+    ioDispatcher = ioDispatcher,
+    appLogWrapper = appLogWrapper,
+    networkUtilsWrapper = networkUtilsWrapper
 ) {
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
@@ -40,8 +44,8 @@ class SubscribersViewModel @Inject constructor(
         offset: Int,
         searchQuery: String,
         filter: DataViewItemFilter?
-    ): List<DataViewItem> {
-        return getDummyDataViewItems(offset)
+    ): List<DataViewItem> = withContext(ioDispatcher) {
+        getDummyDataViewItems(offset)
     }
 
     companion object {

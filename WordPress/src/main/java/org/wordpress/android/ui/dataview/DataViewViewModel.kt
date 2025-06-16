@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -24,6 +26,7 @@ import javax.inject.Named
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
@@ -139,8 +142,8 @@ open class DataViewViewModel @Inject constructor(
         offset: Int = 0,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
-    ): List<DataViewItem> {
-        return emptyList()
+    ): List<DataViewItem> = withContext(ioDispatcher) {
+        emptyList()
     }
 
     /**
