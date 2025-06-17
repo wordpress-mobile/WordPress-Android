@@ -19,6 +19,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import rs.wordpress.api.kotlin.WpComApiClient
+import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -152,6 +154,15 @@ open class DataViewViewModel @Inject constructor(
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
+    }
+
+    fun getApiClient(): WpComApiClient {
+        // These credentials are from a dummy site, so it's safe to check them in during testing
+        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+            username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
+        )
+
+        return WpComApiClient(authProvider)
     }
 
     /**

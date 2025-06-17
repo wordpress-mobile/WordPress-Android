@@ -54,18 +54,13 @@ class SubscribersViewModel @Inject constructor(
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
-        // These credentials are from a dummy site, so it's safe to check them in during testing
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
-        )
-
-        val client = WpComApiClient(authProvider)
-        val params = SubscribersListParams(
-            page = 0u,
-            perPage = pageSize.toULong(),
-            search = searchQuery
-        )
         try {
+            val client = getApiClient()
+            val params = SubscribersListParams(
+                page = 0u,
+                perPage = pageSize.toULong(),
+                search = searchQuery
+            )
             val request = client.request { requestBuilder ->
                 requestBuilder.subscribers().listSubscribers(
                     wpComSiteId = siteId.toULong(),
