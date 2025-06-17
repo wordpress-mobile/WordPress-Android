@@ -137,13 +137,13 @@ open class DataViewViewModel @Inject constructor(
         debouncedQuery.value = query
     }
 
-    fun showToast(@StringRes msgId: Int) {
+    fun showError(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
         }
     }
 
-    fun showToast(message: String) {
+    fun showError(message: String) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(message)
         }
