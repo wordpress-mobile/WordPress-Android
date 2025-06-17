@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.dataview
 
+import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -8,12 +10,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,6 +32,7 @@ open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val toastUtilsWrapper: ToastUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
@@ -44,10 +49,6 @@ open class DataViewViewModel @Inject constructor(
     private var page = 0
 
     var siteId: Long = 0L
-        get() = field
-        set(value) {
-            field = value
-        }
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
@@ -134,6 +135,18 @@ open class DataViewViewModel @Inject constructor(
     fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
         debouncedQuery.value = query
+    }
+
+    fun showToast(@StringRes msgId: Int) {
+        viewModelScope.launch {
+            toastUtilsWrapper.showToast(msgId)
+        }
+    }
+
+    fun showToast(message: String) {
+        viewModelScope.launch {
+            toastUtilsWrapper.showToast(message)
+        }
     }
 
     private fun updateUiState(state: DataViewUiState) {
