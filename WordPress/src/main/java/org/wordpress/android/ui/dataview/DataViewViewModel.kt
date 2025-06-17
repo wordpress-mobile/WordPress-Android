@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -21,6 +22,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
+import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -38,6 +40,7 @@ open class DataViewViewModel @Inject constructor(
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
@@ -57,12 +60,12 @@ open class DataViewViewModel @Inject constructor(
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
-            // These credentials are from a dummy site, so it's safe to check them in during testing
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = "demo",
-                password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
+            // TODO this is strictly for wp.com sites, we'll need to do use different
+            // authentication for self-hosted.
+            apiClient = WpComApiClient(WpAuthenticationProvider.staticWithAuth(
+                WpAuthentication.Bearer(token = accountStore.accessToken!!))
             )
-            apiClient = WpComApiClient(authProvider)
+
             fetchData()
 
             debouncedQuery
@@ -81,7 +84,6 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    @Suppress("MagicNumber")
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             val isLoadingMore = page > 0
@@ -92,8 +94,6 @@ open class DataViewViewModel @Inject constructor(
             }
 
             launch {
-                // simulate network delay
-                delay(1000L)
                 val items = performNetworkRequest(
                     page = page,
                     searchQuery = searchQuery,
