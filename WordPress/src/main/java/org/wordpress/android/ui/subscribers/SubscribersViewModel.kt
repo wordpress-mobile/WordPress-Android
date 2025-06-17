@@ -14,6 +14,7 @@ import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
@@ -29,13 +30,15 @@ class SubscribersViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     val appLogWrapper: AppLogWrapper,
     toastUtilsWrapper: ToastUtilsWrapper,
-    networkUtilsWrapper: NetworkUtilsWrapper
+    networkUtilsWrapper: NetworkUtilsWrapper,
+    selectedSiteRepository: SelectedSiteRepository
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     ioDispatcher = ioDispatcher,
     appLogWrapper = appLogWrapper,
     toastUtilsWrapper = toastUtilsWrapper,
-    networkUtilsWrapper = networkUtilsWrapper
+    networkUtilsWrapper = networkUtilsWrapper,
+    selectedSiteRepository = selectedSiteRepository
 ) {
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
@@ -57,15 +60,14 @@ class SubscribersViewModel @Inject constructor(
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
-            val client = getApiClient()
             val params = SubscribersListParams(
                 page = 0u,
                 perPage = pageSize.toULong(),
                 search = searchQuery
             )
-            val request = client.request { requestBuilder ->
+            val request = apiClient.request { requestBuilder ->
                 requestBuilder.subscribers().listSubscribers(
-                    wpComSiteId = siteId.toULong(),
+                    wpComSiteId = siteId().toULong(),
                     params = params
                 )
             }
@@ -87,11 +89,10 @@ class SubscribersViewModel @Inject constructor(
                     } ?: run {
                         showError(R.string.error_generic_network)
                     }
+                    val offset = page * pageSize
+                    getDummyDataViewItems(offset)
                 }
             }
-
-            val offset = page * pageSize
-            getDummyDataViewItems(offset)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
             e.message?.let {
@@ -116,12 +117,12 @@ class SubscribersViewModel @Inject constructor(
                     valueType = DataViewFieldType.TITLE,
                     subValue = subscriber.subscriptionStatus,
                     subValueType = DataViewFieldType.SUBTITLE,
-                    weight = .3f,
+                    weight = .6f,
                 ),
                 DataViewItemField(
                     value = subscriber.dateSubscribed.toString(),
                     valueType = DataViewFieldType.DATE,
-                    weight = .3f,
+                    weight = .4f,
                 ),
             )
         )

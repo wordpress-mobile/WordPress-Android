@@ -20,16 +20,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            val siteId = intent.getLongExtra(WordPress.REMOTE_SITE_ID, 0L)
-            if (siteId == 0L) {
-                ToastUtils.showToast(this, R.string.blog_not_found)
-                finish()
-                return
-            }
-            viewModel.siteId = siteId
-        }
-
         setContentView(
             ComposeView(this).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

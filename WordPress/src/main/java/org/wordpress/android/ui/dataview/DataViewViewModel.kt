@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
@@ -35,7 +36,8 @@ open class DataViewViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
@@ -50,12 +52,19 @@ open class DataViewViewModel @Inject constructor(
     private var searchQuery: String = ""
     private var page = 0
 
-    var siteId: Long = 0L
+    lateinit var apiClient: WpComApiClient
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
+            // These credentials are from a dummy site, so it's safe to check them in during testing
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = "demo",
+                password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
+            )
+            apiClient = WpComApiClient(authProvider)
             fetchData()
+
             debouncedQuery
                 .debounce(SEARCH_DELAY_MS)
                 .collect { query ->
@@ -66,6 +75,10 @@ open class DataViewViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun siteId(): Long {
+        return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
     @Suppress("MagicNumber")
@@ -154,15 +167,6 @@ open class DataViewViewModel @Inject constructor(
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
-    }
-
-    fun getApiClient(): WpComApiClient {
-        // These credentials are from a dummy site, so it's safe to check them in during testing
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
-        )
-
-        return WpComApiClient(authProvider)
     }
 
     /**
