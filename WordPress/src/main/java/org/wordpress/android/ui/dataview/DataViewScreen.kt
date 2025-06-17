@@ -229,6 +229,7 @@ private fun LoadedDataView(
         if (showProgress) {
             CircularProgressIndicator(
                 modifier = Modifier.size(48.dp)
+                    .align(Alignment.Center)
             )
         }
     }
