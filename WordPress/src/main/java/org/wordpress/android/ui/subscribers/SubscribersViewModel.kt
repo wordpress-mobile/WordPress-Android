@@ -7,17 +7,19 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
+import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemFilter
+import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
-import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscribersListParams
-import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -71,11 +73,16 @@ class SubscribersViewModel @Inject constructor(
                 is WpRequestResult.Success -> {
                     val subscribers = request.response.data.subscribers
                     appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
+                    val items = ArrayList<DataViewItem>()
+                    subscribers.forEach { subscriber ->
+                        items.add(subscriberToDataViewItem(subscriber))
+                    }
+                    return@withContext items
                 }
 
                 else -> {
                     appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
-                    (request as? WpRequestResult.WpError)?.let{
+                    (request as? WpRequestResult.WpError)?.let {
                         showError(it.errorMessage)
                     } ?: run {
                         showError(R.string.error_generic_network)
@@ -94,6 +101,30 @@ class SubscribersViewModel @Inject constructor(
             }
             return@withContext emptyList()
         }
+    }
+
+    private fun subscriberToDataViewItem(subscriber: Subscriber): DataViewItem {
+        return DataViewItem(
+            id = subscriber.userId,
+            image = DataViewItemImage(
+                imageUrl = subscriber.avatar,
+                fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
+            ),
+            fields = listOf(
+                DataViewItemField(
+                    value = subscriber.displayName.ifEmpty { subscriber.emailAddress },
+                    valueType = DataViewFieldType.TITLE,
+                    subValue = subscriber.subscriptionStatus,
+                    subValueType = DataViewFieldType.SUBTITLE,
+                    weight = .3f,
+                ),
+                DataViewItemField(
+                    value = subscriber.dateSubscribed.toString(),
+                    valueType = DataViewFieldType.DATE,
+                    weight = .3f,
+                ),
+            )
+        )
     }
 
     companion object {
