@@ -21,6 +21,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
+import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
@@ -195,6 +196,7 @@ open class DataViewViewModel @Inject constructor(
     open suspend fun performNetworkRequest(
         page: Int = 0,
         pageSize: Int = DEFAULT_PAGE_SIZE,
+        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
     ): List<DataViewItem> = withContext(ioDispatcher) {

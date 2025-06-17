@@ -14,8 +14,10 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscribersListParams
+import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -44,6 +46,7 @@ class SubscribersViewModel @Inject constructor(
     override suspend fun performNetworkRequest(
         page: Int,
         pageSize: Int,
+        sortOrder: WpApiParamOrder,
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
@@ -51,6 +54,8 @@ class SubscribersViewModel @Inject constructor(
             val params = SubscribersListParams(
                 page = page.toULong(),
                 perPage = pageSize.toULong(),
+                sortOrder = sortOrder,
+                sort = ListSubscribersSortField.DISPLAY_NAME,
                 search = searchQuery
             )
             val request = wpComApiClient.request { requestBuilder ->
