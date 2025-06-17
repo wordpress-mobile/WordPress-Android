@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
@@ -13,10 +12,7 @@ import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscribersListParams
@@ -26,18 +22,10 @@ import javax.inject.Named
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    val appLogWrapper: AppLogWrapper,
-    toastUtilsWrapper: ToastUtilsWrapper,
-    networkUtilsWrapper: NetworkUtilsWrapper,
-    selectedSiteRepository: SelectedSiteRepository
+    private val appLogWrapper: AppLogWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
-    ioDispatcher = ioDispatcher,
-    appLogWrapper = appLogWrapper,
-    toastUtilsWrapper = toastUtilsWrapper,
-    networkUtilsWrapper = networkUtilsWrapper,
-    selectedSiteRepository = selectedSiteRepository
+    appLogWrapper = appLogWrapper
 ) {
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
@@ -61,11 +49,11 @@ class SubscribersViewModel @Inject constructor(
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
             val params = SubscribersListParams(
-                page = 0u,
+                page = page.toULong(),
                 perPage = pageSize.toULong(),
                 search = searchQuery
             )
-            val request = apiClient.request { requestBuilder ->
+            val request = wpComApiClient.request { requestBuilder ->
                 requestBuilder.subscribers().listSubscribers(
                     wpComSiteId = siteId().toULong(),
                     params = params

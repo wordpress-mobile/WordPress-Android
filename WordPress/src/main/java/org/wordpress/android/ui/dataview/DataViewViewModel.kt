@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,13 +34,24 @@ import javax.inject.Named
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
-    private val toastUtilsWrapper: ToastUtilsWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
 ) : ScopedViewModel(mainDispatcher) {
+    @Inject
+    lateinit var toastUtilsWrapper: ToastUtilsWrapper
+
+    @Inject
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
+
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -55,15 +65,17 @@ open class DataViewViewModel @Inject constructor(
     private var searchQuery: String = ""
     private var page = 0
 
-    lateinit var apiClient: WpComApiClient
+    lateinit var wpComApiClient: WpComApiClient
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
             // TODO this is strictly for wp.com sites, we'll need to do use different
             // authentication for self-hosted.
-            apiClient = WpComApiClient(WpAuthenticationProvider.staticWithAuth(
-                WpAuthentication.Bearer(token = accountStore.accessToken!!))
+            wpComApiClient = WpComApiClient(
+                WpAuthenticationProvider.staticWithAuth(
+                    WpAuthentication.Bearer(token = accountStore.accessToken!!)
+                )
             )
 
             fetchData()
