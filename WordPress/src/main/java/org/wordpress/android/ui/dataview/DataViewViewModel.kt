@@ -43,6 +43,12 @@ open class DataViewViewModel @Inject constructor(
     private var searchQuery: String = ""
     private var page = 0
 
+    var siteId: Long = 0L
+        get() = field
+        set(value) {
+            field = value
+        }
+
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
@@ -129,8 +135,6 @@ open class DataViewViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
         debouncedQuery.value = query
     }
-
-    fun getSiteId() = 0L // TODO
 
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state

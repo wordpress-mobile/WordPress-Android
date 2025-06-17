@@ -15,7 +15,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.SubscribersListParams
 import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
@@ -56,8 +55,6 @@ class SubscribersViewModel @Inject constructor(
         val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
             username = "demo", password = "FKnT 3P5E aIUs xCIz vb6T 20Ni"
         )
-        // This is the url from api discovery process and should be stored somewhere
-        val apiRootUrl = ParsedUrl.parse("https://remote-wildfowl-pollan.jurassic.ninja/wp-json")
 
         val client = WpComApiClient(authProvider)
         val params = SubscribersListParams(
@@ -66,20 +63,20 @@ class SubscribersViewModel @Inject constructor(
             search = searchQuery
         )
         val request = client.request { requestBuilder ->
-            val response = requestBuilder.subscribers().listSubscribers(
-                wpComSiteId = getSiteId().toULong(),
+            requestBuilder.subscribers().listSubscribers(
+                wpComSiteId = siteId.toULong(),
                 params = params
             )
-            val subscribers = response.data.subscribers
         }
 
         when (request) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.MAIN, "Fetch subscribers success")
+                 val subscribers = request.response.data.subscribers
+                appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: ${request}")
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
             }
         }
 

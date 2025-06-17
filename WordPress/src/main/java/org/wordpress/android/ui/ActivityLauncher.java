@@ -719,11 +719,11 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
-    @SuppressWarnings("unused")
     public static void viewCurrentBlogSubscribers(@NonNull Context context, @NonNull SiteModel site) {
         // for now we only show the subscribers screen for debug users since it's very much a WIP
         if (BuildConfig.DEBUG) {
             Intent intent = new Intent(context, SubscribersActivity.class);
+            intent.putExtra(WordPress.REMOTE_SITE_ID, site.getSiteId());
             context.startActivity(intent);
         } else {
             ToastUtils.showToast(context, R.string.coming_soon, ToastUtils.Duration.LONG);

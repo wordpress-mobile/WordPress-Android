@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -17,6 +18,16 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            val siteId = intent.getLongExtra("siteId", 0L)
+            if (siteId == 0L) {
+                ToastUtils.showToast(this, R.string.blog_not_found)
+                finish()
+                return
+            }
+            viewModel.siteId = siteId
+        }
 
         setContentView(
             ComposeView(this).apply {
