@@ -8,10 +8,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {

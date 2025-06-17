@@ -13,7 +13,6 @@ import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
-import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -53,6 +52,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun performNetworkRequest(
         page: Int,
         pageSize: Int,
@@ -89,8 +89,7 @@ class SubscribersViewModel @Inject constructor(
                     } ?: run {
                         showError(R.string.error_generic_network)
                     }
-                    val offset = page * pageSize
-                    getDummyDataViewItems(offset)
+                    return@withContext emptyList()
                 }
             }
         } catch (e: Exception) {
