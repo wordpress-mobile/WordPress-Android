@@ -134,10 +134,14 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
+    private fun resetPage() {
+        page = 0
+        canLoadMore = true
+    }
+
     fun onRefreshData() {
         if (_uiState.value == DataViewUiState.LOADED) {
-            page = 0
-            canLoadMore = true
+            resetPage()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData()
         }
@@ -153,8 +157,7 @@ open class DataViewViewModel @Inject constructor(
 
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
-        page = 0
-        canLoadMore = true
+        resetPage()
         // clear the filter if it's already selected
         _itemFilter.value = if (filter == _itemFilter.value) {
             null

@@ -209,7 +209,6 @@ private fun LoadedDataView(
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
