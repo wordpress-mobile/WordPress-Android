@@ -64,6 +64,7 @@ open class DataViewViewModel @Inject constructor(
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
     private var page = 0
+    private var canLoadMore = true
 
     lateinit var wpComApiClient: WpComApiClient
 
@@ -108,6 +109,7 @@ open class DataViewViewModel @Inject constructor(
             launch {
                 val items = performNetworkRequest(
                     page = page,
+                    pageSize = DEFAULT_PAGE_SIZE,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
@@ -116,6 +118,7 @@ open class DataViewViewModel @Inject constructor(
                 } else {
                     _items.value = items
                 }
+                canLoadMore = items.size == DEFAULT_PAGE_SIZE
                 if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
@@ -134,13 +137,14 @@ open class DataViewViewModel @Inject constructor(
     fun onRefreshData() {
         if (_uiState.value == DataViewUiState.LOADED) {
             page = 0
+            canLoadMore = true
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData()
         }
     }
 
     fun onFetchMoreData() {
-        if (_uiState.value != DataViewUiState.LOADING_MORE) {
+        if (_uiState.value != DataViewUiState.LOADING_MORE && canLoadMore) {
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
             page++
             fetchData()
@@ -150,6 +154,7 @@ open class DataViewViewModel @Inject constructor(
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         page = 0
+        canLoadMore = true
         // clear the filter if it's already selected
         _itemFilter.value = if (filter == _itemFilter.value) {
             null
