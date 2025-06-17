@@ -11,8 +11,10 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemFilter
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.SubscribersListParams
 import uniffi.wp_api.WpAuthenticationProvider
@@ -23,7 +25,7 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    appLogWrapper: AppLogWrapper,
+    val appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
@@ -63,12 +65,22 @@ class SubscribersViewModel @Inject constructor(
             perPage = pageSize.toULong(),
             search = searchQuery
         )
-        client.request { requestBuilder ->
+        val request = client.request { requestBuilder ->
             val response = requestBuilder.subscribers().listSubscribers(
                 wpComSiteId = getSiteId().toULong(),
                 params = params
             )
             val subscribers = response.data.subscribers
+        }
+
+        when (request) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.MAIN, "Fetch subscribers success")
+            }
+
+            else -> {
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: ${request}")
+            }
         }
 
         val offset = page * pageSize
