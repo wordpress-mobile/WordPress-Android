@@ -47,9 +47,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
                 false
             } else {
-                val siteUrl = applicationPasswordLoginHelper.getSiteUrlFromUrl(rawData)
+                val siteUrlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
                 val xmlRpcEndpoint = async {
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrlLogin.siteUrl.orEmpty())
                 }.await()
                 Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
 
@@ -57,7 +57,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     SiteActionBuilder.newFetchSiteAction(
                         SiteModel().apply {
                             xmlRpcUrl = xmlRpcEndpoint
-                            url = applicationPasswordLoginHelper.getSiteUrlFromUrl(rawData)
+                            url = siteUrlLogin.siteUrl
+                            apiRestUsernamePlain = siteUrlLogin.user
+                            apiRestPasswordPlain = siteUrlLogin.password
                         }
                     )
                 )
