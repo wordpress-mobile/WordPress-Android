@@ -25,11 +25,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         // TODO: Init site
         // TODO store credentials
         viewModelScope.launch {
-            saveCredentials(rawCredentials)
+            val credentialsStored = storeCredentials(rawCredentials)
+            _onFinishedEvent.emit(credentialsStored)
         }
     }
 
-    suspend private fun saveCredentials(rawCredentials: String): Boolean = withContext(ioDispatcher) {
+    suspend private fun storeCredentials(rawCredentials: String): Boolean = withContext(ioDispatcher) {
         if (rawCredentials.isEmpty()) {
             false
         } else {
