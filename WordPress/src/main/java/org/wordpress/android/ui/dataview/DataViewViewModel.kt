@@ -64,11 +64,13 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
     private var page = 0
     private var canLoadMore = true
-    private var errorMessage: String? = null
 
     lateinit var wpComApiClient: WpComApiClient
 
@@ -143,7 +145,7 @@ open class DataViewViewModel @Inject constructor(
     private fun resetPaging() {
         page = 0
         canLoadMore = true
-        errorMessage = null
+        _errorMessage.value = null
     }
 
     fun onRefreshData() {
@@ -180,7 +182,7 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onError(message: String?) {
-        errorMessage = message
+        _errorMessage.value = message
         updateUiState(DataViewUiState.ERROR)
     }
 
