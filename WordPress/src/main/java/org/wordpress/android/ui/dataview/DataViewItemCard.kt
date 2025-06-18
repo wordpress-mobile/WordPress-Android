@@ -53,50 +53,54 @@ fun DataViewItemCard(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-       // verticalAlignment = Alignment.CenterVertically
+        // verticalAlignment = Alignment.CenterVertically
     ) {
         item.image?.let { image ->
-            RemoteImage(
-                imageUrl = image.imageUrl,
-                fallbackImageRes = image.fallbackImageRes,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                RemoteImage(
+                    imageUrl = image.imageUrl,
+                    fallbackImageRes = image.fallbackImageRes,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
         }
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(
-                text = item.title,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            item.fields.forEachIndexed { index, field ->
-                val columnModifier = if (field.weight > 0f) {
-                    Modifier.weight(field.weight)
-                } else {
-                    Modifier
-                }
-                if (index > 0) {
-                    columnModifier.padding(start = 16.dp)
-                }
-                Column(
-                    modifier = columnModifier
-                ) {
-                    Text(
-                        text = field.value,
-                        style = styleFor(field.valueType),
-                        color = colorFor(field.valueType),
-                        maxLines = maxLinesFor(field.valueType),
-                        overflow = TextOverflow.Ellipsis,
-                    )
+            Row {
+                Text(
+                    text = item.title,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                item.fields.forEachIndexed { index, field ->
+                    val columnModifier = if (field.weight > 0f) {
+                        Modifier.weight(field.weight)
+                    } else {
+                        Modifier
+                    }
+                    if (index > 0) {
+                        columnModifier.padding(start = 16.dp)
+                    }
+                    Column(
+                        modifier = columnModifier
+                    ) {
+                        Text(
+                            text = field.value,
+                            style = styleFor(field.valueType),
+                            color = colorFor(field.valueType),
+                            maxLines = maxLinesFor(field.valueType),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 }
             }
         }
