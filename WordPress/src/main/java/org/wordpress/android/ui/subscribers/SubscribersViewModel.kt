@@ -84,21 +84,13 @@ class SubscribersViewModel @Inject constructor(
 
                 else -> {
                     appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
-                    (request as? WpRequestResult.WpError)?.let {
-                        showError(it.errorMessage)
-                    } ?: run {
-                        showError(R.string.error_generic_network)
-                    }
+                    onError((request as? WpRequestResult.WpError)?.errorMessage)
                     return@withContext emptyList()
                 }
             }
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
-            e.message?.let {
-                showError(it)
-            } ?: run {
-                showError(R.string.error_generic_network)
-            }
+            onError(e.message)
             return@withContext emptyList()
         }
     }

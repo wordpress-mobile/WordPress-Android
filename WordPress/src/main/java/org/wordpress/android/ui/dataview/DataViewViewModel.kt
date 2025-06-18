@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.dataview
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -66,6 +65,9 @@ open class DataViewViewModel @Inject constructor(
 
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
 
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
@@ -176,15 +178,10 @@ open class DataViewViewModel @Inject constructor(
         debouncedQuery.value = query
     }
 
-    fun showError(@StringRes msgId: Int) {
+    fun onError(message: String?) {
         viewModelScope.launch {
-            toastUtilsWrapper.showToast(msgId)
-        }
-    }
-
-    fun showError(message: String) {
-        viewModelScope.launch {
-            toastUtilsWrapper.showToast(message)
+            _errorMessage.value = message
+            _uiState.value = DataViewUiState.ERROR
         }
     }
 
