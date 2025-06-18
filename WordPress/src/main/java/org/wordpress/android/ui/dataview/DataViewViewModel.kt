@@ -10,19 +10,16 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,13 +34,7 @@ open class DataViewViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     @Inject
-    lateinit var toastUtilsWrapper: ToastUtilsWrapper
-
-    @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Inject
-    lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -184,10 +175,6 @@ open class DataViewViewModel @Inject constructor(
     fun onError(message: String?) {
         _errorMessage.value = message
         updateUiState(DataViewUiState.ERROR)
-    }
-
-    fun formatDate(date: Date): String {
-        return dateFormatWrapper.getDateInstance().format(date)
     }
 
     private fun updateUiState(state: DataViewUiState) {
