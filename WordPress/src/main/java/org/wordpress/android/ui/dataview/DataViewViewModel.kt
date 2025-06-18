@@ -115,13 +115,17 @@ open class DataViewViewModel @Inject constructor(
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
+                if (uiState.value == DataViewUiState.ERROR) {
+                    return@launch
+                }
+
                 if (isLoadingMore) {
                     _items.value += items
                 } else {
                     _items.value = items
                 }
                 canLoadMore = items.size == PAGE_SIZE
-                if (_items.value.isEmpty() && uiState.value != DataViewUiState.ERROR) {
+                if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
                     } else {
@@ -139,6 +143,7 @@ open class DataViewViewModel @Inject constructor(
     private fun resetPaging() {
         page = 0
         canLoadMore = true
+        errorMessage = null
     }
 
     fun onRefreshData() {
@@ -176,7 +181,7 @@ open class DataViewViewModel @Inject constructor(
 
     fun onError(message: String?) {
         errorMessage = message
-        _uiState.value = DataViewUiState.ERROR
+        updateUiState(DataViewUiState.ERROR)
     }
 
     fun formatDate(date: Date): String {
