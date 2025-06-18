@@ -14,6 +14,7 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
 import uniffi.wp_api.SubscribersListParams
@@ -62,7 +63,8 @@ class SubscribersViewModel @Inject constructor(
                 perPage = PAGE_SIZE.toULong(),
                 sortOrder = sortOrder,
                 search = searchQuery,
-                filter = filterType
+                filter = filterType,
+                sort = ListSubscribersSortField.DISPLAY_NAME
             )
 
             val request = wpComApiClient.request { requestBuilder ->

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.dataview
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -8,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -66,13 +64,11 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage = _errorMessage.asStateFlow()
-
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
     private var page = 0
     private var canLoadMore = true
+    private var errorMessage: String? = null
 
     lateinit var wpComApiClient: WpComApiClient
 
@@ -125,7 +121,7 @@ open class DataViewViewModel @Inject constructor(
                     _items.value = items
                 }
                 canLoadMore = items.size == PAGE_SIZE
-                if (_items.value.isEmpty()) {
+                if (_items.value.isEmpty() && uiState.value != DataViewUiState.ERROR) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
                     } else {
@@ -140,14 +136,14 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    private fun resetPage() {
+    private fun resetPaging() {
         page = 0
         canLoadMore = true
     }
 
     fun onRefreshData() {
         if (_uiState.value == DataViewUiState.LOADED) {
-            resetPage()
+            resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData()
         }
@@ -163,7 +159,7 @@ open class DataViewViewModel @Inject constructor(
 
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
-        resetPage()
+        resetPaging()
         // clear the filter if it's already selected
         _itemFilter.value = if (filter == _itemFilter.value) {
             null
@@ -179,10 +175,8 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onError(message: String?) {
-        viewModelScope.launch {
-            _errorMessage.value = message
-            _uiState.value = DataViewUiState.ERROR
-        }
+        errorMessage = message
+        _uiState.value = DataViewUiState.ERROR
     }
 
     fun formatDate(date: Date): String {

@@ -68,7 +68,7 @@ fun DataViewScreen(
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
-    errorMessage: State<String>? = null,
+    errorMessage: String? = null,
 ) {
     Screen(
         title = title,
@@ -91,7 +91,7 @@ fun DataViewScreen(
                     DataViewUiState.LOADING -> LoadingDataView()
                     DataViewUiState.EMPTY -> EmptyDataView()
                     DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
-                    DataViewUiState.ERROR -> ErrorDataView(errorMessage?.value)
+                    DataViewUiState.ERROR -> ErrorDataView(errorMessage)
                     DataViewUiState.OFFLINE -> OfflineDataView()
                     DataViewUiState.LOADING_MORE,
                     DataViewUiState.LOADED -> LoadedDataView(
