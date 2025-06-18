@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,7 +85,7 @@ fun DataViewItemCard(
                     val columnModifier = if (field.weight > 0f) {
                         Modifier.weight(field.weight)
                     } else {
-                        Modifier
+                        Modifier.weight(1f)
                     }
                     if (index > 0) {
                         columnModifier.padding(start = 16.dp)
@@ -98,6 +99,12 @@ fun DataViewItemCard(
                             color = colorFor(field.valueType),
                             maxLines = maxLinesFor(field.valueType),
                             overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = if (index == item.fields.size - 1) {
+                                TextAlign.End
+                            } else {
+                                TextAlign.Start
+                            }
                         )
                     }
                 }
