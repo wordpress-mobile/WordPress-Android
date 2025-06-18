@@ -128,7 +128,7 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.ApplicationPasswordLoginActivity"
+            android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
             android:theme="@style/LoginTheme.TransparentSystemBars"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">

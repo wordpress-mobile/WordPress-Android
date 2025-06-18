@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts
+package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.content.Intent
 import android.os.Bundle
