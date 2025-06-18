@@ -15,7 +15,6 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.GetSubscriberQuery
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberImportJob
 import uniffi.wp_api.SubscriberType
@@ -124,7 +123,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    suspend fun fetchSubscriber(id: Long): SubscriberImportJob? = withContext(ioDispatcher) {
+    suspend fun fetchSubscriberDetail(subscriberId: Long): SubscriberImportJob? = withContext(ioDispatcher) {
         val request = wpComApiClient.request { requestBuilder ->
             requestBuilder.subscribers().getSubscriber(
                 wpComSiteId = siteId().toULong(),
