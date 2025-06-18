@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import javax.inject.Inject
@@ -21,34 +24,49 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
+    private val siteStore: SiteStore,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<Boolean>()
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
     fun setupSite(rawData: String) {
         viewModelScope.launch {
-            getSiteXmlRpcEndpoint(rawData)
-            val credentialsStored = storeCredentials(rawData)
-            _onFinishedEvent.emit(credentialsStored)
+            val siteStored = storeSite(rawData)
+            if (siteStored) {
+                val credentialsStored = storeCredentials(rawData)
+                _onFinishedEvent.emit(credentialsStored)
+            } else {
+                _onFinishedEvent.emit(false)
+            }
         }
     }
 
-    suspend private fun getSiteXmlRpcEndpoint(rawData: String): String = withContext(ioDispatcher) {
+    suspend private fun storeSite(rawData: String): Boolean = withContext(ioDispatcher) {
         try {
             if (rawData.isEmpty()) {
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
-                ""
+                false
             } else {
                 val siteUrl = applicationPasswordLoginHelper.getSiteUrlFromUrl(rawData)
                 val xmlRpcEndpoint = async {
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
                 }.await()
                 Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
-                xmlRpcEndpoint
+
+                siteStore.onAction(
+                    SiteActionBuilder.newFetchSiteAction(
+                        SiteModel().apply {
+                            xmlRpcUrl = xmlRpcEndpoint
+                            url = applicationPasswordLoginHelper.getSiteUrlFromUrl(rawData)
+                        }
+                    )
+                )
+
+                true
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting XML-RPC endpoint", e)
-            ""
+            false
         }
     }
 
