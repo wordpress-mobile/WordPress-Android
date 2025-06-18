@@ -35,7 +35,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
 /**
- * Provides a card for displaying a single [DataViewItem]
+ * Provides a card for displaying a single [DataViewItem] which contains a primary image,
+ * a title, and a list of fields.
  */
 @Composable
 fun DataViewItemCard(
