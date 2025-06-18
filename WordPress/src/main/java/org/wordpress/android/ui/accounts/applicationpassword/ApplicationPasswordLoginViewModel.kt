@@ -40,7 +40,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 ""
             } else {
                 val siteUrl = applicationPasswordLoginHelper.getSiteUrlFromUrl(rawData)
-                val xmlRpcEndpoint = selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+                val xmlRpcEndpoint = async {
+                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+                }.await()
                 Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
                 xmlRpcEndpoint
             }
@@ -56,9 +58,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
                 false
             } else {
-                val credentialsStoredResult =
-                    async { applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData) }
-                val credentialsStored = credentialsStoredResult.await()
+                val credentialsStored = async {
+                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)
+                }.await()
                 credentialsStored
             }
         } catch (e: Exception) {
