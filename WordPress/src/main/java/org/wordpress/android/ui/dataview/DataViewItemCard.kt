@@ -53,7 +53,6 @@ fun DataViewItemCard(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        // verticalAlignment = Alignment.CenterVertically
     ) {
         item.image?.let { image ->
             Column {
