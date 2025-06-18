@@ -110,7 +110,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             },
             properties
         )
-        appLogWrapper.e(AppLog.T.DB, "WP_RS: Saved application password credentials for: $siteUrl")
+        appLogWrapper.d(AppLog.T.DB, "WP_RS: Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlFromUrl(url: String): String {
