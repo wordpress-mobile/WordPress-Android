@@ -34,6 +34,8 @@ class SubscribersViewModel @Inject constructor(
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
+    private val subscribers = ArrayList<Subscriber>()
+
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
             DataViewItemFilter(
@@ -78,7 +80,8 @@ class SubscribersViewModel @Inject constructor(
             }
             when (request) {
                 is WpRequestResult.Success -> {
-                    val subscribers = request.response.data.subscribers
+                    subscribers.clear()
+                    subscribers.addAll(request.response.data.subscribers)
                     appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
                     val items = ArrayList<DataViewItem>()
                     subscribers.forEach { subscriber ->
@@ -121,6 +124,10 @@ class SubscribersViewModel @Inject constructor(
                 ),
             )
         )
+    }
+
+    override fun getItem(id: Long): Subscriber? {
+        return subscribers.firstOrNull { it.userId == id }
     }
 
     suspend fun fetchSubscriberDetail(subscriberId: Long): SubscriberImportJob? = withContext(ioDispatcher) {

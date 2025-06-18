@@ -5002,6 +5002,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
+    <string name="subscribers_subscription_status">Subscription status</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>

@@ -212,7 +212,7 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to return the item with the given id
      */
     open fun getItem(id: Long): Any? {
-        return _items.value.first { it.id == id }
+        return _items.value.firstOrNull { it.id == id }
     }
 
     private val logTag

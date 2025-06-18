@@ -70,7 +70,7 @@ fun DataViewScreen(
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
 ) {
-    Screen(
+    DataViewScreenScaffold(
         title = title,
         onBackClick = onBackClick,
         onRefresh = onRefresh,
@@ -314,7 +314,7 @@ private fun OfflineDataView() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Screen(
+fun DataViewScreenScaffold(
     title: String,
     content: @Composable () -> Unit,
     onRefresh: () -> Unit,

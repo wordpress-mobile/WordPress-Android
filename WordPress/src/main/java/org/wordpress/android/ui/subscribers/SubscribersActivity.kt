@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewScreen
+import org.wordpress.android.ui.dataview.DataViewScreenScaffold
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 
 @AndroidEntryPoint
@@ -59,11 +60,23 @@ class SubscribersActivity : BaseAppCompatActivity() {
     }
 
     private fun showDetailScreen(subscriberId: Long) {
-        val subscriber = viewModel.getItem(subscriberId)
-        composeView.setContent {
-            SubscriberDetailScreen(
-                subscriber = subscriber
-            )
+        viewModel.getItem(subscriberId)?.let { subscriber ->
+            composeView.setContent {
+                DataViewScreenScaffold(
+                    title = subscriber.displayName,
+                    onRefresh = {
+                        viewModel.onRefreshData()
+                    },
+                    onBackClick = {
+                        finish()
+                    },
+                    content = {
+                        SubscriberDetailScreen(
+                            subscriber = subscriber
+                        )
+                    }
+                )
+            }
         }
     }
 }

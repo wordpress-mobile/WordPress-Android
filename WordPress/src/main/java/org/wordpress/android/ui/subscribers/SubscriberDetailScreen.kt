@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -31,11 +32,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import uniffi.wp_api.Subscriber
 import java.util.Date
 
@@ -54,7 +58,7 @@ fun SubscriberDetailScreen(
         // Profile Photo
         AsyncImage(
             model = subscriber.avatar,
-            contentDescription = "Profile photo",
+            contentDescription = stringResource(id = R.string.profile_picture),
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape)
@@ -89,7 +93,7 @@ fun SubscriberDetailScreen(
                 // Email
                 ProfileInfoRow(
                     icon = Icons.Default.Email,
-                    label = "Email",
+                    label = stringResource(id = R.string.email),
                     value = subscriber.emailAddress,
                     iconTint = MaterialTheme.colorScheme.primary
                 )
@@ -97,7 +101,7 @@ fun SubscriberDetailScreen(
                 // Subscription Status
                 ProfileInfoRow(
                     icon = Icons.Default.Star,
-                    label = "Subscription",
+                    label = stringResource(id = R.string.subscribers_subscription_status),
                     value = subscriber.subscriptionStatus,
                     iconTint = if (subscriber.subscriptionStatus == "Subscribed") {
                         Color(0xFFFFD700)
@@ -121,9 +125,13 @@ fun SubscriberDetailScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
-                onClick = { /* Handle edit profile */ },
+                onClick = { /* Handle delete subscriber */ },
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
             ) {
                 Icon(
                     Icons.Default.Person,
@@ -131,7 +139,7 @@ fun SubscriberDetailScreen(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Edit Profile")
+                Text(stringResource(id = R.string.delete))
             }
 
             OutlinedButton(
@@ -187,7 +195,7 @@ private fun ProfileInfoRow(
 @Preview(showBackground = true)
 @Composable
 fun UserProfileScreenPreview() {
-    MaterialTheme {
+    AppThemeM3 {
         SubscriberDetailScreen(
             subscriber = Subscriber(
                 avatar = "https://via.placeholder.com/150",
