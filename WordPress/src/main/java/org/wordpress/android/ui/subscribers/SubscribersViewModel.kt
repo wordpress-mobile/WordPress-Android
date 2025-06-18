@@ -110,12 +110,11 @@ class SubscribersViewModel @Inject constructor(
                 imageUrl = subscriber.avatar,
                 fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
             ),
+            title = subscriber.displayName.ifEmpty { subscriber.emailAddress },
             fields = listOf(
                 DataViewItemField(
-                    value = subscriber.displayName.ifEmpty { subscriber.emailAddress },
-                    valueType = DataViewFieldType.TITLE,
-                    subValue = subscriber.subscriptionStatus,
-                    subValueType = DataViewFieldType.SUBTITLE,
+                    value = subscriber.subscriptionStatus,
+                    valueType = DataViewFieldType.TEXT,
                     weight = .6f,
                 ),
                 DataViewItemField(
