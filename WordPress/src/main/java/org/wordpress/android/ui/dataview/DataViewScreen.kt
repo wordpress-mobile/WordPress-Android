@@ -292,7 +292,7 @@ private fun ErrorDataView(errorMessage: String?) {
             title = stringResource(R.string.subscribers_error_title),
             subtitle = errorMessage ?: stringResource(R.string.error_generic_network),
             image = R.drawable.img_illustration_cloud_off_152dp,
-            imageContentDescription = stringResource(R.string.subscribers_empty_search),
+            imageContentDescription = stringResource(R.string.subscribers_error_title),
         )
     }
 }
