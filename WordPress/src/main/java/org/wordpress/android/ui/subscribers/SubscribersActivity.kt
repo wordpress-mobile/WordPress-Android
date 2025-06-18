@@ -14,12 +14,13 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
+    private lateinit var composeView: ComposeView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        composeView = ComposeView(this)
         setContentView(
-            ComposeView(this).apply {
+            composeView.apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     this.isForceDarkAllowed = false
                 }
@@ -43,6 +44,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         },
                         onItemClick = { item ->
                             viewModel.onItemClick(item)
+                            showDetailScreen(item.id)
                         },
                         onFilterClick = { filter ->
                             viewModel.onFilterClick(filter)
@@ -54,5 +56,14 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             }
         )
+    }
+
+    private fun showDetailScreen(subscriberId: Long) {
+        val subscriber = viewModel.getItem(subscriberId)
+        composeView.setContent {
+            SubscriberDetailScreen(
+                subscriber = subscriber
+            )
+        }
     }
 }

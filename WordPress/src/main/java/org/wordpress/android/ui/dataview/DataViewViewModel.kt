@@ -221,6 +221,13 @@ open class DataViewViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onItemClick: ${item.id}")
     }
 
+    /**
+     * Descendants should override this to return the item with the given id
+     */
+    open fun getItem(id: Long): Any? {
+        return _items.value.first { it.id == id }
+    }
+
     private val logTag
         get() = this::class.java.simpleName
 
