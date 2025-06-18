@@ -77,8 +77,7 @@ open class DataViewViewModel @Inject constructor(
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
-            // TODO this is strictly for wp.com sites, we'll need to do use different
-            // authentication for self-hosted.
+            // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
             wpComApiClient = WpComApiClient(
                 WpAuthenticationProvider.staticWithAuth(
                     WpAuthentication.Bearer(token = accountStore.accessToken!!)
