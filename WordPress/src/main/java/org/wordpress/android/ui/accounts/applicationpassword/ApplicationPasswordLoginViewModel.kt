@@ -32,12 +32,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             val siteStored = storeSite(rawData)
-            if (siteStored) {
-                val credentialsStored = storeCredentials(rawData)
-                _onFinishedEvent.emit(credentialsStored)
-            } else {
-                _onFinishedEvent.emit(false)
-            }
+            _onFinishedEvent.emit(siteStored)
         }
     }
 
@@ -48,9 +43,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 false
             } else {
                 val siteUrlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
-                val xmlRpcEndpoint = async {
+                val xmlRpcEndpoint =
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrlLogin.siteUrl.orEmpty())
-                }.await()
                 Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
 
                 siteStore.onAction(
