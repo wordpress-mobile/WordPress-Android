@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -24,6 +25,7 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,6 +44,9 @@ open class DataViewViewModel @Inject constructor(
 
     @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Inject
+    lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -182,6 +187,10 @@ open class DataViewViewModel @Inject constructor(
         viewModelScope.launch {
             toastUtilsWrapper.showToast(message)
         }
+    }
+
+    fun formatDate(date: Date): String {
+        return dateFormatWrapper.getDateInstance().format(date)
     }
 
     private fun updateUiState(state: DataViewUiState) {
