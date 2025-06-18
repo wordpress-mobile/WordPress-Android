@@ -110,7 +110,6 @@ open class DataViewViewModel @Inject constructor(
             launch {
                 val items = performNetworkRequest(
                     page = page,
-                    pageSize = DEFAULT_PAGE_SIZE,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
@@ -119,7 +118,7 @@ open class DataViewViewModel @Inject constructor(
                 } else {
                     _items.value = items
                 }
-                canLoadMore = items.size == DEFAULT_PAGE_SIZE
+                canLoadMore = items.size == PAGE_SIZE
                 if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
@@ -195,7 +194,6 @@ open class DataViewViewModel @Inject constructor(
      */
     open suspend fun performNetworkRequest(
         page: Int = 0,
-        pageSize: Int = DEFAULT_PAGE_SIZE,
         sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
@@ -222,6 +220,6 @@ open class DataViewViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L
-        const val DEFAULT_PAGE_SIZE = 25
+        const val PAGE_SIZE = 25
     }
 }

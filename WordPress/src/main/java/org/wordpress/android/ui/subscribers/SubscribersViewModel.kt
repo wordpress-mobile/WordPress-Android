@@ -44,7 +44,6 @@ class SubscribersViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     override suspend fun performNetworkRequest(
         page: Int,
-        pageSize: Int,
         sortOrder: WpApiParamOrder,
         searchQuery: String,
         filter: DataViewItemFilter?
@@ -52,7 +51,7 @@ class SubscribersViewModel @Inject constructor(
         try {
             val params = SubscribersListParams(
                 page = page.toULong(),
-                perPage = pageSize.toULong(),
+                perPage = PAGE_SIZE.toULong(),
                 sortOrder = sortOrder,
                 search = searchQuery
             )
