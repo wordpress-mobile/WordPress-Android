@@ -16,7 +16,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
@@ -36,9 +35,6 @@ open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    lateinit var toastUtilsWrapper: ToastUtilsWrapper
-
     @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
