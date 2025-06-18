@@ -195,7 +195,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         viewModel.markNoteAsRead(mock(), listOf(note))
 
         // Then
-        verify(toastUtilsWrapper, times(1)).showToast(anyInt())
+        verify(toastUtilsWrapper, times(1)).showToast(any())
     }
 
     @Test
