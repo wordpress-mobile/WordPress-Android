@@ -53,44 +53,54 @@ fun DataViewItemCard(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        // verticalAlignment = Alignment.CenterVertically
     ) {
         item.image?.let { image ->
-            RemoteImage(
-                imageUrl = image.imageUrl,
-                fallbackImageRes = image.fallbackImageRes,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                RemoteImage(
+                    imageUrl = image.imageUrl,
+                    fallbackImageRes = image.fallbackImageRes,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
         }
-        item.fields.forEachIndexed { index, field ->
-            val columnModifier = if (field.weight > 0f) {
-                Modifier.weight(field.weight)
-            } else {
-                Modifier
-            }
-            if (index > 0) {
-                columnModifier.padding(start = 16.dp)
-            }
-            Column(
-                modifier = columnModifier
-            ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Row {
                 Text(
-                    text = field.value,
-                    style = styleFor(field.valueType),
-                    color = colorFor(field.valueType),
-                    fontWeight = fontWeightFor(field.valueType),
-                    maxLines = maxLinesFor(field.valueType),
+                    text = item.title,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                field.subValue?.let { subValue ->
-                    Text(
-                        text = subValue,
-                        style = styleFor(field.subValueType),
-                        color = colorFor(field.subValueType),
-                        fontWeight = fontWeightFor(field.subValueType),
-                        maxLines = maxLinesFor(field.valueType),
-                        overflow = TextOverflow.Ellipsis
-                    )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                item.fields.forEachIndexed { index, field ->
+                    val columnModifier = if (field.weight > 0f) {
+                        Modifier.weight(field.weight)
+                    } else {
+                        Modifier
+                    }
+                    if (index > 0) {
+                        columnModifier.padding(start = 16.dp)
+                    }
+                    Column(
+                        modifier = columnModifier
+                    ) {
+                        Text(
+                            text = field.value,
+                            style = styleFor(field.valueType),
+                            color = colorFor(field.valueType),
+                            maxLines = maxLinesFor(field.valueType),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 }
             }
         }
@@ -99,26 +109,13 @@ fun DataViewItemCard(
 
 @Composable
 private fun colorFor(type: DataViewFieldType) = when (type) {
-    DataViewFieldType.TITLE -> MaterialTheme.colorScheme.onSurface
-    DataViewFieldType.SUBTITLE -> MaterialTheme.colorScheme.onSurface
     DataViewFieldType.TEXT -> MaterialTheme.colorScheme.onSurface
     DataViewFieldType.DATE -> MaterialTheme.colorScheme.outline
     DataViewFieldType.EMAIL -> MaterialTheme.colorScheme.primary
 }
 
 @Composable
-private fun fontWeightFor(type: DataViewFieldType) = when (type) {
-    DataViewFieldType.TITLE -> FontWeight.Bold
-    DataViewFieldType.SUBTITLE -> FontWeight.Normal
-    DataViewFieldType.TEXT -> FontWeight.Normal
-    DataViewFieldType.DATE -> FontWeight.Normal
-    DataViewFieldType.EMAIL -> FontWeight.Normal
-}
-
-@Composable
 private fun styleFor(type: DataViewFieldType) = when (type) {
-    DataViewFieldType.TITLE -> MaterialTheme.typography.titleMedium
-    DataViewFieldType.SUBTITLE -> MaterialTheme.typography.titleMedium
     DataViewFieldType.TEXT -> MaterialTheme.typography.bodyMedium
     DataViewFieldType.DATE -> MaterialTheme.typography.bodySmall
     DataViewFieldType.EMAIL -> MaterialTheme.typography.bodyMedium
@@ -126,9 +123,7 @@ private fun styleFor(type: DataViewFieldType) = when (type) {
 
 @Composable
 private fun maxLinesFor(type: DataViewFieldType) = when (type) {
-    DataViewFieldType.TITLE -> 1
-    DataViewFieldType.SUBTITLE -> 1
-    DataViewFieldType.TEXT -> 3
+    DataViewFieldType.TEXT -> 2
     DataViewFieldType.DATE -> 1
     DataViewFieldType.EMAIL -> 1
 }

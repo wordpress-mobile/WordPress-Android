@@ -14,14 +14,7 @@ object DummyDataViewItems {
             val id = (index + startIndex).toLong()
             val fields = listOf(
                 DataViewItemField(
-                    value = "Title $id",
-                    valueType = DataViewFieldType.TITLE,
-                    subValue = "Subtitle $id",
-                    subValueType = DataViewFieldType.SUBTITLE,
-                    weight = .3f,
-                ),
-                DataViewItemField(
-                    value = "Text column",
+                    value = "Text column $id",
                     valueType = DataViewFieldType.TEXT,
                     weight = .4f,
                 ),
@@ -33,6 +26,7 @@ object DummyDataViewItems {
             )
             val item = DataViewItem(
                 id = id,
+                title = "Title $id",
                 image = DataViewItemImage(
                     imageUrl = null,
                     fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,

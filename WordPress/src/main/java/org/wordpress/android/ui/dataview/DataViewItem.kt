@@ -7,5 +7,6 @@ package org.wordpress.android.ui.dataview
 data class DataViewItem(
     val id: Long,
     val image: DataViewItemImage?,
+    val title: String,
     val fields: List<DataViewItemField>,
 )
