@@ -15,6 +15,7 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.Subscriber
+import uniffi.wp_api.SubscriberType
 import uniffi.wp_api.SubscribersListParams
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
@@ -35,8 +36,8 @@ class SubscribersViewModel @Inject constructor(
                 titleRes = R.string.subscribers_filter_email_subscription
             ),
             DataViewItemFilter(
-                id = ID_FILTER__TYPE,
-                titleRes = R.string.subscribers_filter_subscription_type
+                id = ID_FILTER_READER,
+                titleRes = R.string.subscribers_filter_reader_subscription
             )
         )
     }
@@ -48,13 +49,22 @@ class SubscribersViewModel @Inject constructor(
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
+        val filterType = filter?.let {
+            when (it.id) {
+                ID_FILTER_EMAIL -> SubscriberType.EmailSubscriber
+                ID_FILTER_READER -> SubscriberType.ReaderSubscriber
+                else -> null
+            }
+        }
         try {
             val params = SubscribersListParams(
                 page = page.toULong(),
                 perPage = PAGE_SIZE.toULong(),
                 sortOrder = sortOrder,
-                search = searchQuery
+                search = searchQuery,
+                filter = filterType
             )
+
             val request = wpComApiClient.request { requestBuilder ->
                 requestBuilder.subscribers().listSubscribers(
                     wpComSiteId = siteId().toULong(),
@@ -119,6 +129,6 @@ class SubscribersViewModel @Inject constructor(
 
     companion object {
         private const val ID_FILTER_EMAIL = 1L
-        private const val ID_FILTER__TYPE = 2L
+        private const val ID_FILTER_READER = 2L
     }
 }
