@@ -82,7 +82,7 @@ open class DataViewViewModel @Inject constructor(
                 .collect { query ->
                     if (searchQuery != query) {
                         searchQuery = query
-                        page = 0
+                        resetPaging()
                         fetchData()
                     }
                 }
