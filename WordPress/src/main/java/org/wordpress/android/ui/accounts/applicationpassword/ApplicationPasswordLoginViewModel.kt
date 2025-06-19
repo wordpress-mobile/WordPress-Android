@@ -24,8 +24,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     fun setupSite(rawData: String) {
         viewModelScope.launch {
-            storeCredentials(rawData)
-            _onFinishedEvent.emit(true)
+            val stored = storeCredentials(rawData)
+            _onFinishedEvent.emit(stored)
         }
     }
 
