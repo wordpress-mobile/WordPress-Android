@@ -45,6 +45,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -230,7 +233,8 @@ private fun LoadedDataView(
         }
         if (showProgress) {
             CircularProgressIndicator(
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier
+                    .size(48.dp)
                     .align(Alignment.Center)
             )
         }
@@ -320,42 +324,56 @@ fun DataViewScreenScaffold(
     onRefresh: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val navController = rememberNavController()
     AppThemeM3 {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { Text(title) },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        IconButton(onClick = {
+                            navController.navigateUp()
+                        }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                         }
                     },
                 )
             },
         ) { contentPadding ->
-            val refreshState = remember { mutableStateOf(false) }
-            val pullToRefreshState = rememberPullToRefreshState()
-
-            PullToRefreshBox(
-                modifier = Modifier
-                    .fillMaxSize(),
-                isRefreshing = refreshState.value,
-                state = pullToRefreshState,
-                onRefresh = onRefresh,
-                indicator = {
-                    PullToRefreshDefaults.Indicator(
-                        state = pullToRefreshState,
-                        isRefreshing = refreshState.value,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.align(Alignment.TopCenter),
-                    )
-                }
+            NavHost(
+                navController = navController,
+                startDestination = "list"
             ) {
-                Column(
-                    modifier = Modifier
-                        .imePadding()
-                        .padding(contentPadding)
-                ) {
+                composable(route = "list") {
+                    val refreshState = remember { mutableStateOf(false) }
+                    val pullToRefreshState = rememberPullToRefreshState()
+
+                    PullToRefreshBox(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        isRefreshing = refreshState.value,
+                        state = pullToRefreshState,
+                        onRefresh = onRefresh,
+                        indicator = {
+                            PullToRefreshDefaults.Indicator(
+                                state = pullToRefreshState,
+                                isRefreshing = refreshState.value,
+                                color = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.align(Alignment.TopCenter),
+                            )
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .imePadding()
+                                .padding(contentPadding)
+                        ) {
+                            content()
+                        }
+                    }
+                }
+
+                composable(route = "detail") {
                     content()
                 }
             }
