@@ -22,6 +22,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val _onFinishedEvent = MutableSharedFlow<Boolean>()
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
+    /**
+     * This method is called to set up the site with the provided raw data.
+     *
+     * @param rawData The raw data containing the callback data from the application password login.
+     */
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             val stored = storeCredentials(rawData)

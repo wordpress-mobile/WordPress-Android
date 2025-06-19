@@ -21,14 +21,12 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel?.setupSite(intent.dataString.orEmpty())
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ApplicationPasswordLoginViewModel::class.java]
-
-        // initObservers
         viewModel!!.onFinishedEvent.onEach(this::runMainIdNecessary).launchIn(lifecycleScope)
+        viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
     private fun runMainIdNecessary(credentialsStored: Boolean) {
