@@ -8,6 +8,9 @@ class ExperimentalFeatures @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
     fun isEnabled(feature: Feature) : Boolean {
+        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
+            return true
+        }
         return appPrefsWrapper.getExperimentalFeatureConfig(feature.prefKey)
     }
 

@@ -12,9 +12,12 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
+import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -25,35 +28,43 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
+    private val siteXMLRPCClient: SiteXMLRPCClient
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<Boolean>()
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
     fun setupSite(rawData: String) {
         viewModelScope.launch {
-            val siteStored = storeSite(rawData)
-            _onFinishedEvent.emit(siteStored)
+            val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
+            val siteStored = storeSite(urlLogin)
+            if (siteStored) {
+                val sitesFetched = fetchSites(urlLogin)
+                _onFinishedEvent.emit(sitesFetched)
+            } else {
+                Log.e(TAG, "Failed to store site")
+                _onFinishedEvent.emit(false)
+            }
+            _onFinishedEvent.emit(false)
         }
     }
 
-    suspend private fun storeSite(rawData: String): Boolean = withContext(ioDispatcher) {
+    suspend private fun storeSite(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
         try {
-            if (rawData.isEmpty()) {
-                Log.e(TAG, "Cannot store credentials: rawData is empty")
+            if (urlLogin.user.isNullOrEmpty() || urlLogin.password.isNullOrEmpty() || urlLogin.siteUrl.isNullOrEmpty()) {
+                Log.e(TAG, "Cannot store site: rawData is empty")
                 false
             } else {
-                val siteUrlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
                 val xmlRpcEndpoint =
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrlLogin.siteUrl.orEmpty())
+                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
 
                 siteStore.onAction(
                     SiteActionBuilder.newFetchSiteAction(
                         SiteModel().apply {
                             xmlRpcUrl = xmlRpcEndpoint
-                            url = siteUrlLogin.siteUrl
-                            apiRestUsernamePlain = siteUrlLogin.user
-                            apiRestPasswordPlain = siteUrlLogin.password
+                            url = urlLogin.siteUrl
+                            apiRestUsernamePlain = urlLogin.user
+                            apiRestPasswordPlain = urlLogin.password
                         }
                     )
                 )
@@ -66,15 +77,36 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         }
     }
 
+    suspend private fun fetchSites(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
+        try {
+            if (urlLogin.user.isNullOrEmpty() || urlLogin.password.isNullOrEmpty() || urlLogin.siteUrl.isNullOrEmpty()) {
+                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                false
+            } else {
+                siteStore.onAction(
+                    SiteActionBuilder.newFetchSitesXmlRpcAction(
+                        RefreshSitesXMLRPCPayload(
+                            username = urlLogin.user,
+                            password = urlLogin.password,
+                            url = urlLogin.siteUrl,
+                        )
+                    )
+                )
+                true
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error storing credentials", e)
+            false
+        }
+    }
+
     suspend private fun storeCredentials(rawData: String): Boolean = withContext(ioDispatcher) {
         try {
             if (rawData.isEmpty()) {
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
                 false
             } else {
-                val credentialsStored = async {
-                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)
-                }.await()
+                val credentialsStored = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)
                 credentialsStored
             }
         } catch (e: Exception) {
