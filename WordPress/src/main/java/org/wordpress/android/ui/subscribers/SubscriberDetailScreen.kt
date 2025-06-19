@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
 import java.util.Date
 
@@ -70,7 +71,7 @@ fun SubscriberDetailScreen(
 
         // Display Name
         Text(
-            text = subscriber.displayName,
+            text = subscriber.displayNameOrEmail(),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground

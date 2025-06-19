@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -26,6 +28,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
 
 @AndroidEntryPoint
@@ -88,11 +91,13 @@ class SubscribersActivity : BaseAppCompatActivity() {
     @Composable
     private fun Nav() {
         val navController = rememberNavController()
+        val listTitle = stringResource(R.string.subscribers)
+        val titleState = remember { mutableStateOf(listTitle) }
         AppThemeM3 {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(stringResource(R.string.subscribers)) },
+                        title = { Text(titleState.value) },
                         navigationIcon = {
                             IconButton(onClick = {
                                 if (navController.previousBackStackEntry != null) {
@@ -112,6 +117,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     startDestination = SubscriberScreen.List.name
                 ) {
                     composable(route = SubscriberScreen.List.name) {
+                        titleState.value = listTitle
                         DataViewScreen(
                             uiState = viewModel.uiState.collectAsState(),
                             items = viewModel.items.collectAsState(),
@@ -144,6 +150,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     composable(route = SubscriberScreen.Detail.name) {
                         (navController.previousBackStackEntry?.savedStateHandle?.get<Long>("id"))?.let { userId ->
                             viewModel.getSubscriber(userId)?.let { subscriber ->
+                                titleState.value = subscriber.displayNameOrEmail()
                                 SubscriberDetailScreen(
                                     subscriber = subscriber
                                 )
