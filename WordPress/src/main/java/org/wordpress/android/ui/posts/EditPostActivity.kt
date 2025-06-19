@@ -2004,6 +2004,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     onToggleRedo(!hasRedo)
                 }
             })
+            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
+                override fun onFeaturedImageChanged(mediaID: Long) {
+                    setFeaturedImageId(mediaID, false, true)
+                }
+            })
             editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
                 override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
                     editorPhotoPicker?.allowMultipleSelection = config.multiple

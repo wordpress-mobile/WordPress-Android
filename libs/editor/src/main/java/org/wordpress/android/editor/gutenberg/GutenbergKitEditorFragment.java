@@ -45,6 +45,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView;
+import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -85,6 +86,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     private final LiveTextWatcher mTextWatcher = new LiveTextWatcher();
     @Nullable private HistoryChangeListener mHistoryChangeListener = null;
+    @Nullable private FeaturedImageChangeListener mFeaturedImageChangeListener = null;
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
     @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
@@ -159,6 +161,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         });
         mGutenbergView.setContentChangeListener(mTextWatcher::postTextChanged);
         mGutenbergView.setHistoryChangeListener(mHistoryChangeListener);
+        mGutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener);
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
@@ -397,6 +400,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         mHistoryChangeListener = listener;
     }
 
+    public void onFeaturedImageChanged(@NonNull FeaturedImageChangeListener listener) {
+        mFeaturedImageChangeListener = listener;
+    }
+
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
         mOpenMediaLibraryListener = listener;
     }
@@ -499,6 +506,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mHistoryChangeListener = null;
+            mFeaturedImageChangeListener = null;
         }
         super.onDestroy();
     }
