@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -91,10 +92,14 @@ class SubscribersActivity : BaseAppCompatActivity() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { "Subscribers" },
+                        title = { Text(stringResource(R.string.subscribers)) },
                         navigationIcon = {
                             IconButton(onClick = {
-                                navController.navigateUp()
+                                if (navController.previousBackStackEntry != null) {
+                                    navController.navigateUp()
+                                } else {
+                                    finish()
+                                }
                             }) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                             }
@@ -108,7 +113,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 ) {
                     composable(route = SubscriberScreen.List.name) {
                         DataViewScreen(
-                            title = getString(R.string.subscribers),
                             uiState = viewModel.uiState.collectAsState(),
                             items = viewModel.items.collectAsState(),
                             supportedFilters = viewModel.getSupportedFilters(),
@@ -132,9 +136,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             },
                             onFilterClick = { filter ->
                                 viewModel.onFilterClick(filter)
-                            },
-                            onBackClick = {
-                                finish()
                             },
                             modifier = Modifier.padding(contentPadding)
                         )
