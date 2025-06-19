@@ -33,8 +33,6 @@ class SubscribersViewModel @Inject constructor(
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
-    private val subscribers = ArrayList<Subscriber>()
-
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
             DataViewItemFilter(
@@ -135,8 +133,11 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    override fun getItem(id: Long): Subscriber? {
-        return subscribers.firstOrNull { it.userId == id }
+    override fun onItemClick(item: DataViewItem) {
+        (item.data as? Subscriber)?.let{ subscriber ->
+            val name = subscriber.displayName.ifEmpty { subscriber.emailAddress }
+            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber $name")
+        }
     }
 
     companion object {
