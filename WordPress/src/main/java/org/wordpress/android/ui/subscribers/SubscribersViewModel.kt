@@ -53,6 +53,21 @@ class SubscribersViewModel @Inject constructor(
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
+        try {
+            requestSubscribers(filter, page, sortOrder, searchQuery)
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
+            onError(e.message)
+            emptyList()
+        }
+    }
+
+    private suspend fun requestSubscribers(
+        filter: DataViewItemFilter?,
+        page: Int,
+        sortOrder: WpApiParamOrder,
+        searchQuery: String
+    ): List<DataViewItem> {
         val filterType = filter?.let {
             when (it.id) {
                 ID_FILTER_EMAIL -> SubscriberType.EmailSubscriber
@@ -60,42 +75,37 @@ class SubscribersViewModel @Inject constructor(
                 else -> null
             }
         }
-        try {
-            val params = SubscribersListParams(
-                page = page.toULong(),
-                perPage = PAGE_SIZE.toULong(),
-                sortOrder = sortOrder,
-                search = searchQuery,
-                filter = filterType,
+
+        val params = SubscribersListParams(
+            page = page.toULong(),
+            perPage = PAGE_SIZE.toULong(),
+            sortOrder = sortOrder,
+            search = searchQuery,
+            filter = filterType,
+        )
+
+        val request = wpComApiClient.request { requestBuilder ->
+            requestBuilder.subscribers().listSubscribers(
+                wpComSiteId = siteId().toULong(),
+                params = params
             )
-
-            val request = wpComApiClient.request { requestBuilder ->
-                requestBuilder.subscribers().listSubscribers(
-                    wpComSiteId = siteId().toULong(),
-                    params = params
-                )
-            }
-            when (request) {
-                is WpRequestResult.Success -> {
-                    val subscribers = request.response.data.subscribers
-                    appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                    val items = ArrayList<DataViewItem>()
-                    subscribers.forEach { subscriber ->
-                        items.add(subscriberToDataViewItem(subscriber))
-                    }
-                    return@withContext items
+        }
+        when (request) {
+            is WpRequestResult.Success -> {
+                val subscribers = request.response.data.subscribers
+                appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
+                val items = ArrayList<DataViewItem>()
+                subscribers.forEach { subscriber ->
+                    items.add(subscriberToDataViewItem(subscriber))
                 }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
-                    onError((request as? WpRequestResult.WpError)?.errorMessage)
-                    return@withContext emptyList()
-                }
+                return items
             }
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
-            onError(e.message)
-            return@withContext emptyList()
+
+            else -> {
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
+                onError((request as? WpRequestResult.WpError)?.errorMessage)
+                return emptyList()
+            }
         }
     }
 
