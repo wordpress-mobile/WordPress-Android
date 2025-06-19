@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.dataview.DataViewScreenScaffold
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import uniffi.wp_api.Subscriber
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -45,7 +46,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         },
                         onItemClick = { item ->
                             viewModel.onItemClick(item)
-                            showDetailScreen(item.id)
+                            (item.data as? Subscriber)?.let {
+                                showDetailScreen(it)
+                            }
                         },
                         onFilterClick = { filter ->
                             viewModel.onFilterClick(filter)
@@ -59,24 +62,22 @@ class SubscribersActivity : BaseAppCompatActivity() {
         )
     }
 
-    private fun showDetailScreen(subscriberId: Long) {
-        viewModel.getItem(subscriberId)?.let { subscriber ->
-            composeView.setContent {
-                DataViewScreenScaffold(
-                    title = subscriber.displayName,
-                    onRefresh = {
-                        viewModel.onRefreshData()
-                    },
-                    onBackClick = {
-                        finish()
-                    },
-                    content = {
-                        SubscriberDetailScreen(
-                            subscriber = subscriber
-                        )
-                    }
-                )
-            }
+    private fun showDetailScreen(subscriber: Subscriber) {
+        composeView.setContent {
+            DataViewScreenScaffold(
+                title = subscriber.displayName.ifEmpty { subscriber.emailAddress },
+                onRefresh = {
+                    viewModel.onRefreshData()
+                },
+                onBackClick = {
+                    finish()
+                },
+                content = {
+                    SubscriberDetailScreen(
+                        subscriber = subscriber
+                    )
+                }
+            )
         }
     }
 }
