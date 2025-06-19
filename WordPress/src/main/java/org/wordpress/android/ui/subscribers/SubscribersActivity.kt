@@ -152,7 +152,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             viewModel.getSubscriber(userId)?.let { subscriber ->
                                 titleState.value = subscriber.displayNameOrEmail()
                                 SubscriberDetailScreen(
-                                    subscriber = subscriber
+                                    subscriber = subscriber,
+                                    modifier = Modifier.padding(contentPadding)
                                 )
                             }
                         }
