@@ -24,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
-import org.wordpress.android.ui.dataview.DataViewScreenScaffold
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import uniffi.wp_api.Subscriber
 
@@ -127,9 +126,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             onItemClick = { item ->
                                 viewModel.onItemClick(item)
                                 (item.data as? Subscriber)?.let { subscriber ->
-                                    // showDetailScreen(it)
-                                    navController.currentBackStackEntry?.savedStateHandle?.set("userId", subscriber.userId)
-                                    navController.navigate(it)
+                                    navController.currentBackStackEntry?.savedStateHandle?.set("id", subscriber.userId)
+                                    navController.navigate(route = SubscriberScreen.Detail.name)
                                 }
                             },
                             onFilterClick = { filter ->
@@ -143,33 +141,16 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = SubscriberScreen.Detail.name) {
-                        (navController.previousBackStackEntry?.savedStateHandle?.get<Int>("userId"))?.let { userId ->
-                            SubscriberDetailScreen(
-                                subscriber = it
-                            )
+                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>("id"))?.let { userId ->
+                            viewModel.getSubscriber(userId)?.let { subscriber ->
+                                SubscriberDetailScreen(
+                                    subscriber = subscriber
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-    }
-
-    private fun showDetailScreen(subscriber: Subscriber) {
-        composeView.setContent {
-            DataViewScreenScaffold(
-                title = subscriber.displayName.ifEmpty { subscriber.emailAddress },
-                onRefresh = {
-                    viewModel.onRefreshData()
-                },
-                onBackClick = {
-                    finish()
-                },
-                content = {
-                    SubscriberDetailScreen(
-                        subscriber = subscriber
-                    )
-                }
-            )
         }
     }
 }

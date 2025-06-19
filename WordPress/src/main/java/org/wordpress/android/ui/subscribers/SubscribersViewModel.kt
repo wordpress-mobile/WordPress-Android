@@ -133,6 +133,11 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    fun getSubscriber(userId: Long): Subscriber? {
+        val item = items.value.firstOrNull{ it.id == userId }
+        return item?.data as? Subscriber
+    }
+
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let{ subscriber ->
             val name = subscriber.displayName.ifEmpty { subscriber.emailAddress }
