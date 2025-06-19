@@ -16,7 +16,6 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.Subscriber
-import uniffi.wp_api.SubscriberImportJob
 import uniffi.wp_api.SubscriberType
 import uniffi.wp_api.SubscribersListParams
 import uniffi.wp_api.WpApiParamOrder
@@ -33,8 +32,6 @@ class SubscribersViewModel @Inject constructor(
 ) {
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
-
-    private val subscribers = ArrayList<Subscriber>()
 
     override fun getSupportedFilters(): List<DataViewItemFilter> {
         return listOf(
@@ -56,6 +53,21 @@ class SubscribersViewModel @Inject constructor(
         searchQuery: String,
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
+        try {
+            requestSubscribers(filter, page, sortOrder, searchQuery)
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
+            onError(e.message)
+            emptyList()
+        }
+    }
+
+    private suspend fun requestSubscribers(
+        filter: DataViewItemFilter?,
+        page: Int,
+        sortOrder: WpApiParamOrder,
+        searchQuery: String
+    ): List<DataViewItem> {
         val filterType = filter?.let {
             when (it.id) {
                 ID_FILTER_EMAIL -> SubscriberType.EmailSubscriber
@@ -63,43 +75,37 @@ class SubscribersViewModel @Inject constructor(
                 else -> null
             }
         }
-        try {
-            val params = SubscribersListParams(
-                page = page.toULong(),
-                perPage = PAGE_SIZE.toULong(),
-                sortOrder = sortOrder,
-                search = searchQuery,
-                filter = filterType,
+
+        val params = SubscribersListParams(
+            page = page.toULong(),
+            perPage = PAGE_SIZE.toULong(),
+            sortOrder = sortOrder,
+            search = searchQuery,
+            filter = filterType,
+        )
+
+        val request = wpComApiClient.request { requestBuilder ->
+            requestBuilder.subscribers().listSubscribers(
+                wpComSiteId = siteId().toULong(),
+                params = params
             )
-
-            val request = wpComApiClient.request { requestBuilder ->
-                requestBuilder.subscribers().listSubscribers(
-                    wpComSiteId = siteId().toULong(),
-                    params = params
-                )
-            }
-            when (request) {
-                is WpRequestResult.Success -> {
-                    subscribers.clear()
-                    subscribers.addAll(request.response.data.subscribers)
-                    appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                    val items = ArrayList<DataViewItem>()
-                    subscribers.forEach { subscriber ->
-                        items.add(subscriberToDataViewItem(subscriber))
-                    }
-                    return@withContext items
+        }
+        when (request) {
+            is WpRequestResult.Success -> {
+                val subscribers = request.response.data.subscribers
+                appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
+                val items = ArrayList<DataViewItem>()
+                subscribers.forEach { subscriber ->
+                    items.add(subscriberToDataViewItem(subscriber))
                 }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
-                    onError((request as? WpRequestResult.WpError)?.errorMessage)
-                    return@withContext emptyList()
-                }
+                return items
             }
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
-            onError(e.message)
-            return@withContext emptyList()
+
+            else -> {
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
+                onError((request as? WpRequestResult.WpError)?.errorMessage)
+                return emptyList()
+            }
         }
     }
 
@@ -124,33 +130,6 @@ class SubscribersViewModel @Inject constructor(
                 ),
             )
         )
-    }
-
-    override fun getItem(id: Long): Subscriber? {
-        return subscribers.firstOrNull { it.userId == id }
-    }
-
-    suspend fun fetchSubscriberDetail(subscriberId: Long): SubscriberImportJob? = withContext(ioDispatcher) {
-        val request = wpComApiClient.request { requestBuilder ->
-            requestBuilder.subscribers().getSubscriber(
-                wpComSiteId = siteId().toULong(),
-                params = TODO(),
-            )
-        }
-
-        when (request) {
-            is WpRequestResult.Success -> {
-                val result = request.response.data
-                appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber: $result")
-                return@withContext result
-            }
-
-            else -> {
-                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscriber failed: $request")
-                onError((request as? WpRequestResult.WpError)?.errorMessage)
-                return@withContext null
-            }
-        }
     }
 
     companion object {
