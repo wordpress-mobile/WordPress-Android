@@ -128,8 +128,16 @@ class SubscribersViewModel @Inject constructor(
                     valueType = DataViewFieldType.DATE,
                     weight = .4f,
                 ),
-            )
+            ),
+            data = subscriber
         )
+    }
+
+    override fun onItemClick(item: DataViewItem) {
+        (item.data as? Subscriber)?.let{ subscriber ->
+            val name = subscriber.displayName.ifEmpty { subscriber.emailAddress }
+            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber $name")
+        }
     }
 
     companion object {
