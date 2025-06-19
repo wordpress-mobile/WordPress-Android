@@ -9,4 +9,5 @@ data class DataViewItem(
     val image: DataViewItemImage?,
     val title: String,
     val fields: List<DataViewItemField>,
+    val data: Any? = null,
 )
