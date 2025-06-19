@@ -12,9 +12,11 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -38,40 +40,41 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
-            val siteStored = storeSite(urlLogin)
-            _onFinishedEvent.emit(true)
+            val siteFetched = fetchSites(urlLogin)
+            if (siteFetched) {
+                val credentialsStored = storeCredentials(rawData)
+                _onFinishedEvent.emit(credentialsStored)
+            }
+            _onFinishedEvent.emit(false)
         }
     }
 
-    suspend private fun storeSite(urlLogin: ApplicationPasswordLoginHelper.UriLogin): Boolean = withContext(ioDispatcher) {
+    suspend private fun fetchSites(
+        urlLogin: ApplicationPasswordLoginHelper.UriLogin
+    ): Boolean = withContext(ioDispatcher) {
         try {
             if (urlLogin.user.isNullOrEmpty() || urlLogin.password.isNullOrEmpty() || urlLogin.siteUrl.isNullOrEmpty()) {
-                Log.e(TAG, "Cannot store site: rawData is empty")
+                Log.e(TAG, "Cannot store credentials: rawData is empty")
                 false
             } else {
                 val xmlRpcEndpoint =
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
-                Log.d(TAG, "Endpoint: $xmlRpcEndpoint")
-
                 siteStore.onAction(
-                    SiteActionBuilder.newFetchSiteAction(
-                        SiteModel().apply {
-                            xmlRpcUrl = xmlRpcEndpoint
-                            url = urlLogin.siteUrl
-                            apiRestUsernamePlain = urlLogin.user
-                            apiRestPasswordPlain = urlLogin.password
-                        }
+                    SiteActionBuilder.newFetchSitesXmlRpcAction(
+                        RefreshSitesXMLRPCPayload(
+                            username = urlLogin.user,
+                            password = urlLogin.password,
+                            url = xmlRpcEndpoint,
+                        )
                     )
                 )
-
                 true
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting XML-RPC endpoint", e)
+            Log.e(TAG, "Error storing credentials", e)
             false
         }
     }
-
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun storeCredentials(rawData: String): Boolean = withContext(ioDispatcher) {
