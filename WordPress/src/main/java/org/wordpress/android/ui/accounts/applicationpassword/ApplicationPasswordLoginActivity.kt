@@ -27,17 +27,17 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ApplicationPasswordLoginViewModel::class.java]
-        viewModel!!.onFinishedEvent.onEach(this::runMainIdNecessary).launchIn(lifecycleScope)
+        viewModel!!.onFinishedEvent.onEach(this::openMainActivity).launchIn(lifecycleScope)
         viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
-    private fun runMainIdNecessary(sireUrl: String?) {
-        if (sireUrl != null) {
+    private fun openMainActivity(siteUrl: String?) {
+        if (siteUrl != null) {
             ToastUtils.showToast(
                 this,
                 getString(
                     R.string.application_password_credentials_stored,
-                    sireUrl
+                    siteUrl
                 )
             )
             intent.setData(null)
@@ -46,7 +46,7 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 this,
                 getString(
                     R.string.application_password_credentials_storing_error,
-                    sireUrl
+                    siteUrl
                 )
             )
         }
