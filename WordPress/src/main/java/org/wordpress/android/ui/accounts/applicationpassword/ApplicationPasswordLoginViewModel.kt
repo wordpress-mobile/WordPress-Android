@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -18,6 +17,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -25,6 +25,7 @@ private const val TAG = "ApplicationPasswordLoginViewModel"
 
 class ApplicationPasswordLoginViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    // Dispatcher is the way to dispatch actions in the Flux architecture. It will call siteStore.onAction()
     private val dispatcher: Dispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
@@ -36,6 +37,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      * It can emit null if the site could not be set up.
      */
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
+
+    private var currentUrlLogin: UriLogin? = null
 
     fun onStart() {
         dispatcher.register(this)
@@ -55,18 +58,19 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(rawData)
+            // If the site already exists, we can skip fetching it again
             if (credentialsStored) {
-//                _onFinishedEvent.emit(urlLogin.siteUrl)
+                _onFinishedEvent.emit(urlLogin.siteUrl)
             } else {
-                val siteFetched = fetchSites(urlLogin)
-//                _onFinishedEvent.emit(if (siteFetched) urlLogin.siteUrl else null)
+                fetchSites(urlLogin)
+                currentUrlLogin = urlLogin
             }
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchSites(
-        urlLogin: ApplicationPasswordLoginHelper.UriLogin
+        urlLogin: UriLogin
     ): Boolean = withContext(ioDispatcher) {
         try {
             if (urlLogin.user.isNullOrEmpty() ||
@@ -77,7 +81,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             } else {
                 val xmlRpcEndpoint =
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
-                siteStore.onAction(
+                dispatcher.dispatch(
                     SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
                         RefreshSitesXMLRPCPayload(
                             username = urlLogin.user,
@@ -110,9 +114,26 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: SiteStore.OnSiteChanged) {
         Log.e(TAG, "Site changed: ${event.rowsAffected}")
-        // TODO: get prpofile
+        val site = siteStore.sites.firstOrNull { it.url == currentUrlLogin?.siteUrl }
+        if (site == null) {
+            Log.e(TAG, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
+            viewModelScope.launch {
+                _onFinishedEvent.emit(null)
+            }
+        } else {
+            dispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(site))
+        };
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onProfileFetched(event: SiteStore.OnProfileFetched) {
+        viewModelScope.launch {
+            _onFinishedEvent.emit(event.site.url)
+        }
     }
 }
