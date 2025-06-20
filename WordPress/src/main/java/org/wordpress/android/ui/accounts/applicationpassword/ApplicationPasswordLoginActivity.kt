@@ -7,6 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.R
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import javax.inject.Inject
@@ -25,16 +27,31 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)[ApplicationPasswordLoginViewModel::class.java]
-        viewModel!!.onFinishedEvent.onEach(this::runMainIdNecessary).launchIn(lifecycleScope)
+        viewModel!!.onFinishedEvent.onEach(this::openMainActivity).launchIn(lifecycleScope)
         viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
-    private fun runMainIdNecessary(credentialsStored: Boolean) {
-        if (credentialsStored) {
+    private fun openMainActivity(siteUrl: String?) {
+        if (siteUrl != null) {
+            ToastUtils.showToast(
+                this,
+                getString(
+                    R.string.application_password_credentials_stored,
+                    siteUrl
+                )
+            )
             intent.setData(null)
+        } else {
+            ToastUtils.showToast(
+                this,
+                getString(
+                    R.string.application_password_credentials_storing_error,
+                    siteUrl
+                )
+            )
         }
         val mainActivityIntent =
-            Intent(this@ApplicationPasswordLoginActivity, WPMainActivity::class.java)
+            Intent(this, WPMainActivity::class.java)
         mainActivityIntent.setFlags(
             (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     or Intent.FLAG_ACTIVITY_CLEAR_TASK)
