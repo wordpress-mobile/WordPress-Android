@@ -30,6 +30,7 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     }
 
     private fun runMainIdNecessary(credentialsStored: Boolean) {
+        // TODO: show succes or error message
         if (credentialsStored) {
             intent.setData(null)
         }

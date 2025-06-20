@@ -9,9 +9,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_THREAD
@@ -27,7 +25,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
-    private val siteXMLRPCClient: SiteXMLRPCClient
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<Boolean>()
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
@@ -39,13 +36,15 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      */
     fun setupSite(rawData: String) {
         viewModelScope.launch {
-            val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
-            val siteFetched = fetchSites(urlLogin)
-            if (siteFetched) {
-                val credentialsStored = storeCredentials(rawData)
-                _onFinishedEvent.emit(credentialsStored)
+            // Store credentials if the site already exists
+            val credentialsStored = storeCredentials(rawData)
+            if (credentialsStored) {
+                _onFinishedEvent.emit(true)
+            } else {
+                val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
+                val siteFetched = fetchSites(urlLogin)
+                _onFinishedEvent.emit(siteFetched)
             }
-            _onFinishedEvent.emit(false)
         }
     }
 
@@ -60,7 +59,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 val xmlRpcEndpoint =
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 siteStore.onAction(
-                    SiteActionBuilder.newFetchSitesXmlRpcAction(
+                    SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
                         RefreshSitesXMLRPCPayload(
                             username = urlLogin.user,
                             password = urlLogin.password,
