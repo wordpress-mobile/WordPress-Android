@@ -1329,7 +1329,7 @@ open class SiteStore @Inject constructor(
                 emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
             }
             FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD ->
-                coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites from Application Passsword") {
+                coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites from Application Password") {
                     emitChange(fetchSitesXmlRpcFromApplicationPassword(action.payload as RefreshSitesXMLRPCPayload))
             }
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
