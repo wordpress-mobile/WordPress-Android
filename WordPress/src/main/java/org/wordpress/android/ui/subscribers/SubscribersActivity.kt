@@ -46,50 +46,20 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    Nav()
+                    NavigableContent()
                 }
-                /*DataViewScreen(
-                    title = getString(R.string.subscribers),
-                    uiState = viewModel.uiState.collectAsState(),
-                    items = viewModel.items.collectAsState(),
-                    supportedFilters = viewModel.getSupportedFilters(),
-                    currentFilter = viewModel.itemFilter.collectAsState().value,
-                    errorMessage = viewModel.errorMessage.collectAsState().value,
-                    onRefresh = {
-                        viewModel.onRefreshData()
-                    },
-                    onFetchMore = {
-                        viewModel.onFetchMoreData()
-                    },
-                    onSearchQueryChange = { query ->
-                        viewModel.onSearchQueryChange(query)
-                    },
-                    onItemClick = { item ->
-                        viewModel.onItemClick(item)
-                        (item.data as? Subscriber)?.let {
-                            showDetailScreen(it)
-                        }
-                    },
-                    onFilterClick = { filter ->
-                        viewModel.onFilterClick(filter)
-                    },
-                    onBackClick = {
-                        finish()
-                    }
-                )
-            }*/
             }
         )
     }
 
-    enum class SubscriberScreen {
+    private enum class SubscriberScreen {
         List,
         Detail
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun Nav() {
+    private fun NavigableContent() {
         val navController = rememberNavController()
         val listTitle = stringResource(R.string.subscribers)
         val titleState = remember { mutableStateOf(listTitle) }
