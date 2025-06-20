@@ -8,9 +8,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
-import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,13 +52,29 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 )
             )
         }
-        val mainActivityIntent =
-            Intent(this, WPMainActivity::class.java)
-        mainActivityIntent.setFlags(
-            (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        )
-        startActivity(mainActivityIntent)
+//        ActivityLauncher.
+//        if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
+//            ActivityLauncher.showPostSignupInterstitial(this)
+//        } else {
+//            ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate)
+//        }
+//        val mainActivityIntent =
+//            Intent(this, WPMainActivity::class.java)
+//        mainActivityIntent.setFlags(
+//            (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+//                    or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//        )
+//        startActivity(mainActivityIntent)
         finish()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel?.onStop()
     }
 }

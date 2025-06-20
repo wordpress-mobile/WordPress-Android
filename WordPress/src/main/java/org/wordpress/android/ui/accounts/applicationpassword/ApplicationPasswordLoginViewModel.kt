@@ -8,13 +8,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -22,6 +25,7 @@ private const val TAG = "ApplicationPasswordLoginViewModel"
 
 class ApplicationPasswordLoginViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val dispatcher: Dispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
@@ -32,6 +36,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      * It can emit null if the site could not be set up.
      */
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
+
+    fun onStart() {
+        dispatcher.register(this)
+    }
+
+    fun onStop() {
+        dispatcher.unregister(this)
+    }
 
     /**
      * This method is called to set up the site with the provided raw data.
@@ -44,10 +56,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(rawData)
             if (credentialsStored) {
-                _onFinishedEvent.emit(urlLogin.siteUrl)
+//                _onFinishedEvent.emit(urlLogin.siteUrl)
             } else {
                 val siteFetched = fetchSites(urlLogin)
-                _onFinishedEvent.emit(if (siteFetched) urlLogin.siteUrl else null)
+//                _onFinishedEvent.emit(if (siteFetched) urlLogin.siteUrl else null)
             }
         }
     }
@@ -96,5 +108,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             Log.e(TAG, "Error storing credentials", e)
             false
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+        Log.e(TAG, "Site changed: ${event.rowsAffected}")
+        // TODO: get prpofile
     }
 }
