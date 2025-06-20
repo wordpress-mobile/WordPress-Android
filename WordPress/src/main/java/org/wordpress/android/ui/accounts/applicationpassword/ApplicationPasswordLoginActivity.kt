@@ -33,13 +33,13 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
-    private fun openMainActivity(siteUrl: String?) {
-        if (siteUrl != null) {
+    private fun openMainActivity(navigationActionData: ApplicationPasswordLoginViewModel.NavigationActionData) {
+        if (!navigationActionData.isError && navigationActionData.siteUrl != null) {
             ToastUtils.showToast(
                 this,
                 getString(
                     R.string.application_password_credentials_stored,
-                    siteUrl
+                    navigationActionData.siteUrl
                 )
             )
             intent.setData(null)
@@ -48,16 +48,18 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 this,
                 getString(
                     R.string.application_password_credentials_storing_error,
-                    siteUrl
+                    navigationActionData.siteUrl
                 )
             )
         }
-//        ActivityLauncher.
-//        if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
-//            ActivityLauncher.showPostSignupInterstitial(this)
-//        } else {
-//            ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate)
-//        }
+
+        if (navigationActionData.isError) {
+            ActivityLauncher.showMainActivity(this)
+        } else if (navigationActionData.showPostSignupInterstitial) {
+            ActivityLauncher.showPostSignupInterstitial(this)
+        } else {
+            ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
+        }
 //        val mainActivityIntent =
 //            Intent(this, WPMainActivity::class.java)
 //        mainActivityIntent.setFlags(

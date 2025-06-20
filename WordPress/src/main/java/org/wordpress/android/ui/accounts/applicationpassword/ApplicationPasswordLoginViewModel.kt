@@ -15,9 +15,11 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
+import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,7 +34,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
 ) : ViewModel() {
-    private val _onFinishedEvent = MutableSharedFlow<String?>()
+    private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
      * A shared flow that emits the site URL when the setup is finished.
      * It can emit null if the site could not be set up.
@@ -40,9 +42,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
     private var currentUrlLogin: UriLogin? = null
+    private var oldSitesIDs: ArrayList<Int>? = null
 
     fun onStart() {
         dispatcher.register(this)
+        oldSitesIDs = SiteUtils.getCurrentSiteIds(siteStore, false)
     }
 
     fun onStop() {
@@ -61,7 +65,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val credentialsStored = storeCredentials(rawData)
             // If the site already exists, we can skip fetching it again
             if (credentialsStored) {
-                _onFinishedEvent.emit(urlLogin.siteUrl)
+                _onFinishedEvent.emit(
+                    NavigationActionData(
+                        showPostSignupInterstitial = false,
+                        siteUrl = urlLogin.siteUrl,
+                        oldSitesIDs = oldSitesIDs,
+                        isError = false
+                    )
+                )
             } else {
                 fetchSites(urlLogin)
                 currentUrlLogin = urlLogin
@@ -124,7 +135,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         if (site == null) {
             Log.e(TAG, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
             viewModelScope.launch {
-                _onFinishedEvent.emit(null)
+                _onFinishedEvent.emit(NavigationActionData(false, currentUrlLogin?.siteUrl, oldSitesIDs, true))
             }
         } else {
             dispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(site))
@@ -135,7 +146,21 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onProfileFetched(event: SiteStore.OnProfileFetched) {
         viewModelScope.launch {
-            _onFinishedEvent.emit(event.site.url)
+            _onFinishedEvent.emit(
+                NavigationActionData(
+                    showPostSignupInterstitial = !siteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial(),
+                    siteUrl = event.site.url,
+                    oldSitesIDs = oldSitesIDs,
+                    isError = false
+                )
+            )
         }
     }
+
+    data class NavigationActionData(
+        val showPostSignupInterstitial: Boolean,
+        val siteUrl: String?,
+        var oldSitesIDs: ArrayList<Int>?,
+        val isError: Boolean
+    )
 }
