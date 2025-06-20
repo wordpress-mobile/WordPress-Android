@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -118,7 +119,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: SiteStore.OnSiteChanged) {
         Log.e(TAG, "Site changed: ${event.rowsAffected}")
-        val site = siteStore.sites.firstOrNull { it.url == currentUrlLogin?.siteUrl }
+        val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
+        val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
         if (site == null) {
             Log.e(TAG, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
             viewModelScope.launch {
@@ -126,7 +128,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             }
         } else {
             dispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(site))
-        };
+        }
     }
 
     @SuppressWarnings("unused")
