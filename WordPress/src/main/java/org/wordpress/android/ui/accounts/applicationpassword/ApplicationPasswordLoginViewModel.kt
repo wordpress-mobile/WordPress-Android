@@ -26,7 +26,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
 ) : ViewModel() {
-    private val _onFinishedEvent = MutableSharedFlow<Boolean>()
+    private val _onFinishedEvent = MutableSharedFlow<String?>()
+    /**
+     * A shared flow that emits the site URL when the setup is finished.
+     * It can emit null if the site could not be set up.
+     */
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
     /**
@@ -36,14 +40,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      */
     fun setupSite(rawData: String) {
         viewModelScope.launch {
+            val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(rawData)
             if (credentialsStored) {
-                _onFinishedEvent.emit(true)
+                _onFinishedEvent.emit(urlLogin.siteUrl)
             } else {
-                val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
                 val siteFetched = fetchSites(urlLogin)
-                _onFinishedEvent.emit(siteFetched)
+                _onFinishedEvent.emit(if (siteFetched) urlLogin.siteUrl else null)
             }
         }
     }

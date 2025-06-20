@@ -7,6 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.R
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import javax.inject.Inject
@@ -29,13 +31,27 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
-    private fun runMainIdNecessary(credentialsStored: Boolean) {
-        // TODO: show succes or error message
-        if (credentialsStored) {
+    private fun runMainIdNecessary(sireUrl: String?) {
+        if (sireUrl != null) {
+            ToastUtils.showToast(
+                this,
+                getString(
+                    R.string.application_password_credentials_stored,
+                    sireUrl
+                )
+            )
             intent.setData(null)
+        } else {
+            ToastUtils.showToast(
+                this,
+                getString(
+                    R.string.application_password_credentials_storing_error,
+                    sireUrl
+                )
+            )
         }
         val mainActivityIntent =
-            Intent(this@ApplicationPasswordLoginActivity, WPMainActivity::class.java)
+            Intent(this, WPMainActivity::class.java)
         mainActivityIntent.setFlags(
             (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     or Intent.FLAG_ACTIVITY_CLEAR_TASK)
