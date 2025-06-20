@@ -1451,7 +1451,9 @@ open class SiteStore @Inject constructor(
 
     suspend fun fetchSitesXmlRpcFromApplicationPassword(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
-            updateSites(siteXMLRPCClient.fetchSitesFromApplicationPassword(payload.url, payload.username, payload.password))
+            updateSites(
+                siteXMLRPCClient.fetchSitesFromApplicationPassword(payload.url, payload.username, payload.password)
+            )
         }
     }
 

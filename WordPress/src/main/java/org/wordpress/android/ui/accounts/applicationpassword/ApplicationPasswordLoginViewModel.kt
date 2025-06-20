@@ -52,11 +52,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         }
     }
 
-    suspend private fun fetchSites(
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchSites(
         urlLogin: ApplicationPasswordLoginHelper.UriLogin
     ): Boolean = withContext(ioDispatcher) {
         try {
-            if (urlLogin.user.isNullOrEmpty() || urlLogin.password.isNullOrEmpty() || urlLogin.siteUrl.isNullOrEmpty()) {
+            if (urlLogin.user.isNullOrEmpty() ||
+                urlLogin.password.isNullOrEmpty() ||
+                urlLogin.siteUrl.isNullOrEmpty()) {
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
                 false
             } else {

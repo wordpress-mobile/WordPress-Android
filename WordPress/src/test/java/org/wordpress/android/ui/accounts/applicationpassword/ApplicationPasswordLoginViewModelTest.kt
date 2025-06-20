@@ -12,17 +12,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.doThrow
-import org.mockito.kotlin.doReturn
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -93,7 +85,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `when credentials not stored, fetchSites succeeds, emits siteUrl`() = runTest {
         // Given
         whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!)).thenReturn("https://example.com/xmlrpc.php")
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!))
+            .thenReturn("https://example.com/xmlrpc.php")
 
         // When
         viewModel.onFinishedEvent.test {
@@ -111,8 +104,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Test
     fun `when credentials not stored due to exception, fetchSites succeeds, emits siteUrl`() = runTest {
         // Given
-        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenThrow(RuntimeException())
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!)).thenReturn("https://example.com/xmlrpc.php")
+        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData))
+            .thenThrow(RuntimeException())
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!))
+            .thenReturn("https://example.com/xmlrpc.php")
 
         // When
         viewModel.onFinishedEvent.test {
@@ -130,8 +125,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Test
     fun `when credentials not stored, fetchSites fails, emits null`() = runTest {
         // Given
-        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!)).thenThrow(RuntimeException())
+        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData))
+            .thenReturn(false)
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(uriLogin.siteUrl!!))
+            .thenThrow(RuntimeException())
 
         // When
         viewModel.onFinishedEvent.test {
