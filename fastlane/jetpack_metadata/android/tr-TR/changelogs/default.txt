@@ -1,5 +1,3 @@
-25.8:
-Deneysel düzenleyicide bazı düzeltmeler yaptık.
-- Grup bloklarını seçebilir, bunlar arasında gezinebilir ve bunları düzenleyebilirsiniz, grup bloklarının kullanımı da daha kolaydır.
-- Cihazınızın yönlendirmesini değiştirdiğinizde içeriğiniz sıfırlanmayacaktır.
-- Değişiklikleri kaydederken bazen düzenleyicinin çökmesine neden olan sinir bozucu bir hatayı düzelttik.
+25.9:
+- Karanlık moddayken "ben" simgesi artık doğru renktedir.
+- QR kodu taramanızın başarısız olup olmadığını gösteren bir uyarı ekledik. Beklemek yok, tahmin etmek yok, sorun yok.
