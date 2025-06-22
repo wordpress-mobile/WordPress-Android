@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 10:54:07+0000
+Translation-Revision-Date: 2025-06-17 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Le site fourni ne prend pas en charge l’authentification par mot de passe d’application.</string>
+    <string name="application_password_title">S’authentifier à l’aide du mot de passe de l’application</string>
+    <string name="application_password_credentials_stored">Identifiants de connexion du mot de passe de l’application stockés pour %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Détecter un code a pris trop de temps. Veuillez réessayer ou utiliser votre application Appareil photo pour scanner le code.</string>
+    <string name="qrcode_auth_flow_timeout_title">L’analyse a expiré</string>
+    <string name="invite_users">Inviter des utilisateurs</string>
+    <string name="experimental_application_password_feature_description">Activez le mot de passe d’application pour vous connecter aux sites auto-hébergés.</string>
+    <string name="experimental_application_password_feature">Connexion par mot de passe d’applications</string>
+    <string name="experimental_subscribers_feature_description">Afficher et gérer les abonnés à la newsletter (en cours)</string>
+    <string name="experimental_subscribers_feature">Abonnés expérimentaux</string>
+    <string name="cant_share_no_blog">Vous ne pouvez pas partager vers WordPress si vous n’avez pas au moins un blog</string>
+    <string name="coming_soon">Prochainement !</string>
     <string name="me_email_verification_generic_error">Impossible d’envoyer le lien de vérification</string>
     <string name="me_email_verification_resend">Renvoyer le lien de vérification</string>
     <string name="me_email_verification_sent_description">Consulter l’e-mail de confirmation dans votre boîte de réception sur %s</string>
@@ -3297,7 +3309,6 @@ Language: fr
     <string name="invite_message_title">Message personnalisé</string>
     <string name="invite">Invitation</string>
     <string name="invite_names_title">Identifiants ou adresses e-mail</string>
-    <string name="invite_people">Inviter des personnes</string>
     <string name="my_site_header_external">Externe</string>
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
@@ -3310,7 +3321,6 @@ Language: fr
     <string name="user_remove_confirmation_message">Si vous supprimez %1$s, cet utilisateur ne pourras plus accéder à ce site mais tout le contenu ayant été crée par %1$s restera sur le site.\n\nVoulez vous toujours supprimer cet utilisateur ?</string>
     <string name="person_remove_confirmation_title">Supprimer %1$s</string>
     <string name="role">Rôle</string>
-    <string name="people">Personnes</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Les blogs de cette liste n’ont rien publié récemment</string>
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
@@ -3710,7 +3720,6 @@ Language: fr
     <string name="reader_toast_err_adding_tag">Impossible d’ajouter cette étiquette</string>
     <string name="reader_title_applog">Journal de l\'application</string>
     <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
-    <string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
     <string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Paramètres d\'image</string>
@@ -3758,7 +3767,6 @@ Language: fr
     <string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
     <string name="reader_likes_you_and_multi">Vous et %,d personnes aiment ça</string>
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
-    <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
     <string name="comment_unapproved">Commentaire désapprouvé</string>
     <string name="reader_toast_err_get_post">Impossible de récupérer cet article</string>

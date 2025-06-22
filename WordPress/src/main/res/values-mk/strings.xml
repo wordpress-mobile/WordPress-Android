@@ -91,7 +91,6 @@ Language: mk
     <string name="image_settings">Подесувања на сликата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
-    <string name="error_blog_hidden">Овој блог е скриен и неможе да се вчита. Овозможи го повторно во подесувањата и обиди се повторно.</string>
     <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
     <string name="reader_title_applog">Дневник на апликацијата</string>
     <string name="edit_comment">Измени коментар</string>
@@ -115,7 +114,6 @@ Language: mk
     <string name="new_post">Нов напис</string>
     <string name="share_link">Сподели врска</string>
     <string name="reader_empty_posts_in_tag_updating">Преземање написи…</string>
-    <string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
     <string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
     <string name="reader_likes_multi">На %,d луѓе им се допаѓа ова</string>
     <string name="comment_spammed">Коментарот е означен како спам</string>
