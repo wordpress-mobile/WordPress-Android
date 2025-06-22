@@ -1,5 +1,3 @@
-25.8 :
-Nous avons apporté quelques corrections à l’éditeur expérimental.
-- Vous pouvez sélectionner, parcourir et modifier des blocs Groupe. Ils sont par ailleurs plus faciles à utiliser.
-- Votre contenu ne sera pas réinitialisé lorsque vous changerez l’orientation de votre appareil.
-- Nous avons corrigé un bug gênant qui faisait parfois planter l’éditeur lors de l’enregistrement des modifications.
+25.9 :
+- L’icône « Moi » est désormais de la bonne couleur lorsque vous êtes en mode sombre.
+- Nous avons ajouté un avertissement qui vous indique lorsque votre code QR n’a pas pu être scanné. Aucune attente, aucune conjecture, aucun problème.
