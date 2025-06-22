@@ -3286,7 +3286,6 @@ Language: es_CL
     <string name="invite">Invitar</string>
     <string name="invite_names_title">Nombres de usuarios o correos electrónicos</string>
     <string name="my_site_header_external">Externos</string>
-    <string name="invite_people">Invitar Personas</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se encontraron resultados para %s para tu idioma</string>
@@ -3298,7 +3297,6 @@ Language: es_CL
     <string name="user_remove_confirmation_message">Si eliminas %1$s, ese usuario ya no podrá acceder a este sitio, pero cualquier contenido creado por %1$s permanecerá en el sitio.\n\n¿Todavía deseas eliminar este usuario?</string>
     <string name="person_remove_confirmation_title">Quitar %1$s</string>
     <string name="role">Función</string>
-    <string name="people">Gente</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Los blogs de esta lista no han publicado nada últimamente</string>
     <string name="error_remove_user">No se pudo quitar el usuario</string>
     <string name="error_update_role">No se pudo actualizar el rol del usuario</string>
@@ -3729,7 +3727,6 @@ Language: es_CL
     <string name="local_changes">Cambios locales</string>
     <string name="image_settings">Ajustes de imagen</string>
     <string name="wordpress_blog">Blog de WordPress</string>
-    <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app.</string>
     <string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde.</string>
@@ -3747,7 +3744,6 @@ Language: es_CL
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
-    <string name="cant_share_no_visible_blog">No puedes compartir en WordPress sin un blog visible</string>
     <string name="comment_unapproved">Comentario no aprobado</string>
     <string name="pick_photo">Elige una foto</string>
     <string name="pick_video">Elige un vídeo</string>
