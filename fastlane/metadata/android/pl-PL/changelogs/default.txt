@@ -1,5 +1,4 @@
-25.8:
-Wprowadziliśmy kilka poprawek do edytora eksperymentalnego.
-- Możesz łatwiej wybierać, przenosić i edytować bloki grup.
-- Twoja zawartość nie będzie resetowana po zmianie orientacji urządzenia.
-- Naprawiliśmy uciążliwy błąd, który czasami powodował awarię edytora podczas zapisywania zmian.
+25.9:
+- Klawiatura nie nachodzi już na edytor, co oznacza, że przez cały czas widzisz swoje niesamowite dzieło.
+- Ikonka „ja” ma teraz prawidłowy kolor, gdy korzystasz z trybu ciemnego.
+- Dodaliśmy ostrzeżenie, które poinformuje, jeśli skanowanie kodu QR nie powiodło się. Nie musisz czekać, nie musisz zgadywać, nie ma problemu.
