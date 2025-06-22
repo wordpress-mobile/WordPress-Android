@@ -1,5 +1,4 @@
-25.8:
-Hemos hecho algunas correcciones en el editor experimental.
-- Puedes seleccionar, moverte y editar bloques de grupo, y además son más fáciles de usar.
-- Tu contenido no se reiniciará cuando cambies la orientación de tu dispositivo.
-- Hemos corregido un molesto error que a veces hacía que el editor se bloqueara al guardar los cambios.
+25.9:
+- El teclado ya no se superpone sobre el editor así que ahora puedes ver tu fantástico trabajo en todo momento.
+- El icono de «yo» ahora tiene el color correcto cuando estás en el modo oscuro.
+- Hemos añadido una advertencia que te indica si la exploración de tu código QR fue correcta. Sin esperas, sin tareas adicionales, sin problemas.

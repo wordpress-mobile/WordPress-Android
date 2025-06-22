@@ -1,5 +1,3 @@
-25.8:
-Abbiamo apportato alcune correzioni all'editor sperimentale.
-- Puoi selezionare, spostare e modificare i blocchi Gruppo, che sono anche più facili da usare.
-- Il contenuto non verrà reimpostato quando modifichi l'orientamento del dispositivo.
-- Abbiamo corretto un fastidioso bug che a volte causava l'arresto anomalo dell'editor durante il salvataggio delle modifiche.
+25.9:
+- Corretto il colore dell'icona "Io" in modalità scura.
+- Aggiunto un avviso che ti informa se la scansione di un codice QR non è riuscita. Nessuna attesa, nessuna incertezza, nessun problema.

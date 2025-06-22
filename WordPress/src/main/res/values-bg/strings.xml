@@ -304,7 +304,6 @@ Language: bg
     <string name="invite_error_no_usernames">Нужно е поне едно потребителско име</string>
     <string name="invite">Покана</string>
     <string name="my_site_header_external">Външна</string>
-    <string name="invite_people">Покана</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
@@ -314,7 +313,6 @@ Language: bg
     <string name="user_remove_confirmation_message">Ако премахнете %1$s, потребителят вече няма да има достъп до сайта, но съдържанието, създадено от %1$s ще остане.\n\nЖелаете ли да продължите с премахването?</string>
     <string name="person_remove_confirmation_title">Премахване на %1$s</string>
     <string name="role">Роля</string>
-    <string name="people">Хора</string>
     <string name="error_remove_user">Потребителят не може да бъде премахнат</string>
     <string name="error_update_role">Грешка при обновяване на потребителската роля</string>
     <string name="error_fetch_viewers_list">Грешка при зареждане на потребителите на сайта</string>
@@ -693,7 +691,6 @@ Language: bg
     <string name="image_settings">Настройки на изображението</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтална подредба</string>
     <string name="connection_error">Грешка при свързване</string>
-    <string name="error_blog_hidden">Този блог е скрит и не може да бъде зареден. Пуснете го отново от настройките и опитайте отново.</string>
     <string name="post_settings">Настройки на публикацията</string>
     <string name="page_settings">Настройки на страницата</string>
     <string name="local_changes">Локални промени</string>
@@ -727,7 +724,6 @@ Language: bg
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
     <string name="reader_likes_multi">%,d човека харесаха това</string>
     <string name="comment_spammed">Коментарът е отбелязан като спам</string>
-    <string name="cant_share_no_visible_blog">Не можете да споделяте към WordPress без видим блог</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>
     <string name="pick_photo">Избор на снимка</string>
     <string name="pick_video">Избор на видео</string>

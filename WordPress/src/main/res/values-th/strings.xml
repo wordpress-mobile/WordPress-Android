@@ -248,7 +248,6 @@ Language: th
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="image_settings">การตั้งค่ารูปภาพ</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
-    <string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
     <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
     <string name="new_post">เรื่องใหม่</string>
     <string name="view_in_browser">ดูในเบราว์เซอร์</string>
@@ -288,7 +287,6 @@ Language: th
     <string name="share_link">แบ่งปันลิงก์</string>
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
-    <string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
     <string name="comment_unapproved">ไม่อนุมัติความเห็นแล้ว</string>
     <string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
     <string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>

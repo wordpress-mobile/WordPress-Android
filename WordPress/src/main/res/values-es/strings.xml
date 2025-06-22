@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-08 08:39:19+0000
+Translation-Revision-Date: 2025-06-15 18:32:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">El sitio facilitado no admite la identificación de contraseña de aplicaciones.</string>
+    <string name="application_password_title">Identifícate usando una contraseña de aplicación</string>
+    <string name="application_password_credentials_stored">Almacenadas las credenciales de la contraseña de aplicación para %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Se h tardado demasiado en detectar un código. Inténtalo de nuevo o usa tu aplicación de cámara para explorar el código.</string>
+    <string name="qrcode_auth_flow_timeout_title">Tiempo de exploración agotado</string>
+    <string name="invite_users">Invitar a usuarios</string>
+    <string name="experimental_application_password_feature_description">Activa las contraseñas de aplicación para el acceso al sitios auto-alojados.</string>
+    <string name="experimental_application_password_feature">Acceso con contraseña de aplicación</string>
+    <string name="experimental_subscribers_feature_description">Ver y gestionar los suscritores del boletín (funcionando)</string>
+    <string name="experimental_subscribers_feature">Suscriptores experimentales</string>
+    <string name="cant_share_no_blog">No puedes compartir WordPress sin un blog</string>
+    <string name="coming_soon">¡Próximamente!</string>
     <string name="me_email_verification_generic_error">No se ha podido enviar el enlace de verificación</string>
     <string name="me_email_verification_resend">Reenviar el enlace de verificación</string>
     <string name="me_email_verification_sent_description">Comprueba tu bandeja de entrada en %s para ver el correo electrónico de confirmación</string>
@@ -3303,7 +3315,6 @@ Language: es
     <string name="invite_message_title">Mensaje personalizado</string>
     <string name="invite">Invitar</string>
     <string name="invite_names_title">Nombres de usuarios o correos electrónicos</string>
-    <string name="invite_people">Invitar a gente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
@@ -3316,7 +3327,6 @@ Language: es
     <string name="user_remove_confirmation_message">Si eliminas %1$s, ese usuario ya no será capaz de acceder a este sitio, pero cualquier contenido que fuera creado por %1$s permanecerá en el sitio.\n\n¿Aún te gustaría eliminar este usuario?</string>
     <string name="person_remove_confirmation_title">Eliminar %1$s</string>
     <string name="role">Perfil</string>
-    <string name="people">Gente</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Los blogs de esta lista no han publicado nada últimamente.</string>
     <string name="error_remove_user">No se ha podido eliminar el usuario</string>
     <string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
@@ -3716,7 +3726,6 @@ Language: es
     <string name="reader_toast_err_adding_tag">No se ha podido añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
-    <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="image_settings">Ajustes de imagen</string>
@@ -3764,7 +3773,6 @@ Language: es
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
-    <string name="cant_share_no_visible_blog">No se puede compartir en WordPress si no tienes un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
     <string name="comment_unapproved">Comentario no aprobado</string>
     <string name="reader_toast_err_get_post">No fue posible recuperar esta entrada</string>

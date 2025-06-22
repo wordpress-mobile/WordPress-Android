@@ -3285,7 +3285,6 @@ Language: pt_BR
     <string name="invite_message_title">Mensagem personalizada</string>
     <string name="invite">Convidar</string>
     <string name="invite_names_title">Nomes de usuário ou e-mails</string>
-    <string name="invite_people">Convidar pessoas</string>
     <string name="my_site_header_external">Externo</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
@@ -3298,7 +3297,6 @@ Language: pt_BR
     <string name="user_remove_confirmation_message">Caso você remova %1$s, o usuário não irá mais ser capaz de acessar este site, mas o conteúdo que foi criado por %1$s será mantido no site.\n\nAinda gostaria de remover este usuário?</string>
     <string name="person_remove_confirmation_title">Remover %1$s</string>
     <string name="role">Função</string>
-    <string name="people">Pessoas</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Não há posts recentes nos blogs desta lista</string>
     <string name="error_remove_user">Não foi possível remover usuário</string>
     <string name="error_update_role">Não foi possível atualizar a função do usuário</string>
@@ -3698,7 +3696,6 @@ Language: pt_BR
     <string name="reader_toast_err_adding_tag">Não foi possível adicionar a tag</string>
     <string name="reader_title_applog">Log do aplicativo</string>
     <string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
-    <string name="error_blog_hidden">Este blog está oculto e não foi possível carregá-lo. Habilite-o em configurações e tente novamente.</string>
     <string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Configurações de imagem</string>
@@ -3746,7 +3743,6 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="reader_likes_you_and_multi">Você e %,d outros curtiram isso</string>
     <string name="reader_likes_multi">%,d pessoas curtiram isso</string>
-    <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
     <string name="comment_unapproved">Comentário não aprovado</string>
     <string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>

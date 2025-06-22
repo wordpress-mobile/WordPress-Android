@@ -1,5 +1,4 @@
-25.8:
-Wir haben einige Korrekturen am experimentellen Editor vorgenommen.
-- Du kannst Gruppenblöcke auswählen, durchblättern und bearbeiten – und sie sind auch benutzerfreundlicher.
-- Deine Inhalte werden nicht zurückgesetzt, wenn du die Ausrichtung deines Geräts änderst.
-- Wir haben einen lästigen Fehler behoben, der gelegentlich Abstürze des Editors beim Speichern verursacht hat.
+25.9:
+‒ Die Tastatur verdeckt nicht mehr den Editor, sodass du deine großartige Arbeit jederzeit sehen kannst.
+‒ Das „Ich“-Icon hat jetzt die richtige Farbe, wenn du den dunklen Modus verwendest.
+‒ Wir haben eine Warnung hinzugefügt, die dir mitteilt, wenn dein QR-Code-Scan nicht erfolgreich war. Kein Warten, kein Rätselraten, kein Problem.

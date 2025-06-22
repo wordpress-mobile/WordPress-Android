@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 10:54:07+0000
+Translation-Revision-Date: 2025-06-13 09:31:30+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">제공된 사이트는 애플리케이션 비밀번호 인증을 지원하지 않습니다.</string>
+    <string name="application_password_title">애플리케이션 비밀번호를 사용하여 인증</string>
+    <string name="application_password_credentials_stored">%1$s에 저장된 애플리케이션 비밀번호 자격 증명</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">코드를 감지하는 데 너무 오래 걸렸습니다. 다시 시도하거나 카메라 앱을 사용하여 코드를 스캔하세요.</string>
+    <string name="qrcode_auth_flow_timeout_title">스캔 시간이 초과되었습니다</string>
+    <string name="invite_users">사용자 초대</string>
+    <string name="experimental_application_password_feature_description">자체 호스팅 사이트에 로그인하기 위해 애플리케이션 비밀번호를 활성화하세요.</string>
+    <string name="experimental_application_password_feature">애플리케이션 비밀번호 로그인</string>
+    <string name="experimental_subscribers_feature_description">뉴스레터 구독자 보기 및 관리 (작업 진행 중)</string>
+    <string name="experimental_subscribers_feature">실험 구독자</string>
+    <string name="cant_share_no_blog">블로그가 없으면 WordPress에 공유할 수 없습니다.</string>
+    <string name="coming_soon">곧 출시됩니다!</string>
     <string name="me_email_verification_generic_error">인증 링크를 보낼 수 없음</string>
     <string name="me_email_verification_resend">인증 링크 다시 보내기</string>
     <string name="me_email_verification_sent_description">%s의 받은 편지함에서 확정 이메일 확인</string>
@@ -52,6 +64,7 @@ Language: ko_KR
     <string name="more_content_description_blogging_prompts">프롬프트 더 보기</string>
     <string name="more_content_description_promote_blaze">Blaze 더 보기</string>
     <string name="reader_toast_success_undo">블로그 차단 해제됨</string>
+    <string name="feedback_form_note_link_jetpack">지원팀에 문의 화면</string>
     <string name="feedback_form_note_text">이 양식은 지원 양식이 아니므로 당사에서 답변해 드릴 수 없습니다. 도움이 필요하신 경우 \"</string>
     <string name="experimental_block_editor_theme_styles">실험용 블록 에디터 스타일</string>
     <string name="experimental_block_editor">실험용 블록 에디터</string>
@@ -1814,6 +1827,7 @@ Language: ko_KR
     <string name="me">나</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">해제</string>
     <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
+    <string name="prepublishing_tags_description">태그는 게시물의 내용을 독자에게 알리는 데 도움이 됩니다.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">발행일</string>
     <string name="prepublishing_nudges_toolbar_title_tags">태그 추가하기</string>
     <string name="prepublishing_nudges_back_button">뒤로</string>
@@ -3301,7 +3315,6 @@ Language: ko_KR
     <string name="invite_message_title">사용자 정의 메시지</string>
     <string name="invite">초대</string>
     <string name="invite_names_title">사용자명 또는 이메일</string>
-    <string name="invite_people">사용자 초대</string>
     <string name="my_site_header_external">외부</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
@@ -3314,7 +3327,6 @@ Language: ko_KR
     <string name="user_remove_confirmation_message">%1$s을(를) 제거하면 해당 사용자는 이 사이트에 더 이상 액세스할 수 없지만 %1$s 님이 작성한 콘텐츠는 사이트에 남습니다.\n\n그래도 이 사용자를 제거하시겠습니까?</string>
     <string name="person_remove_confirmation_title">%1$s 제거</string>
     <string name="role">역할</string>
-    <string name="people">사람</string>
     <string name="reader_empty_blogs_posts_in_custom_list">이 목록의 블로그에 최근 작성된 글 없음</string>
     <string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
     <string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
@@ -3714,7 +3726,6 @@ Language: ko_KR
     <string name="reader_toast_err_adding_tag">이 태그를 추가할 수 없음</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
     <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
-    <string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>
     <string name="error_refresh_media">현재 미디어를 새로 고칠 수 없습니다</string>
     <string name="wordpress_blog">WordPress 블로그</string>
     <string name="image_settings">이미지 설정</string>
@@ -3762,7 +3773,6 @@ Language: ko_KR
     <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
     <string name="reader_likes_you_and_multi">당신에게 %d명이 \"좋아요\"를 하고 있습니다.</string>
     <string name="reader_likes_multi">%d명이 \"좋아요\"를 눌렀습니다.</string>
-    <string name="cant_share_no_visible_blog">공개 블로그가 없기 때문에 WordPress에 공유 할 수 없습니다</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
     <string name="comment_unapproved">댓글이 불승인 됐습니다</string>
     <string name="reader_toast_err_get_post">이 게시물 을 로드 할 수 없습니다</string>

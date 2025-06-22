@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-08 06:13:30+0000
+Translation-Revision-Date: 2025-06-12 05:58:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">De verstrekte site ondersteunt geen applicatie wachtwoord authenticatie.</string>
+    <string name="application_password_title">Authenticeer met behulp van applicatie wachtwoord</string>
+    <string name="application_password_credentials_stored">Applicatie wachtwoordreferenties opgeslagen voor %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Het duurde te lang om een code te detecteren. Probeer het opnieuw of gebruik je camera-app om de code te scannen.</string>
+    <string name="qrcode_auth_flow_timeout_title">Scan is verlopen</string>
+    <string name="invite_users">Gebruikers uitnodigen</string>
+    <string name="experimental_application_password_feature_description">Applicatie wachtwoord inschakelen om in te loggen op zelf-gehoste sites.</string>
+    <string name="experimental_application_password_feature">Applicatie wachtwoord login</string>
+    <string name="experimental_subscribers_feature_description">Bekijk en beheer nieuwsbrief abonnees (werk in uitvoering)</string>
+    <string name="experimental_subscribers_feature">Experimentele abonnees</string>
+    <string name="cant_share_no_blog">Je kunt niet delen naar WordPress zonder een blog</string>
+    <string name="coming_soon">Komt binnenkort!</string>
     <string name="me_email_verification_generic_error">Kan geen verificatie link verzenden</string>
     <string name="me_email_verification_resend">Verificatielink opnieuw verzenden</string>
     <string name="me_email_verification_sent_description">Controleer je inbox op %s voor de bevestiging e-mail</string>
@@ -2588,7 +2600,7 @@ Language: nl
     <string name="media_empty_upload_media">Media uploaden</string>
     <string name="media_empty_list">Je hebt geen media</string>
     <string name="reader_gallery_images_desc">afbeeldingsgalerij</string>
-    <string name="blavatar_desc">site icoon</string>
+    <string name="blavatar_desc">Site icoon</string>
     <string name="theme_image_desc">thema-afbeelding</string>
     <string name="featured_image_desc">uitgelichte afbeelding</string>
     <string name="button_discard">Negeren</string>
@@ -3303,7 +3315,6 @@ Language: nl
     <string name="invite_message_title">Aangepast bericht</string>
     <string name="invite">Uitnodigen</string>
     <string name="invite_names_title">Gebruikersnamen of e-mails</string>
-    <string name="invite_people">Mensen uitnodigen</string>
     <string name="my_site_header_external">Extern</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
@@ -3316,7 +3327,6 @@ Language: nl
     <string name="user_remove_confirmation_message">Als je %1$s verwijdert, kan die gebruiker deze site niet meer openen. Alle inhoud die door %1$s is gemaakt, blijft echter op de site staan.\n\nWil je deze gebruiker toch verwijderen?</string>
     <string name="person_remove_confirmation_title">Verwijder %1$s</string>
     <string name="role">Rol</string>
-    <string name="people">Mensen</string>
     <string name="reader_empty_blogs_posts_in_custom_list">De blogs in deze lijst hebben recent niets geplaatst</string>
     <string name="error_remove_user">Gebruiker verwijderen mislukt</string>
     <string name="error_update_role">Gebruikersrol updaten mislukt</string>
@@ -3716,7 +3726,6 @@ Language: nl
     <string name="reader_toast_err_adding_tag">Deze tag kan niet worden toegevoegd</string>
     <string name="reader_title_applog">Applicatie log</string>
     <string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
-    <string name="error_blog_hidden">Deze blog is verborgen en kan niet worden geladen. Schakel de blog in instellingen in en probeer het opnieuw.</string>
     <string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Afbeeldingsinstellingen</string>
@@ -3764,7 +3773,6 @@ Language: nl
     <string name="reader_empty_posts_in_tag_updating">Berichten aan het ophalen…</string>
     <string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>
     <string name="reader_likes_multi">%,d mensen vinden dit leuk</string>
-    <string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
     <string name="comment_spammed">Reactie als spam gemarkeerd</string>
     <string name="comment_unapproved">Reactie geweigerd</string>
     <string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
