@@ -6,5 +6,6 @@ enum class DataViewUiState {
     LOADED,
     EMPTY,
     EMPTY_SEARCH,
+    ERROR,
     OFFLINE
 }

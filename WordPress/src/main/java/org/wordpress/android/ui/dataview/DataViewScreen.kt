@@ -68,6 +68,7 @@ fun DataViewScreen(
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
+    errorMessage: String? = null,
 ) {
     Screen(
         title = title,
@@ -90,6 +91,7 @@ fun DataViewScreen(
                     DataViewUiState.LOADING -> LoadingDataView()
                     DataViewUiState.EMPTY -> EmptyDataView()
                     DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
+                    DataViewUiState.ERROR -> ErrorDataView(errorMessage)
                     DataViewUiState.OFFLINE -> OfflineDataView()
                     DataViewUiState.LOADING_MORE,
                     DataViewUiState.LOADED -> LoadedDataView(
@@ -209,7 +211,6 @@ private fun LoadedDataView(
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
@@ -230,6 +231,7 @@ private fun LoadedDataView(
         if (showProgress) {
             CircularProgressIndicator(
                 modifier = Modifier.size(48.dp)
+                    .align(Alignment.Center)
             )
         }
     }
@@ -275,6 +277,22 @@ private fun EmptySearchDataView() {
             title = stringResource(R.string.subscribers_empty_search),
             image = R.drawable.img_illustration_empty_results_216dp,
             imageContentDescription = stringResource(R.string.subscribers_empty_search),
+        )
+    }
+}
+
+@Composable
+private fun ErrorDataView(errorMessage: String?) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EmptyContentM3(
+            title = stringResource(R.string.subscribers_error_title),
+            subtitle = errorMessage ?: stringResource(R.string.error_generic_network),
+            image = R.drawable.img_illustration_cloud_off_152dp,
+            imageContentDescription = stringResource(R.string.subscribers_error_title),
         )
     }
 }
@@ -428,6 +446,25 @@ private fun OfflinePreview() {
     DataViewScreen(
         title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
+        items = remember { mutableStateOf(emptyList()) },
+        supportedFilters = emptyList(),
+        currentFilter = null,
+        onRefresh = { },
+        onFetchMore = { },
+        onSearchQueryChange = { },
+        onItemClick = {},
+        onFilterClick = { },
+        onBackClick = { },
+    )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ErrorPreview() {
+    DataViewScreen(
+        title = "Title",
+        uiState = remember { mutableStateOf(DataViewUiState.ERROR) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,

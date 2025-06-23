@@ -3,18 +3,23 @@ package org.wordpress.android.ui.dataview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import rs.wordpress.api.kotlin.WpComApiClient
+import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpAuthentication
+import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,10 +31,21 @@ import javax.inject.Named
 @HiltViewModel
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
+    @Inject
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
+
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -39,30 +55,47 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
-    private var offset = 0
+    private var page = 0
+    private var canLoadMore = true
+
+    lateinit var wpComApiClient: WpComApiClient
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
+            // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
+            wpComApiClient = WpComApiClient(
+                WpAuthenticationProvider.staticWithAuth(
+                    WpAuthentication.Bearer(token = accountStore.accessToken!!)
+                )
+            )
+
             fetchData()
+
             debouncedQuery
                 .debounce(SEARCH_DELAY_MS)
                 .collect { query ->
                     if (searchQuery != query) {
                         searchQuery = query
-                        offset = 0
+                        resetPaging()
                         fetchData()
                     }
                 }
         }
     }
 
-    @Suppress("MagicNumber")
+    fun siteId(): Long {
+        return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
+    }
+
     private fun fetchData() {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            val isLoadingMore = offset > 0
+            val isLoadingMore = page > 0
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
             } else {
@@ -70,18 +103,21 @@ open class DataViewViewModel @Inject constructor(
             }
 
             launch {
-                // simulate network delay
-                delay(1000L)
                 val items = performNetworkRequest(
-                    offset = offset,
+                    page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value
                 )
+                if (uiState.value == DataViewUiState.ERROR) {
+                    return@launch
+                }
+
                 if (isLoadingMore) {
                     _items.value += items
                 } else {
                     _items.value = items
                 }
+                canLoadMore = items.size == PAGE_SIZE
                 if (_items.value.isEmpty()) {
                     if (searchQuery.isNotEmpty()) {
                         updateUiState(DataViewUiState.EMPTY_SEARCH)
@@ -97,25 +133,31 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
+    private fun resetPaging() {
+        page = 0
+        canLoadMore = true
+        _errorMessage.value = null
+    }
+
     fun onRefreshData() {
         if (_uiState.value == DataViewUiState.LOADED) {
-            offset = 0
+            resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData()
         }
     }
 
     fun onFetchMoreData() {
-        if (_uiState.value != DataViewUiState.LOADING_MORE) {
+        if (_uiState.value != DataViewUiState.LOADING_MORE && canLoadMore) {
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
-            offset += PAGE_SIZE
+            page++
             fetchData()
         }
     }
 
     fun onFilterClick(filter: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
-        offset = 0
+        resetPaging()
         // clear the filter if it's already selected
         _itemFilter.value = if (filter == _itemFilter.value) {
             null
@@ -130,6 +172,11 @@ open class DataViewViewModel @Inject constructor(
         debouncedQuery.value = query
     }
 
+    fun onError(message: String?) {
+        _errorMessage.value = message
+        updateUiState(DataViewUiState.ERROR)
+    }
+
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
@@ -139,7 +186,8 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(
-        offset: Int = 0,
+        page: Int = 0,
+        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null
     ): List<DataViewItem> = withContext(ioDispatcher) {

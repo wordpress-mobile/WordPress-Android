@@ -31,6 +31,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         items = viewModel.items.collectAsState(),
                         supportedFilters = viewModel.getSupportedFilters(),
                         currentFilter = viewModel.itemFilter.collectAsState().value,
+                        errorMessage = viewModel.errorMessage.collectAsState().value,
                         onRefresh = {
                             viewModel.onRefreshData()
                         },
