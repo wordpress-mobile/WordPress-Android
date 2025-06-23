@@ -94,11 +94,7 @@ class SubscribersViewModel @Inject constructor(
             is WpRequestResult.Success -> {
                 val subscribers = request.response.data.subscribers
                 appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                val items = ArrayList<DataViewItem>()
-                subscribers.forEach { subscriber ->
-                    items.add(subscriberToDataViewItem(subscriber))
-                }
-                return items
+                return subscribers.map { subscriberToDataViewItem(it) }
             }
 
             else -> {
