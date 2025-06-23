@@ -106,7 +106,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             onItemClick = { item ->
                                 viewModel.onItemClick(item)
                                 (item.data as? Subscriber)?.let { subscriber ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(NAVIGATION_KEY_ID, subscriber.userId)
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(KEY_ID, subscriber.userId)
                                     navController.navigate(route = SubscriberScreen.Detail.name)
                                 }
                             },
@@ -118,7 +118,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = SubscriberScreen.Detail.name) {
-                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>("id"))?.let { userId ->
+                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_ID))?.let { userId ->
                             viewModel.getSubscriber(userId)?.let { subscriber ->
                                 titleState.value = subscriber.displayNameOrEmail()
                                 SubscriberDetailScreen(
@@ -131,5 +131,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val KEY_ID = "id"
     }
 }
