@@ -160,7 +160,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     data class NavigationActionData(
         val showPostSignupInterstitial: Boolean,
         val siteUrl: String?,
-        var oldSitesIDs: ArrayList<Int>?,
+        val oldSitesIDs: ArrayList<Int>?,
         val isError: Boolean
     )
 }

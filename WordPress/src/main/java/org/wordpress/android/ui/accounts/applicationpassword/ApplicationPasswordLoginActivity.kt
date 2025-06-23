@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
