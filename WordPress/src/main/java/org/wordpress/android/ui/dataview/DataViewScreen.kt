@@ -65,14 +65,20 @@ fun DataViewScreen(
     errorMessage: String? = null,
 ) {
     val refreshState = remember { mutableStateOf(false) }
-    val pullToRefreshState = rememberPullToRefreshState()
+    val pullToRefreshState = rememberPullToRefreshState(
+        refreshing = refreshState.value,
+        onRefresh = {
+            refreshState.value = true
+            onRefresh()
+            refreshState.value = false
+        }
+    )
 
     PullToRefreshBox(
         modifier = Modifier
             .fillMaxSize(),
         isRefreshing = refreshState.value,
         state = pullToRefreshState,
-        onRefresh = onRefresh,
         indicator = {
             PullToRefreshDefaults.Indicator(
                 state = pullToRefreshState,
