@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +14,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
@@ -71,7 +73,12 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         } else if (navigationActionData.showPostSignupInterstitial) {
             ActivityLauncher.showPostSignupInterstitial(this)
         } else {
-            ActivityLauncher.showMainActivity(this)
+            val mainActivityIntent = Intent(this, WPMainActivity::class.java)
+            mainActivityIntent.setFlags(
+                (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
+            startActivity(mainActivityIntent)
         }
         finish()
     }
