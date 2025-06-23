@@ -120,7 +120,6 @@ Language: is
     <string name="invite_error_invalid_usernames_one">Get ekki sent: Ógilt notandanafn eða netfang</string>
     <string name="invite_error_no_usernames">Vinsamlegast bættu við a.m.k einu notandanafni</string>
     <string name="invite">Bjóða</string>
-    <string name="invite_people">Bjóða fólki</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
@@ -130,7 +129,6 @@ Language: is
     <string name="person_removed">Fjarlægði %1$s</string>
     <string name="user_remove_confirmation_message">Ef þú fjarlægir %1$s mun sá notandi ekki lengur hafa aðgang að þessum vef, en allt efni búið til af %1$s mun lifa áfram á vefnum.\n\nViltu ennþá fjarlægja þennan notanda?</string>
     <string name="person_remove_confirmation_title">Fjarlægja %1$s</string>
-    <string name="people">Fólk</string>
     <string name="role">Hlutverk</string>
     <string name="error_remove_user">Gat ekki fjarlægt notanda</string>
     <string name="error_fetch_viewers_list">Gat ekki sótt vefgesti</string>
@@ -515,7 +513,6 @@ Language: is
     <string name="comment_status_trash">Hent í ruslið</string>
     <string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
     <string name="dlg_confirm_trash_comments">Henda í ruslatunnu?</string>
-    <string name="error_blog_hidden">Þetta blogg er falið og ekki hægt að sækja það. Virkjaðu það aftur í stillingum og reyndu aftur.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lárétt jöfnun</string>
     <string name="local_draft">Staðvær drög</string>
     <string name="new_media">Ný skrá</string>
@@ -537,7 +534,6 @@ Language: is
     <string name="reader_empty_posts_in_tag_updating">Sæki færslur…</string>
     <string name="reader_likes_multi">%,d manns líkar þetta</string>
     <string name="comment_spammed">Athugasemd merkt sem amapóstur</string>
-    <string name="cant_share_no_visible_blog">Þú getur ekki deilt með WordPress án þess að hafa sýnilegt blogg</string>
     <string name="reader_likes_you_and_multi">Þú og %,d öðrum líkar þetta</string>
     <string name="reader_likes_you_and_one">Þú og einum öðrum líkar þetta</string>
     <string name="reader_toast_err_get_post">Gat ekki sótt þessa færslu</string>

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 15:54:08+0000
+Translation-Revision-Date: 2025-06-17 09:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Указанный сайт не поддерживает аутентификацию с помощью пароля приложения.</string>
+    <string name="application_password_title">Подтвердить с помощью пароля приложения</string>
+    <string name="application_password_credentials_stored">Учетные данные пароля приложения сохранены для %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Обнаружение кода заняло слишком много времени. Повторите попытку или отсканируйте код в приложении камеры.</string>
+    <string name="qrcode_auth_flow_timeout_title">Время ожидания сканирования истекло</string>
+    <string name="invite_users">Пригласить пользователей</string>
+    <string name="experimental_application_password_feature_description">Активируйте пароль приложения, чтобы входить на автономные сайты.</string>
+    <string name="experimental_application_password_feature">Вход с паролем приложения</string>
+    <string name="experimental_subscribers_feature_description">Просматривать подписчиков рассылки и управлять ими (в разработке)</string>
+    <string name="experimental_subscribers_feature">Экспериментальные подписчики</string>
+    <string name="cant_share_no_blog">Вы не можете делать публикации на WordPress без блога</string>
+    <string name="coming_soon">Уже скоро!</string>
     <string name="me_email_verification_generic_error">Не удалось отправить ссылку для подтверждения</string>
     <string name="me_email_verification_resend">Повторно отправить ссылку для подтверждения</string>
     <string name="me_email_verification_sent_description">Проверьте почту по адресу %s, чтобы получить письмо с подтверждением</string>
@@ -3303,7 +3315,6 @@ Language: ru
     <string name="invite_message_title">Произвольное сообщение</string>
     <string name="invite">Пригласить</string>
     <string name="invite_names_title">Имена пользователей или адреса e-mail</string>
-    <string name="invite_people">Пригласить людей</string>
     <string name="my_site_header_external">Внешние ссылки</string>
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
@@ -3316,7 +3327,6 @@ Language: ru
     <string name="user_remove_confirmation_message">Если вы удалите пользователя %1$s, он больше не сможет посещать этот сайт, но всё содержимое, созданное пользователем %1$s, останется на сайте.\n\nВсё равно удалить этого пользователя?</string>
     <string name="person_remove_confirmation_title">Удалить %1$s</string>
     <string name="role">Роль</string>
-    <string name="people">Люди</string>
     <string name="reader_empty_blogs_posts_in_custom_list">В блогах из этого списка за последнее время не было ничего опубликовано</string>
     <string name="error_remove_user">Не удалось удалить пользователя</string>
     <string name="error_update_role">Не удалось обновить роль пользователя</string>
@@ -3716,7 +3726,6 @@ Language: ru
     <string name="reader_toast_err_adding_tag">Не удается подписаться на эту метку</string>
     <string name="reader_title_applog">Лог приложения</string>
     <string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
-    <string name="error_blog_hidden">Этот блог является скрытым и не может быть загружен. Откройте его через настройки и попробуйте снова.</string>
     <string name="error_refresh_media">В данный момент не удалось обновить медиафайлы.</string>
     <string name="wordpress_blog">Блог WordPress</string>
     <string name="image_settings">Настройки изображений</string>
@@ -3764,7 +3773,6 @@ Language: ru
     <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="reader_likes_you_and_multi">Вам и %,d другим понравилось это.</string>
     <string name="reader_likes_multi">Понравилось %,d людям</string>
-    <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
     <string name="comment_unapproved">Комментарий отклонён</string>
     <string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>

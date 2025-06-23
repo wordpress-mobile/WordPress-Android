@@ -1,5 +1,3 @@
-25.8:
-Fizemos algumas correções no editor experimental.
-- Você pode selecionar, mover e editar blocos de grupo, que também estão mais fáceis de usar.
-- O conteúdo não será redefinido quando você alterar a orientação do dispositivo.
-- Corrigimos um bug que algumas vezes fazia o editor travar ao salvar as alterações.
+25.9:
+- O ícone do seu perfil agora aparece na cor certa no modo escuro.
+- Adicionamos um aviso informando se a varredura do código QR não foi bem-sucedida. Sem espera, sem suposições, sem problemas.

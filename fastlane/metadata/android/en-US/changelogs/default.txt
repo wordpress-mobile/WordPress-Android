@@ -1,4 +1,3 @@
-We made some fixes to the experimental editor.
-- You can select, move through, and edit group blocks—and they’re easier to use, too.
-- Your content won’t reset when you change your device’s orientation.
-- We fixed a pesky bug that sometimes made the editor crash when saving changes.
+- The keyboard no longer overlaps the editor, meaning you can see your amazing work at all times.
+- The “me” icon is now the correct color when you’re in dark mode.
+- We’ve added a warning that tells you if your QR code scan was unsuccessful. No waiting, no guesswork, no problem.

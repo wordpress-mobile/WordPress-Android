@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-12 14:54:07+0000
+Translation-Revision-Date: 2025-06-16 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">لا يدعم الموقع المذكور مصادقة كلمة مرور التطبيق.</string>
+    <string name="application_password_title">المصادقة بكلمة مرور التطبيق</string>
+    <string name="application_password_credentials_stored">بيانات اعتماد كلمة مرور التطبيق مُخزنة بغرض ⁦%1$s⁩</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">استغرق الأمر وقتًا طويلًا للغاية لرصد الكود. يُرجى المحاولة مرة أخرى أو استخدام تطبيق الكاميرا الخاص بك لفحص الكود.</string>
+    <string name="qrcode_auth_flow_timeout_title">انتهت مهلة المسح</string>
+    <string name="invite_users">دعوة مستخدمين</string>
+    <string name="experimental_application_password_feature_description">تمكين كلمة مرور التطبيق لتسجيل الدخول إلى المواقع المستضافة ذاتيًا.</string>
+    <string name="experimental_application_password_feature">كلمات مرور التطبيقات</string>
+    <string name="experimental_subscribers_feature_description">عرض المشتركين في خدمة الرسائل الإخبارية وإدارتهم (العمل قيد التقدم)</string>
+    <string name="experimental_subscribers_feature">المشتركون التجريبيون</string>
+    <string name="cant_share_no_blog">لا تستطيع مشاركتها في ووردبريس دون مدونة</string>
+    <string name="coming_soon">قريبًا!</string>
     <string name="me_email_verification_generic_error">يتعذر إرسال رابط التحقق</string>
     <string name="me_email_verification_resend">إعادة إرسال رابط التحقق</string>
     <string name="me_email_verification_sent_description">تحقق من صندوق الوارد لديك في %s للحصول على رسالة التأكيد عبر البريد الإلكتروني</string>
@@ -3301,7 +3313,6 @@ Language: ar
     <string name="invite">دعوة</string>
     <string name="invite_names_title">أسماء المستخدمين أو عناوين البريد الإلكتروني</string>
     <string name="my_site_header_external">خارجي</string>
-    <string name="invite_people">دعوة أشخاص</string>
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
     <string name="reader_empty_search_description">لم يتم العثور على نتائج تتعلق بـ %s بلغتك</string>
@@ -3312,7 +3323,6 @@ Language: ar
     <string name="user_remove_confirmation_message">إذا قمت بإزالة %1$s، فلن يعود هذا المستخدم قادرًا على الوصول إلى هذا الموقع، ومع ذلك سيبقى أي محتوى تم إنشاؤه بواسطة %1$s على الموقع.\n\nهل لا تزال ترغب في إزالة هذا المستخدم؟</string>
     <string name="person_removed">تمت الإزالة بنجاح @%1$s</string>
     <string name="person_remove_confirmation_title">إزالة %1$s</string>
-    <string name="people">أشخاص</string>
     <string name="role">الدور</string>
     <string name="reader_empty_blogs_posts_in_custom_list">لم تنشر المدونات الموجودة في هذه القائمة أي شيء مؤخرًا</string>
     <string name="error_remove_user">تعذرت إزالة المستخدم</string>
@@ -3736,7 +3746,6 @@ Language: ar
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
-    <string name="error_blog_hidden">هذه المدونة مخفية و لايمكن تحميلها . قم بتفعيلها مرة اخرى من الإعدادات وأعد المحاولة.</string>
     <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
     <string name="trash">سلة المهملات</string>
@@ -3761,7 +3770,6 @@ Language: ar
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
     <string name="reader_likes_multi">%,d أحبوا هذا</string>
-    <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
     <string name="comment_spammed">تم وضع علامة مزعج على التعليق</string>
     <string name="comment_unapproved">لم تتم الموافقة على التعليق</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>

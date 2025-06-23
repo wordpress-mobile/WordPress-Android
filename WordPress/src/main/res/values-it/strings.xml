@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 10:54:07+0000
+Translation-Revision-Date: 2025-06-17 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Il sito fornito non supporta l\'autenticazione tramite password dell\'applicazione.</string>
+    <string name="application_password_title">Effettua l\'autenticazione usando la password dell\'applicazione</string>
+    <string name="application_password_credentials_stored">Credenziali di accesso dell\'applicazione memorizzate per %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Il rilevamento del codice ha richiesto troppo tempo. Riprova o usa l\'app fotocamera per scansionare il codice.</string>
+    <string name="qrcode_auth_flow_timeout_title">Timeout scansione</string>
+    <string name="invite_users">Invita gli utenti</string>
+    <string name="experimental_application_password_feature_description">Abilita la password dell\'applicazione per accedere ai siti ospitati personalmente.</string>
+    <string name="experimental_application_password_feature">Accesso con la password dell\'applicazione</string>
+    <string name="experimental_subscribers_feature_description">Visualizza e gestisci gli abbonati alla newsletter (in fase di sviluppo)</string>
+    <string name="experimental_subscribers_feature">Abbonati sperimentali</string>
+    <string name="cant_share_no_blog">Non è possibile condividere su WordPress senza un blog</string>
+    <string name="coming_soon">Presto disponibile.</string>
     <string name="me_email_verification_generic_error">Impossibile inviare il link di verifica</string>
     <string name="me_email_verification_resend">Invia nuovamente il link di verifica</string>
     <string name="me_email_verification_sent_description">Controlla la tua casella di posta su %s per l\'email di conferma</string>
@@ -2034,7 +2046,7 @@ Language: it
     <string name="my_site_bottom_sheet_add_page">Pagina del sito</string>
     <string name="reader_my_likes_display_name">Mi piace</string>
     <string name="reader_discover_display_name">Scopri</string>
-    <string name="reader_save_for_later_display_name">Salvataggio completato</string>
+    <string name="reader_save_for_later_display_name">Salvato</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
@@ -3289,7 +3301,6 @@ Language: it
     <string name="invite_message_title">Messaggio personalizzato</string>
     <string name="invite">Invita</string>
     <string name="invite_names_title">Nome utente o email</string>
-    <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
     <string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
@@ -3302,7 +3313,6 @@ Language: it
     <string name="user_remove_confirmation_message">Se rimuovi %1$s, questo utente non sarà più in grado di accedere a questo sito ma qualsiasi contenuto creato da %1$s rimarrà disponibile sul sito.\n\nVuoi davvero rimuovere questo utente?</string>
     <string name="person_remove_confirmation_title">Rimuovere %1$s</string>
     <string name="role">Ruolo</string>
-    <string name="people">Persone</string>
     <string name="reader_empty_blogs_posts_in_custom_list">I blog di questo elenco non hanno pubblicato nulla di recente</string>
     <string name="error_remove_user">Impossibile rimuovere l\'utente</string>
     <string name="error_update_role">Impossibile aggiornare il ruolo utente</string>
@@ -3702,7 +3712,6 @@ Language: it
     <string name="reader_toast_err_adding_tag">Impossibile aggiungere questo tag</string>
     <string name="reader_title_applog">Registro applicazione</string>
     <string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
-    <string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
     <string name="error_refresh_media">Al momento non è stato possibile aggiornare l\'elemento multimediale</string>
     <string name="wordpress_blog">Blog di WordPress</string>
     <string name="image_settings">Impostazioni immagini</string>
@@ -3750,7 +3759,6 @@ Language: it
     <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>
     <string name="reader_likes_multi">Piace a %,d persone</string>
-    <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
     <string name="comment_unapproved">Approvazione rimossa dal commento</string>
     <string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>

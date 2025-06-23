@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 13:54:08+0000
+Translation-Revision-Date: 2025-06-16 18:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Sağlanan site Uygulama Şifresi kimlik doğrulamasını desteklemiyor.</string>
+    <string name="application_password_title">Uygulama Şifresi kullanarak yetkilendirin</string>
+    <string name="application_password_credentials_stored">Şunun için uygulama şifresi kimlik bilgileri saklandı: %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Lütfen tekrar deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
+    <string name="qrcode_auth_flow_timeout_title">Tarama zaman aşımına uğradı</string>
+    <string name="invite_users">Kullanıcıları davet et</string>
+    <string name="experimental_application_password_feature_description">Kullanıcı tarafından barındırılan sitelerde oturum açmak için Uygulama Şifresini etkinleştirin.</string>
+    <string name="experimental_application_password_feature">Uygulama Şifresiyle oturum açma</string>
+    <string name="experimental_subscribers_feature_description">Haber bülteni abonelerini görün ve yönetin (çalışma devam ediyor)</string>
+    <string name="experimental_subscribers_feature">Deneysel aboneler</string>
+    <string name="cant_share_no_blog">Blogunuz olmadan WordPress ile paylaşamazsınız</string>
+    <string name="coming_soon">Çok yakında!</string>
     <string name="me_email_verification_generic_error">Doğrulama bağlantısı gönderilemiyor</string>
     <string name="me_email_verification_resend">Doğrulama bağlantısını yeniden gönder</string>
     <string name="me_email_verification_sent_description">Onay e-postası için %s adresinden gelen kutunuzu kontrol edin</string>
@@ -3303,7 +3315,6 @@ Language: tr
     <string name="invite_message_title">Özel ileti</string>
     <string name="invite">Davet et</string>
     <string name="invite_names_title">Kullanıcı adları veya e-posta adresleri</string>
-    <string name="invite_people">İnsanları davet edin</string>
     <string name="my_site_header_external">Dış</string>
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişi temizlensin mi?</string>
@@ -3316,7 +3327,6 @@ Language: tr
     <string name="user_remove_confirmation_message">%1$s kullanıcısını kaldırırsanız, o kullanıcı artık bu siteye erişemez fakat %1$s kullanıcısı tarafından oluşturulmuş içerik sitede kalır.\n\nBu kullanıcıyı gene de kaldırmak istiyor musunuz?</string>
     <string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
     <string name="role">Rol</string>
-    <string name="people">Kişiler</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Bu listedeki bloglarda yakın zamanda herhangi bir yazı paylaşılmamış</string>
     <string name="error_remove_user">Kullanıcı kaldırılamadı</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemedi</string>
@@ -3716,7 +3726,6 @@ Language: tr
     <string name="reader_toast_err_adding_tag">Bu etiket eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
     <string name="fatal_db_error">Uygulama veri tabanı oluşturulurken sorun çıktı. Uygulamayı yeniden kurmayı deneyin.</string>
-    <string name="error_blog_hidden">Bu blog gizli ve yüklenemedi. Ayarlar bölümünden etkinleştirip yeniden deneyin.</string>
     <string name="error_refresh_media">Ortam dosyaları şu anda yenilenemedi</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Görsel ayarları</string>
@@ -3764,7 +3773,6 @@ Language: tr
     <string name="reader_empty_posts_in_tag_updating">Yazılar alınıyor…</string>
     <string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
-    <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
     <string name="comment_unapproved">Yorumun onayı kaldırıldı</string>
     <string name="reader_toast_err_get_post">Bu yazı alınamadı</string>
