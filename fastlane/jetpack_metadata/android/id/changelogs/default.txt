@@ -1,5 +1,3 @@
-25.8:
-Kami melakukan beberapa perbaikan untuk editor eksperimental.
-- Anda dapat memilih, memindahkan, dan mengedit blok grup. Blok grup kini juga lebih mudah digunakan.
-- Konten Anda tidak akan direset saat orientasi perangkat berubah.
-- Kami memperbaiki bug kecil yang terkadang membuat editor crash saat menyimpan perubahan.
+25.9:
+- Ikon "saya" kini menampilkan warna yang tepat saat Anda menggunakan mode gelap.
+- Kami menambahkan peringatan yang memberi tahu Anda jika pemindaian kode QR gagal. Cepat, pasti, dan mudah.

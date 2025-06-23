@@ -82,7 +82,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchSites(
-        urlLogin: UriLogin
+        urlLogin: ApplicationPasswordLoginHelper.UriLogin
     ): Boolean = withContext(ioDispatcher) {
         try {
             if (urlLogin.user.isNullOrEmpty() ||

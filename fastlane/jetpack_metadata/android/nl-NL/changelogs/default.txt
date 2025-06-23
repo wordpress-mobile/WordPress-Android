@@ -1,5 +1,3 @@
-25.8:
-We hebben wat problemen met de experimentele editor opgelost.
-- Je kan groepblokken selecteren, doorlopen en bewerken, en ze zijn ook nog eens eenvoudiger te gebruiken.
-- Je content wordt niet gereset als je de oriëntatie van je apparaat verandert.
-- We hebben een irritante bug verholpen die de editor soms liet crashen wanneer wijzigingen werden opgeslagen.
+25.9:
+- Het pictogram 'ik' heeft nu de juiste kleur als je in de donkere modus zit.
+- We hebben een waarschuwing toegevoegd voor als je de QR-code niet goed hebt gescand. Zonder wachten, zonder gissen, zonder problemen.

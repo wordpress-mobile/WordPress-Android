@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 11:54:08+0000
+Translation-Revision-Date: 2025-06-17 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Die angegebene Website unterstützt keine Authentifizierung per Anwendungspasswort.</string>
+    <string name="application_password_title">Authentifizierung per Anwendungspasswort</string>
+    <string name="application_password_credentials_stored">Anwendungsanmeldedaten gespeichert für %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Es dauerte zu lange, einen Code zu erkennen. Bitte versuche es erneut oder verwende deine Kamera-App, um den Code zu scannen.</string>
+    <string name="qrcode_auth_flow_timeout_title">Zeitüberschreitung beim Scan</string>
+    <string name="invite_users">Benutzer einladen</string>
+    <string name="experimental_application_password_feature_description">Aktiviert das Anwendungspasswort zur Anmeldung bei selbst gehosteten Websites.</string>
+    <string name="experimental_application_password_feature">Anmeldung per Anwendungspasswort</string>
+    <string name="experimental_subscribers_feature_description">Newsletter-Abonnenten anzeigen und verwalten (in Arbeit)</string>
+    <string name="experimental_subscribers_feature">Experimentelle Abonnenten</string>
+    <string name="cant_share_no_blog">Du kannst nicht auf WordPress teilen ohne ein Blog</string>
+    <string name="coming_soon">Demnächst verfügbar!</string>
     <string name="me_email_verification_generic_error">Verifizierungslink kann nicht gesendet werden</string>
     <string name="me_email_verification_resend">Verifizierungslink erneut senden</string>
     <string name="me_email_verification_sent_description">Suche in deinem Posteingang unter %s nach der Bestätigungs-E-Mail</string>
     <string name="me_email_verification_sent">E-Mail gesendet</string>
     <string name="me_email_verification_sending_description">Bestätigungslink wird gesendet</string>
+    <string name="me_email_verification_sending">Wird gesendet …</string>
     <string name="me_email_verification_verify_email_send_link">Bestätigungslink senden</string>
     <string name="me_email_verification_verify_email_description">Bitte bestätige deine E-Mail-Adresse, um dein Konto zu sichern und alle Funktionen freizuschalten</string>
+    <string name="me_email_verification_verify_email">E-Mail-Adresse bestätigen</string>
     <string name="experimental_features_feedback_dialog_decline">Nicht jetzt</string>
     <string name="experimental_features_feedback_dialog_message">Hättest du einen Moment Zeit, um uns Feedback zum experimentellen Editor zu geben?</string>
+    <string name="experimental_features_feedback_dialog_title">Feedback teilen</string>
     <string name="experimental_block_editor_plugins">Plugins für den experimentellen Block-Editor</string>
     <string name="experimental_block_editor_theme_styles_description">Theme-Stile auf den Editor anwenden</string>
     <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
@@ -71,7 +86,7 @@ Language: de
     <string name="feedback_form_discard">Feedback verwerfen?</string>
     <string name="feedback_form_message_hint">Wir wissen dein Feedback zu schätzen!</string>
     <string name="feedback_form_title">Feedback</string>
-    <string name="submit">Übermitteln</string>
+    <string name="submit">Absenden</string>
     <string name="close">Schließen</string>
     <string name="sending">Wird gesendet</string>
     <string name="voice_to_content_generic_error">Es ist derzeit nicht möglich, Beiträge aus Audio zu erstellen. Bitte versuche es später noch einmal.</string>
@@ -1637,7 +1652,7 @@ Language: de
     <string name="reader_follow_comments_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="reader_follow_comments_null_response">Keine Antwort erhalten</string>
     <string name="activity_log_activity_type_filter_clear">Löschen</string>
-    <string name="activity_log_activity_type_filter_apply">Übernehmen</string>
+    <string name="activity_log_activity_type_filter_apply">Anwenden</string>
     <string name="cannot_retry_deleted_media_item_fatal">Die Medien wurden entfernt. Versuche, deine Story neu zu erstellen.</string>
     <string name="label_done_button">Fertig</string>
     <string name="hpp_choose_error">Beim Auswählen des Themes ist ein Fehler aufgetreten.</string>
@@ -3205,7 +3220,7 @@ Language: de
     <string name="image_quality">Bildqualität</string>
     <string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
     <string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
-    <string name="submit_for_review">Abschicken</string>
+    <string name="submit_for_review">Absenden</string>
     <string name="title_subscriber">Abonnent</string>
     <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">Es wurde eine doppelte Website entdeckt.</string>
     <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Diese Website existiert bereits in der App, du kannst sie nicht hinzufügen.</string>
@@ -3281,7 +3296,7 @@ Language: de
     <string name="image_width">Breite</string>
     <string name="image_link_to">Link zu</string>
     <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alternativtext</string>
-    <string name="image_caption">Bildunterschrift</string>
+    <string name="image_caption">Untertitel</string>
     <string name="image_settings_save_toast">Änderungen gespeichert</string>
     <string name="image_settings_dismiss_dialog_title">Ungespeicherte Änderungen verwerfen?</string>
     <string name="stop_upload_dialog_title">Hochladen stoppen?</string>
@@ -3300,7 +3315,6 @@ Language: de
     <string name="invite_message_title">Individuelle Nachricht</string>
     <string name="invite">Einladen</string>
     <string name="invite_names_title">Benutzernamen oder E-Mail-Adressen</string>
-    <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>
     <string name="label_clear_search_history">Lösche Suchverlauf</string>
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
@@ -3313,7 +3327,6 @@ Language: de
     <string name="user_remove_confirmation_message">Falls du %1$s entfernst, kann dieser Benutzer nicht länger auf die Website zugreifen, aber alle von %1$s erstellten Beiträge verbleiben auf der Website.\n\nMöchtest du diesen Benutzter noch immer entfernen?</string>
     <string name="person_remove_confirmation_title">Entferne %1$s</string>
     <string name="role">Rolle</string>
-    <string name="people">Personen</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Die Blogs in dieser Liste haben in letzter Zeit nichts veröffentlicht</string>
     <string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
     <string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
@@ -3651,7 +3664,7 @@ Language: de
     <string name="stats_followers_a_minute_ago">Vor einer Minute</string>
     <string name="stats_followers_seconds_ago">Vor Sekunden</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_top_posts_and_pages">Beiträge &amp; Seiten</string>
+    <string name="stats_view_top_posts_and_pages">Beiträge und Seiten</string>
     <string name="stats_view_countries">Länder</string>
     <string name="stats_likes">Gefällt mir</string>
     <string name="stats_visitors">Besucher</string>
@@ -3663,7 +3676,7 @@ Language: de
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="reader_label_like">Gefällt mir</string>
-    <string name="reader_label_view_original">Zeige Original-Beitrag</string>
+    <string name="reader_label_view_original">Original-Beitrag anzeigen</string>
     <string name="reader_label_comments_closed">Kommentare sind geschlossen</string>
     <string name="reader_title_photo_viewer">%1$d von %2$d</string>
     <string name="error_publish_empty_post">Leerer Beitrag kann nicht veröffentlicht werden</string>
@@ -3700,7 +3713,7 @@ Language: de
     <string name="error_refresh_posts">Beiträge konnten nicht aktualisiert werden</string>
     <string name="error_deleting_post">Beim Löschen des Beitrags ist ein Fehler aufgetreten</string>
     <string name="notifications_empty_list">Keine Benachrichtigungen</string>
-    <string name="sdcard_message">Eine angeschlossene SD-Karte wird für den Medienupload benötigt</string>
+    <string name="sdcard_message">Eine angeschlossene SD-Karte ist für den Medienupload erforderlich</string>
     <string name="cat_name_required">Das Feld Kategorie-Name ist erforderlich</string>
     <string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
     <string name="adding_cat_failed">Hinzufügen der Kategorie fehlgeschlagen</string>
@@ -3711,9 +3724,8 @@ Language: de
     <string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
     <string name="reader_toast_err_removing_tag">Dieses Schlagwort konnte nicht entfernt werden</string>
     <string name="reader_toast_err_adding_tag">Dieses Schlagwort konnte nicht hinzugefügt werden</string>
-    <string name="reader_title_applog">Anwendungslog</string>
+    <string name="reader_title_applog">Anwendungsprotokoll</string>
     <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
-    <string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktiviere ihn wieder in den Einstellungen und versuche es erneut.</string>
     <string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="image_settings">Bild-Einstellungen</string>
@@ -3726,7 +3738,7 @@ Language: de
     <string name="file_error_create">Konnte keine temporäre Datei für den Medienupload erstellen. Stelle sicher, dass genügend Speicherplatz auf deinem Gerät verfügbar ist.</string>
     <string name="category_name">Kategorie-Name</string>
     <string name="add_new_category">Neue Kategorie hinzufügen</string>
-    <string name="view_in_browser">Im Browser anschauen</string>
+    <string name="view_in_browser">Im Browser anzeigen</string>
     <string name="remove_account">Website entfernen</string>
     <string name="saving_changes">Änderungen speichern</string>
     <string name="trash">Papierkorb</string>
@@ -3761,7 +3773,6 @@ Language: de
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
     <string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
     <string name="reader_likes_multi">%d Leuten gefällt dies</string>
-    <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
     <string name="comment_unapproved">Kommentar nicht mehr genehmigt</string>
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
@@ -3791,14 +3802,14 @@ Language: de
     <string name="stats_timeframe_yesterday">Gestern</string>
     <string name="stats_timeframe_today">Heute</string>
     <string name="stats_view_referrers">Referrer</string>
-    <string name="stats_view_tags_and_categories">Tags &amp; Kategorien</string>
+    <string name="stats_view_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_view_clicks">Klicks</string>
     <string name="stats">Statistik</string>
     <string name="share_action">Teilen</string>
     <string name="theme_activate_button">Aktivieren</string>
     <string name="media_edit_failure">Aktualisierung fehlgeschlagen</string>
     <string name="media_edit_description_text">Beschreibung</string>
-    <string name="media_edit_caption_text">Beschriftung</string>
+    <string name="media_edit_caption_text">Untertitel</string>
     <string name="media_edit_title_text">Titel</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
     <string name="media_gallery_type_circles">Kreise</string>
@@ -3844,7 +3855,7 @@ Language: de
     <string name="title">Titel</string>
     <string name="tags_separate_with_commas">Schlagwörter (durch Kommas getrennt)</string>
     <string name="categories">Kategorien</string>
-    <string name="sdcard_title">SD-Karte benötigt</string>
+    <string name="sdcard_title">SD-Karte erforderlich</string>
     <string name="media">Medien</string>
     <string name="updating_cat_success">Kategorie erfolgreich aktualisiert</string>
     <string name="approve">Freigeben</string>

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 13:54:08+0000
+Translation-Revision-Date: 2025-06-17 17:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">האתר שצוין לא תומך באימות של סיסמאות אפליקציה.</string>
+    <string name="application_password_title">לאמת באמצעות סיסמת אפליקציה</string>
+    <string name="application_password_credentials_stored">פרטי הכניסה של סיסמת האפליקציה שמאוחסנים עבור ⁦%1$s⁩</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">הזמן שנדרש לזיהוי הקוד היה ארוך מדי. יש לנסות שוב או להשתמש באפליקציית המצלמה כדי לסרוק את הקוד.</string>
+    <string name="qrcode_auth_flow_timeout_title">הזמן הקצוב לסריקה הסתיים</string>
+    <string name="invite_users">להזמין משתמשים</string>
+    <string name="experimental_application_password_feature_description">יש להפעיל את סיסמת האפליקציה כדי להתחבר לאתרים באחסון עצמי.</string>
+    <string name="experimental_application_password_feature">התחברות באמצעות סיסמאות אפליקציה</string>
+    <string name="experimental_subscribers_feature_description">להציג ולנהל מנויים לניוזלטר (בתהליך בנייה)</string>
+    <string name="experimental_subscribers_feature">מנויים (ניסיוני)</string>
+    <string name="cant_share_no_blog">אין לך אפשרות לשתף ב-WordPress בלי בלוג</string>
+    <string name="coming_soon">בקרוב!</string>
     <string name="me_email_verification_generic_error">לא ניתן לשלוח את הקישור לאימות</string>
     <string name="me_email_verification_resend">לשלוח מחדש את הקישור לאימות</string>
     <string name="me_email_verification_sent_description">יש לבדוק את תיבת הדואר הנכנס בכתובת %s לאימייל האישור</string>
@@ -3258,7 +3270,6 @@ Language: he_IL
     <string name="invite_message_title">הודעה מותאמת אישית</string>
     <string name="invite">הזמנה</string>
     <string name="invite_names_title">שמות משתמשים או כתובות אימייל</string>
-    <string name="invite_people">הזמנת אנשים</string>
     <string name="my_site_header_external">חיצוני</string>
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
@@ -3271,7 +3282,6 @@ Language: he_IL
     <string name="user_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>
     <string name="person_remove_confirmation_title">הסרת %1$s</string>
     <string name="role">תפקיד</string>
-    <string name="people">אנשים</string>
     <string name="reader_empty_blogs_posts_in_custom_list">הבלוגים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
     <string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
     <string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
@@ -3671,7 +3681,6 @@ Language: he_IL
     <string name="reader_toast_err_adding_tag">לא ניתן להוסיף תגית זו</string>
     <string name="reader_title_applog">יומן יישום</string>
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
-    <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
     <string name="wordpress_blog">אתר ב-WordPress</string>
     <string name="image_settings">הגדרות תמונה</string>
@@ -3719,7 +3728,6 @@ Language: he_IL
     <string name="reader_empty_posts_in_tag_updating">מביא רשומות…</string>
     <string name="reader_likes_you_and_multi">אתה ו- %,d אחרים אוהבים את זה</string>
     <string name="reader_likes_multi">%,d אנשים אוהבים את זה</string>
-    <string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
     <string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
     <string name="comment_unapproved">התגובה לא מאושרת</string>
     <string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>

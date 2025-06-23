@@ -9,10 +9,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.ui.main.BaseAppCompatActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,13 +58,6 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         } else {
             ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
         }
-//        val mainActivityIntent =
-//            Intent(this, WPMainActivity::class.java)
-//        mainActivityIntent.setFlags(
-//            (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-//                    or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//        )
-//        startActivity(mainActivityIntent)
         finish()
     }
 

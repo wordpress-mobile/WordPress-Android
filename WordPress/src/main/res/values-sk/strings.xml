@@ -918,7 +918,6 @@ Language: sk
     <string name="invite_message_title">Vlastná správa</string>
     <string name="invite">Pozvať</string>
     <string name="invite_names_title">Používateľské mená alebo emaily</string>
-    <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
     <string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
@@ -930,7 +929,6 @@ Language: sk
     <string name="person_removed">%1$s úspešne odstránený</string>
     <string name="user_remove_confirmation_message">Ak odstránite %1$s, tento používateľ nebude môcť vstúpiť na webovú stránku, ale obsah vytvorený používateľom %1$s ostane na stránke.\n\nNaozaj chcete odstrániť tohto používateľa?</string>
     <string name="person_remove_confirmation_title">Odstrániť %1$s</string>
-    <string name="people">Ľudia</string>
     <string name="role">Rola</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blogy v tomto zozname v poslednom čase nič nezverejnili</string>
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
@@ -1359,7 +1357,6 @@ Language: sk
     <string name="local_draft">Lokálny koncept </string>
     <string name="media_gallery_type_thumbnail_grid">Mriežka s náhľadmi</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
-    <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
     <string name="file_error_create">Nie je možné vytvoriť dočasný súbor. Uistite sa, či máte dostatok miesta vo vašom zariadení.</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
@@ -1374,7 +1371,6 @@ Language: sk
     <string name="reader_toast_err_removing_tag">Túto značku nie je možné odstrániť</string>
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
-    <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>

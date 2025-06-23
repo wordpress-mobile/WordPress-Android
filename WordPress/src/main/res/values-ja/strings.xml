@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 09:54:07+0000
+Translation-Revision-Date: 2025-06-17 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">指定されたサイトはアプリケーションパスワード認証に対応していません。</string>
+    <string name="application_password_title">アプリケーションパスワードを使用して認証</string>
+    <string name="application_password_credentials_stored">%1$s に保存されたアプリケーションパスワードのログイン情報</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">コードの検出に時間がかかりすぎました。 もう一度お試しいただくか、カメラアプリを使用してコードをスキャンしてください。</string>
+    <string name="qrcode_auth_flow_timeout_title">スキャンがタイムアウトしました</string>
+    <string name="invite_users">ユーザーを招待</string>
+    <string name="experimental_application_password_feature_description">インストール型のサイトにログインするには、アプリケーションパスワードを有効にします。</string>
+    <string name="experimental_application_password_feature">アプリケーションパスワードによるログイン</string>
+    <string name="experimental_subscribers_feature_description">ニュースレター購読者の表示と管理 (進行中)</string>
+    <string name="experimental_subscribers_feature">テスト購読者</string>
+    <string name="cant_share_no_blog">ブログがないため WordPress で共有できません</string>
+    <string name="coming_soon">まもなく公開予定です。</string>
     <string name="me_email_verification_generic_error">認証リンクを送信できません</string>
     <string name="me_email_verification_resend">認証リンクを再送</string>
     <string name="me_email_verification_sent_description">%s の受信箱で確認メールを確認</string>
@@ -3289,7 +3301,6 @@ Language: ja_JP
     <string name="invite_message_title">カスタムメッセージ</string>
     <string name="invite">招待</string>
     <string name="invite_names_title">ユーザー名またはメールアドレス</string>
-    <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
@@ -3302,7 +3313,6 @@ Language: ja_JP
     <string name="user_remove_confirmation_message">%1$s を削除すると、そのユーザーはこのサイトにアクセスできなくなりますが、%1$s によって作成されたコンテンツはサイト上に残ります。\n\n本当にこのユーザーを削除しますか ?</string>
     <string name="person_remove_confirmation_title">%1$s を削除</string>
     <string name="role">権限グループ</string>
-    <string name="people">人</string>
     <string name="reader_empty_blogs_posts_in_custom_list">このリスト内のブログには最近の投稿がありません</string>
     <string name="error_remove_user">ユーザーを削除できませんでした</string>
     <string name="error_update_role">ユーザー権限グループを更新できませんでした</string>
@@ -3702,7 +3712,6 @@ Language: ja_JP
     <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
     <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
-    <string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="wordpress_blog">WordPress ブログ</string>
     <string name="image_settings">画像設定</string>
@@ -3750,7 +3759,6 @@ Language: ja_JP
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」しました</string>
     <string name="reader_likes_multi">%,d 人が「いいね」しています</string>
-    <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
     <string name="comment_unapproved">コメントの承認を解除しました</string>
     <string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
