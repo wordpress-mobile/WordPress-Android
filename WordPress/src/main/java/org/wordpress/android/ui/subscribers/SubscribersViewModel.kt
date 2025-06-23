@@ -84,22 +84,26 @@ class SubscribersViewModel @Inject constructor(
             filter = filterType,
         )
 
-        val response = wpComApiClient.request { requestBuilder ->
+        val request = wpComApiClient.request { requestBuilder ->
             requestBuilder.subscribers().listSubscribers(
                 wpComSiteId = siteId().toULong(),
                 params = params
             )
         }
-        when (response) {
+        when (request) {
             is WpRequestResult.Success -> {
-                val subscribers = response.response.data.subscribers
+                val subscribers = request.response.data.subscribers
                 appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                return subscribers.map { subscriberToDataViewItem(it) }
+                val items = ArrayList<DataViewItem>()
+                subscribers.forEach { subscriber ->
+                    items.add(subscriberToDataViewItem(subscriber))
+                }
+                return items
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
-                onError((response as? WpRequestResult.WpError)?.errorMessage)
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
+                onError((request as? WpRequestResult.WpError)?.errorMessage)
                 return emptyList()
             }
         }
@@ -112,7 +116,7 @@ class SubscribersViewModel @Inject constructor(
                 imageUrl = subscriber.avatar,
                 fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
             ),
-            title = subscriber.displayName.ifEmpty { subscriber.emailAddress },
+            title = subscriber.displayNameOrEmail(),
             fields = listOf(
                 DataViewItemField(
                     value = subscriber.subscriptionStatus,
@@ -129,15 +133,21 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    fun getSubscriber(userId: Long): Subscriber? {
+        val item = items.value.firstOrNull { it.id == userId }
+        return item?.data as? Subscriber
+    }
+
     override fun onItemClick(item: DataViewItem) {
-        (item.data as? Subscriber)?.let{ subscriber ->
-            val name = subscriber.displayName.ifEmpty { subscriber.emailAddress }
-            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber $name")
+        (item.data as? Subscriber)?.let { subscriber ->
+            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
         }
     }
 
     companion object {
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L
+
+        fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
 }
