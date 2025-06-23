@@ -734,30 +734,10 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_medium_with_padding</item>
     </style>
 
-    <style name="MyProfileRow">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:padding">@dimen/margin_extra_large</item>
-    </style>
-
     <style name="MyProfileLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="MyProfileText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-    </style>
-
-    <style name="MyProfileDividerView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/divider_size</item>
-        <item name="android:background">?android:attr/listDivider</item>
     </style>
 
     <!--My Site Card - Quick Start-->

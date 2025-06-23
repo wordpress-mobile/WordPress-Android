@@ -3146,8 +3146,8 @@ Language: lv
     <string name="privacy_public_not_indexed">Jūsu vietne ir redzama visiem, bet lūdz meklētājprogrammas to neindeksēt</string>
     <string name="privacy_public">Jūsu vietne ir redzama visiem, un meklētājprogrammas to var indeksēt</string>
     <string name="about_me_hint">Daži vārdi par tevi…</string>
-    <string name="about_me">Par mani</string>
     <string name="public_display_name_hint">Parādītais vārds pēc noklusējuma būs jūsu lietotājvārds, ja tas nav iestatīts</string>
+    <string name="about_me">Par mani</string>
     <string name="public_display_name">Publiski redzamais vārds</string>
     <string name="last_name">Uzvārds</string>
     <string name="first_name">Vārds</string>
