@@ -28,11 +28,12 @@ private const val TAG = "ApplicationPasswordLoginViewModel"
 
 class ApplicationPasswordLoginViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    // Dispatcher is the way to dispatch actions in the Flux architecture. It will call siteStore.onAction()
+    // Dispatcher is the way to dispatch actions to Flux. It will call siteStore.onAction()
     private val dispatcher: Dispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
@@ -60,6 +61,18 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      */
     fun setupSite(rawData: String) {
         viewModelScope.launch {
+            if (rawData.isEmpty()) {
+                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                _onFinishedEvent.emit(
+                    NavigationActionData(
+                        showPostSignupInterstitial = false,
+                        siteUrl = "",
+                        oldSitesIDs = oldSitesIDs,
+                        isError = true
+                    )
+                )
+                return@launch
+            }
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(rawData)
@@ -81,36 +94,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchSites(
-        urlLogin: ApplicationPasswordLoginHelper.UriLogin
-    ): Boolean = withContext(ioDispatcher) {
-        try {
-            if (urlLogin.user.isNullOrEmpty() ||
-                urlLogin.password.isNullOrEmpty() ||
-                urlLogin.siteUrl.isNullOrEmpty()) {
-                Log.e(TAG, "Cannot store credentials: rawData is empty")
-                false
-            } else {
-                val xmlRpcEndpoint =
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
-                dispatcher.dispatch(
-                    SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        RefreshSitesXMLRPCPayload(
-                            username = urlLogin.user,
-                            password = urlLogin.password,
-                            url = xmlRpcEndpoint,
-                        )
-                    )
-                )
-                true
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error storing credentials", e)
-            false
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun storeCredentials(rawData: String): Boolean = withContext(ioDispatcher) {
         try {
             if (rawData.isEmpty()) {
@@ -125,6 +108,44 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             false
         }
     }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchSites(
+        urlLogin: UriLogin
+    ) = withContext(ioDispatcher) {
+        try {
+            if (urlLogin.user.isNullOrEmpty() ||
+                urlLogin.password.isNullOrEmpty() ||
+                urlLogin.siteUrl.isNullOrEmpty()) {
+                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                emitErrorFetching(urlLogin)
+            } else {
+                val xmlRpcEndpoint =
+                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
+                dispatcher.dispatch(
+                    SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
+                        RefreshSitesXMLRPCPayload(
+                            username = urlLogin.user,
+                            password = urlLogin.password,
+                            url = xmlRpcEndpoint,
+                        )
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error storing credentials", e)
+            emitErrorFetching(urlLogin)
+        }
+    }
+
+    private suspend fun emitErrorFetching(urlLogin: UriLogin) =  _onFinishedEvent.emit(
+        NavigationActionData(
+            showPostSignupInterstitial = false,
+            siteUrl = urlLogin.siteUrl,
+            oldSitesIDs = oldSitesIDs,
+            isError = true
+        )
+    )
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -148,7 +169,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         viewModelScope.launch {
             _onFinishedEvent.emit(
                 NavigationActionData(
-                    showPostSignupInterstitial = !siteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial(),
+                    showPostSignupInterstitial = !siteStore.hasSite() && appPrefsWrapper.shouldShowPostSignupInterstitial(),
                     siteUrl = event.site.url,
                     oldSitesIDs = oldSitesIDs,
                     isError = false
@@ -163,4 +184,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         val oldSitesIDs: ArrayList<Int>?,
         val isError: Boolean
     )
+
+    class AppPrefsWrapper @Inject constructor() {
+        fun shouldShowPostSignupInterstitial() = AppPrefs.shouldShowPostSignupInterstitial()
+    }
 }
