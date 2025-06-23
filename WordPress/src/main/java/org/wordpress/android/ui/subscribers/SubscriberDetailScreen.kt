@@ -112,6 +112,17 @@ fun ProfileHeader(
                 textAlign = TextAlign.Center
             )
         }
+        // TODO remove this once we have actual data
+        Spacer(modifier = Modifier.height(12.dp))
+        Row {
+            Text(
+                text = "Note: Displaying dummy data",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -131,17 +142,17 @@ fun EmailStatsCard() {
             StatItem(
                 icon = Icons.Default.Email,
                 label = stringResource(R.string.subscribers_emails_sent_label),
-                value = "???"
+                value = "100"
             )
             StatItem(
                 icon = Icons.Default.MailOutline,
                 label = stringResource(R.string.subscribers_opened_label),
-                value = "???"
+                value = "10"
             )
             StatItem(
                 icon = Icons.Default.Check,
                 label = stringResource(R.string.subscribers_clicked_label),
-                value = "???%"
+                value = "10%"
             )
         }
     }
