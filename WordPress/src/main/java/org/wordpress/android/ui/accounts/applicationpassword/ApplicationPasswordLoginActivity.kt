@@ -52,10 +52,12 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
+        } else if (navigationActionData.showSiteSelector) {
+            ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
         } else if (navigationActionData.showPostSignupInterstitial) {
             ActivityLauncher.showPostSignupInterstitial(this)
         } else {
-            ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
+            ActivityLauncher.showMainActivity(this)
         }
         finish()
     }

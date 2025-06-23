@@ -67,6 +67,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 Log.e(TAG, "Cannot store credentials: rawData is empty")
                 _onFinishedEvent.emit(
                     NavigationActionData(
+                        showSiteSelector = false,
                         showPostSignupInterstitial = false,
                         siteUrl = "",
                         oldSitesIDs = oldSitesIDs,
@@ -82,6 +83,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             if (credentialsStored) {
                 _onFinishedEvent.emit(
                     NavigationActionData(
+                        showSiteSelector = false,
                         showPostSignupInterstitial = false,
                         siteUrl = urlLogin.siteUrl,
                         oldSitesIDs = oldSitesIDs,
@@ -142,6 +144,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     private suspend fun emitErrorFetching(urlLogin: UriLogin) =  _onFinishedEvent.emit(
         NavigationActionData(
+            showSiteSelector = false,
             showPostSignupInterstitial = false,
             siteUrl = urlLogin.siteUrl,
             oldSitesIDs = oldSitesIDs,
@@ -158,7 +161,15 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         if (site == null) {
             Log.e(TAG, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
             viewModelScope.launch {
-                _onFinishedEvent.emit(NavigationActionData(false, currentUrlLogin?.siteUrl, oldSitesIDs, true))
+                _onFinishedEvent.emit(
+                    NavigationActionData(
+                        showSiteSelector = false,
+                        showPostSignupInterstitial = false,
+                        siteUrl = currentUrlLogin?.siteUrl,
+                        oldSitesIDs = oldSitesIDs,
+                        isError = true
+                    )
+                )
             }
         } else {
             dispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(site))
@@ -171,6 +182,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         viewModelScope.launch {
             _onFinishedEvent.emit(
                 NavigationActionData(
+                    showSiteSelector = siteStore.hasSite(),
                     showPostSignupInterstitial = !siteStore.hasSite()
                             && appPrefsWrapper.shouldShowPostSignupInterstitial(),
                     siteUrl = event.site.url,
@@ -182,6 +194,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     }
 
     data class NavigationActionData(
+        val showSiteSelector: Boolean,
         val showPostSignupInterstitial: Boolean,
         val siteUrl: String?,
         val oldSitesIDs: ArrayList<Int>?,
