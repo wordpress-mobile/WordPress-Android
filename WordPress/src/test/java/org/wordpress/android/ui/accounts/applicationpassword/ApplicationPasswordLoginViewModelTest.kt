@@ -17,13 +17,12 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginViewModel.AppPrefsWrapper
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
+@Suppress("MaxLineLength")
 class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher

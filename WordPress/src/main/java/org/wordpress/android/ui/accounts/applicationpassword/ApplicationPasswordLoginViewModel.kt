@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
@@ -149,7 +151,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+    fun onSiteChanged(event: OnSiteChanged) {
         Log.e(TAG, "Site changed: ${event.rowsAffected}")
         val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
         val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
@@ -165,11 +167,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onProfileFetched(event: SiteStore.OnProfileFetched) {
+    fun onProfileFetched(event: OnProfileFetched) {
         viewModelScope.launch {
             _onFinishedEvent.emit(
                 NavigationActionData(
-                    showPostSignupInterstitial = !siteStore.hasSite() && appPrefsWrapper.shouldShowPostSignupInterstitial(),
+                    showPostSignupInterstitial = !siteStore.hasSite()
+                            && appPrefsWrapper.shouldShowPostSignupInterstitial(),
                     siteUrl = event.site.url,
                     oldSitesIDs = oldSitesIDs,
                     isError = false
