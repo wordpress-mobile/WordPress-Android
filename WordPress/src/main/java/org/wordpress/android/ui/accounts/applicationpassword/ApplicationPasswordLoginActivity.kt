@@ -1,6 +1,11 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -10,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -22,6 +28,14 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        setContent {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 
     private fun initViewModel() {
