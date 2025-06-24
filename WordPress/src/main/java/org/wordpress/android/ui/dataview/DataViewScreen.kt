@@ -68,7 +68,7 @@ fun DataViewScreen(
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         isRefreshing = refreshState.value,
         state = pullToRefreshState,
@@ -83,7 +83,7 @@ fun DataViewScreen(
         }
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
