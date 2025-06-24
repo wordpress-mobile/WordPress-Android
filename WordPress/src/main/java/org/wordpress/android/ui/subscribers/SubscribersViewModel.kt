@@ -84,22 +84,22 @@ class SubscribersViewModel @Inject constructor(
             filter = filterType,
         )
 
-        val request = wpComApiClient.request { requestBuilder ->
+        val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.subscribers().listSubscribers(
                 wpComSiteId = siteId().toULong(),
                 params = params
             )
         }
-        when (request) {
+        when (response) {
             is WpRequestResult.Success -> {
-                val subscribers = request.response.data.subscribers
+                val subscribers = response.response.data.subscribers
                 appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
                 return subscribers.map { subscriberToDataViewItem(it) }
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $request")
-                onError((request as? WpRequestResult.WpError)?.errorMessage)
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
+                onError((response as? WpRequestResult.WpError)?.errorMessage)
                 return emptyList()
             }
         }
