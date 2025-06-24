@@ -4995,9 +4995,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
-    <string name="subscribers_filter_subscription_type">Subscriptions type</string>
+    <string name="subscribers_filter_reader_subscription">Reader subscription</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
+    <string name="subscribers_error_title">Something went wrong</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>

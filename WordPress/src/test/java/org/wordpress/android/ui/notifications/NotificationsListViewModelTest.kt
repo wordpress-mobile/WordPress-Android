@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.kotlin.any
@@ -219,7 +220,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(gcmMessageHandler).removeNotificationWithNoteIdFromSystemBar(any(), eq("123"))
         verify(notificationsTableWrapper, times(2)).saveNotes(any(), eq(false))
         verify(eventBusWrapper, times(2)).post(any())
-        verify(toastUtilsWrapper, times(1)).showToast(any())
+        verify(toastUtilsWrapper, times(1)).showToast(anyInt())
     }
 
     @Test
