@@ -18,6 +18,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import kotlin.test.assertEquals
 
@@ -39,6 +40,9 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+
     private lateinit var viewModel: ApplicationPasswordLoginViewModel
 
     private val rawData = "url=callback?site_url=https://example.com&user_login=user&password=pass"
@@ -53,7 +57,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             selfHostedEndpointFinder,
             siteStore,
-            appPrefsWrapper
+            appPrefsWrapper,
+            appLogWrapper
         )
         whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)).thenReturn(urlLogin)
     }

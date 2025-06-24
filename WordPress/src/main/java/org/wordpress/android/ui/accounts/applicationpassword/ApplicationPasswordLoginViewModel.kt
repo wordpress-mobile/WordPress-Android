@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,16 +16,16 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val TAG = "ApplicationPasswordLoginViewModel"
 
 class ApplicationPasswordLoginViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -36,6 +35,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
@@ -64,7 +64,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             if (rawData.isEmpty()) {
-                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                appLogWrapper.e(AppLog.T.MAIN, "Cannot store credentials: rawData is empty")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
@@ -101,14 +101,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private suspend fun storeCredentials(rawData: String): Boolean = withContext(ioDispatcher) {
         try {
             if (rawData.isEmpty()) {
-                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                appLogWrapper.e(AppLog.T.DB, "Cannot store credentials: rawData is empty")
                 false
             } else {
                 val credentialsStored = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)
                 credentialsStored
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error storing credentials", e)
+            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTrace}")
             false
         }
     }
@@ -121,7 +121,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             if (urlLogin.user.isNullOrEmpty() ||
                 urlLogin.password.isNullOrEmpty() ||
                 urlLogin.siteUrl.isNullOrEmpty()) {
-                Log.e(TAG, "Cannot store credentials: rawData is empty")
+                appLogWrapper.e(AppLog.T.MAIN, "Cannot store credentials: rawData is empty")
                 emitErrorFetching(urlLogin)
             } else {
                 val xmlRpcEndpoint =
@@ -137,7 +137,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error storing credentials", e)
+            appLogWrapper.e(AppLog.T.API, "Error storing credentials: ${e.stackTrace}")
             emitErrorFetching(urlLogin)
         }
     }
@@ -158,7 +158,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
         val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
         if (site == null) {
-            Log.e(TAG, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
+            appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
             viewModelScope.launch {
                 _onFinishedEvent.emit(
                     NavigationActionData(
