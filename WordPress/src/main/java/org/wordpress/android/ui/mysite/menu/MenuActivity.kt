@@ -137,7 +137,7 @@ class MenuActivity : BaseAppCompatActivity() {
             is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(this, action.site)
             is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(this, action.site)
             is SiteNavigationAction.OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(this, action.site)
-            is SiteNavigationAction.OpenSubscribers -> ActivityLauncher.viewCurrentBlogSubscribers(this, action.site)
+            is SiteNavigationAction.OpenSubscribers -> ActivityLauncher.viewCurrentBlogSubscribers(this)
             is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(this, action.site)
             is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(this, action.site)
             is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(this, action.site)
