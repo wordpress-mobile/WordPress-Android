@@ -40,7 +40,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -152,7 +151,6 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     public static WpLoginClient provideWpLoginClient() {
         return new WpLoginClient();
     }
