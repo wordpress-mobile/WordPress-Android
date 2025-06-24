@@ -57,7 +57,7 @@ fun DataViewItemCard(
                 RemoteImage(
                     imageUrl = image.imageUrl,
                     fallbackImageRes = image.fallbackImageRes,
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(end = 16.dp)
                         .size(dimensionResource(R.dimen.jp_migration_user_avatar_size))
                         .clip(CircleShape)
