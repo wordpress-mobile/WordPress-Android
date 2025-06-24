@@ -2984,10 +2984,6 @@
     <string name="my_profile">My Profile</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
-    <string name="public_display_name">Public display name</string>
-    <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
-    <string name="about_me">About me</string>
-    <string name="about_me_hint">A few words about you…</string>
     <string name="start_over">Start Over</string>
     <string name="site_settings_start_over_hint">Start your site over</string>
     <string name="start_over_email_subject">Start over with site %s</string>
@@ -3075,6 +3071,7 @@
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
     <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
+    <string name="about_update_email_unverified">To update your profile, you need to verify your email address first.</string>
 
     <!-- Editor -->
     <string name="discard">Discard</string>

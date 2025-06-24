@@ -798,12 +798,6 @@
             android:name=".ui.domains.DomainRegistrationCheckoutWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <!-- Me activities -->
-        <activity
-            android:name=".ui.prefs.MyProfileActivity"
-            android:label="@string/my_profile"
-            android:theme="@style/WordPress.NoActionBar" />
-
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
