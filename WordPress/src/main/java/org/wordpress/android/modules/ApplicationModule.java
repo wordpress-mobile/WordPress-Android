@@ -152,7 +152,6 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     public static WpLoginClient provideWpLoginClient() {
         return new WpLoginClient();
     }
