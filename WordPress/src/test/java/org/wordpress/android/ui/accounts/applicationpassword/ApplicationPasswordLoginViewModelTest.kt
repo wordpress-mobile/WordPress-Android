@@ -18,7 +18,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginViewModel.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -317,7 +317,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 oldSitesIDs = null,
                 isError = false
             )
-            whenever(appPrefsWrapper.shouldShowPostSignupInterstitial()).thenReturn(false)
+            whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(false)
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)

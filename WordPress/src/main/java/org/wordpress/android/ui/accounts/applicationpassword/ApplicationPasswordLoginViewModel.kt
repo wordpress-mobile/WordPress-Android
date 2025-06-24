@@ -21,7 +21,7 @@ import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,7 +35,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
@@ -155,7 +155,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
-        Log.e(TAG, "Site changed: ${event.rowsAffected}")
         val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
         val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
         if (site == null) {
@@ -184,7 +183,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 NavigationActionData(
                     showSiteSelector = siteStore.hasSite(),
                     showPostSignupInterstitial = !siteStore.hasSite()
-                            && appPrefsWrapper.shouldShowPostSignupInterstitial(),
+                            && appPrefsWrapper.shouldShowPostSignupInterstitial,
                     siteUrl = event.site.url,
                     oldSitesIDs = oldSitesIDs,
                     isError = false
@@ -200,8 +199,4 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         val oldSitesIDs: ArrayList<Int>?,
         val isError: Boolean
     )
-
-    class AppPrefsWrapper @Inject constructor() {
-        fun shouldShowPostSignupInterstitial() = AppPrefs.shouldShowPostSignupInterstitial()
-    }
 }
