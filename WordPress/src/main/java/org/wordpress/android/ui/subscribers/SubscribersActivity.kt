@@ -106,7 +106,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             onItemClick = { item ->
                                 viewModel.onItemClick(item)
                                 (item.data as? Subscriber)?.let { subscriber ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(KEY_ID, subscriber.userId)
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                                        key = KEY_ID,
+                                        value = subscriber.userId
+                                    )
                                     navController.navigate(route = SubscriberScreen.Detail.name)
                                 }
                             },
