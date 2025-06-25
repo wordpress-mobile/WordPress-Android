@@ -9,16 +9,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import javax.inject.Inject
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.util.AppLog
 
 @HiltViewModel
 internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
     private val gutenbergKitFeature: GutenbergKitFeature,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
+    private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
@@ -55,11 +58,18 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            // Since FluxC has not way to access the experimental features, this is a workarround to remove the
-            // Application Password credentials when the feature is disabled to avoid FluxC to use them.
-            // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
-            if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-                applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+            try {
+                // Since FluxC has not way to access the experimental features, this is a workaround to remove the
+                // Application Password credentials when the feature is disabled to avoid FluxC to use them.
+                // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
+                if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
+                    applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+                }
+            } catch (exception: Throwable) {
+                appLogWrapper.e(
+                    AppLog.T.DB,
+                    "Error when trying to remove Application Password credentials: ${exception.stackTrace}"
+                )
             }
         }
     }
