@@ -56,9 +56,12 @@ fun DataViewScreen(
     items: State<List<DataViewItem>>,
     supportedFilters: List<DataViewItemFilter>,
     currentFilter: DataViewItemFilter?,
+    supportedSorts: List<DataViewItemFilter>,
+    currentSort: DataViewItemFilter?,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
+    onSortClick: (DataViewItemFilter) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +94,10 @@ fun DataViewScreen(
                 onSearchQueryChange = onSearchQueryChange,
                 onFilterClick = onFilterClick,
                 supportedFilters = supportedFilters,
-                currentFilter = currentFilter
+                currentFilter = currentFilter,
+                onSortClick = onSortClick,
+                supportedSorts = supportedSorts,
+                currentSort = currentSort
             )
 
             when (uiState.value) {
@@ -117,10 +123,14 @@ private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
     currentFilter: DataViewItemFilter? = null,
-    supportedFilters: List<DataViewItemFilter>
+    supportedFilters: List<DataViewItemFilter>,
+    onSortClick: (DataViewItemFilter) -> Unit,
+    currentSort: DataViewItemFilter? = null,
+    supportedSorts: List<DataViewItemFilter>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var filterMenuExpanded by remember { mutableStateOf(false) }
+    var sortMenuExpanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -202,6 +212,46 @@ private fun SearchAndFilterBar(
                         }
                     )
                 }
+            }
+        }
+    }
+
+    // Sort by button
+    IconButton(
+        onClick = {
+            sortMenuExpanded = !sortMenuExpanded
+        },
+        modifier = Modifier
+            .size(48.dp)
+            .padding(4.dp)
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
+            contentDescription = stringResource(R.string.sort),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = sortMenuExpanded,
+            onDismissRequest = {
+                sortMenuExpanded = false
+            }
+        ) {
+            supportedSorts.forEach { sort ->
+                DropdownMenuItem(
+                    text = { Text(stringResource(sort.titleRes)) },
+                    trailingIcon = {
+                        if (sort == currentSort) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    onClick = {
+                        onSortClick(sort)
+                        sortMenuExpanded = false
+                    }
+                )
             }
         }
     }
@@ -327,11 +377,14 @@ private fun LoadedPreview() {
         items = remember { mutableStateOf(getDummyDataViewItems()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -344,11 +397,14 @@ private fun LoadingPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -361,11 +417,14 @@ private fun EmptyPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -378,11 +437,14 @@ private fun EmptySearchPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -395,11 +457,14 @@ private fun OfflinePreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -412,10 +477,13 @@ private fun ErrorPreview() {
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
         currentFilter = null,
+        supportedSorts = emptyList(),
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }

@@ -15,10 +15,10 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
 import uniffi.wp_api.SubscribersListParams
-import uniffi.wp_api.SubscribersRequestGetSubscriberStatsResponse
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,15 +47,43 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    override fun getSupportedSorts(): List<DataViewItemFilter> {
+        return listOf(
+            DataViewItemFilter(
+                id = ID_SORT_EMAIL,
+                titleRes = R.string.subscribers_sort_email
+            ),
+            DataViewItemFilter(
+                id = ID_SORT_DATE,
+                titleRes = R.string.subscribers_sort_date
+            ),
+            DataViewItemFilter(
+                id = ID_SORT_NAME,
+                titleRes = R.string.subscribers_sort_name
+            ),
+            DataViewItemFilter(
+                id = ID_SORT_PLAN,
+                titleRes = R.string.subscribers_sort_plan
+            )
+        )
+    }
+
     @Suppress("TooGenericExceptionCaught")
     override suspend fun performNetworkRequest(
         page: Int,
         sortOrder: WpApiParamOrder,
         searchQuery: String,
-        filter: DataViewItemFilter?
+        filter: DataViewItemFilter?,
+        sortBy: DataViewItemFilter?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
-            fetchSubscriberList(filter, page, sortOrder, searchQuery)
+            fetchSubscriberList(
+                filter = filter,
+                sortBy = sortBy,
+                page = page,
+                sortOrder = sortOrder,
+                searchQuery = searchQuery
+            )
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
             onError(e.message)
@@ -65,6 +93,7 @@ class SubscribersViewModel @Inject constructor(
 
     private suspend fun fetchSubscriberList(
         filter: DataViewItemFilter?,
+        sortBy: DataViewItemFilter?,
         page: Int,
         sortOrder: WpApiParamOrder,
         searchQuery: String
@@ -77,12 +106,23 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
+        val sortType = sortBy?.let {
+            when (it.id) {
+                ID_SORT_NAME -> ListSubscribersSortField.DISPLAY_NAME
+                ID_SORT_EMAIL -> ListSubscribersSortField.EMAIL_ADDRESS
+                ID_SORT_DATE -> ListSubscribersSortField.DATE_SUBSCRIBED
+                ID_SORT_PLAN -> ListSubscribersSortField.PLAN
+                else -> null
+            }
+        }
+
         val params = SubscribersListParams(
             page = page.toULong(),
             perPage = PAGE_SIZE.toULong(),
             sortOrder = sortOrder,
             search = searchQuery,
             filter = filterType,
+            sort = sortType
         )
 
         val response = wpComApiClient.request { requestBuilder ->
@@ -148,35 +188,14 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
-    @Suppress("Unused")
-    private suspend fun fetchSubscriberStats(): SubscribersRequestGetSubscriberStatsResponse? = withContext(ioDispatcher) {
-        try {
-            val response = wpComApiClient.request { requestBuilder ->
-                requestBuilder.subscribers().getSubscriberStats(
-                    wpComSiteId = siteId().toULong()
-                )
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats successfully")
-                    response.response
-                }
-                else -> {
-                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscriber stats failed: $response")
-                    onError((response as? WpRequestResult.WpError)?.errorMessage)
-                    null
-                }
-            }
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscriber stats failed: $e")
-            onError(e.message)
-            null
-        }
-    }
-
     companion object {
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L
+
+        private const val ID_SORT_NAME = 1L
+        private const val ID_SORT_EMAIL = 2L
+        private const val ID_SORT_DATE = 3L
+        private const val ID_SORT_PLAN = 4L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
