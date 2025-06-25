@@ -50,21 +50,21 @@ class SubscribersViewModel @Inject constructor(
     override fun getSupportedSortBys(): List<DataViewItemFilter> {
         return listOf(
             DataViewItemFilter(
-                id = ID_SORT_EMAIL,
-                titleRes = R.string.subscribers_sort_email
-            ),
-            DataViewItemFilter(
                 id = ID_SORT_DATE,
                 titleRes = R.string.subscribers_sort_date
+            ),
+            DataViewItemFilter(
+                id = ID_SORT_PLAN,
+                titleRes = R.string.subscribers_sort_plan
+            ),
+            DataViewItemFilter(
+                id = ID_SORT_EMAIL,
+                titleRes = R.string.subscribers_sort_email
             ),
             DataViewItemFilter(
                 id = ID_SORT_NAME,
                 titleRes = R.string.subscribers_sort_name
             ),
-            DataViewItemFilter(
-                id = ID_SORT_PLAN,
-                titleRes = R.string.subscribers_sort_plan
-            )
         )
     }
 
@@ -78,9 +78,9 @@ class SubscribersViewModel @Inject constructor(
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
             fetchSubscriberList(
+                page = page,
                 filter = filter,
                 sortBy = sortBy,
-                page = page,
                 sortOrder = sortOrder,
                 searchQuery = searchQuery
             )
@@ -92,8 +92,8 @@ class SubscribersViewModel @Inject constructor(
     }
 
     private suspend fun fetchSubscriberList(
-        filter: DataViewItemFilter?,
         page: Int,
+        filter: DataViewItemFilter?,
         sortOrder: WpApiParamOrder,
         sortBy: DataViewItemFilter?,
         searchQuery: String
@@ -108,10 +108,10 @@ class SubscribersViewModel @Inject constructor(
 
         val sortType = sortBy?.let {
             when (it.id) {
-                ID_SORT_NAME -> ListSubscribersSortField.DISPLAY_NAME
-                ID_SORT_EMAIL -> ListSubscribersSortField.EMAIL_ADDRESS
                 ID_SORT_DATE -> ListSubscribersSortField.DATE_SUBSCRIBED
                 ID_SORT_PLAN -> ListSubscribersSortField.PLAN
+                ID_SORT_NAME -> ListSubscribersSortField.DISPLAY_NAME
+                ID_SORT_EMAIL -> ListSubscribersSortField.EMAIL_ADDRESS
                 else -> null
             }
         }
@@ -192,9 +192,9 @@ class SubscribersViewModel @Inject constructor(
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L
 
-        private const val ID_SORT_NAME = 1L
-        private const val ID_SORT_EMAIL = 2L
-        private const val ID_SORT_DATE = 3L
+        private const val ID_SORT_DATE = 1L
+        private const val ID_SORT_NAME = 2L
+        private const val ID_SORT_EMAIL = 3L
         private const val ID_SORT_PLAN = 4L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
