@@ -50,6 +50,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun onFeatureToggled(feature: Feature, enabled: Boolean) {
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
