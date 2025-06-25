@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.dataview
 
 import android.content.res.Configuration
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -131,8 +132,6 @@ private fun SearchAndFilterBar(
     supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var filterMenuExpanded by remember { mutableStateOf(false) }
-    var sortMenuExpanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -179,70 +178,69 @@ private fun SearchAndFilterBar(
 
         // Filter Button
         if (supportedFilters.isNotEmpty()) {
-            IconButton(
-                onClick = {
-                    filterMenuExpanded = !filterMenuExpanded
-                },
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(4.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_filter_list_white_24dp),
-                    contentDescription = stringResource(R.string.filter),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                DropdownMenu(
-                    expanded = filterMenuExpanded,
-                    onDismissRequest = {
-                        filterMenuExpanded = false
-                    }
-                ) {
-                    DropdownItems(
-                        titleRes = R.string.filter,
-                        items = supportedFilters,
-                        currentItem = currentFilter,
-                        onItemClick = { filter ->
-                            onFilterClick(filter)
-                            filterMenuExpanded = false
-                        }
-                    )
+            DropdownMenuButton(
+                titleRes = R.string.filter,
+                iconRes = R.drawable.ic_filter_list_white_24dp,
+                items = supportedFilters,
+                currentItem = currentFilter,
+                onItemClick = { item ->
+                    onFilterClick(item)
                 }
-            }
+            )
         }
 
         // Sort by button
         if (supportedSorts.isNotEmpty()) {
-            IconButton(
-                onClick = {
-                    sortMenuExpanded = !sortMenuExpanded
-                },
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(4.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
-                    contentDescription = stringResource(R.string.sort_by),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                DropdownMenu(
-                    expanded = sortMenuExpanded,
-                    onDismissRequest = {
-                        sortMenuExpanded = false
-                    }
-                ) {
-                    DropdownItems(
-                        titleRes = R.string.sort_by,
-                        items = supportedSorts,
-                        currentItem = currentSort,
-                        onItemClick = { sort ->
-                            onSortClick(sort)
-                            sortMenuExpanded = false
-                        }
-                    )
+            DropdownMenuButton(
+                titleRes = R.string.sort_by,
+                iconRes = R.drawable.ic_sort_24dp,
+                items = supportedSorts,
+                currentItem = currentSort,
+                onItemClick = { item ->
+                    onSortClick(item)
                 }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DropdownMenuButton(
+    @StringRes titleRes: Int,
+    @DrawableRes iconRes: Int,
+    items: List<DataViewDropdownItem>,
+    currentItem: DataViewDropdownItem?,
+    onItemClick: (DataViewDropdownItem) -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    IconButton(
+        onClick = {
+            menuExpanded = !menuExpanded
+        },
+        modifier = Modifier
+            .size(48.dp)
+            .padding(4.dp)
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = iconRes),
+            contentDescription = stringResource(titleRes),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = {
+                menuExpanded = false
             }
+        ) {
+            DropdownItems(
+                titleRes = titleRes,
+                items = items,
+                currentItem = currentItem,
+                onItemClick = { sort ->
+                    onItemClick(sort)
+                    menuExpanded = false
+                }
+            )
         }
     }
 }
