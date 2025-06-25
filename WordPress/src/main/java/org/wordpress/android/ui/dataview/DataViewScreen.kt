@@ -399,9 +399,9 @@ private fun LoadedPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
         items = remember { mutableStateOf(getDummyDataViewItems()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -419,9 +419,9 @@ private fun LoadingPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -439,9 +439,9 @@ private fun EmptyPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -459,9 +459,9 @@ private fun EmptySearchPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -479,9 +479,9 @@ private fun OfflinePreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -499,9 +499,9 @@ private fun ErrorPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.ERROR) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
-        supportedSorts = emptyList(),
+        supportedSorts = dummyDropdownItems,
         currentSort = null,
         onRefresh = { },
         onFetchMore = { },
@@ -511,3 +511,10 @@ private fun ErrorPreview() {
         onSortClick = { },
     )
 }
+
+private val dummyDropdownItems = listOf(
+    DataViewDropdownItem(
+        id = 0L,
+        titleRes = R.string.filter),
+
+)
