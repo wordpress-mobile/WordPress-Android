@@ -148,6 +148,7 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
+    @Suppress("Unused")
     private suspend fun fetchSubscriberStats(): SubscribersRequestGetSubscriberStatsResponse? = withContext(ioDispatcher) {
         try {
             val response = wpComApiClient.request { requestBuilder ->
