@@ -119,6 +119,22 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
+    suspend fun removeAllApplicationPasswordCredentials() {
+        return withContext(bgDispatcher) {
+            siteSqlUtils.getSites().forEach { site ->
+                site.apply {
+                    apiRestUsernamePlain = ""
+                    apiRestPasswordPlain = ""
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                }
+                siteSqlUtils.insertOrUpdateSite(site)
+            }
+        }
+    }
+
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
