@@ -56,14 +56,14 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 fun DataViewScreen(
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
-    supportedFilters: List<DataViewItemFilter>,
-    currentFilter: DataViewItemFilter?,
-    supportedSorts: List<DataViewItemFilter>,
-    currentSort: DataViewItemFilter?,
+    supportedFilters: List<DataViewDropdownItem>,
+    currentFilter: DataViewDropdownItem?,
+    supportedSorts: List<DataViewDropdownItem>,
+    currentSort: DataViewDropdownItem?,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
-    onFilterClick: (DataViewItemFilter) -> Unit,
-    onSortClick: (DataViewItemFilter) -> Unit,
+    onFilterClick: (DataViewDropdownItem) -> Unit,
+    onSortClick: (DataViewDropdownItem) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -123,12 +123,12 @@ fun DataViewScreen(
 @Composable
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
-    onFilterClick: (DataViewItemFilter) -> Unit,
-    currentFilter: DataViewItemFilter? = null,
-    supportedFilters: List<DataViewItemFilter>,
-    onSortClick: (DataViewItemFilter) -> Unit,
-    currentSort: DataViewItemFilter? = null,
-    supportedSorts: List<DataViewItemFilter>,
+    onFilterClick: (DataViewDropdownItem) -> Unit,
+    currentFilter: DataViewDropdownItem? = null,
+    supportedFilters: List<DataViewDropdownItem>,
+    onSortClick: (DataViewDropdownItem) -> Unit,
+    currentSort: DataViewDropdownItem? = null,
+    supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var filterMenuExpanded by remember { mutableStateOf(false) }
@@ -250,9 +250,9 @@ private fun SearchAndFilterBar(
 @Composable
 private fun DropDownItems(
     @StringRes titleRes: Int,
-    items: List<DataViewItemFilter>,
-    currentItem: DataViewItemFilter?,
-    onItemClick: (DataViewItemFilter) -> Unit
+    items: List<DataViewDropdownItem>,
+    currentItem: DataViewDropdownItem?,
+    onItemClick: (DataViewDropdownItem) -> Unit
 ) {
     DropdownMenuItem(
         text = {

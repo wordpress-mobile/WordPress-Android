@@ -52,10 +52,10 @@ open class DataViewViewModel @Inject constructor(
     private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
     val items = _items.asStateFlow()
 
-    private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
+    private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
-    private val _itemSortBy = MutableStateFlow<DataViewItemFilter?>(null)
+    private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemSortBy = _itemSortBy.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -161,7 +161,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    fun onFilterClick(filter: DataViewItemFilter?) {
+    fun onFilterClick(filter: DataViewDropdownItem?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         resetPaging()
         // clear the filter if it's already selected
@@ -173,7 +173,7 @@ open class DataViewViewModel @Inject constructor(
         fetchData()
     }
 
-    fun onSortClick(sort: DataViewItemFilter?) {
+    fun onSortClick(sort: DataViewDropdownItem?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
             _itemSortBy.value = sort
@@ -203,9 +203,9 @@ open class DataViewViewModel @Inject constructor(
     open suspend fun performNetworkRequest(
         page: Int = 0,
         searchQuery: String = "",
-        filter: DataViewItemFilter? = null,
+        filter: DataViewDropdownItem? = null,
         sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
-        sortBy: DataViewItemFilter? = null,
+        sortBy: DataViewDropdownItem? = null,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         emptyList()
     }
@@ -213,21 +213,21 @@ open class DataViewViewModel @Inject constructor(
     /**
      * Descendants should override this to return a list of supported filters
      */
-    open fun getSupportedFilters(): List<DataViewItemFilter> {
+    open fun getSupportedFilters(): List<DataViewDropdownItem> {
         return emptyList()
     }
 
     /**
      * Descendants should override this to return a list of supported sort fields
      */
-    open fun getSupportedSortBys(): List<DataViewItemFilter> {
+    open fun getSupportedSortBys(): List<DataViewDropdownItem> {
         return emptyList()
     }
 
     /**
      * Descendants can override this to return the default sorting
      */
-    open fun getDefaultSortBy(): DataViewItemFilter? {
+    open fun getDefaultSortBy(): DataViewDropdownItem? {
         return if (getSupportedSortBys().isNotEmpty()) {
             getSupportedSortBys().first()
         } else {

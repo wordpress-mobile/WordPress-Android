@@ -10,7 +10,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
-import org.wordpress.android.ui.dataview.DataViewItemFilter
+import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
@@ -34,34 +34,34 @@ class SubscribersViewModel @Inject constructor(
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
-    override fun getSupportedFilters(): List<DataViewItemFilter> {
+    override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_FILTER_EMAIL,
                 titleRes = R.string.subscribers_filter_email_subscription
             ),
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_FILTER_READER,
                 titleRes = R.string.subscribers_filter_reader_subscription
             )
         )
     }
 
-    override fun getSupportedSortBys(): List<DataViewItemFilter> {
+    override fun getSupportedSortBys(): List<DataViewDropdownItem> {
         return listOf(
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_SORT_DATE,
                 titleRes = R.string.subscribers_sort_date
             ),
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_SORT_DISPLAY_NAME,
                 titleRes = R.string.subscribers_sort_display_name
             ),
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_SORT_EMAIL,
                 titleRes = R.string.subscribers_sort_email
             ),
-            DataViewItemFilter(
+            DataViewDropdownItem(
                 id = ID_SORT_PLAN,
                 titleRes = R.string.subscribers_sort_plan
             ),
@@ -72,9 +72,9 @@ class SubscribersViewModel @Inject constructor(
     override suspend fun performNetworkRequest(
         page: Int,
         searchQuery: String,
-        filter: DataViewItemFilter?,
+        filter: DataViewDropdownItem?,
         sortOrder: WpApiParamOrder,
-        sortBy: DataViewItemFilter?,
+        sortBy: DataViewDropdownItem?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
             fetchSubscriberList(
@@ -93,9 +93,9 @@ class SubscribersViewModel @Inject constructor(
 
     private suspend fun fetchSubscriberList(
         page: Int,
-        filter: DataViewItemFilter?,
+        filter: DataViewDropdownItem?,
         sortOrder: WpApiParamOrder,
-        sortBy: DataViewItemFilter?,
+        sortBy: DataViewDropdownItem?,
         searchQuery: String
     ): List<DataViewItem> {
         val filterType = filter?.let {
