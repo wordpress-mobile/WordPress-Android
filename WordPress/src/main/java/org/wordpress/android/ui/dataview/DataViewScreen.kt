@@ -195,23 +195,14 @@ private fun SearchAndFilterBar(
                     filterMenuExpanded = false
                 }
             ) {
-                supportedFilters.forEach { filter ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(filter.titleRes)) },
-                        trailingIcon = {
-                            if (filter == currentFilter) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        onClick = {
-                            onFilterClick(filter)
-                            filterMenuExpanded = false
-                        }
-                    )
-                }
+                DropDownItems(
+                    items = supportedFilters,
+                    currentItem = currentFilter,
+                    onItemClick = { filter ->
+                        onFilterClick(filter)
+                        filterMenuExpanded = false
+                    }
+                )
             }
         }
 
@@ -235,25 +226,40 @@ private fun SearchAndFilterBar(
                     sortMenuExpanded = false
                 }
             ) {
-                supportedSorts.forEach { sort ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(sort.titleRes)) },
-                        trailingIcon = {
-                            if (sort == currentSort) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        onClick = {
-                            onSortClick(sort)
-                            sortMenuExpanded = false
-                        }
-                    )
-                }
+                DropDownItems(
+                    items = supportedSorts,
+                    currentItem = currentSort,
+                    onItemClick = { sort ->
+                        onSortClick(sort)
+                        sortMenuExpanded = false
+                    }
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun DropDownItems(
+    items: List<DataViewItemFilter>,
+    currentItem: DataViewItemFilter?,
+    onItemClick: (DataViewItemFilter) -> Unit
+) {
+    items.forEach { item ->
+        DropdownMenuItem(
+            text = { Text(stringResource(item.titleRes)) },
+            trailingIcon = {
+                if (item == currentItem) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null
+                    )
+                }
+            },
+            onClick = {
+                onItemClick(item)
+            }
+        )
     }
 }
 
