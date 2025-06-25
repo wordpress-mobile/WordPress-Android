@@ -257,7 +257,7 @@ private fun DropDownItems(
     DropdownMenuItem(
         text = {
             Text(
-                text = stringResource(titleRes),
+                text = stringResource(titleRes).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
