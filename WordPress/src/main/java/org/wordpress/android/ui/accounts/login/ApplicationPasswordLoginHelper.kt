@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.UrlUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
@@ -77,7 +78,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
                 false
             } else {
-                val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
+                val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
+                val site = siteSqlUtils.getSites().firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
                 if (site != null) {
                     site.apply {
                         apiRestUsernamePlain = uriLogin.user

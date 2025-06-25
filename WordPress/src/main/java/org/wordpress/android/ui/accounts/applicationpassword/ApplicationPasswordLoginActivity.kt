@@ -2,15 +2,22 @@ package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
-import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +30,14 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        setContent {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -31,13 +46,13 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         viewModel!!.setupSite(intent.dataString.orEmpty())
     }
 
-    private fun openMainActivity(siteUrl: String?) {
-        if (siteUrl != null) {
+    private fun openMainActivity(navigationActionData: ApplicationPasswordLoginViewModel.NavigationActionData) {
+        if (!navigationActionData.isError && navigationActionData.siteUrl != null) {
             ToastUtils.showToast(
                 this,
                 getString(
                     R.string.application_password_credentials_stored,
-                    siteUrl
+                    navigationActionData.siteUrl
                 )
             )
             intent.setData(null)
@@ -46,17 +61,35 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 this,
                 getString(
                     R.string.application_password_credentials_storing_error,
-                    siteUrl
+                    navigationActionData.siteUrl
                 )
             )
         }
-        val mainActivityIntent =
-            Intent(this, WPMainActivity::class.java)
-        mainActivityIntent.setFlags(
-            (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        )
-        startActivity(mainActivityIntent)
+
+        if (navigationActionData.isError) {
+            ActivityLauncher.showMainActivity(this)
+        } else if (navigationActionData.showSiteSelector) {
+            ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
+        } else if (navigationActionData.showPostSignupInterstitial) {
+            ActivityLauncher.showPostSignupInterstitial(this)
+        } else {
+            val mainActivityIntent = Intent(this, WPMainActivity::class.java)
+            mainActivityIntent.setFlags(
+                (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
+            startActivity(mainActivityIntent)
+        }
         finish()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel?.onStop()
     }
 }
