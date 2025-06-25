@@ -112,7 +112,7 @@ class SubscribersViewModel @Inject constructor(
                 imageUrl = subscriber.avatar,
                 fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
             ),
-            title = subscriber.displayName.ifEmpty { subscriber.emailAddress },
+            title = subscriber.displayNameOrEmail(),
             fields = listOf(
                 DataViewItemField(
                     value = subscriber.subscriptionStatus,
@@ -129,15 +129,21 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    fun getSubscriber(userId: Long): Subscriber? {
+        val item = items.value.firstOrNull { it.id == userId }
+        return item?.data as? Subscriber
+    }
+
     override fun onItemClick(item: DataViewItem) {
-        (item.data as? Subscriber)?.let{ subscriber ->
-            val name = subscriber.displayName.ifEmpty { subscriber.emailAddress }
-            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber $name")
+        (item.data as? Subscriber)?.let { subscriber ->
+            appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
         }
     }
 
     companion object {
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L
+
+        fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
 }

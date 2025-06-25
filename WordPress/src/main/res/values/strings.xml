@@ -4995,6 +4995,18 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
+    <string name="subscribers_subscription_status">Subscription status</string>
+    <string name="subscribers_emails_sent_label">Emails</string>
+    <string name="subscribers_opened_label">Opened</string>
+    <string name="subscribers_clicked_label">Clicked</string>
+    <string name="subscribers_newsletter_label">Newsletter subscription</string>
+    <string name="subscribers_detail_label">Subscriber details</string>
+    <string name="subscribers_date_label">Subscription date</string>
+    <string name="subscribers_plan_label">Plan</string>
+    <string name="subscribers_email_label">Email</string>
+    <string name="subscribers_country_label">Country</string>
+    <string name="subscribers_site_label">Site</string>
+    <string name="subscribers_delete_button">Delete subscriber</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
