@@ -47,7 +47,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    override fun getSupportedSortBys(): List<DataViewDropdownItem> {
+    override fun getSupportedSorts(): List<DataViewDropdownItem> {
         return listOf(
             DataViewDropdownItem(
                 id = ID_SORT_DATE,

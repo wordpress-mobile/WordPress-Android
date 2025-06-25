@@ -78,7 +78,7 @@ open class DataViewViewModel @Inject constructor(
                 )
             )
 
-            _itemSortBy.value = getDefaultSortBy()
+            _itemSortBy.value = getDefaultSort()
 
             fetchData()
 
@@ -173,7 +173,7 @@ open class DataViewViewModel @Inject constructor(
         fetchData()
     }
 
-    fun onSortClick(sort: DataViewDropdownItem?) {
+    fun onSortClick(sort: DataViewDropdownItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
             _itemSortBy.value = sort
@@ -211,25 +211,25 @@ open class DataViewViewModel @Inject constructor(
     }
 
     /**
-     * Descendants should override this to return a list of supported filters
+     * Descendants should override this to return a list of supported filter items
      */
     open fun getSupportedFilters(): List<DataViewDropdownItem> {
         return emptyList()
     }
 
     /**
-     * Descendants should override this to return a list of supported sort fields
+     * Descendants should override this to return a list of supported sort items
      */
-    open fun getSupportedSortBys(): List<DataViewDropdownItem> {
+    open fun getSupportedSorts(): List<DataViewDropdownItem> {
         return emptyList()
     }
 
     /**
      * Descendants can override this to return the default sorting
      */
-    open fun getDefaultSortBy(): DataViewDropdownItem? {
-        return if (getSupportedSortBys().isNotEmpty()) {
-            getSupportedSortBys().first()
+    open fun getDefaultSort(): DataViewDropdownItem? {
+        return if (getSupportedSorts().isNotEmpty()) {
+            getSupportedSorts().first()
         } else {
             null
         }

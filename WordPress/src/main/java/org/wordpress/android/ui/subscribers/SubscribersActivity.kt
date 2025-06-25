@@ -93,7 +93,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             items = viewModel.items.collectAsState(),
                             supportedFilters = viewModel.getSupportedFilters(),
                             currentFilter = viewModel.itemFilter.collectAsState().value,
-                            supportedSorts = viewModel.getSupportedSortBys(),
+                            supportedSorts = viewModel.getSupportedSorts(),
                             currentSort = viewModel.itemSortBy.collectAsState().value,
                             errorMessage = viewModel.errorMessage.collectAsState().value,
                             onRefresh = {
