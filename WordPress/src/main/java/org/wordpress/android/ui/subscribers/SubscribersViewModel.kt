@@ -47,7 +47,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    override fun getSupportedSorts(): List<DataViewItemFilter> {
+    override fun getSupportedSortBys(): List<DataViewItemFilter> {
         return listOf(
             DataViewItemFilter(
                 id = ID_SORT_EMAIL,
@@ -71,9 +71,9 @@ class SubscribersViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     override suspend fun performNetworkRequest(
         page: Int,
-        sortOrder: WpApiParamOrder,
         searchQuery: String,
         filter: DataViewItemFilter?,
+        sortOrder: WpApiParamOrder,
         sortBy: DataViewItemFilter?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
@@ -93,9 +93,9 @@ class SubscribersViewModel @Inject constructor(
 
     private suspend fun fetchSubscriberList(
         filter: DataViewItemFilter?,
-        sortBy: DataViewItemFilter?,
         page: Int,
         sortOrder: WpApiParamOrder,
+        sortBy: DataViewItemFilter?,
         searchQuery: String
     ): List<DataViewItem> {
         val filterType = filter?.let {

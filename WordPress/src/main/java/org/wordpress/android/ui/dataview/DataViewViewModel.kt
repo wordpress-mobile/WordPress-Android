@@ -55,8 +55,8 @@ open class DataViewViewModel @Inject constructor(
     private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
-    private val _itemSort = MutableStateFlow<DataViewItemFilter?>(null)
-    val itemSort = _itemSort.asStateFlow()
+    private val _itemSortBy = MutableStateFlow<DataViewItemFilter?>(null)
+    val itemSortBy = _itemSortBy.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
@@ -77,6 +77,8 @@ open class DataViewViewModel @Inject constructor(
                     WpAuthentication.Bearer(token = accountStore.accessToken!!)
                 )
             )
+
+            _itemSortBy.value = getDefaultSortBy()
 
             fetchData()
 
@@ -110,7 +112,7 @@ open class DataViewViewModel @Inject constructor(
                     page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value,
-                    sortOrder = _itemSort.value,
+                    sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
                     return@launch
@@ -173,8 +175,8 @@ open class DataViewViewModel @Inject constructor(
 
     fun onSortClick(sort: DataViewItemFilter?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
-        if (sort != _itemSort.value) {
-            _itemSort.value = sort
+        if (sort != _itemSortBy.value) {
+            _itemSortBy.value = sort
             resetPaging()
             fetchData()
         }
@@ -200,10 +202,10 @@ open class DataViewViewModel @Inject constructor(
      */
     open suspend fun performNetworkRequest(
         page: Int = 0,
-        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         searchQuery: String = "",
         filter: DataViewItemFilter? = null,
-        sort: DataViewItemFilter? = null,
+        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
+        sortBy: DataViewItemFilter? = null,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         emptyList()
     }
@@ -218,8 +220,19 @@ open class DataViewViewModel @Inject constructor(
     /**
      * Descendants should override this to return a list of supported sort fields
      */
-    open fun getSupportedSorts(): List<DataViewItemFilter> {
+    open fun getSupportedSortBys(): List<DataViewItemFilter> {
         return emptyList()
+    }
+
+    /**
+     * Descendants can override this to return the default sorting
+     */
+    open fun getDefaultSortBy(): DataViewItemFilter? {
+        return if (getSupportedSortBys().isNotEmpty()) {
+            getSupportedSortBys().first()
+        } else {
+            null
+        }
     }
 
     /**

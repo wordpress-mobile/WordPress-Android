@@ -214,44 +214,44 @@ private fun SearchAndFilterBar(
                 }
             }
         }
-    }
 
-    // Sort by button
-    IconButton(
-        onClick = {
-            sortMenuExpanded = !sortMenuExpanded
-        },
-        modifier = Modifier
-            .size(48.dp)
-            .padding(4.dp)
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
-            contentDescription = stringResource(R.string.sort),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        DropdownMenu(
-            expanded = sortMenuExpanded,
-            onDismissRequest = {
-                sortMenuExpanded = false
-            }
+        // Sort by button
+        IconButton(
+            onClick = {
+                sortMenuExpanded = !sortMenuExpanded
+            },
+            modifier = Modifier
+                .size(48.dp)
+                .padding(4.dp)
         ) {
-            supportedSorts.forEach { sort ->
-                DropdownMenuItem(
-                    text = { Text(stringResource(sort.titleRes)) },
-                    trailingIcon = {
-                        if (sort == currentSort) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null
-                            )
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
+                contentDescription = stringResource(R.string.sort),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            DropdownMenu(
+                expanded = sortMenuExpanded,
+                onDismissRequest = {
+                    sortMenuExpanded = false
+                }
+            ) {
+                supportedSorts.forEach { sort ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(sort.titleRes)) },
+                        trailingIcon = {
+                            if (sort == currentSort) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        onClick = {
+                            onSortClick(sort)
+                            sortMenuExpanded = false
                         }
-                    },
-                    onClick = {
-                        onSortClick(sort)
-                        sortMenuExpanded = false
-                    }
-                )
+                    )
+                }
             }
         }
     }
