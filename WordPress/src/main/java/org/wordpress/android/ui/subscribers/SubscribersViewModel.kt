@@ -18,6 +18,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
 import uniffi.wp_api.SubscribersListParams
+import uniffi.wp_api.SubscribersRequestGetSubscriberStatsResponse
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,7 +55,7 @@ class SubscribersViewModel @Inject constructor(
         filter: DataViewItemFilter?
     ): List<DataViewItem> = withContext(ioDispatcher) {
         try {
-            requestSubscribers(filter, page, sortOrder, searchQuery)
+            fetchSubscriberList(filter, page, sortOrder, searchQuery)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $e")
             onError(e.message)
@@ -62,7 +63,7 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
-    private suspend fun requestSubscribers(
+    private suspend fun fetchSubscriberList(
         filter: DataViewItemFilter?,
         page: Int,
         sortOrder: WpApiParamOrder,
@@ -129,14 +130,46 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    /*
+     * Returns the subscriber with the given ID, or null if not found. Note that this does NOT do a network call,
+     * it simply returns the subscriber from the existing list of items.
+     */
     fun getSubscriber(userId: Long): Subscriber? {
         val item = items.value.firstOrNull { it.id == userId }
         return item?.data as? Subscriber
     }
 
+    /**
+     * Called when an item in the list is clicked.
+     */
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let { subscriber ->
             appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
+        }
+    }
+
+    private suspend fun fetchSubscriberStats(): SubscribersRequestGetSubscriberStatsResponse? = withContext(ioDispatcher) {
+        try {
+            val response = wpComApiClient.request { requestBuilder ->
+                requestBuilder.subscribers().getSubscriberStats(
+                    wpComSiteId = siteId().toULong()
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats successfully")
+                    response.response
+                }
+                else -> {
+                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscriber stats failed: $response")
+                    onError((response as? WpRequestResult.WpError)?.errorMessage)
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.MAIN, "Fetch subscriber stats failed: $e")
+            onError(e.message)
+            null
         }
     }
 
