@@ -198,7 +198,7 @@ private fun SearchAndFilterBar(
                         filterMenuExpanded = false
                     }
                 ) {
-                    DropDownItems(
+                    DropdownItems(
                         titleRes = R.string.filter,
                         items = supportedFilters,
                         currentItem = currentFilter,
@@ -232,7 +232,7 @@ private fun SearchAndFilterBar(
                         sortMenuExpanded = false
                     }
                 ) {
-                    DropDownItems(
+                    DropdownItems(
                         titleRes = R.string.sort_by,
                         items = supportedSorts,
                         currentItem = currentSort,
@@ -248,7 +248,7 @@ private fun SearchAndFilterBar(
 }
 
 @Composable
-private fun DropDownItems(
+private fun DropdownItems(
     @StringRes titleRes: Int,
     items: List<DataViewDropdownItem>,
     currentItem: DataViewDropdownItem?,
