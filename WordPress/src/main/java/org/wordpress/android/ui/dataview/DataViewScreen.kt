@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.dataview
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -176,64 +178,70 @@ private fun SearchAndFilterBar(
         )
 
         // Filter Button
-        IconButton(
-            onClick = {
-                filterMenuExpanded = !filterMenuExpanded
-            },
-            modifier = Modifier
-                .size(48.dp)
-                .padding(4.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_filter_list_white_24dp),
-                contentDescription = stringResource(R.string.filter),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            DropdownMenu(
-                expanded = filterMenuExpanded,
-                onDismissRequest = {
-                    filterMenuExpanded = false
-                }
+        if (supportedFilters.isNotEmpty()) {
+            IconButton(
+                onClick = {
+                    filterMenuExpanded = !filterMenuExpanded
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(4.dp)
             ) {
-                DropDownItems(
-                    items = supportedFilters,
-                    currentItem = currentFilter,
-                    onItemClick = { filter ->
-                        onFilterClick(filter)
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_filter_list_white_24dp),
+                    contentDescription = stringResource(R.string.filter),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                DropdownMenu(
+                    expanded = filterMenuExpanded,
+                    onDismissRequest = {
                         filterMenuExpanded = false
                     }
-                )
+                ) {
+                    DropDownItems(
+                        titleRes = R.string.filter,
+                        items = supportedFilters,
+                        currentItem = currentFilter,
+                        onItemClick = { filter ->
+                            onFilterClick(filter)
+                            filterMenuExpanded = false
+                        }
+                    )
+                }
             }
         }
 
         // Sort by button
-        IconButton(
-            onClick = {
-                sortMenuExpanded = !sortMenuExpanded
-            },
-            modifier = Modifier
-                .size(48.dp)
-                .padding(4.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
-                contentDescription = stringResource(R.string.sort),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            DropdownMenu(
-                expanded = sortMenuExpanded,
-                onDismissRequest = {
-                    sortMenuExpanded = false
-                }
+        if (supportedSorts.isNotEmpty()) {
+            IconButton(
+                onClick = {
+                    sortMenuExpanded = !sortMenuExpanded
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(4.dp)
             ) {
-                DropDownItems(
-                    items = supportedSorts,
-                    currentItem = currentSort,
-                    onItemClick = { sort ->
-                        onSortClick(sort)
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
+                    contentDescription = stringResource(R.string.sort_by),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                DropdownMenu(
+                    expanded = sortMenuExpanded,
+                    onDismissRequest = {
                         sortMenuExpanded = false
                     }
-                )
+                ) {
+                    DropDownItems(
+                        titleRes = R.string.sort_by,
+                        items = supportedSorts,
+                        currentItem = currentSort,
+                        onItemClick = { sort ->
+                            onSortClick(sort)
+                            sortMenuExpanded = false
+                        }
+                    )
+                }
             }
         }
     }
@@ -241,10 +249,22 @@ private fun SearchAndFilterBar(
 
 @Composable
 private fun DropDownItems(
+    @StringRes titleRes: Int,
     items: List<DataViewItemFilter>,
     currentItem: DataViewItemFilter?,
     onItemClick: (DataViewItemFilter) -> Unit
 ) {
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(titleRes),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        enabled = false,
+        onClick = { }
+    )
     items.forEach { item ->
         DropdownMenuItem(
             text = { Text(stringResource(item.titleRes)) },
