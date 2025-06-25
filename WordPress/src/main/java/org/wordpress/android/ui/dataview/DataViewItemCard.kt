@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.dataview
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,19 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import org.wordpress.android.ui.dataview.compose.RemoteImage
 
 /**
  * Provides a card for displaying a single [DataViewItem] which contains a primary image,
@@ -61,6 +57,11 @@ fun DataViewItemCard(
                 RemoteImage(
                     imageUrl = image.imageUrl,
                     fallbackImageRes = image.fallbackImageRes,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(dimensionResource(R.dimen.jp_migration_user_avatar_size))
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
@@ -135,34 +136,6 @@ private fun maxLinesFor(type: DataViewFieldType) = when (type) {
     DataViewFieldType.EMAIL -> 1
 }
 
-@Composable
-private fun RemoteImage(
-    imageUrl: String?,
-    fallbackImageRes: Int,
-) {
-    val modifier = Modifier
-        .padding(end = 16.dp)
-        .size(dimensionResource(R.dimen.jp_migration_user_avatar_size))
-        .clip(CircleShape)
-        .background(MaterialTheme.colorScheme.surface)
-    if (imageUrl.isNullOrBlank()) {
-        Image(
-            painter = painterResource(id = fallbackImageRes),
-            contentDescription = null,
-            modifier = modifier
-        )
-    } else {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .error(fallbackImageRes)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = modifier
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

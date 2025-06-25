@@ -43,37 +43,18 @@
                     android:padding="@dimen/margin_large">
 
                     <FrameLayout
-                        android:id="@+id/frame_avatar"
+                        android:id="@+id/avatar_container"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/me_profile_photo"
+                        android:padding="@dimen/margin_small">
 
-                        <FrameLayout
-                            android:id="@+id/avatar_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/me_profile_photo"
-                            android:padding="@dimen/margin_small">
-
-                            <ImageView
-                                android:id="@+id/me_avatar"
-                                android:layout_width="@dimen/avatar_sz_inner_circle"
-                                android:layout_height="@dimen/avatar_sz_inner_circle"
-                                android:contentDescription="@string/reader_avatar_desc" />
-                        </FrameLayout>
-
-                        <ProgressBar
-                            android:id="@+id/avatar_progress"
+                        <ImageView
+                            android:id="@+id/me_avatar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
-                            android:layout_gravity="center"
-                            android:background="@drawable/bg_oval_black_translucent_50"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:indeterminate="true"
-                            android:padding="@dimen/margin_large"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
+                            android:contentDescription="@string/reader_avatar_desc" />
                     </FrameLayout>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -82,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_toEndOf="@+id/frame_avatar"
+                        android:layout_toEndOf="@+id/avatar_container"
                         android:ellipsize="end"
                         android:maxLines="1"
                         app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
@@ -97,7 +78,7 @@
                         android:layout_marginStart="@dimen/margin_extra_large"
                         android:layout_marginBottom="@dimen/margin_extra_large"
                         android:layout_below="@id/me_display_name"
-                        android:layout_toEndOf="@id/frame_avatar"
+                        android:layout_toEndOf="@id/avatar_container"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAppearance="?attr/textAppearanceBody2"
@@ -480,17 +461,4 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <include
-        android:id="@+id/gravatar_sync_view"
-        layout="@layout/gravatar_sync_info_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:visibility="gone"
-        android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

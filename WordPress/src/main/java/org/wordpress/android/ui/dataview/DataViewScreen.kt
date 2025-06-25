@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -26,9 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -47,16 +43,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
  * which includes search and filter functionality.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataViewScreen(
-    title: String,
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
     supportedFilters: List<DataViewItemFilter>,
@@ -64,47 +59,57 @@ fun DataViewScreen(
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewItemFilter) -> Unit,
-    onBackClick: () -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
 ) {
-    Screen(
-        title = title,
-        onBackClick = onBackClick,
-        onRefresh = onRefresh,
-        content = {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                SearchAndFilterBar(
-                    onSearchQueryChange = onSearchQueryChange,
-                    onFilterClick = onFilterClick,
-                    supportedFilters = supportedFilters,
-                    currentFilter = currentFilter
-                )
+    val refreshState = remember { mutableStateOf(false) }
+    val pullToRefreshState = rememberPullToRefreshState()
 
-                when (uiState.value) {
-                    DataViewUiState.LOADING -> LoadingDataView()
-                    DataViewUiState.EMPTY -> EmptyDataView()
-                    DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
-                    DataViewUiState.ERROR -> ErrorDataView(errorMessage)
-                    DataViewUiState.OFFLINE -> OfflineDataView()
-                    DataViewUiState.LOADING_MORE,
-                    DataViewUiState.LOADED -> LoadedDataView(
-                        items = items,
-                        onItemClick = onItemClick,
-                        onFetchMore = onFetchMore,
-                        showProgress = uiState.value == DataViewUiState.LOADING_MORE
-                    )
-                }
+    PullToRefreshBox(
+        modifier = modifier
+            .fillMaxSize(),
+        isRefreshing = refreshState.value,
+        state = pullToRefreshState,
+        onRefresh = onRefresh,
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = refreshState.value,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            SearchAndFilterBar(
+                onSearchQueryChange = onSearchQueryChange,
+                onFilterClick = onFilterClick,
+                supportedFilters = supportedFilters,
+                currentFilter = currentFilter
+            )
+
+            when (uiState.value) {
+                DataViewUiState.LOADING -> LoadingDataView()
+                DataViewUiState.EMPTY -> EmptyDataView()
+                DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
+                DataViewUiState.ERROR -> ErrorDataView(errorMessage)
+                DataViewUiState.OFFLINE -> OfflineDataView()
+                DataViewUiState.LOADING_MORE,
+                DataViewUiState.LOADED -> LoadedDataView(
+                    items = items,
+                    onItemClick = onItemClick,
+                    onFetchMore = onFetchMore,
+                    showProgress = uiState.value == DataViewUiState.LOADING_MORE
+                )
             }
         }
-
-    )
+    }
 }
 
 @Composable
@@ -230,7 +235,8 @@ private fun LoadedDataView(
         }
         if (showProgress) {
             CircularProgressIndicator(
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier
+                    .size(48.dp)
                     .align(Alignment.Center)
             )
         }
@@ -312,63 +318,11 @@ private fun OfflineDataView() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun Screen(
-    title: String,
-    content: @Composable () -> Unit,
-    onRefresh: () -> Unit,
-    onBackClick: () -> Unit
-) {
-    AppThemeM3 {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(title) },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
-                        }
-                    },
-                )
-            },
-        ) { contentPadding ->
-            val refreshState = remember { mutableStateOf(false) }
-            val pullToRefreshState = rememberPullToRefreshState()
-
-            PullToRefreshBox(
-                modifier = Modifier
-                    .fillMaxSize(),
-                isRefreshing = refreshState.value,
-                state = pullToRefreshState,
-                onRefresh = onRefresh,
-                indicator = {
-                    PullToRefreshDefaults.Indicator(
-                        state = pullToRefreshState,
-                        isRefreshing = refreshState.value,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.align(Alignment.TopCenter),
-                    )
-                }
-            ) {
-                Column(
-                    modifier = Modifier
-                        .imePadding()
-                        .padding(contentPadding)
-                ) {
-                    content()
-                }
-            }
-        }
-    }
-}
-
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LoadedPreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
         items = remember { mutableStateOf(getDummyDataViewItems()) },
         supportedFilters = emptyList(),
@@ -378,7 +332,6 @@ private fun LoadedPreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
 
@@ -387,7 +340,6 @@ private fun LoadedPreview() {
 @Composable
 private fun LoadingPreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
@@ -397,7 +349,6 @@ private fun LoadingPreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
 
@@ -406,7 +357,6 @@ private fun LoadingPreview() {
 @Composable
 private fun EmptyPreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
@@ -416,7 +366,6 @@ private fun EmptyPreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
 
@@ -425,7 +374,6 @@ private fun EmptyPreview() {
 @Composable
 private fun EmptySearchPreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
@@ -435,7 +383,6 @@ private fun EmptySearchPreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
 
@@ -444,7 +391,6 @@ private fun EmptySearchPreview() {
 @Composable
 private fun OfflinePreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
@@ -454,7 +400,6 @@ private fun OfflinePreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
 
@@ -463,7 +408,6 @@ private fun OfflinePreview() {
 @Composable
 private fun ErrorPreview() {
     DataViewScreen(
-        title = "Title",
         uiState = remember { mutableStateOf(DataViewUiState.ERROR) },
         items = remember { mutableStateOf(emptyList()) },
         supportedFilters = emptyList(),
@@ -473,6 +417,5 @@ private fun ErrorPreview() {
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
-        onBackClick = { },
     )
 }
