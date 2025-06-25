@@ -62,12 +62,12 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     lateinit var emptyAuthParsedUrl: ParsedUrl
 
 
-    private lateinit var helper: ApplicationPasswordLoginHelper
+    private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        helper = ApplicationPasswordLoginHelper(
+        applicationPasswordLoginHelper = ApplicationPasswordLoginHelper(
             testDispatcher(),
             siteSqlUtils,
             uriLoginWrapper,
@@ -88,15 +88,15 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `storeApplicationPasswordCredentialsFrom with empty data returns false`() = runTest {
-        val result = helper.storeApplicationPasswordCredentialsFrom("")
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom("")
         assertFalse(result)
     }
 
     @Test
     fun `storeApplicationPasswordCredentialsFrom with same data returns false`() = runTest {
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
-        helper.storeApplicationPasswordCredentialsFrom(data)
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
         assertFalse(result)
     }
 
@@ -107,7 +107,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, null, TEST_PASSWORD)
             )
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&password=testpasswordr"
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
         assertFalse(result)
     }
 
@@ -118,7 +118,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, "", TEST_PASSWORD)
             )
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&password=testpasswordr"
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
         assertFalse(result)
     }
 
@@ -129,7 +129,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, null)
             )
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser"
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
         assertFalse(result)
     }
 
@@ -140,7 +140,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 ApplicationPasswordLoginHelper.UriLogin(TEST_URL, TEST_USER, "")
             )
         val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser"
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
         assertFalse(result)
     }
 
@@ -154,7 +154,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             }
         whenever(siteSqlUtils.getSites()).thenReturn(listOf(siteModel))
 
-        val result = helper.storeApplicationPasswordCredentialsFrom(data)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
 
         assertTrue(result)
         verify(siteSqlUtils).getSites()
@@ -167,7 +167,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val data = "jetpack://app-pass-authorize?site_url=http://test.com&user_login=testuser&password=testpassword"
             whenever(siteSqlUtils.getSites()).thenReturn(listOf())
 
-            val result = helper.storeApplicationPasswordCredentialsFrom(data)
+            val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(data)
 
             assertFalse(result)
             verify(siteSqlUtils).getSites()
@@ -200,7 +200,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 )
             )
 
-        val result = helper.getAuthorizationUrlComplete(TEST_URL)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
@@ -210,7 +210,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     fun `given login scenario, when api discovery fails, then return emtpy`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
 
-        val result = helper.getAuthorizationUrlComplete(TEST_URL)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
@@ -232,7 +232,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
             .thenReturn("")
 
-        val result = helper.getAuthorizationUrlComplete(TEST_URL)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
@@ -248,9 +248,123 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
                 )
             )
 
-        val result = helper.getAuthorizationUrlComplete(TEST_URL)
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials with no sites completes without errors`() = runTest {
+        whenever(siteSqlUtils.getSites()).thenReturn(emptyList())
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(siteSqlUtils).getSites()
+        verify(siteSqlUtils, times(0)).insertOrUpdateSite(any())
+    }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials clears all password fields for single site`() = runTest {
+        val site = SiteModel().apply {
+            id = 1
+            url = TEST_URL
+            apiRestUsernamePlain = TEST_USER
+            apiRestPasswordPlain = TEST_PASSWORD
+            apiRestUsernameEncrypted = "encrypted_user"
+            apiRestPasswordEncrypted = "encrypted_password"
+            apiRestUsernameIV = "user_iv"
+            apiRestPasswordIV = "password_iv"
+        }
+        whenever(siteSqlUtils.getSites()).thenReturn(listOf(site))
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(siteSqlUtils).getSites()
+        verify(siteSqlUtils).insertOrUpdateSite(eq(site))
+
+        // Verify all password fields are cleared
+        assertEquals("", site.apiRestUsernamePlain)
+        assertEquals("", site.apiRestPasswordPlain)
+        assertEquals("", site.apiRestUsernameEncrypted)
+        assertEquals("", site.apiRestPasswordEncrypted)
+        assertEquals("", site.apiRestUsernameIV)
+        assertEquals("", site.apiRestPasswordIV)
+    }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials clears password fields for multiple sites`() = runTest {
+        val site1 = SiteModel().apply {
+            id = 1
+            url = "http://site1.com"
+            apiRestUsernamePlain = "user1"
+            apiRestPasswordPlain = "password1"
+            apiRestUsernameEncrypted = "encrypted_user1"
+            apiRestPasswordEncrypted = "encrypted_password1"
+            apiRestUsernameIV = "user_iv1"
+            apiRestPasswordIV = "password_iv1"
+        }
+        val site2 = SiteModel().apply {
+            id = 2
+            url = "http://site2.com"
+            apiRestUsernamePlain = "user2"
+            apiRestPasswordPlain = "password2"
+            apiRestUsernameEncrypted = "encrypted_user2"
+            apiRestPasswordEncrypted = "encrypted_password2"
+            apiRestUsernameIV = "user_iv2"
+            apiRestPasswordIV = "password_iv2"
+        }
+        val site3 = SiteModel().apply {
+            id = 3
+            url = "http://site3.com"
+            // This site has no credentials set
+        }
+        whenever(siteSqlUtils.getSites()).thenReturn(listOf(site1, site2, site3))
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(siteSqlUtils).getSites()
+        verify(siteSqlUtils).insertOrUpdateSite(eq(site1))
+        verify(siteSqlUtils).insertOrUpdateSite(eq(site2))
+        verify(siteSqlUtils).insertOrUpdateSite(eq(site3))
+
+        // Verify all password fields are cleared for all sites
+        listOf(site1, site2, site3).forEach { site ->
+            assertEquals("", site.apiRestUsernamePlain)
+            assertEquals("", site.apiRestPasswordPlain)
+            assertEquals("", site.apiRestUsernameEncrypted)
+            assertEquals("", site.apiRestPasswordEncrypted)
+            assertEquals("", site.apiRestUsernameIV)
+            assertEquals("", site.apiRestPasswordIV)
+        }
+    }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials preserves other site fields`() = runTest {
+        val site = SiteModel().apply {
+            id = 1
+            url = TEST_URL
+            name = "Test Site"
+            description = "Test Description"
+            siteId = 12345L
+            apiRestUsernamePlain = TEST_USER
+            apiRestPasswordPlain = TEST_PASSWORD
+        }
+        whenever(siteSqlUtils.getSites()).thenReturn(listOf(site))
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(siteSqlUtils).insertOrUpdateSite(eq(site))
+
+        // Verify non-password fields are preserved
+        assertEquals(1, site.id)
+        assertEquals(TEST_URL, site.url)
+        assertEquals("Test Site", site.name)
+        assertEquals("Test Description", site.description)
+        assertEquals(12345L, site.siteId)
+
+        // Verify password fields are cleared
+        assertEquals("", site.apiRestUsernamePlain)
+        assertEquals("", site.apiRestPasswordPlain)
     }
  }
