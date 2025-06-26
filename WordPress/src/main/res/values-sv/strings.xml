@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 11:54:08+0000
+Translation-Revision-Date: 2025-06-18 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Den angivna webbplatsen stöder inte autentisering med applikationslösenord.</string>
+    <string name="application_password_title">Autentisera med applikationslösenord</string>
+    <string name="application_password_credentials_stored">Autentiseringsuppgifter för applikationslösenord lagrade för %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Det tog för lång tid att identifiera en kod. Försök igen eller använd din kameraapp för att skanna koden.</string>
+    <string name="qrcode_auth_flow_timeout_title">Tidsgränsen gick ut för skanningen</string>
+    <string name="invite_users">Bjud in användare</string>
+    <string name="experimental_application_password_feature_description">Aktivera applikationslösenord för att logga in på webbplatser som drivs på egen server.</string>
+    <string name="experimental_application_password_feature">Inloggning med applösenord</string>
+    <string name="experimental_subscribers_feature_description">Visa och hantera nyhetsbrevsprenumeranter (arbete pågår)</string>
+    <string name="experimental_subscribers_feature">Experimentella prenumeranter</string>
+    <string name="cant_share_no_blog">Du kan inte dela till WordPress utan att ha en blogg</string>
+    <string name="coming_soon">Kommer snart!</string>
     <string name="me_email_verification_generic_error">Det gick inte att skicka verifieringslänken</string>
     <string name="me_email_verification_resend">Skicka verifieringslänken igen</string>
     <string name="me_email_verification_sent_description">Kontrollera din inkorg på %s för att se bekräftelsemeddelandet</string>
@@ -1561,7 +1573,7 @@ Language: sv_SE
     <string name="threat_item_sub_header_misc_vulnerability">Övrig typ av sårbarhet</string>
     <string name="threat_item_header_vulnerable_theme">Sårbart tema: %1$s (version %2$s)</string>
     <string name="threat_item_header_vulnerable_plugin">Sårbart tillägg: %1$s (version %2$s)</string>
-    <string name="threat_item_header_file_malicious_code_pattern">%s: signatur för skadlid kod</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: skadligt kodmönster</string>
     <string name="threat_item_header_database_threat">Databashot %s</string>
     <string name="threat_item_header_infected_core_file">%s: infekterad fil i WordPress-kärnan</string>
     <string name="threat_item_header_threat_found">Hot hittat</string>
@@ -3289,7 +3301,6 @@ Language: sv_SE
     <string name="invite_message_title">Anpassat meddelande</string>
     <string name="invite">Bjud in</string>
     <string name="invite_names_title">Användarnamn eller e‑post</string>
-    <string name="invite_people">Bjud in personer</string>
     <string name="my_site_header_external">Externt</string>
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
@@ -3302,7 +3313,6 @@ Language: sv_SE
     <string name="user_remove_confirmation_message">Om du tar bort %1$s kommer användaren inte längre kunna besöka webbplatsen, men eventuellt innehåll som skapats av %1$s kommer att finnas kvar.\n\nVill du fortfarande ta bort denna användare?</string>
     <string name="person_remove_confirmation_title">Ta bort %1$s</string>
     <string name="role">Roll</string>
-    <string name="people">Människor</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Bloggarna i den här listan har inte publicerat något den senaste tiden</string>
     <string name="error_remove_user">Kunde inte ta bort användare</string>
     <string name="error_update_role">Kunde inte uppdatera användarroll</string>
@@ -3702,7 +3712,6 @@ Language: sv_SE
     <string name="reader_toast_err_adding_tag">Kan inte lägga till denna etikett</string>
     <string name="reader_title_applog">Programlogg</string>
     <string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
-    <string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
     <string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="image_settings">Bildinställningar</string>
@@ -3750,7 +3759,6 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag_updating">Hämtar inlägg…</string>
     <string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>
     <string name="reader_likes_multi">%,d gillar detta</string>
-    <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
     <string name="comment_unapproved">Kommentar förkastad</string>
     <string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>

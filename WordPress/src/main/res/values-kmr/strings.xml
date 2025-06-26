@@ -1633,7 +1633,6 @@ Language: ku_TR
     <string name="invite_error_invalid_usernames_one">Nikare bişîne: Navek an jî email nederbasdar e</string>
     <string name="invite_error_no_usernames">Ji kerema xwe herî kêm navê bikarhênerekî tevlî bike</string>
     <string name="invite">Vexwîne</string>
-    <string name="invite_people">Mirovan Vexwîne</string>
     <string name="my_site_header_external">Derveyî</string>
     <string name="label_clear_search_history">Raboriya lêgerînê paqij bike</string>
     <string name="dlg_confirm_clear_search_history">Raboriya lêgerînê paqij bike?</string>
@@ -1646,7 +1645,6 @@ Language: ku_TR
     <string name="user_remove_confirmation_message">Heke tu %1$s rakî, ew ê êdî nikaribe bigihîje vê malperê, lê naverokên ji hêla %1$s ve hatine afirandin ew ê li ser malperê bimînin.\n\nTu dîsa jî dixwazî vî bikarhênerî rakî?</string>
     <string name="person_remove_confirmation_title">%1$s rake</string>
     <string name="role">Rol</string>
-    <string name="people">Kes</string>
     <string name="error_remove_user">Bikarhêner nayê rakirin</string>
     <string name="error_update_role">Rola bikarhêner nayê hildemandin</string>
     <string name="error_fetch_viewers_list">Bînerên malperê nehatin stendin</string>
@@ -2064,7 +2062,6 @@ Language: ku_TR
     <string name="local_draft">Reşnivîsa cîgehî</string>
     <string name="select_categories">Kategoriyan hilbijêre</string>
     <string name="fatal_db_error">Dema danegeha sepanê dihat afirandin çewtiyek derket. Sepanê ji nû ve saz bike.</string>
-    <string name="error_blog_hidden">Ev blog veşartî ye û nayê barkirin. Di sazkariyan de wê dîsa çalak bike û dîsa biceribîne.</string>
     <string name="error_refresh_media">Medya niha nayên nûkirin</string>
     <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Destûrdarkirin pêwîst e</string>
     <string name="file_error_create">Ji bo hilxistina medyayê dosyeya demkî nayê afirandin. Jê bawer be bila di cîhaza te de têra xwe ciyê vala hebe.</string>
@@ -2078,7 +2075,6 @@ Language: ku_TR
     <string name="reader_empty_posts_in_tag_updating">Şandî tên stendin…</string>
     <string name="reader_likes_multi">%,d kes ev eciband</string>
     <string name="reader_likes_you_and_multi">Te û %,d kesên din ev eciband</string>
-    <string name="cant_share_no_visible_blog">Heta ku blogeke te ya xuyanbar tune be tu nikarî bi WordPressê parve bikî</string>
     <string name="comment_spammed">Şîrove wekî spam hat nîşankirin</string>
     <string name="pick_video">Vîdyo hilbijêre</string>
     <string name="pick_photo">Wêne hilbijêre</string>

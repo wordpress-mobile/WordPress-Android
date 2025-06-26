@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-08 10:05:33+0000
+Translation-Revision-Date: 2025-06-12 12:05:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Site-ul pe care l-ai furnizat nu acceptă autentificarea cu parola aplicației.</string>
+    <string name="application_password_title">Autentificare folosind parola aplicației</string>
+    <string name="application_password_credentials_stored">Datele de conectare pentru parola aplicației sunt stocate pentru %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">A durat prea mult până la detectarea unui cod. Te rog să încerci din nou sau folosește camera pentru a scana codul.</string>
+    <string name="qrcode_auth_flow_timeout_title">Scanarea a expirat</string>
+    <string name="invite_users">Invită utilizatori</string>
+    <string name="experimental_application_password_feature_description">Activează parola aplicației pentru a te autentifica pe site-urile auto-găzduite.</string>
+    <string name="experimental_application_password_feature">Autentificare cu parola aplicației</string>
+    <string name="experimental_subscribers_feature_description">Vizualizezi și administrezi abonații la buletine de știri (în desfășurare)</string>
+    <string name="experimental_subscribers_feature">Abonați experimentali</string>
+    <string name="cant_share_no_blog">Nu poți să partajezi pe WordPress fără un blog</string>
+    <string name="coming_soon">În curând!</string>
     <string name="me_email_verification_generic_error">Nu pot să trimit legătura de verificare</string>
     <string name="me_email_verification_resend">Retrimite legătura de verificare</string>
     <string name="me_email_verification_sent_description">Verifică emailurile primite la %s și caută emailul de confirmare</string>
@@ -1694,7 +1706,7 @@ Language: ro
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Editează folosind editorul web</string>
     <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Alege imagini</string>
     <string name="mlp_notice_blank_page_created">A fost creată o pagină goală</string>
-    <string name="mlp_notice_page_created">A fost creată o pagină</string>
+    <string name="mlp_notice_page_created">Am creat pagina</string>
     <string name="media_insert_failed">Inserarea media a eșuat.</string>
     <string name="media_insert_failed_with_reason">Inserarea media a eșuat: %s</string>
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
@@ -3303,7 +3315,6 @@ Language: ro
     <string name="invite_message_title">Mesaj personalizat</string>
     <string name="invite">Invită</string>
     <string name="invite_names_title">Nume de utilizatori sau emailuri</string>
-    <string name="invite_people">Invită persoane</string>
     <string name="my_site_header_external">Extern</string>
     <string name="label_clear_search_history">Șterge istoric căutări</string>
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
@@ -3316,7 +3327,6 @@ Language: ro
     <string name="user_remove_confirmation_message">Dacă-l înlături pe %1$s, acest utilizator nu va mai putea accesa acest site, dar orice conținut care a fost creat de %1$s va rămâne pe site.\n\nMai vrei să înlături acest utilizator?</string>
     <string name="person_remove_confirmation_title">Înlătură %1$s</string>
     <string name="role">Rol</string>
-    <string name="people">Oameni</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blogurile din această listă nu au publicat nimic recent</string>
     <string name="error_remove_user">Nu am putut să înlătur utilizatorul</string>
     <string name="error_update_role">Nu s-a putut actualiza rolul utilizatorului</string>
@@ -3716,7 +3726,6 @@ Language: ro
     <string name="reader_toast_err_adding_tag">Nu pot să adaug această etichetă</string>
     <string name="reader_title_applog">Jurnal aplicații</string>
     <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
-    <string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Setări imagine</string>
@@ -3764,7 +3773,6 @@ Language: ro
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="reader_likes_you_and_multi">Tu și alții %,d apreciați asta</string>
     <string name="reader_likes_multi">%,d persoane apreciază asta</string>
-    <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
     <string name="comment_spammed">Comentariul a fost marcat ca spam</string>
     <string name="comment_unapproved">Comentariu neaprobat</string>
     <string name="reader_toast_err_get_post">Nu pot aduce acest articol</string>

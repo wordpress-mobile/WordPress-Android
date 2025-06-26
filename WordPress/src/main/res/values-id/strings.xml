@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 10:54:07+0000
+Translation-Revision-Date: 2025-06-17 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Situs yang disediakan tidak mendukung autentikasi Kata Sandi Aplikasi.</string>
+    <string name="application_password_title">Autentikasi menggunakan Kata Sandi Aplikasi</string>
+    <string name="application_password_credentials_stored">Kredensial kata sandi aplikasi disimpan untuk %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Terlalu lama untuk mendeteksi kode. Harap coba lagi atau gunakan kamera untuk memindai kode.</string>
+    <string name="qrcode_auth_flow_timeout_title">Waktu pemindaian habis</string>
+    <string name="invite_users">Undang pengguna</string>
+    <string name="experimental_application_password_feature_description">Aktifkan Kata Sandi Aplikasi untuk login ke situs yang di-hosting sendiri.</string>
+    <string name="experimental_application_password_feature">Login dengan Kata Sandi Aplikasi</string>
+    <string name="experimental_subscribers_feature_description">Lihat dan kelola pelanggan buletin (sedang dalam proses)</string>
+    <string name="experimental_subscribers_feature">Pelanggan eksperimental</string>
+    <string name="cant_share_no_blog">Anda tidak bisa berbagi ke WordPress tanpa memiliki blog</string>
+    <string name="coming_soon">Segera hadir!</string>
     <string name="me_email_verification_generic_error">Tidak dapat mengirim tautan verifikasi</string>
     <string name="me_email_verification_resend">Kirim ulang tautan verifikasi</string>
     <string name="me_email_verification_sent_description">Periksa email konfirmasi di inbox Anda di %s</string>
@@ -3303,7 +3315,6 @@ Language: id
     <string name="invite_message_title">Pesan khusus</string>
     <string name="invite">Undang</string>
     <string name="invite_names_title">Nama pengguna atau email</string>
-    <string name="invite_people">Undang Orang-orang</string>
     <string name="my_site_header_external">Eksternal</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
@@ -3316,7 +3327,6 @@ Language: id
     <string name="user_remove_confirmation_message">Jika Anda menghapus %1$s, pengguna tsb tak bisa mengakses situs ini lagi, tetapi semua konten yang telah dibuat oleh %1$s akan tetap ada di situs ini.\n\nApakah Anda masih ingin menghapus pengguna ini?</string>
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
     <string name="role">Peran</string>
-    <string name="people">Pengguna</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blog dalam daftar ini belum mengeposkan apa-apa akhir-akhir ini</string>
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
@@ -3716,7 +3726,6 @@ Language: id
     <string name="reader_toast_err_adding_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
-    <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
     <string name="error_refresh_media">Media tidak bisa disegarkan saat ini</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Pengaturan gambar</string>
@@ -3764,7 +3773,6 @@ Language: id
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
-    <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
     <string name="comment_unapproved">Komentar tidak disetujui</string>
     <string name="reader_toast_err_get_post">Gagal membuka pos ini</string>

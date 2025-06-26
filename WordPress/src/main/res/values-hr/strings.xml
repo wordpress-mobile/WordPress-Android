@@ -151,7 +151,6 @@ Language: hr
     <string name="invite_message_title">Prilagođena poruka</string>
     <string name="invite">Pozovi</string>
     <string name="invite_names_title">Korisnička imena ili adrese e-pošte</string>
-    <string name="invite_people">Pozovi osobe</string>
     <string name="my_site_header_external">Vanjski</string>
     <string name="label_clear_search_history">Obriši povijest pretraživanja</string>
     <string name="dlg_confirm_clear_search_history">Očistiti povijest pretraživanja?</string>
@@ -162,7 +161,6 @@ Language: hr
     <string name="person_removed">Uspješno uklonjeno %1$s</string>
     <string name="user_remove_confirmation_message">Ako uklonite %1$s, taj korisnik više neće moći pristupiti web mjestu, ali sav sadržaj koji je stvorio %1$s ostat će na web mjestu.\n\nJoš uvijek želite ukloniti ovog korisnika?</string>
     <string name="person_remove_confirmation_title">Ukloni %1$s</string>
-    <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
     <string name="error_remove_user">Korisnik nije uklonjen</string>
     <string name="error_update_role">Uloga korisnika nije promijenjena</string>
@@ -588,7 +586,6 @@ Language: hr
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
     <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Potrebna autorizacija</string>
-    <string name="error_blog_hidden">Blog je skriven i nije ga moguće učitati. Ponovno ga omogućite u postavkama i pokušajte ponovno.</string>
     <string name="fatal_db_error">Pojavila se greška prilikom kreiranja app baze podataka. Pokušajte ponovno instalirati app.</string>
     <string name="remove_account">Ukloni web-stranicu</string>
     <string name="delete_post">Obriši objavu?</string>
@@ -601,7 +598,6 @@ Language: hr
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
     <string name="reader_likes_multi">%,d ljudi se ovo sviđa</string>
     <string name="comment_spammed">Komentar označen kao spam</string>
-    <string name="cant_share_no_visible_blog">Ne možete dijeliti na WordPressu bez vidljivog bloga</string>
     <string name="pick_photo">Odaberi sliku</string>
     <string name="pick_video">Odaberi video</string>
     <string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>

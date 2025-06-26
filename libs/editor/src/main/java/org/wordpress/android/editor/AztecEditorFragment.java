@@ -106,6 +106,7 @@ import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
+import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -716,6 +717,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void onEditorHistoryChanged(@Nullable HistoryChangeListener listener) {
+    }
+
+    @Override public void onFeaturedImageChanged(@Nullable FeaturedImageChangeListener listener) {
     }
 
     @Override public void onOpenMediaLibrary(@Nullable OpenMediaLibraryListener listener) {

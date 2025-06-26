@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-05-13 09:54:09+0000
+Translation-Revision-Date: 2025-06-18 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">你所提供的網站不支援應用程式密碼驗證。</string>
+    <string name="application_password_title">使用應用程式密碼進行驗證</string>
+    <string name="application_password_credentials_stored">已儲存「%1$s」的應用程式密碼憑證</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">驗證碼偵測時間過長。 請再試一次，或開啟相機掃瞄驗證碼。</string>
+    <string name="qrcode_auth_flow_timeout_title">掃描逾時</string>
+    <string name="invite_users">邀請使用者</string>
+    <string name="experimental_application_password_feature_description">啟用應用程式密碼以登入自助託管網站。</string>
+    <string name="experimental_application_password_feature">應用程式密碼登入</string>
+    <string name="experimental_subscribers_feature_description">檢視及管理電子報訂閱者 (進行中)</string>
+    <string name="experimental_subscribers_feature">實驗性訂閱者</string>
+    <string name="cant_share_no_blog">你無法在沒有網誌的情形下分享內容至 WordPress</string>
+    <string name="coming_soon">即將推出！</string>
     <string name="me_email_verification_generic_error">無法傳送驗證連結</string>
     <string name="me_email_verification_resend">重新傳送驗證連結</string>
     <string name="me_email_verification_sent_description">請至 %s 的收件匣，檢查是否收到確認電子郵件</string>
@@ -3288,7 +3300,6 @@ Language: zh_TW
     <string name="invite_message_title">自訂訊息</string>
     <string name="invite">邀請</string>
     <string name="invite_names_title">使用者名稱或電子郵件</string>
-    <string name="invite_people">邀請他人</string>
     <string name="my_site_header_external">外部</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
@@ -3301,7 +3312,6 @@ Language: zh_TW
     <string name="user_remove_confirmation_message">如果移除 %1$s，該使用者將無法再存取此網站，但 %1$s 建立的所有內容仍會保留在網站上。\n\n仍要移除這位使用者嗎？</string>
     <string name="person_remove_confirmation_title">移除 %1$s</string>
     <string name="role">角色</string>
-    <string name="people">使用者</string>
     <string name="reader_empty_blogs_posts_in_custom_list">此清單中的網誌最近尚未張貼任何文章</string>
     <string name="error_remove_user">無法移除使用者</string>
     <string name="error_update_role">無法更新使用者角色</string>
@@ -3700,7 +3710,6 @@ Language: zh_TW
     <string name="reader_toast_err_adding_tag">無法新增此標籤</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
-    <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
     <string name="error_refresh_media">目前無法重新整理媒體</string>
     <string name="wordpress_blog">WordPress 網誌</string>
     <string name="image_settings">圖片設定</string>
@@ -3748,7 +3757,6 @@ Language: zh_TW
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>
     <string name="reader_likes_multi">%,d 人說這個讚</string>
-    <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
     <string name="comment_unapproved">留言未核准</string>
     <string name="reader_toast_err_get_post">無法擷取此文章</string>

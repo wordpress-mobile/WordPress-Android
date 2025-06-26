@@ -656,7 +656,6 @@ Language: el_GR
     <string name="invite">Πρόσκληση</string>
     <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
     <string name="my_site_header_external">Εξωτερική</string>
-    <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
     <string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
     <string name="reader_empty_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
@@ -668,7 +667,6 @@ Language: el_GR
     <string name="person_removed">Ο %1$s αφαιρέθηκε επιτυχώς</string>
     <string name="person_remove_confirmation_title">Αφαίρεση %1$s</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Οι ιστότοποι σε αυτή τη λίστα δεν έχουν δημοσιεύσει κάτι πρόσφατα</string>
-    <string name="people">Άνθρωποι</string>
     <string name="role">Ρόλος</string>
     <string name="error_remove_user">Αδυναμία αφαίρεσης χρήστη</string>
     <string name="error_fetch_viewers_list">Αδυναμία ανάκτησης χρηστών ιστότοπου</string>
@@ -1101,7 +1099,6 @@ Language: el_GR
     <string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
     <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Απαιτείται εξουσιοδότηση</string>
     <string name="new_media">Νέο πολυμέσο</string>
-    <string name="error_blog_hidden">Αυτό το ιστολόγιο είναι κρυφό και δεν μπόρεσε να φορτωθεί. Ενεργοποιήστε το ξανά στις ρυθμίσεις και δοκιμάστε ξανά.</string>
     <string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
     <string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
     <string name="reader_toast_err_adding_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
@@ -1117,7 +1114,6 @@ Language: el_GR
     <string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
     <string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
     <string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
-    <string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
     <string name="reader_likes_you_and_one">Αυτό αρέσει σε εσάς και ακόμη ένα χρήστη</string>
     <string name="pick_photo">Επιλέξτε εικόνα</string>
     <string name="pick_video">Διάλεξε Βίντεο</string>

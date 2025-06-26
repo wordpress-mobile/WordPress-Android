@@ -212,11 +212,9 @@ Language: eu_ES
     <string name="invite">Gonbidatu</string>
     <string name="invite_names_title">Erabiltzaile-izenak edo e-postak</string>
     <string name="my_site_header_external">Kanpokoak</string>
-    <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
     <string name="send">Bidali</string>
-    <string name="people">Jendea</string>
     <string name="role">Rola</string>
     <string name="error_remove_user">Ezin izan da erabiltzailea ezabatu</string>
     <string name="error_update_role">Ezin izan da erabiltzailearen rola eguneratu</string>
@@ -515,7 +513,6 @@ Language: eu_ES
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>
-    <string name="error_blog_hidden">Blog hau ezkutatuta dago eta ezin izan da kargatu. Hobespenetan gaitu eta berriz saiatu.</string>
     <string name="fatal_db_error">Errorea gertatu da aplikazioaren datu-basea sortzean. Saiatu aplikazioa berrinstalatzen.</string>
     <string name="reader_title_applog">Aplikazioaren loga</string>
     <string name="cannot_delete_multi_media_items">Mediaren bat ezin izan da orain ezabatu. Saiatu zaitez berriz beranduago.</string>
@@ -530,7 +527,6 @@ Language: eu_ES
     <string name="delete_post">Bidalketa ezabatu?</string>
     <string name="share_link">Partekatu esteka</string>
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
-    <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
     <string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>
