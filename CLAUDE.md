@@ -74,11 +74,6 @@ WordPress/src/main/java/org/wordpress/android/
 ```
 
 ### Build Configuration Details
-- **Min SDK**: 26 (Android 8.0)
-- **Target/Compile SDK**: 35 (Android 15)
-- **Java Version**: 11
-- **Kotlin**: 2.0.21
-- **AGP**: 8.7.3
 - Uses Gradle Version Catalog for dependency management (`gradle/libs.versions.toml`)
 
 ### Testing Strategy
