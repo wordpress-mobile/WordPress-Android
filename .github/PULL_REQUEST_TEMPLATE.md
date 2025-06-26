@@ -19,3 +19,16 @@ Consider testing the following *yourself* before requesting a review:
 - Multi-tasking: split view and slide over
 
 -->
+
+<!--
+
+Use these emoji to improve the code review
+
+❤️ - Praise. Compliments about great solution.
+⛏ - Nitpick️. Not high importance. Usually, short one-liners.
+💡 - Idea. Alternative solution or improvement.
+❓ - Question. Requires some explanation or more context.
+⚠️ - Warning. Should be addressed in this PR or in some follow-up PR.
+🛑 - Blocker. Must be addressed before PR gets merged.
+
+-->
