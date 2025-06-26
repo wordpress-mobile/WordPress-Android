@@ -220,7 +220,6 @@ private fun DropdownMenuButton(
         },
         modifier = Modifier
             .size(48.dp)
-            .padding(4.dp)
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = iconRes),
