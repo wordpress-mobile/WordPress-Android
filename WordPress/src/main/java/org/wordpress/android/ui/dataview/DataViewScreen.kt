@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import java.util.Locale
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -255,7 +256,7 @@ private fun DropdownItems(
     DropdownMenuItem(
         text = {
             Text(
-                text = stringResource(titleRes).uppercase(),
+                text = stringResource(titleRes).uppercase(Locale.getDefault()),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
