@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.dataview
 
 import android.content.res.Configuration
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,11 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import java.util.Locale
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -54,11 +58,14 @@ import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItem
 fun DataViewScreen(
     uiState: State<DataViewUiState>,
     items: State<List<DataViewItem>>,
-    supportedFilters: List<DataViewItemFilter>,
-    currentFilter: DataViewItemFilter?,
+    supportedFilters: List<DataViewDropdownItem>,
+    currentFilter: DataViewDropdownItem?,
+    supportedSorts: List<DataViewDropdownItem>,
+    currentSort: DataViewDropdownItem?,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
-    onFilterClick: (DataViewItemFilter) -> Unit,
+    onFilterClick: (DataViewDropdownItem) -> Unit,
+    onSortClick: (DataViewDropdownItem) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +98,10 @@ fun DataViewScreen(
                 onSearchQueryChange = onSearchQueryChange,
                 onFilterClick = onFilterClick,
                 supportedFilters = supportedFilters,
-                currentFilter = currentFilter
+                currentFilter = currentFilter,
+                onSortClick = onSortClick,
+                supportedSorts = supportedSorts,
+                currentSort = currentSort
             )
 
             when (uiState.value) {
@@ -115,12 +125,14 @@ fun DataViewScreen(
 @Composable
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
-    onFilterClick: (DataViewItemFilter) -> Unit,
-    currentFilter: DataViewItemFilter? = null,
-    supportedFilters: List<DataViewItemFilter>
+    onFilterClick: (DataViewDropdownItem) -> Unit,
+    currentFilter: DataViewDropdownItem? = null,
+    supportedFilters: List<DataViewDropdownItem>,
+    onSortClick: (DataViewDropdownItem) -> Unit,
+    currentSort: DataViewDropdownItem? = null,
+    supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var filterMenuExpanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -166,44 +178,106 @@ private fun SearchAndFilterBar(
         )
 
         // Filter Button
-        IconButton(
-            onClick = {
-                filterMenuExpanded = !filterMenuExpanded
-            },
-            modifier = Modifier
-                .size(48.dp)
-                .padding(4.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_filter_list_white_24dp),
-                contentDescription = stringResource(R.string.filter),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            DropdownMenu(
-                expanded = filterMenuExpanded,
-                onDismissRequest = {
-                    filterMenuExpanded = false
+        if (supportedFilters.isNotEmpty()) {
+            DropdownMenuButton(
+                titleRes = R.string.filter,
+                iconRes = R.drawable.ic_filter_list_white_24dp,
+                items = supportedFilters,
+                currentItem = currentFilter,
+                onItemClick = { item ->
+                    onFilterClick(item)
                 }
-            ) {
-                supportedFilters.forEach { filter ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(filter.titleRes)) },
-                        trailingIcon = {
-                            if (filter == currentFilter) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        onClick = {
-                            onFilterClick(filter)
-                            filterMenuExpanded = false
-                        }
+            )
+        }
+
+        // Sort by button
+        if (supportedSorts.isNotEmpty()) {
+            DropdownMenuButton(
+                titleRes = R.string.sort_by,
+                iconRes = R.drawable.ic_sort_24dp,
+                items = supportedSorts,
+                currentItem = currentSort,
+                onItemClick = { item ->
+                    onSortClick(item)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DropdownMenuButton(
+    @StringRes titleRes: Int,
+    @DrawableRes iconRes: Int,
+    items: List<DataViewDropdownItem>,
+    currentItem: DataViewDropdownItem?,
+    onItemClick: (DataViewDropdownItem) -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    IconButton(
+        onClick = {
+            menuExpanded = !menuExpanded
+        },
+        modifier = Modifier
+            .size(48.dp)
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = iconRes),
+            contentDescription = stringResource(titleRes),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = {
+                menuExpanded = false
+            }
+        ) {
+            DropdownItems(
+                titleRes = titleRes,
+                items = items,
+                currentItem = currentItem,
+                onItemClick = { sort ->
+                    onItemClick(sort)
+                    menuExpanded = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DropdownItems(
+    @StringRes titleRes: Int,
+    items: List<DataViewDropdownItem>,
+    currentItem: DataViewDropdownItem?,
+    onItemClick: (DataViewDropdownItem) -> Unit
+) {
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(titleRes).uppercase(Locale.getDefault()),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        enabled = false,
+        onClick = { }
+    )
+    items.forEach { item ->
+        DropdownMenuItem(
+            text = { Text(stringResource(item.titleRes)) },
+            trailingIcon = {
+                if (item == currentItem) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null
                     )
                 }
+            },
+            onClick = {
+                onItemClick(item)
             }
-        }
+        )
     }
 }
 
@@ -325,13 +399,16 @@ private fun LoadedPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
         items = remember { mutableStateOf(getDummyDataViewItems()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -342,13 +419,16 @@ private fun LoadingPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -359,13 +439,16 @@ private fun EmptyPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -376,13 +459,16 @@ private fun EmptySearchPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -393,13 +479,16 @@ private fun OfflinePreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
 
@@ -410,12 +499,22 @@ private fun ErrorPreview() {
     DataViewScreen(
         uiState = remember { mutableStateOf(DataViewUiState.ERROR) },
         items = remember { mutableStateOf(emptyList()) },
-        supportedFilters = emptyList(),
+        supportedFilters = dummyDropdownItems,
         currentFilter = null,
+        supportedSorts = dummyDropdownItems,
+        currentSort = null,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
+        onSortClick = { },
     )
 }
+
+private val dummyDropdownItems = listOf(
+    DataViewDropdownItem(
+        id = 0L,
+        titleRes = R.string.filter),
+
+)

@@ -52,8 +52,11 @@ open class DataViewViewModel @Inject constructor(
     private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
     val items = _items.asStateFlow()
 
-    private val _itemFilter = MutableStateFlow<DataViewItemFilter?>(null)
+    private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemFilter = _itemFilter.asStateFlow()
+
+    private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
+    val itemSortBy = _itemSortBy.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
@@ -74,6 +77,8 @@ open class DataViewViewModel @Inject constructor(
                     WpAuthentication.Bearer(token = accountStore.accessToken!!)
                 )
             )
+
+            _itemSortBy.value = getDefaultSort()
 
             fetchData()
 
@@ -106,7 +111,8 @@ open class DataViewViewModel @Inject constructor(
                 val items = performNetworkRequest(
                     page = page,
                     searchQuery = searchQuery,
-                    filter = _itemFilter.value
+                    filter = _itemFilter.value,
+                    sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
                     return@launch
@@ -155,7 +161,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    fun onFilterClick(filter: DataViewItemFilter?) {
+    fun onFilterClick(filter: DataViewDropdownItem?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         resetPaging()
         // clear the filter if it's already selected
@@ -165,6 +171,15 @@ open class DataViewViewModel @Inject constructor(
             filter
         }
         fetchData()
+    }
+
+    fun onSortClick(sort: DataViewDropdownItem) {
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
+        if (sort != _itemSortBy.value) {
+            _itemSortBy.value = sort
+            resetPaging()
+            fetchData()
+        }
     }
 
     fun onSearchQueryChange(query: String) {
@@ -187,18 +202,37 @@ open class DataViewViewModel @Inject constructor(
      */
     open suspend fun performNetworkRequest(
         page: Int = 0,
-        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         searchQuery: String = "",
-        filter: DataViewItemFilter? = null
+        filter: DataViewDropdownItem? = null,
+        sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
+        sortBy: DataViewDropdownItem? = null,
     ): List<DataViewItem> = withContext(ioDispatcher) {
         emptyList()
     }
 
     /**
-     * Descendants should override this to return a list of supported filters
+     * Descendants should override this to return a list of supported filter items
      */
-    open fun getSupportedFilters(): List<DataViewItemFilter> {
+    open fun getSupportedFilters(): List<DataViewDropdownItem> {
         return emptyList()
+    }
+
+    /**
+     * Descendants should override this to return a list of supported sort items
+     */
+    open fun getSupportedSorts(): List<DataViewDropdownItem> {
+        return emptyList()
+    }
+
+    /**
+     * Descendants can override this to return the default sorting
+     */
+    open fun getDefaultSort(): DataViewDropdownItem? {
+        return if (getSupportedSorts().isNotEmpty()) {
+            getSupportedSorts().first()
+        } else {
+            null
+        }
     }
 
     /**

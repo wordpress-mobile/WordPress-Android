@@ -93,6 +93,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             items = viewModel.items.collectAsState(),
                             supportedFilters = viewModel.getSupportedFilters(),
                             currentFilter = viewModel.itemFilter.collectAsState().value,
+                            supportedSorts = viewModel.getSupportedSorts(),
+                            currentSort = viewModel.itemSortBy.collectAsState().value,
                             errorMessage = viewModel.errorMessage.collectAsState().value,
                             onRefresh = {
                                 viewModel.onRefreshData()
@@ -115,6 +117,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             },
                             onFilterClick = { filter ->
                                 viewModel.onFilterClick(filter)
+                            },
+                            onSortClick = { sort ->
+                                viewModel.onSortClick(sort)
                             },
                             modifier = Modifier.padding(contentPadding)
                         )
