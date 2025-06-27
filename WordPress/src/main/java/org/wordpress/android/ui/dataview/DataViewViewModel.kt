@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -21,7 +20,6 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,9 +45,6 @@ open class DataViewViewModel @Inject constructor(
     @Inject
     @Named(IO_THREAD)
     lateinit var ioDispatcher: CoroutineDispatcher
-
-    @Inject
-    lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
@@ -200,10 +195,6 @@ open class DataViewViewModel @Inject constructor(
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
-    }
-
-    fun formatDate(date: Date): String {
-        return dateFormatWrapper.getDateInstance().format(date)
     }
 
     /**

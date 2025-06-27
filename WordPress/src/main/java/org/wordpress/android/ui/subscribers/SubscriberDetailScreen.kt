@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
@@ -213,7 +214,7 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
 
             DetailRow(
                 label = stringResource(R.string.subscribers_date_label),
-                value = subscriber.dateSubscribed.toString()
+                value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
             )
 
             Spacer(modifier = Modifier.height(12.dp))

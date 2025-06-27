@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
@@ -30,6 +31,9 @@ class SubscribersViewModel @Inject constructor(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper
 ) {
+    @Inject
+    lateinit var dateFormatWrapper: SimpleDateFormatWrapper
+
     override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
             DataViewDropdownItem(
@@ -157,7 +161,7 @@ class SubscribersViewModel @Inject constructor(
                     weight = .6f,
                 ),
                 DataViewItemField(
-                    value = formatDate(subscriber.dateSubscribed),
+                    value = dateFormatWrapper.getDateInstance().format(subscriber.dateSubscribed),
                     valueType = DataViewFieldType.DATE,
                     weight = .4f,
                 ),
