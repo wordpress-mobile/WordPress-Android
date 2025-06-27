@@ -217,6 +217,7 @@ class SubscribersViewModel @Inject constructor(
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let { subscriber ->
             appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
+            _subscriberStats.value = null
             launch {
                 val stats = fetchSubscriberStats(subscriber.subscriptionId)
                 _subscriberStats.value = stats
