@@ -15,6 +15,8 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.IndividualSubscriberStats
+import uniffi.wp_api.IndividualSubscriberStatsParams
 import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
@@ -177,6 +179,31 @@ class SubscribersViewModel @Inject constructor(
     fun getSubscriber(userId: Long): Subscriber? {
         val item = items.value.firstOrNull { it.id == userId }
         return item?.data as? Subscriber
+    }
+
+    suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? {
+        val params = IndividualSubscriberStatsParams(
+            subscriptionId = subscriptionId
+        )
+
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.subscribers().individualSubscriberStats(
+                wpComSiteId = siteId().toULong(),
+                params = params
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                val stats = response.response.data
+                appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats: $stats")
+                return stats
+            }
+
+            else -> {
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
+                return null
+            }
+        }
     }
 
     /**
