@@ -25,11 +25,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
+
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -131,6 +133,12 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 titleState.value = subscriber.displayNameOrEmail()
                                 SubscriberDetailScreen(
                                     subscriber = subscriber,
+                                    onEmailClick = { email ->
+                                        onEmailClick(email)
+                                    },
+                                    onUrlClick = { url ->
+                                        onUrlClick(url)
+                                    },
                                     modifier = Modifier.padding(contentPadding)
                                 )
                             }
@@ -139,6 +147,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun onEmailClick(email: String) {
+        ActivityLauncher.openUrlExternal(this, "mailto:$email")
+    }
+
+
+    private fun onUrlClick(url: String) {
+        ActivityLauncher.openUrlExternal(this, url)
     }
 
     companion object {

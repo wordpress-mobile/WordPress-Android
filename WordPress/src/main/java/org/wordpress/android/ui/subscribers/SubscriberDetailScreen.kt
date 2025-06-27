@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.subscribers
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,8 @@ import java.util.Date
 @Composable
 fun SubscriberDetailScreen(
     subscriber: Subscriber,
+    onUrlClick: (String) -> Unit,
+    onEmailClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -71,7 +74,11 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SubscriberDetailsCard(subscriber)
+        SubscriberDetailsCard(
+            subscriber = subscriber,
+            onUrlClick = onUrlClick,
+            onEmailClick = onEmailClick
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -229,7 +236,11 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
 }
 
 @Composable
-private fun SubscriberDetailsCard(subscriber: Subscriber) {
+private fun SubscriberDetailsCard(
+    subscriber: Subscriber,
+    onUrlClick: (String) -> Unit,
+    onEmailClick: (String) -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -252,7 +263,10 @@ private fun SubscriberDetailsCard(subscriber: Subscriber) {
             DetailRow(
                 label = stringResource(R.string.subscribers_email_label),
                 value = subscriber.emailAddress,
-                valueColor = MaterialTheme.colorScheme.primary
+                valueColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable {
+                    onEmailClick(subscriber.emailAddress)
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -264,11 +278,16 @@ private fun SubscriberDetailsCard(subscriber: Subscriber) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            DetailRow(
-                label = stringResource(R.string.subscribers_site_label),
-                value = subscriber.url ?: stringResource(R.string.unknown),
-                valueColor = MaterialTheme.colorScheme.primary
-            )
+            subscriber.url?.let { url ->
+                DetailRow(
+                    label = stringResource(R.string.subscribers_site_label),
+                    value = url,
+                    valueColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        onUrlClick(url)
+                    }
+                )
+            }
         }
     }
 }
@@ -277,9 +296,12 @@ private fun SubscriberDetailsCard(subscriber: Subscriber) {
 private fun DetailRow(
     label: String,
     value: String,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface
+    modifier: Modifier = Modifier,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
@@ -329,7 +351,7 @@ fun SubscriberDetailScreenPreview() {
         emailAddress = "email@example.com",
         emailSubscriptionId = 0u,
         isEmailSubscriber = true,
-        url = "",
+        url = "https://example.com",
         dateSubscribed = Date(),
         subscriptionStatus = "Subscribed",
         avatar = "",
@@ -338,6 +360,10 @@ fun SubscriberDetailScreenPreview() {
     )
 
     AppThemeM3 {
-        SubscriberDetailScreen(subscriber)
+        SubscriberDetailScreen(
+            subscriber = subscriber,
+            onUrlClick = {},
+            onEmailClick = {}
+        )
     }
 }
