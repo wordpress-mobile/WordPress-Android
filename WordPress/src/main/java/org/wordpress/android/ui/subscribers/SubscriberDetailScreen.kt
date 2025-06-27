@@ -43,6 +43,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
+import uniffi.wp_api.SubscriberCountry
 import java.util.Date
 
 @Composable
@@ -322,12 +323,17 @@ fun DeleteSubscriberButton() {
 fun SubscriberDetailScreenPreview() {
     val subscriber = Subscriber(
         userId = 0L,
+        subscriptionId = 0u,
         displayName = "User Name",
         emailAddress = "email@example.com",
         emailSubscriptionId = 0u,
+        isEmailSubscriber = true,
+        url = "",
         dateSubscribed = Date(),
         subscriptionStatus = "Subscribed",
         avatar = "",
+        country = SubscriberCountry("US", "United States"),
+        plans = emptyList(),
     )
 
     AppThemeM3 {

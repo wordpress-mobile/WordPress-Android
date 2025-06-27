@@ -156,7 +156,7 @@ class SubscribersViewModel @Inject constructor(
             title = subscriber.displayNameOrEmail(),
             fields = listOf(
                 DataViewItemField(
-                    value = subscriber.subscriptionStatus,
+                    value = subscriber.subscriptionStatus ?: "",
                     valueType = DataViewFieldType.TEXT,
                     weight = .6f,
                 ),
