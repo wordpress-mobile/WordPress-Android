@@ -38,22 +38,35 @@ class SubscriberDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun fetchSubscriber(
+    suspend fun fetchSubscriberWithStats(
         siteId: ULong,
         userId: Long
-    ): Subscriber? {
+    ): SubscriberWithStats? {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.subscribers().getSubscriber(
                 wpComSiteId = siteId,
-                params = GetSubscriberParams(
-                    userId = userId
-                )
+                params = GetSubscriberParams.WpCom(userId)
             )
         }
+        when (response) {
+            is WpRequestResult.Success -> {
+                val subscriber = response.response.data
+                appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber: $subscriber")
+                val stats = fetchSubscriberStats(siteId, subscriber.subscriptionId)
+                return SubscriberWithStats(
+                    subscriber = subscriber,
+                    stats = stats
+                )
+            }
 
+            else -> {
+                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
+                return null
+            }
+        }
     }
 
-    suspend fun fetchSubscriberStats(
+    private suspend fun fetchSubscriberStats(
         siteId: ULong,
         subscriptionId: ULong
     ): IndividualSubscriberStats? {
@@ -78,4 +91,9 @@ class SubscriberDetailViewModel @Inject constructor(
             }
         }
     }
+
+    data class SubscriberWithStats(
+        val subscriber: Subscriber,
+        val stats: IndividualSubscriberStats?
+    )
 }
