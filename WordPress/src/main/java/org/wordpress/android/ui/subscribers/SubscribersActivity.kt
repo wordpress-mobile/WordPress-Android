@@ -139,7 +139,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                     onUrlClick = { url ->
                                         onUrlClick(url)
                                     },
-                                    modifier = Modifier.padding(contentPadding)
+                                    modifier = Modifier.padding(contentPadding),
+                                    subscriberStats = viewModel.subscriberStats.collectAsState()
                                 )
                             }
                         }

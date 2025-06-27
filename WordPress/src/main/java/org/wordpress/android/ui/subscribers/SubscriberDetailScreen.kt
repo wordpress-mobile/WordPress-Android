@@ -28,6 +28,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +58,7 @@ fun SubscriberDetailScreen(
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    subscriberStats: IndividualSubscriberStats? = null
+    subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
     Column(
         modifier = modifier
@@ -68,7 +71,7 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        subscriberStats?.let { stats ->
+        subscriberStats?.value?.let { stats ->
             EmailStatsCard(subscriberStats = stats)
         }
 
@@ -368,7 +371,7 @@ fun SubscriberDetailScreenPreview() {
     AppThemeM3 {
         SubscriberDetailScreen(
             subscriber = subscriber,
-            subscriberStats = subscriberStats,
+            subscriberStats = remember { mutableStateOf(subscriberStats) },
             onUrlClick = {},
             onEmailClick = {}
         )

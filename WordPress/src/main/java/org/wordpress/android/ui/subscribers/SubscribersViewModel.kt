@@ -2,6 +2,8 @@ package org.wordpress.android.ui.subscribers
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -33,6 +35,9 @@ class SubscribersViewModel @Inject constructor(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper
 ) {
+    private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
+    val subscriberStats = _subscriberStats.asStateFlow()
+
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
@@ -212,6 +217,10 @@ class SubscribersViewModel @Inject constructor(
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let { subscriber ->
             appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
+            launch {
+                val stats = fetchSubscriberStats(subscriber.subscriptionId)
+                _subscriberStats.value = stats
+            }
         }
     }
 
