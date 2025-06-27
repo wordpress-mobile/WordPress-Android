@@ -107,7 +107,7 @@ class SubscribersViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
         searchQuery: String
-    ): List<DataViewItem> {
+    ): List<DataViewItem> = withContext(ioDispatcher) {
         val filterType = filter?.let {
             when (it.id) {
                 ID_FILTER_EMAIL -> SubscriberType.EmailSubscriber
@@ -145,13 +145,13 @@ class SubscribersViewModel @Inject constructor(
             is WpRequestResult.Success -> {
                 val subscribers = response.response.data.subscribers
                 appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                return subscribers.map { subscriberToDataViewItem(it) }
+                return@withContext subscribers.map { subscriberToDataViewItem(it) }
             }
 
             else -> {
                 appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
                 onError((response as? WpRequestResult.WpError)?.errorMessage)
-                return emptyList()
+                return@withContext emptyList()
             }
         }
     }
@@ -189,30 +189,31 @@ class SubscribersViewModel @Inject constructor(
         return item?.data as? Subscriber
     }
 
-    private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? {
-        val params = IndividualSubscriberStatsParams(
-            subscriptionId = subscriptionId
-        )
-
-        val response = wpComApiClient.request { requestBuilder ->
-            requestBuilder.subscribers().individualSubscriberStats(
-                wpComSiteId = siteId().toULong(),
-                params = params
+    private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
+        withContext(ioDispatcher) {
+            val params = IndividualSubscriberStatsParams(
+                subscriptionId = subscriptionId
             )
-        }
-        when (response) {
-            is WpRequestResult.Success -> {
-                val stats = response.response.data
-                appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats: $stats")
-                return stats
-            }
 
-            else -> {
-                appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
-                return null
+            val response = wpComApiClient.request { requestBuilder ->
+                requestBuilder.subscribers().individualSubscriberStats(
+                    wpComSiteId = siteId().toULong(),
+                    params = params
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    val stats = response.response.data
+                    appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats: $stats")
+                    return@withContext stats
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
+                    return@withContext null
+                }
             }
         }
-    }
 
     /**
      * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
