@@ -121,17 +121,6 @@ fun ProfileHeader(
                 textAlign = TextAlign.Center
             )
         }
-        // TODO remove this once we have actual data
-        Spacer(modifier = Modifier.height(12.dp))
-        Row {
-            Text(
-                text = "Note: Displaying dummy data",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }
 
@@ -164,6 +153,18 @@ fun EmailStatsCard() {
                 value = "10%"
             )
         }
+        // TODO remove this once we have actual data
+        Row {
+            Text(
+                text = "Note: Displaying dummy data",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 

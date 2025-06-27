@@ -153,7 +153,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
         ActivityLauncher.openUrlExternal(this, "mailto:$email")
     }
 
-
     private fun onUrlClick(url: String) {
         ActivityLauncher.openUrlExternal(this, url)
     }
