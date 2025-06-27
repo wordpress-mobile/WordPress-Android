@@ -273,12 +273,13 @@ private fun SubscriberDetailsCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            DetailRow(
-                label = stringResource(R.string.subscribers_country_label),
-                value = subscriber.country?.name ?: stringResource(R.string.unknown),
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
+            subscriber.country?.name?.let { countryName ->
+                DetailRow(
+                    label = stringResource(R.string.subscribers_country_label),
+                    value = countryName
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             subscriber.url?.let { url ->
                 DetailRow(
