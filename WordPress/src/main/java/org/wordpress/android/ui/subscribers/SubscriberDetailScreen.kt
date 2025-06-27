@@ -44,6 +44,7 @@ import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
+import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
 import java.util.Date
@@ -53,7 +54,8 @@ fun SubscriberDetailScreen(
     subscriber: Subscriber,
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    subscriberStats: IndividualSubscriberStats? = null
 ) {
     Column(
         modifier = modifier
@@ -66,7 +68,9 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        EmailStatsCard()
+        subscriberStats?.let { stats ->
+            EmailStatsCard(subscriberStats = stats)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -125,7 +129,9 @@ fun ProfileHeader(
 }
 
 @Composable
-fun EmailStatsCard() {
+fun EmailStatsCard(
+    subscriberStats: IndividualSubscriberStats
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -140,28 +146,17 @@ fun EmailStatsCard() {
             StatItem(
                 icon = Icons.Default.Email,
                 label = stringResource(R.string.subscribers_emails_sent_label),
-                value = "100"
+                value = subscriberStats.emailsSent.toString()
             )
             StatItem(
                 icon = Icons.Default.MailOutline,
                 label = stringResource(R.string.subscribers_opened_label),
-                value = "10"
+                value = subscriberStats.uniqueOpens.toString()
             )
             StatItem(
                 icon = Icons.Default.Check,
                 label = stringResource(R.string.subscribers_clicked_label),
-                value = "10%"
-            )
-        }
-        // TODO remove this once we have actual data
-        Row {
-            Text(
-                text = "Note: Displaying dummy data",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                value = subscriberStats.uniqueClicks.toString()
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -363,9 +358,17 @@ fun SubscriberDetailScreenPreview() {
         plans = emptyList(),
     )
 
+    val subscriberStats = IndividualSubscriberStats(
+        emailsSent = 10u,
+        uniqueOpens = 5u,
+        uniqueClicks = 3u,
+        blogRegistrationDate = Date().toString(),
+    )
+
     AppThemeM3 {
         SubscriberDetailScreen(
             subscriber = subscriber,
+            subscriberStats = subscriberStats,
             onUrlClick = {},
             onEmailClick = {}
         )

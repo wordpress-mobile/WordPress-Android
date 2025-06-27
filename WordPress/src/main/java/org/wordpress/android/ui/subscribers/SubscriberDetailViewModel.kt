@@ -26,7 +26,7 @@ class SubscriberDetailViewModel @Inject constructor(
     @Inject
     lateinit var accountStore: AccountStore
 
-    lateinit var wpComApiClient: WpComApiClient
+    private lateinit var wpComApiClient: WpComApiClient
 
     init {
         launch {
