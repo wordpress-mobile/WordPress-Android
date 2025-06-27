@@ -225,13 +225,16 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
                 value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            if (subscriber.plans?.isNotEmpty() == true) {
+                val plan = subscriber.plans!!.first()
+                Spacer(modifier = Modifier.height(12.dp))
 
-            DetailRow(
-                label = stringResource(R.string.subscribers_plan_label),
-                value = "???",
-                valueColor = MaterialTheme.colorScheme.primary
-            )
+                DetailRow(
+                    label = stringResource(R.string.subscribers_plan_label),
+                    value = plan.title,
+                    valueColor = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
