@@ -228,7 +228,7 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
 }
 
 @Composable
-fun SubscriberDetailsCard(subscriber: Subscriber) {
+private fun SubscriberDetailsCard(subscriber: Subscriber) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -258,14 +258,14 @@ fun SubscriberDetailsCard(subscriber: Subscriber) {
 
             DetailRow(
                 label = stringResource(R.string.subscribers_country_label),
-                value = "???"
+                value = subscriber.country?.name ?: stringResource(R.string.unknown),
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             DetailRow(
                 label = stringResource(R.string.subscribers_site_label),
-                value = "???",
+                value = subscriber.url ?: stringResource(R.string.unknown),
                 valueColor = MaterialTheme.colorScheme.primary
             )
         }
@@ -273,7 +273,7 @@ fun SubscriberDetailsCard(subscriber: Subscriber) {
 }
 
 @Composable
-fun DetailRow(
+private fun DetailRow(
     label: String,
     value: String,
     valueColor: Color = MaterialTheme.colorScheme.onSurface
@@ -295,7 +295,7 @@ fun DetailRow(
 }
 
 @Composable
-fun DeleteSubscriberButton() {
+private fun DeleteSubscriberButton() {
     Button(
         onClick = { /* Handle delete action */ },
         modifier = Modifier.fillMaxWidth(),
