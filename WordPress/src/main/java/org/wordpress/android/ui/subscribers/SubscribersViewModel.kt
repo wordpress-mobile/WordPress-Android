@@ -2,6 +2,7 @@ package org.wordpress.android.ui.subscribers
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -37,6 +38,8 @@ class SubscribersViewModel @Inject constructor(
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
+
+    private var statsJob: Job? = null
 
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
@@ -186,7 +189,7 @@ class SubscribersViewModel @Inject constructor(
         return item?.data as? Subscriber
     }
 
-    suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? {
+    private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? {
         val params = IndividualSubscriberStatsParams(
             subscriptionId = subscriptionId
         )
@@ -212,13 +215,14 @@ class SubscribersViewModel @Inject constructor(
     }
 
     /**
-     * Called when an item in the list is clicked.
+     * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
      */
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let { subscriber ->
             appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
             _subscriberStats.value = null
-            launch {
+            statsJob?.cancel()
+            statsJob = launch {
                 val stats = fetchSubscriberStats(subscriber.subscriptionId)
                 _subscriberStats.value = stats
             }
