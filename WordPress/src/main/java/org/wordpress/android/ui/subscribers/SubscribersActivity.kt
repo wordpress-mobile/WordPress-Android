@@ -32,7 +32,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
 
-
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
