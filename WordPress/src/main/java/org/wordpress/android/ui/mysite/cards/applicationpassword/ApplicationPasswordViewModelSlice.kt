@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.mysite.cards.applicationpassword
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sun.jna.Pointer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -17,6 +20,14 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.Event
+import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ApiUrlResolver
+import uniffi.wp_api.ApiUrlResolverImpl
+import uniffi.wp_api.ParsedUrl
+import uniffi.wp_api.PostListParams
+import uniffi.wp_api.WpAuthenticationProvider
+import java.net.URL
 import javax.inject.Inject
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
@@ -44,6 +55,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     fun buildCard(siteModel: SiteModel) {
         if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
+            dummyRequest(siteModel)
         }
     }
 
@@ -83,6 +95,33 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
                 siteURLCache[site.url] = authorizationUrlComplete
+            }
+        }
+    }
+
+    private fun dummyRequest(site: SiteModel) {
+        if (site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+            return
+        }
+        scope.launch {
+            // These credentials are from a dummy site, so it's safe to check them in during testing
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            )
+            // This is the url from api discovery process and should be stored somewhere
+            val apiRootUrl = URL("${site.url}/wp-json")
+            val client = WpApiClient(apiRootUrl, authProvider)
+            val response = client.request { requestBuilder ->
+                requestBuilder.posts().listWithEditContext(PostListParams())
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    Log.d("REQUEST_TAG", "Fetched ${response.response.data.size} posts")
+                }
+
+                else -> {
+                    Log.e("REQUEST_TAG", "Fetch posts failed: $response")
+                }
             }
         }
     }
