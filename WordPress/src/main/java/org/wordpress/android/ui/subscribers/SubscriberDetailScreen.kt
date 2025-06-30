@@ -224,14 +224,22 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
             )
 
             if (subscriber.plans?.isNotEmpty() == true) {
-                val plan = subscriber.plans!!.first()
                 Spacer(modifier = Modifier.height(12.dp))
-
-                DetailRow(
-                    label = stringResource(R.string.subscribers_plan_label),
-                    value = plan.title,
-                    valueColor = MaterialTheme.colorScheme.primary
-                )
+                
+                subscriber.plans!!.forEachIndexed { index, plan ->
+                    if (index > 0) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    DetailRow(
+                        label = if (subscriber.plans!!.size == 1) {
+                            stringResource(R.string.subscribers_plan_label)
+                        } else {
+                            stringResource(R.string.subscribers_plan_label) + " ${index + 1}"
+                        },
+                        value = plan.title,
+                        valueColor = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }
