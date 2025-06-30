@@ -26,6 +26,7 @@ import uniffi.wp_api.ApiUrlResolver
 import uniffi.wp_api.ApiUrlResolverImpl
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.PostListParams
+import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
 import javax.inject.Inject
@@ -110,7 +111,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             )
             // This is the url from api discovery process and should be stored somewhere
             val apiRootUrl = URL("${site.url}/wp-json")
-            val client = WpApiClient(apiRootUrl, authProvider)
+            val client = WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication() {
+                        Log.e("REQUEST_TAG", "Fetch posts failed from app notifier")
+                    }
+                }
+            )
             val response = client.request { requestBuilder ->
                 requestBuilder.posts().listWithEditContext(PostListParams())
             }
