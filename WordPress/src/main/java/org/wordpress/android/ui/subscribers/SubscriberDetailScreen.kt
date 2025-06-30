@@ -352,7 +352,6 @@ fun SubscriberDetailScreenPreview() {
         subscriptionId = 0u,
         displayName = "User Name",
         emailAddress = "email@example.com",
-        emailSubscriptionId = 0u,
         isEmailSubscriber = true,
         url = "https://example.com",
         dateSubscribed = Date(),
