@@ -50,6 +50,7 @@ import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displ
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
+import uniffi.wp_api.SubscriptionPlan
 import java.util.Date
 
 @Composable
@@ -57,6 +58,7 @@ fun SubscriberDetailScreen(
     subscriber: Subscriber,
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
+    onPlanClick: (SubscriptionPlan) -> Unit,
     modifier: Modifier = Modifier,
     subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
@@ -77,7 +79,10 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        NewsletterSubscriptionCard(subscriber)
+        NewsletterSubscriptionCard(
+            subscriber = subscriber,
+            onPlanClick = onPlanClick
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -198,7 +203,10 @@ fun StatItem(
 }
 
 @Composable
-fun NewsletterSubscriptionCard(subscriber: Subscriber) {
+fun NewsletterSubscriptionCard(
+    subscriber: Subscriber,
+    onPlanClick: (SubscriptionPlan) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -225,7 +233,7 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
 
             if (subscriber.plans?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 subscriber.plans!!.forEachIndexed { index, plan ->
                     if (index > 0) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -237,7 +245,10 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
                             stringResource(R.string.subscribers_plan_label) + " ${index + 1}"
                         },
                         value = plan.title,
-                        valueColor = MaterialTheme.colorScheme.primary
+                        valueColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onPlanClick(plan)
+                        }
                     )
                 }
             }
@@ -381,7 +392,8 @@ fun SubscriberDetailScreenPreview() {
             subscriber = subscriber,
             subscriberStats = remember { mutableStateOf(subscriberStats) },
             onUrlClick = {},
-            onEmailClick = {}
+            onEmailClick = {},
+            onPlanClick = {}
         )
     }
 }

@@ -31,6 +31,7 @@ import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
+import uniffi.wp_api.SubscriptionPlan
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -138,6 +139,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                     onUrlClick = { url ->
                                         onUrlClick(url)
                                     },
+                                    onPlanClick = { plan ->
+                                        onPlanClick(plan)
+                                    },
                                     modifier = Modifier.padding(contentPadding),
                                     subscriberStats = viewModel.subscriberStats.collectAsState()
                                 )
@@ -155,6 +159,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
     private fun onUrlClick(url: String) {
         ActivityLauncher.openUrlExternal(this, url)
+    }
+
+    private fun onPlanClick(plan: SubscriptionPlan) {
+        // TODO
     }
 
     companion object {
