@@ -292,16 +292,6 @@ private fun GiftPlanCard(plan: SubscriptionPlan) {
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 textAlign = TextAlign.Center
             )
-
-            plan.giftId?.let { giftId ->
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Gift ID: $giftId",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    textAlign = TextAlign.Center
-                )
-            }
         }
     }
 }
