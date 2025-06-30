@@ -3,8 +3,6 @@ package org.wordpress.android.ui.mysite.cards.applicationpassword
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sun.jna.Pointer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -22,14 +20,9 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.ApiUrlResolver
-import uniffi.wp_api.ApiUrlResolverImpl
-import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.PostListParams
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
