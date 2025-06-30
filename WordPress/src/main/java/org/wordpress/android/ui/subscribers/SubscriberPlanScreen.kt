@@ -69,7 +69,7 @@ fun SubscriberPlanScreen(
 
         if (plan.isGift) {
             Spacer(modifier = Modifier.height(16.dp))
-            GiftPlanCard(plan)
+            GiftPlanCard()
         }
     }
 }
@@ -264,7 +264,7 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
 }
 
 @Composable
-private fun GiftPlanCard(plan: SubscriptionPlan) {
+private fun GiftPlanCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),

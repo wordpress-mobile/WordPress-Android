@@ -56,7 +56,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
     private enum class SubscriberScreen {
         List,
-        Detail
+        Detail,
+        Plan,
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +112,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 viewModel.onItemClick(item)
                                 (item.data as? Subscriber)?.let { subscriber ->
                                     navController.currentBackStackEntry?.savedStateHandle?.set(
-                                        key = KEY_ID,
+                                        key = KEY_USER_ID,
                                         value = subscriber.userId
                                     )
                                     navController.navigate(route = SubscriberScreen.Detail.name)
@@ -128,7 +129,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = SubscriberScreen.Detail.name) {
-                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_ID))?.let { userId ->
+                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_USER_ID))?.let { userId ->
                             viewModel.getSubscriber(userId)?.let { subscriber ->
                                 titleState.value = subscriber.displayNameOrEmail()
                                 SubscriberDetailScreen(
@@ -140,10 +141,25 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                         onUrlClick(url)
                                     },
                                     onPlanClick = { plan ->
-                                        onPlanClick(plan)
+                                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                                            key = KEY_PLAN_ID,
+                                            value = plan.planId
+                                        )
+                                        navController.navigate(route = SubscriberScreen.Plan.name)
                                     },
                                     modifier = Modifier.padding(contentPadding),
                                     subscriberStats = viewModel.subscriberStats.collectAsState()
+                                )
+                            }
+                        }
+                    }
+
+                    composable(route = SubscriberScreen.Detail.name) {
+                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_PLAN_ID))?.let { planId ->
+                            viewModel.getPlan(planId)?.let { plan ->
+                                SubscriberPlanScreen(
+                                    plan = plan,
+                                    modifier = Modifier.padding(contentPadding)
                                 )
                             }
                         }
@@ -166,6 +182,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        private const val KEY_ID = "id"
+        private const val KEY_USER_ID = "userId"
+        private const val KEY_PLAN_ID = "planId"
     }
 }
