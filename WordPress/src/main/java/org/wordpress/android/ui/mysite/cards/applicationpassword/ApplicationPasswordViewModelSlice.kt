@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -39,6 +41,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
+    private val appLogWrapper: AppLogWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -126,23 +129,25 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                         val snackbarHolder = SnackbarMessageHolder(
                             message = message,
                             buttonTitle = button,
-                            buttonAction = { buildApplicationPasswordDiscovery(site) }
+                            buttonAction = { reauthenticate(site) }
                         )
                         _onSnackbarMessage.postValue(Event(snackbarHolder))
                     }
                 }
             )
-            val response = client.request { requestBuilder ->
+            client.request { requestBuilder ->
                 requestBuilder.posts().listWithEditContext(PostListParams())
             }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    Log.d("REQUEST_TAG", "Fetched ${response.response.data.size} posts")
-                }
+        }
+    }
 
-                else -> {
-                    Log.e("REQUEST_TAG", "Fetch posts failed: $response")
-                }
+    private fun reauthenticate(site: SiteModel) {
+        scope.launch {
+            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
+            if (authorizationUrlComplete.isEmpty()) {
+                appLogWrapper.e(AppLog.T.API, "Error getting authorization URL when reauthenticate")
+            } else {
+                onClick(authorizationUrlComplete) // Force the onClick to open reauthentication
             }
         }
     }
@@ -154,7 +159,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     QuickLinkItem(
                         label = UiString.UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = onClick(authorizationUrlComplete)
+                        onClick = ListItemInteraction.create { onClick(authorizationUrlComplete) }
                     )
                 )
             )
@@ -162,7 +167,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
 
-    private fun onClick(authorizationUrlComplete: String) = ListItemInteraction.create {
+    private fun onClick(authorizationUrlComplete: String) {
         _onNavigation.postValue(
             Event(
                 SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
