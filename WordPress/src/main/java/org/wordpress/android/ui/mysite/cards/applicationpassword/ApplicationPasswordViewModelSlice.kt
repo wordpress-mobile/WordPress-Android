@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.applicationpassword
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -105,18 +104,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             return
         }
         scope.launch {
-            // These credentials are from a dummy site, so it's safe to check them in during testing
             val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
                 username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
             )
-            // This is the url from api discovery process and should be stored somewhere
             val apiRootUrl = URL("${site.url}/wp-json")
             val client = WpApiClient(
                 wpOrgSiteApiRootUrl = apiRootUrl,
                 authProvider = authProvider,
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication() {
-                        Log.e("REQUEST_TAG", "Fetch posts failed from app notifier")
                         val message = UiStringText(resourceProvider.getString(R.string.application_password_invalid))
                         val button = UiStringText(resourceProvider.getString(R.string.sign_in))
                         val snackbarHolder = SnackbarMessageHolder(
