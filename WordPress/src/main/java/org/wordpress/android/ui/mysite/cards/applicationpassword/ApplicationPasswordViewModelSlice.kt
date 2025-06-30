@@ -19,7 +19,10 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApiUrlResolver
@@ -34,7 +37,8 @@ import javax.inject.Inject
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val experimentalFeatures: ExperimentalFeatures,
+    private val resourceProvider: ResourceProvider,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -117,6 +121,14 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication() {
                         Log.e("REQUEST_TAG", "Fetch posts failed from app notifier")
+                        val message = UiStringText(resourceProvider.getString(R.string.application_password_invalid))
+                        val button = UiStringText(resourceProvider.getString(R.string.sign_in))
+                        val snackbarHolder = SnackbarMessageHolder(
+                            message = message,
+                            buttonTitle = button,
+                            buttonAction = { buildApplicationPasswordDiscovery(site) }
+                        )
+                        _onSnackbarMessage.postValue(Event(snackbarHolder))
                     }
                 }
             )
