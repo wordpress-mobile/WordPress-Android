@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.subscribers
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,19 +54,19 @@ fun SubscriberPlanScreen(
             .verticalScroll(rememberScrollState())
     ) {
         PlanHeader(plan)
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         PlanDetailsCard(plan)
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         BillingInformationCard(plan)
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         RenewalInformationCard(plan)
-        
+
         if (plan.isGift) {
             Spacer(modifier = Modifier.height(16.dp))
             GiftPlanCard(plan)
@@ -91,7 +89,7 @@ private fun PlanHeader(plan: SubscriptionPlan) {
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-        
+
         Text(
             text = plan.title,
             style = MaterialTheme.typography.headlineMedium,
@@ -99,9 +97,9 @@ private fun PlanHeader(plan: SubscriptionPlan) {
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Surface(
             color = when (plan.status.lowercase()) {
                 "active", "subscribed" -> MaterialTheme.colorScheme.primaryContainer
@@ -142,25 +140,17 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
-            PlanDetailRow(
-                icon = Icons.Default.Info,
-                label = "Plan ID",
-                value = plan.paidSubscriptionId ?: "N/A"
-            )
-            
-            Spacer(modifier = Modifier.height(12.dp))
-            
+
             PlanDetailRow(
                 icon = Icons.Default.DateRange,
                 label = "Start Date",
                 value = SimpleDateFormatWrapper().getDateInstance().format(plan.startDate)
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             PlanDetailRow(
                 icon = Icons.Default.DateRange,
                 label = "End Date",
@@ -188,23 +178,23 @@ private fun BillingInformationCard(plan: SubscriptionPlan) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             PlanDetailRow(
                 icon = Icons.Default.Info,
                 label = "Price",
                 value = formatCurrency(plan.renewalPrice, plan.currency)
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             PlanDetailRow(
                 icon = Icons.Default.Refresh,
                 label = "Billing Interval",
                 value = plan.renewInterval
             )
-            
+
             plan.inactiveRenewInterval?.let { inactiveInterval ->
                 Spacer(modifier = Modifier.height(12.dp))
                 PlanDetailRow(
@@ -235,9 +225,9 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -252,9 +242,9 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
                     },
                     modifier = Modifier.size(20.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.padding(8.dp))
-                
+
                 Column {
                     Text(
                         text = "Next Billing Date",
@@ -292,9 +282,9 @@ private fun GiftPlanCard(plan: SubscriptionPlan) {
                 tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.size(32.dp)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Gift Plan",
                 style = MaterialTheme.typography.titleMedium,
@@ -302,7 +292,7 @@ private fun GiftPlanCard(plan: SubscriptionPlan) {
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 textAlign = TextAlign.Center
             )
-            
+
             plan.giftId?.let { giftId ->
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -333,9 +323,9 @@ private fun PlanDetailRow(
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp)
         )
-        
+
         Spacer(modifier = Modifier.padding(8.dp))
-        
+
         Column {
             Text(
                 text = label,
