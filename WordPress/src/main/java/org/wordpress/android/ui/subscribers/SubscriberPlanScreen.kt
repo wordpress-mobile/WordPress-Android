@@ -111,7 +111,7 @@ private fun PlanHeader(plan: SubscriptionPlan) {
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = plan.status,
+                text = plan.status.uppercase(),
                 style = MaterialTheme.typography.labelMedium,
                 color = if (plan.isActive()) {
                     MaterialTheme.colorScheme.onPrimaryContainer
@@ -141,14 +141,6 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PlanDetailRow(
-                icon = Icons.Default.Info,
-                label = stringResource(id = R.string.subscribers_plan_status),
-                value = plan.status
             )
 
             Spacer(modifier = Modifier.height(16.dp))
