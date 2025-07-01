@@ -66,18 +66,18 @@ open class DataViewViewModel @Inject constructor(
     private var page = 0
     private var canLoadMore = true
 
-    lateinit var wpComApiClient: WpComApiClient
+    // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
+    val wpComApiClient: WpComApiClient by lazy {
+        WpComApiClient(
+            WpAuthenticationProvider.staticWithAuth(
+                WpAuthentication.Bearer(token = accountStore.accessToken!!)
+            )
+        )
+    }
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
-            // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-            wpComApiClient = WpComApiClient(
-                WpAuthenticationProvider.staticWithAuth(
-                    WpAuthentication.Bearer(token = accountStore.accessToken!!)
-                )
-            )
-
             _itemSortBy.value = getDefaultSort()
 
             fetchData()
