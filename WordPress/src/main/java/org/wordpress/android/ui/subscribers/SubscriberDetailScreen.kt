@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
@@ -161,7 +160,7 @@ fun EmailStatsCard(
                 value = subscriberStats.uniqueOpens.toString()
             )
             StatItem(
-                icon = Icons.Default.Check,
+                icon = ImageVector.vectorResource(id = R.drawable.ic_touch),
                 label = stringResource(R.string.subscribers_clicked_label),
                 value = subscriberStats.uniqueClicks.toString()
             )
