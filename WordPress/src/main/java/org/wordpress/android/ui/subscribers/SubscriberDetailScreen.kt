@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.subscribers
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -27,28 +27,38 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
+import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
+import uniffi.wp_api.SubscriberCountry
 import java.util.Date
 
 @Composable
 fun SubscriberDetailScreen(
     subscriber: Subscriber,
-    modifier: Modifier = Modifier
+    onUrlClick: (String) -> Unit,
+    onEmailClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
     Column(
         modifier = modifier
@@ -61,7 +71,9 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        EmailStatsCard()
+        subscriberStats?.value?.let { stats ->
+            EmailStatsCard(subscriberStats = stats)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -69,7 +81,11 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SubscriberDetailsCard(subscriber)
+        SubscriberDetailsCard(
+            subscriber = subscriber,
+            onUrlClick = onUrlClick,
+            onEmailClick = onEmailClick
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -112,22 +128,13 @@ fun ProfileHeader(
                 textAlign = TextAlign.Center
             )
         }
-        // TODO remove this once we have actual data
-        Spacer(modifier = Modifier.height(12.dp))
-        Row {
-            Text(
-                text = "Note: Displaying dummy data",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }
 
 @Composable
-fun EmailStatsCard() {
+fun EmailStatsCard(
+    subscriberStats: IndividualSubscriberStats
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -142,19 +149,20 @@ fun EmailStatsCard() {
             StatItem(
                 icon = Icons.Default.Email,
                 label = stringResource(R.string.subscribers_emails_sent_label),
-                value = "100"
+                value = subscriberStats.emailsSent.toString()
             )
             StatItem(
-                icon = Icons.Default.MailOutline,
+                icon = ImageVector.vectorResource(id = R.drawable.ic_email_open),
                 label = stringResource(R.string.subscribers_opened_label),
-                value = "10"
+                value = subscriberStats.uniqueOpens.toString()
             )
             StatItem(
                 icon = Icons.Default.Check,
                 label = stringResource(R.string.subscribers_clicked_label),
-                value = "10%"
+                value = subscriberStats.uniqueClicks.toString()
             )
         }
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -212,22 +220,29 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
 
             DetailRow(
                 label = stringResource(R.string.subscribers_date_label),
-                value = subscriber.dateSubscribed.toString()
+                value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            if (subscriber.plans?.isNotEmpty() == true) {
+                val plan = subscriber.plans!!.first()
+                Spacer(modifier = Modifier.height(12.dp))
 
-            DetailRow(
-                label = stringResource(R.string.subscribers_plan_label),
-                value = "???",
-                valueColor = MaterialTheme.colorScheme.primary
-            )
+                DetailRow(
+                    label = stringResource(R.string.subscribers_plan_label),
+                    value = plan.title,
+                    valueColor = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
 
 @Composable
-fun SubscriberDetailsCard(subscriber: Subscriber) {
+private fun SubscriberDetailsCard(
+    subscriber: Subscriber,
+    onUrlClick: (String) -> Unit,
+    onEmailClick: (String) -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -250,34 +265,46 @@ fun SubscriberDetailsCard(subscriber: Subscriber) {
             DetailRow(
                 label = stringResource(R.string.subscribers_email_label),
                 value = subscriber.emailAddress,
-                valueColor = MaterialTheme.colorScheme.primary
+                valueColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable {
+                    onEmailClick(subscriber.emailAddress)
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            DetailRow(
-                label = stringResource(R.string.subscribers_country_label),
-                value = "???"
-            )
+            subscriber.country?.name?.let { countryName ->
+                DetailRow(
+                    label = stringResource(R.string.subscribers_country_label),
+                    value = countryName
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            DetailRow(
-                label = stringResource(R.string.subscribers_site_label),
-                value = "???",
-                valueColor = MaterialTheme.colorScheme.primary
-            )
+            subscriber.url?.let { url ->
+                DetailRow(
+                    label = stringResource(R.string.subscribers_site_label),
+                    value = url,
+                    valueColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        onUrlClick(url)
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
-fun DetailRow(
+private fun DetailRow(
     label: String,
     value: String,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface
+    modifier: Modifier = Modifier,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
@@ -294,7 +321,7 @@ fun DetailRow(
 }
 
 @Composable
-fun DeleteSubscriberButton() {
+private fun DeleteSubscriberButton() {
     Button(
         onClick = { /* Handle delete action */ },
         modifier = Modifier.fillMaxWidth(),
@@ -322,15 +349,31 @@ fun DeleteSubscriberButton() {
 fun SubscriberDetailScreenPreview() {
     val subscriber = Subscriber(
         userId = 0L,
+        subscriptionId = 0u,
         displayName = "User Name",
         emailAddress = "email@example.com",
-        emailSubscriptionId = 0u,
+        isEmailSubscriber = true,
+        url = "https://example.com",
         dateSubscribed = Date(),
         subscriptionStatus = "Subscribed",
         avatar = "",
+        country = SubscriberCountry("US", "United States"),
+        plans = emptyList(),
+    )
+
+    val subscriberStats = IndividualSubscriberStats(
+        emailsSent = 10u,
+        uniqueOpens = 5u,
+        uniqueClicks = 3u,
+        blogRegistrationDate = Date().toString(),
     )
 
     AppThemeM3 {
-        SubscriberDetailScreen(subscriber)
+        SubscriberDetailScreen(
+            subscriber = subscriber,
+            subscriberStats = remember { mutableStateOf(subscriberStats) },
+            onUrlClick = {},
+            onEmailClick = {}
+        )
     }
 }

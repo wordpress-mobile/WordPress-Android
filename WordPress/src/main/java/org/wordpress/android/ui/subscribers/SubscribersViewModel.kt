@@ -2,19 +2,24 @@ package org.wordpress.android.ui.subscribers
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
-import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.IndividualSubscriberStats
+import uniffi.wp_api.IndividualSubscriberStatsParams
 import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
@@ -31,6 +36,11 @@ class SubscribersViewModel @Inject constructor(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper
 ) {
+    private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
+    val subscriberStats = _subscriberStats.asStateFlow()
+
+    private var statsJob: Job? = null
+
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
@@ -97,7 +107,7 @@ class SubscribersViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
         searchQuery: String
-    ): List<DataViewItem> {
+    ): List<DataViewItem> = withContext(ioDispatcher) {
         val filterType = filter?.let {
             when (it.id) {
                 ID_FILTER_EMAIL -> SubscriberType.EmailSubscriber
@@ -135,13 +145,13 @@ class SubscribersViewModel @Inject constructor(
             is WpRequestResult.Success -> {
                 val subscribers = response.response.data.subscribers
                 appLogWrapper.d(AppLog.T.MAIN, "Fetched ${subscribers.size} subscribers")
-                return subscribers.map { subscriberToDataViewItem(it) }
+                return@withContext subscribers.map { subscriberToDataViewItem(it) }
             }
 
             else -> {
                 appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
                 onError((response as? WpRequestResult.WpError)?.errorMessage)
-                return emptyList()
+                return@withContext emptyList()
             }
         }
     }
@@ -156,7 +166,7 @@ class SubscribersViewModel @Inject constructor(
             title = subscriber.displayNameOrEmail(),
             fields = listOf(
                 DataViewItemField(
-                    value = subscriber.subscriptionStatus,
+                    value = subscriber.subscriptionStatus ?: "",
                     valueType = DataViewFieldType.TEXT,
                     weight = .6f,
                 ),
@@ -179,12 +189,44 @@ class SubscribersViewModel @Inject constructor(
         return item?.data as? Subscriber
     }
 
+    private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
+        withContext(ioDispatcher) {
+            val params = IndividualSubscriberStatsParams(
+                subscriptionId = subscriptionId
+            )
+
+            val response = wpComApiClient.request { requestBuilder ->
+                requestBuilder.subscribers().individualSubscriberStats(
+                    wpComSiteId = siteId().toULong(),
+                    params = params
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    val stats = response.response.data
+                    appLogWrapper.d(AppLog.T.MAIN, "Fetched subscriber stats: $stats")
+                    return@withContext stats
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.MAIN, "Fetch subscribers failed: $response")
+                    return@withContext null
+                }
+            }
+        }
+
     /**
-     * Called when an item in the list is clicked.
+     * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
      */
     override fun onItemClick(item: DataViewItem) {
         (item.data as? Subscriber)?.let { subscriber ->
             appLogWrapper.d(AppLog.T.MAIN, "Clicked on subscriber ${subscriber.displayNameOrEmail()}")
+            _subscriberStats.value = null
+            statsJob?.cancel()
+            statsJob = launch {
+                val stats = fetchSubscriberStats(subscriber.subscriptionId)
+                _subscriberStats.value = stats
+            }
         }
     }
 
