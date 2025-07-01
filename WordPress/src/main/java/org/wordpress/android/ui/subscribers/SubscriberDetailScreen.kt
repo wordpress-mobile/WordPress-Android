@@ -229,6 +229,14 @@ fun NewsletterSubscriptionCard(
                 value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
             )
 
+            subscriber.subscriptionStatus?.let { status ->
+                Spacer(modifier = Modifier.height(16.dp))
+                DetailRow(
+                    label = stringResource(R.string.subscribers_status_label),
+                    value = status
+                )
+            }
+
             if (subscriber.plans?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(12.dp))
 

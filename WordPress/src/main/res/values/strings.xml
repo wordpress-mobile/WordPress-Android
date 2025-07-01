@@ -5007,6 +5007,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_newsletter_label">Newsletter subscription</string>
     <string name="subscribers_detail_label">Subscriber details</string>
     <string name="subscribers_date_label">Subscription date</string>
+    <string name="subscribers_status_label">Subscription status</string>
     <string name="subscribers_plan_label">Plan</string>
     <string name="subscribers_email_label">Email</string>
     <string name="subscribers_country_label">Country</string>
