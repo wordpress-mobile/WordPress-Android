@@ -5022,6 +5022,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_price">Price</string>
     <string name="subscribers_renewal_info">Renewal information</string>
     <string name="subscribers_renewal_interval">Renewal interval</string>
+    <string name="subscribers_gift_content_description">Gift</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>

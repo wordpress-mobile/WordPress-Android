@@ -280,7 +280,7 @@ private fun GiftPlanCard() {
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_gift),
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.subscribers_gift_content_description),
                 tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.size(32.dp)
             )
