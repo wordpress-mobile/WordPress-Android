@@ -103,9 +103,9 @@ private fun PlanHeader(plan: SubscriptionPlan) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Surface(
-            color = when (plan.status.lowercase()) {
-                "active", "subscribed" -> MaterialTheme.colorScheme.primaryContainer
-                "inactive", "expired" -> MaterialTheme.colorScheme.errorContainer
+            color = when (plan.subscriptionStatus()) {
+                SubscriptionStatus.Subscribed -> MaterialTheme.colorScheme.primaryContainer
+                SubscriptionStatus.NotSending, SubscriptionStatus.NotSubscribed -> MaterialTheme.colorScheme.errorContainer
                 else -> MaterialTheme.colorScheme.surfaceVariant
             },
             shape = RoundedCornerShape(16.dp)
@@ -113,9 +113,9 @@ private fun PlanHeader(plan: SubscriptionPlan) {
             Text(
                 text = plan.status,
                 style = MaterialTheme.typography.labelMedium,
-                color = when (plan.status.lowercase()) {
-                    "active", "subscribed" -> MaterialTheme.colorScheme.onPrimaryContainer
-                    "inactive", "expired" -> MaterialTheme.colorScheme.onErrorContainer
+                color = when (plan.subscriptionStatus()) {
+                    SubscriptionStatus.Subscribed -> MaterialTheme.colorScheme.onPrimaryContainer
+                    SubscriptionStatus.NotSending, SubscriptionStatus.NotSubscribed -> MaterialTheme.colorScheme.onErrorContainer
                     else -> MaterialTheme.colorScheme.onSurfaceVariant
                 },
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
@@ -343,6 +343,24 @@ private fun formatCurrency(amount: Double, currencyCode: String): String {
         formatter.format(amount)
     } catch (e: ArithmeticException) {
         "$currencyCode $amount"
+    }
+}
+
+private enum class SubscriptionStatus {
+    Subscribed,
+    NotSubscribed,
+    NotConfirmed,
+    NotSending,
+    Other
+}
+
+private fun SubscriptionPlan.subscriptionStatus(): SubscriptionStatus {
+    return when (status.lowercase()) {
+        "subscribed" -> SubscriptionStatus.Subscribed
+        "not subscribed" -> SubscriptionStatus.NotSubscribed
+        "not confirmed" -> SubscriptionStatus.NotConfirmed
+        "not sending" -> SubscriptionStatus.NotSending
+        else -> SubscriptionStatus.Other
     }
 }
 
