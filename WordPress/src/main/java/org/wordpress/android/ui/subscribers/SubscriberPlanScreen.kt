@@ -338,14 +338,14 @@ private fun formatCurrency(amount: Double, currencyCode: String): String {
         val formatter = NumberFormat.getCurrencyInstance(Locale.getDefault())
         formatter.currency = currency
         formatter.format(amount)
-    } catch (e: Exception) {
+    } catch (e: ArithmeticException) {
         "$currencyCode $amount"
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SubscriberPlanScreenPreview() {
+fun SubscriberPlansScreenPreview() {
     val plan = SubscriptionPlan(
         isGift = true,
         giftId = 1u,
@@ -362,7 +362,7 @@ fun SubscriberPlanScreenPreview() {
 
     AppThemeM3 {
         SubscriberPlanScreen(
-            plan = plan
+            plan = plan,
         )
     }
 }

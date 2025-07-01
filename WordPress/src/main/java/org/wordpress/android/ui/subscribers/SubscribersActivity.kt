@@ -31,7 +31,6 @@ import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displayNameOrEmail
 import uniffi.wp_api.Subscriber
-import uniffi.wp_api.SubscriptionPlan
 
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
@@ -129,38 +128,50 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = SubscriberScreen.Detail.name) {
-                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_USER_ID))?.let { userId ->
-                            viewModel.getSubscriber(userId)?.let { subscriber ->
-                                titleState.value = subscriber.displayNameOrEmail()
-                                SubscriberDetailScreen(
-                                    subscriber = subscriber,
-                                    onEmailClick = { email ->
-                                        onEmailClick(email)
-                                    },
-                                    onUrlClick = { url ->
-                                        onUrlClick(url)
-                                    },
-                                    onPlanClick = { plan ->
-                                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                                            key = KEY_PLAN_ID,
-                                            value = plan.planId
-                                        )
-                                        navController.navigate(route = SubscriberScreen.Plan.name)
-                                    },
-                                    modifier = Modifier.padding(contentPadding),
-                                    subscriberStats = viewModel.subscriberStats.collectAsState()
-                                )
+                        navController.previousBackStackEntry?.savedStateHandle?.let { handle ->
+                            val userId = handle.get<Long>(KEY_USER_ID)
+                            if (userId != null) {
+                                viewModel.getSubscriber(userId)?.let { subscriber ->
+                                    titleState.value = subscriber.displayNameOrEmail()
+                                    SubscriberDetailScreen(
+                                        subscriber = subscriber,
+                                        onEmailClick = { email ->
+                                            onEmailClick(email)
+                                        },
+                                        onUrlClick = { url ->
+                                            onUrlClick(url)
+                                        },
+                                        onPlanClick = { planIndex ->
+                                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                                key = KEY_USER_ID,
+                                                value = userId
+                                            )
+                                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                                key = KEY_PLAN_INDEX,
+                                                value = planIndex
+                                            )
+                                            navController.navigate(route = SubscriberScreen.Plan.name)
+                                        },
+                                        modifier = Modifier.padding(contentPadding),
+                                        subscriberStats = viewModel.subscriberStats.collectAsState()
+                                    )
+                                }
                             }
                         }
                     }
 
-                    composable(route = SubscriberScreen.Detail.name) {
-                        (navController.previousBackStackEntry?.savedStateHandle?.get<Long>(KEY_PLAN_ID))?.let { planId ->
-                            viewModel.getPlan(planId)?.let { plan ->
-                                SubscriberPlanScreen(
-                                    plan = plan,
-                                    modifier = Modifier.padding(contentPadding)
-                                )
+                    composable(route = SubscriberScreen.Plan.name) {
+                        navController.previousBackStackEntry?.savedStateHandle?.let { handle ->
+                            val userId = handle.get<Long>(KEY_USER_ID)
+                            val planIndex = handle.get<Int>(KEY_PLAN_INDEX)
+                            if (userId != null && planIndex != null) {
+                                viewModel.getSubscriber(userId)?.let { subscriber ->
+                                    titleState.value = subscriber.plans!![planIndex].title
+                                    SubscriberPlanScreen(
+                                        plan = subscriber.plans!![planIndex],
+                                        modifier = Modifier.padding(contentPadding)
+                                    )
+                                }
                             }
                         }
                     }
@@ -177,12 +188,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
         ActivityLauncher.openUrlExternal(this, url)
     }
 
-    private fun onPlanClick(plan: SubscriptionPlan) {
-        // TODO
-    }
-
     companion object {
         private const val KEY_USER_ID = "userId"
-        private const val KEY_PLAN_ID = "planId"
+        private const val KEY_PLAN_INDEX = "planIndex"
     }
 }

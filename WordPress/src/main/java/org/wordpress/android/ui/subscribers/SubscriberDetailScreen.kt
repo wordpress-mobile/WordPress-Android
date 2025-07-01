@@ -50,7 +50,6 @@ import org.wordpress.android.ui.subscribers.SubscribersViewModel.Companion.displ
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
-import uniffi.wp_api.SubscriptionPlan
 import java.util.Date
 
 @Composable
@@ -58,7 +57,7 @@ fun SubscriberDetailScreen(
     subscriber: Subscriber,
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
-    onPlanClick: (SubscriptionPlan) -> Unit,
+    onPlanClick: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
     subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
@@ -205,7 +204,7 @@ fun StatItem(
 @Composable
 fun NewsletterSubscriptionCard(
     subscriber: Subscriber,
-    onPlanClick: (SubscriptionPlan) -> Unit
+    onPlanClick: (index: Int) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -247,7 +246,7 @@ fun NewsletterSubscriptionCard(
                         value = plan.title,
                         valueColor = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
-                            onPlanClick(plan)
+                            onPlanClick(index)
                         }
                     )
                 }
