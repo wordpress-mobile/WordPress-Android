@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,11 +27,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.wordpress.android.R
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import uniffi.wp_api.SubscriptionPlan
@@ -82,7 +84,7 @@ private fun PlanHeader(plan: SubscriptionPlan) {
     ) {
         if (plan.isGift) {
             Icon(
-                imageVector = Icons.Default.Star,
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_gift),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
@@ -135,7 +137,7 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
                 .padding(20.dp)
         ) {
             Text(
-                text = "Plan Details",
+                text = stringResource(id = R.string.subscribers_plan_details_label),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
@@ -145,7 +147,7 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
 
             PlanDetailRow(
                 icon = Icons.Default.DateRange,
-                label = "Start Date",
+                label = stringResource(id = R.string.subscribers_start_date),
                 value = SimpleDateFormatWrapper().getDateInstance().format(plan.startDate)
             )
 
@@ -153,7 +155,7 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
 
             PlanDetailRow(
                 icon = Icons.Default.DateRange,
-                label = "End Date",
+                label = stringResource(id = R.string.subscribers_end_date),
                 value = SimpleDateFormatWrapper().getDateInstance().format(plan.endDate)
             )
         }
@@ -173,7 +175,7 @@ private fun BillingInformationCard(plan: SubscriptionPlan) {
                 .padding(20.dp)
         ) {
             Text(
-                text = "Billing Information",
+                text = stringResource(id = R.string.subscribers_billing_info),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
@@ -183,7 +185,7 @@ private fun BillingInformationCard(plan: SubscriptionPlan) {
 
             PlanDetailRow(
                 icon = Icons.Default.Info,
-                label = "Price",
+                label = stringResource(id = R.string.subscribers_price),
                 value = formatCurrency(plan.renewalPrice, plan.currency)
             )
 
@@ -191,7 +193,7 @@ private fun BillingInformationCard(plan: SubscriptionPlan) {
 
             PlanDetailRow(
                 icon = Icons.Default.Refresh,
-                label = "Billing Interval",
+                label = stringResource(id = R.string.subscribers_billing_interval),
                 value = plan.renewInterval
             )
 
@@ -199,7 +201,7 @@ private fun BillingInformationCard(plan: SubscriptionPlan) {
                 Spacer(modifier = Modifier.height(12.dp))
                 PlanDetailRow(
                     icon = Icons.Default.Refresh,
-                    label = "Inactive Interval",
+                    label = stringResource(id = R.string.subscribers_inactive_interval),
                     value = inactiveInterval
                 )
             }
@@ -220,7 +222,7 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
                 .padding(20.dp)
         ) {
             Text(
-                text = "Renewal Information",
+                text = stringResource(id = R.string.subscribers_renewal_info),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
@@ -247,7 +249,7 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
 
                 Column {
                     Text(
-                        text = "Next Billing Date",
+                        text = stringResource(id = R.string.subscribers_next_billing_date),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -277,7 +279,7 @@ private fun GiftPlanCard() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = Icons.Default.Star,
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_gift),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.size(32.dp)
@@ -286,7 +288,7 @@ private fun GiftPlanCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Gift Plan",
+                text = stringResource(id = R.string.subscribers_gift_plan_label),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,

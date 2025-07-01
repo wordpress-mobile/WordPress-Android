@@ -146,6 +146,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                                 key = KEY_USER_ID,
                                                 value = userId
                                             )
+                                            // plans don't have a unique id, so we use the index to identify them
                                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                                 key = KEY_PLAN_INDEX,
                                                 value = planIndex

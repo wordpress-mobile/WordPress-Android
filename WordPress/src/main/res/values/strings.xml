@@ -5012,6 +5012,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_country_label">Country</string>
     <string name="subscribers_site_label">Site</string>
     <string name="subscribers_delete_button">Delete subscriber</string>
+    <string name="subscribers_gift_plan_label">Gift plan</string>
+    <string name="subscribers_plan_details_label">Plan details</string>
+    <string name="subscribers_start_date">Start date</string>
+    <string name="subscribers_end_date">End date</string>
+    <string name="subscribers_billing_info">Billing information</string>
+    <string name="subscribers_billing_interval">Billing interval</string>
+    <string name="subscribers_inactive_interval">Inactive interval</string>
+    <string name="subscribers_price">Price</string>
+    <string name="subscribers_renewal_info">Renewal information</string>
+    <string name="subscribers_next_billing_date">Next billing date</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
