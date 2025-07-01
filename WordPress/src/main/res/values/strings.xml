@@ -5018,4 +5018,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_invalid">Invalid Application Password</string>
 </resources>
