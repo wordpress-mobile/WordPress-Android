@@ -103,20 +103,20 @@ private fun PlanHeader(plan: SubscriptionPlan) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Surface(
-            color = when (plan.subscriptionStatus()) {
-                SubscriptionStatus.Subscribed -> MaterialTheme.colorScheme.primaryContainer
-                SubscriptionStatus.NotSending, SubscriptionStatus.NotSubscribed -> MaterialTheme.colorScheme.errorContainer
-                else -> MaterialTheme.colorScheme.surfaceVariant
+            color = if (plan.isActive()) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
             },
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
                 text = plan.status,
                 style = MaterialTheme.typography.labelMedium,
-                color = when (plan.subscriptionStatus()) {
-                    SubscriptionStatus.Subscribed -> MaterialTheme.colorScheme.onPrimaryContainer
-                    SubscriptionStatus.NotSending, SubscriptionStatus.NotSubscribed -> MaterialTheme.colorScheme.onErrorContainer
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                color = if (plan.isActive()) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
                 },
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
             )
@@ -141,6 +141,14 @@ private fun PlanDetailsCard(plan: SubscriptionPlan) {
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PlanDetailRow(
+                icon = Icons.Default.Info,
+                label = stringResource(id = R.string.subscribers_plan_status),
+                value = plan.status
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -237,7 +245,7 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = null,
-                    tint = if (plan.status.lowercase() == "active" || plan.status.lowercase() == "subscribed") {
+                    tint = if (plan.isActive()) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -346,23 +354,7 @@ private fun formatCurrency(amount: Double, currencyCode: String): String {
     }
 }
 
-private enum class SubscriptionStatus {
-    Subscribed,
-    NotSubscribed,
-    NotConfirmed,
-    NotSending,
-    Other
-}
-
-private fun SubscriptionPlan.subscriptionStatus(): SubscriptionStatus {
-    return when (status.lowercase()) {
-        "subscribed" -> SubscriptionStatus.Subscribed
-        "not subscribed" -> SubscriptionStatus.NotSubscribed
-        "not confirmed" -> SubscriptionStatus.NotConfirmed
-        "not sending" -> SubscriptionStatus.NotSending
-        else -> SubscriptionStatus.Other
-    }
-}
+private fun SubscriptionPlan.isActive() = status.lowercase() == "active"
 
 @Preview(showBackground = true)
 @Composable
