@@ -249,13 +249,13 @@ private fun RenewalInformationCard(plan: SubscriptionPlan) {
 
                 Column {
                     Text(
-                        text = stringResource(id = R.string.subscribers_next_billing_date),
+                        text = stringResource(id = R.string.subscribers_renewal_interval),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = SimpleDateFormatWrapper().getDateInstance().format(plan.endDate),
+                        text = plan.renewInterval,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
