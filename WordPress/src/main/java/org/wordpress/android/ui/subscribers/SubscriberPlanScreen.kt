@@ -334,6 +334,7 @@ private fun PlanDetailRow(
     }
 }
 
+@Suppress("SwallowedException")
 private fun formatCurrency(amount: Double, currencyCode: String): String {
     return try {
         val currency = Currency.getInstance(currencyCode)
