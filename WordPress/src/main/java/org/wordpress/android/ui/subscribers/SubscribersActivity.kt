@@ -167,11 +167,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             val planIndex = handle.get<Int>(KEY_PLAN_INDEX)
                             if (userId != null && planIndex != null) {
                                 viewModel.getSubscriber(userId)?.let { subscriber ->
-                                    titleState.value = subscriber.plans!![planIndex].title
-                                    SubscriberPlanScreen(
-                                        plan = subscriber.plans!![planIndex],
-                                        modifier = Modifier.padding(contentPadding)
-                                    )
+                                    subscriber.plans?.let { plans ->
+                                        if (planIndex in plans.indices) {
+                                            titleState.value = plans[planIndex].title
+                                            SubscriberPlanScreen(
+                                                plan = plans[planIndex],
+                                                modifier = Modifier.padding(contentPadding)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }

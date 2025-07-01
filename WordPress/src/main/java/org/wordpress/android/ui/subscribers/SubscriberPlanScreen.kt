@@ -341,12 +341,12 @@ private fun formatCurrency(amount: Double, currencyCode: String): String {
         val formatter = NumberFormat.getCurrencyInstance(Locale.getDefault())
         formatter.currency = currency
         formatter.format(amount)
-    } catch (e: ArithmeticException) {
+    } catch (e: IllegalArgumentException) {
         "$currencyCode $amount"
     }
 }
 
-private fun SubscriptionPlan.isActive() = status.lowercase() == "active"
+private fun SubscriptionPlan.isActive() = status == "active"
 
 @Preview(showBackground = true)
 @Composable
