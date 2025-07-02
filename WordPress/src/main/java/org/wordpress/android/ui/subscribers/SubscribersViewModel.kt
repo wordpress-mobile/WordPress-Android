@@ -181,9 +181,9 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    suspend fun addSubscriber(email: String, displayName: String): Boolean = withContext(ioDispatcher) {
+    suspend fun addSubscribers(emails: List<String>): Boolean = withContext(ioDispatcher) {
         val params = AddSubscribersParams(
-            emails = listOf(email),
+            emails = emails
         )
 
         val response = wpComApiClient.request { requestBuilder ->
@@ -195,7 +195,7 @@ class SubscribersViewModel @Inject constructor(
 
         when (response) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.MAIN, "Successfully added subscriber: $email")
+                appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
                 return@withContext true
             }
             else -> {

@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -195,6 +197,18 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
                     composable(route = SubscriberScreen.AddSubscribers.name) {
                         titleState.value = stringResource(R.string.subscribers_add_subscribers)
+                        AddSubscribersScreen(
+                            onSubmit = { emails ->
+                                lifecycleScope.launch {
+                                    val result = viewModel.addSubscribers(emails)
+                                    if (result) {
+                                        navController.navigateUp()
+                                    }
+                                }
+                            },
+                            onCancel = { navController.navigateUp() },
+                            modifier = Modifier.padding(contentPadding)
+                        )
                     }
                 }
             }
