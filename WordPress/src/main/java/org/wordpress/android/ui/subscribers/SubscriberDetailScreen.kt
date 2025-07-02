@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
@@ -57,6 +56,7 @@ fun SubscriberDetailScreen(
     subscriber: Subscriber,
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
+    onPlanClick: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
     subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
@@ -77,7 +77,10 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        NewsletterSubscriptionCard(subscriber)
+        NewsletterSubscriptionCard(
+            subscriber = subscriber,
+            onPlanClick = onPlanClick
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -157,7 +160,7 @@ fun EmailStatsCard(
                 value = subscriberStats.uniqueOpens.toString()
             )
             StatItem(
-                icon = Icons.Default.Check,
+                icon = ImageVector.vectorResource(id = R.drawable.ic_touch),
                 label = stringResource(R.string.subscribers_clicked_label),
                 value = subscriberStats.uniqueClicks.toString()
             )
@@ -198,7 +201,10 @@ fun StatItem(
 }
 
 @Composable
-fun NewsletterSubscriptionCard(subscriber: Subscriber) {
+fun NewsletterSubscriptionCard(
+    subscriber: Subscriber,
+    onPlanClick: (index: Int) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -223,15 +229,34 @@ fun NewsletterSubscriptionCard(subscriber: Subscriber) {
                 value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
             )
 
+            subscriber.subscriptionStatus?.let { status ->
+                Spacer(modifier = Modifier.height(16.dp))
+                DetailRow(
+                    label = stringResource(R.string.subscribers_status_label),
+                    value = status
+                )
+            }
+
             if (subscriber.plans?.isNotEmpty() == true) {
-                val plan = subscriber.plans!!.first()
                 Spacer(modifier = Modifier.height(12.dp))
 
-                DetailRow(
-                    label = stringResource(R.string.subscribers_plan_label),
-                    value = plan.title,
-                    valueColor = MaterialTheme.colorScheme.primary
-                )
+                subscriber.plans!!.forEachIndexed { index, plan ->
+                    if (index > 0) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    DetailRow(
+                        label = if (subscriber.plans!!.size == 1) {
+                            stringResource(R.string.subscribers_plan_label)
+                        } else {
+                            stringResource(R.string.subscribers_plan_label) + " ${index + 1}"
+                        },
+                        value = plan.title,
+                        valueColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            onPlanClick(index)
+                        }
+                    )
+                }
             }
         }
     }
@@ -373,7 +398,8 @@ fun SubscriberDetailScreenPreview() {
             subscriber = subscriber,
             subscriberStats = remember { mutableStateOf(subscriberStats) },
             onUrlClick = {},
-            onEmailClick = {}
+            onEmailClick = {},
+            onPlanClick = {}
         )
     }
 }
