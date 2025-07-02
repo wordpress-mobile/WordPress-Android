@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +58,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
         List,
         Detail,
         Plan,
+        AddSubscribers
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +83,16 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                             }
                         },
+                        actions = {
+                            IconButton(onClick = {
+                                navController.navigate(route = SubscriberScreen.AddSubscribers.name)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = stringResource(R.string.subscribers_add_subscribers)
+                                )
+                            }
+                        }
                     )
                 },
             ) { contentPadding ->
@@ -179,6 +191,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 }
                             }
                         }
+                    }
+
+                    composable(route = SubscriberScreen.AddSubscribers.name) {
+                        titleState.value = stringResource(R.string.subscribers_add_subscribers)
                     }
                 }
             }

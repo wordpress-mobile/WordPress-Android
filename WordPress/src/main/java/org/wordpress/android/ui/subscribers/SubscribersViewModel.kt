@@ -18,6 +18,7 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AddSubscribersParams
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
 import uniffi.wp_api.ListSubscribersSortField
@@ -178,6 +179,31 @@ class SubscribersViewModel @Inject constructor(
             ),
             data = subscriber
         )
+    }
+
+    suspend fun addSubscriber(email: String, displayName: String): Boolean = withContext(ioDispatcher) {
+        val params = AddSubscribersParams(
+            emails = listOf(email),
+        )
+
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.subscribers().addSubscribers(
+                wpComSiteId = siteId().toULong(),
+                params = params
+            )
+        }
+
+        when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.MAIN, "Successfully added subscriber: $email")
+                return@withContext true
+            }
+            else -> {
+                onError((response as? WpRequestResult.WpError)?.errorMessage)
+                appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
+                return@withContext false
+            }
+        }
     }
 
     /*
