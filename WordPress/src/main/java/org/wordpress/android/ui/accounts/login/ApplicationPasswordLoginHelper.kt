@@ -123,9 +123,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
-    suspend fun removeAllApplicationPasswordCredentials() {
+    /**
+     * Removes all the application Password credentials
+     * @return the number of sites that were affected
+     */
+    suspend fun removeAllApplicationPasswordCredentials(): Int {
         return withContext(bgDispatcher) {
-            siteSqlUtils.getSites().forEach { site ->
+            val sites = siteSqlUtils.getSites()
+            val affectedSites = sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+            sites.forEach { site ->
                 site.apply {
                     apiRestUsernamePlain = ""
                     apiRestPasswordPlain = ""
@@ -136,7 +142,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 siteSqlUtils.insertOrUpdateSite(site)
             }
+            affectedSites
         }
+    }
+
+    fun getApplicationPasswordSitesCount(): Int {
+        val sites = siteSqlUtils.getSites()
+        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
     /**
