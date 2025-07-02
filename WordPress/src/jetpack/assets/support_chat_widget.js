@@ -34,11 +34,11 @@
                     thinking: "Thinking..."
                 }, // Override all the default labels for your own language.
                 questions: [
-                    decodeURIComponent(urlParams.questionOne),
+//                    decodeURIComponent(urlParams.questionOne),
 //                    decodeURIComponent(urlParams.questionTwo),
-                    decodeURIComponent(urlParams.questionThree),
+//                    decodeURIComponent(urlParams.questionThree),
 //                    decodeURIComponent(urlParams.questionFour),
-                    decodeURIComponent(urlParams.questionFive),
+//                    decodeURIComponent(urlParams.questionFive),
 //                    decodeURIComponent(urlParams.questionSix)
                 ] // Array of example questions to show in the widget. Three are picked at random.
             },
