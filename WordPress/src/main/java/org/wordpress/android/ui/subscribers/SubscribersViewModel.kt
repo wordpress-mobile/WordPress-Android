@@ -181,7 +181,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    suspend fun addSubscribers(emails: List<String>): Boolean = withContext(ioDispatcher) {
+    suspend fun addSubscribers(emails: List<String>): Result<Boolean> = withContext(ioDispatcher) {
         val params = AddSubscribersParams(
             emails = emails
         )
@@ -196,12 +196,13 @@ class SubscribersViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
-                return@withContext true
+                return@withContext Result.success(true)
             }
             else -> {
+                val error = (response as? WpRequestResult.WpError)?.errorMessage
                 onError((response as? WpRequestResult.WpError)?.errorMessage)
                 appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
-                return@withContext false
+                return@withContext Result.failure(Exception(error))
             }
         }
     }

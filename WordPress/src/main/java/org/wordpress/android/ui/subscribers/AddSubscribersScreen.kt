@@ -40,6 +40,7 @@ fun AddSubscribersScreen(
     modifier: Modifier = Modifier,
 ) {
     var entry by remember { mutableStateOf("") }
+    var isValidEntry by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -55,6 +56,7 @@ fun AddSubscribersScreen(
                 value = entry,
                 onValueChange = {
                     entry = it
+                    isValidEntry = isValidEntry(entry)
                 },
                 label = {
                     Text(stringResource(id = R.string.subscribers_add_email_hint))
@@ -64,9 +66,7 @@ fun AddSubscribersScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (isValidEntry(entry)) {
-                            onSubmit(parseEntry(entry))
-                        }
+                        onSubmit(parseEntry(entry))
                     }
                 ),
                 modifier = modifier.fillMaxWidth()
@@ -99,7 +99,7 @@ fun AddSubscribersScreen(
 
             Button(
                 onClick = { onSubmit(parseEntry(entry)) },
-                enabled = entry.isNotEmpty(),
+                enabled = isValidEntry,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(stringResource(id = R.string.send))

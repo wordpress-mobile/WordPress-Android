@@ -2,6 +2,7 @@ package org.wordpress.android.ui.subscribers
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -201,8 +202,19 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             onSubmit = { emails ->
                                 lifecycleScope.launch {
                                     val result = viewModel.addSubscribers(emails)
-                                    if (result) {
+                                    if (result.isSuccess) {
+                                        Toast.makeText(
+                                            this@SubscribersActivity,
+                                            getString(R.string.subscribers_add_success),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         navController.navigateUp()
+                                    } else {
+                                        Toast.makeText(
+                                            this@SubscribersActivity,
+                                            getString(R.string.subscribers_add_failed),
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 }
                             },
