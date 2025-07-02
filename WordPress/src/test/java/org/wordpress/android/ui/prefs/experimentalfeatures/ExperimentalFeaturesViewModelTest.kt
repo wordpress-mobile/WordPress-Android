@@ -94,7 +94,7 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
         if (BuildConfig.DEBUG) {
             createViewModel()
 
-            viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+            viewModel.confirmDisableApplicationPassword()
             advanceUntilIdle()
 
             verify(applicationPasswordLoginHelper).removeAllApplicationPasswordCredentials()
@@ -131,7 +131,7 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
             whenever(applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials())
                 .doThrow(exception)
 
-            viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+            viewModel.confirmDisableApplicationPassword()
             advanceUntilIdle()
 
             verify(appLogWrapper).e(
