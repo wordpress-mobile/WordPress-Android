@@ -146,6 +146,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
+    fun getApplicationPasswordSitesCount(): Int {
+        val sites = siteSqlUtils.getSites()
+        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+    }
+
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */

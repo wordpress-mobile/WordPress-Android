@@ -24,12 +24,13 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 val features by viewModel.switchStates.collectAsStateWithLifecycle()
-                val showApplicationPasswordDisableDialog by
+                val disableApplicationPasswordDialog by
                 viewModel.disableApplicationPasswordDialogState.collectAsStateWithLifecycle()
                 val showDialog = remember { mutableStateOf(false) }
 
-                if (showApplicationPasswordDisableDialog) {
+                if (disableApplicationPasswordDialog > 0) {
                     ApplicationPasswordOffConfirmationDialog(
+                        affectedSites = disableApplicationPasswordDialog,
                         onDismiss = { viewModel.dismissDisableApplicationPassword() },
                         onConfirm = { viewModel.confirmDisableApplicationPassword() },
                         onContactSupport = {

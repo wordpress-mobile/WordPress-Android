@@ -149,6 +149,7 @@ fun FeedbackDialog(onDismiss: () -> Unit, onSendFeedback: () -> Unit) {
 
 @Composable
 fun ApplicationPasswordOffConfirmationDialog(
+    affectedSites: Int,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onContactSupport: () -> Unit
@@ -158,7 +159,12 @@ fun ApplicationPasswordOffConfirmationDialog(
         title = { Text(text = stringResource(R.string.application_password_disable_feature_title)) },
         text = {
             Column {
-                Text(text = stringResource(R.string.application_password_disable_feature_description))
+                Text(
+                    text = stringResource(
+                        R.string.application_password_disable_feature_description,
+                        affectedSites
+                    )
+                )
 
                 val annotatedString = buildAnnotatedString {
                     val supportText = stringResource(R.string.contact_support)

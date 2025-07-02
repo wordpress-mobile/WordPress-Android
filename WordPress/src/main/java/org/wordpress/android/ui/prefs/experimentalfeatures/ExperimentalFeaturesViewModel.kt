@@ -30,8 +30,8 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
-    private val _disableApplicationPasswordDialogState = MutableStateFlow(false)
-    val disableApplicationPasswordDialogState: StateFlow<Boolean> = _disableApplicationPasswordDialogState.asStateFlow()
+    private val _disableApplicationPasswordDialogState = MutableStateFlow(0)
+    val disableApplicationPasswordDialogState: StateFlow<Int> = _disableApplicationPasswordDialogState.asStateFlow()
 
     init {
         val initialStates = Feature.entries
@@ -62,7 +62,12 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // Application Password credentials when the feature is disabled to avoid FluxC to use them.
         // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
         if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-            _disableApplicationPasswordDialogState.value = true
+            val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
+            if (affectedSites > 0) {
+                _disableApplicationPasswordDialogState.value = affectedSites
+            } else {
+                confirmDisableApplicationPassword()
+            }
         } else {
             _switchStates.update { currentStates ->
                 currentStates.toMutableMap().apply {
@@ -74,12 +79,12 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     fun dismissDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = false
+        _disableApplicationPasswordDialogState.value = 0
     }
 
     @Suppress("TooGenericExceptionCaught")
     fun confirmDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = false
+        _disableApplicationPasswordDialogState.value = 0
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
                 this[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE] = false
