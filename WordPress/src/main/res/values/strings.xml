@@ -5029,7 +5029,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_add_disclosure">
         By clicking Send you represent that you\'ve obtained the appropriate consent to email each person. Spam complaints or high bounce rate from your subscribers may lead to action against your account.
     </string>
-    <string name="subscribers_add_success">Successfully added subscribers</string>
+    <string name="subscribers_add_success_singular">Successfully added subscriber</string>
+    <string name="subscribers_add_success_plural">Successfully added %d subscribers</string>
     <string name="subscribers_add_failed">Failed to add subscribers</string>
 
     <!-- Application Password authentication -->

@@ -203,10 +203,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 lifecycleScope.launch {
                                     val result = viewModel.addSubscribers(emails)
                                     if (result.isSuccess) {
+                                        val toastMsg = if (emails.size > 1) {
+                                            getString(R.string.subscribers_add_success_plural, emails.size)
+                                        } else {
+                                            getString(R.string.subscribers_add_success_singular)
+                                        }
                                         Toast.makeText(
                                             this@SubscribersActivity,
-                                            getString(R.string.subscribers_add_success),
-                                            Toast.LENGTH_SHORT
+                                            toastMsg,
+                                            Toast.LENGTH_LONG
                                         ).show()
                                         navController.navigateUp()
                                     } else {
@@ -219,6 +224,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 }
                             },
                             onCancel = { navController.navigateUp() },
+                            showProgress = viewModel.showAddSubscribersProgress.collectAsState(),
                             modifier = Modifier.padding(contentPadding)
                         )
                     }

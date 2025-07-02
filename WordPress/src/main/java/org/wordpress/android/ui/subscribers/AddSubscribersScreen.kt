@@ -3,6 +3,7 @@ package org.wordpress.android.ui.subscribers
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,20 +11,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -37,6 +42,7 @@ import org.wordpress.android.util.validateEmail
 fun AddSubscribersScreen(
     onSubmit: (List<String>) -> Unit,
     onCancel: () -> Unit,
+    showProgress: State<Boolean>,
     modifier: Modifier = Modifier,
 ) {
     var entry by remember { mutableStateOf("") }
@@ -86,23 +92,34 @@ fun AddSubscribersScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            OutlinedButton(
-                onClick = onCancel,
-                modifier = Modifier.weight(1f)
+        if (showProgress.value) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                Text(stringResource(id = android.R.string.cancel))
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp)
+                )
             }
-
-            Button(
-                onClick = { onSubmit(parseEntry(entry)) },
-                enabled = isValidEntry,
-                modifier = Modifier.weight(1f)
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(stringResource(id = R.string.send))
+                OutlinedButton(
+                    onClick = onCancel,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(id = android.R.string.cancel))
+                }
+
+                Button(
+                    onClick = { onSubmit(parseEntry(entry)) },
+                    enabled = isValidEntry,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(id = R.string.send))
+                }
             }
         }
     }
@@ -128,7 +145,8 @@ private fun AddSubscribersScreenPreview() {
     AppThemeM3 {
         AddSubscribersScreen(
             onSubmit = {},
-            onCancel = {}
+            onCancel = {},
+            showProgress = remember { mutableStateOf(false) }
         )
     }
 }

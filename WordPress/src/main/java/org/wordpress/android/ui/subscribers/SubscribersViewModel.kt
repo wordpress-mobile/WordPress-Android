@@ -40,6 +40,9 @@ class SubscribersViewModel @Inject constructor(
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
 
+    private val _showAddSubscribersProgress = MutableStateFlow(false)
+    val showAddSubscribersProgress = _showAddSubscribersProgress.asStateFlow()
+
     private var statsJob: Job? = null
 
     @Inject
@@ -186,24 +189,30 @@ class SubscribersViewModel @Inject constructor(
             emails = emails
         )
 
-        val response = wpComApiClient.request { requestBuilder ->
-            requestBuilder.subscribers().addSubscribers(
-                wpComSiteId = siteId().toULong(),
-                params = params
-            )
-        }
+        _showAddSubscribersProgress.value = true
+        try {
+            val response = wpComApiClient.request { requestBuilder ->
+                requestBuilder.subscribers().addSubscribers(
+                    wpComSiteId = siteId().toULong(),
+                    params = params
+                )
+            }
 
-        when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
-                return@withContext Result.success(true)
+            when (response) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
+                    return@withContext Result.success(true)
+                }
+
+                else -> {
+                    val error = (response as? WpRequestResult.WpError)?.errorMessage
+                    onError((response as? WpRequestResult.WpError)?.errorMessage)
+                    appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
+                    return@withContext Result.failure(Exception(error))
+                }
             }
-            else -> {
-                val error = (response as? WpRequestResult.WpError)?.errorMessage
-                onError((response as? WpRequestResult.WpError)?.errorMessage)
-                appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
-                return@withContext Result.failure(Exception(error))
-            }
+        } finally {
+            _showAddSubscribersProgress.value = false
         }
     }
 
