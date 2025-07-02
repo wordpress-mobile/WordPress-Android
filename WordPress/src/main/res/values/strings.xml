@@ -5019,4 +5019,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
+    <string name="application_password_disable_feature_title">Disable Application Password?</string>
+    <string name="application_password_disable_feature_description">Disabling Application Password will remove the authentication credentials from the sites you enabled it before.</string>
 </resources>

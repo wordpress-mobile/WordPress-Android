@@ -22,9 +22,15 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 val features by viewModel.switchStates.collectAsStateWithLifecycle()
+                val showApplicationPasswordDisableDialog by viewModel.disableApplicationPasswordDialogState.collectAsStateWithLifecycle()
                 val showDialog = remember { mutableStateOf(false) }
 
-                if (showDialog.value) {
+                if (showApplicationPasswordDisableDialog) {
+                    ApplicationPasswordOffConfirmationDialog(
+                        onDismiss = { viewModel.dismissDisableApplicationPassword() },
+                        onConfirm = { viewModel.confirmDisableApplicationPassword() }
+                    )
+                } else if (showDialog.value) {
                     FeedbackDialog(
                         onDismiss = { showDialog.value = false },
                         onSendFeedback = {

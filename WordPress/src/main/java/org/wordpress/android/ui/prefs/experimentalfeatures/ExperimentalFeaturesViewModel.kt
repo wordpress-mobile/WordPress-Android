@@ -30,6 +30,9 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
+    private val _disableApplicationPasswordDialogState = MutableStateFlow(false)
+    val disableApplicationPasswordDialogState: StateFlow<Boolean> = _disableApplicationPasswordDialogState.asStateFlow()
+
     init {
         val initialStates = Feature.entries
             .filter { feature ->
@@ -56,25 +59,41 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun onFeatureToggled(feature: Feature, enabled: Boolean) {
-        _switchStates.update { currentStates ->
-            currentStates.toMutableMap().apply {
-                this[feature] = enabled
-                experimentalFeatures.setEnabled(feature, enabled)
+        // Since FluxC has not way to access the experimental features, this is a workaround to remove the
+        // Application Password credentials when the feature is disabled to avoid FluxC to use them.
+        // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
+        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
+            _disableApplicationPasswordDialogState.value = true
+        } else {
+            _switchStates.update { currentStates ->
+                currentStates.toMutableMap().apply {
+                    this[feature] = enabled
+                    experimentalFeatures.setEnabled(feature, enabled)
+                }
             }
         }
+    }
+
+    fun dismissDisableApplicationPassword() {
+        _disableApplicationPasswordDialogState.value = false
+    }
+
+    fun confirmDisableApplicationPassword() {
+        _disableApplicationPasswordDialogState.value = false
+        _switchStates.update { currentStates ->
+            currentStates.toMutableMap().apply {
+                this[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE] = false
+                experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+            }
+        }
+
         viewModelScope.launch {
             try {
-                // Since FluxC has not way to access the experimental features, this is a workaround to remove the
-                // Application Password credentials when the feature is disabled to avoid FluxC to use them.
-                // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
-                if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-                    val removedCredentialSites =
-                        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-                    if (removedCredentialSites > 0) {
-                        val properties: MutableMap<String, String?> = HashMap()
-                        properties[AFFECTED_SITES] = removedCredentialSites.toString()
-                        AnalyticsTracker.track(Stat.APPLICATION_PASSWORD_SET_OFF, properties)
-                    }
+                val removedCredentialSites = applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+                if (removedCredentialSites > 0) {
+                    val properties: MutableMap<String, String?> = HashMap()
+                    properties[AFFECTED_SITES] = removedCredentialSites.toString()
+                    AnalyticsTracker.track(Stat.APPLICATION_PASSWORD_SET_OFF, properties)
                 }
             } catch (exception: Throwable) {
                 appLogWrapper.e(

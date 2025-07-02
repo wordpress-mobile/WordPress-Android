@@ -140,6 +140,25 @@ fun FeedbackDialog(onDismiss: () -> Unit, onSendFeedback: () -> Unit) {
     )
 }
 
+@Composable
+fun ApplicationPasswordOffConfirmationDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.application_password_disable_feature_title)) },
+        text = { Text(text = stringResource(R.string.application_password_disable_feature_description)) },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(text = stringResource(R.string.disable))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
