@@ -13,8 +13,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.accounts.login.SUCCESS_TAG
-import org.wordpress.android.ui.accounts.login.URL_TAG
 import org.wordpress.android.util.config.GutenbergKitFeature
 import javax.inject.Inject
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
@@ -70,7 +68,8 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 // Application Password credentials when the feature is disabled to avoid FluxC to use them.
                 // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
                 if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-                    val removedCredentialSites = applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+                    val removedCredentialSites =
+                        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
                     if (removedCredentialSites > 0) {
                         val properties: MutableMap<String, String?> = HashMap()
                         properties[AFFECTED_SITES] = removedCredentialSites.toString()
