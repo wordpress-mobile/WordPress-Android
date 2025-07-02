@@ -13,8 +13,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.Composable
 
 @AndroidEntryPoint
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
@@ -26,7 +24,8 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 val features by viewModel.switchStates.collectAsStateWithLifecycle()
-                val showApplicationPasswordDisableDialog by viewModel.disableApplicationPasswordDialogState.collectAsStateWithLifecycle()
+                val showApplicationPasswordDisableDialog by
+                viewModel.disableApplicationPasswordDialogState.collectAsStateWithLifecycle()
                 val showDialog = remember { mutableStateOf(false) }
 
                 if (showApplicationPasswordDisableDialog) {

@@ -167,31 +167,33 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `confirmDisableApplicationPassword disables feature, removes credentials, and sets dialog state to false`() = test {
-        createViewModel()
-        // Simulate dialog being shown
-        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-        assertThat(viewModel.disableApplicationPasswordDialogState.value).isTrue()
-        // Confirm
-        viewModel.confirmDisableApplicationPassword()
-        advanceUntilIdle()
-        // Dialog should be dismissed
-        assertThat(viewModel.disableApplicationPasswordDialogState.value).isFalse()
-        // Feature should be disabled
-        assertThat(viewModel.switchStates.value[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE]).isFalse()
-        // Credentials should be removed
-        verify(applicationPasswordLoginHelper).removeAllApplicationPasswordCredentials()
-    }
+    fun `confirmDisableApplicationPassword disables feature, removes credentials, and sets dialog state to false`() =
+        test {
+            createViewModel()
+            // Simulate dialog being shown
+            viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+            assertThat(viewModel.disableApplicationPasswordDialogState.value).isTrue()
+            // Confirm
+            viewModel.confirmDisableApplicationPassword()
+            advanceUntilIdle()
+            // Dialog should be dismissed
+            assertThat(viewModel.disableApplicationPasswordDialogState.value).isFalse()
+            // Feature should be disabled
+            assertThat(viewModel.switchStates.value[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE]).isFalse()
+            // Credentials should be removed
+            verify(applicationPasswordLoginHelper).removeAllApplicationPasswordCredentials()
+        }
 
     @Test
-    fun `onFeatureToggled with application password feature disabled shows dialog but does not remove credentials`() = test {
-        createViewModel()
-        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-        // Dialog should be shown
-        assertThat(viewModel.disableApplicationPasswordDialogState.value).isTrue()
-        // Credentials should not be removed yet
-        verify(applicationPasswordLoginHelper, never()).removeAllApplicationPasswordCredentials()
-    }
+    fun `onFeatureToggled with application password feature disabled shows dialog but does not remove credentials`() =
+        test {
+            createViewModel()
+            viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+            // Dialog should be shown
+            assertThat(viewModel.disableApplicationPasswordDialogState.value).isTrue()
+            // Credentials should not be removed yet
+            verify(applicationPasswordLoginHelper, never()).removeAllApplicationPasswordCredentials()
+        }
 
     private fun createViewModel() {
         viewModel = ExperimentalFeaturesViewModel(

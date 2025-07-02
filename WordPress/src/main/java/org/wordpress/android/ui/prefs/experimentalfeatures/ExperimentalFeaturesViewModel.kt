@@ -57,7 +57,6 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     fun onFeatureToggled(feature: Feature, enabled: Boolean) {
         // Since FluxC has not way to access the experimental features, this is a workaround to remove the
         // Application Password credentials when the feature is disabled to avoid FluxC to use them.
@@ -78,6 +77,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         _disableApplicationPasswordDialogState.value = false
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun confirmDisableApplicationPassword() {
         _disableApplicationPasswordDialogState.value = false
         _switchStates.update { currentStates ->
