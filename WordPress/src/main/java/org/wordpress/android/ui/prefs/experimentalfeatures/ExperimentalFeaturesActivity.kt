@@ -11,6 +11,10 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
+import org.wordpress.android.support.SupportWebViewActivity
+import org.wordpress.android.ui.accounts.HelpActivity
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.Composable
 
 @AndroidEntryPoint
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
@@ -28,7 +32,16 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 if (showApplicationPasswordDisableDialog) {
                     ApplicationPasswordOffConfirmationDialog(
                         onDismiss = { viewModel.dismissDisableApplicationPassword() },
-                        onConfirm = { viewModel.confirmDisableApplicationPassword() }
+                        onConfirm = { viewModel.confirmDisableApplicationPassword() },
+                        onContactSupport = {
+                            val intent = SupportWebViewActivity.createIntent(
+                                context = this,
+                                origin = HelpActivity.Origin.UNKNOWN,
+                                selectedSite = null,
+                                extraSupportTags = null
+                            )
+                            this.startActivity(intent)
+                        }
                     )
                 } else if (showDialog.value) {
                     FeedbackDialog(
