@@ -27,8 +27,19 @@ class LocalNotificationWorker(
 
         val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
         if (localNotificationHandler.shouldShowNotification()) {
-            NotificationManagerCompat.from(context).notify(id, localNotificationBuilder(id).build())
-            localNotificationHandler.onNotificationShown()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                if (androidx.core.app.ActivityCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.POST_NOTIFICATIONS
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                ) {
+                    NotificationManagerCompat.from(context).notify(id, localNotificationBuilder(id).build())
+                    localNotificationHandler.onNotificationShown()
+                }
+            } else {
+                NotificationManagerCompat.from(context).notify(id, localNotificationBuilder(id).build())
+                localNotificationHandler.onNotificationShown()
+            }
         }
 
         return Result.success()

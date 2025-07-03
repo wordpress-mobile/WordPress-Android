@@ -277,6 +277,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
+    @SuppressWarnings("RecyclerView")
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             mHeaderHolder = (PostHeaderHolder) holder;

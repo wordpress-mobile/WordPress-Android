@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.core.view.isVisible
 import android.widget.ImageView
 import android.widget.ListPopupWindow
 import android.widget.TextView
@@ -54,7 +55,7 @@ class EventItemViewHolder(
         thumbnail.setImageResource(activity.icon.drawable)
         thumbnail.setBackgroundResource(activity.status.color)
         container.setOnClickListener {
-            itemClickListener(activity.copy(isButtonVisible = actionButton.visibility == View.VISIBLE))
+            itemClickListener(activity.copy(isButtonVisible = actionButton.isVisible))
         }
 
         actionButton.setOnClickListener { renderMoreMenu(activity, it) }

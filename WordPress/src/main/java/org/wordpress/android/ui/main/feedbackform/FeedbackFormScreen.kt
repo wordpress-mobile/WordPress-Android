@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main.feedbackform
 import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -274,13 +275,13 @@ private fun Screen(
 @Composable
 private fun FeedbackFormScreenPreview() {
     val attachment1 = FeedbackFormAttachment(
-        uri = Uri.parse("https://via.placeholder.com/150"),
+        uri = "https://via.placeholder.com/150".toUri(),
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
         mimeType = "image/jpeg",
     )
     val attachment2 = FeedbackFormAttachment(
-        uri = Uri.parse("https://via.placeholder.com/150"),
+        uri = "https://via.placeholder.com/150".toUri(),
         attachmentType = FeedbackFormAttachmentType.VIDEO,
         size = 123456789,
         mimeType = "video/mp4",

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -241,7 +242,7 @@ class FeedbackFormViewModel @Inject constructor(
                     showToast(R.string.feedback_form_max_attachments_reached)
                     return
                 }
-                addAttachment(context, Uri.parse(stringUri))
+                addAttachment(context, stringUri.toUri())
             }
         }
     }

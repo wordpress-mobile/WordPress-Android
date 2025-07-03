@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.widget.ImageView.ScaleType.FIT_CENTER
+import androidx.core.graphics.drawable.toDrawable
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.transition.Transition
@@ -56,12 +57,10 @@ class AztecImageLoader(
                 resource: Bitmap,
                 transition: Transition<in Bitmap>?
             ) {
-                val result: Drawable
                 // By default, BitmapFactory.decodeFile sets the bitmap's density
                 // to the device default so, we need to correctly set the input density to 160 ourselves.
                 resource.density = DisplayMetrics.DENSITY_DEFAULT
-                val bitmapDrawable = BitmapDrawable(context.resources, resource)
-                result = bitmapDrawable
+                val result = resource.toDrawable(context.resources)
                 callbacks.onImageLoaded(result)
                 mRequestsInProgress.remove(url)
             }

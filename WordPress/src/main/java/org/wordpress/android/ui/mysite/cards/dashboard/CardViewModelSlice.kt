@@ -36,6 +36,7 @@ import org.wordpress.android.viewmodel.Event
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import androidx.core.content.edit
 
 @Suppress("LongParameterList")
 class CardViewModelSlice @Inject constructor(
@@ -166,7 +167,9 @@ class CardViewModelSlice @Inject constructor(
 
     private fun generateAndStoreUUID(): String {
         return UUID.randomUUID().toString().also {
-            preferences.getFluxCPreferences().edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
+            preferences.getFluxCPreferences().edit {
+                putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it)
+            }
         }
     }
 

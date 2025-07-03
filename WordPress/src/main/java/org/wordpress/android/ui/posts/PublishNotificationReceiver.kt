@@ -47,8 +47,19 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                     )
                 )
                 .build()
-            NotificationManagerCompat.from(context).notify(notificationId, notificationCompat)
-            systemNotificationsTracker.trackShownNotification(notificationType)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                if (androidx.core.app.ActivityCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.POST_NOTIFICATIONS
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                ) {
+                    NotificationManagerCompat.from(context).notify(notificationId, notificationCompat)
+                    systemNotificationsTracker.trackShownNotification(notificationType)
+                }
+            } else {
+                NotificationManagerCompat.from(context).notify(notificationId, notificationCompat)
+                systemNotificationsTracker.trackShownNotification(notificationType)
+            }
         }
     }
 

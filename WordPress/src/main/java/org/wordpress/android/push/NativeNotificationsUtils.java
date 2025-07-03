@@ -46,7 +46,14 @@ public class NativeNotificationsUtils {
         builder.setProgress(0, 0, intermediateMessage);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(pushId, builder.build());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (androidx.core.app.ActivityCompat.checkSelfPermission(context,
+                    android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                notificationManager.notify(pushId, builder.build());
+            }
+        } else {
+            notificationManager.notify(pushId, builder.build());
+        }
     }
 
     public static NotificationCompat.Builder getBuilder(Context context, String channelId) {

@@ -108,8 +108,17 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                                 notificationType))
                 .build();
 
-        notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
-        mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
-        mSystemNotificationsTracker.trackShownNotification(notificationType);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (androidx.core.app.ActivityCompat.checkSelfPermission(context,
+                    android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
+                mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
+                mSystemNotificationsTracker.trackShownNotification(notificationType);
+            }
+        } else {
+            notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
+            mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
+            mSystemNotificationsTracker.trackShownNotification(notificationType);
+        }
     }
 }

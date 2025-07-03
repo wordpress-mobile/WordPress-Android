@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
@@ -15,11 +16,11 @@ fun StatsListFragmentBinding.drawDateSelector(dateSelectorUiModel: DateSelectorU
     with(dateSelector) {
         selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
         val timeZone = dateSelectorUiModel?.timeZone
-        if (currentSiteTimeZone.visibility == View.GONE && timeZone != null) {
-            currentSiteTimeZone.visibility = View.VISIBLE
+        if (currentSiteTimeZone.isGone && timeZone != null) {
+            currentSiteTimeZone.isVisible = true
             currentSiteTimeZone.text = timeZone
-        } else if (currentSiteTimeZone.visibility == View.VISIBLE && timeZone == null) {
-            currentSiteTimeZone.visibility = View.GONE
+        } else if (currentSiteTimeZone.isVisible && timeZone == null) {
+            currentSiteTimeZone.isGone = true
         }
         val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
         if (previousDateButton.isEnabled != enablePreviousButton) {

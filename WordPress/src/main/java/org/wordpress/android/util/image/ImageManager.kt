@@ -22,6 +22,7 @@ import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -151,7 +152,7 @@ class ImageManager @Inject constructor(
             fallbackAction = {
                 if (!context.isAvailable()) return@runIfMediaNotTooBig
                 val fallbackDrawable = placeholderManager.getErrorResource(imageType)?.let {
-                    ColorDrawable(ContextCompat.getColor(context, it))
+                    ColorDrawable(ResourcesCompat.getColor(context.resources, it, null))
                 }
                 Glide.with(context)
                     .load(fallbackDrawable)
@@ -481,7 +482,7 @@ class ImageManager @Inject constructor(
         val context = imageView.context
         if (!context.isAvailable()) return
         Glide.with(context)
-            .load(ContextCompat.getDrawable(context, resourceId))
+            .load(ResourcesCompat.getDrawable(context.resources, resourceId, context.theme))
             .applyScaleType(scaleType)
             .into(imageView)
             .clearOnDetach()

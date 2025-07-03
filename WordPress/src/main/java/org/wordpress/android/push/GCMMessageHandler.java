@@ -840,8 +840,16 @@ public class GCMMessageHandler {
                 );
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                notificationManager.notify(pushId, builder.build());
-                mSystemNotificationsTracker.trackShownNotification(notificationType);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (androidx.core.app.ActivityCompat.checkSelfPermission(context,
+                            android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                        notificationManager.notify(pushId, builder.build());
+                        mSystemNotificationsTracker.trackShownNotification(notificationType);
+                    }
+                } else {
+                    notificationManager.notify(pushId, builder.build());
+                    mSystemNotificationsTracker.trackShownNotification(notificationType);
+                }
             }
         }
 
@@ -1085,8 +1093,16 @@ public class GCMMessageHandler {
             builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
-            mSystemNotificationsTracker.trackShownNotification(notificationType);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (androidx.core.app.ActivityCompat.checkSelfPermission(context,
+                        android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+                    mSystemNotificationsTracker.trackShownNotification(notificationType);
+                }
+            } else {
+                notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+                mSystemNotificationsTracker.trackShownNotification(notificationType);
+            }
         }
 
         // Returns true if the note type is known to have a gravatar

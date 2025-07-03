@@ -33,6 +33,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.util.Consumer
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
@@ -2740,7 +2741,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
                 val stringUri = matcher.group(1)
-                val uri = Uri.parse(stringUri)
+                val uri = stringUri?.toUri() ?: continue
                 val mediaFile = FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
                         .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
@@ -3140,7 +3141,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
         val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
         stringArray?.forEach { stringUri ->
-            uris.add(Uri.parse(stringUri))
+            uris.add(stringUri.toUri())
         }
         return uris
     }

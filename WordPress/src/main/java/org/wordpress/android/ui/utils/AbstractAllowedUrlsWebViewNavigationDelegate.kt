@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.utils
 
 import android.net.Uri
+import androidx.core.net.toUri
 
 abstract class AbstractAllowedUrlsWebViewNavigationDelegate {
     abstract val allowedUrls: List<UrlMatcher>
@@ -9,7 +10,7 @@ abstract class AbstractAllowedUrlsWebViewNavigationDelegate {
 
     fun canNavigateTo(uri: Uri) = canNavigateTo(uri.toUrl())
 
-    fun canNavigateTo(urlString: String) = canNavigateTo(Uri.parse(urlString))
+    fun canNavigateTo(urlString: String) = canNavigateTo(urlString.toUri())
 
     data class UrlMatcher(
         private val host: Regex,
