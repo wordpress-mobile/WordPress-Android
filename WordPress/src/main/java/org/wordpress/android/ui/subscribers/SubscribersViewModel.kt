@@ -18,7 +18,6 @@ import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.AddSubscribersParams
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
 import uniffi.wp_api.ListSubscribersSortField
@@ -39,9 +38,6 @@ class SubscribersViewModel @Inject constructor(
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
-
-    private val _showAddSubscribersProgress = MutableStateFlow(false)
-    val showAddSubscribersProgress = _showAddSubscribersProgress.asStateFlow()
 
     private var statsJob: Job? = null
 
@@ -182,44 +178,6 @@ class SubscribersViewModel @Inject constructor(
             ),
             data = subscriber
         )
-    }
-
-    suspend fun addSubscribers(emails: List<String>): Result<Boolean> = withContext(ioDispatcher) {
-        val params = AddSubscribersParams(
-            emails = emails
-        )
-
-        _showAddSubscribersProgress.value = true
-        try {
-            val response = wpComApiClient.request { requestBuilder ->
-                requestBuilder.subscribers().addSubscribers(
-                    wpComSiteId = siteId().toULong(),
-                    params = params
-                )
-            }
-
-            when (response) {
-                is WpRequestResult.Success -> {
-                    // the backend may return HTTP 200 even when no subscribers were added, so verify there's
-                    // a valid uploadId before assuming success
-                    if (response.response.data.uploadId == 0.toULong()) {
-                        appLogWrapper.d(AppLog.T.MAIN, "No subscribers added")
-                        return@withContext Result.failure(Exception("No subscribers added"))
-                    } else {
-                        appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
-                        return@withContext Result.success(true)
-                    }
-                }
-
-                else -> {
-                    val error = (response as? WpRequestResult.WpError)?.errorMessage
-                    appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
-                    return@withContext Result.failure(Exception(error))
-                }
-            }
-        } finally {
-            _showAddSubscribersProgress.value = false
-        }
     }
 
     /*

@@ -40,6 +40,8 @@ import uniffi.wp_api.Subscriber
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
+    private val addSubscribersViewModel by viewModels<AddSubscribersViewModel>()
+
     private lateinit var composeView: ComposeView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +73,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
         val navController = rememberNavController()
         val listTitle = stringResource(R.string.subscribers)
         val titleState = remember { mutableStateOf(listTitle) }
+        val showAddSubscribersButtonState = remember { mutableStateOf(true) }
 
         AppThemeM3 {
             Scaffold(
@@ -89,13 +92,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                navController.navigate(route = SubscriberScreen.AddSubscribers.name)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = stringResource(R.string.subscribers_add_subscribers)
-                                )
+                            if (showAddSubscribersButtonState.value) {
+                                IconButton(onClick = {
+                                    navController.navigate(route = SubscriberScreen.AddSubscribers.name)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = stringResource(R.string.subscribers_add_subscribers)
+                                    )
+                                }
                             }
                         }
                     )
@@ -107,6 +112,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 ) {
                     composable(route = SubscriberScreen.List.name) {
                         titleState.value = listTitle
+                        showAddSubscribersButtonState.value = true
                         ShowListScreen(
                             navController,
                             modifier = Modifier.padding(contentPadding)
@@ -119,7 +125,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             if (userId != null) {
                                 viewModel.getSubscriber(userId)?.let { subscriber ->
                                     titleState.value = subscriber.displayNameOrEmail()
-                                    ShowSubscriberDetailScreen(
+                                    showAddSubscribersButtonState.value = false
+                                        ShowSubscriberDetailScreen(
                                         subscriber = subscriber,
                                         navController = navController,
                                         modifier = Modifier.padding(contentPadding)
@@ -138,6 +145,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                     subscriber.plans?.let { plans ->
                                         if (planIndex in plans.indices) {
                                             titleState.value = plans[planIndex].title
+                                            showAddSubscribersButtonState.value = false
                                             SubscriberPlanScreen(
                                                 plan = plans[planIndex],
                                                 modifier = Modifier.padding(contentPadding)
@@ -151,7 +159,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
                     composable(route = SubscriberScreen.AddSubscribers.name) {
                         titleState.value = stringResource(R.string.subscribers_add_subscribers)
-                        ShowAddSubscribersScreen(
+                        showAddSubscribersButtonState.value = false
+                            ShowAddSubscribersScreen(
                             navController = navController,
                             modifier = Modifier.padding(contentPadding)
                         )
@@ -242,7 +251,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
         AddSubscribersScreen(
             onSubmit = { emails ->
                 lifecycleScope.launch {
-                    val result = viewModel.addSubscribers(emails)
+                    val result = addSubscribersViewModel.addSubscribers(emails)
                     if (result.isSuccess) {
                         val toastMsg = if (emails.size > 1) {
                             getString(R.string.subscribers_add_success_plural, emails.size)
@@ -265,7 +274,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             },
             onCancel = { navController.navigateUp() },
-            showProgress = viewModel.showAddSubscribersProgress.collectAsState(),
+            showProgress = addSubscribersViewModel.showProgress.collectAsState(),
             modifier = modifier
         )
     }
