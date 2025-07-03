@@ -221,7 +221,7 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
-    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(ioDispatcher) {
+    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(bgDispatcher) {
         val response = if (subscriber.isEmailSubscriber) {
             wpComApiClient.request { requestBuilder ->
                 requestBuilder.followers().deleteEmailFollower(
