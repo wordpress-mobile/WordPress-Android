@@ -235,6 +235,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 )
                 navController.navigate(route = SubscriberScreen.Plan.name)
             },
+            onDeleteClick = { subscriber ->
+                viewModel.onDeleteSubscriberClick(this@SubscribersActivity, subscriber)
+            },
             modifier = modifier,
             subscriberStats = viewModel.subscriberStats.collectAsState()
         )

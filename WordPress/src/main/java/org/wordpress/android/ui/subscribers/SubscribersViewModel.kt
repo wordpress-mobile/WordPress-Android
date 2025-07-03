@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.subscribers
 
+import android.content.Context
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -9,6 +11,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
@@ -17,6 +20,7 @@ import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ToastUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
@@ -30,8 +34,10 @@ import javax.inject.Named
 
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val toastUtilsWrapper: ToastUtilsWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper
@@ -215,6 +221,37 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
+    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(ioDispatcher) {
+        val response = if (subscriber.isEmailSubscriber) {
+            wpComApiClient.request { requestBuilder ->
+                requestBuilder.followers().deleteEmailFollower(
+                    wpComSiteId = siteId().toULong(),
+                    subscriptionId = subscriber.subscriptionId
+                )
+            }
+        } else {
+            wpComApiClient.request { requestBuilder ->
+                requestBuilder.followers().deleteFollower(
+                    wpComSiteId = siteId().toULong(),
+                    userId = subscriber.userId
+                )
+            }
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
+                return@withContext Result.success(true)
+            }
+
+            else -> {
+                val error = (response as? WpRequestResult.WpError)?.errorMessage
+                appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
+                return@withContext Result.failure(Exception(error))
+            }
+        }
+    }
+
+
     /**
      * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
      */
@@ -227,6 +264,34 @@ class SubscribersViewModel @Inject constructor(
                 val stats = fetchSubscriberStats(subscriber.subscriptionId)
                 _subscriberStats.value = stats
             }
+        }
+    }
+
+    fun onDeleteSubscriberClick(
+        context: Context,
+        subscriber: Subscriber,
+        onSuccess: () -> Unit
+    ) {
+        appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
+        MaterialAlertDialogBuilder(context).also { builder ->
+            builder.setTitle(R.string.subscribers_delete_confirmation_title)
+            builder.setMessage(R.string.subscribers_delete_confirmation_message)
+            builder.setPositiveButton(R.string.delete) { _, _ ->
+                launch(bgDispatcher) {
+                    val result = deleteSubscriber(subscriber = subscriber)
+                    withContext(mainDispatcher) {
+                        if (result.isSuccess) {
+                            toastUtilsWrapper.showToast(R.string.subscribers_delete_success)
+                            onSuccess()
+                        } else {
+                            toastUtilsWrapper.showToast(R.string.subscribers_delete_failed)
+                        }
+                    }
+                }
+            }
+            builder.setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            builder.show()
         }
     }
 
