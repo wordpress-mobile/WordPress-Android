@@ -68,7 +68,9 @@ fun AddSubscribersScreen(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    onSubmit(parseEntry(entry))
+                    if (isValidEntry) {
+                        onSubmit(parseEntry(entry))
+                    }
                 }
             ),
             singleLine = false,
