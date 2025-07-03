@@ -58,7 +58,7 @@ fun AddSubscribersScreen(
             value = entry,
             onValueChange = {
                 entry = it
-                isValidEntry = isValidEntry(entry)
+                isValidEntry = isValidEntry(it)
             },
             label = {
                 Text(stringResource(id = R.string.subscribers_add_email_hint))
