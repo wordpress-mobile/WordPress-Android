@@ -62,7 +62,7 @@ class AddSubscribersViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             val result = addSubscribers(emails)
-            launch(mainDispatcher) {
+            withContext(mainDispatcher) {
                 if (result.isSuccess) {
                     toastUtilsWrapper.showToast(R.string.subscribers_add_success)
                     onSuccess()
