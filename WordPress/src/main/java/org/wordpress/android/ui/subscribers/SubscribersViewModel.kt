@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.subscribers
 
-import android.content.Context
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -19,7 +17,6 @@ import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.ToastUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
@@ -35,7 +32,6 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
-    private val toastUtilsWrapper: ToastUtilsWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper
@@ -47,6 +43,13 @@ class SubscribersViewModel @Inject constructor(
 
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
+
+    sealed class UiEvent {
+        data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
+        data class ShowToast(val messageRes: Int) : UiEvent()
+    }
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent.asStateFlow()
 
     override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
@@ -265,32 +268,23 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteSubscriberClick(
-        context: Context,
-        subscriber: Subscriber,
-        onSuccess: () -> Unit
-    ) {
+    fun onDeleteSubscriberClick(subscriber: Subscriber) {
         appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
-        MaterialAlertDialogBuilder(context).also { builder ->
-            builder.setTitle(R.string.subscribers_delete_confirmation_title)
-            builder.setMessage(R.string.subscribers_delete_confirmation_message)
-            builder.setPositiveButton(R.string.delete) { _, _ ->
-                launch(ioDispatcher) {
-                    val result = deleteSubscriber(subscriber = subscriber)
-                    withContext(mainDispatcher) {
-                        if (result.isSuccess) {
-                            toastUtilsWrapper.showToast(R.string.subscribers_delete_success)
-                            onSuccess()
-                            onRefreshData()
-                        } else {
-                            toastUtilsWrapper.showToast(R.string.subscribers_delete_failed)
-                        }
-                    }
+        _uiEvent.value = UiEvent.ShowDeleteConfirmationDialog(subscriber)
+    }
+
+    fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
+        launch(ioDispatcher) {
+            val result = deleteSubscriber(subscriber = subscriber)
+            withContext(mainDispatcher) {
+                if (result.isSuccess) {
+                    _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_success)
+                    onSuccess()
+                    onRefreshData()
+                } else {
+                    _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
                 }
             }
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            builder.show()
         }
     }
 
