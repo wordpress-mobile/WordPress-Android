@@ -200,13 +200,19 @@ class SubscribersViewModel @Inject constructor(
 
             when (response) {
                 is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
-                    return@withContext Result.success(true)
+                    // the backend may return HTTP 200 even when no subscribers were added, so verify there's
+                    // a valid uploadId before assuming success
+                    if (response.response.data.uploadId == 0.toULong()) {
+                        appLogWrapper.d(AppLog.T.MAIN, "No subscribers added")
+                        return@withContext Result.failure(Exception("No subscribers added"))
+                    } else {
+                        appLogWrapper.d(AppLog.T.MAIN, "Successfully added ${emails.size} subscribers")
+                        return@withContext Result.success(true)
+                    }
                 }
 
                 else -> {
                     val error = (response as? WpRequestResult.WpError)?.errorMessage
-                    onError((response as? WpRequestResult.WpError)?.errorMessage)
                     appLogWrapper.e(AppLog.T.MAIN, "Failed to add subscriber: $response")
                     return@withContext Result.failure(Exception(error))
                 }
