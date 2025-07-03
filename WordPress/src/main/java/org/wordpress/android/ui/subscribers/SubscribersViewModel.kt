@@ -11,7 +11,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
@@ -35,7 +34,6 @@ import javax.inject.Named
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
 ) : DataViewViewModel(
@@ -221,7 +219,7 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
-    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(bgDispatcher) {
+    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(ioDispatcher) {
         val response = if (subscriber.isEmailSubscriber) {
             wpComApiClient.request { requestBuilder ->
                 requestBuilder.followers().deleteEmailFollower(
@@ -277,7 +275,7 @@ class SubscribersViewModel @Inject constructor(
             builder.setTitle(R.string.subscribers_delete_confirmation_title)
             builder.setMessage(R.string.subscribers_delete_confirmation_message)
             builder.setPositiveButton(R.string.delete) { _, _ ->
-                launch(bgDispatcher) {
+                launch(ioDispatcher) {
                     val result = deleteSubscriber(subscriber = subscriber)
                     withContext(mainDispatcher) {
                         if (result.isSuccess) {
