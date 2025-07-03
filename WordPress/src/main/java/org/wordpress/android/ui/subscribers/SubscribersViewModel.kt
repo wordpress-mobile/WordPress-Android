@@ -288,6 +288,10 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
+    fun clearUiEvent() {
+        _uiEvent.value = null
+    }
+
     companion object {
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L

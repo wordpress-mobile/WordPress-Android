@@ -70,9 +70,11 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 when (event) {
                     is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
                         showDeleteConfirmationDialog(event.subscriber, navController)
+                        viewModel.clearUiEvent()
                     }
                     is SubscribersViewModel.UiEvent.ShowToast -> {
                         Toast.makeText(this, event.messageRes, Toast.LENGTH_SHORT).show()
+                        viewModel.clearUiEvent()
                     }
                 }
             }
@@ -302,8 +304,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
                 )
             }
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-            }
+            builder.setNegativeButton(R.string.cancel, null)
             builder.show()
         }
     }
