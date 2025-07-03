@@ -129,7 +129,7 @@ private fun isValidEntry(entry: String): Boolean {
 }
 
 private fun parseEntry(entry: String): List<String> {
-    return entry.split(",").map { it.trim() }
+    return entry.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 }
 
 @Preview
