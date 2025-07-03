@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.UrlUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
@@ -77,9 +78,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
                 false
             } else {
-                val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
+                val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
+                val site = siteSqlUtils.getSites().firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
                 if (site != null) {
                     site.apply {
+                        apiRestUsernameEncrypted = ""
+                        apiRestPasswordEncrypted = ""
+                        apiRestUsernameIV = ""
+                        apiRestPasswordIV = ""
                         apiRestUsernamePlain = uriLogin.user
                         apiRestPasswordPlain = uriLogin.password
                     }
@@ -115,6 +121,34 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
         return uriLoginWrapper.parseUriLogin(url)
+    }
+
+    /**
+     * Removes all the application Password credentials
+     * @return the number of sites that were affected
+     */
+    suspend fun removeAllApplicationPasswordCredentials(): Int {
+        return withContext(bgDispatcher) {
+            val sites = siteSqlUtils.getSites()
+            val affectedSites = sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+            sites.forEach { site ->
+                site.apply {
+                    apiRestUsernamePlain = ""
+                    apiRestPasswordPlain = ""
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                }
+                siteSqlUtils.insertOrUpdateSite(site)
+            }
+            affectedSites
+        }
+    }
+
+    fun getApplicationPasswordSitesCount(): Int {
+        val sites = siteSqlUtils.getSites()
+        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
     /**

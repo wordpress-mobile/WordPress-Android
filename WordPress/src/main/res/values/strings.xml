@@ -116,6 +116,7 @@
     <string name="coming_soon">Coming soon!</string>
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
+    <string name="sort_by">Sort by</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -4992,6 +4993,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
+    <string name="subscribers_sort_email">Email address</string>
+    <string name="subscribers_sort_date">Date subscribed</string>
+    <string name="subscribers_sort_display_name">Display name</string>
+    <string name="subscribers_sort_plan">Plan</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
@@ -5002,15 +5007,30 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_newsletter_label">Newsletter subscription</string>
     <string name="subscribers_detail_label">Subscriber details</string>
     <string name="subscribers_date_label">Subscription date</string>
+    <string name="subscribers_status_label">Subscription status</string>
     <string name="subscribers_plan_label">Plan</string>
     <string name="subscribers_email_label">Email</string>
     <string name="subscribers_country_label">Country</string>
     <string name="subscribers_site_label">Site</string>
     <string name="subscribers_delete_button">Delete subscriber</string>
+    <string name="subscribers_gift_plan_label">Gift plan</string>
+    <string name="subscribers_plan_details_label">Plan details</string>
+    <string name="subscribers_start_date">Start date</string>
+    <string name="subscribers_end_date">End date</string>
+    <string name="subscribers_billing_info">Billing information</string>
+    <string name="subscribers_billing_interval">Billing interval</string>
+    <string name="subscribers_inactive_interval">Inactive interval</string>
+    <string name="subscribers_price">Price</string>
+    <string name="subscribers_renewal_info">Renewal information</string>
+    <string name="subscribers_renewal_interval">Renewal interval</string>
+    <string name="subscribers_gift_content_description">Gift</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
     <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_invalid">Invalid Application Password</string>
+    <string name="application_password_disable_feature_title">Disable Application Password?</string>
+    <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
 </resources>
