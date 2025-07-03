@@ -4,13 +4,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -22,8 +26,10 @@ import javax.inject.Named
 
 @HiltViewModel
 class AddSubscribersViewModel @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val toastUtilsWrapper: ToastUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     @Inject
     @Named(IO_THREAD)
@@ -50,7 +56,24 @@ class AddSubscribersViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    suspend fun addSubscribers(emails: List<String>): Result<Boolean> = withContext(ioDispatcher) {
+    fun onSubmitClick(
+        emails: List<String>,
+        onSuccess: () -> Unit
+    ) {
+        launch(bgDispatcher) {
+            val result = addSubscribers(emails)
+            launch(mainDispatcher) {
+                if (result.isSuccess) {
+                    toastUtilsWrapper.showToast(R.string.subscribers_add_success)
+                    onSuccess()
+                } else {
+                    toastUtilsWrapper.showToast(R.string.subscribers_add_failed)
+                }
+            }
+        }
+    }
+
+    private suspend fun addSubscribers(emails: List<String>): Result<Boolean> = withContext(ioDispatcher) {
         val params = AddSubscribersParams(
             emails = emails
         )

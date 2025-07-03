@@ -2,7 +2,6 @@ package org.wordpress.android.ui.subscribers
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -22,13 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -126,7 +123,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 viewModel.getSubscriber(userId)?.let { subscriber ->
                                     titleState.value = subscriber.displayNameOrEmail()
                                     showAddSubscribersButtonState.value = false
-                                        ShowSubscriberDetailScreen(
+                                    ShowSubscriberDetailScreen(
                                         subscriber = subscriber,
                                         navController = navController,
                                         modifier = Modifier.padding(contentPadding)
@@ -160,7 +157,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     composable(route = SubscriberScreen.AddSubscribers.name) {
                         titleState.value = stringResource(R.string.subscribers_add_subscribers)
                         showAddSubscribersButtonState.value = false
-                            ShowAddSubscribersScreen(
+                        ShowAddSubscribersScreen(
                             navController = navController,
                             modifier = Modifier.padding(contentPadding)
                         )
@@ -250,28 +247,12 @@ class SubscribersActivity : BaseAppCompatActivity() {
     ) {
         AddSubscribersScreen(
             onSubmit = { emails ->
-                lifecycleScope.launch {
-                    val result = addSubscribersViewModel.addSubscribers(emails)
-                    if (result.isSuccess) {
-                        val toastMsg = if (emails.size > 1) {
-                            getString(R.string.subscribers_add_success_plural, emails.size)
-                        } else {
-                            getString(R.string.subscribers_add_success_singular)
-                        }
-                        Toast.makeText(
-                            this@SubscribersActivity,
-                            toastMsg,
-                            Toast.LENGTH_LONG
-                        ).show()
+                addSubscribersViewModel.onSubmitClick(
+                    emails = emails,
+                    onSuccess = {
                         navController.navigateUp()
-                    } else {
-                        Toast.makeText(
-                            this@SubscribersActivity,
-                            getString(R.string.subscribers_add_failed),
-                            Toast.LENGTH_LONG
-                        ).show()
                     }
-                }
+                )
             },
             onCancel = { navController.navigateUp() },
             showProgress = addSubscribersViewModel.showProgress.collectAsState(),
