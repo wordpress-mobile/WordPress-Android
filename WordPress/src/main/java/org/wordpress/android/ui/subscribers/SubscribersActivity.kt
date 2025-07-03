@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -70,6 +71,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
         val navController = rememberNavController()
         val listTitle = stringResource(R.string.subscribers)
         val titleState = remember { mutableStateOf(listTitle) }
+
         AppThemeM3 {
             Scaffold(
                 topBar = {
@@ -105,39 +107,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 ) {
                     composable(route = SubscriberScreen.List.name) {
                         titleState.value = listTitle
-                        DataViewScreen(
-                            uiState = viewModel.uiState.collectAsState(),
-                            items = viewModel.items.collectAsState(),
-                            supportedFilters = viewModel.getSupportedFilters(),
-                            currentFilter = viewModel.itemFilter.collectAsState().value,
-                            supportedSorts = viewModel.getSupportedSorts(),
-                            currentSort = viewModel.itemSortBy.collectAsState().value,
-                            errorMessage = viewModel.errorMessage.collectAsState().value,
-                            onRefresh = {
-                                viewModel.onRefreshData()
-                            },
-                            onFetchMore = {
-                                viewModel.onFetchMoreData()
-                            },
-                            onSearchQueryChange = { query ->
-                                viewModel.onSearchQueryChange(query)
-                            },
-                            onItemClick = { item ->
-                                viewModel.onItemClick(item)
-                                (item.data as? Subscriber)?.let { subscriber ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                                        key = KEY_USER_ID,
-                                        value = subscriber.userId
-                                    )
-                                    navController.navigate(route = SubscriberScreen.Detail.name)
-                                }
-                            },
-                            onFilterClick = { filter ->
-                                viewModel.onFilterClick(filter)
-                            },
-                            onSortClick = { sort ->
-                                viewModel.onSortClick(sort)
-                            },
+                        ShowListScreen(
+                            navController,
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -148,28 +119,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             if (userId != null) {
                                 viewModel.getSubscriber(userId)?.let { subscriber ->
                                     titleState.value = subscriber.displayNameOrEmail()
-                                    SubscriberDetailScreen(
+                                    ShowSubscriberDetailScreen(
                                         subscriber = subscriber,
-                                        onEmailClick = { email ->
-                                            onEmailClick(email)
-                                        },
-                                        onUrlClick = { url ->
-                                            onUrlClick(url)
-                                        },
-                                        onPlanClick = { planIndex ->
-                                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                key = KEY_USER_ID,
-                                                value = userId
-                                            )
-                                            // plans don't have a unique id, so we use the index to identify them
-                                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                key = KEY_PLAN_INDEX,
-                                                value = planIndex
-                                            )
-                                            navController.navigate(route = SubscriberScreen.Plan.name)
-                                        },
-                                        modifier = Modifier.padding(contentPadding),
-                                        subscriberStats = viewModel.subscriberStats.collectAsState()
+                                        navController = navController,
+                                        modifier = Modifier.padding(contentPadding)
                                     )
                                 }
                             }
@@ -198,39 +151,123 @@ class SubscribersActivity : BaseAppCompatActivity() {
 
                     composable(route = SubscriberScreen.AddSubscribers.name) {
                         titleState.value = stringResource(R.string.subscribers_add_subscribers)
-                        AddSubscribersScreen(
-                            onSubmit = { emails ->
-                                lifecycleScope.launch {
-                                    val result = viewModel.addSubscribers(emails)
-                                    if (result.isSuccess) {
-                                        val toastMsg = if (emails.size > 1) {
-                                            getString(R.string.subscribers_add_success_plural, emails.size)
-                                        } else {
-                                            getString(R.string.subscribers_add_success_singular)
-                                        }
-                                        Toast.makeText(
-                                            this@SubscribersActivity,
-                                            toastMsg,
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        navController.navigateUp()
-                                    } else {
-                                        Toast.makeText(
-                                            this@SubscribersActivity,
-                                            getString(R.string.subscribers_add_failed),
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }
-                            },
-                            onCancel = { navController.navigateUp() },
-                            showProgress = viewModel.showAddSubscribersProgress.collectAsState(),
+                        ShowAddSubscribersScreen(
+                            navController = navController,
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun ShowListScreen(
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        DataViewScreen(
+            uiState = viewModel.uiState.collectAsState(),
+            items = viewModel.items.collectAsState(),
+            supportedFilters = viewModel.getSupportedFilters(),
+            currentFilter = viewModel.itemFilter.collectAsState().value,
+            supportedSorts = viewModel.getSupportedSorts(),
+            currentSort = viewModel.itemSortBy.collectAsState().value,
+            errorMessage = viewModel.errorMessage.collectAsState().value,
+            onRefresh = {
+                viewModel.onRefreshData()
+            },
+            onFetchMore = {
+                viewModel.onFetchMoreData()
+            },
+            onSearchQueryChange = { query ->
+                viewModel.onSearchQueryChange(query)
+            },
+            onItemClick = { item ->
+                viewModel.onItemClick(item)
+                (item.data as? Subscriber)?.let { subscriber ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = KEY_USER_ID,
+                        value = subscriber.userId
+                    )
+                    navController.navigate(route = SubscriberScreen.Detail.name)
+                }
+            },
+            onFilterClick = { filter ->
+                viewModel.onFilterClick(filter)
+            },
+            onSortClick = { sort ->
+                viewModel.onSortClick(sort)
+            },
+            modifier = modifier
+        )
+    }
+
+    @Composable
+    private fun ShowSubscriberDetailScreen(
+        subscriber: Subscriber,
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        SubscriberDetailScreen(
+            subscriber = subscriber,
+            onEmailClick = { email ->
+                onEmailClick(email)
+            },
+            onUrlClick = { url ->
+                onUrlClick(url)
+            },
+            onPlanClick = { planIndex ->
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    key = KEY_USER_ID,
+                    value = subscriber.userId
+                )
+                // plans don't have a unique id, so we use the index to identify them
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    key = KEY_PLAN_INDEX,
+                    value = planIndex
+                )
+                navController.navigate(route = SubscriberScreen.Plan.name)
+            },
+            modifier = modifier,
+            subscriberStats = viewModel.subscriberStats.collectAsState()
+        )
+    }
+
+    @Composable
+    private fun ShowAddSubscribersScreen(
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        AddSubscribersScreen(
+            onSubmit = { emails ->
+                lifecycleScope.launch {
+                    val result = viewModel.addSubscribers(emails)
+                    if (result.isSuccess) {
+                        val toastMsg = if (emails.size > 1) {
+                            getString(R.string.subscribers_add_success_plural, emails.size)
+                        } else {
+                            getString(R.string.subscribers_add_success_singular)
+                        }
+                        Toast.makeText(
+                            this@SubscribersActivity,
+                            toastMsg,
+                            Toast.LENGTH_LONG
+                        ).show()
+                        navController.navigateUp()
+                    } else {
+                        Toast.makeText(
+                            this@SubscribersActivity,
+                            getString(R.string.subscribers_add_failed),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            },
+            onCancel = { navController.navigateUp() },
+            showProgress = viewModel.showAddSubscribersProgress.collectAsState(),
+            modifier = modifier
+        )
     }
 
     private fun onEmailClick(email: String) {
