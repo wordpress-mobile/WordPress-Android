@@ -240,7 +240,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     context = this@SubscribersActivity,
                     subscriber = subscriber,
                     onSuccess = {
-                        // TODO refresh list
                         navController.navigateUp()
                     }
                 )

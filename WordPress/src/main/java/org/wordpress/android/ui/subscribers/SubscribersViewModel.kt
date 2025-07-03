@@ -283,6 +283,7 @@ class SubscribersViewModel @Inject constructor(
                         if (result.isSuccess) {
                             toastUtilsWrapper.showToast(R.string.subscribers_delete_success)
                             onSuccess()
+                            onRefreshData()
                         } else {
                             toastUtilsWrapper.showToast(R.string.subscribers_delete_failed)
                         }
