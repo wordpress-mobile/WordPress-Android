@@ -5024,6 +5024,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="subscribers_renewal_info">Renewal information</string>
     <string name="subscribers_renewal_interval">Renewal interval</string>
     <string name="subscribers_gift_content_description">Gift</string>
+    <string name="subscribers_add_subscribers">Add subscribers</string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
+    <string name="subscribers_add_disclosure">
+        By clicking Send you represent that you\'ve obtained the appropriate consent to email each person. Spam complaints or high bounce rate from your subscribers may lead to action against your account.
+    </string>
+    <string name="subscribers_add_success">Successfully added subscribers</string>
+    <string name="subscribers_add_failed">Failed to add subscribers</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
