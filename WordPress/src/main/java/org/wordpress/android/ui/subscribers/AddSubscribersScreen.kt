@@ -119,6 +119,7 @@ fun AddSubscribersScreen(
     }
 }
 
+@Suppress("ReturnCount")
 private fun isValidEntry(entry: String): Boolean {
     if (entry.isEmpty()) {
         return false
