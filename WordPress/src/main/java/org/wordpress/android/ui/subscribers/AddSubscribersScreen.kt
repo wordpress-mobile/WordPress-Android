@@ -58,7 +58,7 @@ fun AddSubscribersScreen(
             value = entry,
             onValueChange = {
                 entry = it
-                isValidEntry = isValidEntry(entry)
+                isValidEntry = isValidEntry(it)
             },
             label = {
                 Text(stringResource(id = R.string.subscribers_add_email_hint))
@@ -119,7 +119,11 @@ fun AddSubscribersScreen(
     }
 }
 
+@Suppress("ReturnCount")
 private fun isValidEntry(entry: String): Boolean {
+    if (entry.isEmpty()) {
+        return false
+    }
     parseEntry(entry).forEach {
         if (!validateEmail(it)) {
             return false
