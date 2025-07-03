@@ -120,6 +120,9 @@ fun AddSubscribersScreen(
 }
 
 private fun isValidEntry(entry: String): Boolean {
+    if (entry.isEmpty()) {
+        return false
+    }
     parseEntry(entry).forEach {
         if (!validateEmail(it)) {
             return false
