@@ -55,42 +55,34 @@ fun AddSubscribersScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Row(
+        OutlinedTextField(
+            value = entry,
+            onValueChange = {
+                entry = it
+                isValidEntry = isValidEntry(entry)
+            },
+            label = {
+                Text(stringResource(id = R.string.subscribers_add_email_hint))
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onSubmit(parseEntry(entry))
+                }
+            ),
             modifier = modifier.fillMaxWidth()
-        ) {
-            OutlinedTextField(
-                value = entry,
-                onValueChange = {
-                    entry = it
-                    isValidEntry = isValidEntry(entry)
-                },
-                label = {
-                    Text(stringResource(id = R.string.subscribers_add_email_hint))
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        onSubmit(parseEntry(entry))
-                    }
-                ),
-                modifier = modifier.fillMaxWidth()
-            )
-        }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.subscribers_add_disclosure),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        Text(
+            text = stringResource(id = R.string.subscribers_add_disclosure),
+            style = MaterialTheme.typography.bodyMedium
+        )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (showProgress.value) {
             Box(
