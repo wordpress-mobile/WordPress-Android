@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Encapsulates the site address validation, cleaning, and error reporting of {@link LoginSiteAddressFragment}.
  */
-class LoginSiteAddressValidator {
+public class LoginSiteAddressValidator {
     private static final int SECONDS_DELAY_BEFORE_SHOWING_ERROR_MESSAGE = 2;
 
     private MutableLiveData<Boolean> mIsValid = new MutableLiveData<>();
@@ -22,19 +22,19 @@ class LoginSiteAddressValidator {
     private String mCleanedSiteAddress = "";
     private final Debouncer mDebouncer;
 
-    @NonNull LiveData<Boolean> getIsValid() {
+    public @NonNull LiveData<Boolean> getIsValid() {
         return mIsValid;
     }
 
-    @NonNull LiveData<Integer> getErrorMessageResId() {
+    public @NonNull LiveData<Integer> getErrorMessageResId() {
         return mErrorMessageResId;
     }
 
-    @NonNull String getCleanedSiteAddress() {
+    public @NonNull String getCleanedSiteAddress() {
         return mCleanedSiteAddress;
     }
 
-    LoginSiteAddressValidator() {
+    public LoginSiteAddressValidator() {
         this(new Debouncer());
     }
 
@@ -43,11 +43,11 @@ class LoginSiteAddressValidator {
         mDebouncer = debouncer;
     }
 
-    void dispose() {
+    public void dispose() {
         mDebouncer.shutdown();
     }
 
-    void setAddress(@NonNull String siteAddress) {
+    public void setAddress(@NonNull String siteAddress) {
         mCleanedSiteAddress = cleanSiteAddress(siteAddress);
         final boolean isValid = siteAddressIsValid(mCleanedSiteAddress);
 

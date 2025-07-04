@@ -1,4 +1,4 @@
-25.8: We hebben enkele oplossingen gemaakt voor de experimentele editor. 
-- Je kunt groep blokken selecteren, erdoorheen bewegen en bewerken—en ze zijn ook gemakkelijker te gebruiken. 
-- Je inhoud wordt niet gereset wanneer je de oriëntatie van je apparaat wijzigt. 
-- We hebben een vervelende bug opgelost die er soms voor zorgde dat de editor crashte bij het opslaan van wijzigingen.
+25.9:
+- Het toetsenbord overlapt niet langer de editor, wat betekent dat je je geweldige werk altijd kunt zien.
+- Het "mij" icoon heeft nu de juiste kleur als je in de donkere modus bent.
+- We hebben een waarschuwing toegevoegd die je vertelt als je QR code scan niet succesvol was. Geen wachten, geen giswerk, geen probleem

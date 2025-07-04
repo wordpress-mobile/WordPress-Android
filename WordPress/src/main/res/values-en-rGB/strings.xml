@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-04-06 13:19:12+0000
+Translation-Revision-Date: 2025-06-20 10:35:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_title">Authenticate using Application Password</string>
+    <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Please try again or use your camera app to scan the code.</string>
+    <string name="qrcode_auth_flow_timeout_title">Scan timed out</string>
+    <string name="invite_users">Invite users</string>
+    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites.</string>
+    <string name="experimental_application_password_feature">Application Password login</string>
+    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers (work in progress)</string>
+    <string name="experimental_subscribers_feature">Experimental subscribers</string>
+    <string name="cant_share_no_blog">You can\'t share to WordPress without a blog</string>
+    <string name="coming_soon">Coming soon!</string>
+    <string name="me_email_verification_generic_error">Unable to send verification link</string>
+    <string name="me_email_verification_resend">Resend verification link</string>
+    <string name="me_email_verification_sent_description">Check your inbox at %s for the confirmation email</string>
+    <string name="me_email_verification_sent">Email sent</string>
+    <string name="me_email_verification_sending_description">Sending verification link</string>
+    <string name="me_email_verification_sending">Sending…</string>
+    <string name="me_email_verification_verify_email_send_link">Send verification link</string>
+    <string name="me_email_verification_verify_email_description">Please verify your email address to secure your account and unlock all features</string>
+    <string name="me_email_verification_verify_email">Verify your email</string>
+    <string name="experimental_features_feedback_dialog_decline">Not now</string>
+    <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
+    <string name="experimental_features_feedback_dialog_title">Share feedback</string>
+    <string name="experimental_block_editor_plugins">Experimental block editor plugins</string>
+    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
+    <string name="experimental_block_editor_description">Access additional block types and settings</string>
+    <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
+    <string name="disable_experimental_block_editor_description">Opt out of additional block types and settings</string>
+    <string name="disable_experimental_block_editor">Disable experimental block editor</string>
     <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
     <string name="feedback_form_note_link_wordpress">community forums.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
@@ -3285,7 +3315,6 @@ Language: en_GB
     <string name="invite_message_title">Custom message</string>
     <string name="invite">Invite</string>
     <string name="invite_names_title">Usernames or emails</string>
-    <string name="invite_people">Invite People</string>
     <string name="my_site_header_external">External</string>
     <string name="label_clear_search_history">Clear search history</string>
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
@@ -3298,7 +3327,6 @@ Language: en_GB
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
     <string name="role">Role</string>
-    <string name="people">People</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
     <string name="error_update_role">Couldn\'t update user role</string>
@@ -3698,7 +3726,6 @@ Language: en_GB
     <string name="reader_toast_err_adding_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
-    <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Image settings</string>
@@ -3746,7 +3773,6 @@ Language: en_GB
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="comment_unapproved">Comment unapproved</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

@@ -8,6 +8,7 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
+import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
@@ -114,8 +115,6 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
@@ -214,10 +213,6 @@ public interface AppComponent {
     void inject(CommentDetailFragment object);
 
     void inject(MeFragment object);
-
-    void inject(MyProfileActivity object);
-
-    void inject(MyProfileFragment object);
 
     void inject(AccountSettingsFragment object);
 
@@ -561,4 +556,6 @@ public interface AppComponent {
     void inject(WPMainNavigationView object);
 
     void inject(PostResolutionOverlayFragment object);
+
+    void inject(LoginSiteApplicationPasswordFragment object);
 }

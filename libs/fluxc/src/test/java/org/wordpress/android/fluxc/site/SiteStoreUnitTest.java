@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.WellSqlTestUtils;
+import org.wordpress.android.fluxc.encryption.EncryptionUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -59,7 +60,7 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
-    private SiteSqlUtils mSiteSqlUtils = new SiteSqlUtils();
+    private SiteSqlUtils mSiteSqlUtils = new SiteSqlUtils(new EncryptionUtils());
     private SiteStore mSiteStore = new SiteStore(
             new Dispatcher(),
             mPostSqlUtils,

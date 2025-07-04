@@ -3285,7 +3285,6 @@ Language: gl_ES
     <string name="invite_message_title">Mensaxe personalizada</string>
     <string name="invite">Invitar</string>
     <string name="invite_names_title">Nomes de usuario ou enderezos de correo electrónico</string>
-    <string name="invite_people">Invitar xente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
@@ -3298,7 +3297,6 @@ Language: gl_ES
     <string name="user_remove_confirmation_message">Se eliminas a %1$s, o usuario non poderá acceder máis a este sitio, aínda que todos os contidos creados por %1$s permanecerán nel.\n\nQueres aínda así eliminar a este usuario?</string>
     <string name="person_remove_confirmation_title">Eliminar a %1$s</string>
     <string name="role">Rol</string>
-    <string name="people">Xente</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Os blogs nesta lista non publicaron nada recentemente</string>
     <string name="error_remove_user">Non foi posible eliminar o usuario</string>
     <string name="error_update_role">Non foi posible actualizar o rol do usuario</string>
@@ -3698,7 +3696,6 @@ Language: gl_ES
     <string name="reader_toast_err_adding_tag">Non se puido engadir esta etiqueta</string>
     <string name="reader_title_applog">Rexistro da aplicación</string>
     <string name="fatal_db_error">Houbo un erro mentres se creaba a base de datos da aplicación. Proba a reinstalar a aplicación.</string>
-    <string name="error_blog_hidden">Este blogue non se pode cargar porque está oculto. Habilítao de novo na configuración e proba outra vez.</string>
     <string name="error_refresh_media">Non se poden actualizar os medios neste momento</string>
     <string name="wordpress_blog">Blogue feito con WordPress</string>
     <string name="image_settings">Configuración da imaxe</string>
@@ -3746,7 +3743,6 @@ Language: gl_ES
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="reader_likes_you_and_multi">A ti e a outros %,d gustoulles isto</string>
     <string name="reader_likes_multi">A %,d persoas gustoulles isto</string>
-    <string name="cant_share_no_visible_blog">Non podes compartir en WordPress se non tes algún blogue visible</string>
     <string name="comment_spammed">Comentario sinalado como spam</string>
     <string name="comment_unapproved">Comentario sen aprobar</string>
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>

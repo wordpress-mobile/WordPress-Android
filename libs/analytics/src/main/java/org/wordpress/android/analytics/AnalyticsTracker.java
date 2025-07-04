@@ -289,9 +289,6 @@ public final class AnalyticsTracker {
         FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_ON,
         ME_ACCESSED("me_tab_accessed"),
         ME_GRAVATAR_TAPPED,
-        ME_GRAVATAR_SHOT_NEW,
-        ME_GRAVATAR_GALLERY_PICKED,
-        ME_GRAVATAR_CROPPED,
         ME_GRAVATAR_UPLOADED,
         ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
         ME_GRAVATAR_UPLOAD_EXCEPTION,
@@ -471,9 +468,6 @@ public final class AnalyticsTracker {
         PAGES_EDIT_HOMEPAGE_ITEM_PRESSED("site_pages_edit_homepage_item_pressed"),
         SIGNUP_BUTTON_TAPPED,
         SIGNUP_EMAIL_BUTTON_TAPPED,
-        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED,
-        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED("signup_email_epilogue_gallery_picked"),
-        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW("signup_email_epilogue_shot_new"),
         SIGNUP_EMAIL_EPILOGUE_UNCHANGED("signup_epilogue_unchanged"),
         SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED("signup_epilogue_update_display_name_failed"),
         SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED("signup_epilogue_update_display_name_succeeded"),
@@ -1158,7 +1152,8 @@ public final class AnalyticsTracker {
         BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL,
         BACKGROUND_REST_AUTODISCOVERY_FAILED,
         WP_ANDROID_APPLICATION_PASSWORD_LOGIN,
-        JP_ANDROID_APPLICATION_PASSWORD_LOGIN;
+        JP_ANDROID_APPLICATION_PASSWORD_LOGIN,
+        APPLICATION_PASSWORD_SET_OFF;
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.

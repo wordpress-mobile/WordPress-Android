@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_PROFILE_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
@@ -1219,13 +1220,13 @@ open class SiteStore @Inject constructor(
      * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPC: List<SiteModel>
-        get() = siteSqlUtils.sitesAccessedViaXMLRPC.asModel
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC
 
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPCCount: Int
-        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count()
 
     /**
      * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
@@ -1326,6 +1327,10 @@ open class SiteStore @Inject constructor(
             }
             FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
                 emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
+            }
+            FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD ->
+                coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites from Application Password") {
+                    emitChange(fetchSitesXmlRpcFromApplicationPassword(action.payload as RefreshSitesXMLRPCPayload))
             }
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
                 emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
@@ -1441,6 +1446,14 @@ open class SiteStore @Inject constructor(
     suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
+        }
+    }
+
+    suspend fun fetchSitesXmlRpcFromApplicationPassword(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
+            updateSites(
+                siteXMLRPCClient.fetchSitesFromApplicationPassword(payload.url, payload.username, payload.password)
+            )
         }
     }
 

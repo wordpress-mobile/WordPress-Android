@@ -24,6 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -135,6 +142,65 @@ fun FeedbackDialog(onDismiss: () -> Unit, onSendFeedback: () -> Unit) {
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(text = stringResource(R.string.experimental_features_feedback_dialog_decline))
+            }
+        }
+    )
+}
+
+@Composable
+fun ApplicationPasswordOffConfirmationDialog(
+    affectedSites: Int,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    onContactSupport: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.application_password_disable_feature_title)) },
+        text = {
+            Column {
+                Text(
+                    text = stringResource(
+                        R.string.application_password_disable_feature_description,
+                        affectedSites
+                    )
+                )
+
+                val annotatedString = buildAnnotatedString {
+                    val supportText = stringResource(R.string.contact_support)
+                    val tag = "contact_support_link"
+                    pushStringAnnotation(tag = tag, annotation = "contact_support")
+                    withStyle(SpanStyle(
+                        color = LocalContentColor.current,
+                        textDecoration = TextDecoration.Underline,
+                        fontWeight = FontWeight.Medium
+                    )) {
+                        append(supportText)
+                    }
+                    pop()
+                }
+                Text(
+                    text = annotatedString,
+                    modifier = Modifier
+                        .padding(top = Margin.Medium.value)
+                        .clickable {
+                            // Only one annotation, so always call
+                            onContactSupport()
+                        },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Start
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(text = stringResource(R.string.disable))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
             }
         }
     )

@@ -96,7 +96,8 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.onSnackbar,
         dashboardItemsViewModelSlice.onSnackbarMessage,
         siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
-        dashboardCardsViewModelSlice.onSnackbarMessage
+        dashboardCardsViewModelSlice.onSnackbarMessage,
+        applicationPasswordViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 

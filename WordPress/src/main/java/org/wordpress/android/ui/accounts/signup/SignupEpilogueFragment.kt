@@ -3,12 +3,8 @@
 package org.wordpress.android.ui.accounts.signup
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -26,7 +22,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,18 +30,16 @@ import com.gravatar.AvatarUrl
 import com.gravatar.quickeditor.GravatarQuickEditor
 import com.gravatar.quickeditor.ui.editor.AuthenticationMethod
 import com.gravatar.quickeditor.ui.editor.AvatarPickerContentLayout
+import com.gravatar.quickeditor.ui.editor.AvatarPickerResult
 import com.gravatar.quickeditor.ui.editor.GravatarQuickEditorParams
 import com.gravatar.services.AvatarService
 import com.gravatar.services.GravatarResult
 import com.gravatar.types.Email
-import com.yalantis.ucrop.UCrop
-import com.yalantis.ucrop.UCropActivity
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.WordPress.Companion.getBitmapCache
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -62,11 +55,7 @@ import org.wordpress.android.login.LoginBaseFormFragment
 import org.wordpress.android.login.widgets.WPLoginInputRow
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.photopicker.MediaPickerConstants
-import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
@@ -74,10 +63,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.WPAvatarUtils
-import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.config.GravatarQuickEditorFeatureConfig
-import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -136,13 +121,7 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
     lateinit var mSignupUtils: SignupUtils
 
     @Inject
-    lateinit var mMediaPickerLauncher: MediaPickerLauncher
-
-    @Inject
     lateinit var mAvatarService: AvatarService
-
-    @Inject
-    lateinit var gravatarQuickEditorFeatureConfig: GravatarQuickEditorFeatureConfig
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -173,33 +152,35 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
         headerAvatarLayout.isEnabled = mIsEmailSignup
         headerAvatarLayout.setOnClickListener {
             mUnifiedLoginTracker.trackClick(UnifiedLoginTracker.Click.SELECT_AVATAR)
-            if (gravatarQuickEditorFeatureConfig.isEnabled()) {
-                GravatarQuickEditor.show(
-                    fragment = this,
-                    gravatarQuickEditorParams = GravatarQuickEditorParams {
-                        email = Email(mEmailAddress)
-                        avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
-                    },
-                    authenticationMethod = AuthenticationMethod.Bearer(mAccount.accessToken.orEmpty()),
-                    onAvatarSelected = {
-                        mPhotoUrl = AvatarUrl(
-                            email = Email(mEmailAddress),
-                            avatarQueryOptions = AvatarQueryOptions {
-                                preferredSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_large)
-                            }
-                        ).url(cacheBuster = System.currentTimeMillis().toString()).toString()
-                        mImageManager.loadIntoCircle(
-                            mHeaderAvatar,
-                            ImageType.AVATAR_WITHOUT_BACKGROUND,
-                            mPhotoUrl
-                        )
-                        mHeaderAvatarAdd.visibility = View.GONE
-                        mIsAvatarAdded = true
-                    },
-                )
-            } else {
-                mMediaPickerLauncher.showGravatarPicker(this@SignupEpilogueFragment)
-            }
+            GravatarQuickEditor.show(
+                fragment = this,
+                gravatarQuickEditorParams = GravatarQuickEditorParams {
+                    email = Email(mEmailAddress)
+                    avatarPickerContentLayout = AvatarPickerContentLayout.Horizontal
+                },
+                authenticationMethod = AuthenticationMethod.Bearer(mAccount.accessToken.orEmpty()),
+                updateHandler = { event ->
+                    when (event) {
+                        AvatarPickerResult -> {
+                            mPhotoUrl = AvatarUrl(
+                                email = Email(mEmailAddress),
+                                avatarQueryOptions = AvatarQueryOptions {
+                                    preferredSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_large)
+                                }
+                            ).url(cacheBuster = System.currentTimeMillis().toString()).toString()
+                            mImageManager.loadIntoCircle(
+                                mHeaderAvatar,
+                                ImageType.AVATAR_WITHOUT_BACKGROUND,
+                                mPhotoUrl
+                            )
+                            mHeaderAvatarAdd.visibility = View.GONE
+                            mIsAvatarAdded = true
+                        }
+
+                        else -> Unit
+                    }
+                },
+            )
         }
         headerAvatarLayout.setOnLongClickListener {
             ToastUtils.showToast(
@@ -371,81 +352,6 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             mIsUpdatingPassword = savedInstanceState.getBoolean(KEY_IS_UPDATING_PASSWORD)
             mHasUpdatedPassword = savedInstanceState.getBoolean(KEY_HAS_UPDATED_PASSWORD)
             mHasMadeUpdates = savedInstanceState.getBoolean(KEY_HAS_MADE_UPDATES)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    @Suppress("deprecation", "NestedBlockDepth", "LongMethod")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (isAdded) {
-            when (resultCode) {
-                Activity.RESULT_OK -> when (requestCode) {
-                    RequestCodes.PHOTO_PICKER -> if (data != null) {
-                        val mediaUriStringsArray =
-                            data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-
-                        if (mediaUriStringsArray != null && mediaUriStringsArray.size > 0) {
-                            val source =
-                                PhotoPickerMediaSource.fromString(
-                                    data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
-                                )
-                            val stat =
-                                if (source == PhotoPickerMediaSource.ANDROID_CAMERA) {
-                                    Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                } else {
-                                    Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED
-                                }
-                            AnalyticsTracker.track(stat)
-                            val imageUri = Uri.parse(mediaUriStringsArray[0])
-
-                            if (imageUri != null) {
-                                val wasSuccess = WPMediaUtils.fetchMediaAndDoNext(
-                                    activity, imageUri
-                                ) { uri -> startCropActivity(uri) }
-
-                                if (!wasSuccess) {
-                                    AppLog.e(
-                                        AppLog.T.UTILS,
-                                        "Can't download picked or captured image"
-                                    )
-                                }
-                            } else {
-                                AppLog.e(AppLog.T.UTILS, "Can't parse media string")
-                            }
-                        } else {
-                            AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image")
-                        }
-                    }
-
-                    UCrop.REQUEST_CROP -> {
-                        AnalyticsTracker.track(Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED)
-                        WPMediaUtils.fetchMediaAndDoNext(
-                            activity, UCrop.getOutput((data)!!)
-                        ) { uri ->
-                            startGravatarUpload(
-                                MediaUtils.getRealPathFromURI(
-                                    activity, uri
-                                )
-                            )
-                        }
-                    }
-                }
-
-                UCrop.RESULT_ERROR -> {
-                    AppLog.e(
-                        AppLog.T.NUX, "Image cropping failed", UCrop.getError(
-                            (data)!!
-                        )
-                    )
-                    ToastUtils.showToast(
-                        activity,
-                        R.string.error_cropping_image,
-                        ToastUtils.Duration.SHORT
-                    )
-                }
-            }
         }
     }
 
@@ -633,56 +539,6 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
         mDialog?.show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
-    private fun loadAvatar(avatarUrl: String, injectFilePath: String) {
-        val newAvatarUploaded = injectFilePath.isNotEmpty()
-        if (newAvatarUploaded) {
-            // Remove specific URL entry from bitmap cache. Update it via injected request cache.
-            getBitmapCache().removeSimilar(avatarUrl)
-            // Changing the signature invalidates Glide's cache
-            mAppPrefsWrapper.avatarVersion += 1
-        }
-
-        val bitmap = getBitmapCache()[avatarUrl]
-        // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
-        // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
-        // which temporary saves the new image into a local bitmap cache.
-        if (bitmap != null) {
-            mImageManager.load((mHeaderAvatar), bitmap)
-        } else {
-            mImageManager.loadIntoCircle(
-                mHeaderAvatar,
-                ImageType.AVATAR_WITHOUT_BACKGROUND,
-                if (newAvatarUploaded) {
-                    injectFilePath
-                } else {
-                    avatarUrl
-                },
-                object : ImageManager.RequestListener<Drawable> {
-                    override fun onLoadFailed(e: Exception?, model: Any?) {
-                        AppLog.e(
-                            AppLog.T.NUX,
-                            "Uploading image to Gravatar succeeded, but setting image view failed"
-                        )
-                        showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar_view))
-                    }
-
-                    @Suppress("NAME_SHADOWING")
-                    override fun onResourceReady(resource: Drawable, model: Any?) {
-                        if (newAvatarUploaded && resource is BitmapDrawable) {
-                            var bitmap = resource.bitmap
-                            // create a copy since the original bitmap may by automatically recycled
-                            bitmap.config?.let { config ->
-                                bitmap = bitmap.copy(config, true)
-                            }
-                            getBitmapCache().put((avatarUrl), bitmap)
-                        }
-                    }
-                },
-                mAppPrefsWrapper.avatarVersion
-            )
-        }
-    }
-
     private fun populateViews() {
         mEmailAddress = mAccountStore.account.email
         mDisplayName = mSignupUtils.createDisplayNameFromEmail(mEmailAddress)
@@ -726,84 +582,6 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             .setPositiveButton(R.string.login_error_button, null)
             .create()
         dialog.show()
-    }
-
-    private fun startCropActivity(uri: Uri?) {
-        val baseContext: Context? = activity
-
-        if (baseContext != null) {
-            val context: Context = ContextThemeWrapper(baseContext, R.style.WordPress_NoActionBar)
-
-            val options = UCrop.Options()
-            options.setShowCropGrid(false)
-            options.setStatusBarColor(
-                context.getColorFromAttribute(
-                    android.R.attr.statusBarColor
-                )
-            )
-            options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-            options.setToolbarWidgetColor(
-                context.getColorFromAttribute(
-                    com.google.android.material.R.attr.colorOnSurface
-                )
-            )
-            options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
-            options.setHideBottomControls(true)
-
-            UCrop.of((uri)!!, Uri.fromFile(File(context.cacheDir, "cropped.jpg")))
-                .withAspectRatio(1f, 1f)
-                .withOptions(options)
-                .start(context, this)
-        }
-    }
-
-    private fun startGravatarUpload(filePath: String) {
-        if (!TextUtils.isEmpty(filePath)) {
-            val file = File(filePath)
-            if (file.exists()) {
-                mAccountStore.accessToken?.let { accessToken ->
-                    startProgress(false)
-                    lifecycleScope.launch {
-                        val result = mAvatarService.uploadCatching(
-                            file,
-                            accessToken,
-                            hash = Email(mAccountStore.account.email).hash(),
-                            selectAvatar = true
-                        )
-                        when (result) {
-                            is GravatarResult.Success -> {
-                                endProgress()
-                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED)
-                                mPhotoUrl = WPAvatarUtils.rewriteAvatarUrl(
-                                    mAccount.account.avatarUrl,
-                                    resources.getDimensionPixelSize(R.dimen.avatar_sz_large)
-                                )
-                                loadAvatar(mPhotoUrl, filePath)
-                                mHeaderAvatarAdd.visibility = View.GONE
-                                mIsAvatarAdded = true
-                            }
-
-                            is GravatarResult.Failure -> {
-                                endProgress()
-                                showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar))
-                                val properties: MutableMap<String, Any?> = HashMap()
-                                properties["error_type"] = result.error
-                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties)
-                                AppLog.e(AppLog.T.NUX, "Uploading image to Gravatar failed")
-                            }
-                        }
-                    }
-                }
-            } else {
-                ToastUtils.showToast(
-                    activity,
-                    R.string.error_locating_image,
-                    ToastUtils.Duration.SHORT
-                )
-            }
-        } else {
-            ToastUtils.showToast(activity, R.string.error_locating_image, ToastUtils.Duration.SHORT)
-        }
     }
 
     @SuppressLint("SetTextI18n")

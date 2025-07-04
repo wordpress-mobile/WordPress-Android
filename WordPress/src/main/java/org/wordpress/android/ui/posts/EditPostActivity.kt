@@ -123,6 +123,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
@@ -2002,6 +2004,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     onToggleRedo(!hasRedo)
                 }
             })
+            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
+                override fun onFeaturedImageChanged(mediaID: Long) {
+                    setFeaturedImageId(mediaID, false, true)
+                }
+            })
             editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
                 override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
                     editorPhotoPicker?.allowMultipleSelection = config.multiple
@@ -2504,8 +2511,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 accountStore.account.userName,
                 accountStore.accessToken,
                 siteModel.selfHostedSiteId,
-                siteModel.username,
-                siteModel.password,
+                siteModel.getUserNameProcessed(),
+                siteModel.getPasswordProcessed(),
                 siteModel.isUsingWpComRestApi,
                 siteModel.webEditor,
                 userAgent.toString(),

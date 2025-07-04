@@ -1,19 +1,13 @@
 package org.wordpress.android.ui.mysite.cards.applicationpassword
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -23,20 +17,23 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
-import rs.wordpress.api.kotlin.ApiDiscoveryResult
-import rs.wordpress.api.kotlin.WpLoginClient
+import org.wordpress.android.viewmodel.ResourceProvider
+import rs.wordpress.api.kotlin.WpApiClient
+import uniffi.wp_api.PostListParams
+import uniffi.wp_api.WpAppNotifier
+import uniffi.wp_api.WpAuthenticationProvider
+import java.net.URL
 import javax.inject.Inject
-import javax.inject.Named
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
-    private val wpLoginClient: WpLoginClient,
-    private val appLogWrapper: AppLogWrapper,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val experimentalFeatures: ExperimentalFeatures,
+    private val resourceProvider: ResourceProvider,
+    private val appLogWrapper: AppLogWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -56,10 +53,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModel: LiveData<MySiteCardAndItem.Card?> = uiModelMutable
 
     fun buildCard(siteModel: SiteModel) {
-        // This is hidden for regular users.
-        // After enabling it, please remove the Suppress annotation for buildCard and buildApplicationPasswordDiscovery
         if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
+            dummyRequest(siteModel)
         }
     }
 
@@ -86,17 +82,61 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
             if (storedSite != null &&
-                !storedSite.apiRestUsername.isNullOrEmpty() && !storedSite.apiRestPassword.isNullOrEmpty()) {
+                !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
+                !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
+                ) {
                 return@launch
             }
 
-            val authorizationUrlComplete = getAuthorizationUrlComplete(site.url)
+            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
                 siteURLCache[site.url] = ""
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
                 siteURLCache[site.url] = authorizationUrlComplete
+            }
+        }
+    }
+
+    private fun dummyRequest(site: SiteModel) {
+        if (site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+            return
+        }
+        scope.launch {
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            )
+            val apiRootUrl = URL("${site.url}/wp-json")
+            val client = WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication() {
+                        val message = UiStringText(resourceProvider.getString(R.string.application_password_invalid))
+                        val button = UiStringText(resourceProvider.getString(R.string.sign_in))
+                        val snackbarHolder = SnackbarMessageHolder(
+                            message = message,
+                            buttonTitle = button,
+                            buttonAction = { reauthenticate(site) }
+                        )
+                        _onSnackbarMessage.postValue(Event(snackbarHolder))
+                    }
+                }
+            )
+            client.request { requestBuilder ->
+                requestBuilder.posts().listWithEditContext(PostListParams())
+            }
+        }
+    }
+
+    private fun reauthenticate(site: SiteModel) {
+        scope.launch {
+            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
+            if (authorizationUrlComplete.isEmpty()) {
+                appLogWrapper.e(AppLog.T.API, "Error getting authorization URL when reauthenticate")
+            } else {
+                onClick(authorizationUrlComplete) // Force the onClick to open reauthentication
             }
         }
     }
@@ -108,51 +148,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     QuickLinkItem(
                         label = UiString.UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = onClick(authorizationUrlComplete)
+                        onClick = ListItemInteraction.create { onClick(authorizationUrlComplete) }
                     )
                 )
             )
         )
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun getAuthorizationUrlComplete(siteUrl: String): String = withContext(bgDispatcher) {
-        try {
-            getAuthorizationUrlCompleteInternal(siteUrl)
-        } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable)
-        }
-    }
 
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
-        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return ""
-    }
-
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
-        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-            is ApiDiscoveryResult.Success -> {
-                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
-                val authorizationUrlComplete =
-                    applicationPasswordLoginHelper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                authorizationUrlComplete
-            }
-
-            is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
-
-            is ApiDiscoveryResult.FailureFindApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
-
-            is ApiDiscoveryResult.FailureParseSiteUrl ->
-                handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
-        }
-    }
-
-    private fun onClick(authorizationUrlComplete: String) = ListItemInteraction.create {
+    private fun onClick(authorizationUrlComplete: String) {
         _onNavigation.postValue(
             Event(
                 SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)

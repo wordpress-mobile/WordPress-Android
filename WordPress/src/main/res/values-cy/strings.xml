@@ -93,7 +93,6 @@ Language: cy_GB
     <string name="invite_error_no_usernames">Ychwanegwch o leiaf un enw defnyddiwr</string>
     <string name="invite">Gwahodd</string>
     <string name="my_site_header_external">Allanol</string>
-    <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
     <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
@@ -102,7 +101,6 @@ Language: cy_GB
     <string name="user_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
     <string name="person_removed">Wedi tynnu %1$s yn llwyddiannus</string>
     <string name="person_remove_confirmation_title">Tynnu %1$s</string>
-    <string name="people">Pobl</string>
     <string name="role">Rôl</string>
     <string name="error_remove_user">Methu tynnu defnyddiwr</string>
     <string name="error_update_role">Methu diweddaru rôl defnyddiwr</string>
@@ -499,7 +497,6 @@ Language: cy_GB
     <string name="local_changes">Newidiadau lleol</string>
     <string name="image_settings">Gosodiadau delweddau</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
     <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
@@ -509,7 +506,6 @@ Language: cy_GB
     <string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
     <string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>
     <string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
-    <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
     <string name="pick_photo">Dewis ffoto</string>
     <string name="pick_video">Dewiswch fideo</string>

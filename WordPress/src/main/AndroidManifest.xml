@@ -128,7 +128,7 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.ApplicationPasswordLoginActivity"
+            android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
             android:theme="@style/LoginTheme.TransparentSystemBars"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
@@ -410,6 +410,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
+
+        <activity android:name=".ui.subscribers.SubscribersActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/subscribers"/>
 
         <!-- Deep Linking Activity -->
         <activity
@@ -794,12 +798,6 @@
             android:name=".ui.domains.DomainRegistrationCheckoutWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <!-- Me activities -->
-        <activity
-            android:name=".ui.prefs.MyProfileActivity"
-            android:label="@string/my_profile"
-            android:theme="@style/WordPress.NoActionBar" />
-
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
@@ -1147,11 +1145,6 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
-        <!-- Scanner -->
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode_ui"/>
 
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"

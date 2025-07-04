@@ -7,9 +7,13 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.encryption.EncryptionUtils
+import org.wordpress.android.util.UrlUtils
+import rs.wordpress.api.kotlin.ApiDiscoveryResult
+import rs.wordpress.api.kotlin.WpLoginClient
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -21,9 +25,46 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val encryptionUtils: EncryptionUtils
+    private val wpLoginClient: WpLoginClient,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     private var processedAppPasswordData: String? = null
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun getAuthorizationUrlComplete(siteUrl: String): String =
+        try {
+            getAuthorizationUrlCompleteInternal(siteUrl)
+        } catch (throwable: Throwable) {
+            handleAuthenticationDiscoveryError(siteUrl, throwable)
+        }
+
+    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
+        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
+            is ApiDiscoveryResult.Success -> {
+                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
+                val authorizationUrlComplete =
+                    uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
+                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                authorizationUrlComplete
+            }
+
+            is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
+                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
+
+            is ApiDiscoveryResult.FailureFindApiRoot ->
+                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
+
+            is ApiDiscoveryResult.FailureParseSiteUrl ->
+                handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
+        }
+    }
+
+    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
+        appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
+        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
+        return ""
+    }
 
     @Suppress("ReturnCount")
     suspend fun storeApplicationPasswordCredentialsFrom(url: String): Boolean {
@@ -37,22 +78,26 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
                 false
             } else {
-                val site = siteSqlUtils.getSites().firstOrNull { it.url == uriLogin.siteUrl }
+                val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
+                val site = siteSqlUtils.getSites().firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
                 if (site != null) {
-                    val encryptedUsername = encryptionUtils.encrypt(uriLogin.user)
-                    val encryptedPassword = encryptionUtils.encrypt(uriLogin.password)
                     site.apply {
-                        apiRestUsername = encryptedUsername.first
-                        apiRestUsernameIV = encryptedUsername.second
-                        apiRestPassword = encryptedPassword.first
-                        apiRestPasswordIV = encryptedPassword.second
+                        apiRestUsernameEncrypted = ""
+                        apiRestPasswordEncrypted = ""
+                        apiRestUsernameIV = ""
+                        apiRestPasswordIV = ""
+                        apiRestUsernamePlain = uriLogin.user
+                        apiRestPasswordPlain = uriLogin.password
                     }
                     siteSqlUtils.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
                 } else {
-                    Log.e("WP_RS", "Cannot save application password credentials for: ${uriLogin.siteUrl}")
+                    appLogWrapper.e(
+                        AppLog.T.DB,
+                        "WP_RS: Cannot save application password credentials for: ${uriLogin.siteUrl}"
+                    )
                     false
                 }
             }
@@ -71,22 +116,39 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             },
             properties
         )
-        Log.d("WP_RS", "Saved application password credentials for: $siteUrl")
+        appLogWrapper.d(AppLog.T.DB, "WP_RS: Saved application password credentials for: $siteUrl")
     }
 
-    fun getSiteUrlFromUrl(url: String): String {
-        return uriLoginWrapper.parseUriLogin(url).siteUrl.orEmpty()
+    fun getSiteUrlLoginFromRawData(url: String): UriLogin {
+        return uriLoginWrapper.parseUriLogin(url)
     }
 
-    fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
-        return if (authorizationUrl.isNullOrEmpty()) {
-            authorizationUrl.orEmpty()
-        } else {
-            authorizationUrl.toUri().buildUpon().apply {
-                appendQueryParameter("app_name", "android-jetpack-client")
-                appendQueryParameter("success_url", "jetpack://app-pass-authorize")
-            }.build().toString()
+    /**
+     * Removes all the application Password credentials
+     * @return the number of sites that were affected
+     */
+    suspend fun removeAllApplicationPasswordCredentials(): Int {
+        return withContext(bgDispatcher) {
+            val sites = siteSqlUtils.getSites()
+            val affectedSites = sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+            sites.forEach { site ->
+                site.apply {
+                    apiRestUsernamePlain = ""
+                    apiRestPasswordPlain = ""
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                }
+                siteSqlUtils.insertOrUpdateSite(site)
+            }
+            affectedSites
         }
+    }
+
+    fun getApplicationPasswordSitesCount(): Int {
+        val sites = siteSqlUtils.getSites()
+        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
     /**
@@ -100,6 +162,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 uri.getQueryParameter("user_login"),
                 uri.getQueryParameter("password")
             )
+        }
+
+        fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
+            return if (authorizationUrl.isNullOrEmpty()) {
+                authorizationUrl.orEmpty()
+            } else {
+                authorizationUrl.toUri().buildUpon().apply {
+                    appendQueryParameter("app_name", "android-jetpack-client")
+                    appendQueryParameter("success_url", "jetpack://app-pass-authorize")
+                }.build().toString()
+            }
         }
     }
 

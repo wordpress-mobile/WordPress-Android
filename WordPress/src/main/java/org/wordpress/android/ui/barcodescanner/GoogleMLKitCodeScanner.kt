@@ -3,6 +3,8 @@ package org.wordpress.android.ui.barcodescanner
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.common.Barcode
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class GoogleMLKitCodeScanner @Inject constructor(
@@ -10,11 +12,14 @@ class GoogleMLKitCodeScanner @Inject constructor(
     private val errorMapper: GoogleCodeScannerErrorMapper,
     private val barcodeFormatMapper: GoogleBarcodeFormatMapper,
     private val inputImageProvider: MediaImageProvider,
+    private val appLogWrapper: AppLogWrapper
 ) : CodeScanner {
     private var barcodeFound = false
     @androidx.camera.core.ExperimentalGetImage
     override fun startScan(imageProxy: ImageProxy, callback: CodeScannerCallback) {
-        val barcodeTask = barcodeScanner.process(inputImageProvider.provideImage(imageProxy))
+        val barcodeTask = barcodeScanner.process(
+            inputImageProvider.provideImage(imageProxy),
+        )
         barcodeTask.addOnCompleteListener {
             // We must call image.close() on received images when finished using them.
             // Otherwise, new images may not be received or the camera may stall.
@@ -26,15 +31,20 @@ class GoogleMLKitCodeScanner @Inject constructor(
             // There will be a good chance that the same barcode gets identified multiple times and as a result
             // success callback will be called multiple times.
             if (!barcodeList.isNullOrEmpty() && !barcodeFound) {
+                appLogWrapper.d(AppLog.T.UTILS, "$TAG: success")
                 barcodeFound = true
                 callback.run(handleScanSuccess(barcodeList.firstOrNull()))
             }
         }
         barcodeTask.addOnFailureListener { exception ->
+            appLogWrapper.e(AppLog.T.UTILS, "$TAG: failure - ${exception.message}")
             callback.run(CodeScannerStatus.Failure(
                 error = exception.message,
                 type = errorMapper.mapGoogleMLKitScanningErrors(exception)
             ))
+        }
+        barcodeTask.addOnCanceledListener {
+            appLogWrapper.d(AppLog.T.UTILS, "$TAG: canceled")
         }
     }
 
@@ -50,5 +60,9 @@ class GoogleMLKitCodeScanner @Inject constructor(
                 type = CodeScanningErrorType.Other(Throwable("Empty raw value"))
             )
         }
+    }
+
+    companion object {
+        private const val TAG = "GoogleMLKitCodeScanner"
     }
 }

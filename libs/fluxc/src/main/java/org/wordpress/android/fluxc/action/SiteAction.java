@@ -51,6 +51,8 @@ public enum SiteAction implements IAction {
     FETCH_SITES,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
     FETCH_SITES_XML_RPC,
+    @Action(payloadType = RefreshSitesXMLRPCPayload.class)
+    FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD,
     @Action(payloadType = FetchWPAPISitePayload.class)
     FETCH_SITE_WP_API,
     @Action(payloadType = NewSitePayload.class)
