@@ -114,6 +114,9 @@
     <string name="sending">Sending</string>
     <string name="item_selected">Selected</string>
     <string name="coming_soon">Coming soon!</string>
+    <string name="filter">Filter</string>
+    <string name="clear">Clear</string>
+    <string name="sort_by">Sort by</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -2982,10 +2985,6 @@
     <string name="my_profile">My Profile</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
-    <string name="public_display_name">Public display name</string>
-    <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
-    <string name="about_me">About me</string>
-    <string name="about_me_hint">A few words about you…</string>
     <string name="start_over">Start Over</string>
     <string name="site_settings_start_over_hint">Start your site over</string>
     <string name="start_over_email_subject">Start over with site %s</string>
@@ -3015,8 +3014,6 @@
     <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
     <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
     <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
-    <string name="gravatar_info_sync_message">Updates might take some time to sync with your Gravatar profile.</string>
-    <string name="gravatar_info_sync_done_button">Done</string>
 
 
     <!-- Self-hosted Users -->
@@ -3071,8 +3068,8 @@
     <string name="error_cropping_image">Error cropping the image</string>
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
-    <string name="error_updating_gravatar">Error updating your Gravatar</string>
     <string name="avatar_update_email_unverified">To update your avatar, you need to verify your email address first.</string>
+    <string name="about_update_email_unverified">To update your profile, you need to verify your email address first.</string>
 
     <!-- Editor -->
     <string name="discard">Discard</string>
@@ -3297,7 +3294,6 @@
 
     <!-- Signup -->
     <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sign Up</string>
-    <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
@@ -4994,8 +4990,54 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
 
+    <!-- Subscribers -->
+    <string name="subscribers_filter_email_subscription">Email subscription</string>
+    <string name="subscribers_filter_reader_subscription">Reader subscription</string>
+    <string name="subscribers_sort_email">Email address</string>
+    <string name="subscribers_sort_date">Date subscribed</string>
+    <string name="subscribers_sort_display_name">Display name</string>
+    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_empty">There are no subscribers</string>
+    <string name="subscribers_empty_search">No results found</string>
+    <string name="subscribers_error_title">Something went wrong</string>
+    <string name="subscribers_subscription_status">Subscription status</string>
+    <string name="subscribers_emails_sent_label">Emails</string>
+    <string name="subscribers_opened_label">Opened</string>
+    <string name="subscribers_clicked_label">Clicked</string>
+    <string name="subscribers_newsletter_label">Newsletter subscription</string>
+    <string name="subscribers_detail_label">Subscriber details</string>
+    <string name="subscribers_date_label">Subscription date</string>
+    <string name="subscribers_status_label">Subscription status</string>
+    <string name="subscribers_plan_label">Plan</string>
+    <string name="subscribers_email_label">Email</string>
+    <string name="subscribers_country_label">Country</string>
+    <string name="subscribers_site_label">Site</string>
+    <string name="subscribers_delete_button">Delete subscriber</string>
+    <string name="subscribers_gift_plan_label">Gift plan</string>
+    <string name="subscribers_plan_details_label">Plan details</string>
+    <string name="subscribers_start_date">Start date</string>
+    <string name="subscribers_end_date">End date</string>
+    <string name="subscribers_billing_info">Billing information</string>
+    <string name="subscribers_billing_interval">Billing interval</string>
+    <string name="subscribers_inactive_interval">Inactive interval</string>
+    <string name="subscribers_price">Price</string>
+    <string name="subscribers_renewal_info">Renewal information</string>
+    <string name="subscribers_renewal_interval">Renewal interval</string>
+    <string name="subscribers_gift_content_description">Gift</string>
+    <string name="subscribers_add_subscribers">Add subscribers</string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
+    <string name="subscribers_add_disclosure">
+        By clicking Send you represent that you\'ve obtained the appropriate consent to email each person. Spam complaints or high bounce rate from your subscribers may lead to action against your account.
+    </string>
+    <string name="subscribers_add_success">Successfully added subscribers</string>
+    <string name="subscribers_add_failed">Failed to add subscribers</string>
+
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
+    <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="application_password_invalid">Invalid Application Password</string>
+    <string name="application_password_disable_feature_title">Disable Application Password?</string>
+    <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
 </resources>
