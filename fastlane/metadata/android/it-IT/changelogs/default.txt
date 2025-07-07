@@ -1,4 +1,0 @@
-25.9:
-- La tastiera non si sovrappone più all'editor, quindi hai sempre visibilità sul tuo fantastico lavoro.
-- Corretto il colore dell'icona "Io" in modalità scura.
-- Aggiunto un avviso che ti informa se la scansione di un codice QR non è riuscita. Nessuna attesa, nessuna incertezza, nessun problema.
