@@ -288,7 +288,9 @@ private fun SortDropdownMenuButton(
                     menuExpanded = false
                 }
             )
+
             HorizontalDivider()
+
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.ascending)) },
                 trailingIcon = {
