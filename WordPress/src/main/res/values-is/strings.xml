@@ -133,7 +133,6 @@ Language: is
     <string name="error_remove_user">Gat ekki fjarlægt notanda</string>
     <string name="error_fetch_viewers_list">Gat ekki sótt vefgesti</string>
     <string name="error_update_role">Gat ekki uppfært hlutverk notanda</string>
-    <string name="error_updating_gravatar">Villa kom upp við að uppfæra þinn Gravatar</string>
     <string name="error_locating_image">Tókst ekki að staðsetja skornu myndina</string>
     <string name="error_refreshing_gravatar">Villa kom upp við að endurfríska þinn Gravatar</string>
     <string name="error_cropping_image">Villa kom upp við skurð á mynd</string>
@@ -236,10 +235,6 @@ Language: is
     <string name="privacy_private">Vefurinn er aðeins sýnilegur þér og þeim notendum sem þú samþykkir</string>
     <string name="privacy_public_not_indexed">Vefurinn þinn er opinn öllum en þú getur beðið leitarvélar um að lesa hann ekki</string>
     <string name="privacy_public">Vefurinn þinn er opinn öllum og gæti verið lesinn af leitarvélum</string>
-    <string name="about_me_hint">Nokkur orð um þig…</string>
-    <string name="about_me">Um mig</string>
-    <string name="public_display_name_hint">Nafn til birtingar mun notast við notandanafn ef það er ekki skilgreint</string>
-    <string name="public_display_name">Nafn sem birtist opinberlega</string>
     <string name="last_name">Föðurnafn</string>
     <string name="my_profile">Minn prófíll</string>
     <string name="first_name">Fornafn</string>

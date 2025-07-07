@@ -193,6 +193,7 @@ Language: mk
     <string name="cancel">Откажи</string>
     <string name="save">Зачувај</string>
     <string name="add">Додај</string>
+    <string name="clear">Исчисти</string>
     <string name="category_refresh_error">Грешка при освежување на категориите</string>
     <string name="on">на</string>
     <string name="reply">Одговори</string>

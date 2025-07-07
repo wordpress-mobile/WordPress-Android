@@ -215,8 +215,6 @@ Language: ja_JP
     <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
     <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
-    <string name="gravatar_info_sync_done_button">完了</string>
-    <string name="gravatar_info_sync_message">Gravatar プロフィールと更新内容が同期されるのに時間がかかる場合があります。</string>
     <string name="gravatar_info_learn_more_link">Gravatar とは</string>
     <string name="gravatar_info_description">自分のアバター、名前、概要情報をこちらで更新すると、Gravatar プロフィールを使用するすべてのサイトにも更新が反映されます。</string>
     <string name="gravatar_info_title">WordPress.com のプロフィールでは Gravatar を活用できます</string>
@@ -2827,7 +2825,6 @@ Language: ja_JP
     <string name="signup_epilogue_error_button_positive">再試行</string>
     <string name="signup_epilogue_error_button_negative">戻す</string>
     <string name="signup_epilogue_error_generic">アカウントの更新中にエラーが発生しました。変更を再試行するか、元に戻して続行できます。</string>
-    <string name="signup_epilogue_error_avatar">アバターのアップロード中にエラーが発生しました。</string>
     <string name="plugin_needs_update">更新が必要</string>
     <string name="plugin_caption_search">プラグインの検索</string>
     <string name="plugin_caption_new">新規</string>
@@ -3317,7 +3314,6 @@ Language: ja_JP
     <string name="error_remove_user">ユーザーを削除できませんでした</string>
     <string name="error_update_role">ユーザー権限グループを更新できませんでした</string>
     <string name="error_fetch_viewers_list">サイト閲覧者を取得できませんでした</string>
-    <string name="error_updating_gravatar">Gravatar 更新エラー</string>
     <string name="error_refreshing_gravatar">Gravatar 再読み込みエラー</string>
     <string name="error_locating_image">切り抜き済み画像位置不明エラー</string>
     <string name="error_cropping_image">画像切り抜きエラー</string>
@@ -3429,10 +3425,6 @@ Language: ja_JP
     <string name="privacy_private">サイトはあなたと、承認したユーザーのみが表示できます</string>
     <string name="privacy_public_not_indexed">誰でもサイトを閲覧することができますが、検索エンジンにはインデックスしないよう要求します</string>
     <string name="privacy_public">誰でもサイトを閲覧することができ、検索エンジンにインデックスされる可能性があります</string>
-    <string name="about_me_hint">簡単な自己紹介</string>
-    <string name="about_me">自己紹介</string>
-    <string name="public_display_name_hint">表示名が設定されていない場合、デフォルトでユーザー名が指定されます</string>
-    <string name="public_display_name">公開表示名</string>
     <string name="last_name">姓</string>
     <string name="first_name">名</string>
     <string name="my_profile">プロフィール</string>
@@ -3857,6 +3849,7 @@ Language: ja_JP
     <string name="no">いいえ</string>
     <string name="yes">はい</string>
     <string name="notification_settings">通知設定</string>
+    <string name="clear"/>
     <string name="add">追加</string>
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>

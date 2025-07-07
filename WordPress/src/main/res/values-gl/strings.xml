@@ -193,8 +193,6 @@ Language: gl_ES
     <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>
     <string name="notifications_unread_content_description">Non lido</string>
     <string name="qrcode_media_deeplink_error">Sitio non encontrado. Comproba que iniciaches sesión coa conta correcta.</string>
-    <string name="gravatar_info_sync_done_button">Feito</string>
-    <string name="gravatar_info_sync_message">As actualizacións poden tardar algún tempo en sincronizarse co teu perfil de Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Que é Gravatar?</string>
     <string name="gravatar_info_description">Se actualizas aquí o teu avatar, nome e información sobre ti, tamén se actualizarán en todos os sitios que utilicen perfís Gravatar.</string>
     <string name="gravatar_info_title">O teu perfil de WordPress.com funciona con Gravatar</string>
@@ -2810,7 +2808,6 @@ Language: gl_ES
     <string name="signup_epilogue_error_button_positive">Reintentar</string>
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houbo algún problema ao actualizar a túa conta. Podes reintentalo ou reverter os teus cambios para continuar.</string>
-    <string name="signup_epilogue_error_avatar">Houbo algún problema ao subir o teu avatar.</string>
     <string name="plugin_needs_update">Necesita actualizarse</string>
     <string name="plugin_caption_search">Buscar plugins</string>
     <string name="plugin_caption_new">Novo</string>
@@ -3301,7 +3298,6 @@ Language: gl_ES
     <string name="error_remove_user">Non foi posible eliminar o usuario</string>
     <string name="error_update_role">Non foi posible actualizar o rol do usuario</string>
     <string name="error_fetch_viewers_list">Non foi posible obter os lectores do sitio</string>
-    <string name="error_updating_gravatar">Houbo un erro ao actualizar o teu Gravatar</string>
     <string name="error_refreshing_gravatar">Erro ao recargar o teu Gravatar</string>
     <string name="error_locating_image">Erro na localización da imaxe recortada</string>
     <string name="error_cropping_image">Erro no recorte da imaxe</string>
@@ -3413,10 +3409,6 @@ Language: gl_ES
     <string name="privacy_private">O sitio só é visible para ti e para os usuarios autorizados</string>
     <string name="privacy_public_not_indexed">O sitio é visible para calquera, pero pídese aos motores de busca que non o indexen.</string>
     <string name="privacy_public">O sitio é visible para calquera e os motores de busca poden indexalo</string>
-    <string name="about_me_hint">Unhas palabras acerca de ti…</string>
-    <string name="about_me">Acerca de mi</string>
-    <string name="public_display_name_hint">Se non se define, o nome mostrado por defecto será o nome de usuario,</string>
-    <string name="public_display_name">Nome público</string>
     <string name="last_name">Apelido</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">O meu perfil</string>

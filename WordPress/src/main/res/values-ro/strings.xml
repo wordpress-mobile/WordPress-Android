@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-12 12:05:44+0000
+Translation-Revision-Date: 2025-07-05 08:15:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Dezactivarea parolelor pentru aplicații va înlătura informațiile despre autentificare din site-urile %1$s.</string>
+    <string name="application_password_disable_feature_title">Dezactivezi parolele pentru aplicații?</string>
+    <string name="application_password_invalid">Parola pentru aplicația nu este validă</string>
+    <string name="application_password_credentials_storing_error">A fost o eroare la stocarea datelor de conectare pentru parola aplicației pentru %1$s</string>
+    <string name="subscribers_add_failed">Adăugarea abonaților a eșuat</string>
+    <string name="subscribers_add_success">Am adăugat cu succes abonații</string>
+    <string name="subscribers_add_disclosure">\n        Dacă dai clic, Trimite înseamnă că ai obținut consimțământul necesar pentru a trimite un email fiecărei persoane. Reclamațiile de spam sau rata ridicată de respingere din partea abonaților tăi pot duce la acțiuni împotriva contului tău.\n    </string>
+    <string name="subscribers_add_email_hint">nume@exemplu.com</string>
+    <string name="subscribers_add_subscribers">Adaugă abonați</string>
+    <string name="subscribers_gift_content_description">Cadou</string>
+    <string name="subscribers_renewal_interval">Interval de reînnoire</string>
+    <string name="subscribers_renewal_info">Informații despre reînnoire</string>
+    <string name="subscribers_price">Preț</string>
+    <string name="subscribers_inactive_interval">Interval inactiv</string>
+    <string name="subscribers_billing_interval">Interval de facturare</string>
+    <string name="subscribers_billing_info">Informații pentru facturare</string>
+    <string name="subscribers_end_date">Dată de încheiere</string>
+    <string name="subscribers_start_date">Dată de începere</string>
+    <string name="subscribers_plan_details_label">Detalii plan</string>
+    <string name="subscribers_gift_plan_label">Plan cadou</string>
+    <string name="subscribers_delete_button">Șterge abonatul</string>
+    <string name="subscribers_site_label">Site</string>
+    <string name="subscribers_country_label">Țară</string>
+    <string name="subscribers_email_label">Email</string>
+    <string name="subscribers_plan_label">Plan</string>
+    <string name="subscribers_status_label">Stare abonament</string>
+    <string name="subscribers_date_label">Dată abonament</string>
+    <string name="subscribers_detail_label">Detalii abonat</string>
+    <string name="subscribers_newsletter_label">Abonament la buletin de știri</string>
+    <string name="subscribers_clicked_label">Dat clic</string>
+    <string name="subscribers_opened_label">Deschis</string>
+    <string name="subscribers_emails_sent_label">Emailuri</string>
+    <string name="subscribers_subscription_status">Stare abonament</string>
+    <string name="subscribers_error_title">Ceva nu a mers bine</string>
+    <string name="subscribers_empty_search">Nu am găsit niciun rezultat</string>
+    <string name="subscribers_empty">Nu există abonați</string>
+    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_display_name">Nume de afișat</string>
+    <string name="subscribers_sort_date">Data abonării</string>
+    <string name="subscribers_sort_email">Adresă email</string>
+    <string name="subscribers_filter_reader_subscription">Abonament Cititor</string>
+    <string name="subscribers_filter_email_subscription">Abonare prin email</string>
+    <string name="about_update_email_unverified">Pentru a-ți actualiza profilul, mai întâi trebuie să-ți confirmi adresa de email.</string>
+    <string name="sort_by">Sortează după</string>
+    <string name="filter">Filtrează</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Site-ul pe care l-ai furnizat nu acceptă autentificarea cu parola aplicației.</string>
     <string name="application_password_title">Autentificare folosind parola aplicației</string>
     <string name="application_password_credentials_stored">Datele de conectare pentru parola aplicației sunt stocate pentru %1$s</string>
@@ -223,8 +268,6 @@ Language: ro
     <string name="notifications_action_mark_all_as_read">Marchează-le pe toate ca citite</string>
     <string name="notifications_unread_content_description">Necitite</string>
     <string name="qrcode_media_deeplink_error">Nu am găsit site-ul. Verifică dacă ești autentificat în contul corect.</string>
-    <string name="gravatar_info_sync_done_button">Gata</string>
-    <string name="gravatar_info_sync_message">Poate să dureze ceva timp până când actualizările se vor sincroniza cu profilul tău Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Ce este Gravatar?</string>
     <string name="gravatar_info_description">Actualizarea aici a avatarului, numelui și informațiilor despre tine, va face actualizarea lor și pe toate site-urile care folosesc profiluri Gravatar.</string>
     <string name="gravatar_info_title">Profilul tău WordPress.com este propulsat de Gravatar</string>
@@ -2840,7 +2883,6 @@ Language: ro
     <string name="signup_epilogue_error_button_positive">Reîncearcă</string>
     <string name="signup_epilogue_error_button_negative">Revenire</string>
     <string name="signup_epilogue_error_generic">Au fost unele probleme la actualizarea contului tău. Poți reîncerca sau reveni la modificările tale pentru a continua.</string>
-    <string name="signup_epilogue_error_avatar">Au fost unele probleme la încărcarea avatarului tău.</string>
     <string name="plugin_needs_update">Necesită actualizare</string>
     <string name="plugin_caption_search">Caută module</string>
     <string name="plugin_caption_new">Noi</string>
@@ -3331,7 +3373,6 @@ Language: ro
     <string name="error_remove_user">Nu am putut să înlătur utilizatorul</string>
     <string name="error_update_role">Nu s-a putut actualiza rolul utilizatorului</string>
     <string name="error_fetch_viewers_list">N-am putut aduce vizitatorii site-ului</string>
-    <string name="error_updating_gravatar">Eroare la actualizare Gravatar</string>
     <string name="error_refreshing_gravatar">Eroare la reîncărcare Gravatar</string>
     <string name="error_locating_image">Eroare de poziționare a imaginii decupate</string>
     <string name="error_cropping_image">Eroare la decuparea imaginii</string>
@@ -3443,10 +3484,6 @@ Language: ro
     <string name="privacy_private">Site-ul tău este vizibil doar pentru tine și pentru utilizatorii pe care i-ai aprobat</string>
     <string name="privacy_public_not_indexed">Site-ul tău este vizibil pentru toată lumea, dar cere motoarelor de căutare să nu-l indexeze</string>
     <string name="privacy_public">Site-ul tău este vizibil pentru toată lumea și poate fi indexat de motoarele de căutare</string>
-    <string name="about_me_hint">Câteva cuvinte despre tine…</string>
-    <string name="about_me">Despre mine</string>
-    <string name="public_display_name_hint">Numele afișat va fi implicit numele utilizator dacă nu este setat</string>
-    <string name="public_display_name">Numele afișat public</string>
     <string name="last_name">Nume</string>
     <string name="first_name">Prenume</string>
     <string name="my_profile">Profilul meu</string>
@@ -3871,6 +3908,7 @@ Language: ro
     <string name="no">Nu</string>
     <string name="yes">Da</string>
     <string name="notification_settings">Setări notificare</string>
+    <string name="clear">Șterge</string>
     <string name="add">Adaugă</string>
     <string name="save">Salvare</string>
     <string name="cancel">Anulare</string>

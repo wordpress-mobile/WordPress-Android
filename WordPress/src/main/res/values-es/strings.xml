@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-15 18:32:40+0000
+Translation-Revision-Date: 2025-07-05 15:35:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Desactivar la contraseña de aplicación eliminará tu información de acceso de los sitios %1$s.</string>
+    <string name="application_password_disable_feature_title">¿Desactivar contraseña de aplicación?</string>
+    <string name="application_password_invalid">Contraseña de aplicación no válida</string>
+    <string name="application_password_credentials_storing_error">Ha ocurrido un error al almacenar las credenciales de aplicación para %1$s</string>
+    <string name="subscribers_add_failed">Fallo al añadir suscriptores</string>
+    <string name="subscribers_add_success">Suscriptores añadidos correctamente</string>
+    <string name="subscribers_add_disclosure">\nAl hacer clic en «Enviar» declaras que has obtenido el consentimiento adecuado para enviar correos electrónicos a cada persona. Las quejas por spam o un alto porcentaje de rebotes de tus suscriptores pueden dar lugar a acciones contra tu cuenta.\n    </string>
+    <string name="subscribers_add_email_hint">nombre@ejemplo.com</string>
+    <string name="subscribers_add_subscribers">Añadir suscriptores</string>
+    <string name="subscribers_gift_content_description">Regalo</string>
+    <string name="subscribers_renewal_interval">Intervalo de renovación</string>
+    <string name="subscribers_renewal_info">Información de renovación</string>
+    <string name="subscribers_price">Precio</string>
+    <string name="subscribers_inactive_interval">Intervalo de inactividad</string>
+    <string name="subscribers_billing_interval">Intervalo de facturación</string>
+    <string name="subscribers_billing_info">Información de facturación</string>
+    <string name="subscribers_end_date">Fecha de finalización</string>
+    <string name="subscribers_start_date">Fecha de inicio</string>
+    <string name="subscribers_plan_details_label">Detalles del plan</string>
+    <string name="subscribers_gift_plan_label">Plan de regalo</string>
+    <string name="subscribers_delete_button">Borrar suscriptor</string>
+    <string name="subscribers_site_label">Sitio</string>
+    <string name="subscribers_country_label">País</string>
+    <string name="subscribers_email_label">Correo electrónico</string>
+    <string name="subscribers_plan_label">Plan</string>
+    <string name="subscribers_status_label">Estado de la suscripción</string>
+    <string name="subscribers_date_label">Fecha de suscripción</string>
+    <string name="subscribers_detail_label">Detalles del suscriptor</string>
+    <string name="subscribers_newsletter_label">Suscripción al boletín</string>
+    <string name="subscribers_clicked_label">Clics</string>
+    <string name="subscribers_opened_label">Abierto</string>
+    <string name="subscribers_emails_sent_label">Correos electrónicos</string>
+    <string name="subscribers_subscription_status">Estado de la suscripción</string>
+    <string name="subscribers_error_title">Algo salió mal</string>
+    <string name="subscribers_empty_search">No se encontraron resultados</string>
+    <string name="subscribers_empty">No hay suscriptores</string>
+    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_display_name">Nombre visible</string>
+    <string name="subscribers_sort_date">Fecha de suscripción</string>
+    <string name="subscribers_sort_email">Dirección de correo electrónico</string>
+    <string name="subscribers_filter_reader_subscription">Suscripciones del lector</string>
+    <string name="subscribers_filter_email_subscription">Suscripción por correo electrónico</string>
+    <string name="about_update_email_unverified">Para actualizar tu perfil primero tienes que verificar tu dirección de correo electrónico.</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="filter">Filtrar</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">El sitio facilitado no admite la identificación de contraseña de aplicaciones.</string>
     <string name="application_password_title">Identifícate usando una contraseña de aplicación</string>
     <string name="application_password_credentials_stored">Almacenadas las credenciales de la contraseña de aplicación para %1$s</string>
@@ -223,8 +268,6 @@ Language: es
     <string name="notifications_action_mark_all_as_read">Marcar todo como leído</string>
     <string name="notifications_unread_content_description">No leído</string>
     <string name="qrcode_media_deeplink_error">Sitio no encontrado. Comprueba que has iniciado sesión con la cuenta correcta.</string>
-    <string name="gravatar_info_sync_done_button">Hecho</string>
-    <string name="gravatar_info_sync_message">Las actualizaciones pueden tardar algún tiempo en sincronizarse con tu perfil de Gravatar.</string>
     <string name="gravatar_info_learn_more_link">¿Qué es Gravatar?</string>
     <string name="gravatar_info_description">Si actualizas aquí tu avatar, nombre e información sobre ti, también se actualizarán en todos los sitios que utilicen perfiles Gravatar.</string>
     <string name="gravatar_info_title">Tu perfil de WordPress.com funciona con Gravatar</string>
@@ -2840,7 +2883,6 @@ Language: es
     <string name="signup_epilogue_error_button_positive">Reintentar</string>
     <string name="signup_epilogue_error_button_negative">Revertir</string>
     <string name="signup_epilogue_error_generic">Hubo algún problema al actualizar tu cuenta. Puedes reintentarlo o revertir tus cambios para continuar.</string>
-    <string name="signup_epilogue_error_avatar">Hubo algún problema al subir tu avatar.</string>
     <string name="plugin_needs_update">Necesita actualizarse</string>
     <string name="plugin_caption_search">Buscar plugins</string>
     <string name="plugin_caption_new">Nuevo</string>
@@ -3331,7 +3373,6 @@ Language: es
     <string name="error_remove_user">No se ha podido eliminar el usuario</string>
     <string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudieron recuperar los espectadores del sitio</string>
-    <string name="error_updating_gravatar">Error al subir tu Gravatar</string>
     <string name="error_refreshing_gravatar">Error al recargar tu Gravatar</string>
     <string name="error_locating_image">Error al localizar la imagen recortada</string>
     <string name="error_cropping_image">Error al recortar la imagen</string>
@@ -3443,10 +3484,6 @@ Language: es
     <string name="privacy_private">Tu sitio es visible únicamente por ti y por lo usuarios que apruebes</string>
     <string name="privacy_public_not_indexed">Tu sitio es visible para todos pero pide a los motores de búsqueda no ser indexado</string>
     <string name="privacy_public">Tu sitio es visible para todos y puede ser indexado por motores de búsqueda</string>
-    <string name="about_me_hint">Algunas palabras sobre ti…</string>
-    <string name="about_me">Sobre mí</string>
-    <string name="public_display_name_hint">El nombre público mostrará por defecto el nombre de usuario si no está establecido</string>
-    <string name="public_display_name">Nombre que se mostrará públicamente</string>
     <string name="last_name">Apellidos</string>
     <string name="first_name">Nombre</string>
     <string name="my_profile">Mi perfil</string>
@@ -3871,6 +3908,7 @@ Language: es
     <string name="no">No</string>
     <string name="yes">Sí</string>
     <string name="notification_settings">Ajustes de avisos</string>
+    <string name="clear">Borrar</string>
     <string name="add">Añadir</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>

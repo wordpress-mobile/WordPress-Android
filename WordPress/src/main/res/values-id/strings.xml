@@ -223,8 +223,6 @@ Language: id
     <string name="notifications_action_mark_all_as_read">Tandai semua sebagai sudah dibaca</string>
     <string name="notifications_unread_content_description">Belum dibaca</string>
     <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
-    <string name="gravatar_info_sync_done_button">Selesai</string>
-    <string name="gravatar_info_sync_message">Mungkin perlu beberapa saat sampai perubahan tersinkron dengan profil Gravatar Anda.</string>
     <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
     <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
     <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
@@ -2840,7 +2838,6 @@ Language: id
     <string name="signup_epilogue_error_button_positive">Coba lagi</string>
     <string name="signup_epilogue_error_button_negative">Kembalikan</string>
     <string name="signup_epilogue_error_generic">Ada beberapa masalah saat memperbarui akun. Anda dapat mencoba lagi atau mengembalikan perubahan untuk melanjutkan.</string>
-    <string name="signup_epilogue_error_avatar">Ada beberapa masalah saat mengunggah avatar Anda.</string>
     <string name="plugin_needs_update">Perlu pembaruan</string>
     <string name="plugin_caption_search">Cari Plugin</string>
     <string name="plugin_caption_new">Baru</string>
@@ -3331,7 +3328,6 @@ Language: id
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
     <string name="error_fetch_viewers_list">Gagal menampilkan pengunjung situs</string>
-    <string name="error_updating_gravatar">Terjadi galat saat memperbarui Gravatar</string>
     <string name="error_refreshing_gravatar">Terjadi galat saat memuat ulang Gravatar</string>
     <string name="error_locating_image">Terjadi galat saat mencari gambar yang dipangkas</string>
     <string name="error_cropping_image">Terjadi galat saat memangkas gambar</string>
@@ -3443,10 +3439,6 @@ Language: id
     <string name="privacy_private">Situs Anda hanya dapat dilihat oleh Anda dan pengguna yang Anda setujui</string>
     <string name="privacy_public_not_indexed">Situs Anda dapat dilihat oleh semua orang, tetapi meminta mesin pencari untuk tidak mengindeks.</string>
     <string name="privacy_public">Situs Anda dapat dilihat oleh semua orang dan mungkin diindeks berdasarkan mesin pencarian.</string>
-    <string name="about_me_hint">Beberapa kata tentang Anda…</string>
-    <string name="about_me">Tentang saya</string>
-    <string name="public_display_name_hint">Nama tampilan secara default akan menjadi nama pengguna Anda bila tidak diatur</string>
-    <string name="public_display_name">Nama tampilan publik</string>
     <string name="last_name">Nama belakang</string>
     <string name="first_name">Nama depan</string>
     <string name="my_profile">Profil Saya</string>
@@ -3871,6 +3863,7 @@ Language: id
     <string name="no">Tidak</string>
     <string name="yes">Ya</string>
     <string name="notification_settings">Pengaturan Pemberitahuan</string>
+    <string name="clear">Kosongkan</string>
     <string name="add">Tambah</string>
     <string name="save">Simpan</string>
     <string name="cancel">Batal</string>
