@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 09:54:08+0000
+Translation-Revision-Date: 2025-07-07 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Wenn du das Anwendungspasswort deaktivierst, werden deine Anmeldedaten von %1$s Websites entfernt.</string>
+    <string name="application_password_disable_feature_title">Anwendungspasswort deaktivieren?</string>
+    <string name="application_password_invalid">Ungültiges Anwendungspasswort</string>
+    <string name="application_password_credentials_storing_error">Beim Speichern der Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
+    <string name="subscribers_add_failed">Das Hinzufügen der Abonnenten ist fehlgeschlagen</string>
+    <string name="subscribers_add_success">Die Abonnenten wurden erfolgreich hinzugefügt</string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
+    <string name="subscribers_add_subscribers">Abonnenten hinzufügen</string>
+    <string name="subscribers_gift_content_description">Geschenk</string>
+    <string name="subscribers_renewal_interval">Verlängerungsintervall</string>
+    <string name="subscribers_renewal_info">Verlängerungsinformationen</string>
+    <string name="subscribers_price">Preis</string>
+    <string name="subscribers_inactive_interval">Inaktives Intervall</string>
+    <string name="subscribers_billing_interval">Zahlungsintervall</string>
+    <string name="subscribers_billing_info">Rechnungsinformationen</string>
+    <string name="subscribers_end_date">Enddatum</string>
+    <string name="subscribers_start_date">Startdatum</string>
+    <string name="subscribers_plan_details_label">Tarif-Details</string>
+    <string name="subscribers_gift_plan_label">Geschenk-Tarif</string>
+    <string name="subscribers_delete_button">Abonnent löschen</string>
+    <string name="subscribers_site_label">Website</string>
+    <string name="subscribers_country_label">Land</string>
+    <string name="subscribers_email_label">E-Mail</string>
+    <string name="subscribers_plan_label">Tarif</string>
+    <string name="subscribers_status_label">Abonnement-Status</string>
+    <string name="subscribers_date_label">Abonnementdatum</string>
+    <string name="subscribers_detail_label">Abonnentendetails</string>
+    <string name="subscribers_newsletter_label">Newsletter-Abonnement</string>
+    <string name="subscribers_clicked_label">Geklickt</string>
+    <string name="subscribers_opened_label">Geöffnet</string>
+    <string name="subscribers_emails_sent_label">E-Mails</string>
+    <string name="subscribers_subscription_status">Abonnement-Status</string>
+    <string name="subscribers_error_title">Es ist ein Fehler aufgetreten</string>
+    <string name="subscribers_empty_search">Es wurden keine Ergebnisse gefunden</string>
+    <string name="subscribers_empty">Es sind keine Abonnenten vorhanden</string>
+    <string name="subscribers_sort_plan">Tarif</string>
+    <string name="subscribers_sort_display_name">Angezeigter Name</string>
+    <string name="subscribers_sort_date">Abonnementbeginn</string>
+    <string name="subscribers_sort_email">E-Mail-Adresse</string>
+    <string name="subscribers_filter_reader_subscription">Reader-Abonnements</string>
+    <string name="subscribers_filter_email_subscription">E-Mail-Abonnement</string>
+    <string name="about_update_email_unverified">Um dein Profil zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
+    <string name="sort_by">Sortieren nach</string>
+    <string name="filter">Filter</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Die angegebene Website unterstützt keine Authentifizierung per Anwendungspasswort.</string>
     <string name="application_password_title">Authentifizierung per Anwendungspasswort</string>
     <string name="application_password_credentials_stored">Anwendungsanmeldedaten gespeichert für %1$s</string>
@@ -223,8 +267,6 @@ Language: de
     <string name="notifications_action_mark_all_as_read">Alle als gelesen markieren</string>
     <string name="notifications_unread_content_description">Ungelesen</string>
     <string name="qrcode_media_deeplink_error">Die Website wurde nicht gefunden. Überprüfe, ob du im richtigen Konto angemeldet bist.</string>
-    <string name="gravatar_info_sync_done_button">Fertig</string>
-    <string name="gravatar_info_sync_message">Die Synchronisierung deines Gravatar-Profils mit den neuesten Updates kann einige Zeit in Anspruch nehmen.</string>
     <string name="gravatar_info_learn_more_link">Was ist Gravatar?</string>
     <string name="gravatar_info_description">Wenn du hier deinen Avatar, Namen und deine Informationen über dich aktualisierst, werden sie auch auf allen Websites aktualisiert, die Gravatar-Profile nutzen.</string>
     <string name="gravatar_info_title">Dein WordPress.com-Profil wird unterstützt von Gravatar</string>
@@ -2725,7 +2767,7 @@ Language: de
     <string name="photo_picker_camera_desc">Kamera öffnen</string>
     <string name="photo_picker_device_desc">von Gerät auswählen</string>
     <string name="people_invite_role_info_desc">Rolleninfo</string>
-    <string name="media_settings_play">abspielen</string>
+    <string name="media_settings_play">Wiedergeben</string>
     <string name="media_settings_image_preview_desc">Bildvorschau</string>
     <string name="media_preview_desc">Vorschau</string>
     <string name="media_preview_audio_desc">Audio</string>
@@ -2840,7 +2882,6 @@ Language: de
     <string name="signup_epilogue_error_button_positive">Erneut versuchen</string>
     <string name="signup_epilogue_error_button_negative">Rückgängig machen</string>
     <string name="signup_epilogue_error_generic">Es gab Probleme bei der Aktualisierung deines Kontos. Du kannst es erneut versuchen oder deine Änderungen rückgängig machen, um fortzufahren.</string>
-    <string name="signup_epilogue_error_avatar">Es gab Probleme beim Hochladen deines Avatars.</string>
     <string name="plugin_needs_update">Benötigt Update</string>
     <string name="plugin_caption_search">Plugins suchen</string>
     <string name="plugin_caption_new">Neu</string>
@@ -3331,7 +3372,6 @@ Language: de
     <string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
     <string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
     <string name="error_fetch_viewers_list">Website-Besucher konnten nicht abgerufen werden</string>
-    <string name="error_updating_gravatar">Beim Aktualisieren deines Gravatars ist ein Fehler aufgetreten</string>
     <string name="error_refreshing_gravatar">Beim Neuladen deines Gravatars ist ein Fehler aufgetreten</string>
     <string name="error_locating_image">Bei der Lokalisierung des zugeschnittenen Bildes ist ein Fehler aufgetreten.</string>
     <string name="error_cropping_image">Beim Zuschneiden des Bildes ist ein Fehler aufgetreten</string>
@@ -3443,10 +3483,6 @@ Language: de
     <string name="privacy_private">Deine Website ist nur für dich und freigegebene Nutzer sichtbar.</string>
     <string name="privacy_public_not_indexed">Deine Website ist für alle sichtbar. Suchmaschinen werden aufgefordert, sie nicht zu indexieren.</string>
     <string name="privacy_public">Deine Website ist für alle sichtbar. Suchmaschinen dürfen sie indexieren.</string>
-    <string name="about_me_hint">Ein paar Infos über dich …</string>
-    <string name="about_me">Über mich</string>
-    <string name="public_display_name_hint">Wenn du keinen Anzeigenamen festlegst, wird standardmäßig dein Benutzername verwendet.</string>
-    <string name="public_display_name">Öffentlich angezeigter Name</string>
     <string name="last_name">Nachname</string>
     <string name="first_name">Vorname</string>
     <string name="my_profile">Mein Profil</string>
@@ -3871,6 +3907,7 @@ Language: de
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Benachrichtigungseinstellungen</string>
+    <string name="clear">Leeren</string>
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>

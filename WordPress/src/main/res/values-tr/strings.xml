@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-16 18:54:08+0000
+Translation-Revision-Date: 2025-07-07 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Uygulama şifresini devre dışı bırakırsanız oturum açma bilgileriniz %1$s siteden kaldırılır.</string>
+    <string name="application_password_disable_feature_title">Uygulama Şifresini Devre Dışı Bırak</string>
+    <string name="application_password_invalid">Geçersiz Uygulama Şifresi</string>
+    <string name="application_password_credentials_storing_error">%1$s Uygulama şifresi kimlik bilgileri saklanırken bir hata oluştu</string>
+    <string name="subscribers_add_failed">Aboneler eklenemedi</string>
+    <string name="subscribers_add_success">Aboneler başarıyla eklendi</string>
+    <string name="subscribers_add_disclosure">\n        Gönder seçeneğine tıklayarak, her bir kişiye e-posta göndermek için uygun onayı aldığınızı beyan etmiş olursunuz. Abonelerinizden gelen spam şikayetleri veya e-postaların yüksek oranda geri dönmesi, hesabınıza işlem yapılmasına neden olabilir.\n    </string>
+    <string name="subscribers_add_email_hint">isim@ornek.com</string>
+    <string name="subscribers_add_subscribers">Abone ekleyin</string>
+    <string name="subscribers_gift_content_description">Hediye</string>
+    <string name="subscribers_renewal_interval">Yenileme aralığı</string>
+    <string name="subscribers_renewal_info">Yenileme bilgileri</string>
+    <string name="subscribers_price">Fiyat</string>
+    <string name="subscribers_inactive_interval">Etkin olmayan aralık</string>
+    <string name="subscribers_billing_interval">Faturalama aralığı</string>
+    <string name="subscribers_billing_info">Fatura bilgileri</string>
+    <string name="subscribers_end_date">Bitiş tarihi</string>
+    <string name="subscribers_start_date">Başlangıç tarihi</string>
+    <string name="subscribers_plan_details_label">Paket ayrıntıları</string>
+    <string name="subscribers_gift_plan_label">Hediye paketi</string>
+    <string name="subscribers_delete_button">Aboneyi silin</string>
+    <string name="subscribers_country_label">Ülke</string>
+    <string name="subscribers_email_label">E-posta</string>
+    <string name="subscribers_plan_label">Paket</string>
+    <string name="subscribers_status_label">Abonelik durumu</string>
+    <string name="subscribers_date_label">Abonelik - Bitiş Tarihi</string>
+    <string name="subscribers_detail_label">Abone bilgileri</string>
+    <string name="subscribers_newsletter_label">Haber Bülteni Aboneliği</string>
+    <string name="subscribers_clicked_label">Tıklandı</string>
+    <string name="subscribers_opened_label">Açıldı</string>
+    <string name="subscribers_emails_sent_label">E-postalar</string>
+    <string name="subscribers_subscription_status">Abonelik durumu</string>
+    <string name="subscribers_error_title">Bir sorun oluştu</string>
+    <string name="subscribers_empty_search">Hiçbir sonuç bulunamadı</string>
+    <string name="subscribers_empty">Abone yok</string>
+    <string name="subscribers_sort_plan">Paket</string>
+    <string name="subscribers_sort_display_name">Görünen ad</string>
+    <string name="subscribers_sort_date">Abone olunduğu tarih</string>
+    <string name="subscribers_sort_email">E-posta adresi</string>
+    <string name="subscribers_filter_reader_subscription">Okuyucu Abonelikleri</string>
+    <string name="subscribers_filter_email_subscription">E-Posta aboneliği</string>
+    <string name="about_update_email_unverified">Profilinizi güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
+    <string name="sort_by">Şuna göre sırala:</string>
+    <string name="filter">Filtrele</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Sağlanan site Uygulama Şifresi kimlik doğrulamasını desteklemiyor.</string>
     <string name="application_password_title">Uygulama Şifresi kullanarak yetkilendirin</string>
     <string name="application_password_credentials_stored">Şunun için uygulama şifresi kimlik bilgileri saklandı: %1$s</string>
@@ -223,8 +267,6 @@ Language: tr
     <string name="notifications_action_mark_all_as_read">Tümünü okundu olarak işaretle</string>
     <string name="notifications_unread_content_description">Okunmamış</string>
     <string name="qrcode_media_deeplink_error">Site bulunamadı. Doğru hesapta oturum açtığınızdan emin olun.</string>
-    <string name="gravatar_info_sync_done_button">Tamam</string>
-    <string name="gravatar_info_sync_message">Güncellemelerin Gravatar profilinizle eşitlenmesi biraz zaman alabilir.</string>
     <string name="gravatar_info_learn_more_link">Gravatar nedir?</string>
     <string name="gravatar_info_description">Avatarınız, adınız ve hakkında bilgilerinizi güncellerseniz bunlar, Gravatar profillerini kullanan tüm sitelerde güncellenir.</string>
     <string name="gravatar_info_title">WordPress.com profiliniz Gravatar tarafından desteklenir</string>
@@ -2840,7 +2882,6 @@ Language: tr
     <string name="signup_epilogue_error_button_positive">Yeniden dene</string>
     <string name="signup_epilogue_error_button_negative">Geri al</string>
     <string name="signup_epilogue_error_generic">Hesabınız güncellenirken bir sorun çıktı. Yeniden deneyebilir ya da ilerlemek için değişikliklerinizi geri alabilirsiniz.</string>
-    <string name="signup_epilogue_error_avatar">Avatarınız güncellenirken bir sorun çıktı.</string>
     <string name="plugin_needs_update">Güncellenmesi gerekiyor</string>
     <string name="plugin_caption_search">Eklentileri ara</string>
     <string name="plugin_caption_new">Yeni</string>
@@ -3331,7 +3372,6 @@ Language: tr
     <string name="error_remove_user">Kullanıcı kaldırılamadı</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemedi</string>
     <string name="error_fetch_viewers_list">Site takipçileri alınamadı</string>
-    <string name="error_updating_gravatar">Gravatar güncellenirken sorun çıktı</string>
     <string name="error_refreshing_gravatar">Gravatar yenilenirken sorun çıktı</string>
     <string name="error_locating_image">Kırpılmış görsel konumlandırılırken sorun çıktı</string>
     <string name="error_cropping_image">Görsel kırpılırken sorun çıktı</string>
@@ -3443,10 +3483,6 @@ Language: tr
     <string name="privacy_private">Siteniz yalnızca siz ve onay verdiğiniz kullanıcılar tarafından görülebilir</string>
     <string name="privacy_public_not_indexed">Siteniz herkes tarafından görüntülenebilir, ancak arama motorlarından kendisini dizine eklememesini ister</string>
     <string name="privacy_public">Siteniz herkes tarafından görülebilir ve arama motorları tarafından dizine eklenebilir</string>
-    <string name="about_me_hint">Hakkınızda birkaç sözcük…</string>
-    <string name="about_me">Hakkımda</string>
-    <string name="public_display_name_hint">Ayarlanmazsa, görüntülenecek ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
-    <string name="public_display_name">Herkese açık görüntülenecek ad</string>
     <string name="last_name">Soyad</string>
     <string name="first_name">Ad</string>
     <string name="my_profile">Profilim</string>
@@ -3871,6 +3907,7 @@ Language: tr
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
     <string name="notification_settings">Bildirim ayarları</string>
+    <string name="clear">Temizle</string>
     <string name="add">Ekle</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>

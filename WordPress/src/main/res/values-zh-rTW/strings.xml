@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-18 14:54:08+0000
+Translation-Revision-Date: 2025-07-07 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">停用應用程式密碼會移除 %1$s 網站的登入資訊。</string>
+    <string name="application_password_disable_feature_title">確定要停用應用程式密碼？</string>
+    <string name="application_password_invalid">無效的應用程式密碼</string>
+    <string name="application_password_credentials_storing_error">儲存 %1$s 的應用程式密碼認證時發生錯誤</string>
+    <string name="subscribers_add_failed">無法新增訂閱者</string>
+    <string name="subscribers_add_success">已成功新增訂閱者</string>
+    <string name="subscribers_add_disclosure">\n        按一下「傳送」，即表示你已徵得所有人同意，願意接收你傳送的電子郵件。 若你的訂閱者投訴垃圾訊息或退信的機率過高，我們可能會對你的帳號採取行動。\n    </string>
+    <string name="subscribers_add_subscribers">新增訂閱者</string>
+    <string name="subscribers_gift_content_description">禮物</string>
+    <string name="subscribers_renewal_interval">續訂間隔</string>
+    <string name="subscribers_renewal_info">續訂資訊</string>
+    <string name="subscribers_price">價格</string>
+    <string name="subscribers_inactive_interval">閒置間隔</string>
+    <string name="subscribers_billing_interval">帳單間隔</string>
+    <string name="subscribers_billing_info">帳單資訊</string>
+    <string name="subscribers_end_date">結束日期</string>
+    <string name="subscribers_start_date">開始日期</string>
+    <string name="subscribers_plan_details_label">方案詳細資料</string>
+    <string name="subscribers_gift_plan_label">禮物方案</string>
+    <string name="subscribers_delete_button">刪除訂閱者</string>
+    <string name="subscribers_site_label">網站</string>
+    <string name="subscribers_country_label">國家/地區</string>
+    <string name="subscribers_email_label">電子郵件</string>
+    <string name="subscribers_plan_label">方案</string>
+    <string name="subscribers_status_label">訂閱狀態</string>
+    <string name="subscribers_date_label">訂閱日期</string>
+    <string name="subscribers_detail_label">訂閱者詳細資料</string>
+    <string name="subscribers_newsletter_label">電子報訂閱</string>
+    <string name="subscribers_clicked_label">已點擊</string>
+    <string name="subscribers_opened_label">開啟數</string>
+    <string name="subscribers_emails_sent_label">電子郵件</string>
+    <string name="subscribers_subscription_status">訂閱狀態</string>
+    <string name="subscribers_error_title">發生錯誤</string>
+    <string name="subscribers_empty_search">找不到結果</string>
+    <string name="subscribers_empty">沒有訂閱者</string>
+    <string name="subscribers_sort_plan">方案</string>
+    <string name="subscribers_sort_display_name">顯示名稱</string>
+    <string name="subscribers_sort_date">訂閱日期</string>
+    <string name="subscribers_sort_email">電子郵件地址</string>
+    <string name="subscribers_filter_reader_subscription">讀者訂閱</string>
+    <string name="subscribers_filter_email_subscription">電子郵件訂閱</string>
+    <string name="about_update_email_unverified">若想更新個人檔案，請先驗證電子郵件地址。</string>
+    <string name="sort_by">排序依據</string>
+    <string name="filter">篩選</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">你所提供的網站不支援應用程式密碼驗證。</string>
     <string name="application_password_title">使用應用程式密碼進行驗證</string>
     <string name="application_password_credentials_stored">已儲存「%1$s」的應用程式密碼憑證</string>
@@ -221,8 +265,6 @@ Language: zh_TW
     <string name="notifications_action_mark_all_as_read">將全部標示為已讀</string>
     <string name="notifications_unread_content_description">未讀</string>
     <string name="qrcode_media_deeplink_error">找不到網站。 檢查你是否已登入正確的帳號。</string>
-    <string name="gravatar_info_sync_done_button">完成</string>
-    <string name="gravatar_info_sync_message">更新內容和 Gravatar 個人檔案同步可能需要一些時間。</string>
     <string name="gravatar_info_learn_more_link">什麼是 Gravatar？</string>
     <string name="gravatar_info_description">若在此更新你的大頭貼、姓名和相關資訊，也會在所有使用 Gravatar 個人檔案的網站中一同更新。</string>
     <string name="gravatar_info_title">你的 WordPress.com 個人檔案由 Gravatar 提供技術支援</string>
@@ -2828,7 +2870,6 @@ Language: zh_TW
     <string name="signup_epilogue_error_button_positive">重試</string>
     <string name="signup_epilogue_error_button_negative">還原</string>
     <string name="signup_epilogue_error_generic">更新你的帳號時發生錯誤。你可以重試或還原變更並繼續。</string>
-    <string name="signup_epilogue_error_avatar">上傳你的大頭貼時發生錯誤。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜尋外掛程式</string>
     <string name="plugin_caption_new">新增</string>
@@ -3316,7 +3357,6 @@ Language: zh_TW
     <string name="error_remove_user">無法移除使用者</string>
     <string name="error_update_role">無法更新使用者角色</string>
     <string name="error_fetch_viewers_list">無法擷取網站使用者</string>
-    <string name="error_updating_gravatar">更新你的 Gravatar 時發生錯誤</string>
     <string name="error_refreshing_gravatar">重新載入你的 Gravatar 時發生錯誤</string>
     <string name="error_locating_image">尋找裁切的圖片時發生錯誤</string>
     <string name="error_cropping_image">裁切圖片時發生錯誤</string>
@@ -3428,10 +3468,6 @@ Language: zh_TW
     <string name="privacy_private">只有你和經核准的使用者可看見你的網站</string>
     <string name="privacy_public_not_indexed">所有人都能看見你的網站，但網站會要求搜尋引擎不要加入索引</string>
     <string name="privacy_public">所有人都能看見你的網站，且搜尋引擎可能會將網站加入索引</string>
-    <string name="about_me_hint">簡單介紹一下自己…</string>
-    <string name="about_me">關於我</string>
-    <string name="public_display_name_hint">如果未設定，顯示名稱會預設為你的使用者名稱</string>
-    <string name="public_display_name">公開顯示名稱</string>
     <string name="last_name">姓氏</string>
     <string name="first_name">名字</string>
     <string name="my_profile">我的個人檔案</string>
@@ -3855,6 +3891,7 @@ Language: zh_TW
     <string name="no">否</string>
     <string name="yes">是</string>
     <string name="notification_settings">通知設定</string>
+    <string name="clear">清除</string>
     <string name="add">新增</string>
     <string name="save">儲存</string>
     <string name="cancel">取消</string>

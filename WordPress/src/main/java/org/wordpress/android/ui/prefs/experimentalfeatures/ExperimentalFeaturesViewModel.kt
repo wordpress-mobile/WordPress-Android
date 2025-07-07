@@ -47,9 +47,6 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // only show subscribers in debug builds
         return if (BuildConfig.DEBUG.not() && feature == Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE) {
             false
-        } else if (BuildConfig.DEBUG.not() && feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
-            // only show application password in debug builds
-            false
         } else if (gutenbergKitFeature.isEnabled()) {
             feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {

@@ -217,8 +217,6 @@ Language: fr
     <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
     <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
-    <string name="gravatar_info_sync_done_button">Terminé</string>
-    <string name="gravatar_info_sync_message">Il se peut que les mises à jour prennent un peu de temps pour se synchroniser avec votre profil Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Qu’est-ce que Gravatar ?</string>
     <string name="gravatar_info_description">Mettre à jour votre avatar, votre nom et les informations vous concernant ici les mettra également à jour sur l’ensemble des sites qui utilisent les profils Gravatar.</string>
     <string name="gravatar_info_title">Votre profil WordPress.com est propulsé par Gravatar</string>
@@ -2834,7 +2832,6 @@ Language: fr
     <string name="signup_epilogue_error_button_positive">Réessayer</string>
     <string name="signup_epilogue_error_button_negative">Annuler les modifications</string>
     <string name="signup_epilogue_error_generic">Une erreur s\'est produite lors de la mise à jour de votre compte. Vous pouvez réessayer ou annuler vos modifications pour continuer.</string>
-    <string name="signup_epilogue_error_avatar">Une erreur s\'est produite lors du chargement de votre avatar.</string>
     <string name="plugin_needs_update">Mise à jour nécessaire</string>
     <string name="plugin_caption_search">Chercher parmi les extensions</string>
     <string name="plugin_caption_new">Nouvelles</string>
@@ -3325,7 +3322,6 @@ Language: fr
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
     <string name="error_fetch_viewers_list">Impossible de récupérer les utilisateurs du site</string>
-    <string name="error_updating_gravatar">Erreur lors de la mise à jour de votre Gravatar</string>
     <string name="error_refreshing_gravatar">Erreur lors de la mise en ligne de votre Gravatar</string>
     <string name="error_locating_image">Erreur de la localisation de l\'image recadrée</string>
     <string name="error_cropping_image">Erreur lors du recadrage de l\'image</string>
@@ -3437,10 +3433,6 @@ Language: fr
     <string name="privacy_private">Votre site est visible uniquement pour vous et les utilisateurs que vous approuvez</string>
     <string name="privacy_public_not_indexed">Votre site est visible par tous, mais demande aux moteurs de recherche de ne pas l\'indexer</string>
     <string name="privacy_public">Votre site est visible par tous et peut être indexé par les moteurs de recherche</string>
-    <string name="about_me_hint">Quelques mots à propos de vous…</string>
-    <string name="about_me">À propos de moi</string>
-    <string name="public_display_name_hint">Le nom affiché par défaut est votre identifiant s\'il n\'est pas défini.</string>
-    <string name="public_display_name">Public</string>
     <string name="last_name">Nom</string>
     <string name="first_name">Prénom</string>
     <string name="my_profile">Mon profil</string>
@@ -3865,6 +3857,7 @@ Language: fr
     <string name="no">Non</string>
     <string name="yes">Oui</string>
     <string name="notification_settings">Paramètres de Notification</string>
+    <string name="clear">Effacer</string>
     <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>

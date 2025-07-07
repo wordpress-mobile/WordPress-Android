@@ -223,8 +223,6 @@ Language: ko_KR
     <string name="notifications_action_mark_all_as_read">모두 읽음으로 표시</string>
     <string name="notifications_unread_content_description">읽지 않음</string>
     <string name="qrcode_media_deeplink_error">사이트를 찾을 수 없습니다. 올바른 계정에 로그인했는지 확인하세요.</string>
-    <string name="gravatar_info_sync_done_button">완료</string>
-    <string name="gravatar_info_sync_message">업데이트 내용이 그라바타 프로필과 동기화되려면 시간이 조금 걸릴 수 있습니다.</string>
     <string name="gravatar_info_learn_more_link">그라바타가 무엇인가요?</string>
     <string name="gravatar_info_description">아바타, 이름 및 소개 정보를 업데이트하면 그라바타 프로필을 사용하는 모든 사이트에서도 업데이트됩니다.</string>
     <string name="gravatar_info_title">워드프레스닷컴 프로필이 그라바타에서 제공됩니다.</string>
@@ -2840,7 +2838,6 @@ Language: ko_KR
     <string name="signup_epilogue_error_button_positive">다시 시도</string>
     <string name="signup_epilogue_error_button_negative">되돌리기</string>
     <string name="signup_epilogue_error_generic">계정을 업데이트하는 중에 문제가 발생했습니다. 다시 시도하거나 변경 내용을 되돌려 계속할 수 있습니다.</string>
-    <string name="signup_epilogue_error_avatar">아바타를 업데이트하는 중에 문제가 발생했습니다.</string>
     <string name="plugin_needs_update">업데이트 필요</string>
     <string name="plugin_caption_search">플러그인 검색</string>
     <string name="plugin_caption_new">신규</string>
@@ -3331,7 +3328,6 @@ Language: ko_KR
     <string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
     <string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
     <string name="error_fetch_viewers_list">사이트 사용자를 가져올 수 없습니다.</string>
-    <string name="error_updating_gravatar">Gravatar를 업데이트하는 중 오류가 발생했습니다.</string>
     <string name="error_refreshing_gravatar">Gravatar를 다시 로드하는 중 오류가 발생했습니다.</string>
     <string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
     <string name="error_cropping_image">이미지를 자르는 중 오류가 발생했습니다.</string>
@@ -3443,10 +3439,6 @@ Language: ko_KR
     <string name="privacy_private">사이트가 본인과 본인이 승인한 사용자에게만 공개됩니다.</string>
     <string name="privacy_public_not_indexed">사이트가 모든 사람에게 공개되지만 검색 엔진에 사이트가 검색되지 않도록 요청합니다.</string>
     <string name="privacy_public">사이트가 모든 사람에게 공개되며 검색 엔진이 검색할 수 있습니다.</string>
-    <string name="about_me_hint">사용자에 대한 몇 가지 정보…</string>
-    <string name="about_me">내 소개</string>
-    <string name="public_display_name_hint">대화명을 설정하지 않을 경우 기본적으로 사용자명으로 설정됩니다.</string>
-    <string name="public_display_name">공개 이름</string>
     <string name="last_name">성</string>
     <string name="first_name">이름</string>
     <string name="my_profile">내 프로필</string>
@@ -3871,6 +3863,7 @@ Language: ko_KR
     <string name="no">아니오</string>
     <string name="yes">예</string>
     <string name="notification_settings">알림 설정</string>
+    <string name="clear">삭제</string>
     <string name="add">추가</string>
     <string name="save">저장</string>
     <string name="cancel">취소</string>

@@ -12,8 +12,10 @@ Language: sv_SE
     <string name="login_prologue_revamped_jetpack_feature_text_15">Skriv var du än är</string>
     <string name="missing_splits_dialog_message">Jetpack-appen saknar nödvändiga komponenter och måste installeras om från Google Play Store.</string>
     <string name="me_btn_share">Dela Jetpack med en vän</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Publicera ett foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Publicera ett foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Åtgärda ett säkerhetsproblem</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Dela på sociala medier</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Sök efter tillägg</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Återställ en säkerhetskopia</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Svara på kommentarer</string>
@@ -23,15 +25,13 @@ Language: sv_SE
     <string name="login_prologue_revamped_jetpack_feature_text_2">Bygg en webbplats</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Uppdatera ett tillägg</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack-logotyp</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_14">Publicera ett foto</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Dela på sociala medier</string>
     <string name="me_btn_about">Om Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logga ut från Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">Logga ut från Jetpack</string>
     <string name="support_ticket_subject">Support för Jetpack för Android</string>
     <string name="login_magic_links_sent_label">Öppna e-posten på din enhet och tryck på länken i e-postmeddelandet som du har fått från Jetpack.com.</string>
+    <string name="continue_with_wpcom_no_signup">Fortsätt med WordPress.com</string>
     <string name="app_tagline">Webbplatssäkerhet och prestanda i din ficka</string>
     <string name="post_signup_interstitial_title">Välkommen till Jetpack</string>
     <string name="app_title">Jetpack för Android</string>
-    <string name="continue_with_wpcom_no_signup">Fortsätt med WordPress.com</string>
 </resources>

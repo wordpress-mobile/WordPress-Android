@@ -223,8 +223,6 @@ Language: ru
     <string name="notifications_action_mark_all_as_read">Отметить все как прочитанные</string>
     <string name="notifications_unread_content_description">Не прочитано</string>
     <string name="qrcode_media_deeplink_error">Сайт не найден. Убедитесь в том, что выполнили вход в нужную учётную запись.</string>
-    <string name="gravatar_info_sync_done_button">Готово</string>
-    <string name="gravatar_info_sync_message">Синхронизация обновлений с вашим профилем Gravatar может занять некоторое время.</string>
     <string name="gravatar_info_learn_more_link">Что такое Gravatar?</string>
     <string name="gravatar_info_description">Если вы обновите свой аватар, имя пользователя и личные данные на этом сайте, всё это будет автоматически обновлено на других сайтах, где используются профили Gravatar.</string>
     <string name="gravatar_info_title">Ваш профиль WordPress.com создан при поддержке Gravatar</string>
@@ -2840,7 +2838,6 @@ Language: ru
     <string name="signup_epilogue_error_button_positive">Повтор</string>
     <string name="signup_epilogue_error_button_negative">Откат</string>
     <string name="signup_epilogue_error_generic">Возникла ошибка обновления учетной записи. Вы можете повторить или сделать откат изменений.</string>
-    <string name="signup_epilogue_error_avatar">Возникла ошибка обновления аватара.</string>
     <string name="plugin_needs_update">Требует обновления</string>
     <string name="plugin_caption_search">Искать плагины</string>
     <string name="plugin_caption_new">Новые</string>
@@ -3331,7 +3328,6 @@ Language: ru
     <string name="error_remove_user">Не удалось удалить пользователя</string>
     <string name="error_update_role">Не удалось обновить роль пользователя</string>
     <string name="error_fetch_viewers_list">Не получить список пользователей сайта</string>
-    <string name="error_updating_gravatar">При обновлении граватара произошла ошибка</string>
     <string name="error_refreshing_gravatar">При перезагрузке граватара произошла ошибка</string>
     <string name="error_locating_image">Не удалось найти обрезанное изображение</string>
     <string name="error_cropping_image">При обрезке изображения произошла ошибка</string>
@@ -3443,10 +3439,6 @@ Language: ru
     <string name="privacy_private">Ваш сайт доступен только вам и выбранным вами пользователям.</string>
     <string name="privacy_public_not_indexed">Ваш сайт доступен всем посетителям, но для него выбран параметр «Попросить поисковые системы не индексировать сайт».</string>
     <string name="privacy_public">Ваш сайт доступен всем и может индексироваться поисковыми системами.</string>
-    <string name="about_me_hint">Несколько слов о себе…</string>
-    <string name="about_me">Обо мне</string>
-    <string name="public_display_name_hint">Если отображаемое имя не задано, вместо него по умолчанию используется имя пользователя.</string>
-    <string name="public_display_name">Отображаемое для всех имя</string>
     <string name="last_name">Фамилия</string>
     <string name="first_name">Имя</string>
     <string name="my_profile">Мой профиль</string>
@@ -3871,6 +3863,7 @@ Language: ru
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="notification_settings">Настройки уведомлений</string>
+    <string name="clear">Очистить</string>
     <string name="add">Добавить</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>

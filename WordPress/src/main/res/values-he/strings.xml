@@ -189,8 +189,6 @@ Language: he_IL
     <string name="notifications_action_mark_all_as_read">לסמן את כל ההודעות כ\'נקרא\'</string>
     <string name="notifications_unread_content_description">לא נקרא</string>
     <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
-    <string name="gravatar_info_sync_done_button">סיימנו</string>
-    <string name="gravatar_info_sync_message">ייתכן שיידרש קצת זמן לסנכרון העדכונים האלה בפרופיל שלך ב-Gravatar.</string>
     <string name="gravatar_info_learn_more_link">מה זה Gravatar?</string>
     <string name="gravatar_info_description">עדכון של תמונת הפרופיל, השם והמידע עליך כאן יעדכן את הפרטים בכל האתרים שמשתמשים בפרופילים של Gravatar.</string>
     <string name="gravatar_info_title">הפרופיל שלך ב-WordPress.com מופעל באמצעות Gravatar</string>
@@ -2796,7 +2794,6 @@ Language: he_IL
     <string name="signup_epilogue_error_button_positive">יש לנסות שנית</string>
     <string name="signup_epilogue_error_button_negative">חזרה למצב קודם</string>
     <string name="signup_epilogue_error_generic">אירעה בעיה בעדכון החשבון שלך. אפשר לנסות שוב או לבטל את השינויים כדי להמשיך.</string>
-    <string name="signup_epilogue_error_avatar">אירעה בעיה בטעינה של תמונת פרופיל שלך.</string>
     <string name="plugin_needs_update">נדרש עדכון</string>
     <string name="plugin_caption_search">חיפוש בתוספים</string>
     <string name="plugin_caption_new">חדש</string>
@@ -3286,7 +3283,6 @@ Language: he_IL
     <string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
     <string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
     <string name="error_fetch_viewers_list">לא הצלחנו לאחזר את משתמשי האתר</string>
-    <string name="error_updating_gravatar">שגיאה בעדכון ה-gravatar שלך</string>
     <string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה-gravatar שלך</string>
     <string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
     <string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
@@ -3398,10 +3394,6 @@ Language: he_IL
     <string name="privacy_private">האתר גלוי רק לך ולמשתמשים שאישרת</string>
     <string name="privacy_public_not_indexed">האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</string>
     <string name="privacy_public">האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</string>
-    <string name="about_me_hint">תיאור אישי בכמה מילים…</string>
-    <string name="about_me">מי אני</string>
-    <string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
-    <string name="public_display_name">שם תצוגה ציבורי</string>
     <string name="last_name">שם משפחה</string>
     <string name="first_name">שם פרטי</string>
     <string name="my_profile">הפרופיל שלי</string>
@@ -3826,6 +3818,7 @@ Language: he_IL
     <string name="no">לא</string>
     <string name="yes">כן</string>
     <string name="notification_settings">הגדרות התראות</string>
+    <string name="clear">נקה</string>
     <string name="add">הוסף</string>
     <string name="save">שמור</string>
     <string name="cancel">בטל</string>

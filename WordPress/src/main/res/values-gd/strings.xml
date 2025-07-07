@@ -263,6 +263,7 @@ Language: gd_GB
     <string name="cancel">Sguir dheth</string>
     <string name="save">Sàbhail</string>
     <string name="add">Cuir ris</string>
+    <string name="clear">Falamhaich</string>
     <string name="preview">Ro-shealladh</string>
     <string name="on"> </string>
     <string name="reply">Freagair</string>
