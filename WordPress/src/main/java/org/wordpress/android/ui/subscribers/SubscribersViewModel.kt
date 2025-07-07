@@ -17,7 +17,6 @@ import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
@@ -49,7 +48,8 @@ class SubscribersViewModel @Inject constructor(
         data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
         data class ShowToast(val messageRes: Int) : UiEvent()
     }
-    private val _uiEvent = SingleLiveEvent<UiEvent>()
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
     val uiEvent = _uiEvent
 
     override fun getSupportedFilters(): List<DataViewDropdownItem> {

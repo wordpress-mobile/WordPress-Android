@@ -19,6 +19,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -60,14 +63,16 @@ class SubscribersActivity : BaseAppCompatActivity() {
             }
         )
 
-        viewModel.uiEvent.observe(this) { event ->
-            when (event) {
-                is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
-                    showDeleteConfirmationDialog(event.subscriber, navController)
-                }
+        lifecycleScope.launch {
+            viewModel.uiEvent.filterNotNull().collect { event ->
+                when (event) {
+                    is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
+                        showDeleteConfirmationDialog(event.subscriber, navController)
+                    }
 
-                is SubscribersViewModel.UiEvent.ShowToast -> {
-                    Toast.makeText(this, event.messageRes, Toast.LENGTH_SHORT).show()
+                    is SubscribersViewModel.UiEvent.ShowToast -> {
+                        Toast.makeText(this@SubscribersActivity, event.messageRes, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
