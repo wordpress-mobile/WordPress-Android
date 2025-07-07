@@ -1,11 +1,307 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-20 09:29:30+0000
+Translation-Revision-Date: 2025-06-25 19:41:27+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: lv
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Norādītā vietne neatbalsta lietojumprogrammas paroles autentifikāciju.</string>
+    <string name="application_password_title">Autentificēties, izmantojot lietojumprogrammas paroli</string>
+    <string name="application_password_credentials_stored">Lietotnes paroles akreditācijas dati ir saglabāti domēnam %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Koda noteikšanai bija nepieciešams pārāk ilgs laiks. Lūdzu, mēģiniet vēlreiz vai izmantojiet kameras lietotni, lai skenētu kodu.</string>
+    <string name="qrcode_auth_flow_timeout_title">Skenēšanas taimauts</string>
+    <string name="invite_users">Uzaicināt lietotājus</string>
+    <string name="experimental_application_password_feature_description">Iespējojiet lietojumprogrammas paroli, lai pieteiktos pašmitinātās vietnēs.</string>
+    <string name="experimental_application_password_feature">Pieteikšanās ar lietojumprogrammas paroli</string>
+    <string name="experimental_subscribers_feature_description">Skatīt un pārvaldīt informatīvā izdevuma abonentus (darbs procesā)</string>
+    <string name="experimental_subscribers_feature">Eksperimentālie abonenti</string>
+    <string name="cant_share_no_blog">Jūs nevarat kopīgot pakalpojumā WordPress bez emuāra</string>
+    <string name="coming_soon">Drīzumā!</string>
+    <string name="me_email_verification_generic_error">Nevar nosūtīt verifikācijas saiti</string>
+    <string name="me_email_verification_resend">Atkārtoti nosūtīt verifikācijas saiti</string>
+    <string name="me_email_verification_sent_description">Pārbaudiet savu iesūtni vietnē %s, lai saņemtu apstiprinājuma e-pastu.</string>
+    <string name="me_email_verification_sent">E-pasts nosūtīts</string>
+    <string name="me_email_verification_sending_description">Notiek verifikācijas saites sūtīšana</string>
+    <string name="me_email_verification_sending">Sūtīšana…</string>
+    <string name="me_email_verification_verify_email_send_link">Nosūtīt verifikācijas saiti</string>
+    <string name="me_email_verification_verify_email_description">Lūdzu, verificējiet savu e-pasta adresi, lai aizsargātu savu kontu un atbloķētu visas funkcijas.</string>
+    <string name="me_email_verification_verify_email">Verificējiet savu e-pastu</string>
+    <string name="experimental_features_feedback_dialog_decline">Ne tagad</string>
+    <string name="experimental_features_feedback_dialog_message">Vai vēlaties sniegt atsauksmes par eksperimentālo redaktoru?</string>
+    <string name="experimental_features_feedback_dialog_title">Kopīgot atsauksmes</string>
+    <string name="experimental_block_editor_plugins">Eksperimentāli bloku redaktora spraudņi</string>
+    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
+    <string name="experimental_block_editor_description">Piekļūstiet papildu bloku veidiem un iestatījumiem</string>
+    <string name="experimental_block_editor_note">Eksperimentālais bloku redaktors kļūs par noklusējuma redaktoru nākamajā laidienā, un iespēja to atspējot tiks noņemta.</string>
+    <string name="disable_experimental_block_editor_description">Atteikties no papildu bloķēšanas veidiem un iestatījumiem</string>
+    <string name="disable_experimental_block_editor">Atspējot eksperimentālo bloku redaktoru</string>
+    <string name="avatar_update_email_unverified">Lai atjauninātu savu avatāru, vispirms ir jāapstiprina sava e-pasta adrese.</string>
+    <string name="feedback_form_note_link_wordpress">kopienas forumos.</string>
+    <string name="default_web_client_id" a8c-src-lib="module:login">vietturis</string>
+    <string name="personalization_screen_shortcuts_accessibility_label">Pārslēgt saīsni %s</string>
+    <string name="personalization_screen_card_accessibility_label">Pārslēgt %s karti</string>
+    <string name="user_avatar_content_description">Lietotāja %s avatārs</string>
+    <string name="user_row_content_description">Rādīt lietotāja %s detalizētu informāciju</string>
+    <string name="biographical_info_empty">Nav norādīts</string>
+    <string name="biographical_info">Biogrāfiskā informācija</string>
+    <string name="about_the_user">Par lietotāju</string>
+    <string name="website">Tīmekļa vietne</string>
+    <string name="contact_info">Kontaktinformācija</string>
+    <string name="nickname">Segvārds</string>
+    <string name="name">Vārds</string>
+    <string name="no_users">Nav lietotāju</string>
+    <string name="user">Lietotājs</string>
+    <string name="users">Lietotāji</string>
+    <string name="me_btn_help_and_support">Palīdzība un atbalsts</string>
+    <string name="me_btn_experimental_features">Eksperimentālās funkcijas</string>
+    <string name="more_content_description_plans">Plāni vairāk</string>
+    <string name="more_content_description_recent_activity">Jaunākās aktivitātes un vairāk</string>
+    <string name="more_content_description_pages">Vairāk lappušu</string>
+    <string name="more_content_description_posts">Vairāk ierakstu</string>
+    <string name="more_content_description_quick_start">Ātrā sākšana vairāk</string>
+    <string name="more_content_description_today_stats">Šodienas statistika vairāk</string>
+    <string name="more_content_description_blogging_prompts">Uzvedina vairāk</string>
+    <string name="more_content_description_promote_blaze">Uzliesmojieties vairāk</string>
+    <string name="reader_toast_success_undo">Blogs atbloķēts</string>
+    <string name="feedback_form_note_link_jetpack">Sazinieties ar atbalsta dienestu ekrāns.</string>
+    <string name="feedback_form_note_text">Lūdzu, ņemiet vērā, ka šī nav atbalsta veidlapa, un mēs nevarēsim atbildēt. Ja jums nepieciešama palīdzība, lūdzu, izmantojiet mūsu \"</string>
+    <string name="experimental_block_editor_theme_styles">Eksperimentāli bloku redaktora stili</string>
+    <string name="experimental_block_editor">Eksperimentāls bloku redaktors</string>
+    <string name="experimental_features_screen_title">Eksperimentālās funkcijas</string>
+    <string name="back">Atpakaļ</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">No šīs lietotnes</string>
+    <string name="dialog_confirm_autosave_restore_button">No citas ierīces</string>
+    <string name="item_selected">Atlasīts</string>
+    <string name="send_feedback">Sūtīt atsauksmes</string>
+    <string name="media_pager_remove_item_content_description">Noņemt vienumu %1$d</string>
+    <string name="feedback_form_add_attachments">Pievienot pielikumus</string>
+    <string name="feedback_form_unable_to_create_tempfile">Neizdevās izveidot pagaidu failu</string>
+    <string name="feedback_form_attachment_already_added">Pielikums jau ir pievienots</string>
+    <string name="feedback_form_attachment_too_large">Pielikumu lielums nedrīkst pārsniegt 32 MB</string>
+    <string name="feedback_form_unsupported_attachment">Šis faila tips netiek atbalstīts</string>
+    <string name="feedback_form_max_attachments_reached">Sasniegts maksimālais pielikumu skaits</string>
+    <string name="feedback_form_failure">Mēs nevarējām iesniegt jūsu atsauksmi.</string>
+    <string name="feedback_form_success">Paldies par atsauksmju iesniegšanu!</string>
+    <string name="feedback_form_discard">Vai atmest jūsu atsauksmi?</string>
+    <string name="feedback_form_message_hint">Jūsu atsauksmes ir novērtētas!</string>
+    <string name="feedback_form_title">Atsauksmes</string>
+    <string name="submit">Iesniegt</string>
+    <string name="close">Aizvērt</string>
+    <string name="sending">Sūtīšana</string>
+    <string name="voice_to_content_generic_error">Ieraksts no audio pašlaik nav pieejams. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
+    <string name="voice_to_content_done_label">Pabeigts</string>
+    <string name="voice_to_content_upgrade">Jauniniet, lai saņemtu vairāk pieprasījumu</string>
+    <string name="voice_to_content_ineligible">Jums nav pietiekami daudz pieprasījumu, lai izveidotu ierakstu no audio.</string>
+    <string name="voice_to_content_recording_label">Ierakstīšana</string>
+    <string name="voice_to_content_begin_recording_label">Sākt ierakstīšanu</string>
+    <string name="voice_to_content_secondary_header_label">Pieejamie pieprasījumi:</string>
+    <string name="voice_to_content_base_header_label">Ieraksts no audio</string>
+    <string name="voice_to_content_processing_label">Apstrāde</string>
+    <string name="voice_to_content_error_label">Kļūda</string>
+    <string name="voice_to_content_processing">Apstrāde</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pieskarieties, lai rediģētu</string>
+    <string name="voice_to_content_permissions_required_msg">Lai ierakstītu audio, šai lietotnei ir nepieciešama atļauja piekļūt jūsu mikrofonam. Jūs iepriekš esat liedzis šo atļauju. Lai izmantotu šo funkciju, lūdzu, aktivizējiet mikrofona atļauju lietotnes iestatījumos.</string>
+    <string name="voice_to_content_permissions_required_title">Nepieciešama audio ierakstīšanas atļauja</string>
+    <string name="permission_access_media_location">Multivides atrašanās vieta</string>
+    <string name="in_app_update_restart">Restartēt</string>
+    <string name="in_app_update_available">Atjauninājums ir lejupielādēts. Lai lietotu, restartējiet.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Ieraksts no audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">atvērt izvēlni</string>
+    <string name="reader_tags_feed_action_label_unlike_post">noņemt ierakstu ar “Patīk”</string>
+    <string name="reader_tags_feed_action_label_like_post">patīk ieraksts</string>
+    <string name="reader_tags_feed_action_label_open_blog">atvērt emuāru</string>
+    <string name="reader_tags_feed_action_label_open_post">atvērt ierakstu</string>
+    <string name="reader_tags_feed_error_retry">Mēģināt vēlreiz</string>
+    <string name="reader_tags_feed_no_content_error_description">Šobrīd nevarējām atrast nevienu ierakstu ar atzīmi %s.</string>
+    <string name="reader_tags_feed_loading_error_description">Šobrīd nevarējām ielādēt ierakstus no šīs birkas.</string>
+    <string name="reader_tags_feed_error_title">Nav atrastas ziņas par tēmu %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Vairāk no %s</string>
+    <string name="reader_tags_display_name">Birkas</string>
+    <string name="reader_announcement_card_reading_preferences_description">Izvēlieties sev piemērotas krāsas un fontus. Lasot ierakstu, pieskarieties AA ikonai ekrāna augšdaļā.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Lasīšanas preferences</string>
+    <string name="reader_announcement_card_tags_stream_description">Pieskarieties nolaižamajai izvēlnei augšpusē un atlasiet Atslēgvārdi, lai piekļūtu straumēm no jūsu sekotajām atzīmēm.</string>
+    <string name="reader_announcement_card_tags_stream_title">Atzīmju plūsma</string>
+    <string name="reader_announcement_card_title">Jaunumi pakalpojumā Lasītājs</string>
+    <string name="reader_dropdown_menu_tags">Jūsu birkas</string>
+    <string name="no_connection_error_description">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
+    <string name="no_connection_error_title">Šobrīd nevar ielādēt šo saturu.</string>
+    <string name="stats_subscribers_marker_view_plural">Abonenti</string>
+    <string name="stats_subscribers_marker_view_singular">Abonents</string>
+    <string name="stats_view_subscriber_growth">Abonentu skaita pieaugums</string>
+    <string name="role_subscriber">Abonents</string>
+    <string name="title_email_subscriber">E-pasta abonents</string>
+    <string name="people_empty_list_filtered_email_subscribers">Vēl nav e-pasta abonentu</string>
+    <string name="people_empty_list_filtered_subscribers">Vēl nav abonentu</string>
+    <string name="people_dropdown_item_email_subscribers">E-pasta abonenti</string>
+    <string name="people_dropdown_item_subscribers">Abonenti</string>
+    <string name="invite_already_subscribed">%s: Jau abonēts</string>
+    <string name="error_no_camera_available">Nav pieejama kameras lietotne.</string>
+    <string name="error_remove_subscriber">Nevarēja noņemt abonentu</string>
+    <string name="error_fetch_email_subscribers_list">Nevarēja izgūt vietnes e-pasta abonentus</string>
+    <string name="error_fetch_subscribers_list">Nevarēja izgūt vietnes abonentus.</string>
+    <string name="post_settings_add_to_calendar_error">Nevar pievienot kalendāram</string>
+    <string name="post_settings_no_calendar_app_exists">Nav atrasta lietotne, kas apstrādātu pieprasījumu pievienot kalendāram</string>
+    <string name="site_subscriptions">Vietnes abonementi</string>
+    <string name="notifications_tab_title_subscribers">Abonenti</string>
+    <string name="subscribers">Abonenti</string>
+    <string name="notifications_empty_subscribers">Vēl nav abonentu</string>
+    <string name="stats_view_emails">E-pasti</string>
+    <string name="stats_view_subscribers">Abonenti</string>
+    <string name="stats_view_total_subscribers">Kopējais abonentu skaits</string>
+    <string name="stats_view_subscriber_totals">Abonentu kopsumma</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Klikšķi</string>
+    <string name="stats_emails_opens_label">Atveras</string>
+    <string name="stats_emails_latest_emails_label">Jaunākie e-pasti</string>
+    <string name="stats_subscriber_since_label">Abonents kopš</string>
+    <string name="stats_name_label">Vārds</string>
+    <string name="stats_publicize_subscribers_label">Abonenti</string>
+    <string name="stats_subscriber_label">Abonents</string>
+    <string name="stats_subscribers_count_message">Kopā %1$s abonenti: %2$s</string>
+    <string name="page_upload_conflict_error">Šai lapai ir jaunāka versija.</string>
+    <string name="editor_updating_content">Satura atjaunināšana</string>
+    <string name="stats_subscribers">Abonenti</string>
+    <string name="weekly_roundup_notification_text_views_and_comment">Pagājušajā nedēļā jums bija %1$s skatījumi un 1 komentārs</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Pagājušajā nedēļā jums bija %1$s skatījumi un 1 atzīme “Patīk”.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Pagājušajā nedēļā jums bija %1$s skatījumi, 1 atzīme “Patīk” un 1 komentārs.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Pagājušajā nedēļā jums bija %1$s skatījumi, %2$s atzīmes Patīk un 1 komentārs.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Pagājušajā nedēļā jums bija %1$s skatījumi, 1 atzīme “Patīk” un %2$s komentāri.</string>
+    <string name="site_picker_recent_sites">Jaunākās vietnes</string>
+    <string name="site_picker_all_sites">Visas vietnes</string>
+    <string name="site_picker_pinned_sites">Piespraustas vietnes</string>
+    <string name="site_picker_edit_pins">Rediģēt piespraudes</string>
+    <string name="dialog_post_autosave_body_for_page">Jūs šajā lapā veicāt nesaglabātas izmaiņas no citas ierīces. Lūdzu, atlasiet lapas versiju, kuru vēlaties saglabāt.</string>
+    <string name="dialog_post_autosave_body">Jūs veicāt nesaglabātas izmaiņas šajā ierakstā no citas ierīces. Lūdzu, atlasiet ieraksta versiju, kuru vēlaties saglabāt.</string>
+    <string name="dialog_post_autosave_title">Automātiskā saglabāšana pieejama</string>
+    <string name="dialog_post_conflict_another_device">Cita ierīce</string>
+    <string name="dialog_post_conflict_current_device">Pašreizējā ierīce</string>
+    <string name="dialog_post_conflict_body_for_page">Lapa tika modificēta citā ierīcē. Lūdzu, atlasiet lapas versiju, kuru vēlaties saglabāt.</string>
+    <string name="dialog_post_conflict_body">Ieraksts tika modificēts citā ierīcē. Lūdzu, atlasiet ieraksta versiju, kuru vēlaties saglabāt.</string>
+    <string name="dialog_post_conflict_title">Atrisināt konfliktu</string>
+    <string name="reader_preferences_font_size_extra_large">Īpaši liels</string>
+    <string name="reader_preferences_font_size_large">Liels</string>
+    <string name="reader_preferences_font_size_normal">Normāls</string>
+    <string name="reader_preferences_font_size_small">Mazs</string>
+    <string name="reader_preferences_font_size_extra_small">Īpaši mazs</string>
+    <string name="reader_preferences_screen_font_size_label">Fonta lielums</string>
+    <string name="reader_preferences_screen_font_family_label">Fonts</string>
+    <string name="reader_preferences_screen_theme_label">Krāsu shēma</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">nosūtīt savu atsauksmi</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Notīrīt atlasīto krāsu</string>
+    <string name="reader_no_followed_tags_text_title">Nav sekotu tagu</string>
+    <string name="reader_toast_err_tag_already_following">Jūs jau sekojat šai atzīmei</string>
+    <string name="reader_menu_reading_preferences">Lasīšanas preferences</string>
+    <string name="reader_page_followed_tags_text_title">Sekotās atzīmes</string>
+    <string name="reader_preferences_theme_candy">Konfektes</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Vakars</string>
+    <string name="reader_preferences_theme_sepia">Sēpija</string>
+    <string name="reader_preferences_theme_soft">Mīksts</string>
+    <string name="reader_preferences_theme_system">Noklusējuma</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">nosūtīt savu atsauksmi</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Šī ir jauna funkcija, kas joprojām tiek izstrādāta. Lai palīdzētu mums to uzlabot, %s.</string>
+    <string name="reader_preferences_screen_preview_text">Izvēlieties krāsas, fontus un izmērus. Apskatiet savu izvēli šeit un, kad esat pabeidzis, lasiet ierakstus ar saviem stiliem.</string>
+    <string name="reader_preferences_screen_preview_title">Lasīšanas preferences</string>
+    <string name="reader_filter_empty_tags_action_follow">Sekot atzīmei</string>
+    <string name="button_read">Lasīt</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Varat kopēt sava ieraksta tekstu gadījumam, ja tas ietekmē jūsu saturu. Kopējiet kļūdas informāciju, lai to atkļūdotu un kopīgotu ar atbalsta dienestu.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Redaktors ir saskāries ar negaidītu kļūdu</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pieskarieties šeit, lai kopētu ziņas tekstu</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pieskarieties šeit, lai kopētu kļūdas informāciju</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kopēt ziņas tekstu</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kopēšanas kļūdas informācija</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Poga ieraksta teksta kopēšanai</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Poga kļūdas informācijas kopēšanai</string>
+    <string name="editor_updating_content_failed">Neizdevās atjaunināt saturu</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video paraksts. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video paraksts. Tukšs</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rediģēt videoklipu</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Automātiskā atskaņošana dažiem lietotājiem var radīt lietojamības problēmas.</string>
+    <string name="notifications_action_mark_all_as_read">Atzīmēt visu kā izlasītu</string>
+    <string name="notifications_unread_content_description">Nelasīts</string>
+    <string name="qrcode_media_deeplink_error">Vietne nav atrasta. Pārbaudiet, vai esat pieteicies pareizajā kontā.</string>
+    <string name="gravatar_info_learn_more_link">Kas ir Gravatar?</string>
+    <string name="gravatar_info_description">Atjauninot savu avatāru, vārdu un informāciju par sevi šeit, tā tiks atjaunināta arī visās vietnēs, kas izmanto Gravatar profilus.</string>
+    <string name="gravatar_info_title">Jūsu WordPress.com profilu nodrošina Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">Nevar ielādēt multivides failus koplietošanai. Lūdzu, pārbaudiet lietotnes atļaujas vai izmantojiet lietotnes multivides bibliotēku.</string>
+    <string name="site_monitoring_cannot_be_started">Šobrīd nevaram atvērt vietnes uzraudzību. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Tīmekļa servera žurnāli</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP žurnāli</string>
+    <string name="site_monitoring_tab_title_metrics">Metrika</string>
+    <string name="site_monitoring">Vietnes uzraudzība</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Izmantojiet &lt;b&gt;Discover&lt;/b&gt;, lai atrastu vietnes un birkas. Mēģiniet atlasīt &lt;b&gt;Abonementi&lt;/b&gt;, lai skatītu abonēto saturu un pārvaldītu savus abonementus.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Dodieties uz abonementiem</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Jūsu abonētajos emuāros nav jaunu publikāciju.</string>
+    <string name="reader_no_followed_blogs_description_subs">Abonējiet emuārus pakalpojumā Discover vai meklējiet emuāru, kas jums jau patīk.</string>
+    <string name="reader_no_recommended_blogs_title">Nav ieteiktu emuāru</string>
+    <string name="reader_no_posts_with_this_tag">Nav ziņu ar šo birku</string>
+    <string name="reader_toast_err_unable_to_block_blog">Nevar bloķēt šo emuāru</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Šī emuāra ieraksti vairs netiks rādīti</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">Nevar atteikties no emuāra abonēšanas</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">Jums nav atļaujas piekļūt šim emuāram</string>
+    <string name="reader_toast_err_unable_to_follow_blog">Nevar abonēt šo emuāru</string>
+    <string name="reader_toast_err_already_follow_this_blog">Jūs jau esat abonējis šo emuāru</string>
+    <string name="reader_toast_err_show_blog">Nevar parādīt šo emuāru</string>
+    <string name="reader_label_choose_interests">Izvēlieties savas intereses</string>
+    <string name="reader_label_subscribers_count_single">1 abonents</string>
+    <string name="reader_label_subscribers_count">%s abonenti</string>
+    <string name="reader_label_subscribe_count">%,d abonenti</string>
+    <string name="reader_label_blog_subscribed">Abonēts emuārs</string>
+    <string name="reader_hint_search_subscribed_blogs">Meklēt abonētos emuārus</string>
+    <string name="reader_btn_subscribed">Abonēts</string>
+    <string name="reader_btn_subscribe">Abonēt</string>
+    <string name="reader_menu_block_this_blog">Bloķēt šo emuāru</string>
+    <string name="reader_menu_tags_and_blogs">Rediģēt birkas un emuārus</string>
+    <string name="reader_page_followed_blogs_title">Abonētie emuāri</string>
+    <string name="reader_title_tags">Sekot birkai</string>
+    <string name="reader_activity_title_manage_tags_blogs">Pārvaldīt tagus un emuārus</string>
+    <string name="reader_activity_title_tag_preview">Birka</string>
+    <string name="reader_activity_title_blog_preview">Lasītāja emuārs</string>
+    <string name="reader_subscribed_display_name">Abonēts</string>
+    <string name="reader_filter_chip_tag_other">%d birkas</string>
+    <string name="reader_filter_chip_tag_one">1 birka</string>
+    <string name="reader_filter_chip_tag_zero">0 atzīmes</string>
+    <string name="reader_filter_chip_blog_other">%d emuāri</string>
+    <string name="reader_filter_chip_blog_one">1 emuārs</string>
+    <string name="reader_filter_chip_blog_zero">0 emuāri</string>
+    <string name="reader_dropdown_menu_lists">Saraksti</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">Patika</string>
+    <string name="reader_dropdown_menu_saved">Saglabāts</string>
+    <string name="reader_dropdown_menu_subscriptions">Abonementi</string>
+    <string name="reader_dropdown_menu_discover">Atklājiet</string>
+    <string name="reader_search_content_description">Meklēt</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Sekot birkām</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogi, kurus abonēt</string>
+    <string name="reader_filter_empty_tags_action_suggested">Ieteiktās atzīmes</string>
+    <string name="reader_filter_empty_blogs_action_search">Meklēt emuāru</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Sekojiet birkai, un šeit varēsiet redzēt tās labākās ziņas.</string>
+    <string name="reader_filter_empty_tags_list_title">Nav birku</string>
+    <string name="reader_filter_empty_blogs_list_text">Abonējiet emuārus pakalpojumā Discover, un šeit redzēsiet to jaunākos ierakstus. Vai arī meklējiet emuāru, kas jums jau patīk.</string>
+    <string name="reader_filter_empty_blogs_list_title">Nav emuāra abonementu</string>
+    <string name="reader_filter_empty_blogs_action">Abonēt emuāru</string>
+    <string name="reader_filter_empty_blogs_list">Skatiet jaunākos ierakstus no emuāriem, kurus esat abonējis</string>
+    <string name="reader_filter_by_tag_title">Atlasīt pēc birkas</string>
+    <string name="reader_filter_by_blog_title">Filtrēt pēc emuāra</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gaida savienojumu</string>
+    <string name="stats_traffic">Satiksme</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Darbs bezsaistē</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tīkla savienojums atjaunots</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tīkla savienojums pārtraukts, darbojas bezsaistē</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Fonta lielums, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Faila tips netiek atbalstīts kā multivides fails.</string>
+    <string name="media_cannot_be_started">Šobrīd nevaram atvērt multivides failus. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
+    <string name="domains_just_search_for_a_domain_button">Vienkārši meklējiet domēnu</string>
+    <string name="domains_upgrade_to_a_plan_button">Jaunināt uz plānu</string>
+    <string name="domains_upgrade_to_plan_caption">Saņemiet bezmaksas domēna reģistrāciju uz vienu gadu vai pārsūtīšanu ar jebkuru gada maksas plānu.</string>
+    <string name="domains_site_domain_never_expires">Nekad nebeidzas derīguma termiņš</string>
+    <string name="domains_free_domain">Jūsu bezmaksas WordPress.com domēns</string>
+    <string name="domains_site_other_domains">Citi %s domēni</string>
+    <string name="domains_primary_site_domain_chip">Primārais domēns</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuārija ir klāt!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Ejam!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Ieslēgt emuāra uzvednes</string>
@@ -2542,7 +2838,6 @@ Language: lv
     <string name="signup_epilogue_error_button_positive">Mēģiniet vēlreiz</string>
     <string name="signup_epilogue_error_button_negative">Atgriezties</string>
     <string name="signup_epilogue_error_generic">Atjauninot jūsu kontu, radās problēmas. Lai turpinātu, varat atkārtot mēģinājumu vai atgriezt izmaiņas.</string>
-    <string name="signup_epilogue_error_avatar">Radās problēmas augšupielādējot jūsu tēlu (avatar).</string>
     <string name="plugin_needs_update">Nepieciešams atjaunināt</string>
     <string name="plugin_caption_search">Meklēt spraudņus</string>
     <string name="plugin_caption_new">Jauns</string>
@@ -3033,7 +3328,6 @@ Language: lv
     <string name="error_remove_user">Nevarēja noņemt lietotāju</string>
     <string name="error_update_role">Nevarēja atjaunināt lietotāja lomu</string>
     <string name="error_fetch_viewers_list">Nevarēja izgūt vietnes skatītājus</string>
-    <string name="error_updating_gravatar">Atjauninot jūsu Gravatar, radās kļūda</string>
     <string name="error_refreshing_gravatar">Kļūda, atkārtoti ielādējot jūsu Gravatar</string>
     <string name="error_locating_image">Atrodot apgriezto attēlu, radās kļūda</string>
     <string name="error_cropping_image">Apgriežot attēlu, radās kļūda</string>
@@ -3145,10 +3439,6 @@ Language: lv
     <string name="privacy_private">Jūsu vietne ir redzama tikai jums un apstiprinātajiem lietotājiem</string>
     <string name="privacy_public_not_indexed">Jūsu vietne ir redzama visiem, bet lūdz meklētājprogrammas to neindeksēt</string>
     <string name="privacy_public">Jūsu vietne ir redzama visiem, un meklētājprogrammas to var indeksēt</string>
-    <string name="about_me_hint">Daži vārdi par tevi…</string>
-    <string name="public_display_name_hint">Parādītais vārds pēc noklusējuma būs jūsu lietotājvārds, ja tas nav iestatīts</string>
-    <string name="about_me">Par mani</string>
-    <string name="public_display_name">Publiski redzamais vārds</string>
     <string name="last_name">Uzvārds</string>
     <string name="first_name">Vārds</string>
     <string name="my_profile">Mans profils</string>

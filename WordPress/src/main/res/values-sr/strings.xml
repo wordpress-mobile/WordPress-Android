@@ -1460,7 +1460,6 @@ Language: sr_RS
     <string name="role">Улога</string>
     <string name="error_remove_user">Корисник није уклоњен</string>
     <string name="error_update_role">Није промењена улога корисника</string>
-    <string name="error_updating_gravatar">Грешка приликом мењања вашег Граватара</string>
     <string name="error_refreshing_gravatar">Грешка током учитавања вашег Граватара</string>
     <string name="error_locating_image">Грешка приликом налажења исечене слике</string>
     <string name="error_cropping_image">Грешка током сечења слике</string>
@@ -1561,10 +1560,6 @@ Language: sr_RS
     <string name="site_settings_image_original_size">Изворна величина</string>
     <string name="privacy_public_not_indexed">Ваша локација је видљива свима, али тражи од претраживача да је не индексирају</string>
     <string name="privacy_public">Ваша локација је видљива свима и претраживачи је могу индексирати</string>
-    <string name="about_me_hint">Неколико речи о вама …</string>
-    <string name="public_display_name_hint">Име за приказ подразумевано ће бити ваше корисничко име ако није другачије постављено</string>
-    <string name="about_me">О мени</string>
-    <string name="public_display_name">Јавно име за приказ</string>
     <string name="my_profile">Мој профил</string>
     <string name="last_name">Презиме</string>
     <string name="first_name">Име</string>

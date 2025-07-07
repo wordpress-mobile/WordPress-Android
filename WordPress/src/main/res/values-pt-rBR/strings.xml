@@ -193,8 +193,6 @@ Language: pt_BR
     <string name="notifications_action_mark_all_as_read">Marcar todas como lidas</string>
     <string name="notifications_unread_content_description">Não lidas</string>
     <string name="qrcode_media_deeplink_error">Site não encontrado. Verifique se você está conectado à conta correta.</string>
-    <string name="gravatar_info_sync_done_button">Concluir</string>
-    <string name="gravatar_info_sync_message">Pode levar um tempo para sincronizar as atualizações do seu perfil no Gravatar.</string>
     <string name="gravatar_info_learn_more_link">O que é Gravatar?</string>
     <string name="gravatar_info_description">Se você atualizar seu avatar, nome e informações pessoais aqui, eles também serão atualizados em todos os sites que usam perfis do Gravatar.</string>
     <string name="gravatar_info_title">Seu perfil do WordPress.com usa tecnologia Gravatar</string>
@@ -2810,7 +2808,6 @@ Language: pt_BR
     <string name="signup_epilogue_error_button_positive">Tentar novamente</string>
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
-    <string name="signup_epilogue_error_avatar">Houve um problema ao enviar seu avatar.</string>
     <string name="plugin_needs_update">Precisa de atualização</string>
     <string name="plugin_caption_search">Pesquisar plugins</string>
     <string name="plugin_caption_new">Novo</string>
@@ -3301,7 +3298,6 @@ Language: pt_BR
     <string name="error_remove_user">Não foi possível remover usuário</string>
     <string name="error_update_role">Não foi possível atualizar a função do usuário</string>
     <string name="error_fetch_viewers_list">Não foi possível recuperar os espectadores do site</string>
-    <string name="error_updating_gravatar">Erro ao enviar o seu Gravatar</string>
     <string name="error_refreshing_gravatar">Erro ao carregar o seu Gravatar</string>
     <string name="error_locating_image">Erro ao localizar o recorte da imagem</string>
     <string name="error_cropping_image">Erro ao cortar a imagem</string>
@@ -3413,10 +3409,6 @@ Language: pt_BR
     <string name="privacy_private">Seu site é visível apenas para você e usuários aprovados</string>
     <string name="privacy_public_not_indexed">Seu site está visível para todos mas solicita aos mecanismos de busca para não indexá-lo</string>
     <string name="privacy_public">Seu site está visível para todos e pode ser indexado por mecanismos de busca</string>
-    <string name="about_me_hint">Algumas palavras sobre você…</string>
-    <string name="about_me">Sobre mim</string>
-    <string name="public_display_name_hint">O nome de exibição será o seu nome de usuário se não for configurado</string>
-    <string name="public_display_name">Nome para exibição pública</string>
     <string name="last_name">Sobrenome</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">Meu perfil</string>
@@ -3841,6 +3833,7 @@ Language: pt_BR
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="notification_settings">Configurações de notificações</string>
+    <string name="clear">Limpar</string>
     <string name="add">Adicionar</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>

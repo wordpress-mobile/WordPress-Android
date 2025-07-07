@@ -218,7 +218,6 @@ Language: eu_ES
     <string name="role">Rola</string>
     <string name="error_remove_user">Ezin izan da erabiltzailea ezabatu</string>
     <string name="error_update_role">Ezin izan da erabiltzailearen rola eguneratu</string>
-    <string name="error_updating_gravatar">Errorea zure Gravatarra kargatzean</string>
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
     <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
@@ -288,8 +287,6 @@ Language: eu_ES
     <string name="search">Bilatu</string>
     <string name="disabled">Ezgaitu</string>
     <string name="site_settings_image_original_size">Jatorrizko neurria</string>
-    <string name="about_me">Niri buruz</string>
-    <string name="public_display_name">Publikoki erakusten den izena</string>
     <string name="my_profile">Nire profila</string>
     <string name="first_name">Izena</string>
     <string name="last_name">Abizena</string>
@@ -619,6 +616,7 @@ Language: eu_ES
     <string name="cancel">Ezeztatu</string>
     <string name="save">Gorde</string>
     <string name="add">Gehitu</string>
+    <string name="clear">Garbitu</string>
     <string name="reply">Erantzun</string>
     <string name="no">Ez</string>
     <string name="yes">Bai</string>

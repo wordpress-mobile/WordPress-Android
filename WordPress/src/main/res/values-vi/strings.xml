@@ -1976,7 +1976,6 @@ Language: vi_VN
     <string name="signup_epilogue_error_button_positive">Thử lại</string>
     <string name="signup_epilogue_error_button_negative">Đảo ngược</string>
     <string name="signup_epilogue_error_generic">Xảy ra lỗi khi cập nhật tài khoản của bạn. Hãy thử lại hoặc đảo ngược những thay đổi.</string>
-    <string name="signup_epilogue_error_avatar">Xảy ra lỗi khi tải lên ảnh đại diện.</string>
     <string name="site_settings_like_header">Thích</string>
     <string name="plugin_needs_update">Cần cập nhật</string>
     <string name="plugin_caption_search">Tìm kiếm plugin</string>
@@ -2456,7 +2455,6 @@ Language: vi_VN
     <string name="error_remove_user">Không thể chặn người dùng</string>
     <string name="error_fetch_viewers_list">Không tải được danh sách độc giả</string>
     <string name="error_update_role">Không thể đổi vai trò người dùng</string>
-    <string name="error_updating_gravatar">Lỗi cập nhật Gravatar của bạn</string>
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
     <string name="error_locating_image">Lỗi định vị hình ảnh được cắt</string>
     <string name="error_cropping_image">Lỗi cắt ảnh</string>
@@ -2568,10 +2566,6 @@ Language: vi_VN
     <string name="privacy_private">Chỉ bạn và những người mà bạn duyệt mới có thể xem blog</string>
     <string name="privacy_public_not_indexed">Mọi người đều có thể xem blog nhưng các cỗ máy tìm kiếm không được phép lập chỉ mục</string>
     <string name="privacy_public">Mọi người đều có thể xem blog và các cỗ máy tìm kiếm được phép lập chỉ mục</string>
-    <string name="about_me_hint">Một vài từ mô tả về bạn…</string>
-    <string name="about_me">Giới thiệu bản thân</string>
-    <string name="public_display_name_hint"> Nếu không được đặt, tên hiển thị sẽ mặc định là tên người dùng của bạn</string>
-    <string name="public_display_name">Tên hiển thị công khai</string>
     <string name="my_profile">Hồ sơ của tôi</string>
     <string name="last_name">Tên</string>
     <string name="first_name">Họ</string>

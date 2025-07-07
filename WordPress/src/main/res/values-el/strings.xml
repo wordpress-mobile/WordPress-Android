@@ -671,7 +671,6 @@ Language: el_GR
     <string name="error_remove_user">Αδυναμία αφαίρεσης χρήστη</string>
     <string name="error_fetch_viewers_list">Αδυναμία ανάκτησης χρηστών ιστότοπου</string>
     <string name="error_update_role">Αδυναμία ενημέρωσης ρόλου χρήστη</string>
-    <string name="error_updating_gravatar">Σφάλμα κατά την ενημέρωση του Gravatar σας</string>
     <string name="error_locating_image">Σφάλμα εντοπισμού της περικομμένης εικόνας</string>
     <string name="error_refreshing_gravatar">Σφάλμα κατά την επαναφόρτωση του Gravatar σας</string>
     <string name="error_cropping_image">Σφάλμα κατά την περικοπή της εικόνας</string>
@@ -783,10 +782,6 @@ Language: el_GR
     <string name="privacy_private">Ο ιστότοπός σας είναι ορατός μόνο σε σας και τους χρήστες που εγκρίνετε</string>
     <string name="privacy_public_not_indexed">Ο ιστότοπός σας είναι ορατός σε όλους αλλά ζητά από τις μηχανές αναζήτησης να μην τον ευρετηριάζουν</string>
     <string name="privacy_public">Ο ιστότοπός σας είναι ορατός σε όλους και οι μηχανές αναζήτησης μπορούν να τον ευρετηριάζουν </string>
-    <string name="about_me_hint">Λίγα λόγια για εσάς…</string>
-    <string name="public_display_name_hint">Αν δεν ορίσετε όνομα που θα εμφανίζεται, από προεπιλογή θα εμφανίζεται το όνομα χρήστη σας.</string>
-    <string name="about_me">Για μένα</string>
-    <string name="public_display_name">Δημόσια εμφανιζόμενο όνομα</string>
     <string name="my_profile">Το προφίλ μου</string>
     <string name="first_name">Όνομα</string>
     <string name="last_name">Επώνυμο</string>
