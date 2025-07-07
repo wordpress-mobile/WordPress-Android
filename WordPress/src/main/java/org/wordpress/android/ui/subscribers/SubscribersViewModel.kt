@@ -268,11 +268,17 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Trigger the delete confirmation dialog when the user taps the delete button for a subscriber
+     */
     fun onDeleteSubscriberClick(subscriber: Subscriber) {
         appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
         _uiEvent.value = UiEvent.ShowDeleteConfirmationDialog(subscriber)
     }
 
+    /**
+     * Subscriber deletion has been confirmed by the user. Delete the subscriber and refresh the list.
+     */
     fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
         launch(ioDispatcher) {
             val result = deleteSubscriber(subscriber = subscriber)
