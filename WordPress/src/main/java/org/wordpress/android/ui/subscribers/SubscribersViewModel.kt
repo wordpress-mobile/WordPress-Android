@@ -223,7 +223,7 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
-    private suspend fun deleteSubscriber(subscriber: Subscriber): Result<Boolean> = withContext(ioDispatcher) {
+    private suspend fun deleteSubscriber(subscriber: Subscriber) = runCatching {
         val response = if (subscriber.isEmailSubscriber) {
             wpComApiClient.request { requestBuilder ->
                 requestBuilder.followers().deleteEmailFollower(
@@ -242,13 +242,13 @@ class SubscribersViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
-                return@withContext Result.success(true)
+                Result.success(true)
             }
 
             else -> {
                 val error = (response as? WpRequestResult.WpError)?.errorMessage
                 appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
-                return@withContext Result.failure(Exception(error))
+                Result.failure(Exception(error))
             }
         }
     }
