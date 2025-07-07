@@ -224,31 +224,33 @@ class SubscribersViewModel @Inject constructor(
         }
 
     private suspend fun deleteSubscriber(subscriber: Subscriber) = runCatching {
-        val response = if (subscriber.isEmailSubscriber) {
-            wpComApiClient.request { requestBuilder ->
-                requestBuilder.followers().deleteEmailFollower(
-                    wpComSiteId = siteId().toULong(),
-                    subscriptionId = subscriber.subscriptionId
-                )
+        withContext(ioDispatcher) {
+            val response = if (subscriber.isEmailSubscriber) {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteEmailFollower(
+                        wpComSiteId = siteId().toULong(),
+                        subscriptionId = subscriber.subscriptionId
+                    )
+                }
+            } else {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteFollower(
+                        wpComSiteId = siteId().toULong(),
+                        userId = subscriber.userId
+                    )
+                }
             }
-        } else {
-            wpComApiClient.request { requestBuilder ->
-                requestBuilder.followers().deleteFollower(
-                    wpComSiteId = siteId().toULong(),
-                    userId = subscriber.userId
-                )
-            }
-        }
-        when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
-                Result.success(true)
-            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
+                    Result.success(true)
+                }
 
-            else -> {
-                val error = (response as? WpRequestResult.WpError)?.errorMessage
-                appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
-                Result.failure(Exception(error))
+                else -> {
+                    val error = (response as? WpRequestResult.WpError)?.errorMessage
+                    appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
+                    Result.failure(Exception(error))
+                }
             }
         }
     }
