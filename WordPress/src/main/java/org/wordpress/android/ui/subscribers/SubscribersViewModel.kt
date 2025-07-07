@@ -3,6 +3,7 @@ package org.wordpress.android.ui.subscribers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -286,6 +287,8 @@ class SubscribersViewModel @Inject constructor(
     fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
         launch(ioDispatcher) {
             val result = deleteSubscriber(subscriber = subscriber)
+            // add a short delay or else refreshing the list may still show the deleted subscriber
+            delay(DELETE_DELAY)
             withContext(mainDispatcher) {
                 if (result.isSuccess) {
                     _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_success)
@@ -311,6 +314,8 @@ class SubscribersViewModel @Inject constructor(
         private const val ID_SORT_DISPLAY_NAME = 2L
         private const val ID_SORT_EMAIL = 3L
         private const val ID_SORT_PLAN = 4L
+
+        private const val DELETE_DELAY = 500L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
