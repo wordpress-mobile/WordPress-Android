@@ -401,7 +401,7 @@ class PostListViewModel @Inject constructor(
 
     private fun convertToPhotonUrlIfPossible(featuredImageUrl: String?): String? =
         readerUtilsWrapper.getResizedImageUrl(
-            featuredImageUrl,
+            featuredImageUrl.orEmpty(),
             photonWidth,
             photonHeight,
             SiteUtils.getAccessibilityInfoFromSite(connector.site)

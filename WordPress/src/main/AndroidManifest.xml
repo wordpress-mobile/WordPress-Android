@@ -128,6 +128,22 @@
         </activity>
 
         <activity
+            android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
+            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="app-pass-authorize"
+                    android:scheme="${magicLinkScheme}" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
             android:theme="@style/NoDisplay"
             android:exported="true">
@@ -220,7 +236,7 @@
             android:label="@string/me_btn_app_settings"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".ui.prefs.ExperimentalFeaturesActivity"
+            android:name=".ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity"
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
@@ -394,6 +410,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
+
+        <activity android:name=".ui.subscribers.SubscribersActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/subscribers"/>
 
         <!-- Deep Linking Activity -->
         <activity
@@ -618,7 +638,7 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
@@ -716,7 +736,7 @@
         <!--People Management-->
         <activity
             android:name=".ui.people.PeopleManagementActivity"
-            android:label="@string/people"
+            android:label="@string/users"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
         <activity
@@ -777,12 +797,6 @@
         <activity
             android:name=".ui.domains.DomainRegistrationCheckoutWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
-
-        <!-- Me activities -->
-        <activity
-            android:name=".ui.prefs.MyProfileActivity"
-            android:label="@string/my_profile"
-            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Lib activities-->
         <activity
@@ -1131,11 +1145,6 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
-        <!-- Scanner -->
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode_ui"/>
 
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"

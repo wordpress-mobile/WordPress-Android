@@ -21,8 +21,11 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SELF_HOSTED_USERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SUBSCRIBERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -45,6 +48,7 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -133,11 +137,26 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    fun buildSubscribersItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (site.hasCapabilityListSubscribers &&
+            experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)
+        ) {
+            ListItem(
+                R.drawable.ic_mail_white_24dp,
+                UiStringRes(R.string.subscribers),
+                onClick = ListItemInteraction.create(SUBSCRIBERS, onClick),
+                listItemAction = SUBSCRIBERS
+            )
+        } else {
+            null
+        }
+    }
+
     fun buildPeopleItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityListUsers) {
             ListItem(
                 R.drawable.ic_user_white_24dp,
-                UiStringRes(R.string.people),
+                UiStringRes(R.string.users),
                 onClick = ListItemInteraction.create(PEOPLE, onClick),
                 listItemAction = PEOPLE
             )

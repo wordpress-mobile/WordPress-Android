@@ -2,7 +2,6 @@ package org.wordpress.android.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextWatcher;
@@ -42,6 +41,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -119,7 +119,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -129,7 +129,11 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
 
         if (savedInstanceState == null) {
-            EditTextUtils.showSoftInput(getEditTextToFocusOnStart());
+            try {
+                EditTextUtils.showSoftInput(getEditTextToFocusOnStart());
+            } catch (Exception exception) {
+                AppLog.e(T.MAIN, "Error showing soft input", exception);
+            }
         }
     }
 
@@ -245,12 +249,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         mProgressDialog =
                 ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
-                        new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                endProgressIfNeeded();
-                            }
-                        });
+                        dialogInterface -> endProgressIfNeeded());
         mInProgress = true;
     }
 

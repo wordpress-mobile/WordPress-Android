@@ -1,0 +1,4 @@
+25.9:
+- Tangentbordet överlappar inte längre redigeraren, vilket innebär att du kan se ditt fantastiska arbete hela tiden.
+- Ikonen ”jag” är nu rätt färg när du är i mörkt läge.
+- Vi har lagt till en varning som talar om för dig om din QR-kodskanning misslyckades. Ingen väntan, inga gissningar, inga problem.

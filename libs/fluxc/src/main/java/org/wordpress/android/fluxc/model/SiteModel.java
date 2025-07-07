@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
@@ -100,6 +101,22 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mUsername;
     @Column
     private String mPassword;
+    @Nullable
+    @Column(name = "API_REST_USERNAME")
+    private String mApiRestUsernameEncrypted;
+    @Nullable
+    private String mApiRestUsernamePlain;
+    @Nullable
+    @Column(name = "API_REST_PASSWORD")
+    private String mApiRestPasswordEncrypted;
+    @Nullable
+    private String mApiRestPasswordPlain;
+    @Nullable
+    @Column
+    private String mApiRestUsernameIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
+    @Nullable
+    @Column
+    private String mApiRestPasswordIV; // Exclusive IV. Reusing IV in encryption mode violates security best practices.
     @Column(name = "XMLRPC_URL")
     private String mXmlRpcUrl;
     @Column
@@ -358,6 +375,54 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mPassword = password;
     }
 
+    public String getApiRestUsernameEncrypted() {
+        return mApiRestUsernameEncrypted;
+    }
+
+    public void setApiRestUsernameEncrypted(String apiRestUsernameEncrypted) {
+        mApiRestUsernameEncrypted = apiRestUsernameEncrypted;
+    }
+
+    public String getApiRestUsernamePlain() {
+        return mApiRestUsernamePlain;
+    }
+
+    public void setApiRestUsernamePlain(String apiRestUsernamePlain) {
+        mApiRestUsernamePlain = apiRestUsernamePlain;
+    }
+
+    public String getApiRestPasswordEncrypted() {
+        return mApiRestPasswordEncrypted;
+    }
+
+    public void setApiRestPasswordEncrypted(String apiRestPasswordEncrypted) {
+        mApiRestPasswordEncrypted = apiRestPasswordEncrypted;
+    }
+
+    public String getApiRestPasswordPlain() {
+        return mApiRestPasswordPlain;
+    }
+
+    public void setApiRestPasswordPlain(String apiRestPasswordPlain) {
+        mApiRestPasswordPlain = apiRestPasswordPlain;
+    }
+
+    public String getApiRestUsernameIV() {
+        return mApiRestUsernameIV;
+    }
+
+    public void setApiRestUsernameIV(String apiRestUsernameIV) {
+        mApiRestUsernameIV = apiRestUsernameIV;
+    }
+
+    public String getApiRestPasswordIV() {
+        return mApiRestPasswordIV;
+    }
+
+    public void setApiRestPasswordIV(String apiRestPasswordIV) {
+        mApiRestPasswordIV = apiRestPasswordIV;
+    }
+
     public String getXmlRpcUrl() {
         return mXmlRpcUrl;
     }
@@ -406,10 +471,18 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mDisplayName = displayName;
     }
 
+    /**
+     * @deprecated Hiding sites is no longer a feature on wp.com
+     */
+    @Deprecated
     public boolean isVisible() {
         return mIsVisible;
     }
 
+    /**
+     * @deprecated Hiding sites is no longer a feature on wp.com
+     */
+    @Deprecated
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
     }
@@ -540,6 +613,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setHasCapabilityListUsers(boolean capabilityListUsers) {
         mHasCapabilityListUsers = capabilityListUsers;
+    }
+
+    /**
+     * This may change, but for now the newsletter subscribers feature requires a
+     * WP.com or Atomic site with user list capabilities.
+     */
+    public boolean getHasCapabilityListSubscribers() {
+        return getHasCapabilityListUsers() && (isWPCom() || isWPComAtomic());
     }
 
     public boolean getHasCapabilityManageCategories() {

@@ -1,3 +1,4 @@
-25.7: slechts twee oplossingen voor de experimentele blok-editor deze keer:
-1. je kunt feedback over de editor verzenden terwijl je het gebruikt. 
-2. we hebben een bug opgelost waarbij de code weergave niet goed werkte
+25.9:
+- Het toetsenbord overlapt niet langer de editor, wat betekent dat je je geweldige werk altijd kunt zien.
+- Het "mij" icoon heeft nu de juiste kleur als je in de donkere modus bent.
+- We hebben een waarschuwing toegevoegd die je vertelt als je QR code scan niet succesvol was. Geen wachten, geen giswerk, geen probleem

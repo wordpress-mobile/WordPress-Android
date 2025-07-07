@@ -172,7 +172,6 @@ Language: gd_GB
     <string name="local_changes">Atharraichean ionadail</string>
     <string name="image_settings">Roghainnean an deilbh</string>
     <string name="wordpress_blog">Bloga WordPress</string>
-    <string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a-rithist.</string>
     <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
@@ -183,7 +182,6 @@ Language: gd_GB
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
-    <string name="cant_share_no_visible_blog">Chan urrainn dhut co-roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
     <string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>
     <string name="pick_photo">Tagh dealbh</string>
     <string name="pick_video">Tagh video</string>

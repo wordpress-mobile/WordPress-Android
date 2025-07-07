@@ -1825,7 +1825,6 @@ Language: nb_NO
     <string name="invite_message_title">Tilpasset melding</string>
     <string name="invite">Inviter</string>
     <string name="invite_names_title">Brukernavn eller e-poster</string>
-    <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
@@ -1838,7 +1837,6 @@ Language: nb_NO
     <string name="user_remove_confirmation_message">Hvis du fjerner %1$s, vil den brukeren ikke lenger få tilgang til dette nettstedet, men alt innhold som ble laget av %1$s vil forbli på nettstedet.\n\nVil du fortsatt fjerne denne brukeren?</string>
     <string name="person_remove_confirmation_title">Fjern %1$s</string>
     <string name="role">Rolle</string>
-    <string name="people">Folk</string>
     <string name="error_remove_user">Klarte ikke å fjerne brukeren</string>
     <string name="error_update_role">Klarte ikke å oppdatere brukerrollen</string>
     <string name="error_fetch_viewers_list">Klarte ikke å hente inn sideleserne</string>
@@ -2231,7 +2229,6 @@ Language: nb_NO
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
     <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
-    <string name="error_blog_hidden">Bloggen er skjult og kunne ikke bli lastet inn. Aktiver den igjen i innstillingene og prøv igjen.</string>
     <string name="error_refresh_media">Media kunne ikke bli oppfrisket for øyeblikket</string>
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="image_settings">Bildeinnstillinger</string>
@@ -2278,7 +2275,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
-    <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
     <string name="comment_unapproved">Kommentar avslått</string>
     <string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>

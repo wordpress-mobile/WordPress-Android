@@ -1,0 +1,4 @@
+25.9:
+- Klavye artık düzenleyiciyle örtüşmüyor, yani harika çalışmalarınızı her zaman görebilirsiniz.
+- Karanlık moddayken "ben" simgesi artık doğru renktedir.
+- QR kodu taramanızın başarısız olup olmadığını gösteren bir uyarı ekledik. Beklemek yok, tahmin etmek yok, sorun yok.

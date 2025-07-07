@@ -22,6 +22,8 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.CommentErrorUtilsWrapper
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -291,6 +293,6 @@ class CommentsXMLRPCClient @Inject constructor(
     // This creates some not consistent behaviours in various areas of the app that needs a more broad fix and review
     // (more details in the internal p2 post and comments pe8j1f-V-p2); numbers of such cases are pretty low actually
     // and this fix prioritizes the mentioned crash.
-    private fun SiteModel.notNullUserName() = this.username ?: ""
-    private fun SiteModel.notNullPassword() = this.password ?: ""
+    private fun SiteModel.notNullUserName() = this.getUserNameProcessed()
+    private fun SiteModel.notNullPassword() = this.getPasswordProcessed()
 }

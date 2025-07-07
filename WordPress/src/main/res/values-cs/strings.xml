@@ -2737,7 +2737,6 @@ Language: cs_CZ
     <string name="invite">Pozvat</string>
     <string name="invite_names_title">Uživatelská jména nebo e-maily</string>
     <string name="my_site_header_external">Externí</string>
-    <string name="invite_people">Přidat uživatele</string>
     <string name="label_clear_search_history">Smazat historii prohlížení</string>
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
     <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
@@ -2748,7 +2747,6 @@ Language: cs_CZ
     <string name="person_removed">%1$s úspěšně odstraněno</string>
     <string name="user_remove_confirmation_message">Máte odstranit %1$s, tento uživatel již nebude moci přihlašovat k tomuto webu, ale všechen obsah, který vytvořil %1$s zůstanou na webu.\n\nChcete i přesto odstranit tohoto uživatele?</string>
     <string name="person_remove_confirmation_title">Ostranit %1$s</string>
-    <string name="people">Lidé</string>
     <string name="role">Role</string>
     <string name="error_remove_user">Nepodařilo se odstranit vybraného uživatele</string>
     <string name="error_fetch_viewers_list">Nemohu získat zobrazení webu</string>
@@ -3177,7 +3175,6 @@ Language: cs_CZ
     <string name="post_settings">Nastavení příspěvku</string>
     <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Je vyžadována autorizace</string>
     <string name="notifications_empty_all">Doposud nejsou k dispozici žádná oznámení.</string>
-    <string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
     <string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>
     <string name="wordpress_blog">WordPress web</string>
     <string name="select_categories">Vyberte rubriku</string>
@@ -3191,7 +3188,6 @@ Language: cs_CZ
     <string name="comment_spammed">Komentář byl označen jako spam</string>
     <string name="reader_likes_you_and_multi">To se líbí vám a dalším %,d</string>
     <string name="reader_likes_multi">To se mi líbí (%,d)</string>
-    <string name="cant_share_no_visible_blog">Nemůžete sdílet s WordPressem bez viditelného webu</string>
     <string name="comment_unapproved">Komentář nebyl schválen</string>
     <string name="pick_photo">Vyberte fotku</string>
     <string name="pick_video">Vyberte video</string>

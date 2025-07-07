@@ -137,7 +137,7 @@ android {
         buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "true"
         buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "true"
         buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "true"
-        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "true"
+        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_ONE", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_TWO", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
@@ -164,7 +164,6 @@ android {
         buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
         buildConfigField "boolean", "READER_FLOATING_BUTTON", "false"
         buildConfigField "boolean", "ENABLE_SELF_HOSTED_USERS", "false"
-        buildConfigField "boolean", "GRAVATAR_QUICK_EDITOR", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -201,7 +200,6 @@ android {
 
     productFlavors {
         wordpress {
-            isDefault true
             dimension "app"
 
             applicationId "org.wordpress.android"
@@ -216,6 +214,7 @@ android {
         }
 
         jetpack {
+            isDefault true
             dimension "app"
 
             applicationId "com.jetpack.android"
@@ -498,6 +497,7 @@ dependencies {
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
     androidTestImplementation project(path:':libs:mocks')
 

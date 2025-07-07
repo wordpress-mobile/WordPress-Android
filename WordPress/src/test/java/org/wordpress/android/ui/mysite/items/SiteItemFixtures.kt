@@ -79,9 +79,15 @@ val ADMIN_ITEM = ListItem(
     onClick = ListItemInteraction.create(ListItemAction.ADMIN, SITE_ITEM_ACTION),
     listItemAction = ListItemAction.ADMIN
 )
+val SUBSCRIBERS_ITEM = ListItem(
+    R.drawable.ic_mail_white_24dp,
+    UiStringRes(R.string.subscribers),
+    onClick = ListItemInteraction.create(ListItemAction.SUBSCRIBERS, SITE_ITEM_ACTION),
+    listItemAction = ListItemAction.SUBSCRIBERS
+)
 val PEOPLE_ITEM = ListItem(
     R.drawable.ic_user_white_24dp,
-    UiStringRes(R.string.people),
+    UiStringRes(R.string.users),
     onClick = ListItemInteraction.create(ListItemAction.PEOPLE, SITE_ITEM_ACTION),
     listItemAction = ListItemAction.PEOPLE
 )

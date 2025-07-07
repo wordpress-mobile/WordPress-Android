@@ -49,6 +49,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
+import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
@@ -147,5 +148,10 @@ public abstract class ApplicationModule {
     @Provides
     public static RecordingStrategy provideVoiceToContentRecordingStrategy() {
         return new VoiceToContentRecordingStrategy();
+    }
+
+    @Provides
+    public static WpLoginClient provideWpLoginClient() {
+        return new WpLoginClient();
     }
 }

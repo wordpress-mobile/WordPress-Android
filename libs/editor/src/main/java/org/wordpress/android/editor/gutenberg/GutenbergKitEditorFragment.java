@@ -45,6 +45,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView;
+import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -85,6 +86,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     private final LiveTextWatcher mTextWatcher = new LiveTextWatcher();
     @Nullable private HistoryChangeListener mHistoryChangeListener = null;
+    @Nullable private FeaturedImageChangeListener mFeaturedImageChangeListener = null;
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
     @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
@@ -159,6 +161,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         });
         mGutenbergView.setContentChangeListener(mTextWatcher::postTextChanged);
         mGutenbergView.setHistoryChangeListener(mHistoryChangeListener);
+        mGutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener);
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
@@ -334,8 +337,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override
-    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
-            EditorFragmentNotAddedException {
+    public @NonNull Pair<CharSequence, CharSequence> getTitleAndContent(@NonNull CharSequence originalContent)
+            throws EditorFragmentNotAddedException {
+        return getTitleAndContent(originalContent, false);
+    }
+
+    public @NonNull Pair<CharSequence, CharSequence> getTitleAndContent(@NonNull CharSequence originalContent,
+            boolean completeComposition) throws EditorFragmentNotAddedException {
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -345,7 +353,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 result[0] = new Pair<>(title, content);
                 latch.countDown();
             }
-        }, true);
+        }, completeComposition);
 
         try {
             latch.await();
@@ -390,6 +398,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     public void onEditorHistoryChanged(@NonNull HistoryChangeListener listener) {
         mHistoryChangeListener = listener;
+    }
+
+    public void onFeaturedImageChanged(@NonNull FeaturedImageChangeListener listener) {
+        mFeaturedImageChangeListener = listener;
     }
 
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
@@ -494,6 +506,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mHistoryChangeListener = null;
+            mFeaturedImageChangeListener = null;
         }
         super.onDestroy();
     }
@@ -565,6 +578,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setAuthHeader((String) mSettings.get("authHeader"))
                 .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
                 .setEditorSettings(editorSettings)
+                .setLocale((String) mSettings.get("locale"))
                 .build();
 
         mGutenbergView.start(config);

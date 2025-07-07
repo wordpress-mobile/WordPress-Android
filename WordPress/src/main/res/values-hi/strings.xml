@@ -126,7 +126,6 @@ Language: hi_IN
     <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
-    <string name="people">लोग</string>
     <string name="post_format_video">विडियो </string>
     <string name="post_format_status">स्थिति</string>
     <string name="alignment_center">मध्य में</string>
@@ -294,7 +293,6 @@ Language: hi_IN
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">क्षैतिज संरेखण</string>
     <string name="local_changes">स्थानीय परिवर्तन</string>
     <string name="local_draft">स्थानीय प्रारूप</string>
-    <string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
     <string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>
     <string name="file_not_found">अपलोड करने के लिए मीडिया फाइल नहीं मिल सका. उसे हटाया या स्थानांतरित किया गया?</string>
     <string name="fatal_db_error">एप्लिकेशन बनाते हुए त्रुटि हुई. एप्लिकेशन को फिर से इनस्टॉल करने का प्रयास करें.</string>
@@ -305,7 +303,6 @@ Language: hi_IN
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
     <string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
     <string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
-    <string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
     <string name="comment_spammed">टिप्पणी स्पैम के रूप में चिह्नित </string>
     <string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
     <string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>

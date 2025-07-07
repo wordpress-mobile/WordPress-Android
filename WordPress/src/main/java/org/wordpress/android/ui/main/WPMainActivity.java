@@ -369,8 +369,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            mPerAppLocaleManager.performMigrationIfNecessary();
-
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
                 && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
@@ -1715,11 +1713,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
-        // Make selected site visible
-        selectedSite.setIsVisible(true);
-        mSelectedSiteRepository.updateSite(selectedSite);
-
         // When we select a site, we want to update its information or options
+        mSelectedSiteRepository.updateSite(selectedSite);
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
     }
 
@@ -1751,20 +1746,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             return;
         }
 
-        // Else select the first visible site in the list
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
-        if (sites.size() != 0) {
+        // Else select the first site in the list
+        List<SiteModel> sites = mSiteStore.getSites();
+        if (!sites.isEmpty()) {
             setSelectedSite(sites.get(0));
-            return;
+        } else {
+            // Else no site selected
+            AppLog.w(T.MAIN, "No site selected");
         }
-
-        // Else select the first in the list
-        sites = mSiteStore.getSites();
-        if (sites.size() != 0) {
-            setSelectedSite(sites.get(0));
-        }
-
-        // Else no site selected
     }
 
     // FluxC events
