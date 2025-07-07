@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,6 +37,8 @@ import uniffi.wp_api.Subscriber
 @AndroidEntryPoint
 class SubscribersActivity : BaseAppCompatActivity() {
     private val viewModel by viewModels<SubscribersViewModel>()
+    private val addSubscribersViewModel by viewModels<AddSubscribersViewModel>()
+
     private lateinit var composeView: ComposeView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
         List,
         Detail,
         Plan,
+        AddSubscribers
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +70,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
         val navController = rememberNavController()
         val listTitle = stringResource(R.string.subscribers)
         val titleState = remember { mutableStateOf(listTitle) }
+        val showAddSubscribersButtonState = remember { mutableStateOf(true) }
+
         AppThemeM3 {
             Scaffold(
                 topBar = {
@@ -81,6 +88,18 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                             }
                         },
+                        actions = {
+                            if (showAddSubscribersButtonState.value) {
+                                IconButton(onClick = {
+                                    navController.navigate(route = SubscriberScreen.AddSubscribers.name)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = stringResource(R.string.subscribers_add_subscribers)
+                                    )
+                                }
+                            }
+                        }
                     )
                 },
             ) { contentPadding ->
@@ -90,39 +109,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 ) {
                     composable(route = SubscriberScreen.List.name) {
                         titleState.value = listTitle
-                        DataViewScreen(
-                            uiState = viewModel.uiState.collectAsState(),
-                            items = viewModel.items.collectAsState(),
-                            supportedFilters = viewModel.getSupportedFilters(),
-                            currentFilter = viewModel.itemFilter.collectAsState().value,
-                            supportedSorts = viewModel.getSupportedSorts(),
-                            currentSort = viewModel.itemSortBy.collectAsState().value,
-                            errorMessage = viewModel.errorMessage.collectAsState().value,
-                            onRefresh = {
-                                viewModel.onRefreshData()
-                            },
-                            onFetchMore = {
-                                viewModel.onFetchMoreData()
-                            },
-                            onSearchQueryChange = { query ->
-                                viewModel.onSearchQueryChange(query)
-                            },
-                            onItemClick = { item ->
-                                viewModel.onItemClick(item)
-                                (item.data as? Subscriber)?.let { subscriber ->
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                                        key = KEY_USER_ID,
-                                        value = subscriber.userId
-                                    )
-                                    navController.navigate(route = SubscriberScreen.Detail.name)
-                                }
-                            },
-                            onFilterClick = { filter ->
-                                viewModel.onFilterClick(filter)
-                            },
-                            onSortClick = { sort ->
-                                viewModel.onSortClick(sort)
-                            },
+                        showAddSubscribersButtonState.value = true
+                        ShowListScreen(
+                            navController,
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -133,28 +122,11 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             if (userId != null) {
                                 viewModel.getSubscriber(userId)?.let { subscriber ->
                                     titleState.value = subscriber.displayNameOrEmail()
-                                    SubscriberDetailScreen(
+                                    showAddSubscribersButtonState.value = false
+                                    ShowSubscriberDetailScreen(
                                         subscriber = subscriber,
-                                        onEmailClick = { email ->
-                                            onEmailClick(email)
-                                        },
-                                        onUrlClick = { url ->
-                                            onUrlClick(url)
-                                        },
-                                        onPlanClick = { planIndex ->
-                                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                key = KEY_USER_ID,
-                                                value = userId
-                                            )
-                                            // plans don't have a unique id, so we use the index to identify them
-                                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                key = KEY_PLAN_INDEX,
-                                                value = planIndex
-                                            )
-                                            navController.navigate(route = SubscriberScreen.Plan.name)
-                                        },
-                                        modifier = Modifier.padding(contentPadding),
-                                        subscriberStats = viewModel.subscriberStats.collectAsState()
+                                        navController = navController,
+                                        modifier = Modifier.padding(contentPadding)
                                     )
                                 }
                             }
@@ -170,6 +142,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
                                     subscriber.plans?.let { plans ->
                                         if (planIndex in plans.indices) {
                                             titleState.value = plans[planIndex].title
+                                            showAddSubscribersButtonState.value = false
                                             SubscriberPlanScreen(
                                                 plan = plans[planIndex],
                                                 modifier = Modifier.padding(contentPadding)
@@ -180,9 +153,111 @@ class SubscribersActivity : BaseAppCompatActivity() {
                             }
                         }
                     }
+
+                    composable(route = SubscriberScreen.AddSubscribers.name) {
+                        titleState.value = stringResource(R.string.subscribers_add_subscribers)
+                        showAddSubscribersButtonState.value = false
+                        ShowAddSubscribersScreen(
+                            navController = navController,
+                            modifier = Modifier.padding(contentPadding)
+                        )
+                    }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun ShowListScreen(
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        DataViewScreen(
+            uiState = viewModel.uiState.collectAsState(),
+            items = viewModel.items.collectAsState(),
+            supportedFilters = viewModel.getSupportedFilters(),
+            currentFilter = viewModel.itemFilter.collectAsState().value,
+            supportedSorts = viewModel.getSupportedSorts(),
+            currentSort = viewModel.itemSortBy.collectAsState().value,
+            errorMessage = viewModel.errorMessage.collectAsState().value,
+            onRefresh = {
+                viewModel.onRefreshData()
+            },
+            onFetchMore = {
+                viewModel.onFetchMoreData()
+            },
+            onSearchQueryChange = { query ->
+                viewModel.onSearchQueryChange(query)
+            },
+            onItemClick = { item ->
+                viewModel.onItemClick(item)
+                (item.data as? Subscriber)?.let { subscriber ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = KEY_USER_ID,
+                        value = subscriber.userId
+                    )
+                    navController.navigate(route = SubscriberScreen.Detail.name)
+                }
+            },
+            onFilterClick = { filter ->
+                viewModel.onFilterClick(filter)
+            },
+            onSortClick = { sort ->
+                viewModel.onSortClick(sort)
+            },
+            modifier = modifier
+        )
+    }
+
+    @Composable
+    private fun ShowSubscriberDetailScreen(
+        subscriber: Subscriber,
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        SubscriberDetailScreen(
+            subscriber = subscriber,
+            onEmailClick = { email ->
+                onEmailClick(email)
+            },
+            onUrlClick = { url ->
+                onUrlClick(url)
+            },
+            onPlanClick = { planIndex ->
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    key = KEY_USER_ID,
+                    value = subscriber.userId
+                )
+                // plans don't have a unique id, so we use the index to identify them
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    key = KEY_PLAN_INDEX,
+                    value = planIndex
+                )
+                navController.navigate(route = SubscriberScreen.Plan.name)
+            },
+            modifier = modifier,
+            subscriberStats = viewModel.subscriberStats.collectAsState()
+        )
+    }
+
+    @Composable
+    private fun ShowAddSubscribersScreen(
+        navController: NavHostController,
+        modifier: Modifier
+    ) {
+        AddSubscribersScreen(
+            onSubmit = { emails ->
+                addSubscribersViewModel.onSubmitClick(
+                    emails = emails,
+                    onSuccess = {
+                        navController.navigateUp()
+                    }
+                )
+            },
+            onCancel = { navController.navigateUp() },
+            showProgress = addSubscribersViewModel.showProgress.collectAsState(),
+            modifier = modifier
+        )
     }
 
     private fun onEmailClick(email: String) {
