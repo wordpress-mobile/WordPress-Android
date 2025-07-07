@@ -6,7 +6,7 @@
 
 26.0
 -----
-
+* [**] Added Application Password login experimental feature
 
 25.9
 -----
