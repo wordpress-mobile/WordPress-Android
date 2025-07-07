@@ -4,10 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -64,21 +60,17 @@ class SubscribersActivity : BaseAppCompatActivity() {
             }
         )
 
-        viewModel.uiEvent
-            .filterNotNull()
-            .onEach { event ->
-                when (event) {
-                    is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
-                        showDeleteConfirmationDialog(event.subscriber, navController)
-                        viewModel.clearUiEvent()
-                    }
-                    is SubscribersViewModel.UiEvent.ShowToast -> {
-                        Toast.makeText(this, event.messageRes, Toast.LENGTH_SHORT).show()
-                        viewModel.clearUiEvent()
-                    }
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
+                    showDeleteConfirmationDialog(event.subscriber, navController)
+                }
+
+                is SubscribersViewModel.UiEvent.ShowToast -> {
+                    Toast.makeText(this, event.messageRes, Toast.LENGTH_SHORT).show()
                 }
             }
-            .launchIn(lifecycleScope)
+        }
     }
 
     private enum class SubscriberScreen {
