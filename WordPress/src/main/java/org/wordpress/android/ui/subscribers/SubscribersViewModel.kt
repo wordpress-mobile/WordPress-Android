@@ -275,7 +275,7 @@ class SubscribersViewModel @Inject constructor(
     fun onDeleteSubscriberClick(subscriber: Subscriber) {
         appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
         _uiEvent.value = UiEvent.ShowDeleteConfirmationDialog(subscriber)
-        _uiEvent.value = null
+        clearUiEvent()
     }
 
     /**
@@ -292,9 +292,13 @@ class SubscribersViewModel @Inject constructor(
                 } else {
                     _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
                 }
-                _uiEvent.value = null
+                clearUiEvent()
             }
         }
+    }
+
+    private fun clearUiEvent() {
+        _uiEvent.value = null
     }
 
     companion object {
