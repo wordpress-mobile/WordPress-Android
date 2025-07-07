@@ -78,6 +78,13 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
+    override fun getDefaultSort(): DataViewDropdownItem? {
+        return DataViewDropdownItem(
+            id = ID_SORT_DISPLAY_NAME,
+            titleRes = R.string.subscribers_sort_display_name
+        )
+    }
+
     @Suppress("TooGenericExceptionCaught")
     override suspend fun performNetworkRequest(
         page: Int,

@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -199,55 +200,20 @@ private fun SearchAndFilterBar(
 
         // Sort by button
         if (supportedSorts.isNotEmpty()) {
-            SortDropdownMenuButton(
-                supportedSorts = supportedSorts,
-                currentSort = currentSort,
-                currentSortOrder = currentSortOrder,
-                onSortClick = onSortClick,
-                onSortOrderClick = onSortOrderClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun SortDropdownMenuButton(
-    supportedSorts: List<DataViewDropdownItem>,
-    currentSort: DataViewDropdownItem?,
-    currentSortOrder: WpApiParamOrder,
-    onSortClick: (DataViewDropdownItem) -> Unit,
-    onSortOrderClick: (WpApiParamOrder) -> Unit
-) {
-    var menuExpanded by remember { mutableStateOf(false) }
-    IconButton(
-        onClick = {
-            menuExpanded = !menuExpanded
-        },
-        modifier = Modifier
-            .size(48.dp)
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
-            contentDescription = stringResource(R.string.sort_by),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        DropdownMenu(
-            expanded = menuExpanded,
-            onDismissRequest = {
-                menuExpanded = false
-            }
-        ) {
-            SortDropdownItems(
-                supportedSorts = supportedSorts,
-                currentSort = currentSort,
-                currentSortOrder = currentSortOrder,
-                onSortClick = { sort ->
-                    onSortClick(sort)
-                    menuExpanded = false
-                },
-                onSortOrderClick = { order ->
-                    onSortOrderClick(order)
-                    menuExpanded = false
+            DropdownMenuButton(
+                titleRes = R.string.sort_by,
+                iconRes = R.drawable.ic_sort_24dp,
+                items = supportedSorts,
+                currentItem = currentSort,
+                onItemClick = onSortClick,
+                additionalContent = {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    SortOrderItems(
+                        currentSortOrder = currentSortOrder,
+                        onSortOrderClick = onSortOrderClick
+                    )
                 }
             )
         }
@@ -260,7 +226,8 @@ private fun DropdownMenuButton(
     @DrawableRes iconRes: Int,
     items: List<DataViewDropdownItem>,
     currentItem: DataViewDropdownItem?,
-    onItemClick: (DataViewDropdownItem) -> Unit
+    onItemClick: (DataViewDropdownItem) -> Unit,
+    additionalContent: @Composable (() -> Unit?)? = null
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     IconButton(
@@ -272,7 +239,7 @@ private fun DropdownMenuButton(
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = iconRes),
-            contentDescription = stringResource(titleRes),
+            contentDescription = stringResource(id = titleRes),
             tint = MaterialTheme.colorScheme.primary
         )
         DropdownMenu(
@@ -285,70 +252,25 @@ private fun DropdownMenuButton(
                 titleRes = titleRes,
                 items = items,
                 currentItem = currentItem,
-                onItemClick = { sort ->
-                    onItemClick(sort)
+                onItemClick = { item ->
+                    onItemClick(item)
                     menuExpanded = false
                 }
             )
+            additionalContent?.let {
+                it()
+            }
         }
     }
 }
 
 @Composable
-private fun SortDropdownItems(
-    supportedSorts: List<DataViewDropdownItem>,
-    currentSort: DataViewDropdownItem?,
+private fun SortOrderItems(
     currentSortOrder: WpApiParamOrder,
-    onSortClick: (DataViewDropdownItem) -> Unit,
     onSortOrderClick: (WpApiParamOrder) -> Unit
 ) {
-    // Title
     DropdownMenuItem(
-        text = {
-            Text(
-                text = stringResource(R.string.sort_by).uppercase(Locale.getDefault()),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        enabled = false,
-        onClick = { }
-    )
-    
-    // Sort field options
-    supportedSorts.forEach { sort ->
-        DropdownMenuItem(
-            text = { Text(stringResource(sort.titleRes)) },
-            trailingIcon = {
-                if (sort == currentSort) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = null
-                    )
-                }
-            },
-            onClick = {
-                onSortClick(sort)
-            }
-        )
-    }
-    
-    // Separator (divider)
-    DropdownMenuItem(
-        text = {
-            Text(
-                text = "",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        enabled = false,
-        onClick = { }
-    )
-    
-    // Ascending option
-    DropdownMenuItem(
-        text = { Text("Ascending") },
+        text = { Text(stringResource(id = R.string.ascending)) },
         trailingIcon = {
             if (currentSortOrder == WpApiParamOrder.ASC) {
                 Icon(
@@ -361,10 +283,9 @@ private fun SortDropdownItems(
             onSortOrderClick(WpApiParamOrder.ASC)
         }
     )
-    
-    // Descending option
+
     DropdownMenuItem(
-        text = { Text("Descending") },
+        text = { Text(stringResource(id = R.string.descending)) },
         trailingIcon = {
             if (currentSortOrder == WpApiParamOrder.DESC) {
                 Icon(
@@ -661,6 +582,7 @@ private fun ErrorPreview() {
 private val dummyDropdownItems = listOf(
     DataViewDropdownItem(
         id = 0L,
-        titleRes = R.string.filter),
+        titleRes = R.string.filter
+    ),
 
-)
+    )
