@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -13,7 +14,7 @@ import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
-import uniffi.wp_api.PostListParams
+import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
@@ -39,9 +40,45 @@ class MediaGridViewModel @Inject constructor() : ViewModel() {
                 requestBuilder.media().listWithEditContext(MediaListParams())
             }
 
-            media.successfulResponse()?.data?.forEach {
-                Log.d("MEDIA_TAG", "Media: ${it.mediaType}")
+            media.successfulResponse()?.data?.forEach { mediaWithEditContext ->
+                val mediaModel = mapMediaWithEditContextToMediaModel(mediaWithEditContext, site.id)
+                Log.d("MEDIA_TAG", "Media: ${mediaModel.url}")
+                // Use mediaModel here
             } ?: run { Log.d("MEDIA_TAG", "No media") }
         }
+    }
+
+    private fun mapMediaWithEditContextToMediaModel(
+        mediaWithEditContext: MediaWithEditContext,
+        siteId: Int
+    ): MediaModel = MediaModel(siteId, mediaWithEditContext.id).apply {
+        // Map URLs
+        url = mediaWithEditContext.sourceUrl
+        guid = mediaWithEditContext.link
+
+        // Map file information
+        title = mediaWithEditContext.title.rendered
+        caption = mediaWithEditContext.caption.rendered
+        description = mediaWithEditContext.description.rendered
+        alt = mediaWithEditContext.altText
+
+        // Map media type and mime type
+        mimeType = mediaWithEditContext.mimeType
+        fileExtension = mediaWithEditContext.mediaType.toString()
+
+        // Map media details if available
+        mediaWithEditContext.mediaDetails.let { details ->
+            // The exact structure of MediaDetails depends on the uniffi generated code
+            // You may need to adjust these based on the actual properties available
+        }
+
+        // Map dates
+        uploadDate = mediaWithEditContext.date
+
+        // Map author
+        authorId = mediaWithEditContext.author
+
+        // Set upload state as uploaded since this is fetched from server
+        uploadState = MediaModel.MediaUploadState.UPLOADED.toString()
     }
 }
