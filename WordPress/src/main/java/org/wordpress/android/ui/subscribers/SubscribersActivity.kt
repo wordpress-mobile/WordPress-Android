@@ -200,6 +200,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
             currentFilter = viewModel.itemFilter.collectAsState().value,
             supportedSorts = viewModel.getSupportedSorts(),
             currentSort = viewModel.itemSortBy.collectAsState().value,
+            currentSortOrder = viewModel.sortOrder.collectAsState().value,
             errorMessage = viewModel.errorMessage.collectAsState().value,
             onRefresh = {
                 viewModel.onRefreshData()
@@ -225,6 +226,9 @@ class SubscribersActivity : BaseAppCompatActivity() {
             },
             onSortClick = { sort ->
                 viewModel.onSortClick(sort)
+            },
+            onSortOrderClick = { order ->
+                viewModel.onSortOrderClick(order)
             },
             modifier = modifier
         )

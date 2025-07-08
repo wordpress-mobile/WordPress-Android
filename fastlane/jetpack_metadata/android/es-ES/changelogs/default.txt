@@ -1,3 +1,0 @@
-25.9:
-- El icono «yo» es ahora el color correcto cuando estás en modo oscuro.
-- Hemos añadido una advertencia que te indica si el escaneo del código QR no se ha realizado correctamente. Sin esperas, sin conjeturas, sin problemas.

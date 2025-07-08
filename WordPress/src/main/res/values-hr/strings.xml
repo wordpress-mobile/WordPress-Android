@@ -164,7 +164,6 @@ Language: hr
     <string name="role">Uloga</string>
     <string name="error_remove_user">Korisnik nije uklonjen</string>
     <string name="error_update_role">Uloga korisnika nije promijenjena</string>
-    <string name="error_updating_gravatar">Pogreška tijekom promjene vašeg Gravatara</string>
     <string name="error_refreshing_gravatar">Pogreška tijekom učitavanja vašeg Gravatara</string>
     <string name="error_locating_image">Pogreška tijekom pronalaženja izrezane slike</string>
     <string name="error_cropping_image">Pogreška tijekom izrezivanja slike</string>
@@ -273,10 +272,6 @@ Language: hr
     <string name="privacy_private">Vaša web-stranica je vidljiva samo vama i korisnicima koje odobrite</string>
     <string name="privacy_public_not_indexed">Vaša web-stranica je vidljiva svima, ali traži od pretraživača da ju ne indeksiraju</string>
     <string name="privacy_public">Vaša web-stranica je vidljiva svima, i pretraživači će ju indeksirati</string>
-    <string name="about_me_hint">Nekoliko riječi o vama…</string>
-    <string name="about_me">O meni</string>
-    <string name="public_display_name_hint">Prikazano ime biti će vaše korisničko ime, ako drugo nije postavljeno</string>
-    <string name="public_display_name">Javno prikazano ime</string>
     <string name="my_profile">Moj profil</string>
     <string name="first_name">Ime</string>
     <string name="last_name">Prezime</string>
@@ -687,6 +682,7 @@ Language: hr
     <string name="yes">Da</string>
     <string name="no">Ne</string>
     <string name="cancel">Odustani</string>
+    <string name="clear">Obriši</string>
     <string name="on">u</string>
     <string name="save">Snimi</string>
     <string name="category_refresh_error">Pogreška u osvježavanju kategorija</string>

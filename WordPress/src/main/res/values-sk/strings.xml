@@ -444,7 +444,6 @@ Language: sk
     <string name="signup_epilogue_error_button_positive">Skúsiť znova</string>
     <string name="signup_epilogue_error_button_negative">Prejsť späť</string>
     <string name="signup_epilogue_error_generic">Pri aktualizácii vášho účtu sa vyskytli problémy. Môžete to skúsiť znova alebo vrátiť zmeny, aby ste mohli pokračovať.</string>
-    <string name="signup_epilogue_error_avatar">Pri nahrávaní vášho avataru sa vyskytli problémy.</string>
     <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
     <string name="plugin_needs_update">Potrebná aktualizácia</string>
     <string name="plugin_caption_search">Hľadať pluginy</string>
@@ -934,7 +933,6 @@ Language: sk
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
     <string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
     <string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>
-    <string name="error_updating_gravatar">Chyba pri nahrávaní vášho Gravatu</string>
     <string name="error_refreshing_gravatar">Chyba pri znovu nahrávaní vášho Gravatu</string>
     <string name="error_locating_image">Chyba pri umiestnení zmenšeného obrázku</string>
     <string name="error_cropping_image">Chyba pri orezaní obrázku</string>
@@ -1046,10 +1044,6 @@ Language: sk
     <string name="privacy_private">Vaša stránka je viditeľná iba pre vás a vami schválených používateľov</string>
     <string name="privacy_public_not_indexed">Vaša stránka je viditeľná každému, ale indexovanie vyhľadávačmi nie je povolené</string>
     <string name="privacy_public">Vaša strána je viditeľná každému a môže byť indexovaná vyhľadávačmi</string>
-    <string name="about_me_hint">Pár slov o vás…</string>
-    <string name="public_display_name_hint">V prípade, že nemáte nastavené zobrazovacie meno, bude použité vaše užívateľské meno</string>
-    <string name="about_me">O mne</string>
-    <string name="public_display_name">Pre návštevníkov zobrazovať meno</string>
     <string name="my_profile">Profil</string>
     <string name="first_name">Meno</string>
     <string name="last_name">Priezvisko</string>
@@ -1464,6 +1458,7 @@ Language: sk
     <string name="cancel">Zrušiť</string>
     <string name="save">Uložiť</string>
     <string name="add">Pridať</string>
+    <string name="clear">Vymazať</string>
     <string name="notification_settings">Nastavenie upozornení</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>

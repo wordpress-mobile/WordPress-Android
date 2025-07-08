@@ -1,3 +1,0 @@
-25.9:
-- Het pictogram 'ik' heeft nu de juiste kleur als je in de donkere modus zit.
-- We hebben een waarschuwing toegevoegd voor als je de QR-code niet goed hebt gescand. Zonder wachten, zonder gissen, zonder problemen.

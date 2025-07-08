@@ -1364,7 +1364,6 @@ Language: nb_NO
     <string name="signup_epilogue_hint_display">Visningsnavn</string>
     <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
     <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
-    <string name="signup_epilogue_error_avatar">Det oppsto problemer med å laste opp din avatar.</string>
     <string name="plugin_needs_update">Trenger oppdatering</string>
     <string name="plugin_caption_search">Søk utvidelser</string>
     <string name="plugin_caption_new">Ny</string>
@@ -1840,7 +1839,6 @@ Language: nb_NO
     <string name="error_remove_user">Klarte ikke å fjerne brukeren</string>
     <string name="error_update_role">Klarte ikke å oppdatere brukerrollen</string>
     <string name="error_fetch_viewers_list">Klarte ikke å hente inn sideleserne</string>
-    <string name="error_updating_gravatar">Feil ved oppdatering av din Gravatar</string>
     <string name="error_refreshing_gravatar">Feil ved gjeninnlasting av din Gravatar</string>
     <string name="error_locating_image">Feil under oppsøking av det beskjærte bildet</string>
     <string name="error_cropping_image">Feil under beskjæring av bildet</string>
@@ -1952,10 +1950,6 @@ Language: nb_NO
     <string name="privacy_private">Nettstedet ditt er kun tilgjengelig for deg og for brukere som du godkjenner</string>
     <string name="privacy_public_not_indexed">Nettstedet er synlig for alle, men ber søkemotorer om å ikke indeksere den</string>
     <string name="privacy_public">Nettstedet ditt er synlig for alle, og kan bli indeksert av noen søkemotorer</string>
-    <string name="about_me_hint">Noen få ord om deg selv …</string>
-    <string name="about_me">Om meg</string>
-    <string name="public_display_name_hint">Visningsnavnet vil falle tilbake til brukernavnet ditt, dersom det ikke er spesifisert</string>
-    <string name="public_display_name">Navn som skal vises offentlig</string>
     <string name="last_name">Etternavn</string>
     <string name="first_name">Fornavn</string>
     <string name="my_profile">Min profil</string>
@@ -2370,6 +2364,7 @@ Language: nb_NO
     <string name="no">Nei</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Innstillinger for varslinger</string>
+    <string name="clear">Tøm</string>
     <string name="add">Legg til</string>
     <string name="save">Lagre</string>
     <string name="cancel">Avbryt</string>

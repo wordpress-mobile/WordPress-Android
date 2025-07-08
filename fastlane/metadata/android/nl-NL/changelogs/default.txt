@@ -1,4 +1,0 @@
-25.9:
-- Het toetsenbord overlapt niet langer de editor, wat betekent dat je je geweldige werk altijd kunt zien.
-- Het "mij" icoon heeft nu de juiste kleur als je in de donkere modus bent.
-- We hebben een waarschuwing toegevoegd die je vertelt als je QR code scan niet succesvol was. Geen wachten, geen giswerk, geen probleem

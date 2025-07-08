@@ -185,6 +185,6 @@ class NestedWebView @JvmOverloads constructor(
     }
 
     init {
-        isNestedScrollingEnabled = true
+        isNestedScrollingEnabled = false
     }
 }
