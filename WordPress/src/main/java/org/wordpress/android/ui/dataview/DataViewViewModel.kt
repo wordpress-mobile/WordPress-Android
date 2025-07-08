@@ -104,13 +104,16 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    private fun fetchData() {
+    private fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             val isLoadingMore = page > 0
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
             } else {
                 updateUiState(DataViewUiState.LOADING)
+            }
+            if (isRefreshing) {
+                _refreshState.value = true
             }
 
             launch {
@@ -145,7 +148,6 @@ open class DataViewViewModel @Inject constructor(
             }
         } else {
             updateUiState(DataViewUiState.OFFLINE)
-            _refreshState.value = false
         }
     }
 
@@ -159,8 +161,7 @@ open class DataViewViewModel @Inject constructor(
         if (_uiState.value == DataViewUiState.LOADED) {
             resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
-            _refreshState.value = true
-            fetchData()
+            fetchData(isRefreshing = true)
         }
     }
 
