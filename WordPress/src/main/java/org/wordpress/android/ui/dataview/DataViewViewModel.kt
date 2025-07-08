@@ -122,6 +122,7 @@ open class DataViewViewModel @Inject constructor(
                     sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
+                    _refreshState.value = false
                     return@launch
                 }
 
@@ -140,9 +141,11 @@ open class DataViewViewModel @Inject constructor(
                 } else {
                     updateUiState(DataViewUiState.LOADED)
                 }
+                _refreshState.value = false
             }
         } else {
             updateUiState(DataViewUiState.OFFLINE)
+            _refreshState.value = false
         }
     }
 
@@ -158,7 +161,6 @@ open class DataViewViewModel @Inject constructor(
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             _refreshState.value = true
             fetchData()
-            _refreshState.value = false
         }
     }
 
