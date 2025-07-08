@@ -64,6 +64,9 @@ open class DataViewViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
 
+    private val _refreshState = MutableStateFlow(false)
+    val refreshState = _refreshState.asStateFlow()
+
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
     private var page = 0
@@ -153,7 +156,9 @@ open class DataViewViewModel @Inject constructor(
         if (_uiState.value == DataViewUiState.LOADED) {
             resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
+            _refreshState.value = true
             fetchData()
+            _refreshState.value = false
         }
     }
 
