@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.dataview
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
+import uniffi.wp_api.WpApiParamOrder
 import java.util.Locale
 
 /**
@@ -62,10 +63,12 @@ fun DataViewScreen(
     currentFilter: DataViewDropdownItem?,
     supportedSorts: List<DataViewDropdownItem>,
     currentSort: DataViewDropdownItem?,
+    currentSortOrder: WpApiParamOrder,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewDropdownItem) -> Unit,
     onSortClick: (DataViewDropdownItem) -> Unit,
+    onSortOrderClick: (WpApiParamOrder) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -100,8 +103,10 @@ fun DataViewScreen(
                 supportedFilters = supportedFilters,
                 currentFilter = currentFilter,
                 onSortClick = onSortClick,
+                onSortOrderClick = onSortOrderClick,
                 supportedSorts = supportedSorts,
-                currentSort = currentSort
+                currentSort = currentSort,
+                currentSortOrder = currentSortOrder
             )
 
             when (uiState.value) {
@@ -129,7 +134,9 @@ private fun SearchAndFilterBar(
     currentFilter: DataViewDropdownItem? = null,
     supportedFilters: List<DataViewDropdownItem>,
     onSortClick: (DataViewDropdownItem) -> Unit,
+    onSortOrderClick: (WpApiParamOrder) -> Unit,
     currentSort: DataViewDropdownItem? = null,
+    currentSortOrder: WpApiParamOrder,
     supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -179,12 +186,10 @@ private fun SearchAndFilterBar(
 
         // Filter Button
         if (supportedFilters.isNotEmpty()) {
-            DropdownMenuButton(
-                titleRes = R.string.filter,
-                iconRes = R.drawable.ic_filter_list_white_24dp,
-                items = supportedFilters,
-                currentItem = currentFilter,
-                onItemClick = { item ->
+            FilterDropdownMenuButton(
+                filters = supportedFilters,
+                currentFilter = currentFilter,
+                onFilterClick = { item ->
                     onFilterClick(item)
                 }
             )
@@ -192,26 +197,25 @@ private fun SearchAndFilterBar(
 
         // Sort by button
         if (supportedSorts.isNotEmpty()) {
-            DropdownMenuButton(
-                titleRes = R.string.sort_by,
-                iconRes = R.drawable.ic_sort_24dp,
-                items = supportedSorts,
-                currentItem = currentSort,
-                onItemClick = { item ->
-                    onSortClick(item)
-                }
+            SortDropdownMenuButton(
+                sorts = supportedSorts,
+                currentSort = currentSort,
+                onSortClick = onSortClick,
+                currentSortOrder = currentSortOrder,
+                onSortOrderClick = onSortOrderClick
             )
         }
     }
 }
 
+/**
+ * Dropdown menu button for displaying a list of filter [DataViewDropdownItem]s
+ */
 @Composable
-private fun DropdownMenuButton(
-    @StringRes titleRes: Int,
-    @DrawableRes iconRes: Int,
-    items: List<DataViewDropdownItem>,
-    currentItem: DataViewDropdownItem?,
-    onItemClick: (DataViewDropdownItem) -> Unit
+private fun FilterDropdownMenuButton(
+    filters: List<DataViewDropdownItem>,
+    currentFilter: DataViewDropdownItem?,
+    onFilterClick: (DataViewDropdownItem) -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     IconButton(
@@ -222,8 +226,8 @@ private fun DropdownMenuButton(
             .size(48.dp)
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = iconRes),
-            contentDescription = stringResource(titleRes),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_filter_list_white_24dp),
+            contentDescription = stringResource(id = R.string.filter),
             tint = MaterialTheme.colorScheme.primary
         )
         DropdownMenu(
@@ -233,11 +237,88 @@ private fun DropdownMenuButton(
             }
         ) {
             DropdownItems(
-                titleRes = titleRes,
-                items = items,
-                currentItem = currentItem,
-                onItemClick = { sort ->
-                    onItemClick(sort)
+                titleRes = R.string.filter,
+                items = filters,
+                currentItem = currentFilter,
+                onItemClick = { item ->
+                    onFilterClick(item)
+                    menuExpanded = false
+                }
+            )
+        }
+    }
+}
+
+/**
+ * Dropdown menu button for displaying a list of sort [DataViewDropdownItem]s along with sort order items
+ */
+@Composable
+private fun SortDropdownMenuButton(
+    sorts: List<DataViewDropdownItem>,
+    currentSort: DataViewDropdownItem?,
+    onSortClick: (DataViewDropdownItem) -> Unit,
+    currentSortOrder: WpApiParamOrder,
+    onSortOrderClick: (WpApiParamOrder) -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    IconButton(
+        onClick = {
+            menuExpanded = !menuExpanded
+        },
+        modifier = Modifier
+            .size(48.dp)
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_sort_24dp),
+            contentDescription = stringResource(id = R.string.sort_by),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = {
+                menuExpanded = false
+            }
+        ) {
+            DropdownItems(
+                titleRes = R.string.sort_by,
+                items = sorts,
+                currentItem = currentSort,
+                onItemClick = { item ->
+                    onSortClick(item)
+                    menuExpanded = false
+                }
+            )
+
+            HorizontalDivider()
+
+            DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.ascending)) },
+                trailingIcon = {
+                    if (currentSortOrder == WpApiParamOrder.ASC) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null
+                        )
+                    }
+                },
+                onClick = {
+                    onSortOrderClick(WpApiParamOrder.ASC)
+                    menuExpanded = false
+                }
+            )
+
+            DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.descending)) },
+                trailingIcon = {
+                    if (currentSortOrder == WpApiParamOrder.DESC) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null
+                        )
+                    }
+                },
+                onClick = {
+                    onSortOrderClick(WpApiParamOrder.DESC)
                     menuExpanded = false
                 }
             )
@@ -403,12 +484,14 @@ private fun LoadedPreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
@@ -423,12 +506,14 @@ private fun LoadingPreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
@@ -443,12 +528,14 @@ private fun EmptyPreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
@@ -463,12 +550,14 @@ private fun EmptySearchPreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
@@ -483,12 +572,14 @@ private fun OfflinePreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
@@ -503,18 +594,21 @@ private fun ErrorPreview() {
         currentFilter = null,
         supportedSorts = dummyDropdownItems,
         currentSort = null,
+        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
+        onSortOrderClick = { },
     )
 }
 
 private val dummyDropdownItems = listOf(
     DataViewDropdownItem(
         id = 0L,
-        titleRes = R.string.filter),
+        titleRes = R.string.filter
+    ),
 
-)
+    )

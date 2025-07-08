@@ -117,6 +117,8 @@
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
     <string name="sort_by">Sort by</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -4993,10 +4995,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
-    <string name="subscribers_sort_email">Email address</string>
+    <string name="subscribers_sort_email">Email</string>
     <string name="subscribers_sort_date">Date subscribed</string>
-    <string name="subscribers_sort_display_name">Display name</string>
-    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_name">Name</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>

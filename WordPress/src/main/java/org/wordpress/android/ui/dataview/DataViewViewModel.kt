@@ -58,6 +58,9 @@ open class DataViewViewModel @Inject constructor(
     private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemSortBy = _itemSortBy.asStateFlow()
 
+    private val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
+    val sortOrder = _sortOrder.asStateFlow()
+
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
 
@@ -112,6 +115,7 @@ open class DataViewViewModel @Inject constructor(
                     page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value,
+                    sortOrder = _sortOrder.value,
                     sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
@@ -177,6 +181,15 @@ open class DataViewViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
             _itemSortBy.value = sort
+            resetPaging()
+            fetchData()
+        }
+    }
+
+    fun onSortOrderClick(order: WpApiParamOrder) {
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
+        if (order != _sortOrder.value) {
+            _sortOrder.value = order
             resetPaging()
             fetchData()
         }
