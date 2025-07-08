@@ -219,8 +219,6 @@ Language: it
     <string name="notifications_action_mark_all_as_read">Contrassegna tutte come lette</string>
     <string name="notifications_unread_content_description">Non lette</string>
     <string name="qrcode_media_deeplink_error">Nessun sito trovato. Assicurati di aver effettuato l\'accesso all\'account corretto.</string>
-    <string name="gravatar_info_sync_done_button">Fatto</string>
-    <string name="gravatar_info_sync_message">Gli aggiornamenti potrebbero richiedere un po\' di tempo per essere sincronizzati con il tuo profilo Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Cos\'è Gravatar?</string>
     <string name="gravatar_info_description">Aggiornando il tuo avatar, il nome e le informazioni personali qui, verranno aggiornati anche su tutti i siti che utilizzano i profili Gravatar.</string>
     <string name="gravatar_info_title">Il tuo profilo WordPress.com è gestito da Gravatar</string>
@@ -2830,7 +2828,6 @@ Language: it
     <string name="signup_epilogue_error_button_positive">Riprova</string>
     <string name="signup_epilogue_error_button_negative">Riconverti</string>
     <string name="signup_epilogue_error_generic">Si è verificato un errore durante l\'aggiornamento del tuo account. Puoi riprovare o annullare le modifiche per continuare.</string>
-    <string name="signup_epilogue_error_avatar">Si è verificato un errore durante l\'aggiornamento del tuo avatar.</string>
     <string name="plugin_needs_update">È necessario l\'aggiornamento</string>
     <string name="plugin_caption_search">Cerca plugin</string>
     <string name="plugin_caption_new">Nuovo</string>
@@ -3317,7 +3314,6 @@ Language: it
     <string name="error_remove_user">Impossibile rimuovere l\'utente</string>
     <string name="error_update_role">Impossibile aggiornare il ruolo utente</string>
     <string name="error_fetch_viewers_list">Non è possibile recuperare i visitatori del sito</string>
-    <string name="error_updating_gravatar">Errore nell\'aggiornamento del tuo Gravatar</string>
     <string name="error_refreshing_gravatar">Errore nel ricaricamento del tuo Gravatar</string>
     <string name="error_locating_image">Errore nella localizzazione dell\'immagine ritagliata</string>
     <string name="error_cropping_image">Errore nel ritaglio dell\'immagine</string>
@@ -3429,10 +3425,6 @@ Language: it
     <string name="privacy_private">Il tuo sito è visibile solo a te e agli utenti che approvi</string>
     <string name="privacy_public_not_indexed">Il tuo sito è visibile a chiunque, ma chiede ai motori di ricerca di non indicizzarlo</string>
     <string name="privacy_public">Il tuo sito è visibile a chiunque e può essere indicizzato dai motori di ricerca</string>
-    <string name="about_me_hint">Alcune informazioni su di te…</string>
-    <string name="about_me">Informazioni su di me</string>
-    <string name="public_display_name_hint">Se non viene impostato, il nome visualizzato coinciderà con il nome utente per impostazione predefinita</string>
-    <string name="public_display_name">Nome visualizzato (pubblico)</string>
     <string name="last_name">Cognome</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">Impostazioni profilo</string>
@@ -3857,6 +3849,7 @@ Language: it
     <string name="no">No</string>
     <string name="yes">Sì</string>
     <string name="notification_settings">Impostazioni notifiche</string>
+    <string name="clear">Reimposta</string>
     <string name="add">Aggiungi</string>
     <string name="save">Salva</string>
     <string name="cancel">Annulla</string>

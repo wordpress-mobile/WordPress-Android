@@ -1,4 +1,0 @@
-25.9:
-- El teclado ya no se superpone sobre el editor así que ahora puedes ver tu fantástico trabajo en todo momento.
-- El icono de «yo» ahora tiene el color correcto cuando estás en el modo oscuro.
-- Hemos añadido una advertencia que te indica si la exploración de tu código QR fue correcta. Sin esperas, sin tareas adicionales, sin problemas.

@@ -1,3 +1,1 @@
-- The keyboard no longer overlaps the editor, meaning you can see your amazing work at all times.
-- The “me” icon is now the correct color when you’re in dark mode.
-- We’ve added a warning that tells you if your QR code scan was unsuccessful. No waiting, no guesswork, no problem.
+* [***] Introduces experimental Application Passwords authentication which will allow improving existing features and introduce new features once it's fully integrated.

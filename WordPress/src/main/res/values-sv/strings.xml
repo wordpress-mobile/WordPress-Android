@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-18 14:54:08+0000
+Translation-Revision-Date: 2025-07-07 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Om du inaktiverar lösenordet för applikationen tas din inloggningsinformation bort från %1$s webbplatser.</string>
+    <string name="application_password_disable_feature_title">Inaktivera applikationslösenord?</string>
+    <string name="application_password_invalid">Ogiltigt applikationslösenord</string>
+    <string name="application_password_credentials_storing_error">Det uppstod ett fel vid lagring av autentiseringsuppgifter för applikationslösenord för %1$s</string>
+    <string name="subscribers_add_failed">Misslyckades att lägga till prenumeranter</string>
+    <string name="subscribers_add_success">Prenumeranter har lagts till</string>
+    <string name="subscribers_add_disclosure">\n        Genom att klicka på Skicka intygar du att du har fått lämpligt samtycke för att skicka e-post till varje person. Klagomål om skräppost eller hög avvisningsfrekvens från dina prenumeranter kan leda till åtgärder mot ditt konto.\n    </string>
+    <string name="subscribers_add_email_hint">namn@exempel.com</string>
+    <string name="subscribers_add_subscribers">Lägg till prenumeranter</string>
+    <string name="subscribers_gift_content_description">Gåva</string>
+    <string name="subscribers_renewal_interval">Förnyelseintervall</string>
+    <string name="subscribers_renewal_info">Förnyelseinformation</string>
+    <string name="subscribers_price">Pris</string>
+    <string name="subscribers_inactive_interval">Inaktivt intervall</string>
+    <string name="subscribers_billing_interval">Faktureringsintervall</string>
+    <string name="subscribers_billing_info">Faktureringsinformation</string>
+    <string name="subscribers_end_date">Slutdatum</string>
+    <string name="subscribers_start_date">Startdatum</string>
+    <string name="subscribers_plan_details_label">Paketdetaljer</string>
+    <string name="subscribers_gift_plan_label">Presentprenumeration</string>
+    <string name="subscribers_delete_button">Ta bort prenumerant</string>
+    <string name="subscribers_site_label">Webbplats</string>
+    <string name="subscribers_country_label">Land</string>
+    <string name="subscribers_email_label">E-post</string>
+    <string name="subscribers_plan_label">Paket</string>
+    <string name="subscribers_status_label">Prenumerationsstatus</string>
+    <string name="subscribers_date_label">Prenumerationsdatum</string>
+    <string name="subscribers_detail_label">Prenumerantinformation</string>
+    <string name="subscribers_newsletter_label">Prenumeration på nyhetsbrev</string>
+    <string name="subscribers_clicked_label">Klickade</string>
+    <string name="subscribers_opened_label">Öppnade</string>
+    <string name="subscribers_emails_sent_label">E-postmeddelanden</string>
+    <string name="subscribers_subscription_status">Prenumerationsstatus</string>
+    <string name="subscribers_error_title">Något gick fel</string>
+    <string name="subscribers_empty_search">Inga resultat hittades</string>
+    <string name="subscribers_empty">Det finns inga prenumeranter</string>
+    <string name="subscribers_sort_plan">Paket</string>
+    <string name="subscribers_sort_display_name">Visningsnamn</string>
+    <string name="subscribers_sort_date">Prenumerationsdatum</string>
+    <string name="subscribers_sort_email">E-postadress</string>
+    <string name="subscribers_filter_reader_subscription">Läsarprenumeration</string>
+    <string name="subscribers_filter_email_subscription">E-postprenumeration</string>
+    <string name="about_update_email_unverified">För att uppdatera din profil måste du först verifiera din e-postadress.</string>
+    <string name="sort_by">Sortera efter</string>
+    <string name="filter">Filter</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Den angivna webbplatsen stöder inte autentisering med applikationslösenord.</string>
     <string name="application_password_title">Autentisera med applikationslösenord</string>
     <string name="application_password_credentials_stored">Autentiseringsuppgifter för applikationslösenord lagrade för %1$s</string>
@@ -209,8 +254,6 @@ Language: sv_SE
     <string name="notifications_action_mark_all_as_read">Markera alla som lästa</string>
     <string name="notifications_unread_content_description">Olästa</string>
     <string name="qrcode_media_deeplink_error">Webbplats hittades inte. Kontrollera att du är inloggad på rätt konto.</string>
-    <string name="gravatar_info_sync_done_button">Klar</string>
-    <string name="gravatar_info_sync_message">Uppdateringar kan ta lite tid att synkronisera med din Gravatar-profil.</string>
     <string name="gravatar_info_learn_more_link">Vad är Gravatar?</string>
     <string name="gravatar_info_description">Om du uppdaterar din profilbild, ditt namn och informationen ”Om” här kommer det också att uppdateras på alla webbplatser som använder Gravatar-profiler.</string>
     <string name="gravatar_info_title">Din WordPress.com-profil drivs med Gravatar</string>
@@ -2826,7 +2869,6 @@ Language: sv_SE
     <string name="signup_epilogue_error_button_positive">Försök igen</string>
     <string name="signup_epilogue_error_button_negative">Backa</string>
     <string name="signup_epilogue_error_generic">Det gick inte att uppdatera ditt konto. Du kan försöka en gång till eller backa dina ändringar för att fortsätta.</string>
-    <string name="signup_epilogue_error_avatar">Det gick inte att ladda upp din profilbild.</string>
     <string name="plugin_needs_update">Behöver uppdateras</string>
     <string name="plugin_caption_search">Sök tillägg</string>
     <string name="plugin_caption_new">Nya</string>
@@ -3317,7 +3359,6 @@ Language: sv_SE
     <string name="error_remove_user">Kunde inte ta bort användare</string>
     <string name="error_update_role">Kunde inte uppdatera användarroll</string>
     <string name="error_fetch_viewers_list">Kunde inte hämta webbplatsens läsare</string>
-    <string name="error_updating_gravatar">Det gick inte att uppdatera din Gravatar</string>
     <string name="error_refreshing_gravatar">Det gick inte att ladda om din Gravatar</string>
     <string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
     <string name="error_cropping_image">Det gick inte att beskära bilden</string>
@@ -3429,10 +3470,6 @@ Language: sv_SE
     <string name="privacy_private">Din webbplats är bara synlig för dig själv och användare som du godkänner</string>
     <string name="privacy_public_not_indexed">Din webbplats är synlig för alla, men begär att sökmotorerna inte ska indexera den</string>
     <string name="privacy_public">Din webbplats är synlig för alla och kan indexeras av sökmotorer</string>
-    <string name="about_me_hint">Ett par ord om dig själv…</string>
-    <string name="about_me">Om mig</string>
-    <string name="public_display_name_hint">Om det inte anges något annat kommer visningsnamnet som standard att vara ditt användarnamn</string>
-    <string name="public_display_name">Offentligt visningsnamn</string>
     <string name="last_name">Efternamn</string>
     <string name="first_name">Förnamn</string>
     <string name="my_profile">Min profil</string>
@@ -3687,7 +3724,7 @@ Language: sv_SE
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
     <string name="help">Hjälp</string>
     <string name="username_or_password_incorrect">Användarnamnet eller lösenordet som angavs är felaktigt</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ange en giltig epostadress</string>
+    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ange en giltig e-postadress</string>
     <string name="invalid_email_message">Din epostadress är ogilltig</string>
     <string name="error_downloading_image">Fel vid nedladdning av bild</string>
     <string name="error_load_comment">Kunde inte ladda kommentaren</string>
@@ -3857,6 +3894,7 @@ Language: sv_SE
     <string name="no">Nej</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Aviseringsinställningar</string>
+    <string name="clear">Rensa</string>
     <string name="add">Lägg till</string>
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>

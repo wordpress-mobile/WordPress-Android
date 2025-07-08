@@ -223,8 +223,6 @@ Language: pl
     <string name="notifications_action_mark_all_as_read">Zaznacz wszystko jako przeczytane</string>
     <string name="notifications_unread_content_description">Nieprzeczytane</string>
     <string name="qrcode_media_deeplink_error">Witryna nie znaleziona. Sprawdź, czy jesteś zalogowany na właściwe konto.</string>
-    <string name="gravatar_info_sync_done_button">Gotowe</string>
-    <string name="gravatar_info_sync_message">Aktualizacje mogą zająć trochę czasu, żeby zsynchronizować się z twoim profilem Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Czym jest Gravatar?</string>
     <string name="gravatar_info_description">Aktualizując tutaj swój awatar, imię i informacje o sobie, zaktualizujesz je również na wszystkich witrynach, które korzystają z profili Gravatar.</string>
     <string name="gravatar_info_title">Twój profil WordPress.com pochodzi z Gravatar</string>
@@ -2840,7 +2838,6 @@ Language: pl
     <string name="signup_epilogue_error_button_positive">Spróbuj ponownie</string>
     <string name="signup_epilogue_error_button_negative">Cofnij</string>
     <string name="signup_epilogue_error_generic">Wystąpił problem podczas aktualizacji twojego konta. Możesz spróbować ponownie lub cofnąć zmianę użytkownika aby kontynuować.</string>
-    <string name="signup_epilogue_error_avatar">Wystąpił błąd przesyłania swojego zdjęcia profilowego.</string>
     <string name="plugin_needs_update">Wymaga aktualizacji/subskrypcji</string>
     <string name="plugin_caption_search">Szukaj wtyczek</string>
     <string name="plugin_caption_new">Nowe</string>
@@ -3331,7 +3328,6 @@ Language: pl
     <string name="error_remove_user">Nie można usunąć użytkownika</string>
     <string name="error_update_role">Nie można zaktualizować roli użytkownika</string>
     <string name="error_fetch_viewers_list">Nie można pobrać oglądających tej witryny</string>
-    <string name="error_updating_gravatar">Błąd aktualizacji twojego obrazka profilowego</string>
     <string name="error_refreshing_gravatar">Błąd wczytywania twojego obrazka profilowego</string>
     <string name="error_locating_image">Błąd lokalizacji skadrowanego obrazka</string>
     <string name="error_cropping_image">Błąd kadrowania obrazka</string>
@@ -3443,10 +3439,6 @@ Language: pl
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
     <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nieindeksowanie jej</string>
     <string name="privacy_public">Twoja witryna jest widoczna dla wszystkich i może być indeksowana przez wyszukiwarki</string>
-    <string name="about_me_hint">Kilka słów o sobie…</string>
-    <string name="about_me">O mnie</string>
-    <string name="public_display_name_hint">Jeśli jej nie określisz, to twoją nazwą wyświetlaną publicznie będzie nazwa użytkownika</string>
-    <string name="public_display_name">Nazwa wyświetlana publicznie</string>
     <string name="last_name">Nazwisko</string>
     <string name="first_name">Imię</string>
     <string name="my_profile">Mój profil</string>
@@ -3871,6 +3863,7 @@ Language: pl
     <string name="no">Nie</string>
     <string name="yes">Tak</string>
     <string name="notification_settings">Ustawienia powiadomień</string>
+    <string name="clear">Wyczyść</string>
     <string name="add">Dodaj</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>

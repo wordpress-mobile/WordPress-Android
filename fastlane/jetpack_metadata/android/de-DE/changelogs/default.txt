@@ -1,3 +1,0 @@
-25.9:
-‒ Das „Ich“-Icon hat jetzt die richtige Farbe, wenn du den dunklen Modus verwendest.
-‒ Wir haben eine Warnung hinzugefügt, die dir mitteilt, wenn dein QR-Code-Scan nicht erfolgreich war. Kein Warten, kein Rätselraten, kein Problem.

@@ -301,6 +301,7 @@ Language: da_DK
     <string name="error">Fejl</string>
     <string name="save">Gem</string>
     <string name="add">Tilføj</string>
+    <string name="clear">Ryd</string>
     <string name="cancel">Annuller</string>
     <string name="category_refresh_error">Kategori opdateringsfejl</string>
     <string name="yes">Ja</string>

@@ -105,7 +105,6 @@ Language: cy_GB
     <string name="error_remove_user">Methu tynnu defnyddiwr</string>
     <string name="error_update_role">Methu diweddaru rôl defnyddiwr</string>
     <string name="error_fetch_viewers_list">Methu adfer darllenydd y wefan</string>
-    <string name="error_updating_gravatar">Gwall wrth ddiweddaru eich Gravatar</string>
     <string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
     <string name="error_refreshing_gravatar">Gwall wrth ail-lwytho eich Gravatar</string>
     <string name="error_cropping_image">Bu gwall wrth docio eich delwedd.</string>
@@ -208,10 +207,6 @@ Language: cy_GB
     <string name="privacy_private">Mae eich gwefan yn weladwy i chi yn unig a defnyddwyr rydych wedi eu cymeradwyo</string>
     <string name="privacy_public_not_indexed">Mae eich gwefan yn weladwy i bawb, ond mae\'n gofyn i beiriannau chwilio i beidio mynegeio eich gwefan</string>
     <string name="privacy_public">Mae eich gwefan yn weladwy i bawb, ac o bosib wedi ei fynegeio gan beiriannau chwilio</string>
-    <string name="about_me_hint">Ychydig o eiriau amdanoch chi…</string>
-    <string name="public_display_name_hint">Bydd yr enw dangos yn defnyddio eich enw defnyddiwr os yw wedi ei osod</string>
-    <string name="about_me">Amdanaf fi</string>
-    <string name="public_display_name">Enw dangos cyhoeddus</string>
     <string name="my_profile">Fy Mhroffil</string>
     <string name="first_name">Enw cyntaf</string>
     <string name="last_name">Enw olaf</string>

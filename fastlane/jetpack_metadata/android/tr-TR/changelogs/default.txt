@@ -1,3 +1,0 @@
-25.9:
-- Karanlık moddayken "ben" simgesi artık doğru renktedir.
-- QR kodu taramanızın başarısız olup olmadığını gösteren bir uyarı ekledik. Beklemek yok, tahmin etmek yok, sorun yok.

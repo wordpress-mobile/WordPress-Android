@@ -316,7 +316,6 @@ Language: bg
     <string name="error_remove_user">Потребителят не може да бъде премахнат</string>
     <string name="error_update_role">Грешка при обновяване на потребителската роля</string>
     <string name="error_fetch_viewers_list">Грешка при зареждане на потребителите на сайта</string>
-    <string name="error_updating_gravatar">Грешка при обновяването на вашия аватар в Gravatar</string>
     <string name="error_locating_image">Неуспешно откриване на изрязаното изображение</string>
     <string name="error_refreshing_gravatar">Грешка при презареждането на вашия аватар в Gravatar</string>
     <string name="error_cropping_image">Грешка при изрязване на изображението</string>
@@ -421,10 +420,6 @@ Language: bg
     <string name="privacy_private">Вашият сайт е видим за вас и одобрените от вас потребители</string>
     <string name="privacy_public_not_indexed">Сайтът ви се вижда от всички, но не позволява на търсачките да го индексират</string>
     <string name="privacy_public">Вашият сайт е видим от всички и може да бъде индексиран от търсачките</string>
-    <string name="about_me_hint">Няколко думи за вас…</string>
-    <string name="about_me">За мен</string>
-    <string name="public_display_name_hint">Потребителското ви име ще стане официално име ако такова не е специално зададено</string>
-    <string name="public_display_name">Публично име</string>
     <string name="my_profile">Моят профил</string>
     <string name="last_name">Фамилия</string>
     <string name="first_name">Собствено име</string>
@@ -807,6 +802,7 @@ Language: bg
     <string name="no">Не</string>
     <string name="error">Грешка</string>
     <string name="cancel">Отказ</string>
+    <string name="clear">Изчистване</string>
     <string name="yes">Да</string>
     <string name="on">на</string>
     <string name="category_refresh_error">Грешка при обновлението на категориите</string>

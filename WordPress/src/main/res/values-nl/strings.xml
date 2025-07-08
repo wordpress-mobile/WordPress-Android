@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-12 05:58:51+0000
+Translation-Revision-Date: 2025-07-05 06:24:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Het uitschakelen van applicatie wachtwoord zal je login info verwijderen van %1$s sites.</string>
+    <string name="application_password_disable_feature_title">Applicatie wachtwoord uitschakelen?</string>
+    <string name="application_password_invalid">Ongeldig applicatie wachtwoord</string>
+    <string name="application_password_credentials_storing_error">Er is een fout opgetreden bij het opslaan van wachtwoord referenties voor %1$s</string>
+    <string name="subscribers_add_failed">Het is niet gelukt om abonnees toe te voegen</string>
+    <string name="subscribers_add_success">Succesvol abonnees toegevoegd</string>
+    <string name="subscribers_add_disclosure">\nDoor op Verzenden te klikken geef je aan dat je toestemming hebt gekregen om elke persoon te e-mailen. Spam klachten of een hoog bouncepercentage van je abonnees kunnen leiden tot actie tegen je account.    \n    </string>
+    <string name="subscribers_add_email_hint">naam@voorbeeld.com</string>
+    <string name="subscribers_add_subscribers">Abonnees toevoegen</string>
+    <string name="subscribers_gift_content_description">Geschenk</string>
+    <string name="subscribers_renewal_interval">Vernieuwingsinterval</string>
+    <string name="subscribers_renewal_info">Vernieuwingsinformatie</string>
+    <string name="subscribers_price">Prijs</string>
+    <string name="subscribers_inactive_interval">Inactief interval</string>
+    <string name="subscribers_billing_interval">Factuurinterval</string>
+    <string name="subscribers_billing_info">Facturatie-informatie</string>
+    <string name="subscribers_end_date">Einddatum</string>
+    <string name="subscribers_start_date">Startdatum</string>
+    <string name="subscribers_plan_details_label">Abonnement details</string>
+    <string name="subscribers_gift_plan_label">Cadeau plan</string>
+    <string name="subscribers_delete_button">Abonnee verwijderen</string>
+    <string name="subscribers_site_label">Site</string>
+    <string name="subscribers_country_label">Land</string>
+    <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_plan_label">Abonnement</string>
+    <string name="subscribers_status_label">Inschrijfstatus</string>
+    <string name="subscribers_date_label">Inschrijvingsdatum</string>
+    <string name="subscribers_detail_label">Abonnee details</string>
+    <string name="subscribers_newsletter_label">Abonnement op de nieuwsbrief</string>
+    <string name="subscribers_clicked_label">Geklikt</string>
+    <string name="subscribers_opened_label">Geopend</string>
+    <string name="subscribers_emails_sent_label">E-mails</string>
+    <string name="subscribers_subscription_status">Inschrijfstatus</string>
+    <string name="subscribers_error_title">Er ging iets mis</string>
+    <string name="subscribers_empty_search">Geen resultaten gevonden</string>
+    <string name="subscribers_empty">Er zijn geen abonnees</string>
+    <string name="subscribers_sort_plan">Abonnement</string>
+    <string name="subscribers_sort_display_name">Weergavenaam</string>
+    <string name="subscribers_sort_date">Datum van inschrijving</string>
+    <string name="subscribers_sort_email">E-mailadres</string>
+    <string name="subscribers_filter_reader_subscription">Reader abonnement</string>
+    <string name="subscribers_filter_email_subscription">E-mail inschrijving</string>
+    <string name="about_update_email_unverified">Om je profiel te updaten, moet je eerst je e-mailadres verifiëren.</string>
+    <string name="sort_by">Sorteren op</string>
+    <string name="filter">Filteren</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">De verstrekte site ondersteunt geen applicatie wachtwoord authenticatie.</string>
     <string name="application_password_title">Authenticeer met behulp van applicatie wachtwoord</string>
     <string name="application_password_credentials_stored">Applicatie wachtwoordreferenties opgeslagen voor %1$s</string>
@@ -223,8 +268,6 @@ Language: nl
     <string name="notifications_action_mark_all_as_read">Alles als gelezen markeren</string>
     <string name="notifications_unread_content_description">Ongelezen</string>
     <string name="qrcode_media_deeplink_error">Site niet gevonden. Controleer of je op het juiste account bent ingelogd.</string>
-    <string name="gravatar_info_sync_done_button">Gereed</string>
-    <string name="gravatar_info_sync_message">Het kan even duren voordat updates met je Gravatar profiel worden gesynchroniseerd.</string>
     <string name="gravatar_info_learn_more_link">Wat is Gravatar?</string>
     <string name="gravatar_info_description">Als je je avatar, naam en beschrijving hier updatet, worden deze ook geüpdatet op alle sites waarop het Gravatar profiel wordt gebruikt.</string>
     <string name="gravatar_info_title">Je WordPress.com profiel wordt mogelijk gemaakt door Gravatar</string>
@@ -2600,7 +2643,7 @@ Language: nl
     <string name="media_empty_upload_media">Media uploaden</string>
     <string name="media_empty_list">Je hebt geen media</string>
     <string name="reader_gallery_images_desc">afbeeldingsgalerij</string>
-    <string name="blavatar_desc">Site icoon</string>
+    <string name="blavatar_desc">site icoon</string>
     <string name="theme_image_desc">thema-afbeelding</string>
     <string name="featured_image_desc">uitgelichte afbeelding</string>
     <string name="button_discard">Negeren</string>
@@ -2840,7 +2883,6 @@ Language: nl
     <string name="signup_epilogue_error_button_positive">Opnieuw proberen</string>
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
     <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van je account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
-    <string name="signup_epilogue_error_avatar">Er waren problemen met het uploaden van je avatar.</string>
     <string name="plugin_needs_update">Vereist updaten</string>
     <string name="plugin_caption_search">Zoek plugins</string>
     <string name="plugin_caption_new">Nieuw</string>
@@ -3331,7 +3373,6 @@ Language: nl
     <string name="error_remove_user">Gebruiker verwijderen mislukt</string>
     <string name="error_update_role">Gebruikersrol updaten mislukt</string>
     <string name="error_fetch_viewers_list">Kon site kijkers niet ophalen</string>
-    <string name="error_updating_gravatar">Fout bij het updaten van je Gravatar</string>
     <string name="error_refreshing_gravatar">Fout bij het opnieuw laden van je Gravatar</string>
     <string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
     <string name="error_cropping_image">Fout bij het bijsnijden van de afbeelding</string>
@@ -3443,10 +3484,6 @@ Language: nl
     <string name="privacy_private">Je site is alleen zichtbaar voor jou en gebruikers die je goedkeurt</string>
     <string name="privacy_public_not_indexed">Je site kan door iedereen worden bekeken, maar wordt niet geïndexeerd door zoekmachines</string>
     <string name="privacy_public">Je site kan door iedereen worden bekeken en kan worden geïndexeerd door zoekmachines</string>
-    <string name="about_me_hint">Enkele woorden over jou…</string>
-    <string name="about_me">Over mij</string>
-    <string name="public_display_name_hint">De weergavenaam is standaard je gebruikersnaam, tenzij hij anders is ingesteld</string>
-    <string name="public_display_name">Openbare weergavenaam</string>
     <string name="last_name">Achternaam</string>
     <string name="first_name">Voornaam</string>
     <string name="my_profile">Mijn profiel</string>
@@ -3871,6 +3908,7 @@ Language: nl
     <string name="no">Nee</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Notificatie instellingen</string>
+    <string name="clear">Maak leeg</string>
     <string name="add">Toevoegen</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>

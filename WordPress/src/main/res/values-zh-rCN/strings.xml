@@ -223,8 +223,6 @@ Language: zh_CN
     <string name="notifications_action_mark_all_as_read">全部标为已读</string>
     <string name="notifications_unread_content_description">未读</string>
     <string name="qrcode_media_deeplink_error">未找到站点。 检查您是否已登录到正确的账户。</string>
-    <string name="gravatar_info_sync_done_button">完成</string>
-    <string name="gravatar_info_sync_message">更新的内容可能需要一段时间才能与您的 Gravatar 个人资料同步。</string>
     <string name="gravatar_info_learn_more_link">什么是 Gravatar？</string>
     <string name="gravatar_info_description">您在此对头像、名称和简介信息做出的更新也将更新到所有使用 Gravatar 个人资料的站点。</string>
     <string name="gravatar_info_title">您的 WordPress.com 个人资料由 Gravatar 提供技术支持</string>
@@ -2840,7 +2838,6 @@ Language: zh_CN
     <string name="signup_epilogue_error_button_positive">重试</string>
     <string name="signup_epilogue_error_button_negative">恢复</string>
     <string name="signup_epilogue_error_generic">更新账户时出现问题。您可以重试或恢复更改以继续。</string>
-    <string name="signup_epilogue_error_avatar">上传头像时出现问题。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜索插件</string>
     <string name="plugin_caption_new">新</string>
@@ -3331,7 +3328,6 @@ Language: zh_CN
     <string name="error_remove_user">无法删除用户</string>
     <string name="error_update_role">无法更新用户角色</string>
     <string name="error_fetch_viewers_list">无法获取站点查看数</string>
-    <string name="error_updating_gravatar">更新 Gravatar 时出错</string>
     <string name="error_refreshing_gravatar">重新加载 Gravatar 时出错</string>
     <string name="error_locating_image">查找已裁剪的图片时出错</string>
     <string name="error_cropping_image">裁剪图片时出错</string>
@@ -3443,10 +3439,6 @@ Language: zh_CN
     <string name="privacy_private">您的站点仅对您以及您审核通过的用户可见</string>
     <string name="privacy_public_not_indexed">您的站点对所有人可见，但要求搜索引擎不将其编入索引</string>
     <string name="privacy_public">您的站点对所有人可见，并且可以被搜索引擎编入索引</string>
-    <string name="about_me_hint">有关您的一些字词…</string>
-    <string name="about_me">关于我</string>
-    <string name="public_display_name_hint">显示名称（如果未设置）将默认为您的用户名</string>
-    <string name="public_display_name">公开显示名称</string>
     <string name="last_name">姓氏</string>
     <string name="first_name">名字</string>
     <string name="my_profile">我的个人资料</string>
@@ -3871,6 +3863,7 @@ Language: zh_CN
     <string name="no">否</string>
     <string name="yes">是</string>
     <string name="notification_settings">通知设置</string>
+    <string name="clear">清除</string>
     <string name="add">添加</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>

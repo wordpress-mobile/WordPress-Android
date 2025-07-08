@@ -1175,7 +1175,6 @@ Language: ku_TR
     <string name="signup_epilogue_error_button_positive">Dîsa biceribîne</string>
     <string name="signup_epilogue_hint_username">Navê bikarhêner</string>
     <string name="signup_epilogue_hint_password">Pêborîn (li gor daxwazê)</string>
-    <string name="signup_epilogue_error_avatar">Di hilxistina avatara te de hinek pirsgirêk derketin.</string>
     <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Di şandina emailê de hin pirsgirêk derketibûn. Tu dikarî niha dîsa biceribînî an jî bigirî û paşê dîsa biceribînî.</string>
     <string name="signup_epilogue_hint_password_detail">Tu her timî dikarî wekî berî niha bi girêdanekê têketinê bikî lê heke tu bixwazî em dikarin pêborînekê jî ji te re saz bikin.</string>
     <string name="signup_epilogue_hint_display">Navê Dixuye</string>
@@ -1648,7 +1647,6 @@ Language: ku_TR
     <string name="error_remove_user">Bikarhêner nayê rakirin</string>
     <string name="error_update_role">Rola bikarhêner nayê hildemandin</string>
     <string name="error_fetch_viewers_list">Bînerên malperê nehatin stendin</string>
-    <string name="error_updating_gravatar">Di hildemandina Gravatara te de çewtî derket</string>
     <string name="error_refreshing_gravatar">Di nûkirina Gravatara te de çewtî derket</string>
     <string name="error_locating_image">Di bicîkirina wêneyên qusandî de çewtî derket</string>
     <string name="error_cropping_image">Di qusandina wêneyê de çewtî derket</string>
@@ -1760,10 +1758,6 @@ Language: ku_TR
     <string name="privacy_private">Malpera te tenê ji bo te û bikarhênerên ku te pejirandine re xuyanbar e</string>
     <string name="privacy_public_not_indexed">Malpera te ji her kesî re xuyanbar e lê ji motorên lêgerînê daxwaze ku wê îndeks neke</string>
     <string name="privacy_public">Malpera te ji her kesî re xuyanbar e û ji aliyê motorên lêgerînê ve dikare bê îndekskirin</string>
-    <string name="about_me_hint">Çend gotin di derbarê te de…</string>
-    <string name="about_me">Derbarê min de</string>
-    <string name="public_display_name_hint">Heke neyê sazkirin, ew ê navê xuya bi bixweberî bibe navê bikarhêner</string>
-    <string name="public_display_name">Navê nîşandanê yê giştî</string>
     <string name="last_name">Paşnav</string>
     <string name="first_name">Nav</string>
     <string name="my_profile">Profîla Min</string>

@@ -14,8 +14,6 @@ Language: en_CA
     <string name="notifications_unread_content_description">Unread</string>
     <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
     <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
-    <string name="gravatar_info_sync_done_button">Done</string>
-    <string name="gravatar_info_sync_message">Updates might take some time to sync with your Gravatar profile.</string>
     <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
     <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
     <string name="error_media_could_not_share_media_from_device">Unable to load the media for sharing. Please check the app\'s permissions\n        or use the app\'s media library.</string>
@@ -2621,7 +2619,6 @@ Language: en_CA
     <string name="signup_epilogue_error_button_positive">Retry</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
-    <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
     <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_epilogue_hint_password_detail">You can always log in with a link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="plugin_needs_update">Needs update</string>
@@ -3112,7 +3109,6 @@ Language: en_CA
     <string name="error_remove_user">Couldn\'t remove user</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
-    <string name="error_updating_gravatar">Error updating your Gravatar</string>
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_cropping_image">Error cropping the image</string>
@@ -3224,10 +3220,6 @@ Language: en_CA
     <string name="privacy_private">Your site is visible only to you and users you approve</string>
     <string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
     <string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
-    <string name="about_me_hint">A few words about you…</string>
-    <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
-    <string name="about_me">About me</string>
-    <string name="public_display_name">Public display name</string>
     <string name="my_profile">My Profile</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
