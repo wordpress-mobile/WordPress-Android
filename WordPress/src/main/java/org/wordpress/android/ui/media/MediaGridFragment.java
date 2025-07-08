@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +65,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -156,6 +159,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
+    @Inject
+    ViewModelProvider.Factory mViewModelFactory;
+
+    private MediaGridViewModel mViewModel;
+
     private MediaBrowserType mBrowserType;
 
     private EmptyViewRecyclerView mRecycler;
@@ -202,6 +210,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(MediaGridViewModel.class);
 
         Bundle args = getArguments();
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
@@ -556,6 +566,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
+        Log.d("MEDIA_TAG", "Media fetched");
         if (event.isError()) {
             handleFetchAllMediaError(event);
             return;
@@ -737,6 +748,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void fetchMediaList(boolean loadMore) {
+        Log.d("MEDIA_TAG", "Fetching media");
+        mViewModel.fetchMediaList(mSite);
+
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);

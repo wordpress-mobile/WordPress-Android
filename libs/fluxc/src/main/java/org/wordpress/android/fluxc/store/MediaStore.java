@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -592,6 +593,8 @@ public class MediaStore extends Store {
         if (!(actionType instanceof MediaAction)) {
             return;
         }
+
+        Log.d("MEDIA_TAG", "Media Event: " + actionType);
 
         switch ((MediaAction) actionType) {
             case PUSH_MEDIA:
