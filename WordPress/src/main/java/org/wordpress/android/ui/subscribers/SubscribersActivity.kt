@@ -70,6 +70,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
                         showDeleteConfirmationDialog(event.subscriber, navController)
                     }
 
+                    is SubscribersViewModel.UiEvent.ShowDeleteSuccessDialog -> {
+                        showDeleteSuccessDialog()
+                    }
+
                     is SubscribersViewModel.UiEvent.ShowToast -> {
                         Toast.makeText(this@SubscribersActivity, event.messageRes, Toast.LENGTH_SHORT).show()
                     }
@@ -290,6 +294,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
         )
     }
 
+    /**
+     * The user tapped the "Delete subscriber" button, so show a confirmation dialog
+     * before telling the view model to actually delete the subscriber
+     */
     private fun showDeleteConfirmationDialog(
         subscriber: Subscriber,
         navController: NavHostController
@@ -306,6 +314,15 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 )
             }
             builder.setNegativeButton(R.string.cancel, null)
+            builder.show()
+        }
+    }
+
+    private fun showDeleteSuccessDialog() {
+        MaterialAlertDialogBuilder(this).also { builder ->
+            builder.setTitle(R.string.subscribers_delete_success_title)
+            builder.setMessage(R.string.subscribers_delete_success_message)
+            builder.setPositiveButton(R.string.ok, null)
             builder.show()
         }
     }

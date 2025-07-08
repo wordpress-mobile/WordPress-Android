@@ -46,6 +46,7 @@ class SubscribersViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
+        data object ShowDeleteSuccessDialog : UiEvent()
         data class ShowToast(val messageRes: Int) : UiEvent()
     }
 
@@ -287,7 +288,7 @@ class SubscribersViewModel @Inject constructor(
                     // note that it may take a few seconds for the subscriber to actually be deleted,
                     // which is why we only remove it locally instead of fetching the list again
                     removeItem(subscriber.userId)
-                    _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_success)
+                    _uiEvent.value = UiEvent.ShowDeleteSuccessDialog
                     onSuccess()
                 } else {
                     _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
