@@ -198,6 +198,13 @@ open class DataViewViewModel @Inject constructor(
     }
 
     /**
+     * Removes an item from the local list of items
+     */
+    fun removeItem(id: Long) {
+        _items.value = items.value.filter { it.id != id }
+    }
+
+    /**
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(

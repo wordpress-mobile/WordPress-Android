@@ -3,7 +3,6 @@ package org.wordpress.android.ui.subscribers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -189,7 +188,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    /*
+    /**
      * Returns the subscriber with the given ID, or null if not found. Note that this does NOT do a network call,
      * it simply returns the subscriber from the existing list of items.
      */
@@ -282,18 +281,19 @@ class SubscribersViewModel @Inject constructor(
     }
 
     /**
-     * Subscriber deletion has been confirmed by the user. Delete the subscriber and refresh the list.
+     * Subscriber deletion has been confirmed by the user so delete the subscriber
      */
     fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
         launch(ioDispatcher) {
             val result = deleteSubscriber(subscriber = subscriber)
-            // add a short delay or else refreshing the list may still show the deleted subscriber
-            delay(DELETE_DELAY)
+
             withContext(mainDispatcher) {
                 if (result.isSuccess) {
+                    // note that it may take a few seconds for the subscriber to actually be deleted,
+                    // which is why we only remove it locally instead of fetching the list again
+                    removeItem(subscriber.userId)
                     _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_success)
                     onSuccess()
-                    onRefreshData()
                 } else {
                     _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
                 }
@@ -314,8 +314,6 @@ class SubscribersViewModel @Inject constructor(
         private const val ID_SORT_DISPLAY_NAME = 2L
         private const val ID_SORT_EMAIL = 3L
         private const val ID_SORT_PLAN = 4L
-
-        private const val DELETE_DELAY = 500L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
