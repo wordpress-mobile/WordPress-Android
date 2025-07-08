@@ -1,15 +1,14 @@
 package org.wordpress.android.ui.media
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
@@ -21,6 +20,10 @@ import java.net.URL
 import javax.inject.Inject
 
 class MediaGridViewModel @Inject constructor() : ViewModel() {
+    private val _mediaList = MutableStateFlow<List<MediaModel>>(emptyList())
+    // Necessary to be done as LiveData because the observer is in Java
+    val mediaList: LiveData<List<MediaModel>> = _mediaList.asLiveData()
+
     fun fetchMediaList(site: SiteModel) {
         viewModelScope.launch {
             val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
@@ -40,43 +43,43 @@ class MediaGridViewModel @Inject constructor() : ViewModel() {
                 requestBuilder.media().listWithEditContext(MediaListParams())
             }
 
-            media.successfulResponse()?.data?.forEach { mediaWithEditContext ->
-                val mediaModel = mapMediaWithEditContextToMediaModel(mediaWithEditContext, site.id)
-                Log.d("MEDIA_TAG", "Media: ${mediaModel.url}")
-                // Use mediaModel here
-            } ?: run { Log.d("MEDIA_TAG", "No media") }
+            val mediaModelList = media.successfulResponse()?.data?.toMediaModelList(site.id)
+            _mediaList.value = mediaModelList ?: emptyList()
         }
     }
 
-    private fun mapMediaWithEditContextToMediaModel(
-        mediaWithEditContext: MediaWithEditContext,
+    private fun List<MediaWithEditContext>.toMediaModelList(
         siteId: Int
-    ): MediaModel = MediaModel(siteId, mediaWithEditContext.id).apply {
+    ): List<MediaModel> = map { it.toMediaModel(siteId) }
+
+    private fun MediaWithEditContext.toMediaModel(
+        siteId: Int
+    ): MediaModel = MediaModel(siteId, id).apply {
         // Map URLs
-        url = mediaWithEditContext.sourceUrl
-        guid = mediaWithEditContext.link
+        url = this@toMediaModel.sourceUrl
+        guid = this@toMediaModel.link
 
         // Map file information
-        title = mediaWithEditContext.title.rendered
-        caption = mediaWithEditContext.caption.rendered
-        description = mediaWithEditContext.description.rendered
-        alt = mediaWithEditContext.altText
+        title = this@toMediaModel.title.rendered
+        caption = this@toMediaModel.caption.rendered
+        description = this@toMediaModel.description.rendered
+        alt = this@toMediaModel.altText
 
         // Map media type and mime type
-        mimeType = mediaWithEditContext.mimeType
-        fileExtension = mediaWithEditContext.mediaType.toString()
+        mimeType = this@toMediaModel.mimeType
+        fileExtension = this@toMediaModel.mediaType.toString()
 
         // Map media details if available
-        mediaWithEditContext.mediaDetails.let { details ->
+        this@toMediaModel.mediaDetails.let { details ->
             // The exact structure of MediaDetails depends on the uniffi generated code
             // You may need to adjust these based on the actual properties available
         }
 
         // Map dates
-        uploadDate = mediaWithEditContext.date
+        uploadDate = this@toMediaModel.date
 
         // Map author
-        authorId = mediaWithEditContext.author
+        authorId = this@toMediaModel.author
 
         // Set upload state as uploaded since this is fetched from server
         uploadState = MediaModel.MediaUploadState.UPLOADED.toString()
