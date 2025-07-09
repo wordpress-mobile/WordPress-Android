@@ -96,7 +96,6 @@ public class UploadStore extends Store {
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
-//        Log.d("MEDIA_TAG", "Upload Event: " + actionType);
         if (actionType instanceof UploadAction) {
             onUploadAction((UploadAction) actionType, action.getPayload());
         } else if (actionType instanceof MediaAction) {

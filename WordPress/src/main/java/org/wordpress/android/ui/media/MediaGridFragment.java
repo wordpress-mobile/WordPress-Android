@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -557,7 +556,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        Log.d("MEDIA_TAG", "Media fetched");
         if (event.isError()) {
             handleFetchAllMediaError(event);
             return;
@@ -739,8 +737,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void fetchMediaList(boolean loadMore) {
-        Log.d("MEDIA_TAG", "Fetching media");
-
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
