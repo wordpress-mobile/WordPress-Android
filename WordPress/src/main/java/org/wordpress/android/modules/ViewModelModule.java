@@ -25,7 +25,6 @@ import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
-import org.wordpress.android.ui.media.MediaGridViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
@@ -552,9 +551,4 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostResolutionOverlayViewModel.class)
     abstract ViewModel postResolutionOverlayViewModel(PostResolutionOverlayViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MediaGridViewModel.class)
-    abstract ViewModel mediaGridViewModel(MediaGridViewModel viewModel);
 }

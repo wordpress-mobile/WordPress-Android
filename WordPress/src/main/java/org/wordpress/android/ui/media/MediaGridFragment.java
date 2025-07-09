@@ -65,7 +65,6 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -162,8 +161,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Inject
     ViewModelProvider.Factory mViewModelFactory;
 
-    private MediaGridViewModel mViewModel;
-
     private MediaBrowserType mBrowserType;
 
     private EmptyViewRecyclerView mRecycler;
@@ -210,8 +207,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(MediaGridViewModel.class);
 
         Bundle args = getArguments();
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
@@ -749,7 +744,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private void fetchMediaList(boolean loadMore) {
         Log.d("MEDIA_TAG", "Fetching media");
-        mViewModel.fetchMediaList(mSite);
 
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {

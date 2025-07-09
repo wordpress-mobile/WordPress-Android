@@ -1,14 +1,14 @@
-package org.wordpress.android.ui.media
+package org.wordpress.android.fluxc.network.rest.wpcom.media
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.MimeType
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
@@ -18,14 +18,18 @@ import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
 import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class MediaGridViewModel @Inject constructor() : ViewModel() {
-    private val _mediaList = MutableStateFlow<List<MediaModel>>(emptyList())
-    // Necessary to be done as LiveData because the observer is in Java
-    val mediaList: LiveData<List<MediaModel>> = _mediaList.asLiveData()
+/**
+ * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
+ */
+@Singleton
+class MediaRSApiRestClient @Inject constructor() {
+    private val applicationScope by lazy { CoroutineScope(Dispatchers.IO) }
 
-    fun fetchMediaList(site: SiteModel) {
-        viewModelScope.launch {
+    fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
+        applicationScope.launch {
             val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
                 username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
             )
@@ -44,7 +48,11 @@ class MediaGridViewModel @Inject constructor() : ViewModel() {
             }
 
             val mediaModelList = media.successfulResponse()?.data?.toMediaModelList(site.id)
-            _mediaList.value = mediaModelList ?: emptyList()
+            mediaModelList?.forEach {
+                Log.d("MEDIA_TAG", it.url)
+            } ?: run {
+                Log.d("MEDIA_TAG", "MEDIA MODEL LIST IS NULL")
+            }
         }
     }
 
@@ -82,6 +90,6 @@ class MediaGridViewModel @Inject constructor() : ViewModel() {
         authorId = this@toMediaModel.author
 
         // Set upload state as uploaded since this is fetched from server
-        uploadState = MediaModel.MediaUploadState.UPLOADED.toString()
+        uploadState = org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED.toString()
     }
 }
