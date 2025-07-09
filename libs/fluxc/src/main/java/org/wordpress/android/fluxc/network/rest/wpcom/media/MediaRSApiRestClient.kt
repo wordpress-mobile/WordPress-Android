@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaDetails
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
@@ -94,30 +95,87 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): List<MediaModel> = map { it.toMediaModel(siteId) }
 
+    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
     private fun MediaWithEditContext.toMediaModel(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
-        // Map URLs
         url = this@toMediaModel.sourceUrl
         guid = this@toMediaModel.link
-
-        // Map file information
         title = this@toMediaModel.title.rendered
         caption = this@toMediaModel.caption.rendered
         description = this@toMediaModel.description.rendered
         alt = this@toMediaModel.altText
-
-        // Map media type and mime type
+        postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
         fileExtension = this@toMediaModel.mediaType.toString()
-
-        // Map dates
         uploadDate = this@toMediaModel.date
-
-        // Map author
         authorId = this@toMediaModel.author
-
-        // Set upload state as uploaded since this is fetched from server
         uploadState = org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED.toString()
+
+        // Map media details if available
+        this@toMediaModel.mediaDetails.let { details ->
+            try {
+                val detailsClass: Class<out MediaDetails> = details::class.java
+
+                detailsClass.getDeclaredField("width").let { field ->
+                    field.isAccessible = true
+                    (field.get(details) as? Number)?.let { width = it.toInt() }
+                }
+
+                detailsClass.getDeclaredField("height").let { field ->
+                    field.isAccessible = true
+                    (field.get(details) as? Number)?.let { height = it.toInt() }
+                }
+
+                detailsClass.getDeclaredField("file").let { field ->
+                    field.isAccessible = true
+                    (field.get(details) as? String)?.let { fileName = it }
+                }
+
+                mapMediaDetails(detailsClass, details)
+            } catch (e: Exception) {
+                // Ignore reflection errors - fields may not exist in this version
+                appLogWrapper.d(AppLog.T.MEDIA, "Could not access MediaDetails fields: ${e.message}")
+            }
+        }
     }
+
+    private fun MediaModel.mapMediaDetails(
+        detailsClass: Class<out MediaDetails>,
+        details: MediaDetails
+    ) {
+        detailsClass.getDeclaredField("sizes").let { sizesField ->
+            sizesField.isAccessible = true
+            val sizes = sizesField.get(details)
+
+            if (sizes != null) {
+                val sizesClass = sizes::class.java
+                fileUrlMediumSize = getSizeField("medium", sizesClass, sizes)
+                fileUrlLargeSize = getSizeField("large", sizesClass, sizes)
+                thumbnailUrl = getSizeField("thumbnail", sizesClass, sizes)
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
+    private fun getSizeField(
+        name: String,
+        sizesClass: Class<out Any>,
+        sizes: Any?
+    ): String? = try {
+            sizesClass.getDeclaredField(name).let { field ->
+                field.isAccessible = true
+                val internalField = field.get(sizes)
+                if (internalField != null) {
+                    val thumbnailClass = internalField::class.java
+                    thumbnailClass.getDeclaredField("sourceUrl").let { sourceField ->
+                        sourceField.isAccessible = true
+                        (sourceField.get(internalField) as? String)
+                    }
+                }
+                null
+            }
+        } catch (_: Exception) {
+            null
+        }
 }
