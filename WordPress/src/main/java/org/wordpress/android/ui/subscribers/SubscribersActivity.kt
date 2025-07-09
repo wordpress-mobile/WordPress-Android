@@ -234,7 +234,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
             onSortOrderClick = { order ->
                 viewModel.onSortOrderClick(order)
             },
-            modifier = modifier
+            modifier = modifier,
+            refreshState = viewModel.refreshState.collectAsState()
         )
     }
 
