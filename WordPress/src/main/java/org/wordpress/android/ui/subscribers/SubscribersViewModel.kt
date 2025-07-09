@@ -73,10 +73,6 @@ class SubscribersViewModel @Inject constructor(
                 titleRes = R.string.subscribers_sort_date
             ),
             DataViewDropdownItem(
-                id = ID_SORT_EMAIL,
-                titleRes = R.string.subscribers_sort_email
-            ),
-            DataViewDropdownItem(
                 id = ID_SORT_NAME,
                 titleRes = R.string.subscribers_sort_name
             ),
@@ -125,7 +121,6 @@ class SubscribersViewModel @Inject constructor(
             when (it.id) {
                 ID_SORT_DATE -> ListSubscribersSortField.DATE_SUBSCRIBED
                 ID_SORT_NAME -> ListSubscribersSortField.DISPLAY_NAME
-                ID_SORT_EMAIL -> ListSubscribersSortField.EMAIL_ADDRESS
                 else -> null
             }
         }
@@ -307,8 +302,7 @@ class SubscribersViewModel @Inject constructor(
         private const val ID_FILTER_READER = 2L
 
         private const val ID_SORT_DATE = 1L
-        private const val ID_SORT_EMAIL = 2L
-        private const val ID_SORT_NAME = 3L
+        private const val ID_SORT_NAME = 2L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
