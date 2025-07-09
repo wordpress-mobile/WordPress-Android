@@ -57,6 +57,7 @@ fun SubscriberDetailScreen(
     onUrlClick: (String) -> Unit,
     onEmailClick: (String) -> Unit,
     onPlanClick: (index: Int) -> Unit,
+    onDeleteClick: (subscriber: Subscriber) -> Unit,
     modifier: Modifier = Modifier,
     subscriberStats: State<IndividualSubscriberStats?>? = null
 ) {
@@ -92,7 +93,11 @@ fun SubscriberDetailScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        DeleteSubscriberButton()
+        DeleteSubscriberButton(
+            onClick = {
+                onDeleteClick(subscriber)
+            }
+        )
     }
 }
 
@@ -346,9 +351,13 @@ private fun DetailRow(
 }
 
 @Composable
-private fun DeleteSubscriberButton() {
+private fun DeleteSubscriberButton(
+    onClick: () -> Unit,
+) {
     Button(
-        onClick = { /* Handle delete action */ },
+        onClick = {
+            onClick()
+        },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
@@ -399,7 +408,8 @@ fun SubscriberDetailScreenPreview() {
             subscriberStats = remember { mutableStateOf(subscriberStats) },
             onUrlClick = {},
             onEmailClick = {},
-            onPlanClick = {}
+            onPlanClick = {},
+            onDeleteClick = {}
         )
     }
 }
