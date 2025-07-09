@@ -1,1 +1,1 @@
-* [***] Introduces experimental Application Passwords authentication which will allow improving existing features and introduce new features once it's fully integrated.
+We’ve added Application Passwords authentication. It’s still experimental, but once it’s fully integrated, we’ll be able to improve existing features and introduce new ones. Rock on.
