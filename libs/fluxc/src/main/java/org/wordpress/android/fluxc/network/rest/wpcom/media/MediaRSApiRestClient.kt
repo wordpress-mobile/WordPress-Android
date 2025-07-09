@@ -2,12 +2,12 @@ package org.wordpress.android.fluxc.network.rest.wpcom.media
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
@@ -20,6 +20,7 @@ import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -27,13 +28,12 @@ import javax.inject.Singleton
  */
 @Singleton
 class MediaRSApiRestClient @Inject constructor(
+    @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
 ) {
-    private val applicationScope by lazy { CoroutineScope(Dispatchers.IO) }
-
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
-        applicationScope.launch {
+        scope.launch {
             val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
                 username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
             )
