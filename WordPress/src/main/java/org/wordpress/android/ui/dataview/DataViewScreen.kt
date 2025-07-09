@@ -73,8 +73,8 @@ fun DataViewScreen(
     onFetchMore: () -> Unit,
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
+    refreshState: State<Boolean>
 ) {
-    val refreshState = remember { mutableStateOf(false) }
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
@@ -492,6 +492,7 @@ private fun LoadedPreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -514,6 +515,7 @@ private fun LoadingPreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -536,6 +538,7 @@ private fun EmptyPreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -558,6 +561,7 @@ private fun EmptySearchPreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -580,6 +584,7 @@ private fun OfflinePreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -602,6 +607,7 @@ private fun ErrorPreview() {
         onFilterClick = { },
         onSortClick = { },
         onSortOrderClick = { },
+        refreshState = remember { mutableStateOf(false) }
     )
 }
 
@@ -610,5 +616,4 @@ private val dummyDropdownItems = listOf(
         id = 0L,
         titleRes = R.string.filter
     ),
-
-    )
+)

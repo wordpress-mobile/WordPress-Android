@@ -2,6 +2,7 @@ package org.wordpress.android.ui.subscribers
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,15 +18,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -40,6 +46,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
     private val addSubscribersViewModel by viewModels<AddSubscribersViewModel>()
 
     private lateinit var composeView: ComposeView
+    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +62,24 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 }
             }
         )
+
+        lifecycleScope.launch {
+            viewModel.uiEvent.filterNotNull().collect { event ->
+                when (event) {
+                    is SubscribersViewModel.UiEvent.ShowDeleteConfirmationDialog -> {
+                        showDeleteConfirmationDialog(event.subscriber, navController)
+                    }
+
+                    is SubscribersViewModel.UiEvent.ShowDeleteSuccessDialog -> {
+                        showDeleteSuccessDialog()
+                    }
+
+                    is SubscribersViewModel.UiEvent.ShowToast -> {
+                        Toast.makeText(this@SubscribersActivity, event.messageRes, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     private enum class SubscriberScreen {
@@ -67,10 +92,10 @@ class SubscribersActivity : BaseAppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun NavigableContent() {
-        val navController = rememberNavController()
+        navController = rememberNavController()
         val listTitle = stringResource(R.string.subscribers)
         val titleState = remember { mutableStateOf(listTitle) }
-        val showAddSubscribersButtonState = remember { mutableStateOf(true) }
+        val showAddSubscribersButtonState = rememberSaveable { mutableStateOf(true) }
 
         AppThemeM3 {
             Scaffold(
@@ -209,7 +234,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
             onSortOrderClick = { order ->
                 viewModel.onSortOrderClick(order)
             },
-            modifier = modifier
+            modifier = modifier,
+            refreshState = viewModel.refreshState.collectAsState()
         )
     }
 
@@ -239,6 +265,11 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 )
                 navController.navigate(route = SubscriberScreen.Plan.name)
             },
+            onDeleteClick = { _ ->
+                viewModel.onDeleteSubscriberClick(
+                    subscriber = subscriber,
+                )
+            },
             modifier = modifier,
             subscriberStats = viewModel.subscriberStats.collectAsState()
         )
@@ -262,6 +293,39 @@ class SubscribersActivity : BaseAppCompatActivity() {
             showProgress = addSubscribersViewModel.showProgress.collectAsState(),
             modifier = modifier
         )
+    }
+
+    /**
+     * The user tapped the "Delete subscriber" button, so show a confirmation dialog
+     * before telling the view model to actually delete the subscriber
+     */
+    private fun showDeleteConfirmationDialog(
+        subscriber: Subscriber,
+        navController: NavHostController
+    ) {
+        MaterialAlertDialogBuilder(this).also { builder ->
+            builder.setTitle(R.string.subscribers_delete_confirmation_title)
+            builder.setMessage(R.string.subscribers_delete_confirmation_message)
+            builder.setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deleteSubscriberConfirmed(
+                    subscriber = subscriber,
+                    onSuccess = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+            builder.setNegativeButton(R.string.cancel, null)
+            builder.show()
+        }
+    }
+
+    private fun showDeleteSuccessDialog() {
+        MaterialAlertDialogBuilder(this).also { builder ->
+            builder.setTitle(R.string.subscribers_delete_success_title)
+            builder.setMessage(R.string.subscribers_delete_success_message)
+            builder.setPositiveButton(R.string.ok, null)
+            builder.show()
+        }
     }
 
     private fun onEmailClick(email: String) {
