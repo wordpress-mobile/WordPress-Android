@@ -15,7 +15,6 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
-import uniffi.wp_api.MediaRequestListWithEditContextResponse
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
@@ -70,8 +69,8 @@ class MediaRSApiRestClient @Inject constructor(
                     emptyList()
                 }
             }
-            val canLoadMore = mediaModelList?.size == number
-            notifyMediaListFetched(site, mediaModelList.orEmpty(), offset > 0, canLoadMore, mimeType)
+            val canLoadMore = mediaModelList.size == number
+            notifyMediaListFetched(site, mediaModelList, offset > 0, canLoadMore, mimeType)
         }
     }
 
