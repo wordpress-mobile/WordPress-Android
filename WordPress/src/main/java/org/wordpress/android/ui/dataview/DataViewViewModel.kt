@@ -58,8 +58,14 @@ open class DataViewViewModel @Inject constructor(
     private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemSortBy = _itemSortBy.asStateFlow()
 
+    private val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
+    val sortOrder = _sortOrder.asStateFlow()
+
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
+
+    private val _refreshState = MutableStateFlow(false)
+    val refreshState = _refreshState.asStateFlow()
 
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
@@ -98,7 +104,7 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    private fun fetchData() {
+    private fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             val isLoadingMore = page > 0
             if (isLoadingMore) {
@@ -106,15 +112,20 @@ open class DataViewViewModel @Inject constructor(
             } else {
                 updateUiState(DataViewUiState.LOADING)
             }
+            if (isRefreshing) {
+                _refreshState.value = true
+            }
 
             launch {
                 val items = performNetworkRequest(
                     page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value,
+                    sortOrder = _sortOrder.value,
                     sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
+                    _refreshState.value = false
                     return@launch
                 }
 
@@ -133,6 +144,7 @@ open class DataViewViewModel @Inject constructor(
                 } else {
                     updateUiState(DataViewUiState.LOADED)
                 }
+                _refreshState.value = false
             }
         } else {
             updateUiState(DataViewUiState.OFFLINE)
@@ -149,7 +161,7 @@ open class DataViewViewModel @Inject constructor(
         if (_uiState.value == DataViewUiState.LOADED) {
             resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
-            fetchData()
+            fetchData(isRefreshing = true)
         }
     }
 
@@ -182,6 +194,15 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
+    fun onSortOrderClick(order: WpApiParamOrder) {
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
+        if (order != _sortOrder.value) {
+            _sortOrder.value = order
+            resetPaging()
+            fetchData()
+        }
+    }
+
     fun onSearchQueryChange(query: String) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSearchQueryChange")
         debouncedQuery.value = query
@@ -195,6 +216,13 @@ open class DataViewViewModel @Inject constructor(
     private fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
+    }
+
+    /**
+     * Removes an item from the local list of items
+     */
+    fun removeItem(id: Long) {
+        _items.value = items.value.filter { it.id != id }
     }
 
     /**

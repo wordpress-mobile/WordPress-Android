@@ -30,7 +30,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
@@ -43,6 +43,15 @@ class SubscribersViewModel @Inject constructor(
 
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
+
+    sealed class UiEvent {
+        data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
+        data object ShowDeleteSuccessDialog : UiEvent()
+        data class ShowToast(val messageRes: Int) : UiEvent()
+    }
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent
 
     override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
@@ -64,16 +73,12 @@ class SubscribersViewModel @Inject constructor(
                 titleRes = R.string.subscribers_sort_date
             ),
             DataViewDropdownItem(
-                id = ID_SORT_DISPLAY_NAME,
-                titleRes = R.string.subscribers_sort_display_name
-            ),
-            DataViewDropdownItem(
                 id = ID_SORT_EMAIL,
                 titleRes = R.string.subscribers_sort_email
             ),
             DataViewDropdownItem(
-                id = ID_SORT_PLAN,
-                titleRes = R.string.subscribers_sort_plan
+                id = ID_SORT_NAME,
+                titleRes = R.string.subscribers_sort_name
             ),
         )
     }
@@ -119,8 +124,7 @@ class SubscribersViewModel @Inject constructor(
         val sortType = sortBy?.let {
             when (it.id) {
                 ID_SORT_DATE -> ListSubscribersSortField.DATE_SUBSCRIBED
-                ID_SORT_PLAN -> ListSubscribersSortField.PLAN
-                ID_SORT_DISPLAY_NAME -> ListSubscribersSortField.DISPLAY_NAME
+                ID_SORT_NAME -> ListSubscribersSortField.DISPLAY_NAME
                 ID_SORT_EMAIL -> ListSubscribersSortField.EMAIL_ADDRESS
                 else -> null
             }
@@ -180,7 +184,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    /*
+    /**
      * Returns the subscriber with the given ID, or null if not found. Note that this does NOT do a network call,
      * it simply returns the subscriber from the existing list of items.
      */
@@ -215,6 +219,39 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
+    private suspend fun deleteSubscriber(subscriber: Subscriber) = runCatching {
+        withContext(ioDispatcher) {
+            val response = if (subscriber.isEmailSubscriber) {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteEmailFollower(
+                        wpComSiteId = siteId().toULong(),
+                        subscriptionId = subscriber.subscriptionId
+                    )
+                }
+            } else {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteFollower(
+                        wpComSiteId = siteId().toULong(),
+                        userId = subscriber.userId
+                    )
+                }
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
+                    Result.success(true)
+                }
+
+                else -> {
+                    val error = (response as? WpRequestResult.WpError)?.errorMessage
+                    appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
+                    Result.failure(Exception(error))
+                }
+            }
+        }
+    }
+
+
     /**
      * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
      */
@@ -230,14 +267,48 @@ class SubscribersViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Trigger the delete confirmation dialog when the user taps the delete button for a subscriber
+     */
+    fun onDeleteSubscriberClick(subscriber: Subscriber) {
+        appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
+        _uiEvent.value = UiEvent.ShowDeleteConfirmationDialog(subscriber)
+        clearUiEvent()
+    }
+
+    /**
+     * Subscriber deletion has been confirmed by the user so delete the subscriber
+     */
+    fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
+        launch(ioDispatcher) {
+            val result = deleteSubscriber(subscriber = subscriber)
+
+            withContext(mainDispatcher) {
+                if (result.isSuccess) {
+                    // note that it may take a few seconds for the subscriber to actually be deleted,
+                    // which is why we only remove it locally instead of fetching the list again
+                    removeItem(subscriber.userId)
+                    _uiEvent.value = UiEvent.ShowDeleteSuccessDialog
+                    onSuccess()
+                } else {
+                    _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
+                }
+                clearUiEvent()
+            }
+        }
+    }
+
+    private fun clearUiEvent() {
+        _uiEvent.value = null
+    }
+
     companion object {
         private const val ID_FILTER_EMAIL = 1L
         private const val ID_FILTER_READER = 2L
 
         private const val ID_SORT_DATE = 1L
-        private const val ID_SORT_DISPLAY_NAME = 2L
-        private const val ID_SORT_EMAIL = 3L
-        private const val ID_SORT_PLAN = 4L
+        private const val ID_SORT_EMAIL = 2L
+        private const val ID_SORT_NAME = 3L
 
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }

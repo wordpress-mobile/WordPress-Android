@@ -117,6 +117,8 @@
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
     <string name="sort_by">Sort by</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -4993,10 +4995,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
-    <string name="subscribers_sort_email">Email address</string>
+    <string name="subscribers_sort_email">Email</string>
     <string name="subscribers_sort_date">Date subscribed</string>
-    <string name="subscribers_sort_display_name">Display name</string>
-    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_name">Name</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
@@ -5031,6 +5032,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     </string>
     <string name="subscribers_add_success">Successfully added subscribers</string>
     <string name="subscribers_add_failed">Failed to add subscribers</string>
+    <string name="subscribers_delete_confirmation_title">Delete subscriber</string>
+    <string name="subscribers_delete_confirmation_message">Are you sure you want to delete this subscriber?</string>
+    <string name="subscribers_delete_success_title">Subscriber deleted</string>
+    <string name="subscribers_delete_success_message">The subscriber has been deleted, but it may take a minute for the deletion to take effect</string>
+    <string name="subscribers_delete_failed">Failed to delete subscriber</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
