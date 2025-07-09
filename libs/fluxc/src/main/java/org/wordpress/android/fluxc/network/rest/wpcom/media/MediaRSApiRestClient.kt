@@ -111,12 +111,6 @@ class MediaRSApiRestClient @Inject constructor(
         mimeType = this@toMediaModel.mimeType
         fileExtension = this@toMediaModel.mediaType.toString()
 
-        // Map media details if available
-        this@toMediaModel.mediaDetails.let { details ->
-            // The exact structure of MediaDetails depends on the uniffi generated code
-            // You may need to adjust these based on the actual properties available
-        }
-
         // Map dates
         uploadDate = this@toMediaModel.date
 
