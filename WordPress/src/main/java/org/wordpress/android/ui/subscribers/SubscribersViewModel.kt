@@ -30,7 +30,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class SubscribersViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
@@ -43,6 +43,15 @@ class SubscribersViewModel @Inject constructor(
 
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
+
+    sealed class UiEvent {
+        data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
+        data object ShowDeleteSuccessDialog : UiEvent()
+        data class ShowToast(val messageRes: Int) : UiEvent()
+    }
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent
 
     override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
@@ -175,7 +184,7 @@ class SubscribersViewModel @Inject constructor(
         )
     }
 
-    /*
+    /**
      * Returns the subscriber with the given ID, or null if not found. Note that this does NOT do a network call,
      * it simply returns the subscriber from the existing list of items.
      */
@@ -210,6 +219,39 @@ class SubscribersViewModel @Inject constructor(
             }
         }
 
+    private suspend fun deleteSubscriber(subscriber: Subscriber) = runCatching {
+        withContext(ioDispatcher) {
+            val response = if (subscriber.isEmailSubscriber) {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteEmailFollower(
+                        wpComSiteId = siteId().toULong(),
+                        subscriptionId = subscriber.subscriptionId
+                    )
+                }
+            } else {
+                wpComApiClient.request { requestBuilder ->
+                    requestBuilder.followers().deleteFollower(
+                        wpComSiteId = siteId().toULong(),
+                        userId = subscriber.userId
+                    )
+                }
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MAIN, "Delete subscriber success")
+                    Result.success(true)
+                }
+
+                else -> {
+                    val error = (response as? WpRequestResult.WpError)?.errorMessage
+                    appLogWrapper.e(AppLog.T.MAIN, "Delete subscriber failed: $error")
+                    Result.failure(Exception(error))
+                }
+            }
+        }
+    }
+
+
     /**
      * Called when an item in the list is clicked. We use this to request stats for the clicked subscriber.
      */
@@ -223,6 +265,41 @@ class SubscribersViewModel @Inject constructor(
                 _subscriberStats.value = stats
             }
         }
+    }
+
+    /**
+     * Trigger the delete confirmation dialog when the user taps the delete button for a subscriber
+     */
+    fun onDeleteSubscriberClick(subscriber: Subscriber) {
+        appLogWrapper.d(AppLog.T.MAIN, "Clicked on delete subscriber ${subscriber.displayNameOrEmail()}")
+        _uiEvent.value = UiEvent.ShowDeleteConfirmationDialog(subscriber)
+        clearUiEvent()
+    }
+
+    /**
+     * Subscriber deletion has been confirmed by the user so delete the subscriber
+     */
+    fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
+        launch(ioDispatcher) {
+            val result = deleteSubscriber(subscriber = subscriber)
+
+            withContext(mainDispatcher) {
+                if (result.isSuccess) {
+                    // note that it may take a few seconds for the subscriber to actually be deleted,
+                    // which is why we only remove it locally instead of fetching the list again
+                    removeItem(subscriber.userId)
+                    _uiEvent.value = UiEvent.ShowDeleteSuccessDialog
+                    onSuccess()
+                } else {
+                    _uiEvent.value = UiEvent.ShowToast(R.string.subscribers_delete_failed)
+                }
+                clearUiEvent()
+            }
+        }
+    }
+
+    private fun clearUiEvent() {
+        _uiEvent.value = null
     }
 
     companion object {
