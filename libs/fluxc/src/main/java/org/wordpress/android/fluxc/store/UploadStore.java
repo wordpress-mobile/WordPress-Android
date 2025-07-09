@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -157,9 +156,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
-
-    @Inject
-    ViewModelProvider.Factory mViewModelFactory;
 
     private MediaBrowserType mBrowserType;
 

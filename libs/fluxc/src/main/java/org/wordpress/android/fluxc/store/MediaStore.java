@@ -966,7 +966,6 @@ public class MediaStore extends Store {
             }
         }
         if (payload.site.isUsingSelfHostedRestApi()) {
-            // TODO call the new self hosted rest api
             mMediaRSApiRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
