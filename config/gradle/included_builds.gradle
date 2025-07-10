@@ -56,17 +56,6 @@ if (localBuilds.exists()) {
         }
     }
 
-    if (ext.has("localStoriesAndroidPath")) {
-        includeBuild(ext.localStoriesAndroidPath) {
-            dependencySubstitution {
-                println "Substituting stories-android with the local build"
-                substitute module("$gradle.ext.storiesAndroidPath") using project(':stories')
-                substitute module("$gradle.ext.storiesAndroidMp4ComposePath") using project(':mp4compose')
-                substitute module("$gradle.ext.storiesAndroidPhotoEditorPath") using project(':photoeditor')
-            }
-        }
-    }
-
     if (ext.has("localAztecAndroidPath")) {
         includeBuild(ext.localAztecAndroidPath) {
             dependencySubstitution {
