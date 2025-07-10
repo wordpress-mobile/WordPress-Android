@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -40,6 +41,9 @@ import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.compose.ui.platform.ComposeView;
+import androidx.compose.ui.platform.ViewCompositionStrategy;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -155,6 +159,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private boolean mShowAudioTab;
 
     private boolean mLaunchPhotoPicker = false;
+    private boolean mShowApplicationPasswordDialog = true; // Set to true for testing
 
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
@@ -302,6 +307,51 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
+    private void showApplicationPasswordOffReauthenticateDialog() {
+        // Create a ComposeView to host the Compose dialog
+        ComposeView composeView = new ComposeView(this);
+        
+        // Set the view composition strategy
+        composeView.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed.INSTANCE
+        );
+        
+        // Add the ComposeView to the activity's content first
+        ViewGroup contentView = findViewById(android.R.id.content);
+        contentView.addView(composeView);
+        
+        // Set the content - use the static helper from Kotlin
+        MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
+            composeView,
+            () -> {
+                // onDismiss callback
+                AppLog.d(AppLog.T.MEDIA, "ApplicationPasswordOffReauthenticateDialog - onDismiss called");
+                mShowApplicationPasswordDialog = false;
+                // Small delay to allow Compose to update before removing the view
+                composeView.postDelayed(() -> {
+                    ViewGroup parent = (ViewGroup) composeView.getParent();
+                    if (parent != null) {
+                        parent.removeView(composeView);
+                    }
+                }, 100);
+            },
+            () -> {
+                // onConfirm callback - navigate to login
+                AppLog.d(AppLog.T.MEDIA, "ApplicationPasswordOffReauthenticateDialog - onConfirm called");
+                mShowApplicationPasswordDialog = false;
+                ToastUtils.showToast(MediaBrowserActivity.this, "Login button clicked", ToastUtils.Duration.SHORT);
+                // Small delay to allow Compose to update before removing the view
+                composeView.postDelayed(() -> {
+                    ViewGroup parent = (ViewGroup) composeView.getParent();
+                    if (parent != null) {
+                        parent.removeView(composeView);
+                    }
+                    // TODO: Add navigation to login/reauthentication screen after removing the view
+                }, 100);
+            }
+        );
+    }
+
     public MediaDeleteService getMediaDeleteService() {
         if (mDeleteService == null) {
             return null;
@@ -419,6 +469,11 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public void onStart() {
         super.onStart();
+        
+        // Show the application password dialog if needed
+        if (mShowApplicationPasswordDialog) {
+            showApplicationPasswordOffReauthenticateDialog();
+        }
         if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
             registerReceiver(
                     mReceiver,
