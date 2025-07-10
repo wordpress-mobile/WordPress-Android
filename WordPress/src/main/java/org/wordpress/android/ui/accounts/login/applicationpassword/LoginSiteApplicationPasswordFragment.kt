@@ -87,6 +87,8 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mAnalyticsListener.trackUrlFormViewed()
+
         requireActivity().setTitle(R.string.site_address_login_title)
         this.siteAddressInput = view.findViewById(R.id.login_site_address_row)
         siteAddressInput?.addTextChangedListener(this)
