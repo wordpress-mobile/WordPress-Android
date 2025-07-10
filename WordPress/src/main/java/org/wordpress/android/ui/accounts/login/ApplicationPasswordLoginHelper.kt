@@ -49,7 +49,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
-                        "API_ROOT_URL ${urlDiscoveryResult.success.apiRootUrl}")
+                        " API_ROOT_URL ${urlDiscoveryResult.success.apiRootUrl}")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -191,7 +191,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         val password: String?
     )
 
-    // We need to wrap the dispatcher because tests are failing sue to the actions not having a proper equals method
+    // We need to wrap the dispatcher because tests are failing due to the actions not having a proper equals method
     // so, every action is returning false when compared with the one we want to test
     class DispatcherWrapper @Inject constructor(private val dispatcher: Dispatcher) {
         fun insertOrUpdateSite(site: SiteModel) {
