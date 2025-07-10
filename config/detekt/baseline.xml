@@ -149,10 +149,8 @@
     <ID>NestedBlockDepth:AllTimeWidgetBlockListViewModel.kt$AllTimeWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:AllTimeWidgetListViewModel.kt$AllTimeWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit)</ID>
     <ID>NestedBlockDepth:CreatePageListItemActionsUseCase.kt$CreatePageListItemActionsUseCase$fun setupPageActions( listType: PageListType, uploadUiState: PostUploadUiState, siteModel: SiteModel, remoteId: Long ): Set&lt;Action></ID>
-    <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String>): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData></ID>
     <ID>NestedBlockDepth:TodayWidgetBlockListViewModel.kt$TodayWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
@@ -168,7 +166,6 @@
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun queueFeaturedImageForUpload( localPostId: Int, site: SiteModel, uri: Uri, mimeType: String? ): EnqueueFeaturedImageResult</ID>
     <ID>ReturnCount:FollowedBlogsProvider.kt$FollowedBlogsProvider$fun getAllFollowedBlogs(query: String?): List&lt;PreferenceModel></ID>
     <ID>ReturnCount:ImageManager.kt$ImageManager$ private fun Context?.isAvailable(): Boolean</ID>
-    <ID>ReturnCount:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList&lt;String>): Boolean</ID>
     <ID>ReturnCount:MediaPickerAdapterDiffCallback.kt$MediaPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:PageListViewModel.kt$PageListViewModel$private fun getFeaturedImageUrl(featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PageParentFragment.kt$PageParentFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
@@ -181,9 +178,6 @@
     <ID>ReturnCount:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
     <ID>ReturnCount:ReaderSiteNotificationsUseCase.kt$ReaderSiteNotificationsUseCase$suspend fun toggleNotification( blogId: Long, feedId: Long ): SiteNotificationState</ID>
     <ID>ReturnCount:RemotePreviewLogicHelper.kt$RemotePreviewLogicHelper$fun runPostPreviewLogic( activity: Activity, site: SiteModel, post: PostImmutableModel, helperFunctions: RemotePreviewHelperFunctions ): PreviewLogicOperationResult</ID>
-    <ID>ReturnCount:StoriesMediaPickerResultHandler.kt$StoriesMediaPickerResultHandler$@Deprecated("Use rather the other handle method and the live data navigation.") fun handleMediaPickerResultForStories( data: Intent, activity: Activity?, selectedSite: SiteModel?, source: PagePostCreationSourcesDetail ): Boolean</ID>
-    <ID>ReturnCount:StoriesMediaPickerResultHandler.kt$StoriesMediaPickerResultHandler$private fun buildNavigationAction( data: Intent, selectedSite: SiteModel, source: PagePostCreationSourcesDetail ): SiteNavigationAction?</ID>
-    <ID>ReturnCount:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>ReturnCount:UploadActionUseCase.kt$UploadActionUseCase$fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun endsWithDelimiter(string: String): Boolean</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeDelimiterFromItemIfPresent(item: String?): String?</ID>

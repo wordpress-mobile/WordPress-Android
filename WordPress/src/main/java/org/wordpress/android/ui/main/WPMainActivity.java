@@ -1474,7 +1474,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-            case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
