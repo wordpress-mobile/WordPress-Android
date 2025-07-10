@@ -139,7 +139,8 @@ public class PeopleListFragment extends Fragment {
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
 
-        // if the subscribers feature is enabled, hide the filter spinner and set the default filter
+        // If the subscribers feature flag is enabled, hide the filter spinner and set the default filter.
+        // Once the subscribers feature is released to everyone, we can remove the filter entirely.
         if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)) {
             mFilteredRecyclerView.hideAppBarLayout();
             mPeopleListFilter = PeopleListFilter.TEAM;
