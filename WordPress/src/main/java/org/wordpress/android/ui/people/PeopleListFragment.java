@@ -209,7 +209,6 @@ public class PeopleListFragment extends Fragment {
                         mFilteredRecyclerView.setToolbarScrollFlags(0);
                         return "";
                     case GENERIC_ERROR:
-                    case PERMISSION_ERROR:
                         switch (mPeopleListFilter) {
                             case TEAM:
                                 return getString(R.string.error_fetch_users_list);
