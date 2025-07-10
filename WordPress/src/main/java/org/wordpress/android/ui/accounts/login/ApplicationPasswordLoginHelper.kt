@@ -9,9 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
@@ -27,7 +25,7 @@ private const val SUCCESS_TAG = "success"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val dispatcher: Dispatcher,
+    private val dispatcherWrapper: DispatcherWrapper,
     private val siteStore: SiteStore,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -101,7 +99,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                             wpApiRestUrl = urlDiscoveryResult.success.apiRootUrl.url()
                         }
                     }
-                    insertOrUpdateSite(site)
+                    dispatcherWrapper.insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
@@ -114,12 +112,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun insertOrUpdateSite(site: SiteModel) {
-        dispatcher.dispatch(
-            SiteActionBuilder.newUpdateSiteAction(site)
-        )
     }
 
     private fun trackSuccessful(siteUrl: String) {
@@ -158,7 +150,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestUsernameIV = ""
                     apiRestPasswordIV = ""
                 }
-                insertOrUpdateSite(site)
+                dispatcherWrapper.insertOrUpdateSite(site)
             }
             affectedSites
         }
@@ -198,4 +190,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         val user: String?,
         val password: String?
     )
+
+    // We need to wrap the dispatcher because tests are failing sue to the actions not having a proper equals method
+    // so, every action is returning false when compared with the one we want to test
+    class DispatcherWrapper @Inject constructor(private val dispatcher: Dispatcher) {
+        fun insertOrUpdateSite(site: SiteModel) {
+            dispatcher.dispatch(
+                SiteActionBuilder.newUpdateSiteAction(site)
+            )
+        }
+    }
 }
