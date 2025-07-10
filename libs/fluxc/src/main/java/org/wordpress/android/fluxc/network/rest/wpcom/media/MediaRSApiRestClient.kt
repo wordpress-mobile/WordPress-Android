@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.MediaDetails
+import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
@@ -95,7 +95,6 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): List<MediaModel> = map { it.toMediaModel(siteId) }
 
-    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
     private fun MediaWithEditContext.toMediaModel(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
@@ -112,70 +111,23 @@ class MediaRSApiRestClient @Inject constructor(
         authorId = this@toMediaModel.author
         uploadState = org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED.toString()
 
-        // Map media details if available
-        this@toMediaModel.mediaDetails.let { details ->
-            try {
-                val detailsClass: Class<out MediaDetails> = details::class.java
-
-                detailsClass.getDeclaredField("width").let { field ->
-                    field.isAccessible = true
-                    (field.get(details) as? Number)?.let { width = it.toInt() }
-                }
-
-                detailsClass.getDeclaredField("height").let { field ->
-                    field.isAccessible = true
-                    (field.get(details) as? Number)?.let { height = it.toInt() }
-                }
-
-                detailsClass.getDeclaredField("file").let { field ->
-                    field.isAccessible = true
-                    (field.get(details) as? String)?.let { fileName = it }
-                }
-
-                mapMediaDetails(detailsClass, details)
-            } catch (e: Exception) {
-                // Ignore reflection errors - fields may not exist in this version
-                appLogWrapper.d(AppLog.T.MEDIA, "Could not access MediaDetails fields: ${e.message}")
+        // Parse the media details
+        when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
+            is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
+            is MediaDetailsPayload.Image -> {
+                width = parsedType.v1.width.toInt()
+                height = parsedType.v1.height.toInt()
+                thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
+                fileUrlMediumSize = parsedType.v1.sizes?.get("medium")?.sourceUrl
+                fileUrlLargeSize = parsedType.v1.sizes?.get("large")?.sourceUrl
             }
+            is MediaDetailsPayload.Video -> {
+                width = parsedType.v1.width.toInt()
+                height = parsedType.v1.height.toInt()
+                length = parsedType.v1.length.toInt()
+            }
+            is MediaDetailsPayload.Document,
+            null -> {}
         }
     }
-
-    private fun MediaModel.mapMediaDetails(
-        detailsClass: Class<out MediaDetails>,
-        details: MediaDetails
-    ) {
-        detailsClass.getDeclaredField("sizes").let { sizesField ->
-            sizesField.isAccessible = true
-            val sizes = sizesField.get(details)
-
-            if (sizes != null) {
-                val sizesClass = sizes::class.java
-                fileUrlMediumSize = getSizeField("medium", sizesClass, sizes)
-                fileUrlLargeSize = getSizeField("large", sizesClass, sizes)
-                thumbnailUrl = getSizeField("thumbnail", sizesClass, sizes)
-            }
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
-    private fun getSizeField(
-        name: String,
-        sizesClass: Class<out Any>,
-        sizes: Any?
-    ): String? = try {
-            sizesClass.getDeclaredField(name).let { field ->
-                field.isAccessible = true
-                val internalField = field.get(sizes)
-                if (internalField != null) {
-                    val thumbnailClass = internalField::class.java
-                    thumbnailClass.getDeclaredField("sourceUrl").let { sourceField ->
-                        sourceField.isAccessible = true
-                        (sourceField.get(internalField) as? String)
-                    }
-                }
-                null
-            }
-        } catch (_: Exception) {
-            null
-        }
 }
