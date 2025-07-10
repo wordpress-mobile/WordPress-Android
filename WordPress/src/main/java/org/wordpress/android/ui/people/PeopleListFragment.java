@@ -41,7 +41,6 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPAvatarUtils;
@@ -57,6 +56,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * Note that this fragment relies on [FilteredRecyclerView] but in July 2025 we
+ * hide the filter in the XML layout because it's no longer needed due to the
+ * separate "Subscribers" feature. At some point we'll likely want to remove
+ * all the filtering logic from this fragment but for now it's kept intact.
+ */
 public class PeopleListFragment extends Fragment {
     private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
@@ -156,14 +161,7 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public FilterCriteria onRecallSelection() {
-                mPeopleListFilter = AppPrefs.getPeopleListFilter();
-
-                // if viewers is not available for this blog, set the filter to TEAM
-                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
-                    mPeopleListFilter = PeopleListFilter.TEAM;
-                    AppPrefs.setPeopleListFilter(mPeopleListFilter);
-                }
-                return mPeopleListFilter;
+                return PeopleListFilter.TEAM;
             }
 
             @Override
@@ -175,7 +173,6 @@ public class PeopleListFragment extends Fragment {
             public void onFilterSelected(int position, FilterCriteria criteria) {
                 AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_FILTER_CHANGED);
                 mPeopleListFilter = (PeopleListFilter) criteria;
-                AppPrefs.setPeopleListFilter(mPeopleListFilter);
             }
 
             @Override
@@ -211,6 +208,7 @@ public class PeopleListFragment extends Fragment {
                         mFilteredRecyclerView.setToolbarScrollFlags(0);
                         return "";
                     case GENERIC_ERROR:
+                    case PERMISSION_ERROR:
                         switch (mPeopleListFilter) {
                             case TEAM:
                                 return getString(R.string.error_fetch_users_list);
