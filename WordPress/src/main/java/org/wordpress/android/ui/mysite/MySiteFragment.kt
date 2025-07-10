@@ -258,7 +258,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     }
                 }
             }
-            RequestCodes.STORIES_PHOTO_PICKER,
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
