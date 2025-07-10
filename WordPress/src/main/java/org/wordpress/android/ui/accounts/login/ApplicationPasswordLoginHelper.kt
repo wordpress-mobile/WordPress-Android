@@ -6,7 +6,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
@@ -22,7 +27,8 @@ private const val SUCCESS_TAG = "success"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val siteSqlUtils: SiteSqlUtils,
+    private val dispatcher: Dispatcher,
+    private val siteStore: SiteStore,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
@@ -79,7 +85,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 false
             } else {
                 val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
-                val site = siteSqlUtils.getSites().firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+                val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
                 if (site != null) {
                     site.apply {
                         apiRestUsernameEncrypted = ""
@@ -89,7 +95,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         apiRestUsernamePlain = uriLogin.user
                         apiRestPasswordPlain = uriLogin.password
                     }
-                    siteSqlUtils.insertOrUpdateSite(site)
+                    insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }
                     processedAppPasswordData = url // Save locally to avoid duplicated calls
                     true
@@ -102,6 +108,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun insertOrUpdateSite(site: SiteModel) {
+        dispatcher.dispatch(
+            SiteActionBuilder.newUpdateSiteAction(site)
+        )
     }
 
     private fun trackSuccessful(siteUrl: String) {
@@ -129,7 +141,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      */
     suspend fun removeAllApplicationPasswordCredentials(): Int {
         return withContext(bgDispatcher) {
-            val sites = siteSqlUtils.getSites()
+            val sites = siteStore.sites
             val affectedSites = sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
             sites.forEach { site ->
                 site.apply {
@@ -140,15 +152,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestUsernameIV = ""
                     apiRestPasswordIV = ""
                 }
-                siteSqlUtils.insertOrUpdateSite(site)
+                insertOrUpdateSite(site)
             }
             affectedSites
         }
     }
 
     fun getApplicationPasswordSitesCount(): Int {
-        val sites = siteSqlUtils.getSites()
-        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+        return siteStore.sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
     /**
