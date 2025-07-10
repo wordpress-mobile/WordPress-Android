@@ -50,7 +50,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
+                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
+                        "API_ROOT_URL ${urlDiscoveryResult.success.apiRootUrl}")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -87,6 +88,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
                 val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
                 if (site != null) {
+                    // Get the current apiRootUrl
+                    val urlDiscoveryResult = wpLoginClient.apiDiscovery(normalizedUrl)
                     site.apply {
                         apiRestUsernameEncrypted = ""
                         apiRestPasswordEncrypted = ""
@@ -94,6 +97,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         apiRestPasswordIV = ""
                         apiRestUsernamePlain = uriLogin.user
                         apiRestPasswordPlain = uriLogin.password
+                        if (urlDiscoveryResult is ApiDiscoveryResult.Success) {
+                            wpApiRestUrl = urlDiscoveryResult.success.apiRootUrl.url()
+                        }
                     }
                     insertOrUpdateSite(site)
                     uriLogin.siteUrl?.let { trackSuccessful(it) }

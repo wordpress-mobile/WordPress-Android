@@ -108,7 +108,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 credentialsStored
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTrace}")
+            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.message}")
             false
         }
     }
@@ -137,7 +137,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Error storing credentials: ${e.stackTrace}")
+            appLogWrapper.e(AppLog.T.API, "Error fetching sites: ${e.message}")
             emitErrorFetching(urlLogin)
         }
     }
