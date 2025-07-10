@@ -58,7 +58,7 @@ import javax.inject.Inject;
 
 /**
  * Note that this fragment relies on [FilteredRecyclerView] but in July 2025 we
- * hide the filter in the XML layout because it's no longer needed due to the
+ * hid the filter in the XML layout because it's no longer needed due to the
  * separate "Subscribers" feature. At some point we'll likely want to remove
  * all the filtering logic from this fragment but for now it's kept intact.
  */
