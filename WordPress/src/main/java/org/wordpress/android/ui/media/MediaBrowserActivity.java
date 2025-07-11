@@ -68,6 +68,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
@@ -135,6 +136,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ActivityNavigator mActivityNavigator;
 
     private SiteModel mSite;
 
@@ -310,44 +312,27 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private void showApplicationPasswordOffReauthenticateDialog() {
         // Create a ComposeView to host the Compose dialog
         ComposeView composeView = new ComposeView(this);
-        
+
         // Set the view composition strategy
         composeView.setViewCompositionStrategy(
             ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed.INSTANCE
         );
-        
+
         // Add the ComposeView to the activity's content first
         ViewGroup contentView = findViewById(android.R.id.content);
         contentView.addView(composeView);
-        
+
         // Set the content - use the static helper from Kotlin
         MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
             composeView,
             () -> {
                 // onDismiss callback
-                AppLog.d(AppLog.T.MEDIA, "ApplicationPasswordOffReauthenticateDialog - onDismiss called");
                 mShowApplicationPasswordDialog = false;
-                // Small delay to allow Compose to update before removing the view
-                composeView.postDelayed(() -> {
-                    ViewGroup parent = (ViewGroup) composeView.getParent();
-                    if (parent != null) {
-                        parent.removeView(composeView);
-                    }
-                }, 100);
             },
             () -> {
                 // onConfirm callback - navigate to login
-                AppLog.d(AppLog.T.MEDIA, "ApplicationPasswordOffReauthenticateDialog - onConfirm called");
                 mShowApplicationPasswordDialog = false;
-                ToastUtils.showToast(MediaBrowserActivity.this, "Login button clicked", ToastUtils.Duration.SHORT);
-                // Small delay to allow Compose to update before removing the view
-                composeView.postDelayed(() -> {
-                    ViewGroup parent = (ViewGroup) composeView.getParent();
-                    if (parent != null) {
-                        parent.removeView(composeView);
-                    }
-                    // TODO: Add navigation to login/reauthentication screen after removing the view
-                }, 100);
+                mActivityNavigator.openApplicationPasswordLogin(this, "https://vanilla.wpmt.co/wp-admin/authorize-application.php?app_name=android-jetpack-client&success_url=jetpack%3A%2F%2Fapp-pass-authorize");
             }
         );
     }
@@ -469,7 +454,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public void onStart() {
         super.onStart();
-        
+
         // Show the application password dialog if needed
         if (mShowApplicationPasswordDialog) {
             showApplicationPasswordOffReauthenticateDialog();
