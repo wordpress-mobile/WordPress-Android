@@ -223,7 +223,6 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
@@ -2505,7 +2504,6 @@
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
-    <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
@@ -3616,7 +3614,6 @@
 
     <string name="create_post_fab_tooltip">Create a post</string>
     <string name="create_page_fab_tooltip">Create a page</string>
-    <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
@@ -3752,7 +3749,6 @@
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
-    <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
@@ -4995,7 +4991,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
-    <string name="subscribers_sort_email">Email</string>
     <string name="subscribers_sort_date">Date subscribed</string>
     <string name="subscribers_sort_name">Name</string>
     <string name="subscribers_empty">There are no subscribers</string>

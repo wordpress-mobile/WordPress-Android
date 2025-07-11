@@ -20,7 +20,6 @@ public class RequestCodes {
     public static final int STOCK_MEDIA_PICKER_MULTI_SELECT = 1201;
     public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT = 1202;
     public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK = 1203;
-    public static final int STORIES_PHOTO_PICKER = 1204;
     public static final int SITE_ICON_PICKER = 1205;
     public static final int SHOW_LOGIN_EPILOGUE_AND_RETURN = 1300;
     public static final int SHOW_SIGNUP_EPILOGUE_AND_RETURN = 1301;
