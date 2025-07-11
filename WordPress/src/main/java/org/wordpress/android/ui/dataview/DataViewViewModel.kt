@@ -37,8 +37,6 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    private var shouldAutoInitialize = true
-
     // Internal constructor for testing
     internal constructor(
         testDependencies: DataViewTestDependencies
@@ -49,9 +47,8 @@ open class DataViewViewModel @Inject constructor(
         testDependencies.selectedSiteRepository,
         testDependencies.accountStore,
         testDependencies.ioDispatcher
-    ) {
-        shouldAutoInitialize = testDependencies.autoInitialize
-    }
+    )
+
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -91,12 +88,10 @@ open class DataViewViewModel @Inject constructor(
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        if (shouldAutoInitialize) {
-            initializeViewModel()
-        }
+        initializeViewModel()
     }
 
-    protected fun initializeViewModel() {
+    private fun initializeViewModel() {
         launch {
             _itemSortBy.value = getDefaultSort()
             startInitialDataFetch()
@@ -173,7 +168,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    protected fun resetPaging() {
+    private fun resetPaging() {
         page = INITIAL_PAGE
         canLoadMore = true
         _errorMessage.value = null
@@ -310,5 +305,4 @@ internal data class DataViewTestDependencies(
     val selectedSiteRepository: SelectedSiteRepository,
     val accountStore: AccountStore,
     val ioDispatcher: CoroutineDispatcher,
-    val autoInitialize: Boolean = true
 )

@@ -5,18 +5,22 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
+import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 
 @ExperimentalCoroutinesApi
 class DataViewViewModelTest : BaseUnitTest() {
+    val networkUtilsWrapper = mock<NetworkUtilsWrapper>()
+
     private fun createTestViewModel(): TestDataViewViewModel {
         val appLogWrapper = mock<AppLogWrapper>()
-        val networkUtilsWrapper = mock<NetworkUtilsWrapper>()
+        val networkUtilsWrapper = networkUtilsWrapper
         val selectedSiteRepository = mock<SelectedSiteRepository>()
         val accountStore = mock<AccountStore>()
 
@@ -27,13 +31,13 @@ class DataViewViewModelTest : BaseUnitTest() {
             selectedSiteRepository = selectedSiteRepository,
             accountStore = accountStore,
             ioDispatcher = testDispatcher(),
-            autoInitialize = false
         )
         return TestDataViewViewModel(testDependencies)
     }
 
     @Test
     fun `when initialized, then ui state starts as loading`() = runTest {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val viewModel = createTestViewModel()
         assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.LOADING)
     }
@@ -86,7 +90,7 @@ class DataViewViewModelTest : BaseUnitTest() {
             return emptyList()
         }
 
-        override fun createWpComApiClient(): rs.wordpress.api.kotlin.WpComApiClient {
+        override fun createWpComApiClient(): WpComApiClient {
             return mock()
         }
 
