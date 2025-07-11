@@ -59,7 +59,12 @@ class SiteXMLRPCClient @Inject constructor(
         add(request)
     }
 
-    suspend fun fetchSitesFromApplicationPassword(xmlrpcUrl: String, apiRootUrl: String, username: String, password: String): SitesModel {
+    suspend fun fetchSitesFromApplicationPassword(
+        xmlrpcUrl: String,
+        apiRootUrl: String,
+        username: String,
+        password: String
+    ): SitesModel {
         val sites = fetchSites(xmlrpcUrl, username, password)
         // If fetched from Application Password, we need to be sure we are not storing the regular credentials
         sites.sites.forEach { site ->

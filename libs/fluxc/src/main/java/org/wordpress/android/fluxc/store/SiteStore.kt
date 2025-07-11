@@ -1337,7 +1337,9 @@ open class SiteStore @Inject constructor(
             }
             FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD ->
                 coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites from Application Password") {
-                    emitChange(fetchSitesXmlRpcFromApplicationPassword(action.payload as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload))
+                    emitChange(fetchSitesXmlRpcFromApplicationPassword(
+                        action.payload as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload)
+                    )
             }
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
                 emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
@@ -1456,10 +1458,17 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    suspend fun fetchSitesXmlRpcFromApplicationPassword(payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload): OnSiteChanged {
+    suspend fun fetchSitesXmlRpcFromApplicationPassword(
+        payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+    ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             updateSites(
-                siteXMLRPCClient.fetchSitesFromApplicationPassword(payload.url, payload.apiRootUrl,payload.username, payload.password)
+                siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                    payload.url,
+                    payload.apiRootUrl,
+                    payload.username,
+                    payload.password
+                )
             )
         }
     }

@@ -74,7 +74,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return ""
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ComplexCondition")
     suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||

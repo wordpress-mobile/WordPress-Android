@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
@@ -112,7 +111,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ComplexCondition")
     private suspend fun fetchSites(
         username: String,
         password: String,
