@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
@@ -77,8 +76,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 return@launch
             }
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
+            currentUrlLogin = urlLogin
             // Store credentials if the site already exists
-            val credentialsStored = storeCredentials(rawData)
+            val credentialsStored = storeCredentials(urlLogin)
             // If the site already exists, we can skip fetching it again
             if (credentialsStored) {
                 _onFinishedEvent.emit(
@@ -91,62 +91,62 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     )
                 )
             } else {
-                fetchSites(urlLogin)
-                currentUrlLogin = urlLogin
+                fetchSites(
+                    urlLogin.user.orEmpty(),
+                    urlLogin.password.orEmpty(),
+                    urlLogin.siteUrl.orEmpty(),
+                    urlLogin.apiRootUrl.orEmpty()
+                )
             }
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun storeCredentials(rawData: String): Boolean = withContext(ioDispatcher) {
+    private suspend fun storeCredentials(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
         try {
-            if (rawData.isEmpty()) {
-                appLogWrapper.e(AppLog.T.DB, "Cannot store credentials: rawData is empty")
-                false
-            } else {
-                val credentialsStored = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)
-                credentialsStored
-            }
+            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTrace}")
+            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTraceToString()}")
             false
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ComplexCondition")
     private suspend fun fetchSites(
-        urlLogin: UriLogin
-    ) = withContext(ioDispatcher) {
+        username: String,
+        password: String,
+        siteUrl: String,
+        apiRootUrl: String
+        ) = withContext(ioDispatcher) {
         try {
-            if (urlLogin.user.isNullOrEmpty() ||
-                urlLogin.password.isNullOrEmpty() ||
-                urlLogin.siteUrl.isNullOrEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot store credentials: rawData is empty")
-                emitErrorFetching(urlLogin)
+            if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
+                appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: UriLogin is empty")
+                emitErrorFetching(siteUrl)
             } else {
                 val xmlRpcEndpoint =
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
+                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
                 dispatcher.dispatch(
                     SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        RefreshSitesXMLRPCPayload(
-                            username = urlLogin.user,
-                            password = urlLogin.password,
+                        SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                            username = username,
+                            password = password,
                             url = xmlRpcEndpoint,
+                            apiRootUrl = apiRootUrl,
                         )
                     )
                 )
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Error storing credentials: ${e.stackTrace}")
-            emitErrorFetching(urlLogin)
+            appLogWrapper.e(AppLog.T.API, "Error fetching sites: ${e.stackTraceToString()}")
+            emitErrorFetching(siteUrl)
         }
     }
 
-    private suspend fun emitErrorFetching(urlLogin: UriLogin) =  _onFinishedEvent.emit(
+    private suspend fun emitErrorFetching(siteUrl: String) =  _onFinishedEvent.emit(
         NavigationActionData(
             showSiteSelector = false,
             showPostSignupInterstitial = false,
-            siteUrl = urlLogin.siteUrl,
+            siteUrl = siteUrl,
             oldSitesIDs = oldSitesIDs,
             isError = true
         )
