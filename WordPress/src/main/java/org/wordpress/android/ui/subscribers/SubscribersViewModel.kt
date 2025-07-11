@@ -9,13 +9,17 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.dataview.DataViewViewModel
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
@@ -32,17 +36,23 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val dateFormatWrapper: SimpleDateFormatWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
-    appLogWrapper = appLogWrapper
+    appLogWrapper = appLogWrapper,
+    networkUtilsWrapper = networkUtilsWrapper,
+    selectedSiteRepository = selectedSiteRepository,
+    accountStore = accountStore,
+    ioDispatcher = ioDispatcher
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
 
     private var statsJob: Job? = null
-
-    @Inject
-    lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
     sealed class UiEvent {
         data class ShowDeleteConfirmationDialog(val subscriber: Subscriber) : UiEvent()
