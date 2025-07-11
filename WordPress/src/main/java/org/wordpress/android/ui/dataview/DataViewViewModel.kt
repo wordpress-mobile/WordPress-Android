@@ -75,10 +75,6 @@ open class DataViewViewModel @Inject constructor(
     private var page = INITIAL_PAGE
     private var canLoadMore = true
 
-    private fun prefs(): SharedPreferences {
-        return sharedPrefs
-    }
-
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
@@ -114,23 +110,21 @@ open class DataViewViewModel @Inject constructor(
      * Restores the sort order, sort by, and filter from saved preferences
      */
     private fun restorePrefs() {
-        val prefs = prefs()
-
-        val sortOrdinal = prefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
+        val sortOrdinal = sharedPrefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
         if (sortOrdinal > -1) {
             WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal)?.let {
                 _sortOrder.value = it
             }
         }
 
-        val sortById = prefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
+        val sortById = sharedPrefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
         if (sortById > -1) {
             _itemSortBy.value = getSupportedSorts().firstOrNull { it.id == sortById }
         } else {
             _itemSortBy.value = getDefaultSort()
         }
 
-        val filterId = prefs.getLong(getPrefKeyName(PrefKey.FILTER), -1)
+        val filterId = sharedPrefs.getLong(getPrefKeyName(PrefKey.FILTER), -1)
         if (filterId > -1) {
             _itemFilter.value = getSupportedFilters().firstOrNull { it.id == filterId }
         }
@@ -212,10 +206,10 @@ open class DataViewViewModel @Inject constructor(
         // clear the filter if it's already selected
         if (filter == _itemFilter.value || filter == null) {
             _itemFilter.value = null
-            prefs().edit { remove(keyName) }
+            sharedPrefs.edit { remove(keyName) }
         } else {
             _itemFilter.value = filter
-            prefs().edit { putLong(keyName, filter.id) }
+            sharedPrefs.edit { putLong(keyName, filter.id) }
         }
         fetchData()
     }
@@ -231,7 +225,7 @@ open class DataViewViewModel @Inject constructor(
     fun onSortClick(sort: DataViewDropdownItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
-            prefs().edit { putLong(getPrefKeyName(PrefKey.SORT_BY), sort.id) }
+            sharedPrefs.edit { putLong(getPrefKeyName(PrefKey.SORT_BY), sort.id) }
             _itemSortBy.value = sort
             resetPaging()
             fetchData()
@@ -241,7 +235,7 @@ open class DataViewViewModel @Inject constructor(
     fun onSortOrderClick(order: WpApiParamOrder) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
         if (order != _sortOrder.value) {
-            prefs().edit { putInt(getPrefKeyName(PrefKey.SORT_ORDER), order.ordinal) }
+            sharedPrefs.edit { putInt(getPrefKeyName(PrefKey.SORT_ORDER), order.ordinal) }
             _sortOrder.value = order
             resetPaging()
             fetchData()
