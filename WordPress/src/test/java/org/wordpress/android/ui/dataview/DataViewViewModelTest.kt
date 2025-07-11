@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -15,13 +14,12 @@ import uniffi.wp_api.WpApiParamOrder
 
 @ExperimentalCoroutinesApi
 class DataViewViewModelTest : BaseUnitTest() {
-
     private fun createTestViewModel(): TestDataViewViewModel {
         val appLogWrapper = mock<AppLogWrapper>()
         val networkUtilsWrapper = mock<NetworkUtilsWrapper>()
         val selectedSiteRepository = mock<SelectedSiteRepository>()
         val accountStore = mock<AccountStore>()
-        
+
         val testDependencies = DataViewTestDependencies(
             mainDispatcher = testDispatcher(),
             appLogWrapper = appLogWrapper,
@@ -68,9 +66,9 @@ class DataViewViewModelTest : BaseUnitTest() {
             DataViewItem(id = 1, image = null, title = "Test Item 1", fields = emptyList()),
             DataViewItem(id = 2, image = null, title = "Test Item 2", fields = emptyList())
         ))
-        
+
         viewModel.removeItem(1)
-        
+
         assertThat(viewModel.items.value).hasSize(1)
         assertThat(viewModel.items.value.first().id).isEqualTo(2)
     }
@@ -78,7 +76,6 @@ class DataViewViewModelTest : BaseUnitTest() {
     private class TestDataViewViewModel(
         testDependencies: DataViewTestDependencies
     ) : DataViewViewModel(testDependencies) {
-
         override suspend fun performNetworkRequest(
             page: Int,
             searchQuery: String,
