@@ -13,6 +13,9 @@ class ApiRootUrlCache @Inject constructor() {
     private val cache = mutableMapOf<String, String>()
 
     fun put(key: String, value: String) {
+        if (key.isEmpty() || value.isEmpty()) {
+            return
+        }
         cache[key] = value
     }
 
