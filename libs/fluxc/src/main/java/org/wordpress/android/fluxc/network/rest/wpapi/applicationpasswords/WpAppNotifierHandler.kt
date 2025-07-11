@@ -36,7 +36,7 @@ class WpAppNotifierHandler @Inject constructor(
                 listeners.forEach {
                     val listener = it.value.get()
                     withContext(mainDispatcher) {
-                        listener?.onRequestedWithInvalidAuthentication(site.url)
+                        listener?.onRequestedWithInvalidAuthentication(urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url())
                     }
                 }
             } else {
