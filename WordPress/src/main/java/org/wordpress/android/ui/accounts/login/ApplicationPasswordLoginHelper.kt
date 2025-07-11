@@ -31,6 +31,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
+    private val apiRootUrlCache: ApiRootUrlCache
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -46,10 +47,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
             is ApiDiscoveryResult.Success -> {
                 val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
+                // Store the ApiRootUrl for use it after the login
+                apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), urlDiscoveryResult.success.apiRootUrl.url())
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
-                        " API_ROOT_URL ${urlDiscoveryResult.success.apiRootUrl}")
+                        " API_ROOT_URL ${urlDiscoveryResult.success.apiRootUrl.url()}")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -72,44 +75,39 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    suspend fun storeApplicationPasswordCredentialsFrom(url: String): Boolean {
-        if (url.isEmpty() || url == processedAppPasswordData) {
+    suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
+        if (urlLogin.apiRootUrl == null ||
+            urlLogin.user.isNullOrEmpty() ||
+            urlLogin.password.isNullOrEmpty() ||
+            urlLogin.siteUrl == null ||
+            urlLogin.siteUrl == processedAppPasswordData
+            ) {
             return false
         }
 
         return withContext(bgDispatcher) {
-            val uriLogin = uriLoginWrapper.parseUriLogin(url)
-
-            if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
-                false
-            } else {
-                val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
-                val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
-                if (site != null) {
-                    // Get the current apiRootUrl
-                    val urlDiscoveryResult = wpLoginClient.apiDiscovery(normalizedUrl)
-                    site.apply {
-                        apiRestUsernameEncrypted = ""
-                        apiRestPasswordEncrypted = ""
-                        apiRestUsernameIV = ""
-                        apiRestPasswordIV = ""
-                        apiRestUsernamePlain = uriLogin.user
-                        apiRestPasswordPlain = uriLogin.password
-                        if (urlDiscoveryResult is ApiDiscoveryResult.Success) {
-                            wpApiRestUrl = urlDiscoveryResult.success.apiRootUrl.url()
-                        }
-                    }
-                    dispatcherWrapper.insertOrUpdateSite(site)
-                    uriLogin.siteUrl?.let { trackSuccessful(it) }
-                    processedAppPasswordData = url // Save locally to avoid duplicated calls
-                    true
-                } else {
-                    appLogWrapper.e(
-                        AppLog.T.DB,
-                        "WP_RS: Cannot save application password credentials for: ${uriLogin.siteUrl}"
-                    )
-                    false
+            val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
+            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+            if (site != null) {
+                site.apply {
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                    apiRestUsernamePlain = urlLogin.user
+                    apiRestPasswordPlain = urlLogin.password
+                    wpApiRestUrl = urlLogin.apiRootUrl
                 }
+                dispatcherWrapper.insertOrUpdateSite(site)
+                urlLogin.siteUrl?.let { trackSuccessful(it) }
+                processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
+                true
+            } else {
+                appLogWrapper.e(
+                    AppLog.T.DB,
+                    "WP_RS: Cannot save application password credentials for: ${urlLogin.siteUrl}"
+                )
+                false
             }
         }
     }
@@ -163,14 +161,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
-    class UriLoginWrapper @Inject constructor() {
+    class UriLoginWrapper @Inject constructor(private val apiRootUrlCache: ApiRootUrlCache) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
-            return UriLogin(
-                uri.getQueryParameter("site_url"),
-                uri.getQueryParameter("user_login"),
-                uri.getQueryParameter("password")
-            )
+            val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
+            val userLogin = uri.getQueryParameter("user_login")
+            val password = uri.getQueryParameter("password")
+            val apiRootUrl = apiRootUrlCache.get(siteUrl)
+            return UriLogin(siteUrl, userLogin, password, apiRootUrl)
         }
 
         fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
@@ -188,7 +186,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     data class UriLogin(
         val siteUrl: String?,
         val user: String?,
-        val password: String?
+        val password: String?,
+        val apiRootUrl: String?
     )
 
     // We need to wrap the dispatcher because tests are failing due to the actions not having a proper equals method
