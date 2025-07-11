@@ -719,13 +719,8 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogSubscribers(@NonNull Context context) {
-        // for now we only show the subscribers screen for debug users since it's very much a WIP
-        if (BuildConfig.DEBUG) {
-            Intent intent = new Intent(context, SubscribersActivity.class);
-            context.startActivity(intent);
-        } else {
-            ToastUtils.showToast(context, R.string.coming_soon, ToastUtils.Duration.LONG);
-        }
+        Intent intent = new Intent(context, SubscribersActivity.class);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
