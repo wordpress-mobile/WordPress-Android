@@ -32,20 +32,26 @@ import javax.inject.Named
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    private var shouldAutoInitialize = true
 
-    @Inject
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var accountStore: AccountStore
-
-    @Inject
-    @Named(IO_THREAD)
-    lateinit var ioDispatcher: CoroutineDispatcher
-
+    // Internal constructor for testing
+    internal constructor(
+        testDependencies: DataViewTestDependencies
+    ) : this(
+        testDependencies.mainDispatcher,
+        testDependencies.appLogWrapper,
+        testDependencies.networkUtilsWrapper,
+        testDependencies.selectedSiteRepository,
+        testDependencies.accountStore,
+        testDependencies.ioDispatcher
+    ) {
+        shouldAutoInitialize = testDependencies.autoInitialize
+    }
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -73,21 +79,37 @@ open class DataViewViewModel @Inject constructor(
     private var canLoadMore = true
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-    val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
+    protected open fun createWpComApiClient(): WpComApiClient {
+        return WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
             )
         )
     }
 
+    val wpComApiClient: WpComApiClient by lazy { createWpComApiClient() }
+
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
+        if (shouldAutoInitialize) {
+            initializeViewModel()
+        }
+    }
+
+    protected open fun initializeViewModel() {
         launch {
             _itemSortBy.value = getDefaultSort()
+            startInitialDataFetch()
+            observeSearchQuery()
+        }
+    }
 
-            fetchData()
+    protected open fun startInitialDataFetch() {
+        fetchData()
+    }
 
+    private fun observeSearchQuery() {
+        launch {
             debouncedQuery
                 .debounce(SEARCH_DELAY_MS)
                 .collect { query ->
@@ -104,7 +126,7 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    private fun fetchData(isRefreshing: Boolean = false) {
+    protected open fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
             val isLoadingMore = page > INITIAL_PAGE
             if (isLoadingMore) {
@@ -151,7 +173,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    private fun resetPaging() {
+    protected fun resetPaging() {
         page = INITIAL_PAGE
         canLoadMore = true
         _errorMessage.value = null
@@ -213,7 +235,7 @@ open class DataViewViewModel @Inject constructor(
         updateUiState(DataViewUiState.ERROR)
     }
 
-    private fun updateUiState(state: DataViewUiState) {
+    protected fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
     }
@@ -279,3 +301,14 @@ open class DataViewViewModel @Inject constructor(
         const val INITIAL_PAGE = 1
     }
 }
+
+// Internal data class for testing dependencies
+internal data class DataViewTestDependencies(
+    val mainDispatcher: CoroutineDispatcher,
+    val appLogWrapper: AppLogWrapper,
+    val networkUtilsWrapper: NetworkUtilsWrapper,
+    val selectedSiteRepository: SelectedSiteRepository,
+    val accountStore: AccountStore,
+    val ioDispatcher: CoroutineDispatcher,
+    val autoInitialize: Boolean = true
+)
