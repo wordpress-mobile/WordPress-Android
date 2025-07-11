@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -33,7 +34,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val experimentalFeatures: ExperimentalFeatures,
     private val resourceProvider: ResourceProvider,
-    private val appLogWrapper: AppLogWrapper
+    private val appLogWrapper: AppLogWrapper,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -113,14 +115,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 authProvider = authProvider,
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication() {
-                        val message = UiStringText(resourceProvider.getString(R.string.application_password_invalid))
-                        val button = UiStringText(resourceProvider.getString(R.string.sign_in))
-                        val snackbarHolder = SnackbarMessageHolder(
-                            message = message,
-                            buttonTitle = button,
-                            buttonAction = { reauthenticate(site) }
-                        )
-                        _onSnackbarMessage.postValue(Event(snackbarHolder))
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                     }
                 }
             )

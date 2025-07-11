@@ -21,6 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -94,7 +95,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     QuickStartPromptClickInterface,
     FullScreenDialogFragment.OnConfirmListener,
     FullScreenDialogFragment.OnDismissListener,
-    OnScrollToTopListener {
+    OnScrollToTopListener,
+    WpAppNotifierHandler.NotifierListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -140,6 +142,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
 
+    @Inject
+    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var wpMainActivityViewModel: WPMainActivityViewModel
@@ -175,6 +180,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onPause() {
         super.onPause()
+        wpAppNotifierHandler.removeListener(this)
         activity?.let {
             if (!it.isChangingConfigurations) {
                 viewModel.clearActiveQuickStartTask()
@@ -184,6 +190,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
+        wpAppNotifierHandler.addListener(this)
         viewModel.onResume()
     }
 
@@ -736,8 +743,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
-            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
+//            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
         }
+    }
+
+    override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
+        activityNavigator.openApplicationPasswordLogin(requireActivity(), authenticationUrl)
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
