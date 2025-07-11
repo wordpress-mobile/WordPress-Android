@@ -111,6 +111,9 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
+    /**
+     * Restores the sort order, sort by, and filter from saved preferences
+     */
     private fun restorePrefs() {
         val prefs = prefs()
 
@@ -216,6 +219,10 @@ open class DataViewViewModel @Inject constructor(
         fetchData()
     }
 
+    /**
+     * Returns the name of the preference key for the given [prefKey]. This relies on
+     * the [logTag] so descendants will have unique names for each key.
+     */
     private fun getPrefKeyName(prefKey: PrefKey) : String {
         return "${logTag}_${prefKey.name}"
     }
