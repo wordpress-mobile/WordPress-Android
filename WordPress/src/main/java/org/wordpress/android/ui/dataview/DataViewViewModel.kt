@@ -55,7 +55,7 @@ open class DataViewViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
-    private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
+    protected val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
     val items = _items.asStateFlow()
 
     private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
@@ -96,7 +96,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    protected open fun initializeViewModel() {
+    protected fun initializeViewModel() {
         launch {
             _itemSortBy.value = getDefaultSort()
             startInitialDataFetch()
