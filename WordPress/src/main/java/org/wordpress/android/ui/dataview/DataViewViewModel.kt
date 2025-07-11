@@ -37,18 +37,6 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    // Internal constructor for testing
-    internal constructor(
-        testDependencies: DataViewTestDependencies
-    ) : this(
-        testDependencies.mainDispatcher,
-        testDependencies.appLogWrapper,
-        testDependencies.networkUtilsWrapper,
-        testDependencies.selectedSiteRepository,
-        testDependencies.accountStore,
-        testDependencies.ioDispatcher
-    )
-
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -296,13 +284,3 @@ open class DataViewViewModel @Inject constructor(
         const val PAGE_SIZE = 25
     }
 }
-
-// Internal data class for testing dependencies
-internal data class DataViewTestDependencies(
-    val mainDispatcher: CoroutineDispatcher,
-    val appLogWrapper: AppLogWrapper,
-    val networkUtilsWrapper: NetworkUtilsWrapper,
-    val selectedSiteRepository: SelectedSiteRepository,
-    val accountStore: AccountStore,
-    val ioDispatcher: CoroutineDispatcher,
-)

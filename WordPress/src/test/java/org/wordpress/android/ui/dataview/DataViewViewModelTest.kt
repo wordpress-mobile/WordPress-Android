@@ -4,33 +4,40 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 
 @ExperimentalCoroutinesApi
 class DataViewViewModelTest : BaseUnitTest() {
-    val networkUtilsWrapper = mock<NetworkUtilsWrapper>()
-
-    private fun createTestViewModel(): TestableDataViewViewModel {
-        val appLogWrapper = mock<AppLogWrapper>()
-        val selectedSiteRepository = mock<SelectedSiteRepository>()
-        val accountStore = mock<AccountStore>()
-
-        val testDependencies = DataViewTestDependencies(
+    private fun createTestViewModel(): DataViewViewModel {
+        return spy(object : DataViewViewModel(
             mainDispatcher = testDispatcher(),
-            appLogWrapper = appLogWrapper,
-            networkUtilsWrapper = this.networkUtilsWrapper,
-            selectedSiteRepository = selectedSiteRepository,
-            accountStore = accountStore,
-            ioDispatcher = testDispatcher(),
-        )
-        return TestableDataViewViewModel(testDependencies)
+            appLogWrapper = mock(),
+            networkUtilsWrapper = mock {
+                on { isNetworkAvailable() } doReturn true
+            },
+            selectedSiteRepository = mock(),
+            accountStore = mock(),
+            ioDispatcher = testDispatcher()
+        ) {
+            override suspend fun performNetworkRequest(
+                page: Int,
+                searchQuery: String,
+                filter: DataViewDropdownItem?,
+                sortOrder: WpApiParamOrder,
+                sortBy: DataViewDropdownItem?
+            ): List<DataViewItem> = emptyList()
+
+            override fun createWpComApiClient(): WpComApiClient = mock()
+
+            override fun startInitialDataFetch() {
+                // Skip initial data fetch for tests
+            }
+        })
     }
 
     @Test
@@ -58,27 +65,5 @@ class DataViewViewModelTest : BaseUnitTest() {
         val viewModel = createTestViewModel()
         viewModel.onSortOrderClick(WpApiParamOrder.DESC)
         assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
-    }
-
-    private class TestableDataViewViewModel(
-        testDependencies: DataViewTestDependencies
-    ) : DataViewViewModel(testDependencies) {
-        override suspend fun performNetworkRequest(
-            page: Int,
-            searchQuery: String,
-            filter: DataViewDropdownItem?,
-            sortOrder: WpApiParamOrder,
-            sortBy: DataViewDropdownItem?
-        ): List<DataViewItem> {
-            return emptyList()
-        }
-
-        override fun createWpComApiClient(): WpComApiClient {
-            return mock()
-        }
-
-        override fun startInitialDataFetch() {
-            // Skip initial data fetch for tests
-        }
     }
 }
