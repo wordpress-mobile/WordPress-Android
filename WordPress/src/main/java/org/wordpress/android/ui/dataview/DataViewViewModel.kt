@@ -2,7 +2,6 @@ package org.wordpress.android.ui.dataview
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.withContext
-import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -36,6 +34,7 @@ import javax.inject.Named
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val sharedPrefs: SharedPreferences,
 ) : ScopedViewModel(mainDispatcher) {
     @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -77,7 +76,7 @@ open class DataViewViewModel @Inject constructor(
     private var canLoadMore = true
 
     private fun prefs(): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(getContext())
+        return sharedPrefs
     }
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
@@ -119,7 +118,9 @@ open class DataViewViewModel @Inject constructor(
 
         val sortOrdinal = prefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
         if (sortOrdinal > -1) {
-            _sortOrder.value = WpApiParamOrder.entries.toTypedArray()[sortOrdinal]
+            WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal)?.let {
+                _sortOrder.value = it
+            }
         }
 
         val sortById = prefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
