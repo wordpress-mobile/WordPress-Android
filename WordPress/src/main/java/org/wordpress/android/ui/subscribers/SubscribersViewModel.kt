@@ -34,7 +34,7 @@ class SubscribersViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
-    appLogWrapper = appLogWrapper
+    appLogWrapper = appLogWrapper,
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()

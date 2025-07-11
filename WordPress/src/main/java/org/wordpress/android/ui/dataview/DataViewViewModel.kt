@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.dataview
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -8,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.withContext
+import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -72,6 +76,10 @@ open class DataViewViewModel @Inject constructor(
     private var page = INITIAL_PAGE
     private var canLoadMore = true
 
+    private fun prefs(): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(getContext())
+    }
+
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
@@ -84,8 +92,7 @@ open class DataViewViewModel @Inject constructor(
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
         launch {
-            _itemSortBy.value = getDefaultSort()
-
+            restorePrefs()
             fetchData()
 
             debouncedQuery
@@ -102,6 +109,27 @@ open class DataViewViewModel @Inject constructor(
 
     fun siteId(): Long {
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
+    }
+
+    private fun restorePrefs() {
+        val prefs = prefs()
+
+        val sortOrdinal = prefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
+        if (sortOrdinal > -1) {
+            _sortOrder.value = WpApiParamOrder.entries.toTypedArray()[sortOrdinal]
+        }
+
+        val sortById = prefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
+        if (sortById > -1) {
+            _itemSortBy.value = getSupportedSorts().firstOrNull { it.id == sortById }
+        } else {
+            _itemSortBy.value = getDefaultSort()
+        }
+
+        val filterId = prefs.getLong(getPrefKeyName(PrefKey.FILTER), -1)
+        if (filterId > -1) {
+            _itemFilter.value = getSupportedFilters().firstOrNull { it.id == filterId }
+        }
     }
 
     private fun fetchData(isRefreshing: Boolean = false) {
@@ -176,18 +204,26 @@ open class DataViewViewModel @Inject constructor(
     fun onFilterClick(filter: DataViewDropdownItem?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         resetPaging()
+        val keyName = getPrefKeyName(PrefKey.FILTER)
         // clear the filter if it's already selected
-        _itemFilter.value = if (filter == _itemFilter.value) {
-            null
+        if (filter == _itemFilter.value || filter == null) {
+            _itemFilter.value = null
+            prefs().edit { remove(keyName) }
         } else {
-            filter
+            _itemFilter.value = filter
+            prefs().edit { putLong(keyName, filter.id) }
         }
         fetchData()
+    }
+
+    private fun getPrefKeyName(prefKey: PrefKey) : String {
+        return "${logTag}_${prefKey.name}"
     }
 
     fun onSortClick(sort: DataViewDropdownItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
+            prefs().edit { putLong(getPrefKeyName(PrefKey.SORT_BY), sort.id) }
             _itemSortBy.value = sort
             resetPaging()
             fetchData()
@@ -197,6 +233,7 @@ open class DataViewViewModel @Inject constructor(
     fun onSortOrderClick(order: WpApiParamOrder) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
         if (order != _sortOrder.value) {
+            prefs().edit { putInt(getPrefKeyName(PrefKey.SORT_ORDER), order.ordinal) }
             _sortOrder.value = order
             resetPaging()
             fetchData()
@@ -272,6 +309,12 @@ open class DataViewViewModel @Inject constructor(
 
     private val logTag
         get() = this::class.java.simpleName
+
+    private enum class PrefKey {
+        SORT_ORDER,
+        SORT_BY,
+        FILTER,
+    }
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L
