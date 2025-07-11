@@ -6,7 +6,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
@@ -22,11 +25,14 @@ private const val SUCCESS_TAG = "success"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val siteSqlUtils: SiteSqlUtils,
+    private val dispatcherWrapper: DispatcherWrapper,
+    private val siteStore: SiteStore,
     private val uriLoginWrapper: UriLoginWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
+    private val apiRootUrlCache: ApiRootUrlCache,
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -41,10 +47,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
         when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
             is ApiDiscoveryResult.Success -> {
-                val authorizationUrl = urlDiscoveryResult.success.applicationPasswordsAuthenticationUrl.url()
+                val authorizationUrl =
+                    discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
+                val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
+                // Store the ApiRootUrl for use it after the login
+                apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete")
+                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
+                        " API_ROOT_URL $apiRootUrl")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -66,40 +77,40 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return ""
     }
 
-    @Suppress("ReturnCount")
-    suspend fun storeApplicationPasswordCredentialsFrom(url: String): Boolean {
-        if (url.isEmpty() || url == processedAppPasswordData) {
+    @Suppress("ComplexCondition")
+    suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
+        if (urlLogin.apiRootUrl == null ||
+            urlLogin.user.isNullOrEmpty() ||
+            urlLogin.password.isNullOrEmpty() ||
+            urlLogin.siteUrl == null ||
+            urlLogin.siteUrl == processedAppPasswordData
+            ) {
             return false
         }
 
         return withContext(bgDispatcher) {
-            val uriLogin = uriLoginWrapper.parseUriLogin(url)
-
-            if (uriLogin.user.isNullOrEmpty() || uriLogin.password.isNullOrEmpty() ) {
-                false
-            } else {
-                val normalizedUrl = UrlUtils.normalizeUrl(uriLogin.siteUrl)
-                val site = siteSqlUtils.getSites().firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
-                if (site != null) {
-                    site.apply {
-                        apiRestUsernameEncrypted = ""
-                        apiRestPasswordEncrypted = ""
-                        apiRestUsernameIV = ""
-                        apiRestPasswordIV = ""
-                        apiRestUsernamePlain = uriLogin.user
-                        apiRestPasswordPlain = uriLogin.password
-                    }
-                    siteSqlUtils.insertOrUpdateSite(site)
-                    uriLogin.siteUrl?.let { trackSuccessful(it) }
-                    processedAppPasswordData = url // Save locally to avoid duplicated calls
-                    true
-                } else {
-                    appLogWrapper.e(
-                        AppLog.T.DB,
-                        "WP_RS: Cannot save application password credentials for: ${uriLogin.siteUrl}"
-                    )
-                    false
+            val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
+            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+            if (site != null) {
+                site.apply {
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                    apiRestUsernamePlain = urlLogin.user
+                    apiRestPasswordPlain = urlLogin.password
+                    wpApiRestUrl = urlLogin.apiRootUrl
                 }
+                dispatcherWrapper.insertOrUpdateSite(site)
+                trackSuccessful(urlLogin.siteUrl)
+                processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
+                true
+            } else {
+                appLogWrapper.e(
+                    AppLog.T.DB,
+                    "WP_RS: Cannot save application password credentials for: ${urlLogin.siteUrl}"
+                )
+                false
             }
         }
     }
@@ -129,7 +140,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      */
     suspend fun removeAllApplicationPasswordCredentials(): Int {
         return withContext(bgDispatcher) {
-            val sites = siteSqlUtils.getSites()
+            val sites = siteStore.sites
             val affectedSites = sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
             sites.forEach { site ->
                 site.apply {
@@ -140,28 +151,27 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestUsernameIV = ""
                     apiRestPasswordIV = ""
                 }
-                siteSqlUtils.insertOrUpdateSite(site)
+                dispatcherWrapper.insertOrUpdateSite(site)
             }
             affectedSites
         }
     }
 
     fun getApplicationPasswordSitesCount(): Int {
-        val sites = siteSqlUtils.getSites()
-        return sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
+        return siteStore.sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
-    class UriLoginWrapper @Inject constructor() {
+    class UriLoginWrapper @Inject constructor(private val apiRootUrlCache: ApiRootUrlCache) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
-            return UriLogin(
-                uri.getQueryParameter("site_url"),
-                uri.getQueryParameter("user_login"),
-                uri.getQueryParameter("password")
-            )
+            val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
+            val userLogin = uri.getQueryParameter("user_login")
+            val password = uri.getQueryParameter("password")
+            val apiRootUrl = apiRootUrlCache.get(siteUrl)
+            return UriLogin(siteUrl, userLogin, password, apiRootUrl)
         }
 
         fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {
@@ -179,6 +189,24 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     data class UriLogin(
         val siteUrl: String?,
         val user: String?,
-        val password: String?
+        val password: String?,
+        val apiRootUrl: String?
     )
+
+    // We need to wrap the dispatcher because tests are failing due to the actions not having a proper equals method
+    // so, every action is returning false when compared with the one we want to test
+    class DispatcherWrapper @Inject constructor(private val dispatcher: Dispatcher) {
+        fun insertOrUpdateSite(site: SiteModel) {
+            dispatcher.dispatch(
+                SiteActionBuilder.newUpdateSiteAction(site)
+            )
+        }
+    }
+
+    class DiscoverSuccessWrapper @Inject constructor() {
+        fun getApiRootUrl(successObject: ApiDiscoveryResult.Success) = successObject.success.apiRootUrl.url()
+
+        fun getApplicationPasswordsAuthenticationUrl(successObject: ApiDiscoveryResult.Success) =
+            successObject.success.applicationPasswordsAuthenticationUrl.url()
+    }
 }
