@@ -161,7 +161,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private boolean mShowAudioTab;
 
     private boolean mLaunchPhotoPicker = false;
-    private boolean mShowApplicationPasswordDialog = true; // Set to true for testing
 
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
@@ -326,12 +325,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
             composeView,
             () -> {
-                // onDismiss callback
-                mShowApplicationPasswordDialog = false;
+                // onDismiss callback. Stub
             },
             () -> {
                 // onConfirm callback - navigate to login
-                mShowApplicationPasswordDialog = false;
                 mActivityNavigator.openApplicationPasswordLogin(this, "https://vanilla.wpmt.co/wp-admin/authorize-application.php?app_name=android-jetpack-client&success_url=jetpack%3A%2F%2Fapp-pass-authorize");
             }
         );
