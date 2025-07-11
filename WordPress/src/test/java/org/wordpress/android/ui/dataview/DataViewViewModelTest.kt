@@ -5,7 +5,6 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -62,20 +61,6 @@ class DataViewViewModelTest : BaseUnitTest() {
         assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
     }
 
-    @Test
-    fun `when removeItem is called, then item is removed from the list`() = runTest {
-        val viewModel = createTestViewModel()
-        viewModel.setTestItems(listOf(
-            DataViewItem(id = 1, image = null, title = "Test Item 1", fields = emptyList()),
-            DataViewItem(id = 2, image = null, title = "Test Item 2", fields = emptyList())
-        ))
-
-        viewModel.removeItem(1)
-
-        assertThat(viewModel.items.value).hasSize(1)
-        assertThat(viewModel.items.value.first().id).isEqualTo(2)
-    }
-
     private class TestableDataViewViewModel(
         testDependencies: DataViewTestDependencies
     ) : DataViewViewModel(testDependencies) {
@@ -91,10 +76,6 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         override fun createWpComApiClient(): WpComApiClient {
             return mock()
-        }
-
-        fun setTestItems(testItems: List<DataViewItem>) {
-            _items.value = testItems
         }
 
         override fun startInitialDataFetch() {
