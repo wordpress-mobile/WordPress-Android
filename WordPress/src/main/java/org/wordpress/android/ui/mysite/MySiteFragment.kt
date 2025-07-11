@@ -7,8 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -45,6 +48,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.media.showApplicationPasswordOffReauthenticateDialog
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -748,7 +752,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
-        activityNavigator.openApplicationPasswordLogin(requireActivity(), authenticationUrl)
+        showApplicationPasswordOffReauthenticateDialog(authenticationUrl)
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
@@ -880,6 +884,32 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
+    }
+
+    private fun showApplicationPasswordOffReauthenticateDialog(authenticationUrl: String) {
+        // Create a ComposeView to host the Compose dialog
+        val composeView = ComposeView(requireContext())
+
+        // Set the view composition strategy
+        composeView.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+        )
+
+        // Add the ComposeView to the fragment's view
+        val contentView = requireActivity().findViewById<ViewGroup>(android.R.id.content)
+        contentView.addView(composeView)
+
+        // Set the content - use the static helper from Kotlin
+        showApplicationPasswordOffReauthenticateDialog(
+            composeView,
+            {
+                // onDismiss callback - Stub
+            },
+            {
+                // onConfirm callback - navigate to login and remove ComposeView
+                activityNavigator.openApplicationPasswordLogin(requireActivity(), authenticationUrl)
+            }
+        )
     }
 
     companion object {
