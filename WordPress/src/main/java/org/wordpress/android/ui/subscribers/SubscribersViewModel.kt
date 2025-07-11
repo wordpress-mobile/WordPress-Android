@@ -36,8 +36,8 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
-    val networkUtilsWrapper: NetworkUtilsWrapper,
-    val selectedSiteRepository: SelectedSiteRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
     accountStore: AccountStore,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val dateFormatWrapper: SimpleDateFormatWrapper,
