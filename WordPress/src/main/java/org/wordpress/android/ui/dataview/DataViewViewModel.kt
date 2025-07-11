@@ -276,6 +276,6 @@ open class DataViewViewModel @Inject constructor(
     companion object {
         private const val SEARCH_DELAY_MS = 500L
         const val PAGE_SIZE = 25
-        const val INITIAL_PAGE = 1
+        private const val INITIAL_PAGE = 1
     }
 }
