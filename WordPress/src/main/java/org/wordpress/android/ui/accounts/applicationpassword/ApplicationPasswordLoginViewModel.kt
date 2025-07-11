@@ -92,7 +92,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     )
                 )
             } else {
-                fetchSites(urlLogin.user.orEmpty(), urlLogin.password.orEmpty(), urlLogin.siteUrl.orEmpty())
+                fetchSites(
+                    urlLogin.user.orEmpty(),
+                    urlLogin.password.orEmpty(),
+                    urlLogin.siteUrl.orEmpty(),
+                    urlLogin.apiRootUrl.orEmpty()
+                )
             }
         }
     }
@@ -108,9 +113,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchSites(username: String, password: String, siteUrl: String) = withContext(ioDispatcher) {
+    private suspend fun fetchSites(
+        username: String,
+        password: String,
+        siteUrl: String,
+        apiRootUrl: String
+        ) = withContext(ioDispatcher) {
         try {
-            if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
                 appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: UriLogin is empty")
                 emitErrorFetching(siteUrl)
             } else {
@@ -118,10 +128,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
                 dispatcher.dispatch(
                     SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        RefreshSitesXMLRPCPayload(
+                        SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                             username = username,
                             password = password,
                             url = xmlRpcEndpoint,
+                            apiRootUrl = apiRootUrl,
                         )
                     )
                 )
