@@ -18,7 +18,7 @@ import uniffi.wp_api.WpApiParamOrder
 class DataViewViewModelTest : BaseUnitTest() {
     val networkUtilsWrapper = mock<NetworkUtilsWrapper>()
 
-    private fun createTestViewModel(): TestDataViewViewModel {
+    private fun createTestViewModel(): TestableDataViewViewModel {
         val appLogWrapper = mock<AppLogWrapper>()
         val networkUtilsWrapper = networkUtilsWrapper
         val selectedSiteRepository = mock<SelectedSiteRepository>()
@@ -32,12 +32,11 @@ class DataViewViewModelTest : BaseUnitTest() {
             accountStore = accountStore,
             ioDispatcher = testDispatcher(),
         )
-        return TestDataViewViewModel(testDependencies)
+        return TestableDataViewViewModel(testDependencies)
     }
 
     @Test
     fun `when initialized, then ui state starts as loading`() = runTest {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val viewModel = createTestViewModel()
         assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.LOADING)
     }
@@ -77,7 +76,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         assertThat(viewModel.items.value.first().id).isEqualTo(2)
     }
 
-    private class TestDataViewViewModel(
+    private class TestableDataViewViewModel(
         testDependencies: DataViewTestDependencies
     ) : DataViewViewModel(testDependencies) {
         override suspend fun performNetworkRequest(
@@ -96,6 +95,10 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         fun setTestItems(testItems: List<DataViewItem>) {
             _items.value = testItems
+        }
+
+        override fun startInitialDataFetch() {
+            // Skip initial data fetch for tests
         }
     }
 }
