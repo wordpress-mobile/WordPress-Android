@@ -20,14 +20,13 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     private fun createTestViewModel(): TestableDataViewViewModel {
         val appLogWrapper = mock<AppLogWrapper>()
-        val networkUtilsWrapper = networkUtilsWrapper
         val selectedSiteRepository = mock<SelectedSiteRepository>()
         val accountStore = mock<AccountStore>()
 
         val testDependencies = DataViewTestDependencies(
             mainDispatcher = testDispatcher(),
             appLogWrapper = appLogWrapper,
-            networkUtilsWrapper = networkUtilsWrapper,
+            networkUtilsWrapper = this.networkUtilsWrapper,
             selectedSiteRepository = selectedSiteRepository,
             accountStore = accountStore,
             ioDispatcher = testDispatcher(),
