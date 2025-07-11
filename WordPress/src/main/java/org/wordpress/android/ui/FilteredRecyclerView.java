@@ -467,6 +467,10 @@ public class FilteredRecyclerView extends RelativeLayout {
         mSearchSuggestionsRecyclerView.setAdapter(searchSuggestionAdapter);
     }
 
+    public void hideAppBarLayout() {
+        mAppBarLayout.setVisibility(GONE);
+    }
+
     public void showAppBarLayout() {
         mAppBarLayout.setVisibility(VISIBLE);
     }
