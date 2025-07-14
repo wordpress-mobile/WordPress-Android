@@ -144,6 +144,11 @@
         </activity>
 
         <activity
+            android:name=".ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity"
+            android:theme="@style/WordPress.TransparentDialog"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
             android:theme="@style/NoDisplay"
             android:exported="true">

@@ -47,7 +47,6 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.showApplicationPasswordOffReauthenticateDialog
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment

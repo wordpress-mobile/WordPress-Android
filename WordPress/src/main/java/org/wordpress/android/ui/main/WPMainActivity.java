@@ -20,8 +20,6 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.compose.ui.platform.ComposeView;
-import androidx.compose.ui.platform.ViewCompositionStrategy;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
@@ -90,6 +88,7 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
@@ -103,7 +102,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
-import org.wordpress.android.ui.media.MediaBrowserScreenKt;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
@@ -1992,29 +1990,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
-        // Create a ComposeView to host the Compose dialog
-        ComposeView composeView = new ComposeView(this);
-
-        // Set the view composition strategy
-        composeView.setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed.INSTANCE
-        );
-
-        // Add the ComposeView to the activity's content first
-        ViewGroup contentView = findViewById(android.R.id.content);
-        contentView.addView(composeView);
-
-        // Set the content - use the static helper from Kotlin
-        MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
-                composeView,
-                () -> {
-                    // onDismiss callback. Stub
-                },
-                () -> {
-                    // onConfirm callback - navigate to login
-                    mActivityNavigator.openApplicationPasswordLogin(this, authenticationUrl);
-                }
-        );
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
     }
 
     @Nullable

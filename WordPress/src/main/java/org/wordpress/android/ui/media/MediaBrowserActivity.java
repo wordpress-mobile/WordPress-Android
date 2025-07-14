@@ -315,29 +315,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     }
 
     private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
-        // Create a ComposeView to host the Compose dialog
-        ComposeView composeView = new ComposeView(this);
-
-        // Set the view composition strategy
-        composeView.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed.INSTANCE
-        );
-
-        // Add the ComposeView to the activity's content first
-        ViewGroup contentView = findViewById(android.R.id.content);
-        contentView.addView(composeView);
-
-        // Set the content - use the static helper from Kotlin
-        MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
-            composeView,
-            () -> {
-                // onDismiss callback. Stub
-            },
-            () -> {
-                // onConfirm callback - navigate to login
-                mActivityNavigator.openApplicationPasswordLogin(this, authenticationUrl);
-            }
-        );
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
     }
 
     public MediaDeleteService getMediaDeleteService() {
