@@ -108,8 +108,24 @@ open class DataViewViewModel @Inject constructor(
     protected fun getCanLoadMore(): Boolean = canLoadMore
     protected fun getCurrentSearchQuery(): String = searchQuery
     protected fun getDebouncedQuery(): StateFlow<String> = debouncedQuery.asStateFlow()
+    
+    protected fun setItems(items: List<DataViewItem>) {
+        _items.value = items
+    }
+    
+    protected fun setPage(newPage: Int) {
+        page = newPage
+    }
+    
+    protected fun setCanLoadMore(value: Boolean) {
+        canLoadMore = value
+    }
+    
+    protected fun setSearchQuery(query: String) {
+        searchQuery = query
+    }
 
-    private fun fetchData(isRefreshing: Boolean = false) {
+    protected fun fetchData(isRefreshing: Boolean = false) {
         if (getNetworkUtilsWrapper().isNetworkAvailable()) {
             val isLoadingMore = page > INITIAL_PAGE
             if (isLoadingMore) {
