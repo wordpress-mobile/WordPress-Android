@@ -28,13 +28,15 @@ class ApplicationPasswordReauthenticateViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun onDialogConfirmed(authenticationUrl: String) {
-        if (authenticationUrl.isEmpty()) {
-            appLogWrapper.w(AppLog.T.MAIN, "Authentication URL is empty, cannot proceed with reauthentication")
-            return
-        }
-
         viewModelScope.launch {
             _isLoading.value = true
+
+            if (authenticationUrl.isEmpty()) {
+                appLogWrapper.w(AppLog.T.MAIN, "Authentication URL is empty, cannot proceed with reauthentication")
+                _navigationEvent.emit(NavigationEvent.ShowError)
+                return@launch
+            }
+
             try {
                 val completeAuthUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(authenticationUrl)
 
