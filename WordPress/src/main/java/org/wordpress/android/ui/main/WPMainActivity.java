@@ -20,6 +20,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.compose.ui.platform.ComposeView;
+import androidx.compose.ui.platform.ViewCompositionStrategy;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
@@ -46,6 +48,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
@@ -100,6 +103,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.media.MediaBrowserScreenKt;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
@@ -210,7 +214,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         QuickStartPromptClickInterface,
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
-        UpdateSelectedSiteListener {
+        UpdateSelectedSiteListener,
+        WpAppNotifierHandler.NotifierListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -307,6 +312,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
+
+    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1129,6 +1136,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
+        mWpAppNotifierHandler.addListener(this);
+
         // Load selected site
         initSelectedSite();
 
@@ -1919,6 +1928,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
+        mWpAppNotifierHandler.removeListener(this);
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }
 
@@ -1975,6 +1985,36 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 );
             }
         }
+    }
+
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
+        showApplicationPasswordOffReauthenticateDialog(authenticationUrl);
+    }
+
+    private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
+        // Create a ComposeView to host the Compose dialog
+        ComposeView composeView = new ComposeView(this);
+
+        // Set the view composition strategy
+        composeView.setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed.INSTANCE
+        );
+
+        // Add the ComposeView to the activity's content first
+        ViewGroup contentView = findViewById(android.R.id.content);
+        contentView.addView(composeView);
+
+        // Set the content - use the static helper from Kotlin
+        MediaBrowserScreenKt.showApplicationPasswordOffReauthenticateDialog(
+                composeView,
+                () -> {
+                    // onDismiss callback. Stub
+                },
+                () -> {
+                    // onConfirm callback - navigate to login
+                    mActivityNavigator.openApplicationPasswordLogin(this, authenticationUrl);
+                }
+        );
     }
 
     @Nullable

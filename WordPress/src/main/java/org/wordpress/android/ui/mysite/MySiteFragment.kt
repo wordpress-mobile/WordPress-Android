@@ -24,7 +24,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -99,8 +98,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     QuickStartPromptClickInterface,
     FullScreenDialogFragment.OnConfirmListener,
     FullScreenDialogFragment.OnDismissListener,
-    OnScrollToTopListener,
-    WpAppNotifierHandler.NotifierListener {
+    OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -146,9 +144,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
 
-    @Inject
-    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
-
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var wpMainActivityViewModel: WPMainActivityViewModel
@@ -184,7 +179,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onPause() {
         super.onPause()
-        wpAppNotifierHandler.removeListener(this)
         activity?.let {
             if (!it.isChangingConfigurations) {
                 viewModel.clearActiveQuickStartTask()
@@ -194,7 +188,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        wpAppNotifierHandler.addListener(this)
         viewModel.onResume()
     }
 
@@ -747,12 +740,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
-//            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
+            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
         }
-    }
-
-    override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
-        showApplicationPasswordOffReauthenticateDialog(authenticationUrl)
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
@@ -884,32 +873,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
-    }
-
-    private fun showApplicationPasswordOffReauthenticateDialog(authenticationUrl: String) {
-        // Create a ComposeView to host the Compose dialog
-        val composeView = ComposeView(requireContext())
-
-        // Set the view composition strategy
-        composeView.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-        )
-
-        // Add the ComposeView to the fragment's view
-        val contentView = requireActivity().findViewById<ViewGroup>(android.R.id.content)
-        contentView.addView(composeView)
-
-        // Set the content - use the static helper from Kotlin
-        showApplicationPasswordOffReauthenticateDialog(
-            composeView,
-            {
-                // onDismiss callback - Stub
-            },
-            {
-                // onConfirm callback - navigate to login and remove ComposeView
-                activityNavigator.openApplicationPasswordLogin(requireActivity(), authenticationUrl)
-            }
-        )
     }
 
     companion object {
