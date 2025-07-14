@@ -32,8 +32,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
     private val experimentalFeatures: ExperimentalFeatures,
-    private val appLogWrapper: AppLogWrapper,
-    private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -55,7 +53,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     fun buildCard(siteModel: SiteModel) {
         if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
-            dummyRequest(siteModel)
         }
     }
 
@@ -95,41 +92,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
                 siteURLCache[site.url] = authorizationUrlComplete
-            }
-        }
-    }
-
-    private fun dummyRequest(site: SiteModel) {
-        if (site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
-            return
-        }
-        scope.launch {
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-            )
-            val apiRootUrl = URL("${site.url}/wp-json")
-            val client = WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
-                authProvider = authProvider,
-                appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication() {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
-            )
-            client.request { requestBuilder ->
-                requestBuilder.posts().listWithEditContext(PostListParams())
-            }
-        }
-    }
-
-    private fun reauthenticate(site: SiteModel) {
-        scope.launch {
-            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
-            if (authorizationUrlComplete.isEmpty()) {
-                appLogWrapper.e(AppLog.T.API, "Error getting authorization URL when reauthenticate")
-            } else {
-                onClick(authorizationUrlComplete) // Force the onClick to open reauthentication
             }
         }
     }

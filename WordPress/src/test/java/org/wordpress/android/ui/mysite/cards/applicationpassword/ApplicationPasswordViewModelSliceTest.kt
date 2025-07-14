@@ -42,13 +42,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var siteSqlUtils: SiteSqlUtils
 
     @Mock
-    lateinit var appLogWrapper: AppLogWrapper
-
-    @Mock
     lateinit var experimentalFeatures: ExperimentalFeatures
-
-    @Mock
-    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
 
     private lateinit var siteTest: SiteModel
 
@@ -64,8 +58,6 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteSqlUtils,
             experimentalFeatures,
-            appLogWrapper,
-            wpAppNotifierHandler
         ).apply {
             initialize(testScope())
             whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
