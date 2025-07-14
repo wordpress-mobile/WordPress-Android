@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.subscribers
 
+import android.content.SharedPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -32,9 +33,11 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    sharedPrefs: SharedPreferences,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
-    appLogWrapper = appLogWrapper
+    appLogWrapper = appLogWrapper,
+    sharedPrefs = sharedPrefs
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
