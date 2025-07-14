@@ -41,7 +41,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Get the authentication URL from intent extras
-        val authenticationUrl = intent.getStringExtra(EXTRA_AUTHENTICATION_URL) ?: ""
+        val authenticationUrl = intent.getStringExtra(EXTRA_SITE_URL) ?: ""
 
         // Observe navigation events
         lifecycleScope.launch {
@@ -153,7 +153,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
     }
 
     companion object {
-        const val EXTRA_AUTHENTICATION_URL = "authentication_url"
+        const val EXTRA_SITE_URL = "site_url_arg"
     }
 }
 

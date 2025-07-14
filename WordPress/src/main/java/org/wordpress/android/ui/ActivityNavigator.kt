@@ -261,7 +261,7 @@ class ActivityNavigator @Inject constructor() {
 
     fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
         val intent = Intent(activity, ApplicationPasswordReauthenticateActivity::class.java)
-        intent.putExtra(ApplicationPasswordReauthenticateActivity.EXTRA_AUTHENTICATION_URL, authenticationUrl)
+        intent.putExtra(ApplicationPasswordReauthenticateActivity.EXTRA_SITE_URL, authenticationUrl)
         activity.startActivity(intent)
     }
 }
