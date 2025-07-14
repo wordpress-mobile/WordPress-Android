@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 09:54:08+0000
+Translation-Revision-Date: 2025-07-08 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Menonaktifkan kata sandi aplikasi akan menghapus informasi login Anda dari %1$s situs.</string>
+    <string name="application_password_disable_feature_title">Nonaktifkan Kata Sandi Aplikasi?</string>
+    <string name="application_password_invalid">Kata Sandi Aplikasi Tidak Valid</string>
+    <string name="application_password_credentials_storing_error">Terjadi error saat menyimpan kredensial kata sandi Aplikasi untuk %1$s</string>
+    <string name="subscribers_add_failed">Gagal menambahkan pelanggan</string>
+    <string name="subscribers_add_success">Berhasil menambahkan pelanggan</string>
+    <string name="subscribers_add_disclosure">\n        Dengan mengklik Kirim, Anda menyatakan bahwa Anda telah mendapatkan persetujuan yang sesuai untuk mengirim email kepada setiap orang. Keluhan spam atau tingkat bounce yang tinggi dari pelanggan dapat memicu tindakan terhadap akun Anda.\n    </string>
+    <string name="subscribers_add_email_hint">nama@contoh.com</string>
+    <string name="subscribers_add_subscribers">Tambahkan pelanggan</string>
+    <string name="subscribers_gift_content_description">Hadiah</string>
+    <string name="subscribers_renewal_interval">Interval perpanjangan</string>
+    <string name="subscribers_renewal_info">Informasi perpanjangan</string>
+    <string name="subscribers_price">Harga</string>
+    <string name="subscribers_inactive_interval">Interval tidak aktif</string>
+    <string name="subscribers_billing_interval">Interval penagihan</string>
+    <string name="subscribers_billing_info">Informasi tagihan</string>
+    <string name="subscribers_end_date">Tanggal akhir</string>
+    <string name="subscribers_start_date">Tanggal mulai</string>
+    <string name="subscribers_plan_details_label">Detail paket</string>
+    <string name="subscribers_gift_plan_label">Paket hadiah</string>
+    <string name="subscribers_delete_button">Hapus pelanggan</string>
+    <string name="subscribers_site_label">Situs</string>
+    <string name="subscribers_country_label">Negara</string>
+    <string name="subscribers_plan_label">Paket</string>
+    <string name="subscribers_status_label">Status langganan</string>
+    <string name="subscribers_date_label">Tanggal langganan</string>
+    <string name="subscribers_detail_label">Detail pelanggan</string>
+    <string name="subscribers_newsletter_label">Langganan buletin</string>
+    <string name="subscribers_clicked_label">Diklik</string>
+    <string name="subscribers_opened_label">Dibuka</string>
+    <string name="subscribers_emails_sent_label">Email</string>
+    <string name="subscribers_subscription_status">Status langganan</string>
+    <string name="subscribers_error_title">Terjadi kesalahan</string>
+    <string name="subscribers_empty_search">Hasil tidak ditemukan</string>
+    <string name="subscribers_empty">Tidak ada pelanggan</string>
+    <string name="subscribers_sort_plan">Paket</string>
+    <string name="subscribers_sort_display_name">Nama tampilan</string>
+    <string name="subscribers_sort_date">Tanggal berlangganan</string>
+    <string name="subscribers_sort_email">Alamat email</string>
+    <string name="subscribers_filter_reader_subscription">Langganan pembaca</string>
+    <string name="subscribers_filter_email_subscription">Langganan email</string>
+    <string name="about_update_email_unverified">Untuk memperbarui profil, alamat email harus diverifikasi terlebih dahulu.</string>
+    <string name="sort_by">Urutkan berdasarkan</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Situs yang disediakan tidak mendukung autentikasi Kata Sandi Aplikasi.</string>
     <string name="application_password_title">Autentikasi menggunakan Kata Sandi Aplikasi</string>
     <string name="application_password_credentials_stored">Kredensial kata sandi aplikasi disimpan untuk %1$s</string>
