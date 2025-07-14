@@ -32,20 +32,11 @@ import javax.inject.Named
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Inject
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var accountStore: AccountStore
-
-    @Inject
-    @Named(IO_THREAD)
-    lateinit var ioDispatcher: CoroutineDispatcher
-
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -73,13 +64,17 @@ open class DataViewViewModel @Inject constructor(
     private var canLoadMore = true
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-    val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
+    protected open fun createWpComApiClient(): WpComApiClient {
+        return WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
             )
         )
     }
+
+    private val wpComApiClient: WpComApiClient by lazy { createWpComApiClient() }
+    
+    protected fun getApiClient(): WpComApiClient = wpComApiClient
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
@@ -104,8 +99,18 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
+    protected fun getNetworkUtilsWrapper(): NetworkUtilsWrapper = networkUtilsWrapper
+    protected fun getSelectedSiteRepository(): SelectedSiteRepository = selectedSiteRepository
+    protected fun getAccountStore(): AccountStore = accountStore
+    protected fun getIoDispatcher(): CoroutineDispatcher = ioDispatcher
+    
+    protected fun getCurrentPage(): Int = page
+    protected fun getCanLoadMore(): Boolean = canLoadMore
+    protected fun getCurrentSearchQuery(): String = searchQuery
+    protected fun getDebouncedQuery(): StateFlow<String> = debouncedQuery.asStateFlow()
+
     private fun fetchData(isRefreshing: Boolean = false) {
-        if (networkUtilsWrapper.isNetworkAvailable()) {
+        if (getNetworkUtilsWrapper().isNetworkAvailable()) {
             val isLoadingMore = page > INITIAL_PAGE
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
@@ -151,7 +156,7 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    private fun resetPaging() {
+    protected fun resetPaging() {
         page = INITIAL_PAGE
         canLoadMore = true
         _errorMessage.value = null
@@ -213,7 +218,7 @@ open class DataViewViewModel @Inject constructor(
         updateUiState(DataViewUiState.ERROR)
     }
 
-    private fun updateUiState(state: DataViewUiState) {
+    protected fun updateUiState(state: DataViewUiState) {
         _uiState.value = state
         appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
     }
@@ -234,7 +239,7 @@ open class DataViewViewModel @Inject constructor(
         filter: DataViewDropdownItem? = null,
         sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
         sortBy: DataViewDropdownItem? = null,
-    ): List<DataViewItem> = withContext(ioDispatcher) {
+    ): List<DataViewItem> = withContext(getIoDispatcher()) {
         emptyList()
     }
 

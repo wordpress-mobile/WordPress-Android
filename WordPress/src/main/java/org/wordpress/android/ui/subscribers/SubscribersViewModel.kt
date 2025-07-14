@@ -7,8 +7,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
@@ -16,7 +18,9 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
@@ -32,9 +36,17 @@ import javax.inject.Named
 class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
-    appLogWrapper = appLogWrapper
+    appLogWrapper = appLogWrapper,
+    networkUtilsWrapper = networkUtilsWrapper,
+    selectedSiteRepository = selectedSiteRepository,
+    accountStore = accountStore,
+    ioDispatcher = ioDispatcher,
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
@@ -86,7 +98,7 @@ class SubscribersViewModel @Inject constructor(
         filter: DataViewDropdownItem?,
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
-    ): List<DataViewItem> = withContext(ioDispatcher) {
+    ): List<DataViewItem> = withContext(getIoDispatcher()) {
         try {
             fetchSubscriberList(
                 page = page,
@@ -108,7 +120,7 @@ class SubscribersViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
         searchQuery: String
-    ): List<DataViewItem> = withContext(ioDispatcher) {
+    ): List<DataViewItem> = withContext(getIoDispatcher()) {
         val filterType = filter?.let {
             when (it.id) {
                 SubscriberFilterType.Email.id -> SubscriberType.EmailSubscriber
@@ -134,7 +146,7 @@ class SubscribersViewModel @Inject constructor(
             sort = sortType
         )
 
-        val response = wpComApiClient.request { requestBuilder ->
+        val response = getApiClient().request { requestBuilder ->
             requestBuilder.subscribers().listSubscribers(
                 wpComSiteId = siteId().toULong(),
                 params = params
@@ -189,12 +201,12 @@ class SubscribersViewModel @Inject constructor(
     }
 
     private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
-        withContext(ioDispatcher) {
+        withContext(getIoDispatcher()) {
             val params = IndividualSubscriberStatsParams(
                 subscriptionId = subscriptionId
             )
 
-            val response = wpComApiClient.request { requestBuilder ->
+            val response = getApiClient().request { requestBuilder ->
                 requestBuilder.subscribers().individualSubscriberStats(
                     wpComSiteId = siteId().toULong(),
                     params = params
@@ -215,16 +227,16 @@ class SubscribersViewModel @Inject constructor(
         }
 
     private suspend fun deleteSubscriber(subscriber: Subscriber) = runCatching {
-        withContext(ioDispatcher) {
+        withContext(getIoDispatcher()) {
             val response = if (subscriber.isEmailSubscriber) {
-                wpComApiClient.request { requestBuilder ->
+                getApiClient().request { requestBuilder ->
                     requestBuilder.followers().deleteEmailFollower(
                         wpComSiteId = siteId().toULong(),
                         subscriptionId = subscriber.subscriptionId
                     )
                 }
             } else {
-                wpComApiClient.request { requestBuilder ->
+                getApiClient().request { requestBuilder ->
                     requestBuilder.followers().deleteFollower(
                         wpComSiteId = siteId().toULong(),
                         userId = subscriber.userId
@@ -275,7 +287,7 @@ class SubscribersViewModel @Inject constructor(
      * Subscriber deletion has been confirmed by the user so delete the subscriber
      */
     fun deleteSubscriberConfirmed(subscriber: Subscriber, onSuccess: () -> Unit) {
-        launch(ioDispatcher) {
+        launch(getIoDispatcher()) {
             val result = deleteSubscriber(subscriber = subscriber)
 
             withContext(mainDispatcher) {
