@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-21 14:00:51+0000
+Translation-Revision-Date: 2025-07-14 07:40:34+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: pl
@@ -1107,7 +1107,7 @@ Language: pl
     <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Stwórz odnośnik</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
-    <string name="post_status_sticky">Przypięte</string>
+    <string name="post_status_sticky">Przypięto</string>
     <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
     <string name="post_settings_mark_as_sticky_options_header">Oznaczony jako przypięty</string>
     <string name="reader_follow_comments_unfollow_conversation">Przestań obserwować konwersację</string>

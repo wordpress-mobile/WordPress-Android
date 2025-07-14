@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 15:54:07+0000
+Translation-Revision-Date: 2025-07-09 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">禁用应用程序密码会从 %1$s 个站点中删除您的登录信息。</string>
+    <string name="application_password_disable_feature_title">禁用应用程序密码？</string>
+    <string name="application_password_invalid">应用程序密码无效</string>
+    <string name="application_password_credentials_storing_error">保存 %1$s 的应用程序密码凭据时出现错误</string>
+    <string name="subscribers_add_failed">订阅者添加失败</string>
+    <string name="subscribers_add_success">订阅者添加成功</string>
+    <string name="subscribers_add_disclosure">\n        点击“发送”即表示您确认已获得向每个人发送电子邮件的适当同意。 若订阅者发起垃圾邮件投诉或出现高退信率，可能导致您的账户受到限制措施。\n    </string>
+    <string name="subscribers_add_subscribers">添加订阅者</string>
+    <string name="subscribers_gift_content_description">礼品</string>
+    <string name="subscribers_renewal_interval">续订间隔</string>
+    <string name="subscribers_renewal_info">续订信息</string>
+    <string name="subscribers_price">价格</string>
+    <string name="subscribers_inactive_interval">非活动间隔</string>
+    <string name="subscribers_billing_interval">计费间隔</string>
+    <string name="subscribers_billing_info">账单信息</string>
+    <string name="subscribers_end_date">结束日期</string>
+    <string name="subscribers_start_date">开始日期</string>
+    <string name="subscribers_plan_details_label">套餐详情</string>
+    <string name="subscribers_gift_plan_label">礼品套餐</string>
+    <string name="subscribers_delete_button">删除订阅者</string>
+    <string name="subscribers_site_label">站点</string>
+    <string name="subscribers_country_label">国家/地区</string>
+    <string name="subscribers_email_label">电子邮件</string>
+    <string name="subscribers_plan_label">套餐</string>
+    <string name="subscribers_status_label">订阅状态</string>
+    <string name="subscribers_date_label">订阅日期</string>
+    <string name="subscribers_detail_label">订阅者详情</string>
+    <string name="subscribers_newsletter_label">电子报订阅</string>
+    <string name="subscribers_clicked_label">已点击</string>
+    <string name="subscribers_opened_label">已打开</string>
+    <string name="subscribers_emails_sent_label">电子邮件</string>
+    <string name="subscribers_subscription_status">订阅状态</string>
+    <string name="subscribers_error_title">出错了</string>
+    <string name="subscribers_empty_search">未找到结果</string>
+    <string name="subscribers_empty">无订阅者</string>
+    <string name="subscribers_sort_plan">套餐</string>
+    <string name="subscribers_sort_display_name">显示名称</string>
+    <string name="subscribers_sort_date">订阅日期</string>
+    <string name="subscribers_sort_email">电子邮件地址</string>
+    <string name="subscribers_filter_reader_subscription">阅读器订阅</string>
+    <string name="subscribers_filter_email_subscription">电子邮件订阅</string>
+    <string name="about_update_email_unverified">要更新您的个人资料，您需要先验证您的电子邮件地址。</string>
+    <string name="sort_by">排序方式</string>
+    <string name="filter">筛选</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">提供的站点不支持应用程序密码身份验证。</string>
     <string name="application_password_title">使用应用程序密码进行身份验证</string>
     <string name="application_password_credentials_stored">存储用于 %1$s 的应用程序密码凭据</string>
