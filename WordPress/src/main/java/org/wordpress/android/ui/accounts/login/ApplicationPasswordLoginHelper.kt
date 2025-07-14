@@ -181,14 +181,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return if (authorizationUrl.isNullOrEmpty()) {
                 authorizationUrl.orEmpty()
             } else {
-                val appName: String?
-                val successUrl: String?
+                val appName: String
+                val successUrl: String
                 if (buildConfigWrapper.isJetpackApp) {
-                    appName = "android-jetpack-client"
-                    successUrl = "jetpack://app-pass-authorize"
+                    appName = ANDROID_JETPACK_CLIENT
+                    successUrl = JETPACK_SUCCESS_URL
                 } else {
-                    appName = "android-wordpress-client"
-                    successUrl = "wordpress://app-pass-authorize"
+                    appName = ANDROID_WORDPRESS_CLIENT
+                    successUrl = WORDPRESS_SUCCESS_URL
                 }
                 authorizationUrl.toUri().buildUpon().apply {
                     appendQueryParameter("app_name", appName)
@@ -196,6 +196,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }.build().toString()
             }
         }
+    }
+
+    companion object {
+        private const val ANDROID_JETPACK_CLIENT = "android-jetpack-client"
+        private const val ANDROID_WORDPRESS_CLIENT = "android-wordpress-client"
+        private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
+        private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
     }
 
     data class UriLogin(
