@@ -1,0 +1,2 @@
+26.0:
+We hebben de authenticatie van applicatie wachtwoorden toegevoegd. Het is nog experimenteel, maar zodra het volledig geïntegreerd is, kunnen we bestaande functies verbeteren en nieuwe introduceren. Rock on.
