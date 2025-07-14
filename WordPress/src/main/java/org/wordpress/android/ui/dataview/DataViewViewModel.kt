@@ -78,6 +78,10 @@ open class DataViewViewModel @Inject constructor(
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
+        initializeViewModel()
+    }
+
+    protected open fun initializeViewModel() {
         launch {
             _itemSortBy.value = getDefaultSort()
 
