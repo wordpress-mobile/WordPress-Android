@@ -16,13 +16,10 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.test.assertNotNull
 
 private const val TEST_URL = "https://www.test.com"

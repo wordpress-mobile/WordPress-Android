@@ -88,7 +88,6 @@ import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;

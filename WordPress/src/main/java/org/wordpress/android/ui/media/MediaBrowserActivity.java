@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -41,9 +40,6 @@ import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
-
-import androidx.compose.ui.platform.ComposeView;
-import androidx.compose.ui.platform.ViewCompositionStrategy;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

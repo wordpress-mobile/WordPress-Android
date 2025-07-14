@@ -6,9 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -18,14 +16,7 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ResourceProvider
-import rs.wordpress.api.kotlin.WpApiClient
-import uniffi.wp_api.PostListParams
-import uniffi.wp_api.WpAppNotifier
-import uniffi.wp_api.WpAuthenticationProvider
-import java.net.URL
 import javax.inject.Inject
 
 class ApplicationPasswordViewModelSlice @Inject constructor(

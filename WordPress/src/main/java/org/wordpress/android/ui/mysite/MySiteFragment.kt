@@ -7,11 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.StringRes
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
