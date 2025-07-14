@@ -9,7 +9,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 const val FLUXC_SCOPE = "FLUXC_SCOPE"
-const val FLUXC_UI_THREAD = "FLUXC_UI_THREAD"
 
 @Module
 class ThreadModule {
@@ -18,11 +17,5 @@ class ThreadModule {
     @Named(FLUXC_SCOPE)
     fun provideFluxCScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.IO)
-    }
-
-    @Provides
-    @Named(FLUXC_UI_THREAD)
-    fun provideFluxCUiDispatcher(): CoroutineDispatcher {
-        return Dispatchers.Main
     }
 }
