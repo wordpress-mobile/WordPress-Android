@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -47,7 +48,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Mock
-    lateinit var resourceProvider: ResourceProvider
+    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
 
     private lateinit var siteTest: SiteModel
 
@@ -63,8 +64,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteSqlUtils,
             experimentalFeatures,
-            resourceProvider,
-            appLogWrapper
+            appLogWrapper,
+            wpAppNotifierHandler
         ).apply {
             initialize(testScope())
             whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)

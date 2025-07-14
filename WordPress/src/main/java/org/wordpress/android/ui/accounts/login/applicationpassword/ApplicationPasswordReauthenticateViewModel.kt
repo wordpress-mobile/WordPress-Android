@@ -26,6 +26,7 @@ class ApplicationPasswordReauthenticateViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    @Suppress("TooGenericExceptionCaught")
     fun onDialogConfirmed(authenticationUrl: String) {
         if (authenticationUrl.isEmpty()) {
             appLogWrapper.w(AppLog.T.MAIN, "Authentication URL is empty, cannot proceed with reauthentication")
@@ -43,7 +44,7 @@ class ApplicationPasswordReauthenticateViewModel @Inject constructor(
                     appLogWrapper.e(AppLog.T.MAIN, "Failed to process authentication URL")
                     _navigationEvent.emit(NavigationEvent.ShowError)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 appLogWrapper.e(AppLog.T.MAIN, "Error processing authentication URL - ${e.stackTraceToString()}")
                 _navigationEvent.emit(NavigationEvent.ShowError)
             } finally {

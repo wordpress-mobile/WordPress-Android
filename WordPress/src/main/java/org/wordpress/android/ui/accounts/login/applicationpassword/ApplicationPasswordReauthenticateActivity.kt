@@ -48,7 +48,10 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
                     is ApplicationPasswordReauthenticateViewModel.NavigationEvent.NavigateToLogin -> {
-                        activityNavigator.openApplicationPasswordLogin(this@ApplicationPasswordReauthenticateActivity, event.authenticationUrl)
+                        activityNavigator.openApplicationPasswordLogin(
+                            this@ApplicationPasswordReauthenticateActivity,
+                            event.authenticationUrl
+                        )
                         finish()
                     }
                     is ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError -> {
@@ -64,7 +67,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
 
         setContent {
             AppThemeM3 {
-                ApplicationPasswordOffReauthenticateDialog(
+                ApplicationPasswordReauthenticateDialog(
                     viewModel = viewModel,
                     onDismiss = {
                         finish()
@@ -78,7 +81,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ApplicationPasswordOffReauthenticateDialog(
+    fun ApplicationPasswordReauthenticateDialog(
         viewModel: ApplicationPasswordReauthenticateViewModel,
         onDismiss: () -> Unit,
         onConfirm: () -> Unit,
@@ -117,7 +120,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
     @Preview
     @Preview(uiMode = UI_MODE_NIGHT_YES)
     @Composable
-    fun ApplicationPasswordOffReauthenticateDialogPreview() {
+    fun ApplicationPasswordReauthenticateDialogPreview() {
         AppThemeM3 {
             // Preview with mock loading state
             AlertDialog(

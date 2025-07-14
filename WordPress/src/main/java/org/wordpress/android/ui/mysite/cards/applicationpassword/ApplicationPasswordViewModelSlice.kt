@@ -32,7 +32,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteSqlUtils: SiteSqlUtils,
     private val experimentalFeatures: ExperimentalFeatures,
-    private val resourceProvider: ResourceProvider,
     private val appLogWrapper: AppLogWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
