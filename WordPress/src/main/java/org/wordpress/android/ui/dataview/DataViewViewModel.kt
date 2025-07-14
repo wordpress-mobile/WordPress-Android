@@ -69,7 +69,7 @@ open class DataViewViewModel @Inject constructor(
 
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
-    private var page = 0
+    private var page = INITIAL_PAGE
     private var canLoadMore = true
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
@@ -106,7 +106,7 @@ open class DataViewViewModel @Inject constructor(
 
     private fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            val isLoadingMore = page > 0
+            val isLoadingMore = page > INITIAL_PAGE
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
             } else {
@@ -152,7 +152,7 @@ open class DataViewViewModel @Inject constructor(
     }
 
     private fun resetPaging() {
-        page = 0
+        page = INITIAL_PAGE
         canLoadMore = true
         _errorMessage.value = null
     }
@@ -229,7 +229,7 @@ open class DataViewViewModel @Inject constructor(
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(
-        page: Int = 0,
+        page: Int = INITIAL_PAGE,
         searchQuery: String = "",
         filter: DataViewDropdownItem? = null,
         sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
@@ -276,5 +276,6 @@ open class DataViewViewModel @Inject constructor(
     companion object {
         private const val SEARCH_DELAY_MS = 500L
         const val PAGE_SIZE = 25
+        private const val INITIAL_PAGE = 1
     }
 }
