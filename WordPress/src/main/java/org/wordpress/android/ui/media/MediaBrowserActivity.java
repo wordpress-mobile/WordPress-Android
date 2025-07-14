@@ -307,10 +307,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     }
 
     @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
-        showApplicationPasswordOffReauthenticateDialog(authenticationUrl);
+        showApplicationPasswordReauthenticateDialog(authenticationUrl);
     }
 
-    private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
+    private void showApplicationPasswordReauthenticateDialog(@NonNull String authenticationUrl) {
         mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
     }
 

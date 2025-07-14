@@ -13,19 +13,27 @@ import javax.inject.Singleton
 class WpAppNotifierHandler @Inject constructor() {
     private val listeners = mutableMapOf<String, WeakReference<NotifierListener>>()
 
+    @Synchronized
     fun notifyRequestedWithInvalidAuthentication(site: SiteModel) {
+        cleanupDeadReferences()
         listeners.forEach {
             val listener = it.value.get()
             listener?.onRequestedWithInvalidAuthentication(site.url)
         }
     }
 
+    @Synchronized
     fun addListener(listener: NotifierListener) {
-        listeners.put(listener.toString(), WeakReference(listener))
+        listeners[listener.toString()] = WeakReference(listener)
     }
 
+    @Synchronized
     fun removeListener(listener: NotifierListener) {
         listeners.remove(listener.toString())
+    }
+
+    private fun cleanupDeadReferences() {
+        listeners.entries.removeAll { it.value.get() == null }
     }
 
     interface NotifierListener {
