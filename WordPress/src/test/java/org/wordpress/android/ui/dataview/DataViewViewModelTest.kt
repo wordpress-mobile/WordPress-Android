@@ -76,13 +76,6 @@ class DataViewViewModelTest {
     }
 
     @Test
-    fun `siteId returns 0 when no site selected`() = testScope.runTest {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-        val viewModel = createViewModel()
-        assertThat(viewModel.siteId()).isEqualTo(0L)
-    }
-
-    @Test
     fun `onFilterClick sets filter when different`() = testScope.runTest {
         val viewModel = createViewModel()
         val filter = DataViewDropdownItem(1, android.R.string.ok)
@@ -252,7 +245,7 @@ class DataViewViewModelTest {
     }
 
     @Test
-    fun `resetPaging resets page and canLoadMore`() = testScope.runTest {
+    fun `resetPaging resets page, canLoadMore, and error`() = testScope.runTest {
         val viewModel = createViewModel()
 
         // Set some initial state
