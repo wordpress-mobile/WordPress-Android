@@ -266,7 +266,6 @@ class DataViewViewModelTest : BaseUnitTest() {
             }
         }
 
-
         // Initialize these properties before the parent constructor runs
         private val supportedSorts: List<DataViewDropdownItem> = listOf(
             DataViewDropdownItem(1L, R.string.app_name),
