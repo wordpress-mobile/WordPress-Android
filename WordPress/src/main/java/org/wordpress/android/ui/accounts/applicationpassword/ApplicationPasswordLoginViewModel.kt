@@ -161,7 +161,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             } else {
                 _onFinishedEvent.emit(
                     NavigationActionData(
-                        showSiteSelector = siteStore.hasSite() && oldSitesIDs?.contains(site.id) == false,
+                        showSiteSelector = siteStore.hasSite() &&
+                                oldSitesIDs?.contains(site.id) != true, // null or false
                         showPostSignupInterstitial = !siteStore.hasSite()
                                 && appPrefsWrapper.shouldShowPostSignupInterstitial,
                         siteUrl = currentUrlLogin?.siteUrl,
