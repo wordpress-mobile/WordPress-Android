@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.util.ToastUtils
@@ -24,6 +25,9 @@ import javax.inject.Inject
 class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var unifiedLoginTracker: UnifiedLoginTracker
 
     private var viewModel: ApplicationPasswordLoginViewModel? = null
 
@@ -69,8 +73,10 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
         } else if (navigationActionData.showSiteSelector) {
+            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
         } else if (navigationActionData.showPostSignupInterstitial) {
+            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showPostSignupInterstitial(this)
         } else {
             val mainActivityIntent = Intent(this, WPMainActivity::class.java)

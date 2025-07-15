@@ -169,14 +169,14 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with null authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl(null)
         assertEquals("", result)
     }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with empty authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl("")
         assertEquals("", result)
     }

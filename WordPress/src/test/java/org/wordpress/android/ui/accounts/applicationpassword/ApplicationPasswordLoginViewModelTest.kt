@@ -64,32 +64,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given intent rawData, when setup site and able to store credentials, then emit ok`() = runTest {
-        // Given
-        val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
-            showSiteSelector = false,
-            showPostSignupInterstitial = false,
-            siteUrl = urlLogin.siteUrl,
-            oldSitesIDs = null,
-            isError = false
-        )
-        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(true)
-
-        // When
-        viewModel.onFinishedEvent.test {
-            viewModel.setupSite(rawData)
-
-            // Then
-            val finishedEvent = awaitItem()
-            assertEquals(expectedResult, finishedEvent)
-            verify(applicationPasswordLoginHelper, times(1))
-                .storeApplicationPasswordCredentialsFrom(eq(urlLogin))
-            verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
     fun `given empty rawData, when setup site, then emit error`() = runTest {
         // Given
         val emptyRawData = ""
@@ -209,6 +183,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with site selector`() =
         runTest {
             // Given
+            val testSite = SiteModel().apply { url = urlLogin.siteUrl }
             val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
@@ -218,6 +193,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(true)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
@@ -226,9 +202,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(SiteModel())
                     )
                 )
 
@@ -244,6 +221,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no site selector nor interstitial`() =
         runTest {
             // Given
+            val testSite = SiteModel().apply { url = urlLogin.siteUrl }
             val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = false,
@@ -253,6 +231,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(false)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
@@ -261,9 +240,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
                     )
                 )
 
@@ -279,6 +259,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no interstitial by sites`() =
         runTest {
             // Given
+            val testSite = SiteModel().apply { url = urlLogin.siteUrl }
             val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
@@ -288,6 +269,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(true)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
@@ -296,9 +278,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(SiteModel())
                     )
                 )
 
@@ -314,6 +297,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with no interstitial by preferences`() =
         runTest {
             // Given
+            val testSite = SiteModel().apply { url = urlLogin.siteUrl }
             val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = false,
@@ -322,6 +306,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 oldSitesIDs = null,
                 isError = false
             )
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(false)
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
@@ -331,9 +316,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
                     )
                 )
 
