@@ -72,9 +72,8 @@ open class DataViewViewModel @Inject constructor(
     protected val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
-                requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
-                    WpAuthentication.Bearer(token = token)
-                }
+                val token = requireNotNull(accountStore.accessToken) { "Access token is required but was null" }
+                WpAuthentication.Bearer(token = token)
             )
         )
     }
