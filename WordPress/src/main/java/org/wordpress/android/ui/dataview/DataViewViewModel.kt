@@ -82,7 +82,7 @@ open class DataViewViewModel @Inject constructor(
         this.initialize()
     }
 
-    open fun initialize() {
+    protected open fun initialize() {
         launch {
             restorePrefs()
             fetchData()
