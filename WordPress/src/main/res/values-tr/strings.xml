@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-07 12:54:08+0000
+Translation-Revision-Date: 2025-07-08 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
@@ -31,9 +31,9 @@ Language: tr
     <string name="subscribers_email_label">E-posta</string>
     <string name="subscribers_plan_label">Paket</string>
     <string name="subscribers_status_label">Abonelik durumu</string>
-    <string name="subscribers_date_label">Abonelik - Bitiş Tarihi</string>
-    <string name="subscribers_detail_label">Abone bilgileri</string>
-    <string name="subscribers_newsletter_label">Haber Bülteni Aboneliği</string>
+    <string name="subscribers_date_label">Abonelik tarihi</string>
+    <string name="subscribers_detail_label">Abone ayrıntıları</string>
+    <string name="subscribers_newsletter_label">Haber Bülteni aboneliği</string>
     <string name="subscribers_clicked_label">Tıklandı</string>
     <string name="subscribers_opened_label">Açıldı</string>
     <string name="subscribers_emails_sent_label">E-postalar</string>
@@ -45,7 +45,7 @@ Language: tr
     <string name="subscribers_sort_display_name">Görünen ad</string>
     <string name="subscribers_sort_date">Abone olunduğu tarih</string>
     <string name="subscribers_sort_email">E-posta adresi</string>
-    <string name="subscribers_filter_reader_subscription">Okuyucu Abonelikleri</string>
+    <string name="subscribers_filter_reader_subscription">Okuyucu abonelikleri</string>
     <string name="subscribers_filter_email_subscription">E-Posta aboneliği</string>
     <string name="about_update_email_unverified">Profilinizi güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="sort_by">Şuna göre sırala:</string>

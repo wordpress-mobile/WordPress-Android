@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 09:54:08+0000
+Translation-Revision-Date: 2025-07-08 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、%1$s件のサイトからログイン情報が削除されます。</string>
+    <string name="application_password_disable_feature_title">アプリケーションパスワードを無効にしますか ?</string>
+    <string name="application_password_invalid">アプリケーションパスワードが無効です</string>
+    <string name="application_password_credentials_storing_error">%1$s のアプリケーションパスワードのログイン情報を保存する際にエラーが発生しました</string>
+    <string name="subscribers_add_failed">購読者の追加に失敗しました</string>
+    <string name="subscribers_add_success">購読者を追加しました</string>
+    <string name="subscribers_add_disclosure">\n       「送信」をクリックすると、お客様は、各ユーザーへのメール送信について適切な同意を得ていることを表明するものとします。 購読者からスパムの苦情が多く寄せられたり、バウンスレートが高かったりすると、アカウントに何らかの措置がとられる可能性があります。\n    </string>
+    <string name="subscribers_add_subscribers">購読者を追加</string>
+    <string name="subscribers_gift_content_description">ギフト</string>
+    <string name="subscribers_renewal_interval">更新間隔</string>
+    <string name="subscribers_renewal_info">更新情報</string>
+    <string name="subscribers_price">価格</string>
+    <string name="subscribers_inactive_interval">無効な間隔</string>
+    <string name="subscribers_billing_interval">請求の間隔</string>
+    <string name="subscribers_billing_info">お支払い情報</string>
+    <string name="subscribers_end_date">終了日</string>
+    <string name="subscribers_start_date">開始日</string>
+    <string name="subscribers_plan_details_label">プランの詳細</string>
+    <string name="subscribers_gift_plan_label">ギフトプラン</string>
+    <string name="subscribers_delete_button">購読者を削除</string>
+    <string name="subscribers_site_label">サイト</string>
+    <string name="subscribers_country_label">国</string>
+    <string name="subscribers_email_label">メールアドレス</string>
+    <string name="subscribers_plan_label">プラン</string>
+    <string name="subscribers_status_label">講読ステータス</string>
+    <string name="subscribers_date_label">購読日</string>
+    <string name="subscribers_detail_label">購読者の詳細</string>
+    <string name="subscribers_newsletter_label">ニュースレターの購読</string>
+    <string name="subscribers_clicked_label">クリックした</string>
+    <string name="subscribers_opened_label">開いた</string>
+    <string name="subscribers_emails_sent_label">メールアドレス</string>
+    <string name="subscribers_subscription_status">講読ステータス</string>
+    <string name="subscribers_error_title">エラーが発生しました</string>
+    <string name="subscribers_empty_search">結果が見つかりませんでした</string>
+    <string name="subscribers_empty">購読者がいません</string>
+    <string name="subscribers_sort_plan">プラン</string>
+    <string name="subscribers_sort_display_name">表示名</string>
+    <string name="subscribers_sort_date">登録した日付</string>
+    <string name="subscribers_sort_email">メールアドレス</string>
+    <string name="subscribers_filter_reader_subscription">Reader 購読</string>
+    <string name="subscribers_filter_email_subscription">メール購読</string>
+    <string name="about_update_email_unverified">プロフィールを更新するには、まずメールアドレスを確認する必要があります。</string>
+    <string name="sort_by">並べ替え</string>
+    <string name="filter">フィルター</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">指定されたサイトはアプリケーションパスワード認証に対応していません。</string>
     <string name="application_password_title">アプリケーションパスワードを使用して認証</string>
     <string name="application_password_credentials_stored">%1$s に保存されたアプリケーションパスワードのログイン情報</string>
