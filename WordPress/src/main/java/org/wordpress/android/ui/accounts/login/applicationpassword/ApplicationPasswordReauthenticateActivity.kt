@@ -8,15 +8,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,7 +59,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
                     is ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError -> {
                         ToastUtils.showToast(
                             this@ApplicationPasswordReauthenticateActivity,
-                            getString(R.string.error_generic,)
+                            getString(R.string.error_generic)
                         )
                         finish()
                     }
@@ -96,7 +98,13 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
                 )
             },
             title = { Text(text = stringResource(R.string.application_password_invalid)) },
-            text = { Text(text = stringResource(R.string.application_password_invalid_description)) },
+            text = {
+                Column(
+                    modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = stringResource(R.string.application_password_invalid_description))
+                }
+            },
             confirmButton = {
                 Button(
                     onClick = {
