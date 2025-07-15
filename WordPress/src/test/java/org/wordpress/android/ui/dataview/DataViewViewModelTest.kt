@@ -271,15 +271,6 @@ class DataViewViewModelTest : BaseUnitTest() {
             testItems = items
         }
 
-        fun simulateDataLoad() {
-            // Trigger a data fetch which will call performNetworkRequest and update items
-            launch {
-                val items = performNetworkRequest()
-                // Directly update the private _items field through the parent class method
-                updateItemsForTest(items)
-            }
-        }
-
         // Override to expose access to private fields for testing
         fun updateItemsForTest(items: List<DataViewItem>) {
             try {
