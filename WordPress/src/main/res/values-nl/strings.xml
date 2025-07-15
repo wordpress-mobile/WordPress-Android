@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-05 06:24:14+0000
+Translation-Revision-Date: 2025-07-14 16:52:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
@@ -1357,7 +1357,7 @@ Language: nl
     <string name="gutenberg_native_one" tools:ignore="UnusedResources">Eén</string>
     <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Titel toevoegen</string>
     <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Geen voorbeeld beschikbaar</string>
-    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bezig met laden</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aan het laden</string>
     <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Tekstkleur</string>
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s link</string>
@@ -1754,7 +1754,7 @@ Language: nl
     <string name="media_insert_failed_with_reason">Invoegen media mislukt: %s</string>
     <string name="photo_picker_wordpress_media_library">Kies uit WordPress mediabibliotheek</string>
     <string name="reader_label_toolbar_back">Terug</string>
-    <string name="reader_discover_empty_button_text">Aan de slag</string>
+    <string name="reader_discover_empty_button_text">Ga aan de slag</string>
     <string name="reader_discover_empty_subtitle_follow">Volg tags om nieuwe blogs te ontdekken</string>
     <string name="reader_post_details_header_by_author_name">Door</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Deze verwijzer kan niet gemarkeerd worden als spam</string>
@@ -3134,7 +3134,7 @@ Language: nl
     <string name="post_settings_password_dialog_hint">Alleen personen met dit wachtwoord kunnen dit bericht bekijken</string>
     <string name="post_settings_excerpt_dialog_hint">Samenvattingen zijn optionele, handgemaakte overzichten van je content.</string>
     <string name="post_settings_slug_dialog_hint">De \'slug\' is de URL-vriendelijke versie van de berichttitel.</string>
-    <string name="post_settings_post_format">Berichtformat</string>
+    <string name="post_settings_post_format">Bericht format</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_excerpt">Samenvatting</string>
