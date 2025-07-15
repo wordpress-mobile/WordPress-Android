@@ -73,10 +73,10 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
         } else if (navigationActionData.showSiteSelector) {
-            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.name)
+            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
         } else if (navigationActionData.showPostSignupInterstitial) {
-            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.name)
+            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showPostSignupInterstitial(this)
         } else {
             val mainActivityIntent = Intent(this, WPMainActivity::class.java)
