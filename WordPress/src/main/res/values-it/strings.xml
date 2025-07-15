@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 15:54:08+0000
+Translation-Revision-Date: 2025-07-08 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">La disabilitazione della password dell\'applicazione comporterà la rimozione delle tue informazioni di accesso da %1$s siti.</string>
+    <string name="application_password_disable_feature_title">Disabilitare la password dell\'applicazione?</string>
+    <string name="application_password_invalid">Password dell\'applicazione non valida</string>
+    <string name="application_password_credentials_storing_error">Si è verificato un errore durante la memorizzazione delle credenziali di accesso dell\'applicazione per %1$s</string>
+    <string name="subscribers_add_failed">Impossibile aggiungere abbonati</string>
+    <string name="subscribers_add_success">Abbonati aggiunti correttamente</string>
+    <string name="subscribers_add_disclosure">\n        Facendo clic su Invia dichiari di aver ottenuto il consenso appropriato per inviare e-mail a ciascuna persona. Eventuali reclami per spam o un alto tasso di rimbalzo dai tuoi abbonati potrebbero portare a provvedimenti contro il tuo account.\n    </string>
+    <string name="subscribers_add_email_hint">nome@esempio.com</string>
+    <string name="subscribers_add_subscribers">Aggiungi abbonati</string>
+    <string name="subscribers_gift_content_description">Regalo</string>
+    <string name="subscribers_renewal_interval">Intervallo di rinnovo</string>
+    <string name="subscribers_renewal_info">Informazioni sul rinnovo</string>
+    <string name="subscribers_price">Prezzo</string>
+    <string name="subscribers_inactive_interval">Intervallo inattivo</string>
+    <string name="subscribers_billing_interval">Intervallo di fatturazione</string>
+    <string name="subscribers_billing_info">Informazioni di fatturazione</string>
+    <string name="subscribers_end_date">Data di fine</string>
+    <string name="subscribers_start_date">Data di inizio</string>
+    <string name="subscribers_plan_details_label">Dettagli del piano</string>
+    <string name="subscribers_gift_plan_label">Piano regalo</string>
+    <string name="subscribers_delete_button">Elimina abbonato</string>
+    <string name="subscribers_site_label">Sito</string>
+    <string name="subscribers_country_label">Paese</string>
+    <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_plan_label">Piano</string>
+    <string name="subscribers_status_label">Stato dell\'abbonamento</string>
+    <string name="subscribers_date_label">Data di abbonamento</string>
+    <string name="subscribers_detail_label">Dettagli dell\'abbonato</string>
+    <string name="subscribers_newsletter_label">Abbonamento alla newsletter</string>
+    <string name="subscribers_clicked_label">Clic effettuato</string>
+    <string name="subscribers_opened_label">Aperta</string>
+    <string name="subscribers_emails_sent_label">E-mail</string>
+    <string name="subscribers_subscription_status">Stato dell\'abbonamento</string>
+    <string name="subscribers_error_title">Si è verificato un problema</string>
+    <string name="subscribers_empty_search">Nessun risultato trovato</string>
+    <string name="subscribers_empty">Non ci sono abbonati</string>
+    <string name="subscribers_sort_plan">Piano</string>
+    <string name="subscribers_sort_display_name">Nome visualizzato</string>
+    <string name="subscribers_sort_date">Data di abbonamento</string>
+    <string name="subscribers_sort_email">Indirizzo e-mail</string>
+    <string name="subscribers_filter_reader_subscription">Abbonamento a Reader</string>
+    <string name="subscribers_filter_email_subscription">Abbonamento all\'e-mail</string>
+    <string name="about_update_email_unverified">Per aggiornare il tuo profilo devi prima verificare il tuo indirizzo e-mail.</string>
+    <string name="sort_by">Ordina per</string>
+    <string name="filter">Filtra</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Il sito fornito non supporta l\'autenticazione tramite password dell\'applicazione.</string>
     <string name="application_password_title">Effettua l\'autenticazione usando la password dell\'applicazione</string>
     <string name="application_password_credentials_stored">Credenziali di accesso dell\'applicazione memorizzate per %1$s</string>

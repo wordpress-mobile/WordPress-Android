@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-07 12:54:07+0000
+Translation-Revision-Date: 2025-07-12 21:07:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
@@ -12,6 +12,7 @@ Language: de
     <string name="application_password_credentials_storing_error">Beim Speichern der Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
     <string name="subscribers_add_failed">Das Hinzufügen der Abonnenten ist fehlgeschlagen</string>
     <string name="subscribers_add_success">Die Abonnenten wurden erfolgreich hinzugefügt</string>
+    <string name="subscribers_add_disclosure">\n        Mit deinem Klick auf „Senden“ bestätigst du, dass du die entsprechende Einwilligung eingeholt hast, um diesen Personen eine E-Mail zu senden. Spam-Beschwerden oder hohe Absprungraten von deinen Abonnenten können dazu führen, dass wir Maßnahmen gegen dein Konto ergreifen.\n    </string>
     <string name="subscribers_add_email_hint">name@example.com</string>
     <string name="subscribers_add_subscribers">Abonnenten hinzufügen</string>
     <string name="subscribers_gift_content_description">Geschenk</string>
@@ -32,7 +33,7 @@ Language: de
     <string name="subscribers_plan_label">Tarif</string>
     <string name="subscribers_status_label">Abonnement-Status</string>
     <string name="subscribers_date_label">Abonnementdatum</string>
-    <string name="subscribers_detail_label">Abonnentendetails</string>
+    <string name="subscribers_detail_label">Details zum Abonnenten</string>
     <string name="subscribers_newsletter_label">Newsletter-Abonnement</string>
     <string name="subscribers_clicked_label">Geklickt</string>
     <string name="subscribers_opened_label">Geöffnet</string>
@@ -906,7 +907,7 @@ Language: de
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s %% der Abonnenten insgesamt</string>
-    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Link kopieren</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>

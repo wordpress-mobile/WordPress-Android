@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 15:54:07+0000
+Translation-Revision-Date: 2025-07-08 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion de %1$s sites.</string>
+    <string name="application_password_disable_feature_title">Désactiver le mot de passe d’application ?</string>
+    <string name="application_password_invalid">Mot de passe d’application non valide</string>
+    <string name="application_password_credentials_storing_error">Une erreur est survenue lors du stockage des identifiants de connexion du mot de passe d’application pour %1$s</string>
+    <string name="subscribers_add_failed">Échec de l’ajout d’abonnés</string>
+    <string name="subscribers_add_success">Abonnés ajoutés avec succès</string>
+    <string name="subscribers_add_disclosure">\n        En cliquant sur Envoyer, vous confirmez avoir obtenu l’autorisation nécessaire pour envoyer des e-mails à chaque personne. Les plaintes pour spam ou le taux de rebond élevé de vos abonnés peuvent entraîner des poursuites contre votre compte.\n    </string>
+    <string name="subscribers_add_email_hint">nom@exemple.com</string>
+    <string name="subscribers_add_subscribers">Ajouter des abonnés</string>
+    <string name="subscribers_gift_content_description">Cadeau</string>
+    <string name="subscribers_renewal_interval">Intervalle de renouvellement</string>
+    <string name="subscribers_renewal_info">Informations concernant le renouvellement</string>
+    <string name="subscribers_price">Prix</string>
+    <string name="subscribers_inactive_interval">Intervalle d’inactivité</string>
+    <string name="subscribers_billing_interval">Intervalle de facturation</string>
+    <string name="subscribers_billing_info">Détails de facturation</string>
+    <string name="subscribers_end_date">Date de fin</string>
+    <string name="subscribers_start_date">Date de début</string>
+    <string name="subscribers_plan_details_label">Détails du plan</string>
+    <string name="subscribers_gift_plan_label">Plan cadeau</string>
+    <string name="subscribers_delete_button">Supprimer l’abonné</string>
+    <string name="subscribers_country_label">Pays</string>
+    <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_status_label">État de l’abonnement</string>
+    <string name="subscribers_date_label">Date d’abonnement</string>
+    <string name="subscribers_detail_label">Détails de l’abonné</string>
+    <string name="subscribers_newsletter_label">Abonnement à la newsletter</string>
+    <string name="subscribers_clicked_label">Clics</string>
+    <string name="subscribers_opened_label">Ouvertures</string>
+    <string name="subscribers_emails_sent_label">E-mails</string>
+    <string name="subscribers_subscription_status">État de l’abonnement</string>
+    <string name="subscribers_error_title">Un problème est survenu</string>
+    <string name="subscribers_empty_search">Aucun résultat</string>
+    <string name="subscribers_empty">Aucun abonné</string>
+    <string name="subscribers_sort_display_name">Nom affiché</string>
+    <string name="subscribers_sort_date">Date d’abonnement</string>
+    <string name="subscribers_sort_email">Adresse e-mail</string>
+    <string name="subscribers_filter_reader_subscription">Abonnement via le Lecteur</string>
+    <string name="subscribers_filter_email_subscription">Abonnement par e-mail</string>
+    <string name="about_update_email_unverified">Pour mettre à jour votre profil, vous devez d’abord vérifier votre adresse e-mail.</string>
+    <string name="sort_by">Trier par</string>
+    <string name="filter">Filtrer</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Le site fourni ne prend pas en charge l’authentification par mot de passe d’application.</string>
     <string name="application_password_title">S’authentifier à l’aide du mot de passe de l’application</string>
     <string name="application_password_credentials_stored">Identifiants de connexion du mot de passe de l’application stockés pour %1$s</string>
