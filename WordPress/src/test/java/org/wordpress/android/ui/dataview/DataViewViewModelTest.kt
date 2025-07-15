@@ -177,7 +177,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        val testFilter = DataViewDropdownItem(1, R.string.app_name)
+        val testFilter = DataViewDropdownItem(1L, R.string.app_name)
 
         viewModel.testOnFilterClick(testFilter)
         advanceUntilIdle()
@@ -191,7 +191,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        val testSort = DataViewDropdownItem(2, R.string.app_name)
+        val testSort = DataViewDropdownItem(2L, R.string.app_name)
 
         viewModel.testOnSortClick(testSort)
         advanceUntilIdle()
@@ -268,13 +268,13 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         // Initialize these properties before the parent constructor runs
         private val supportedSorts: List<DataViewDropdownItem> = listOf(
-            DataViewDropdownItem(1, R.string.app_name),
-            DataViewDropdownItem(2, R.string.app_name)
+            DataViewDropdownItem(1L, R.string.app_name),
+            DataViewDropdownItem(2L, R.string.app_name)
         )
 
         private val supportedFilters: List<DataViewDropdownItem> = listOf(
-            DataViewDropdownItem(1, R.string.app_name),
-            DataViewDropdownItem(2, R.string.app_name)
+            DataViewDropdownItem(1L, R.string.app_name),
+            DataViewDropdownItem(2L, R.string.app_name)
         )
 
         @Volatile
