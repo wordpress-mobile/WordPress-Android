@@ -139,9 +139,9 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val testItems = listOf(
-            DataViewItem(1, null, "Item 1", emptyList()),
-            DataViewItem(2, null, "Item 2", emptyList()),
-            DataViewItem(3, null, "Item 3", emptyList())
+            DataViewItem(id = 1L, image = null, title = "Item 1", fields = emptyList()),
+            DataViewItem(id = 2L, image = null, title = "Item 2", fields = emptyList()),
+            DataViewItem(id = 3L, image = null, title = "Item 3", fields = emptyList())
         )
 
         // Set items and simulate data load
