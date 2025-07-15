@@ -82,7 +82,7 @@ open class DataViewViewModel @Inject constructor(
         initialize()
     }
 
-    fun initialize() {
+    open fun initialize() {
         launch {
             restorePrefs()
             fetchData()
@@ -146,7 +146,7 @@ open class DataViewViewModel @Inject constructor(
                     filter = _itemFilter.value,
                     sortOrder = _sortOrder.value,
                     sortBy = _itemSortBy.value,
-                )
+                ) ?: emptyList() // Handle null case
                 if (uiState.value == DataViewUiState.ERROR) {
                     _refreshState.value = false
                     return@launch

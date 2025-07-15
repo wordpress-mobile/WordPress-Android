@@ -72,8 +72,6 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when view model is created, then initial state is loading`() {
-        // Mock network as available for this test since auto-initialization calls fetchData()
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val viewModel = createTestViewModel()
         assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.LOADING)
     }
@@ -257,14 +255,15 @@ class DataViewViewModelTest : BaseUnitTest() {
         accountStore,
         ioDispatcher
     ) {
-        private var shouldRestorePrefs = false
+        private var shouldInitialize = false
 
-        // Override restorePrefs to control when it's called
-        override fun restorePrefs() {
-            if (shouldRestorePrefs) {
-                super.restorePrefs()
+        // Override initialize to control when the full initialization happens
+        override fun initialize() {
+            if (shouldInitialize) {
+                super.initialize()
             }
         }
+
 
         // Initialize these properties before the parent constructor runs
         private val supportedSorts: List<DataViewDropdownItem> = listOf(
@@ -342,9 +341,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         }
 
         fun initializeForTest() {
-            shouldRestorePrefs = true
-            // Call restorePrefs manually since we blocked it during construction
-            restorePrefs()
+            shouldInitialize = true
+            initialize()
         }
     }
 }
