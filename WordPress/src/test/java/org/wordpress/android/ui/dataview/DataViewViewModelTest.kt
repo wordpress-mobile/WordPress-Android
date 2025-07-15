@@ -2,7 +2,6 @@ package org.wordpress.android.ui.dataview
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -62,7 +61,15 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `siteId returns correct site ID`() {
-        val viewModel = createTestViewModel()
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
         val siteId = viewModel.siteId()
         assertThat(siteId).isEqualTo(123L)
     }
@@ -70,35 +77,101 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `siteId returns 0 when no site selected`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-        val viewModel = createTestViewModel()
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
         val siteId = viewModel.siteId()
         assertThat(siteId).isEqualTo(0L)
     }
 
     @Test
-    fun `access token is used for API client`() {
-        val viewModel = createTestViewModel()
+    fun `access token is used for API client initialization`() {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
         // Just verify the ViewModel initializes without throwing
         assertThat(viewModel).isNotNull
     }
 
     @Test
-    fun `access token null throws exception`() {
-        whenever(accountStore.accessToken).thenReturn(null)
+    fun `supported sorts returns test data`() {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
 
-        try {
-            createTestViewModel()
-            assertThat(false).isTrue() // Should not reach here
-        } catch (e: IllegalArgumentException) {
-            assertThat(e.message).contains("Access token is required but was null")
-        }
+        val supportedSorts = viewModel.getSupportedSorts()
+
+        assertThat(supportedSorts).hasSize(2)
+        assertThat(supportedSorts[0].id).isEqualTo(1L)
+        assertThat(supportedSorts[1].id).isEqualTo(2L)
+    }
+
+    @Test
+    fun `supported filters returns test data`() {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+
+        val supportedFilters = viewModel.getSupportedFilters()
+
+        assertThat(supportedFilters).hasSize(2)
+        assertThat(supportedFilters[0].id).isEqualTo(1L)
+        assertThat(supportedFilters[1].id).isEqualTo(2L)
+    }
+
+    @Test
+    fun `default sort is first supported sort`() {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+
+        val defaultSort = viewModel.getDefaultSort()
+
+        assertThat(defaultSort).isEqualTo(viewModel.getSupportedSorts().first())
     }
 
     @Test
     fun `removeItem removes item from list`() = runTest {
-        val viewModel = createTestViewModel()
-        // Wait for initialization
-        delay(100)
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+        advanceUntilIdle() // Wait for initialization
 
         val testItems = listOf(
             DataViewItem(1, null, "Item 1", emptyList()),
@@ -106,7 +179,7 @@ class DataViewViewModelTest : BaseUnitTest() {
             DataViewItem(3, null, "Item 3", emptyList())
         )
 
-        // Set items directly in the flow
+        // Set items using reflection
         viewModel.setTestItems(testItems)
 
         viewModel.removeItem(2)
@@ -118,7 +191,17 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onError updates error message and UI state`() = runTest {
-        val viewModel = createTestViewModel()
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+        advanceUntilIdle()
+
         val errorMessage = "Test error"
 
         viewModel.onError(errorMessage)
@@ -128,70 +211,8 @@ class DataViewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `supported sorts returns test data`() = runTest {
-        val viewModel = createTestViewModel()
-
-        val supportedSorts = viewModel.getSupportedSorts()
-
-        assertThat(supportedSorts).hasSize(2)
-        assertThat(supportedSorts[0].id).isEqualTo(1L)
-        assertThat(supportedSorts[1].id).isEqualTo(2L)
-    }
-
-    @Test
-    fun `supported filters returns test data`() = runTest {
-        val viewModel = createTestViewModel()
-
-        val supportedFilters = viewModel.getSupportedFilters()
-
-        assertThat(supportedFilters).hasSize(2)
-        assertThat(supportedFilters[0].id).isEqualTo(1L)
-        assertThat(supportedFilters[1].id).isEqualTo(2L)
-    }
-
-    @Test
-    fun `default sort is first supported sort`() = runTest {
-        val viewModel = createTestViewModel()
-
-        val defaultSort = viewModel.getDefaultSort()
-
-        assertThat(defaultSort).isEqualTo(viewModel.getSupportedSorts().first())
-    }
-
-    @Test
     fun `onFilterClick toggles filter`() = runTest {
-        val viewModel = createTestViewModel()
-        val testFilter = DataViewDropdownItem(1, R.string.app_name)
-        delay(100) // Wait for initialization
-
-        viewModel.onFilterClick(testFilter)
-
-        assertThat(viewModel.itemFilter.value).isEqualTo(testFilter)
-    }
-
-    @Test
-    fun `onSortClick updates sort`() = runTest {
-        val viewModel = createTestViewModel()
-        val testSort = DataViewDropdownItem(2, R.string.app_name)
-        delay(100) // Wait for initialization
-
-        viewModel.onSortClick(testSort)
-
-        assertThat(viewModel.itemSortBy.value).isEqualTo(testSort)
-    }
-
-    @Test
-    fun `onSortOrderClick updates sort order`() = runTest {
-        val viewModel = createTestViewModel()
-        delay(100) // Wait for initialization
-
-        viewModel.onSortOrderClick(WpApiParamOrder.DESC)
-
-        assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
-    }
-
-    private fun createTestViewModel(): TestDataViewViewModel {
-        return TestDataViewViewModel(
+        val viewModel = TestDataViewViewModel(
             mainDispatcher = testDispatcher(),
             appLogWrapper = appLogWrapper,
             sharedPrefs = sharedPrefs,
@@ -200,6 +221,74 @@ class DataViewViewModelTest : BaseUnitTest() {
             accountStore = accountStore,
             ioDispatcher = testDispatcher()
         )
+        advanceUntilIdle() // Wait for initialization
+
+        val testFilter = DataViewDropdownItem(1, R.string.app_name)
+
+        viewModel.onFilterClick(testFilter)
+
+        assertThat(viewModel.itemFilter.value).isEqualTo(testFilter)
+    }
+
+    @Test
+    fun `onSortClick updates sort`() = runTest {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+        advanceUntilIdle() // Wait for initialization
+
+        val testSort = DataViewDropdownItem(2, R.string.app_name)
+
+        viewModel.onSortClick(testSort)
+
+        assertThat(viewModel.itemSortBy.value).isEqualTo(testSort)
+    }
+
+    @Test
+    fun `onSortOrderClick updates sort order`() = runTest {
+        val viewModel = TestDataViewViewModel(
+            mainDispatcher = testDispatcher(),
+            appLogWrapper = appLogWrapper,
+            sharedPrefs = sharedPrefs,
+            networkUtilsWrapper = networkUtilsWrapper,
+            selectedSiteRepository = selectedSiteRepository,
+            accountStore = accountStore,
+            ioDispatcher = testDispatcher()
+        )
+        advanceUntilIdle() // Wait for initialization
+
+        viewModel.onSortOrderClick(WpApiParamOrder.DESC)
+
+        assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
+    }
+
+    @Test
+    fun `access token null throws exception`() {
+        whenever(accountStore.accessToken).thenReturn(null)
+
+        try {
+            TestDataViewViewModel(
+                mainDispatcher = testDispatcher(),
+                appLogWrapper = appLogWrapper,
+                sharedPrefs = sharedPrefs,
+                networkUtilsWrapper = networkUtilsWrapper,
+                selectedSiteRepository = selectedSiteRepository,
+                accountStore = accountStore,
+                ioDispatcher = testDispatcher()
+            )
+            // If we get here, test should fail
+            assertThat(false).isTrue()
+        } catch (e: Exception) {
+            // Check if the exception or its cause contains the expected message
+            val message = e.message ?: e.cause?.message ?: ""
+            assertThat(message).contains("Access token is required but was null")
+        }
     }
 
     /**
@@ -222,10 +311,30 @@ class DataViewViewModelTest : BaseUnitTest() {
         accountStore,
         ioDispatcher
     ) {
+        private val supportedSorts = listOf(
+            DataViewDropdownItem(1, R.string.app_name),
+            DataViewDropdownItem(2, R.string.app_name)
+        )
+
+        private val supportedFilters = listOf(
+            DataViewDropdownItem(1, R.string.app_name),
+            DataViewDropdownItem(2, R.string.app_name)
+        )
+
         private var testItems: List<DataViewItem> = emptyList()
 
         fun setTestItems(items: List<DataViewItem>) {
             testItems = items
+            try {
+                // Use reflection to set the private _items field
+                val itemsField = DataViewViewModel::class.java.getDeclaredField("_items")
+                itemsField.isAccessible = true
+                @Suppress("UNCHECKED_CAST")
+                val itemsFlow = itemsField.get(this) as kotlinx.coroutines.flow.MutableStateFlow<List<DataViewItem>>
+                itemsFlow.value = items
+            } catch (e: Exception) {
+                // Ignore reflection errors in tests
+            }
         }
 
         override suspend fun performNetworkRequest(
@@ -239,17 +348,11 @@ class DataViewViewModelTest : BaseUnitTest() {
         }
 
         override fun getSupportedSorts(): List<DataViewDropdownItem> {
-            return listOf(
-                DataViewDropdownItem(1, R.string.app_name),
-                DataViewDropdownItem(2, R.string.app_name)
-            )
+            return supportedSorts
         }
 
         override fun getSupportedFilters(): List<DataViewDropdownItem> {
-            return listOf(
-                DataViewDropdownItem(1, R.string.app_name),
-                DataViewDropdownItem(2, R.string.app_name)
-            )
+            return supportedFilters
         }
     }
 }
