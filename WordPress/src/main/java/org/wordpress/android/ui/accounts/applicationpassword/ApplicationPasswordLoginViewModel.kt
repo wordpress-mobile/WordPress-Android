@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.login.util.SiteUtils
@@ -80,17 +79,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(urlLogin)
             // If the site already exists, we can skip fetching it again
-            if (credentialsStored) {
-                _onFinishedEvent.emit(
-                    NavigationActionData(
-                        showSiteSelector = false,
-                        showPostSignupInterstitial = false,
-                        siteUrl = urlLogin.siteUrl,
-                        oldSitesIDs = oldSitesIDs,
-                        isError = false
-                    )
-                )
-            } else {
+            if (!credentialsStored) {
                 fetchSites(
                     urlLogin.user.orEmpty(),
                     urlLogin.password.orEmpty(),
@@ -155,11 +144,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
-        val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
-        val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
-        if (site == null) {
-            appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
-            viewModelScope.launch {
+        viewModelScope.launch {
+            val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
+            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
+            if (site == null) {
+                appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
@@ -169,26 +158,19 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                         isError = true
                     )
                 )
-            }
-        } else {
-            dispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(site))
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onProfileFetched(event: OnProfileFetched) {
-        viewModelScope.launch {
-            _onFinishedEvent.emit(
-                NavigationActionData(
-                    showSiteSelector = siteStore.hasSite(),
-                    showPostSignupInterstitial = !siteStore.hasSite()
-                            && appPrefsWrapper.shouldShowPostSignupInterstitial,
-                    siteUrl = event.site.url,
-                    oldSitesIDs = oldSitesIDs,
-                    isError = false
+            } else {
+                _onFinishedEvent.emit(
+                    NavigationActionData(
+                        showSiteSelector = siteStore.hasSite() &&
+                                oldSitesIDs?.contains(site.id) != true, // null or false
+                        showPostSignupInterstitial = !siteStore.hasSite()
+                                && appPrefsWrapper.shouldShowPostSignupInterstitial,
+                        siteUrl = currentUrlLogin?.siteUrl,
+                        oldSitesIDs = oldSitesIDs,
+                        isError = false
+                    )
                 )
-            )
+            }
         }
     }
 
