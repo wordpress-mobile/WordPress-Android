@@ -239,6 +239,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     /**
      * Test implementation of DataViewViewModel for testing purposes
      */
+    @Suppress("LongParameterList")
     private class TestDataViewViewModel(
         mainDispatcher: kotlinx.coroutines.CoroutineDispatcher,
         appLogWrapper: AppLogWrapper,

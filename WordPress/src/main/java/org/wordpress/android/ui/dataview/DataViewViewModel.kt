@@ -40,25 +40,27 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
+    @Suppress("VariableNaming")
     protected val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
+    @Suppress("VariableNaming")
     protected val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
     val items = _items.asStateFlow()
 
-    protected val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
+    private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemFilter = _itemFilter.asStateFlow()
 
-    protected val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
+    private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemSortBy = _itemSortBy.asStateFlow()
 
-    protected val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
+    private val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
     val sortOrder = _sortOrder.asStateFlow()
 
-    protected val _errorMessage = MutableStateFlow<String?>(null)
+    private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
 
-    protected val _refreshState = MutableStateFlow(false)
+    private val _refreshState = MutableStateFlow(false)
     val refreshState = _refreshState.asStateFlow()
 
     private val debouncedQuery = MutableStateFlow("")
