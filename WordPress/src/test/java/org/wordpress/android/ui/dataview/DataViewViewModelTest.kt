@@ -3,6 +3,7 @@ package org.wordpress.android.ui.dataview
 import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +18,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 import uniffi.wp_api.WpApiParamOrder
-import kotlin.test.DefaultAsserter.fail
 
 @ExperimentalCoroutinesApi
 class DataViewViewModelTest : BaseUnitTest() {
@@ -228,7 +228,7 @@ class DataViewViewModelTest : BaseUnitTest() {
             // Access the wpComApiClient property to trigger the lazy initialization
             viewModel.testAccessWpComApiClient()
             // If we get here, test should fail
-            fail("Access token is required but was null")
+            Assertions.fail("Access token is required but was null")
         } catch (e: Exception) {
             // Check if the exception or its cause contains the expected message
             val message = e.message ?: e.cause?.message ?: ""
