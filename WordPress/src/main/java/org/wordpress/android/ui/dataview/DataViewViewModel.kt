@@ -79,7 +79,7 @@ open class DataViewViewModel @Inject constructor(
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        initialize()
+        this.initialize()
     }
 
     open fun initialize() {
@@ -146,7 +146,7 @@ open class DataViewViewModel @Inject constructor(
                     filter = _itemFilter.value,
                     sortOrder = _sortOrder.value,
                     sortBy = _itemSortBy.value,
-                ) ?: emptyList() // Handle null case
+                )
                 if (uiState.value == DataViewUiState.ERROR) {
                     _refreshState.value = false
                     return@launch
