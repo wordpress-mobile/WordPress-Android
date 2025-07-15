@@ -130,34 +130,48 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
     @Composable
     fun ApplicationPasswordReauthenticateDialogPreview() {
         AppThemeM3 {
-            // Preview with mock loading state
-            AlertDialog(
-                onDismissRequest = {},
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Lock,
-                        contentDescription = null
-                    )
-                },
-                title = { Text(text = "Application Password Invalid") },
-                text = { Text(text = "Your application password has expired. Please log in again.") },
-                confirmButton = {
-                    Button(
-                        onClick = {},
-                        enabled = false
-                    ) {
-                        Row {
-                            CircularProgressIndicator(
-                                modifier = androidx.compose.ui.Modifier.size(16.dp),
-                                strokeWidth = 2.dp
-                            )
-                            Spacer(modifier = androidx.compose.ui.Modifier.width(8.dp))
-                            Text(text = "Log In")
-                        }
+            ApplicationPasswordReauthenticateDialogPreviewContent()
+        }
+    }
+    
+    @Composable
+    private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
+        val isLoading = remember { mutableStateOf(false) }
+        
+        AlertDialog(
+            onDismissRequest = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null
+                )
+            },
+            title = { Text(text = stringResource(R.string.application_password_invalid)) },
+            text = {
+                Column(
+                    modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = stringResource(R.string.application_password_invalid_description))
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        isLoading.value = !isLoading.value
+                    },
+                    enabled = !isLoading.value
+                ) {
+                    if (isLoading.value) {
+                        CircularProgressIndicator(
+                            modifier = androidx.compose.ui.Modifier.size(16.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(text = stringResource(R.string.log_in))
                     }
                 }
-            )
-        }
+            }
+        )
     }
 
     companion object {
