@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:21:52+0000
+Translation-Revision-Date: 2025-07-11 04:03:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nb_NO
@@ -15,6 +15,7 @@ Language: nb_NO
     <string name="me_btn_scan_login_code">Skann innloggingskode</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt siste innlegg %1$s har fått %2$s likerklikk.</string>
     <string name="stats_most_popular_percent_views_empty">Ikke nok aktivitet. Kom tilbake senere når ditt nettsted har hatt flere besøkende!</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% av følgere totalt</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopier lenke</string>
     <string name="quick_start_sites_type_get_to_know_app">Bli kjent med appen</string>
@@ -181,6 +182,7 @@ Language: nb_NO
     <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
     <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
     <string name="site_settings_categories_title">Kategorier</string>
+    <string name="site_settings_blogging_reminders_title">Påminnelser</string>
     <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Skriv inn en URL</string>
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s-blokk</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Kolonneinnstillinger</string>
@@ -674,6 +676,7 @@ Language: nb_NO
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Legg til URL</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Legg til alt-tekst</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">LEGG TIL BLOKK HER</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legge til en beskrivelse</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
     <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>

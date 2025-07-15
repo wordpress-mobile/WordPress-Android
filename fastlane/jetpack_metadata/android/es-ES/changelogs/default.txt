@@ -1,0 +1,2 @@
+26.0:
+Hemos añadido la autenticación de contraseñas de aplicaciones. Todavía es experimental, pero una vez que esté completamente integrada, podremos mejorar las funciones con las que ya cuenta e introducir otras nuevas. ¡Por fin!
