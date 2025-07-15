@@ -149,7 +149,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.updateItemsForTest(testItems)
         advanceUntilIdle()
 
-        viewModel.removeItem(2)
+        viewModel.removeItem(2L)
 
         val remainingItems = viewModel.items.value
         assertThat(remainingItems).hasSize(2)
