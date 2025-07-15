@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -145,12 +144,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
-        Log.d("CHANGE_TAG", "Receiving onsite changed event")
         viewModelScope.launch {
             val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
             val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
             if (site == null) {
-                Log.d("CHANGE_TAG", "Receiving onsite changed event error")
                 appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
                 _onFinishedEvent.emit(
                     NavigationActionData(
@@ -162,7 +159,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     )
                 )
             } else {
-                Log.d("CHANGE_TAG", "Open sites: ${siteStore.hasSite() && oldSitesIDs?.contains(site.id) == false}")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = siteStore.hasSite() && oldSitesIDs?.contains(site.id) == false,
