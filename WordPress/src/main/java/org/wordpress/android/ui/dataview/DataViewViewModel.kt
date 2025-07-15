@@ -35,20 +35,11 @@ open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val sharedPrefs: SharedPreferences,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Inject
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var accountStore: AccountStore
-
-    @Inject
-    @Named(IO_THREAD)
-    lateinit var ioDispatcher: CoroutineDispatcher
-
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -76,7 +67,7 @@ open class DataViewViewModel @Inject constructor(
     private var canLoadMore = true
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-    val wpComApiClient: WpComApiClient by lazy {
+    protected val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
