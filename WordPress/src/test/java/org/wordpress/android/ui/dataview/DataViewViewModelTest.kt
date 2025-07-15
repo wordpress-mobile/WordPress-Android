@@ -284,17 +284,9 @@ class DataViewViewModelTest : BaseUnitTest() {
             testItems = items
         }
 
-        // Override to expose access to private fields for testing
+        // Direct access to protected fields for testing (no reflection needed!)
         fun updateItemsForTest(items: List<DataViewItem>) {
-            try {
-                val itemsField = DataViewViewModel::class.java.getDeclaredField("_items")
-                itemsField.isAccessible = true
-                @Suppress("UNCHECKED_CAST")
-                val itemsFlow = itemsField.get(this) as kotlinx.coroutines.flow.MutableStateFlow<List<DataViewItem>>
-                itemsFlow.value = items
-            } catch (e: Exception) {
-                // Fallback - items won't be updated but test won't crash
-            }
+            _items.value = items
         }
 
         override suspend fun performNetworkRequest(
