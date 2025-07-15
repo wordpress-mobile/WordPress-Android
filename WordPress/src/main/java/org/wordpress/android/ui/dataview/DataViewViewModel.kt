@@ -77,14 +77,9 @@ open class DataViewViewModel @Inject constructor(
         )
     }
 
-    // Flag to control auto-initialization (can be overridden by subclasses)
-    open val autoInitialize: Boolean = true
-
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        if (autoInitialize) {
-            initialize()
-        }
+        initialize()
     }
 
     fun initialize() {
@@ -111,7 +106,7 @@ open class DataViewViewModel @Inject constructor(
     /**
      * Restores the sort order, sort by, and filter from saved preferences
      */
-    private fun restorePrefs() {
+    protected open fun restorePrefs() {
         val sortOrdinal = sharedPrefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
         if (sortOrdinal > -1) {
             WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal)?.let {
