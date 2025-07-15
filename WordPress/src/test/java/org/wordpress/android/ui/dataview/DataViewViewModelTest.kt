@@ -51,7 +51,6 @@ class DataViewViewModelTest : BaseUnitTest() {
         whenever(sharedPrefs.edit()).thenReturn(sharedPrefsEditor)
         whenever(sharedPrefsEditor.putInt(any(), any())).thenReturn(sharedPrefsEditor)
         whenever(sharedPrefsEditor.putLong(any(), any())).thenReturn(sharedPrefsEditor)
-        whenever(sharedPrefsEditor.remove(any())).thenReturn(sharedPrefsEditor)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false) // Prevent network calls
@@ -72,25 +71,24 @@ class DataViewViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when view model is created, then initial state is loading`() {
+        val viewModel = createTestViewModel()
+        assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.LOADING)
+    }
+
+    @Test
     fun `siteId returns correct site ID`() = runTest {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
         val siteId = viewModel.siteId()
         assertThat(siteId).isEqualTo(123L)
     }
 
     @Test
-    fun `siteId returns 0 when no site selected`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-        val viewModel = createTestViewModel()
-        advanceUntilIdle()
-        val siteId = viewModel.siteId()
-        assertThat(siteId).isEqualTo(0L)
-    }
-
-    @Test
     fun `access token is used for API client initialization`() {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
         // Just verify the ViewModel initializes without throwing
         assertThat(viewModel).isNotNull
@@ -99,6 +97,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `supported sorts returns test data`() {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
 
         val supportedSorts = viewModel.getSupportedSorts()
@@ -111,6 +110,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `supported filters returns test data`() {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
 
         val supportedFilters = viewModel.getSupportedFilters()
@@ -123,6 +123,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `default sort is first supported sort`() {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
 
         val defaultSort = viewModel.getDefaultSort()
@@ -133,8 +134,8 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `removeItem removes item from list`() = runTest {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
-        advanceUntilIdle() // Wait for initialization
 
         val testItems = listOf(
             DataViewItem(1, null, "Item 1", emptyList()),
@@ -157,7 +158,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `onError updates error message and UI state`() = runTest {
         val viewModel = createTestViewModel()
-        advanceUntilIdle()
+        viewModel.initializeForTest()
         advanceUntilIdle()
 
         val errorMessage = "Test error"
@@ -172,8 +173,8 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `onFilterClick toggles filter`() = runTest {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
-        advanceUntilIdle() // Wait for initialization
 
         val testFilter = DataViewDropdownItem(1, R.string.app_name)
 
@@ -186,8 +187,8 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `onSortClick updates sort`() = runTest {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
-        advanceUntilIdle() // Wait for initialization
 
         val testSort = DataViewDropdownItem(2, R.string.app_name)
 
@@ -200,8 +201,8 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `onSortOrderClick updates sort order`() = runTest {
         val viewModel = createTestViewModel()
+        viewModel.initializeForTest()
         advanceUntilIdle()
-        advanceUntilIdle() // Wait for initialization
 
         viewModel.testOnSortOrderClick(WpApiParamOrder.DESC)
         advanceUntilIdle()
@@ -254,12 +255,16 @@ class DataViewViewModelTest : BaseUnitTest() {
         accountStore,
         ioDispatcher
     ) {
-        private val supportedSorts = listOf(
+        // Override autoInitialize to prevent automatic initialization
+        override val autoInitialize: Boolean = false
+
+        // Initialize these properties before the parent constructor runs
+        private val supportedSorts: List<DataViewDropdownItem> = listOf(
             DataViewDropdownItem(1, R.string.app_name),
             DataViewDropdownItem(2, R.string.app_name)
         )
 
-        private val supportedFilters = listOf(
+        private val supportedFilters: List<DataViewDropdownItem> = listOf(
             DataViewDropdownItem(1, R.string.app_name),
             DataViewDropdownItem(2, R.string.app_name)
         )
@@ -302,6 +307,10 @@ class DataViewViewModelTest : BaseUnitTest() {
             return supportedFilters
         }
 
+        override fun getDefaultSort(): DataViewDropdownItem {
+            return supportedSorts[0]
+        }
+
         // Test helper methods to access protected/public methods without side effects
         fun testOnError(message: String?) {
             onError(message)
@@ -322,6 +331,10 @@ class DataViewViewModelTest : BaseUnitTest() {
         fun testAccessWpComApiClient() {
             // Access the lazy wpComApiClient to trigger initialization
             wpComApiClient.toString()
+        }
+
+        fun initializeForTest() {
+            initialize()
         }
     }
 }

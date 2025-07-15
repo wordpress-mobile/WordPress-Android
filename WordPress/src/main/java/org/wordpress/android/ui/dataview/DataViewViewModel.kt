@@ -77,8 +77,17 @@ open class DataViewViewModel @Inject constructor(
         )
     }
 
+    // Flag to control auto-initialization (can be overridden by subclasses)
+    open val autoInitialize: Boolean = true
+
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
+        if (autoInitialize) {
+            initialize()
+        }
+    }
+
+    fun initialize() {
         launch {
             restorePrefs()
             fetchData()
