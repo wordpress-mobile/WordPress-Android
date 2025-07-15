@@ -164,7 +164,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
-    class UriLoginWrapper @Inject constructor(private val apiRootUrlCache: ApiRootUrlCache) {
+    class UriLoginWrapper @Inject constructor(
+        private val apiRootUrlCache: ApiRootUrlCache,
+        private val buildConfigWrapper: BuildConfigWrapper,
+        ) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
             val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
@@ -178,12 +181,28 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return if (authorizationUrl.isNullOrEmpty()) {
                 authorizationUrl.orEmpty()
             } else {
+                val appName: String
+                val successUrl: String
+                if (buildConfigWrapper.isJetpackApp) {
+                    appName = ANDROID_JETPACK_CLIENT
+                    successUrl = JETPACK_SUCCESS_URL
+                } else {
+                    appName = ANDROID_WORDPRESS_CLIENT
+                    successUrl = WORDPRESS_SUCCESS_URL
+                }
                 authorizationUrl.toUri().buildUpon().apply {
-                    appendQueryParameter("app_name", "android-jetpack-client")
-                    appendQueryParameter("success_url", "jetpack://app-pass-authorize")
+                    appendQueryParameter("app_name", appName)
+                    appendQueryParameter("success_url", successUrl)
                 }.build().toString()
             }
         }
+    }
+
+    companion object {
+        private const val ANDROID_JETPACK_CLIENT = "android-jetpack-client"
+        private const val ANDROID_WORDPRESS_CLIENT = "android-wordpress-client"
+        private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
+        private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
     }
 
     data class UriLogin(
