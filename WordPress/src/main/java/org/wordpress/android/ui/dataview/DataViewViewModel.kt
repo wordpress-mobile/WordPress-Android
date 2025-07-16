@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -45,9 +46,8 @@ open class DataViewViewModel @Inject constructor(
 
     private val debouncedQuery = MutableStateFlow("")
 
-    // State update helper functions
     private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
-        _uiState.value = update(_uiState.value)
+        _uiState.update { update(it) }
     }
 
     private fun updateItems(items: List<DataViewItem>, isLoadingMore: Boolean = false) {
@@ -115,11 +115,7 @@ open class DataViewViewModel @Inject constructor(
      */
     protected open fun restorePrefs() {
         val sortOrdinal = sharedPrefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
-        val sortOrder = if (sortOrdinal > -1) {
-            WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal) ?: WpApiParamOrder.ASC
-        } else {
-            WpApiParamOrder.ASC
-        }
+        val sortOrder = WpApiParamOrder.entries.getOrNull(sortOrdinal) ?: WpApiParamOrder.ASC
 
         val sortById = sharedPrefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
         val sortBy = if (sortById > -1) {
