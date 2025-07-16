@@ -27,8 +27,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 ) {
     lateinit var scope: CoroutineScope
 
-    private val siteURLCache = mutableMapOf<String, String>()
-
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
     }
@@ -52,21 +50,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)
 
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
-        // Check if the site URL is already cached
-        val cachedValue = siteURLCache[site.url]
-        if (cachedValue == null) {
-            // No cached value, set to null until get a response
-            uiModelMutable.postValue(null)
-        } else {
-            // If cached value is empty, it means the site has no authentication URL
-            if (cachedValue.isEmpty()) {
-                uiModelMutable.postValue(null)
-            } else {
-                postAuthenticationUrl(cachedValue)
-            }
-            return
-        }
-
         scope.launch {
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteStore.sites.firstOrNull { it.localId() == site.localId() }
@@ -80,10 +63,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
-                siteURLCache[site.url] = ""
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
-                siteURLCache[site.url] = authorizationUrlComplete
             }
         }
     }
