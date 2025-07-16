@@ -147,8 +147,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         viewModelScope.launch {
             val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
             val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
-            if (site == null) {
-                appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
+            if (event.rowsAffected < 1 || site == null ||
+                site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+                appLogWrapper.e(AppLog.T.MAIN, "Site not found or credentials are empty.")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
