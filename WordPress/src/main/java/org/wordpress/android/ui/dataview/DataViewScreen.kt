@@ -33,6 +33,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -356,6 +357,14 @@ private fun DropdownItems(
     }
 }
 
+/**
+ * Displays a list of data items with pagination support.
+ * 
+ * Uses a simple flag-based approach to prevent duplicate pagination calls:
+ * - When the last item is rendered AND the flag hasn't been set, triggers onFetchMore()
+ * - The flag is reset whenever the items list changes (via LaunchedEffect)
+ * - This prevents the performance issue where onFetchMore() was called on every recomposition
+ */
 @Composable
 private fun LoadedDataView(
     items: List<DataViewItem>,
@@ -363,6 +372,8 @@ private fun LoadedDataView(
     onFetchMore: () -> Unit,
     showProgress: Boolean = false
 ) {
+    var hasTriggeredLoadMore by remember { mutableStateOf(false) }
+    
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -377,11 +388,18 @@ private fun LoadedDataView(
                         onItemClick(item)
                     }
                 )
-                if (items.last() == item) {
+                if (items.last() == item && !hasTriggeredLoadMore) {
+                    hasTriggeredLoadMore = true
                     onFetchMore()
                 }
             }
         }
+        
+        // Reset flag when items change
+        LaunchedEffect(items.size) {
+            hasTriggeredLoadMore = false
+        }
+        
         if (showProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
