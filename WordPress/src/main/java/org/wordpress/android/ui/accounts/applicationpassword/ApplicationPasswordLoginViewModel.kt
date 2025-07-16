@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
@@ -141,14 +142,13 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
     )
 
-    @SuppressWarnings("unused", "ComplexCondition")
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
         viewModelScope.launch {
             val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
             val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
-            if (event.rowsAffected < 1 || site == null ||
-                site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+            if (event.rowsAffected < 1 || site == null || areBadCredentials(site)) {
                 appLogWrapper.e(AppLog.T.MAIN, "Site not found or credentials are empty.")
                 _onFinishedEvent.emit(
                     NavigationActionData(
@@ -174,6 +174,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             }
         }
     }
+
+    private fun areBadCredentials(site: SiteModel) =
+        site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()
 
     data class NavigationActionData(
         val showSiteSelector: Boolean,
