@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
@@ -210,7 +211,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         QuickStartPromptClickInterface,
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
-        UpdateSelectedSiteListener {
+        UpdateSelectedSiteListener,
+        WpAppNotifierHandler.NotifierListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -307,6 +309,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
+
+    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1129,6 +1133,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
+        mWpAppNotifierHandler.addListener(this);
+
         // Load selected site
         initSelectedSite();
 
@@ -1919,6 +1925,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
+        mWpAppNotifierHandler.removeListener(this);
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }
 
@@ -1975,6 +1982,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 );
             }
         }
+    }
+
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
+        showApplicationPasswordOffReauthenticateDialog(authenticationUrl);
+    }
+
+    private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
     }
 
     @Nullable

@@ -17,11 +17,9 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.test.assertNotNull
 
 private const val TEST_URL = "https://www.test.com"
@@ -41,13 +39,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var siteSqlUtils: SiteSqlUtils
 
     @Mock
-    lateinit var appLogWrapper: AppLogWrapper
-
-    @Mock
     lateinit var experimentalFeatures: ExperimentalFeatures
-
-    @Mock
-    lateinit var resourceProvider: ResourceProvider
 
     private lateinit var siteTest: SiteModel
 
@@ -63,8 +55,6 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteSqlUtils,
             experimentalFeatures,
-            resourceProvider,
-            appLogWrapper
         ).apply {
             initialize(testScope())
             whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)

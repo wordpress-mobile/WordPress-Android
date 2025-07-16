@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
@@ -8,6 +7,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
@@ -32,6 +32,7 @@ class MediaRSApiRestClient @Inject constructor(
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
@@ -44,7 +45,7 @@ class MediaRSApiRestClient @Inject constructor(
                 authProvider = authProvider,
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication() {
-                        Log.d("MEDIA_TAG", "NOT AUTHENTICATED")
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                     }
                 }
             )
