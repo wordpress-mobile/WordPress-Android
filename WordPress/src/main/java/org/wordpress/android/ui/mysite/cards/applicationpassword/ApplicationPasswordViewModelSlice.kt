@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -52,10 +51,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
         scope.launch {
             // If the site is already authorized, no need to run the discovery
-            val storedSite = siteStore.sites.firstOrNull { it.localId() == site.localId() }
+            val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
             if (storedSite != null &&
-                !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
-                !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
+                !storedSite.apiRestUsernamePlain.isNullOrEmpty() &&
+                !storedSite.apiRestPasswordPlain.isNullOrEmpty()
                 ) {
                 uiModelMutable.postValue(null)
                 return@launch
