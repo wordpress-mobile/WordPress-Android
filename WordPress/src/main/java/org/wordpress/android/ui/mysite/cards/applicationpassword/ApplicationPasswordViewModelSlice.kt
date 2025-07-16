@@ -52,10 +52,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         scope.launch {
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
-            if (storedSite != null &&
-                !storedSite.apiRestUsernamePlain.isNullOrEmpty() &&
-                !storedSite.apiRestPasswordPlain.isNullOrEmpty()
-                ) {
+            if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
                 uiModelMutable.postValue(null)
                 return@launch
             }
