@@ -42,7 +42,7 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     private val testSite = SiteModel().apply {
         id = 1
-        siteId = 123L
+        siteId = TEST_SITE_SITE_ID
         name = "Test Site"
     }
 
@@ -84,7 +84,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
         val siteId = viewModel.siteId()
-        assertThat(siteId).isEqualTo(123L)
+        assertThat(siteId).isEqualTo(TEST_SITE_SITE_ID)
     }
 
     @Test
@@ -456,9 +456,10 @@ class DataViewViewModelTest : BaseUnitTest() {
     fun `pagination behavior stops loading when page is not full`() = runTest {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val viewModel = createTestViewModel()
+        val itemCount = PAGE_SIZE - 10
 
         // Set up partial page of items (less than PAGE_SIZE)
-        val testItems = (1..10).map {
+        val testItems = (1..itemCount ).map {
             DataViewItem(id = it.toLong(), image = null, title = "Item $it", fields = emptyList())
         }
         viewModel.setTestItems(testItems)
@@ -466,7 +467,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should not allow loading more since we have a partial page
-        assertThat(viewModel.items.value).hasSize(10) // Less than PAGE_SIZE
+        assertThat(viewModel.items.value).hasSize(itemCount) // Less than PAGE_SIZE
 
         // Test that onFetchMoreData does nothing (indicates cannot load more)
         val initialState = viewModel.uiState.value
@@ -574,5 +575,9 @@ class DataViewViewModelTest : BaseUnitTest() {
             shouldInitialize = true
             initialize()
         }
+    }
+
+    companion object {
+        private const val TEST_SITE_SITE_ID = 123L
     }
 }
