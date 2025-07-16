@@ -141,7 +141,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
     )
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused", "ComplexCondition")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
         viewModelScope.launch {
