@@ -57,6 +57,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
                 !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
                 ) {
+                uiModelMutable.postValue(null)
                 return@launch
             }
 
