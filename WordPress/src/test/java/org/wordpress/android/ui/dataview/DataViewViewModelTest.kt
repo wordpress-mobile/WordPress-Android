@@ -499,6 +499,13 @@ class DataViewViewModelTest : BaseUnitTest() {
         accountStore,
         ioDispatcher
     ) {
+        /**
+         * Flag to control when the full initialization happens. How It Works
+         *   1. During construction: shouldInitialize is false, so initialize() does nothing
+         *   2. Test setup: We can safely set up test data with setTestItems()
+         *   3. When ready: We call initializeForTest() to trigger the actual initialization
+         *   4. Controlled execution: The initialization happens exactly when the test wants it to
+         */
         private var shouldInitialize = false
 
         // Override initialize to control when the full initialization happens
