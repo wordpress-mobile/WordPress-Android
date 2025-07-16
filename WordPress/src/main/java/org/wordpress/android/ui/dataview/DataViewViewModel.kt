@@ -40,12 +40,10 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    @Suppress("VariableNaming")
-    protected val _uiState = MutableStateFlow(DataViewUiState.LOADING)
+    private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
-    @Suppress("VariableNaming")
-    protected val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
+    private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
     val items = _items.asStateFlow()
 
     private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
