@@ -359,7 +359,7 @@ private fun DropdownItems(
 
 /**
  * Displays a list of data items with pagination support.
- * 
+ *
  * Uses a simple flag-based approach to prevent duplicate pagination calls:
  * - When the last item is rendered AND the flag hasn't been set, triggers onFetchMore()
  * - The flag is reset whenever the items list changes (via LaunchedEffect)
@@ -373,7 +373,7 @@ private fun LoadedDataView(
     showProgress: Boolean = false
 ) {
     var hasTriggeredLoadMore by remember { mutableStateOf(false) }
-    
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -394,12 +394,12 @@ private fun LoadedDataView(
                 }
             }
         }
-        
+
         // Reset flag when items change
         LaunchedEffect(items.size) {
             hasTriggeredLoadMore = false
         }
-        
+
         if (showProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -490,7 +490,14 @@ private fun OfflineDataView() {
 @Composable
 private fun LoadedPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.LOADED, items = getDummyDataViewItems())) },
+        uiState = remember {
+            mutableStateOf(
+                DataViewUiState(
+                    loadingState = LoadingState.LOADED,
+                    items = getDummyDataViewItems()
+                )
+            )
+        },
         supportedFilters = dummyDropdownItems,
         supportedSorts = dummyDropdownItems,
         onRefresh = { },
@@ -580,7 +587,14 @@ private fun OfflinePreview() {
 @Composable
 private fun ErrorPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.ERROR, errorMessage = "Connection failed")) },
+        uiState = remember {
+            mutableStateOf(
+                DataViewUiState(
+                    loadingState = LoadingState.ERROR,
+                    errorMessage = "Connection failed"
+                )
+            )
+        },
         supportedFilters = dummyDropdownItems,
         supportedSorts = dummyDropdownItems,
         onRefresh = { },

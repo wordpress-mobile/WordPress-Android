@@ -395,7 +395,11 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should transition through loading to loaded/empty state
-        assertThat(viewModel.uiState.value.loadingState).isIn(LoadingState.LOADING, LoadingState.EMPTY, LoadingState.LOADED)
+        assertThat(viewModel.uiState.value.loadingState).isIn(
+            LoadingState.LOADING,
+            LoadingState.EMPTY,
+            LoadingState.LOADED
+        )
     }
 
     @Test
@@ -459,7 +463,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         val itemCount = PAGE_SIZE - 10
 
         // Set up partial page of items (less than PAGE_SIZE)
-        val testItems = (1..itemCount ).map {
+        val testItems = (1..itemCount).map {
             DataViewItem(id = it.toLong(), image = null, title = "Item $it", fields = emptyList())
         }
         viewModel.setTestItems(testItems)
