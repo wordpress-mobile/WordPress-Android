@@ -161,6 +161,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return siteStore.sites.count { !it.apiRestUsernameEncrypted.isNullOrEmpty() }
     }
 
+    fun siteHasBadCredentials(site: SiteModel) =
+        site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()
+
     /**
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */

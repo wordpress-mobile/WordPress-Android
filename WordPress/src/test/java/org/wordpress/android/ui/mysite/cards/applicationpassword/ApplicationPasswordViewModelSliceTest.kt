@@ -16,7 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
@@ -36,7 +36,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Mock
-    lateinit var siteSqlUtils: SiteSqlUtils
+    lateinit var siteStore: SiteStore
 
     @Mock
     lateinit var experimentalFeatures: ExperimentalFeatures
@@ -53,7 +53,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
         applicationPasswordViewModelSlice = ApplicationPasswordViewModelSlice(
             applicationPasswordLoginHelper,
-            siteSqlUtils,
+            siteStore,
             experimentalFeatures,
         ).apply {
             initialize(testScope())
@@ -97,51 +97,21 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given site already authenticated, when calling api discovery, then show no card`() = runTest {
-        whenever(siteSqlUtils.getSiteWithLocalId(eq(siteTest.localId()))
-        ).thenReturn(SiteModel().apply {
-            apiRestUsernameEncrypted = "user"
-            apiRestPasswordEncrypted = "password"
-        })
+        whenever(siteStore.sites)
+        .thenReturn(
+            listOf(
+                SiteModel().apply {
+                    id = siteTest.id
+                    apiRestUsernamePlain = "user"
+                    apiRestPasswordPlain = "password"
+                }
+            )
+        )
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
         assertNull(applicationPasswordCard)
-        verify(siteSqlUtils).getSiteWithLocalId(eq(siteTest.localId()))
+        verify(siteStore).sites
         verify(applicationPasswordLoginHelper, times(0)).getAuthorizationUrlComplete(any())
     }
-
-    @Test
-    fun `given site url cached, when calling api discovery, then show card but don't call api discovery`() = runTest {
-        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
-            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
-
-        // Add site to the cache
-        applicationPasswordViewModelSlice.buildCard(siteTest)
-
-        // call function again
-        applicationPasswordViewModelSlice.buildCard(siteTest)
-
-        assertNotNull(applicationPasswordCard)
-        verify(siteSqlUtils).getSiteWithLocalId(eq(siteTest.localId()))
-        verify(applicationPasswordLoginHelper, times(1))
-            .getAuthorizationUrlComplete(any()) // only called once
-    }
-
-    @Test
-    fun `given site with empty cached, when calling api discovery, then don't show card nor call api discovery`() =
-        runTest {
-            whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
-                .thenReturn("")
-
-            // Add site tp the cache
-            applicationPasswordViewModelSlice.buildCard(siteTest)
-
-            // call function again
-            applicationPasswordViewModelSlice.buildCard(siteTest)
-
-            assertNull(applicationPasswordCard)
-            verify(siteSqlUtils).getSiteWithLocalId(eq(siteTest.localId()))
-            verify(applicationPasswordLoginHelper, times(1))
-                .getAuthorizationUrlComplete(any()) // only called once
-        }
 }

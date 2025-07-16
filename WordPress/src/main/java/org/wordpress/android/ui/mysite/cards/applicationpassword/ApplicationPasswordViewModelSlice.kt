@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -21,12 +21,10 @@ import javax.inject.Inject
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val siteSqlUtils: SiteSqlUtils,
+    private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
 ) {
     lateinit var scope: CoroutineScope
-
-    private val siteURLCache = mutableMapOf<String, String>()
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -51,38 +49,19 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)
 
     private fun buildApplicationPasswordDiscovery(site: SiteModel) {
-        // Check if the site URL is already cached
-        val cachedValue = siteURLCache[site.url]
-        if (cachedValue == null) {
-            // No cached value, set to null until get a response
-            uiModelMutable.postValue(null)
-        } else {
-            // If cached value is empty, it means the site has no authentication URL
-            if (cachedValue.isEmpty()) {
-                uiModelMutable.postValue(null)
-            } else {
-                postAuthenticationUrl(cachedValue)
-            }
-            return
-        }
-
         scope.launch {
             // If the site is already authorized, no need to run the discovery
-            val storedSite = siteSqlUtils.getSiteWithLocalId(site.localId())
-            if (storedSite != null &&
-                !storedSite.apiRestUsernameEncrypted.isNullOrEmpty() &&
-                !storedSite.apiRestPasswordEncrypted.isNullOrEmpty()
-                ) {
+            val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
+            if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
+                uiModelMutable.postValue(null)
                 return@launch
             }
 
             val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
-                siteURLCache[site.url] = ""
             } else {
                 postAuthenticationUrl(authorizationUrlComplete)
-                siteURLCache[site.url] = authorizationUrlComplete
             }
         }
     }
