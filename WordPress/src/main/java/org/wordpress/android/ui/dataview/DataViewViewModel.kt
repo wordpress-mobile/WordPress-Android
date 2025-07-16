@@ -49,6 +49,7 @@ open class DataViewViewModel @Inject constructor(
     private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
         _uiState.value = update(_uiState.value)
     }
+
     private fun updateItems(items: List<DataViewItem>, isLoadingMore: Boolean = false) {
         updateState { currentState ->
             currentState.copy(
@@ -173,7 +174,12 @@ open class DataViewViewModel @Inject constructor(
                 updateState { it.copy(isRefreshing = false) }
             }
         } else {
-            updateState { it.copy(loadingState = LoadingState.OFFLINE) }
+            updateState {
+                it.copy(
+                    loadingState = LoadingState.OFFLINE,
+                    isRefreshing = false
+                )
+            }
         }
     }
 
@@ -215,7 +221,7 @@ open class DataViewViewModel @Inject constructor(
      * Returns the name of the preference key for the given [prefKey]. This relies on
      * the [logTag] so descendants will have unique names for each key.
      */
-    private fun getPrefKeyName(prefKey: PrefKey) : String {
+    private fun getPrefKeyName(prefKey: PrefKey): String {
         return "${logTag}_${prefKey.name}"
     }
 
