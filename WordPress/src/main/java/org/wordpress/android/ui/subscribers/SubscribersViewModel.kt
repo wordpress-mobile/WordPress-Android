@@ -199,7 +199,7 @@ class SubscribersViewModel @Inject constructor(
      * it simply returns the subscriber from the existing list of items.
      */
     fun getSubscriber(userId: Long): Subscriber? {
-        val item = items.value.firstOrNull { it.id == userId }
+        val item = uiState.value.items.firstOrNull { it.id == userId }
         return item?.data as? Subscriber
     }
 
