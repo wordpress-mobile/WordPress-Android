@@ -136,11 +136,34 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaFetched(site, responseMedia, null)
                 }
 
-                else -> {
-                    appLogWrapper.e(AppLog.T.MEDIA, "Fetch media failed: $mediaResponse")
-                    val mediaError = MediaError(MediaErrorType.fromBaseNetworkError(mediaResponse))
-                    mediaError.message = mediaResponse.message
-                    mediaError.logMessage = mediaResponse.apiError
+                is WpRequestResult.MediaFileNotFound<*> -> {
+                    appLogWrapper.e(AppLog.T.MEDIA, "Media file not found: $mediaResponse")
+                    val mediaError = MediaError(MediaErrorType.NOT_FOUND)
+                    mediaError.message = "Media file not found"
+                    notifyMediaFetched(site, media, mediaError)
+                }
+
+                is WpRequestResult.ResponseParsingError<*> -> {
+                    appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
+                    val mediaError = MediaError(MediaErrorType.PARSE_ERROR)
+                    mediaError.message = "Failed to parse response"
+                    notifyMediaFetched(site, media, mediaError)
+                }
+
+                is WpRequestResult.SiteUrlParsingError<*> -> {
+                    appLogWrapper.e(AppLog.T.MEDIA, "Site URL parsing error: $mediaResponse")
+                    val mediaError = MediaError(MediaErrorType.MALFORMED_MEDIA_ARG)
+                    mediaError.message = "Invalid site URL"
+                    notifyMediaFetched(site, media, mediaError)
+                }
+
+                is WpRequestResult.InvalidHttpStatusCode<*>,
+                is WpRequestResult.WpError<*>,
+                is WpRequestResult.RequestExecutionFailed<*>,
+                is WpRequestResult.UnknownError<*> -> {
+                    appLogWrapper.e(AppLog.T.MEDIA, "Unknown error: $mediaResponse")
+                    val mediaError = MediaError(MediaErrorType.GENERIC_ERROR)
+                    mediaError.message = "Unknown error occurred"
                     notifyMediaFetched(site, media, mediaError)
                 }
             }
