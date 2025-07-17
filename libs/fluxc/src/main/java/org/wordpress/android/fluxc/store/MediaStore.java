@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -938,7 +939,9 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
+        Log.d("MEDIA_TAG", "Upload media. Can read file: " + payload.media.getFilePath() + " -> " + MediaUtils.canReadFile(payload.media.getFilePath()));
         if (payload.site.isUsingSelfHostedRestApi()) {
+            Log.d("MEDIA_TAG", "New rest");
             mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
@@ -964,7 +967,9 @@ public class MediaStore extends Store {
                 offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
             }
         }
+        Log.d("MEDIA_TAG", "Fetch multiple media");
         if (payload.site.isUsingSelfHostedRestApi()) {
+            Log.d("MEDIA_TAG", "New rest");
             mMediaRSApiRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
@@ -985,7 +990,9 @@ public class MediaStore extends Store {
             return;
         }
 
+        Log.d("MEDIA_TAG", "Fetch single media");
         if (payload.site.isUsingSelfHostedRestApi()) {
+            Log.d("MEDIA_TAG", "New rest");
             mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
@@ -1002,7 +1009,9 @@ public class MediaStore extends Store {
             return;
         }
 
+        Log.d("MEDIA_TAG", "Delete media");
         if (payload.site.isUsingSelfHostedRestApi()) {
+            Log.d("MEDIA_TAG", "New rest");
             mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);

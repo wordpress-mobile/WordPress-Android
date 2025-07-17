@@ -299,7 +299,7 @@ class MediaRSApiRestClient @Inject constructor(
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
                     params = MediaCreateParams(title = media.title),
-                    filePath = media.filePath!!, // We have already checked the nullability
+                    filePath = media.filePath!!, // We have already checked the nullability but it's mutable
                     fileContentType = media.mimeType.orEmpty(),
                     requestId = null
                 )
