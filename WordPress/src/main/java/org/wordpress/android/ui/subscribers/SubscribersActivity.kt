@@ -199,13 +199,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
     ) {
         DataViewScreen(
             uiState = viewModel.uiState.collectAsState(),
-            items = viewModel.items.collectAsState(),
             supportedFilters = viewModel.getSupportedFilters(),
-            currentFilter = viewModel.itemFilter.collectAsState().value,
             supportedSorts = viewModel.getSupportedSorts(),
-            currentSort = viewModel.itemSortBy.collectAsState().value,
-            currentSortOrder = viewModel.sortOrder.collectAsState().value,
-            errorMessage = viewModel.errorMessage.collectAsState().value,
             onRefresh = {
                 viewModel.onRefreshData()
             },
@@ -234,8 +229,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
             onSortOrderClick = { order ->
                 viewModel.onSortOrderClick(order)
             },
-            modifier = modifier,
-            refreshState = viewModel.refreshState.collectAsState()
+            modifier = modifier
         )
     }
 

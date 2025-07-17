@@ -75,7 +75,7 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Test
     fun `when view model is created, then initial state is loading`() {
         val viewModel = createTestViewModel()
-        assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.LOADING)
+        assertThat(viewModel.uiState.value.loadingState).isEqualTo(LoadingState.LOADING)
     }
 
     @Test
@@ -150,11 +150,11 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Verify items were loaded
-        assertThat(viewModel.items.value).hasSize(3)
+        assertThat(viewModel.uiState.value.items).hasSize(3)
 
         viewModel.removeItem(2L)
 
-        val remainingItems = viewModel.items.value
+        val remainingItems = viewModel.uiState.value.items
         assertThat(remainingItems).hasSize(2)
         assertThat(remainingItems.map { it.id }).containsExactly(1L, 3L)
     }
@@ -170,8 +170,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.testOnError(errorMessage)
         advanceUntilIdle()
 
-        assertThat(viewModel.errorMessage.value).isEqualTo(errorMessage)
-        assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.ERROR)
+        assertThat(viewModel.uiState.value.errorMessage).isEqualTo(errorMessage)
+        assertThat(viewModel.uiState.value.loadingState).isEqualTo(LoadingState.ERROR)
     }
 
     @Test
@@ -185,7 +185,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.testOnFilterClick(testFilter)
         advanceUntilIdle()
 
-        assertThat(viewModel.itemFilter.value).isEqualTo(testFilter)
+        assertThat(viewModel.uiState.value.currentFilter).isEqualTo(testFilter)
     }
 
     @Test
@@ -199,7 +199,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.testOnSortClick(testSort)
         advanceUntilIdle()
 
-        assertThat(viewModel.itemSortBy.value).isEqualTo(testSort)
+        assertThat(viewModel.uiState.value.currentSortBy).isEqualTo(testSort)
     }
 
     @Test
@@ -211,7 +211,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.testOnSortOrderClick(WpApiParamOrder.DESC)
         advanceUntilIdle()
 
-        assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
+        assertThat(viewModel.uiState.value.sortOrder).isEqualTo(WpApiParamOrder.DESC)
     }
 
     @Test
@@ -250,7 +250,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Verify the search was processed (items would be fetched with the query)
-        assertThat(viewModel.items.value).isEmpty()
+        assertThat(viewModel.uiState.value.items).isEmpty()
     }
 
     @Test
@@ -267,13 +267,13 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Wait for state to be loaded (should have items)
-        assertThat(viewModel.items.value).isNotEmpty()
+        assertThat(viewModel.uiState.value.items).isNotEmpty()
 
         viewModel.onRefreshData()
         advanceUntilIdle()
 
-        assertThat(viewModel.refreshState.value).isFalse()
-        assertThat(viewModel.errorMessage.value).isNull()
+        assertThat(viewModel.uiState.value.isRefreshing).isFalse()
+        assertThat(viewModel.uiState.value.errorMessage).isNull()
     }
 
     @Test
@@ -284,12 +284,12 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         // Verify initial state is not loaded (should be empty or loading)
         val initialState = viewModel.uiState.value
-        assertThat(initialState).isNotEqualTo(DataViewUiState.LOADED)
+        assertThat(initialState.loadingState).isNotEqualTo(LoadingState.LOADED)
 
         viewModel.onRefreshData()
         advanceUntilIdle()
 
-        assertThat(viewModel.refreshState.value).isFalse()
+        assertThat(viewModel.uiState.value.isRefreshing).isFalse()
     }
 
     @Test
@@ -306,13 +306,13 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should have loaded items and be able to load more (full page size)
-        assertThat(viewModel.items.value).hasSize(25)
+        assertThat(viewModel.uiState.value.items).hasSize(25)
 
         viewModel.onFetchMoreData()
         advanceUntilIdle()
 
         // Verify the state was updated during loading
-        assertThat(viewModel.uiState.value).isIn(DataViewUiState.LOADED, DataViewUiState.LOADING_MORE)
+        assertThat(viewModel.uiState.value.loadingState).isIn(LoadingState.LOADED, LoadingState.LOADING_MORE)
     }
 
     @Test
@@ -336,7 +336,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should still be in loading more state or have completed
-        assertThat(viewModel.uiState.value).isIn(DataViewUiState.LOADING_MORE, DataViewUiState.LOADED)
+        assertThat(viewModel.uiState.value.loadingState).isIn(LoadingState.LOADING_MORE, LoadingState.LOADED)
     }
 
     @Test
@@ -353,7 +353,7 @@ class DataViewViewModelTest : BaseUnitTest() {
 
         // After initialization with partial page, should not be able to load more
         val initialState = viewModel.uiState.value
-        assertThat(viewModel.items.value).hasSize(10) // Less than PAGE_SIZE
+        assertThat(viewModel.uiState.value.items).hasSize(10) // Less than PAGE_SIZE
 
         viewModel.onFetchMoreData()
         advanceUntilIdle()
@@ -384,7 +384,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        assertThat(viewModel.uiState.value).isEqualTo(DataViewUiState.OFFLINE)
+        assertThat(viewModel.uiState.value.loadingState).isEqualTo(LoadingState.OFFLINE)
     }
 
     @Test
@@ -395,7 +395,11 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should transition through loading to loaded/empty state
-        assertThat(viewModel.uiState.value).isIn(DataViewUiState.LOADING, DataViewUiState.EMPTY, DataViewUiState.LOADED)
+        assertThat(viewModel.uiState.value.loadingState).isIn(
+            LoadingState.LOADING,
+            LoadingState.EMPTY,
+            LoadingState.LOADED
+        )
     }
 
     @Test
@@ -405,7 +409,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        assertThat(viewModel.sortOrder.value).isEqualTo(WpApiParamOrder.DESC)
+        assertThat(viewModel.uiState.value.sortOrder).isEqualTo(WpApiParamOrder.DESC)
     }
 
     @Test
@@ -415,7 +419,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        assertThat(viewModel.itemSortBy.value?.id).isEqualTo(1L)
+        assertThat(viewModel.uiState.value.currentSortBy?.id).isEqualTo(1L)
     }
 
     @Test
@@ -425,7 +429,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         viewModel.initializeForTest()
         advanceUntilIdle()
 
-        assertThat(viewModel.itemFilter.value?.id).isEqualTo(2L)
+        assertThat(viewModel.uiState.value.currentFilter?.id).isEqualTo(2L)
     }
 
     @Test
@@ -442,14 +446,14 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should allow loading more since we have a full page
-        assertThat(viewModel.items.value).hasSize(25)
+        assertThat(viewModel.uiState.value.items).hasSize(25)
 
         // Test that onFetchMoreData works (indicates can load more)
         viewModel.onFetchMoreData()
         advanceUntilIdle()
 
         // Should have attempted to load more
-        assertThat(viewModel.uiState.value).isIn(DataViewUiState.LOADED, DataViewUiState.LOADING_MORE)
+        assertThat(viewModel.uiState.value.loadingState).isIn(LoadingState.LOADED, LoadingState.LOADING_MORE)
     }
 
     @Test
@@ -459,7 +463,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         val itemCount = PAGE_SIZE - 10
 
         // Set up partial page of items (less than PAGE_SIZE)
-        val testItems = (1..itemCount ).map {
+        val testItems = (1..itemCount).map {
             DataViewItem(id = it.toLong(), image = null, title = "Item $it", fields = emptyList())
         }
         viewModel.setTestItems(testItems)
@@ -467,7 +471,7 @@ class DataViewViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Should not allow loading more since we have a partial page
-        assertThat(viewModel.items.value).hasSize(itemCount) // Less than PAGE_SIZE
+        assertThat(viewModel.uiState.value.items).hasSize(itemCount) // Less than PAGE_SIZE
 
         // Test that onFetchMoreData does nothing (indicates cannot load more)
         val initialState = viewModel.uiState.value

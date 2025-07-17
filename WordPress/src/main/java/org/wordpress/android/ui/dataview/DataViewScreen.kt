@@ -33,6 +33,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,12 +59,8 @@ import java.util.Locale
 @Composable
 fun DataViewScreen(
     uiState: State<DataViewUiState>,
-    items: State<List<DataViewItem>>,
     supportedFilters: List<DataViewDropdownItem>,
-    currentFilter: DataViewDropdownItem?,
     supportedSorts: List<DataViewDropdownItem>,
-    currentSort: DataViewDropdownItem?,
-    currentSortOrder: WpApiParamOrder,
     onSearchQueryChange: (String) -> Unit,
     onItemClick: (DataViewItem) -> Unit,
     onFilterClick: (DataViewDropdownItem) -> Unit,
@@ -71,22 +68,20 @@ fun DataViewScreen(
     onSortOrderClick: (WpApiParamOrder) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
-    modifier: Modifier = Modifier,
-    errorMessage: String? = null,
-    refreshState: State<Boolean>
+    modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
         modifier = modifier
             .fillMaxSize(),
-        isRefreshing = refreshState.value,
+        isRefreshing = uiState.value.isRefreshing,
         state = pullToRefreshState,
         onRefresh = onRefresh,
         indicator = {
             PullToRefreshDefaults.Indicator(
                 state = pullToRefreshState,
-                isRefreshing = refreshState.value,
+                isRefreshing = uiState.value.isRefreshing,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.align(Alignment.TopCenter),
             )
@@ -101,26 +96,26 @@ fun DataViewScreen(
                 onSearchQueryChange = onSearchQueryChange,
                 onFilterClick = onFilterClick,
                 supportedFilters = supportedFilters,
-                currentFilter = currentFilter,
+                currentFilter = uiState.value.currentFilter,
                 onSortClick = onSortClick,
                 onSortOrderClick = onSortOrderClick,
                 supportedSorts = supportedSorts,
-                currentSort = currentSort,
-                currentSortOrder = currentSortOrder
+                currentSort = uiState.value.currentSortBy,
+                currentSortOrder = uiState.value.sortOrder
             )
 
-            when (uiState.value) {
-                DataViewUiState.LOADING -> LoadingDataView()
-                DataViewUiState.EMPTY -> EmptyDataView()
-                DataViewUiState.EMPTY_SEARCH -> EmptySearchDataView()
-                DataViewUiState.ERROR -> ErrorDataView(errorMessage)
-                DataViewUiState.OFFLINE -> OfflineDataView()
-                DataViewUiState.LOADING_MORE,
-                DataViewUiState.LOADED -> LoadedDataView(
-                    items = items,
+            when (uiState.value.loadingState) {
+                LoadingState.LOADING -> LoadingDataView()
+                LoadingState.EMPTY -> EmptyDataView()
+                LoadingState.EMPTY_SEARCH -> EmptySearchDataView()
+                LoadingState.ERROR -> ErrorDataView(uiState.value.errorMessage)
+                LoadingState.OFFLINE -> OfflineDataView()
+                LoadingState.LOADING_MORE,
+                LoadingState.LOADED -> LoadedDataView(
+                    items = uiState.value.items,
                     onItemClick = onItemClick,
                     onFetchMore = onFetchMore,
-                    showProgress = uiState.value == DataViewUiState.LOADING_MORE
+                    showProgress = uiState.value.loadingState == LoadingState.LOADING_MORE
                 )
             }
         }
@@ -362,13 +357,23 @@ private fun DropdownItems(
     }
 }
 
+/**
+ * Displays a list of data items with pagination support.
+ *
+ * Uses a simple flag-based approach to prevent duplicate pagination calls:
+ * - When the last item is rendered AND the flag hasn't been set, triggers onFetchMore()
+ * - The flag is reset whenever the items list changes (via LaunchedEffect)
+ * - This prevents the performance issue where onFetchMore() was called on every recomposition
+ */
 @Composable
 private fun LoadedDataView(
-    items: State<List<DataViewItem>>,
+    items: List<DataViewItem>,
     onItemClick: (DataViewItem) -> Unit,
     onFetchMore: () -> Unit,
     showProgress: Boolean = false
 ) {
+    var hasTriggeredLoadMore by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -376,18 +381,25 @@ private fun LoadedDataView(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(items.value) { item ->
+            items(items) { item ->
                 DataViewItemCard(
                     item = item,
                     onItemClick = {
                         onItemClick(item)
                     }
                 )
-                if (items.value.last() == item) {
+                if (items.last() == item && !hasTriggeredLoadMore) {
+                    hasTriggeredLoadMore = true
                     onFetchMore()
                 }
             }
         }
+
+        // Reset flag when items change
+        LaunchedEffect(items.size) {
+            hasTriggeredLoadMore = false
+        }
+
         if (showProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -478,21 +490,23 @@ private fun OfflineDataView() {
 @Composable
 private fun LoadedPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.LOADED) },
-        items = remember { mutableStateOf(getDummyDataViewItems()) },
+        uiState = remember {
+            mutableStateOf(
+                DataViewUiState(
+                    loadingState = LoadingState.LOADED,
+                    items = getDummyDataViewItems()
+                )
+            )
+        },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
@@ -501,21 +515,16 @@ private fun LoadedPreview() {
 @Composable
 private fun LoadingPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.LOADING) },
-        items = remember { mutableStateOf(emptyList()) },
+        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.LOADING)) },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
@@ -524,21 +533,16 @@ private fun LoadingPreview() {
 @Composable
 private fun EmptyPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.EMPTY) },
-        items = remember { mutableStateOf(emptyList()) },
+        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.EMPTY)) },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
@@ -547,21 +551,16 @@ private fun EmptyPreview() {
 @Composable
 private fun EmptySearchPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.EMPTY_SEARCH) },
-        items = remember { mutableStateOf(emptyList()) },
+        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.EMPTY_SEARCH)) },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
@@ -570,21 +569,16 @@ private fun EmptySearchPreview() {
 @Composable
 private fun OfflinePreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.OFFLINE) },
-        items = remember { mutableStateOf(emptyList()) },
+        uiState = remember { mutableStateOf(DataViewUiState(loadingState = LoadingState.OFFLINE)) },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
@@ -593,21 +587,23 @@ private fun OfflinePreview() {
 @Composable
 private fun ErrorPreview() {
     DataViewScreen(
-        uiState = remember { mutableStateOf(DataViewUiState.ERROR) },
-        items = remember { mutableStateOf(emptyList()) },
+        uiState = remember {
+            mutableStateOf(
+                DataViewUiState(
+                    loadingState = LoadingState.ERROR,
+                    errorMessage = "Connection failed"
+                )
+            )
+        },
         supportedFilters = dummyDropdownItems,
-        currentFilter = null,
         supportedSorts = dummyDropdownItems,
-        currentSort = null,
-        currentSortOrder = WpApiParamOrder.ASC,
         onRefresh = { },
         onFetchMore = { },
         onSearchQueryChange = { },
         onItemClick = {},
         onFilterClick = { },
         onSortClick = { },
-        onSortOrderClick = { },
-        refreshState = remember { mutableStateOf(false) }
+        onSortOrderClick = { }
     )
 }
 
