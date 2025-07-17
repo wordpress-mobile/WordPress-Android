@@ -13,23 +13,23 @@ import java.util.Date
 object DummySubscribers {
     private val dummyNames = listOf(
         "Brian Allen",
-        "Lisa Anderson",
         "Robert Brown",
+        "Lisa Anderson",
         "Michael Chen",
         "Lauren Clark",
         "Jennifer Davis",
-        "Rachel Green",
+        "David Green",
         "Ryan Harris"
     )
 
     private val dummyEmails = listOf(
         "brian.allen@example.com",
-        "lisa.anderson@example.com",
         "robert.brown@example.com",
+        "lisa.anderson@example.com",
         "michael.chen@example.com",
         "lauren.clark@example.com",
         "jennifer.davis@example.com",
-        "rachel.green@example.com",
+        "david.green@example.com",
         "ryan.harris@example.com"
     )
 
@@ -63,36 +63,31 @@ object DummySubscribers {
 
     private val websiteUrls = listOf(
         "https://brianallen.example.com",
-        "https://lisa-anderson.example.com",
         "https://robertbrown.example.com",
+        "https://lisa-anderson.example.com",
         "https://michaelchen.example.com",
         "https://laurenclark.example.com",
         "https://jenniferdavis.example.com",
-        "https://rachel-green.example.com",
+        "https://david-green.example.com",
         "https://ryanharris.example.com"
     )
 
     fun getDummySubscribers(count: Int = 8): List<Subscriber> {
         val subscribers = mutableListOf<Subscriber>()
         repeat(count) { index ->
-            val nameIndex = index % dummyNames.size
-            val emailIndex = index % dummyEmails.size
-            val dateIndex = index % dummyDates.size
             val statusIndex = index % subscriptionStatuses.size
-            val countryIndex = index % countries.size
-            val urlIndex = index % websiteUrls.size
 
             val subscriber = Subscriber(
                 userId = (index + 1).toLong(),
                 subscriptionId = (index + 1001).toULong(),
-                displayName = dummyNames[nameIndex],
-                emailAddress = dummyEmails[emailIndex],
+                displayName = dummyNames[index],
+                emailAddress = dummyEmails[index],
                 isEmailSubscriber = statusIndex == EMAIL_SUBSCRIBER_STATUS_INDEX,
-                url = websiteUrls[urlIndex],
-                dateSubscribed = dummyDates[dateIndex],
+                url = websiteUrls[index],
+                dateSubscribed = dummyDates[index],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
-                avatar = "android.resource://org.wordpress.android/drawable/dummy_profile_${nameIndex + 1}",
-                country = countries[countryIndex],
+                avatar = "android.resource://org.wordpress.android/drawable/dummy_profile_${index + 1}",
+                country = countries[index],
                 plans = emptyList()
             )
             subscribers.add(subscriber)
