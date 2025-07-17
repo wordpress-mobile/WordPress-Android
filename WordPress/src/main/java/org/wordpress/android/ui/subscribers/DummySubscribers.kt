@@ -6,8 +6,10 @@ import uniffi.wp_api.SubscriberCountry
 import java.util.Date
 
 /**
- * Returns a list of "dummy" [Subscriber]s for use in Compose previews and testing
+ * Returns a list of "dummy" [Subscriber]s for use in screenshots promoting this feature
+ * (we can't use real data because that would expose emails and other private info)
  */
+@Suppress("Unused")
 object DummySubscribers {
     private val dummyNames = listOf(
         "Brian Allen", "Lisa Anderson", "Robert Brown", "Michael Chen", "Lauren Clark",
@@ -158,7 +160,7 @@ object DummySubscribers {
         return subscribers
     }
 
-    @Suppress("Unused")
+    @Suppress("Unused", "MagicNumber")
     fun getDummySubscriberStats(): IndividualSubscriberStats {
         return IndividualSubscriberStats(
             emailsSent = 1201u,
