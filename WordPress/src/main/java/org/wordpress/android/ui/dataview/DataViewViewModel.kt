@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.dataview
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -32,20 +34,12 @@ import javax.inject.Named
 open class DataViewViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
+    private val sharedPrefs: SharedPreferences,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Inject
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var accountStore: AccountStore
-
-    @Inject
-    @Named(IO_THREAD)
-    lateinit var ioDispatcher: CoroutineDispatcher
-
     private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
     val uiState: StateFlow<DataViewUiState> = _uiState
 
@@ -58,28 +52,39 @@ open class DataViewViewModel @Inject constructor(
     private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
     val itemSortBy = _itemSortBy.asStateFlow()
 
+    private val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
+    val sortOrder = _sortOrder.asStateFlow()
+
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
 
+    private val _refreshState = MutableStateFlow(false)
+    val refreshState = _refreshState.asStateFlow()
+
     private val debouncedQuery = MutableStateFlow("")
     private var searchQuery: String = ""
-    private var page = 0
+    private var page = INITIAL_PAGE
     private var canLoadMore = true
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
-    val wpComApiClient: WpComApiClient by lazy {
+    protected val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
-                WpAuthentication.Bearer(token = accountStore.accessToken!!)
+                requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
+                    WpAuthentication.Bearer(token = token)
+                }
             )
         )
     }
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        launch {
-            _itemSortBy.value = getDefaultSort()
+        this.initialize()
+    }
 
+    protected open fun initialize() {
+        launch {
+            restorePrefs()
             fetchData()
 
             debouncedQuery
@@ -98,13 +103,40 @@ open class DataViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
     }
 
-    private fun fetchData() {
+    /**
+     * Restores the sort order, sort by, and filter from saved preferences
+     */
+    protected open fun restorePrefs() {
+        val sortOrdinal = sharedPrefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
+        if (sortOrdinal > -1) {
+            WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal)?.let {
+                _sortOrder.value = it
+            }
+        }
+
+        val sortById = sharedPrefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
+        if (sortById > -1) {
+            _itemSortBy.value = getSupportedSorts().firstOrNull { it.id == sortById }
+        } else {
+            _itemSortBy.value = getDefaultSort()
+        }
+
+        val filterId = sharedPrefs.getLong(getPrefKeyName(PrefKey.FILTER), -1)
+        if (filterId > -1) {
+            _itemFilter.value = getSupportedFilters().firstOrNull { it.id == filterId }
+        }
+    }
+
+    private fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            val isLoadingMore = page > 0
+            val isLoadingMore = page > INITIAL_PAGE
             if (isLoadingMore) {
                 updateUiState(DataViewUiState.LOADING_MORE)
             } else {
                 updateUiState(DataViewUiState.LOADING)
+            }
+            if (isRefreshing) {
+                _refreshState.value = true
             }
 
             launch {
@@ -112,9 +144,11 @@ open class DataViewViewModel @Inject constructor(
                     page = page,
                     searchQuery = searchQuery,
                     filter = _itemFilter.value,
+                    sortOrder = _sortOrder.value,
                     sortBy = _itemSortBy.value,
                 )
                 if (uiState.value == DataViewUiState.ERROR) {
+                    _refreshState.value = false
                     return@launch
                 }
 
@@ -133,6 +167,7 @@ open class DataViewViewModel @Inject constructor(
                 } else {
                     updateUiState(DataViewUiState.LOADED)
                 }
+                _refreshState.value = false
             }
         } else {
             updateUiState(DataViewUiState.OFFLINE)
@@ -140,7 +175,7 @@ open class DataViewViewModel @Inject constructor(
     }
 
     private fun resetPaging() {
-        page = 0
+        page = INITIAL_PAGE
         canLoadMore = true
         _errorMessage.value = null
     }
@@ -149,7 +184,7 @@ open class DataViewViewModel @Inject constructor(
         if (_uiState.value == DataViewUiState.LOADED) {
             resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
-            fetchData()
+            fetchData(isRefreshing = true)
         }
     }
 
@@ -164,19 +199,41 @@ open class DataViewViewModel @Inject constructor(
     fun onFilterClick(filter: DataViewDropdownItem?) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onFilterClick: $filter")
         resetPaging()
+        val keyName = getPrefKeyName(PrefKey.FILTER)
         // clear the filter if it's already selected
-        _itemFilter.value = if (filter == _itemFilter.value) {
-            null
+        if (filter == _itemFilter.value || filter == null) {
+            _itemFilter.value = null
+            sharedPrefs.edit { remove(keyName) }
         } else {
-            filter
+            _itemFilter.value = filter
+            sharedPrefs.edit { putLong(keyName, filter.id) }
         }
         fetchData()
+    }
+
+    /**
+     * Returns the name of the preference key for the given [prefKey]. This relies on
+     * the [logTag] so descendants will have unique names for each key.
+     */
+    private fun getPrefKeyName(prefKey: PrefKey) : String {
+        return "${logTag}_${prefKey.name}"
     }
 
     fun onSortClick(sort: DataViewDropdownItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
         if (sort != _itemSortBy.value) {
+            sharedPrefs.edit { putLong(getPrefKeyName(PrefKey.SORT_BY), sort.id) }
             _itemSortBy.value = sort
+            resetPaging()
+            fetchData()
+        }
+    }
+
+    fun onSortOrderClick(order: WpApiParamOrder) {
+        appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
+        if (order != _sortOrder.value) {
+            sharedPrefs.edit { putInt(getPrefKeyName(PrefKey.SORT_ORDER), order.ordinal) }
+            _sortOrder.value = order
             resetPaging()
             fetchData()
         }
@@ -198,10 +255,17 @@ open class DataViewViewModel @Inject constructor(
     }
 
     /**
+     * Removes an item from the local list of items
+     */
+    fun removeItem(id: Long) {
+        _items.value = items.value.filter { it.id != id }
+    }
+
+    /**
      * Descendants should override this to perform their specific network request
      */
     open suspend fun performNetworkRequest(
-        page: Int = 0,
+        page: Int = INITIAL_PAGE,
         searchQuery: String = "",
         filter: DataViewDropdownItem? = null,
         sortOrder: WpApiParamOrder = WpApiParamOrder.ASC,
@@ -245,8 +309,15 @@ open class DataViewViewModel @Inject constructor(
     private val logTag
         get() = this::class.java.simpleName
 
+    private enum class PrefKey {
+        SORT_ORDER,
+        SORT_BY,
+        FILTER,
+    }
+
     companion object {
         private const val SEARCH_DELAY_MS = 500L
         const val PAGE_SIZE = 25
+        private const val INITIAL_PAGE = 1
     }
 }

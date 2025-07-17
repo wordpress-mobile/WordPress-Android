@@ -3004,7 +3004,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             RequestCodes.MULTI_SELECT_MEDIA_PICKER,
             RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
             RequestCodes.PHOTO_PICKER,
-            RequestCodes.STORIES_PHOTO_PICKER,
             RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
             RequestCodes.MEDIA_LIBRARY,
             RequestCodes.PICTURE_LIBRARY,

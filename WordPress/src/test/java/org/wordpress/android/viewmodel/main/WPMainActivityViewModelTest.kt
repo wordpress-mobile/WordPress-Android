@@ -382,17 +382,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(
-            site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false),
-            page = PageType.MY_SITE
-        )
-        assertThat(viewModel.isBottomSheetShowing.value).isNull()
-        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
-    }
-
-    @Test
     fun `bottom sheet is visualized when user has full access to content and has 2 options`() {
         whenever(mainCreateSheetHelper.canCreatePage(any(), any())).thenReturn(false)
         startViewModelWithDefaultParameters()

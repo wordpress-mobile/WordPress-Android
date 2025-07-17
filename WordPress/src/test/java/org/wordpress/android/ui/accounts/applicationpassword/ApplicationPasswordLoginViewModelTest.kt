@@ -46,7 +46,12 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ApplicationPasswordLoginViewModel
 
     private val rawData = "url=callback?site_url=https://example.com&user_login=user&password=pass"
-    private val urlLogin = ApplicationPasswordLoginHelper.UriLogin("https://example.com", "user", "pass")
+    private val urlLogin = ApplicationPasswordLoginHelper.UriLogin("https://example.com", "user", "pass", "https://example.com/json")
+    private val testSite = SiteModel().apply {
+        apiRestUsernamePlain = urlLogin.user
+        apiRestPasswordPlain = urlLogin.password
+        url = urlLogin.siteUrl
+    }
 
     @Before
     fun setUp() {
@@ -61,32 +66,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             appLogWrapper
         )
         whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)).thenReturn(urlLogin)
-    }
-
-    @Test
-    fun `given intent rawData, when setup site and able to store credentials, then emit ok`() = runTest {
-        // Given
-        val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
-            showSiteSelector = false,
-            showPostSignupInterstitial = false,
-            siteUrl = urlLogin.siteUrl,
-            oldSitesIDs = null,
-            isError = false
-        )
-        whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(true)
-
-        // When
-        viewModel.onFinishedEvent.test {
-            viewModel.setupSite(rawData)
-
-            // Then
-            val finishedEvent = awaitItem()
-            assertEquals(expectedResult, finishedEvent)
-            verify(applicationPasswordLoginHelper, times(1))
-                .storeApplicationPasswordCredentialsFrom(rawData)
-            verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
-            cancelAndIgnoreRemainingEvents()
-        }
     }
 
     @Test
@@ -109,7 +88,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             val finishedEvent = awaitItem()
             assertEquals(expectedResult, finishedEvent)
             verify(applicationPasswordLoginHelper, times(0))
-                .storeApplicationPasswordCredentialsFrom(rawData)
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin))
             verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
             cancelAndIgnoreRemainingEvents()
         }
@@ -129,7 +108,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             )
             whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(malformedRawData))
                 .thenReturn(
-                    ApplicationPasswordLoginHelper.UriLogin("", "", "")
+                    ApplicationPasswordLoginHelper.UriLogin("", "", "", "")
                 )
 
             // When
@@ -155,7 +134,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 oldSitesIDs = null,
                 isError = true
             )
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any())).thenThrow(RuntimeException())
 
             // When
@@ -182,7 +161,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 oldSitesIDs = null,
                 isError = true
             )
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -218,7 +197,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(true)
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -226,9 +206,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(SiteModel())
                     )
                 )
 
@@ -253,7 +234,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(false)
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -261,9 +243,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
                     )
                 )
 
@@ -288,7 +271,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 isError = false
             )
             whenever(siteStore.hasSite()).thenReturn(true)
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -296,9 +280,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(SiteModel())
                     )
                 )
 
@@ -322,8 +307,9 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 oldSitesIDs = null,
                 isError = false
             )
+            whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(false)
-            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(rawData)).thenReturn(false)
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin))).thenReturn(false)
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -331,9 +317,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
                 // Mock onSiteChanged event
-                viewModel.onProfileFetched(
-                    SiteStore.OnProfileFetched(
-                        SiteModel().apply { url = urlLogin.siteUrl }
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
                     )
                 )
 

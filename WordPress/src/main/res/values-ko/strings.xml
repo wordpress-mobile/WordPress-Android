@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-13 09:31:30+0000
+Translation-Revision-Date: 2025-07-08 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">애플리케이션 비밀번호를 비활성화하면 %1$s 사이트에서 로그인 정보가 제거됩니다.</string>
+    <string name="application_password_disable_feature_title">애플리케이션 비밀번호 비활성화 여부</string>
+    <string name="application_password_invalid">유효하지 않은 애플리케이션 비밀번호</string>
+    <string name="application_password_credentials_storing_error">%1$s에 대한 애플리케이션 비밀번호 자격 증명 저장 중 오류가 발생했습니다.</string>
+    <string name="subscribers_add_failed">구독자 추가 실패</string>
+    <string name="subscribers_add_success">구독자 추가됨</string>
+    <string name="subscribers_add_disclosure">\n        보내기를 클릭하면 각자에게 이메일을 보내는 데 대한 적절한 동의를 얻었음을 나타내는 것입니다. 구독자의 스팸 불만 사항 또는 높은 이탈률은 계정에 대한 조치로 이어질 수 있습니다.\n    </string>
+    <string name="subscribers_add_subscribers">구독자 추가</string>
+    <string name="subscribers_gift_content_description">선물</string>
+    <string name="subscribers_renewal_interval">갱신 주기</string>
+    <string name="subscribers_renewal_info">갱신 정보</string>
+    <string name="subscribers_price">가격</string>
+    <string name="subscribers_inactive_interval">비활성 주기</string>
+    <string name="subscribers_billing_interval">청구 주기</string>
+    <string name="subscribers_billing_info">청구 정보</string>
+    <string name="subscribers_end_date">종료 날짜</string>
+    <string name="subscribers_start_date">시작 날짜</string>
+    <string name="subscribers_plan_details_label">요금제 상세 정보</string>
+    <string name="subscribers_gift_plan_label">선물 요금제</string>
+    <string name="subscribers_delete_button">구독자 삭제</string>
+    <string name="subscribers_site_label">사이트</string>
+    <string name="subscribers_country_label">국가</string>
+    <string name="subscribers_email_label">이메일</string>
+    <string name="subscribers_plan_label">요금제</string>
+    <string name="subscribers_status_label">구독 상태</string>
+    <string name="subscribers_date_label">구독 날짜</string>
+    <string name="subscribers_detail_label">구독자 상세 정보</string>
+    <string name="subscribers_newsletter_label">뉴스레터 구독</string>
+    <string name="subscribers_clicked_label">클릭됨</string>
+    <string name="subscribers_opened_label">열림</string>
+    <string name="subscribers_emails_sent_label">이메일</string>
+    <string name="subscribers_subscription_status">구독 상태</string>
+    <string name="subscribers_error_title">문제가 발생했습니다</string>
+    <string name="subscribers_empty_search">결과를 찾을 수 없음</string>
+    <string name="subscribers_empty">구독자가 없습니다.</string>
+    <string name="subscribers_sort_plan">요금제</string>
+    <string name="subscribers_sort_display_name">대화명</string>
+    <string name="subscribers_sort_date">구독한 날짜</string>
+    <string name="subscribers_sort_email">이메일 주소</string>
+    <string name="subscribers_filter_reader_subscription">리더 구독</string>
+    <string name="subscribers_filter_email_subscription">이메일 구독</string>
+    <string name="about_update_email_unverified">프로필을 업데이트하려면 먼저 이메일 주소를 확인해야 합니다.</string>
+    <string name="sort_by">정렬 기준</string>
+    <string name="filter">필터</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">제공된 사이트는 애플리케이션 비밀번호 인증을 지원하지 않습니다.</string>
     <string name="application_password_title">애플리케이션 비밀번호를 사용하여 인증</string>
     <string name="application_password_credentials_stored">%1$s에 저장된 애플리케이션 비밀번호 자격 증명</string>

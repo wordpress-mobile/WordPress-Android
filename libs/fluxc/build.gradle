@@ -108,6 +108,8 @@ dependencies {
     implementation libs.kotlinx.coroutines.core
     implementation libs.kotlinx.coroutines.android
 
+    implementation(libs.wordpress.rs.android)
+
     // Encrypted Logging
     api(libs.terl.lazysodium.android.get().toString()) // TODO: https://github.com/gradle/gradle/issues/21267
     api(libs.jna.get().toString()) // TODO: https://github.com/gradle/gradle/issues/21267

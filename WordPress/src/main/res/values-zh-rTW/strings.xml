@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-07 14:54:08+0000
+Translation-Revision-Date: 2025-07-08 13:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">停用應用程式密碼會移除 %1$s 網站的登入資訊。</string>
+    <string name="application_password_disable_feature_description">若停用應用程式密碼，系統將移除「%1$s」網站的登入資訊。</string>
     <string name="application_password_disable_feature_title">確定要停用應用程式密碼？</string>
     <string name="application_password_invalid">無效的應用程式密碼</string>
-    <string name="application_password_credentials_storing_error">儲存 %1$s 的應用程式密碼認證時發生錯誤</string>
+    <string name="application_password_credentials_storing_error">儲存「%1$s」的應用程式密碼憑證時發生錯誤</string>
     <string name="subscribers_add_failed">無法新增訂閱者</string>
     <string name="subscribers_add_success">已成功新增訂閱者</string>
-    <string name="subscribers_add_disclosure">\n        按一下「傳送」，即表示你已徵得所有人同意，願意接收你傳送的電子郵件。 若你的訂閱者投訴垃圾訊息或退信的機率過高，我們可能會對你的帳號採取行動。\n    </string>
+    <string name="subscribers_add_disclosure">\n按一下「傳送」，即表示你已徵得所有人同意，願意接收你傳送的電子郵件。        若你的訂閱者投訴垃圾訊息或退信的機率過高，我們可能會對你的帳號採取行動。\n    </string>
     <string name="subscribers_add_subscribers">新增訂閱者</string>
     <string name="subscribers_gift_content_description">禮物</string>
     <string name="subscribers_renewal_interval">續訂間隔</string>

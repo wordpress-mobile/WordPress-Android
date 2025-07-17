@@ -117,6 +117,8 @@
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
     <string name="sort_by">Sort by</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -221,7 +223,6 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
@@ -973,7 +974,7 @@
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
     <string name="experimental_subscribers_feature">Experimental subscribers</string>
-    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers (work in progress)</string>
+    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites.</string>
 
@@ -2503,7 +2504,6 @@
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
-    <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
@@ -3614,7 +3614,6 @@
 
     <string name="create_post_fab_tooltip">Create a post</string>
     <string name="create_page_fab_tooltip">Create a page</string>
-    <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
@@ -3750,7 +3749,6 @@
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
-    <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
@@ -4993,10 +4991,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
-    <string name="subscribers_sort_email">Email address</string>
     <string name="subscribers_sort_date">Date subscribed</string>
-    <string name="subscribers_sort_display_name">Display name</string>
-    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_name">Name</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
@@ -5031,6 +5027,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     </string>
     <string name="subscribers_add_success">Successfully added subscribers</string>
     <string name="subscribers_add_failed">Failed to add subscribers</string>
+    <string name="subscribers_delete_confirmation_title">Delete subscriber</string>
+    <string name="subscribers_delete_confirmation_message">Are you sure you want to delete this subscriber?</string>
+    <string name="subscribers_delete_success_title">Subscriber deleted</string>
+    <string name="subscribers_delete_success_message">The subscriber has been deleted, but it may take a minute for the deletion to take effect</string>
+    <string name="subscribers_delete_failed">Failed to delete subscriber</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
@@ -5038,6 +5039,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
+    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
     <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
 </resources>

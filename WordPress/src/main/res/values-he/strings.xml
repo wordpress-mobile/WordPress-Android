@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 17:54:09+0000
+Translation-Revision-Date: 2025-07-08 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">השבתה של סיסמת האפליקציה תסיר את פרטי הכניסה שלך מ-⁦%1$s⁩ אתרים.</string>
+    <string name="application_password_disable_feature_title">האם להשבית את \'סיסמת אפליקציה\'?</string>
+    <string name="application_password_invalid">סיסמת האפליקציה לא תקפה</string>
+    <string name="application_password_credentials_storing_error">אירעה שגיאה בשמירה של פרטי הכניסה עבור סיסמת האפליקציה ל-⁦%1$s⁩</string>
+    <string name="subscribers_add_failed">ההוספה של המנויים נכשלה</string>
+    <string name="subscribers_add_success">ההוספה של המנויים בוצעה בהצלחה</string>
+    <string name="subscribers_add_disclosure">\n        לחיצה על \'לשלוח\' מהווה הצהרה שקיבלת את ההסכמה המתאימה כדי לשלוח אימייל לכל אחד. תלונות על דואר זבל או שיעור גבוה של אימיילים שחזרו או נדחו מהמנויים עלולים להוביל לנקיטת פעולות נגד החשבון שלך.\n    </string>
+    <string name="subscribers_add_subscribers">להוסיף מנויים</string>
+    <string name="subscribers_gift_content_description">מתנה</string>
+    <string name="subscribers_renewal_interval">תדירות החידוש</string>
+    <string name="subscribers_renewal_info">פרטי חידוש</string>
+    <string name="subscribers_price">מחיר</string>
+    <string name="subscribers_inactive_interval">תדירות של חוסר פעילות</string>
+    <string name="subscribers_billing_interval">תדירות החיוב</string>
+    <string name="subscribers_billing_info">פרטי חיוב</string>
+    <string name="subscribers_end_date">תאריך סיום</string>
+    <string name="subscribers_start_date">תאריך התחלה</string>
+    <string name="subscribers_plan_details_label">פרטי התוכנית</string>
+    <string name="subscribers_gift_plan_label">תוכנית מתנות</string>
+    <string name="subscribers_delete_button">למחוק את המנוי</string>
+    <string name="subscribers_site_label">אתר</string>
+    <string name="subscribers_country_label">ארץ</string>
+    <string name="subscribers_email_label">אימייל</string>
+    <string name="subscribers_plan_label">תוכנית</string>
+    <string name="subscribers_status_label">סטטוס מינוי</string>
+    <string name="subscribers_date_label">תאריך המינוי</string>
+    <string name="subscribers_detail_label">פרטי המנוי</string>
+    <string name="subscribers_newsletter_label">מינוי לניוזלטר</string>
+    <string name="subscribers_clicked_label">המשתמש לחץ</string>
+    <string name="subscribers_opened_label">נפתח</string>
+    <string name="subscribers_emails_sent_label">הודעות אימייל</string>
+    <string name="subscribers_subscription_status">סטטוס מינוי</string>
+    <string name="subscribers_error_title">משהו השתבש</string>
+    <string name="subscribers_empty_search">לא נמצאו תוצאות</string>
+    <string name="subscribers_empty">אין מנויים</string>
+    <string name="subscribers_sort_plan">תוכנית</string>
+    <string name="subscribers_sort_display_name">שם תצוגה</string>
+    <string name="subscribers_sort_date">תאריך ההרשמה למינוי</string>
+    <string name="subscribers_sort_email">כתובת אימייל</string>
+    <string name="subscribers_filter_reader_subscription">מינוי ב-Reader</string>
+    <string name="subscribers_filter_email_subscription">מינוי באימייל</string>
+    <string name="about_update_email_unverified">כדי לעדכן את הפרופיל שלך, עליך לאמת את כתובת האימייל שלך תחילה.</string>
+    <string name="sort_by">למיין לפי</string>
+    <string name="filter">לסנן</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">האתר שצוין לא תומך באימות של סיסמאות אפליקציה.</string>
     <string name="application_password_title">לאמת באמצעות סיסמת אפליקציה</string>
     <string name="application_password_credentials_stored">פרטי הכניסה של סיסמת האפליקציה שמאוחסנים עבור ⁦%1$s⁩</string>

@@ -876,6 +876,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return isWPCom() || (isJetpackConnected() && getOrigin() == ORIGIN_WPCOM_REST);
     }
 
+    public boolean isUsingSelfHostedRestApi() {
+        return !isWPCom() && mApiRestUsernamePlain != null && mApiRestPasswordPlain != null;
+    }
+
     public void setSpaceAvailable(long spaceAvailable) {
         mSpaceAvailable = spaceAvailable;
     }

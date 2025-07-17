@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignPage
@@ -256,5 +257,11 @@ class ActivityNavigator @Inject constructor() {
             .setInstantAppsEnabled(false)
             .setShowTitle(false)
             .build()
+    }
+
+    fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
+        val intent = Intent(activity, ApplicationPasswordReauthenticateActivity::class.java)
+        intent.putExtra(ApplicationPasswordReauthenticateActivity.EXTRA_SITE_URL, authenticationUrl)
+        activity.startActivity(intent)
     }
 }

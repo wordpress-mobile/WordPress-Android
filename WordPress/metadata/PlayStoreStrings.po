@@ -10,21 +10,18 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_260"
+msgid ""
+"26.0:\n"
+"We’ve added Application Passwords authentication. It’s still experimental, but once it’s fully integrated, we’ll be able to improve existing features and introduce new ones. Rock on.\n"
+msgstr ""
+
 msgctxt "release_note_259"
 msgid ""
 "25.9:\n"
 "- The keyboard no longer overlaps the editor, meaning you can see your amazing work at all times.\n"
 "- The “me” icon is now the correct color when you’re in dark mode.\n"
 "- We’ve added a warning that tells you if your QR code scan was unsuccessful. No waiting, no guesswork, no problem.\n"
-msgstr ""
-
-msgctxt "release_note_258"
-msgid ""
-"25.8:\n"
-"We made some fixes to the experimental editor.\n"
-"- You can select, move through, and edit group blocks—and they’re easier to use, too.\n"
-"- Your content won’t reset when you change your device’s orientation.\n"
-"- We fixed a pesky bug that sometimes made the editor crash when saving changes.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

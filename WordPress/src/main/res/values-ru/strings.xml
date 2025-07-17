@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-06-17 09:54:08+0000
+Translation-Revision-Date: 2025-07-08 16:09:30+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">При отключении пароля приложения будут удалены данные для входа на сайты: %1$s.</string>
+    <string name="application_password_disable_feature_title">Отключить пароль приложения?</string>
+    <string name="application_password_invalid">Неверный пароль приложения</string>
+    <string name="application_password_credentials_storing_error">Произошла ошибка при сохранении учётных данных пароля приложения %1$s</string>
+    <string name="subscribers_add_failed">Не удалось добавить подписчиков</string>
+    <string name="subscribers_add_success">Подписчики добавлены</string>
+    <string name="subscribers_add_disclosure">\n        Нажимая «Отправить», вы подтверждаете, что получили от каждого человека согласие на рассылку по эл. почте. Жалобы на спам или частое отклонение писем вашими подписчиками могут повлечь санкции по отношению к вашей учётной записи.\n    </string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
+    <string name="subscribers_add_subscribers">Добавить подписчиков</string>
+    <string name="subscribers_gift_content_description">Подарок</string>
+    <string name="subscribers_renewal_interval">Интервал продления</string>
+    <string name="subscribers_renewal_info">Информация о продлении</string>
+    <string name="subscribers_price">Цена</string>
+    <string name="subscribers_inactive_interval">Интервал деактивации</string>
+    <string name="subscribers_billing_interval">Расчётный интервал</string>
+    <string name="subscribers_billing_info">Платёжные реквизиты</string>
+    <string name="subscribers_end_date">Дата окончания</string>
+    <string name="subscribers_start_date">Дата начала</string>
+    <string name="subscribers_plan_details_label">Сведения о тарифном плане</string>
+    <string name="subscribers_gift_plan_label">Подписка в подарок</string>
+    <string name="subscribers_delete_button">Удалить подписчика</string>
+    <string name="subscribers_site_label">Сайт</string>
+    <string name="subscribers_country_label">Страна</string>
+    <string name="subscribers_email_label">Адрес эл. почты</string>
+    <string name="subscribers_plan_label">Тарифный план</string>
+    <string name="subscribers_status_label">Статус подписки</string>
+    <string name="subscribers_date_label">Дата подписки</string>
+    <string name="subscribers_detail_label">Сведения о подписчике</string>
+    <string name="subscribers_newsletter_label">Подписка на рассылку</string>
+    <string name="subscribers_clicked_label">Переходы</string>
+    <string name="subscribers_opened_label">Количество открытий</string>
+    <string name="subscribers_emails_sent_label">Адреса эл. почты</string>
+    <string name="subscribers_subscription_status">Статус подписки</string>
+    <string name="subscribers_error_title">Что-то пошло не так</string>
+    <string name="subscribers_empty_search">Результатов не найдено</string>
+    <string name="subscribers_empty">Подписчиков нет</string>
+    <string name="subscribers_sort_plan">Тарифный план</string>
+    <string name="subscribers_sort_display_name">Отображаемое имя</string>
+    <string name="subscribers_sort_date">Дата подписки</string>
+    <string name="subscribers_sort_email">Адрес эл. почты</string>
+    <string name="subscribers_filter_reader_subscription">Подписки в разделе «Чтиво»</string>
+    <string name="subscribers_filter_email_subscription">Подписка по эл. почте</string>
+    <string name="about_update_email_unverified">Чтобы обновить профиль, необходимо подтвердить адрес электронной почты.</string>
+    <string name="sort_by">Сортировать по</string>
+    <string name="filter">Фильтр</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Указанный сайт не поддерживает аутентификацию с помощью пароля приложения.</string>
     <string name="application_password_title">Подтвердить с помощью пароля приложения</string>
     <string name="application_password_credentials_stored">Учетные данные пароля приложения сохранены для %1$s</string>
