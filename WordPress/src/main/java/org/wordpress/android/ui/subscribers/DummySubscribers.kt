@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.subscribers
 
+import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
 import java.util.Date
@@ -155,6 +156,16 @@ object DummySubscribers {
             subscribers.add(subscriber)
         }
         return subscribers
+    }
+
+    @Suppress("Unused")
+    fun getDummySubscriberStats(): IndividualSubscriberStats {
+        return IndividualSubscriberStats(
+            emailsSent = 1201u,
+            uniqueOpens = 858u,
+            uniqueClicks = 687u,
+            blogRegistrationDate = Date(1673740800000L).toString(),
+        )
     }
 
     private const val EMAIL_SUBSCRIBER_STATUS_INDEX = 0
