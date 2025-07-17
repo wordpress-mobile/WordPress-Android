@@ -12,14 +12,25 @@ import java.util.Date
 @Suppress("Unused")
 object DummySubscribers {
     private val dummyNames = listOf(
-        "Brian Allen", "Lisa Anderson", "Robert Brown", "Michael Chen", 
-        "Lauren Clark", "Jennifer Davis", "Rachel Green", "Ryan Harris"
+        "Brian Allen",
+        "Lisa Anderson",
+        "Robert Brown",
+        "Michael Chen",
+        "Lauren Clark",
+        "Jennifer Davis",
+        "Rachel Green",
+        "Ryan Harris"
     )
 
     private val dummyEmails = listOf(
-        "brian.allen@example.com", "lisa.anderson@example.com", "robert.brown@example.com",
-        "michael.chen@example.com", "lauren.clark@example.com", "jennifer.davis@example.com",
-        "rachel.green@example.com", "ryan.harris@example.com"
+        "brian.allen@example.com",
+        "lisa.anderson@example.com",
+        "robert.brown@example.com",
+        "michael.chen@example.com",
+        "lauren.clark@example.com",
+        "jennifer.davis@example.com",
+        "rachel.green@example.com",
+        "ryan.harris@example.com"
     )
 
     private val dummyDates = listOf(
@@ -38,8 +49,14 @@ object DummySubscribers {
     )
 
     private val profileImageUrls = listOf(
-        "dummy_profile_1", "dummy_profile_2", "dummy_profile_3", "dummy_profile_4",
-        "dummy_profile_5", "dummy_profile_6", "dummy_profile_7", "dummy_profile_8"
+        "dummy_profile_1",
+        "dummy_profile_2",
+        "dummy_profile_3",
+        "dummy_profile_4",
+        "dummy_profile_5",
+        "dummy_profile_6",
+        "dummy_profile_7",
+        "dummy_profile_8"
     )
 
     private val countries = listOf(
@@ -54,9 +71,14 @@ object DummySubscribers {
     )
 
     private val websiteUrls = listOf(
-        "https://brianallen.example.com", "https://lisa-anderson.example.com", "https://robertbrown.example.com",
-        "https://michaelchen.example.com", "https://laurenclark.example.com", "https://jenniferdavis.example.com",
-        "https://rachel-green.example.com", "https://ryanharris.example.com"
+        "https://brianallen.example.com",
+        "https://lisa-anderson.example.com",
+        "https://robertbrown.example.com",
+        "https://michaelchen.example.com",
+        "https://laurenclark.example.com",
+        "https://jenniferdavis.example.com",
+        "https://rachel-green.example.com",
+        "https://ryanharris.example.com"
     )
 
     fun getDummySubscribers(count: Int = 8): List<Subscriber> {
