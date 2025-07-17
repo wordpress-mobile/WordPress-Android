@@ -136,36 +136,45 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaFetched(site, responseMedia, null)
                 }
 
-                is WpRequestResult.MediaFileNotFound<*> -> {
-                    appLogWrapper.e(AppLog.T.MEDIA, "Media file not found: $mediaResponse")
-                    val mediaError = MediaError(MediaErrorType.NOT_FOUND)
-                    mediaError.message = "Media file not found"
-                    notifyMediaFetched(site, media, mediaError)
-                }
+                else -> parseMediaError(site, media, mediaResponse)
+            }
+        }
+    }
 
-                is WpRequestResult.ResponseParsingError<*> -> {
-                    appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
-                    val mediaError = MediaError(MediaErrorType.PARSE_ERROR)
-                    mediaError.message = "Failed to parse response"
-                    notifyMediaFetched(site, media, mediaError)
-                }
+    private fun parseMediaError(site: SiteModel, media: MediaModel, mediaResponse: WpRequestResult<*>) {
+        when (mediaResponse) {
+            is WpRequestResult.Success -> {
+                throw IllegalStateException("Success media response shuld not be parsed as an error")
+            }
+            is WpRequestResult.MediaFileNotFound<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Media file not found: $mediaResponse")
+                val mediaError = MediaError(MediaErrorType.NOT_FOUND)
+                mediaError.message = "Media file not found"
+                notifyMediaFetched(site, media, mediaError)
+            }
 
-                is WpRequestResult.SiteUrlParsingError<*> -> {
-                    appLogWrapper.e(AppLog.T.MEDIA, "Site URL parsing error: $mediaResponse")
-                    val mediaError = MediaError(MediaErrorType.MALFORMED_MEDIA_ARG)
-                    mediaError.message = "Invalid site URL"
-                    notifyMediaFetched(site, media, mediaError)
-                }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
+                val mediaError = MediaError(MediaErrorType.PARSE_ERROR)
+                mediaError.message = "Failed to parse response"
+                notifyMediaFetched(site, media, mediaError)
+            }
 
-                is WpRequestResult.InvalidHttpStatusCode<*>,
-                is WpRequestResult.WpError<*>,
-                is WpRequestResult.RequestExecutionFailed<*>,
-                is WpRequestResult.UnknownError<*> -> {
-                    appLogWrapper.e(AppLog.T.MEDIA, "Unknown error: $mediaResponse")
-                    val mediaError = MediaError(MediaErrorType.GENERIC_ERROR)
-                    mediaError.message = "Unknown error occurred"
-                    notifyMediaFetched(site, media, mediaError)
-                }
+            is WpRequestResult.SiteUrlParsingError<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Site URL parsing error: $mediaResponse")
+                val mediaError = MediaError(MediaErrorType.MALFORMED_MEDIA_ARG)
+                mediaError.message = "Invalid site URL"
+                notifyMediaFetched(site, media, mediaError)
+            }
+
+            is WpRequestResult.InvalidHttpStatusCode<*>,
+            is WpRequestResult.WpError<*>,
+            is WpRequestResult.RequestExecutionFailed<*>,
+            is WpRequestResult.UnknownError<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Unknown error: $mediaResponse")
+                val mediaError = MediaError(MediaErrorType.GENERIC_ERROR)
+                mediaError.message = "Unknown error occurred"
+                notifyMediaFetched(site, media, mediaError)
             }
         }
     }
@@ -177,6 +186,57 @@ class MediaRSApiRestClient @Inject constructor(
     ) {
         val payload = MediaPayload(site, media, error)
         dispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload))
+    }
+
+    fun deleteMedia(site: SiteModel, media: MediaModel?) {
+        if (media == null) {
+            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
+            error.logMessage = "Requested media is null"
+            notifyMediaFetched(site, null, error)
+            return
+        }
+
+        scope.launch {
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            )
+            val apiRootUrl = URL(site.buildUrl())
+            val client = WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication() {
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    }
+                }
+            )
+
+            val mediaResponse = client.request { requestBuilder ->
+                requestBuilder.media().delete(media.mediaId)
+            }
+
+            when (mediaResponse) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MEDIA, "Deleted media with ID: " + media.mediaId)
+
+                    val responseMedia: MediaModel = mediaResponse.response.data.previous.toMediaModel(site.id).apply {
+                        localSiteId = site.id
+                    }
+                    notifyMediaDeleted(site, responseMedia, null)
+                }
+
+                else -> parseMediaError(site, media, mediaResponse)
+            }
+        }
+    }
+
+    private fun notifyMediaDeleted(
+        site: SiteModel,
+        media: MediaModel?,
+        error: MediaError?
+    ) {
+        val payload = MediaPayload(site, media, error)
+        dispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload))
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(

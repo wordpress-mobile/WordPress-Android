@@ -1000,7 +1000,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
