@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.experimentalfeatures
 
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
@@ -7,7 +8,16 @@ import javax.inject.Inject
 class ExperimentalFeatures @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
-    fun isEnabled(feature: Feature) : Boolean {
+    fun isEnabled(feature: Feature): Boolean {
+        // Experimental subscribers feature is only available in the Jetpack app but was originally available
+        // in the WordPress app, so if this is the WordPress app make sure to disable it. This can be dropped
+        // a few releases down the road (code written July 17, 2025)
+        if (feature == Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE &&
+            !BuildConfig.IS_JETPACK_APP &&
+            appPrefsWrapper.getExperimentalFeatureConfig(feature.prefKey)
+        ) {
+            setEnabled(feature, false)
+        }
         return appPrefsWrapper.getExperimentalFeatureConfig(feature.prefKey)
     }
 
