@@ -54,6 +54,7 @@ fun RemoteImage(
     }
 }
 
+@Suppress("SwallowedException")
 private fun isValidDrawableId(context: Context, drawableId: Int): Boolean = try {
     context.resources.getValue(drawableId, TypedValue(), true)
     true
