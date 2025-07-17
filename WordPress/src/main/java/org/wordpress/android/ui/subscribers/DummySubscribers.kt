@@ -156,29 +156,4 @@ object DummySubscribers {
         }
         return subscribers
     }
-
-    @Suppress("Unused")
-    fun getDummySubscriber(index: Int = 0): Subscriber {
-        val nameIndex = index % dummyNames.size
-        val emailIndex = index % dummyEmails.size
-        val dateIndex = index % dummyDates.size
-        val statusIndex = index % subscriptionStatuses.size
-        val imageIndex = index % profileImageUrls.size
-        val countryIndex = index % countries.size
-        val urlIndex = index % websiteUrls.size
-
-        return Subscriber(
-            userId = (index + 1).toLong(),
-            subscriptionId = (index + 1001).toULong(),
-            displayName = dummyNames[nameIndex],
-            emailAddress = dummyEmails[emailIndex],
-            isEmailSubscriber = statusIndex == 0,
-            url = websiteUrls[urlIndex],
-            dateSubscribed = dummyDates[dateIndex],
-            subscriptionStatus = subscriptionStatuses[statusIndex],
-            avatar = profileImageUrls[imageIndex],
-            country = countries[countryIndex],
-            plans = emptyList()
-        )
-    }
 }
