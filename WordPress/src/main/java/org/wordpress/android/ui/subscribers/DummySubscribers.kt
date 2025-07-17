@@ -117,15 +117,15 @@ object DummySubscribers {
     )
 
     private val websiteUrls = listOf(
-        "https://brianallen.blog", "https://lisa-anderson.com", "https://robertbrown.net",
-        "https://michaelchen.dev", "https://laurenclark.io", "https://jenniferdavis.org",
-        "https://rachel-green.com", "https://ryanharris.me", "https://matthewjackson.blog",
-        "https://sarahjohnson.com", "https://melissaking.net", "https://christopherlee.dev",
-        "https://kevinlewis.io", "https://jessicamartinez.com", "https://amandamiller.blog",
-        "https://thomasmoore.org", "https://nicolerobinson.me", "https://davidrodriguez.net",
-        "https://danieltaylor.com", "https://emmathompson.io", "https://stevenwalker.dev",
-        "https://ashleywhite.blog", "https://jameswilson.com", "https://mariagarcia.org",
-        "https://stephanieyoung.me"
+        "https://brianallen.example.com", "https://lisa-anderson.example.com", "https://robertbrown.example.com",
+        "https://michaelchen.example.com", "https://laurenclark.example.com", "https://jenniferdavis.example.com",
+        "https://rachel-green.example.com", "https://ryanharris.example.com", "https://matthewjackson.example.com",
+        "https://sarahjohnson.example.com", "https://melissaking.example.com", "https://christopherlee.example.com",
+        "https://kevinlewis.example.com", "https://jessicamartinez.example.com", "https://amandamiller.example.com",
+        "https://thomasmoore.example.com", "https://nicolerobinson.example.com", "https://davidrodriguez.example.com",
+        "https://danieltaylor.example.com", "https://emmathompson.example.com", "https://stevenwalker.example.com",
+        "https://ashleywhite.example.com", "https://jameswilson.example.com", "https://mariagarcia.example.com",
+        "https://stephanieyoung.example.com"
     )
 
     fun getDummySubscribers(count: Int = 25): List<Subscriber> {
