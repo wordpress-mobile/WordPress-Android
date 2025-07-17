@@ -144,7 +144,7 @@ object DummySubscribers {
                 subscriptionId = (index + 1001).toULong(),
                 displayName = dummyNames[nameIndex],
                 emailAddress = dummyEmails[emailIndex],
-                isEmailSubscriber = statusIndex == 0,
+                isEmailSubscriber = statusIndex == EMAIL_SUBSCRIBER_STATUS_INDEX,
                 url = websiteUrls[urlIndex],
                 dateSubscribed = dummyDates[dateIndex],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
@@ -156,4 +156,6 @@ object DummySubscribers {
         }
         return subscribers
     }
+
+    private const val EMAIL_SUBSCRIBER_STATUS_INDEX = 0
 }
