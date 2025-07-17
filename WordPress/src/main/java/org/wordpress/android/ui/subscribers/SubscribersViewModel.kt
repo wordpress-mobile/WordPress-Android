@@ -124,9 +124,10 @@ class SubscribersViewModel @Inject constructor(
         sortBy: DataViewDropdownItem?,
         searchQuery: String
     ): List<DataViewItem> = withContext(ioDispatcher) {
-        // TODO remove the dummy data
-        val subscribers = DummySubscribers.getDummySubscribers()
-        return@withContext subscribers.map { subscriberToDataViewItem(it) }
+        if (USE_DUMMY_DATA) {
+            val subscribers = DummySubscribers.getDummySubscribers()
+            return@withContext subscribers.map { subscriberToDataViewItem(it) }
+        }
         val filterType = filter?.let {
             when (it.id) {
                 SubscriberFilterType.Email.id -> SubscriberType.EmailSubscriber
@@ -208,6 +209,10 @@ class SubscribersViewModel @Inject constructor(
 
     private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
         withContext(ioDispatcher) {
+            if (USE_DUMMY_DATA) {
+                return@withContext DummySubscribers.getDummySubscriberStats()
+            }
+
             val params = IndividualSubscriberStatsParams(
                 subscriptionId = subscriptionId
             )
@@ -326,6 +331,7 @@ class SubscribersViewModel @Inject constructor(
     }
 
     companion object {
+        private const val USE_DUMMY_DATA = false
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
 }

@@ -5,6 +5,7 @@ import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
 import java.util.Date
+import kotlin.random.Random
 
 /**
  * Returns a list of "dummy" [Subscriber]s for use in screenshots promoting this feature
@@ -117,10 +118,11 @@ object DummySubscribers {
 
     @Suppress("Unused", "MagicNumber")
     fun getDummySubscriberStats(): IndividualSubscriberStats {
+        val random = Random.nextInt(from = 500, until = 1000)
         return IndividualSubscriberStats(
-            emailsSent = 1201u,
-            uniqueOpens = 858u,
-            uniqueClicks = 687u,
+            emailsSent = random.toULong(),
+            uniqueOpens = (random - 200).toULong(),
+            uniqueClicks = (random - 243).toULong(),
             blogRegistrationDate = Date(1673740800000L).toString(),
         )
     }
