@@ -45,18 +45,9 @@ object DummySubscribers {
     )
 
     private val subscriptionStatuses = listOf(
-        "Subscribed", "Not subscribed", "Not sending"
-    )
-
-    private val profileImageUrls = listOf(
-        "dummy_profile_1",
-        "dummy_profile_2",
-        "dummy_profile_3",
-        "dummy_profile_4",
-        "dummy_profile_5",
-        "dummy_profile_6",
-        "dummy_profile_7",
-        "dummy_profile_8"
+        "Subscribed",
+        "Not subscribed",
+        "Not sending"
     )
 
     private val countries = listOf(
@@ -88,7 +79,6 @@ object DummySubscribers {
             val emailIndex = index % dummyEmails.size
             val dateIndex = index % dummyDates.size
             val statusIndex = index % subscriptionStatuses.size
-            val imageIndex = index % profileImageUrls.size
             val countryIndex = index % countries.size
             val urlIndex = index % websiteUrls.size
 
@@ -101,7 +91,7 @@ object DummySubscribers {
                 url = websiteUrls[urlIndex],
                 dateSubscribed = dummyDates[dateIndex],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
-                avatar = profileImageUrls[imageIndex],
+                avatar = "android.resource://org.wordpress.android/drawable/dummy_profile_${nameIndex + 1}",
                 country = countries[countryIndex],
                 plans = emptyList()
             )
