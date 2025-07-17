@@ -208,6 +208,8 @@ class SubscribersViewModel @Inject constructor(
 
     private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
         withContext(ioDispatcher) {
+            // TODO remove the dummy stats before merging
+            return@withContext DummySubscribers.getDummySubscriberStats()
             val params = IndividualSubscriberStatsParams(
                 subscriptionId = subscriptionId
             )
