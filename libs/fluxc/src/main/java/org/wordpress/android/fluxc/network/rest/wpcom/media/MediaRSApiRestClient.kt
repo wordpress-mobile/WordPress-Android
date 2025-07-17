@@ -4,11 +4,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
+import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
@@ -62,12 +68,12 @@ class MediaRSApiRestClient @Inject constructor(
 
             val mediaModelList = when (mediaResponse) {
                 is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.MAIN, "Fetched media list: ${mediaResponse.response.data.size}")
+                    appLogWrapper.d(AppLog.T.MEDIA, "Fetched media list: ${mediaResponse.response.data.size}")
                     mediaResponse.response.data.toMediaModelList(site.id)
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.MAIN, "Fetch media list failed: $mediaResponse")
+                    appLogWrapper.e(AppLog.T.MEDIA, "Fetch media list failed: $mediaResponse")
                     emptyList()
                 }
             }
@@ -90,6 +96,64 @@ class MediaRSApiRestClient @Inject constructor(
             loadedMore, canLoadMore, mimeType
         )
         dispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
+    }
+
+    fun fetchMedia(site: SiteModel, media: MediaModel?) {
+        if (media == null) {
+            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
+            error.logMessage = "Requested media is null"
+            notifyMediaFetched(site, null, error)
+            return
+        }
+
+        scope.launch {
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            )
+            val apiRootUrl = URL(site.buildUrl())
+            val client = WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication() {
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    }
+                }
+            )
+
+            val mediaResponse = client.request { requestBuilder ->
+                requestBuilder.media().retrieveWithEditContext(media.mediaId)
+            }
+
+
+            when (mediaResponse) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MEDIA, "Fetched media with ID: " + media.mediaId)
+
+                    val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
+                        localSiteId = site.id
+                    }
+                    notifyMediaFetched(site, responseMedia, null)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.MEDIA, "Fetch media failed: $mediaResponse")
+                    val mediaError = MediaError(MediaErrorType.fromBaseNetworkError(mediaResponse))
+                    mediaError.message = mediaResponse.message
+                    mediaError.logMessage = mediaResponse.apiError
+                    notifyMediaFetched(site, media, mediaError)
+                }
+            }
+        }
+    }
+
+    private fun notifyMediaFetched(
+        site: SiteModel,
+        media: MediaModel?,
+        error: MediaError?
+    ) {
+        val payload = MediaPayload(site, media, error)
+        dispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload))
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(
