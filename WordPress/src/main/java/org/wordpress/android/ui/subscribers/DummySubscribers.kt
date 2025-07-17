@@ -144,13 +144,13 @@ object DummySubscribers {
                 subscriptionId = (index + 1001).toULong(),
                 displayName = dummyNames[nameIndex],
                 emailAddress = dummyEmails[emailIndex],
-                isEmailSubscriber = statusIndex == 0, // true for "Subscribed"
+                isEmailSubscriber = statusIndex == 0,
                 url = websiteUrls[urlIndex],
                 dateSubscribed = dummyDates[dateIndex],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
                 avatar = profileImageUrls[imageIndex],
                 country = countries[countryIndex],
-                plans = emptyList() // Can be extended with dummy subscription plans if needed
+                plans = emptyList()
             )
             subscribers.add(subscriber)
         }
