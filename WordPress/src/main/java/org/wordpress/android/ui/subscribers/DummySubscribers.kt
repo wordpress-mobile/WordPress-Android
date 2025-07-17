@@ -41,7 +41,8 @@ object DummySubscribers {
         Date(1683072000000L), // 2023-05-03
         Date(1687046400000L), // 2023-06-18
         Date(1690243200000L), // 2023-07-25
-        Date(1691884800000L)  // 2023-08-12
+        Date(1691884800000L), // 2023-08-12
+        Date(1687046400000L), // 2023-06-18
     )
 
     private val subscriptionStatuses = listOf(
