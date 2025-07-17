@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.subscribers
 
+import org.wordpress.android.R
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberCountry
@@ -51,6 +52,17 @@ object DummySubscribers {
         "Not sending"
     )
 
+    private val profileImageDrawables = listOf(
+        R.drawable.dummy_profile_1,
+        R.drawable.dummy_profile_2,
+        R.drawable.dummy_profile_3,
+        R.drawable.dummy_profile_4,
+        R.drawable.dummy_profile_5,
+        R.drawable.dummy_profile_6,
+        R.drawable.dummy_profile_7,
+        R.drawable.dummy_profile_8
+    )
+
     private val countries = listOf(
         SubscriberCountry("US", "United States"),
         SubscriberCountry("CA", "Canada"),
@@ -87,7 +99,7 @@ object DummySubscribers {
                 url = websiteUrls[index],
                 dateSubscribed = dummyDates[index],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
-                avatar = "android.resource://org.wordpress.android/drawable/dummy_profile_${index + 1}",
+                avatar = "drawable:${profileImageDrawables[index]}",
                 country = countries[index],
                 plans = emptyList()
             )
