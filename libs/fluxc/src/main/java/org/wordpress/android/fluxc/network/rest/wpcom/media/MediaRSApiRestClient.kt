@@ -136,35 +136,38 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaFetched(site, responseMedia, null)
                 }
 
-                else -> parseMediaError(site, media, mediaResponse)
+                else -> {
+                    val mediaError = parseMediaError(mediaResponse)
+                    notifyMediaFetched(site, media, mediaError)
+                }
             }
         }
     }
 
-    private fun parseMediaError(site: SiteModel, media: MediaModel, mediaResponse: WpRequestResult<*>) {
-        when (mediaResponse) {
+    private fun parseMediaError(mediaResponse: WpRequestResult<*>): MediaError {
+        return when (mediaResponse) {
             is WpRequestResult.Success -> {
                 throw IllegalStateException("Success media response shuld not be parsed as an error")
             }
             is WpRequestResult.MediaFileNotFound<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Media file not found: $mediaResponse")
-                val mediaError = MediaError(MediaErrorType.NOT_FOUND)
-                mediaError.message = "Media file not found"
-                notifyMediaFetched(site, media, mediaError)
+                MediaError(MediaErrorType.NOT_FOUND).apply {
+                    message = "Media file not found"
+                }
             }
 
             is WpRequestResult.ResponseParsingError<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
-                val mediaError = MediaError(MediaErrorType.PARSE_ERROR)
-                mediaError.message = "Failed to parse response"
-                notifyMediaFetched(site, media, mediaError)
+                MediaError(MediaErrorType.PARSE_ERROR).apply {
+                    message = "Failed to parse response"
+                }
             }
 
             is WpRequestResult.SiteUrlParsingError<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Site URL parsing error: $mediaResponse")
-                val mediaError = MediaError(MediaErrorType.MALFORMED_MEDIA_ARG)
-                mediaError.message = "Invalid site URL"
-                notifyMediaFetched(site, media, mediaError)
+                MediaError(MediaErrorType.MALFORMED_MEDIA_ARG).apply {
+                    message = "Invalid site URL"
+                }
             }
 
             is WpRequestResult.InvalidHttpStatusCode<*>,
@@ -172,9 +175,9 @@ class MediaRSApiRestClient @Inject constructor(
             is WpRequestResult.RequestExecutionFailed<*>,
             is WpRequestResult.UnknownError<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Unknown error: $mediaResponse")
-                val mediaError = MediaError(MediaErrorType.GENERIC_ERROR)
-                mediaError.message = "Unknown error occurred"
-                notifyMediaFetched(site, media, mediaError)
+                MediaError(MediaErrorType.GENERIC_ERROR).apply {
+                    message = "Unknown error occurred"
+                }
             }
         }
     }
@@ -225,7 +228,10 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaDeleted(site, responseMedia, null)
                 }
 
-                else -> parseMediaError(site, media, mediaResponse)
+                else -> {
+                    val mediaError = parseMediaError(mediaResponse)
+                    notifyMediaDeleted(site, media, mediaError)
+                }
             }
         }
     }
