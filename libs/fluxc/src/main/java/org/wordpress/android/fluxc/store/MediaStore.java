@@ -938,7 +938,9 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);

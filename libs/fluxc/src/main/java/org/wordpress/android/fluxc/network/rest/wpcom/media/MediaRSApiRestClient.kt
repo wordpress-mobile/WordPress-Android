@@ -1,30 +1,44 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media
 
+import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
+import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
+import org.wordpress.android.fluxc.utils.WPComRestClientUtils.getHttpUrlWithLocale
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
+import java.io.IOException
+import java.io.StringReader
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
@@ -138,6 +152,7 @@ class MediaRSApiRestClient @Inject constructor(
 
                 else -> {
                     val mediaError = parseMediaError(mediaResponse)
+                    appLogWrapper.e(AppLog.T.MEDIA, "Fetch media failed: ${mediaError.message}")
                     notifyMediaFetched(site, media, mediaError)
                 }
             }
@@ -230,6 +245,7 @@ class MediaRSApiRestClient @Inject constructor(
 
                 else -> {
                     val mediaError = parseMediaError(mediaResponse)
+                    appLogWrapper.e(AppLog.T.MEDIA, "Delete media failed: ${mediaError.message}")
                     notifyMediaDeleted(site, media, mediaError)
                 }
             }
@@ -243,6 +259,77 @@ class MediaRSApiRestClient @Inject constructor(
     ) {
         val payload = MediaPayload(site, media, error)
         dispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload))
+    }
+
+    fun uploadMedia(site: SiteModel, media: MediaModel?) {
+        if (media == null || media.id == 0) {
+            // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
+            val error = MediaError(MediaErrorType.INVALID_ID)
+            if (media == null) {
+                error.logMessage = "Media object is null on upload"
+            } else {
+                error.logMessage = "Media ID is 0 on upload"
+            }
+            notifyMediaUploaded(media, error)
+            return
+        }
+
+        if (media.filePath == null || !MediaUtils.canReadFile(media.filePath)) {
+            val error = MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED)
+            error.logMessage = "Can't read file on upload"
+            notifyMediaUploaded(media, error)
+            return
+        }
+
+        scope.launch {
+            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            )
+            val apiRootUrl = URL(site.buildUrl())
+            val client = WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication() {
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    }
+                }
+            )
+
+            val mediaResponse = client.request { requestBuilder ->
+                requestBuilder.media().create(
+                    params = MediaCreateParams(title = media.title),
+                    filePath = media.filePath!!, // We have already checked the nullability
+                    fileContentType = media.mimeType.orEmpty(),
+                    requestId = null
+                )
+            }
+
+            when (mediaResponse) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MEDIA, "Uploaded media with ID: " + media.mediaId)
+
+                    val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
+                        localSiteId = site.id
+                    }
+                    notifyMediaUploaded(responseMedia, null)
+                }
+
+                else -> {
+                    val mediaError = parseMediaError(mediaResponse)
+                    appLogWrapper.e(AppLog.T.MEDIA, "Upload media failed: ${mediaError.message}")
+                    notifyMediaUploaded(media, mediaError)
+                }
+            }
+        }
+    }
+
+    private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
+        if (media != null) {
+            media.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
+        }
+        val payload = ProgressPayload(media, 1f, error == null, error)
+        dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(
