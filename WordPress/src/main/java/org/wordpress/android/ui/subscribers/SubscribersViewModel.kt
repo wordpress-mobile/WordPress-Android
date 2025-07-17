@@ -124,6 +124,9 @@ class SubscribersViewModel @Inject constructor(
         sortBy: DataViewDropdownItem?,
         searchQuery: String
     ): List<DataViewItem> = withContext(ioDispatcher) {
+        // TODO remove dummy subscribers before merging
+        val subscribers = DummySubscribers.getDummySubscribers()
+        return@withContext subscribers.map { subscriberToDataViewItem(it) }
         val filterType = filter?.let {
             when (it.id) {
                 SubscriberFilterType.Email.id -> SubscriberType.EmailSubscriber
