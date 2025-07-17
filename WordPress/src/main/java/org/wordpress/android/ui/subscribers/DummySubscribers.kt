@@ -85,26 +85,33 @@ object DummySubscribers {
         "https://ryanharris.example.com"
     )
 
-    fun getDummySubscribers(count: Int = 8): List<Subscriber> {
+    fun getDummySubscribers(count: Int = 20): List<Subscriber> {
         val subscribers = mutableListOf<Subscriber>()
         repeat(count) { index ->
+            val nameIndex = index % dummyNames.size
+            val emailIndex = index % dummyEmails.size
+            val dateIndex = index % dummyDates.size
             val statusIndex = index % subscriptionStatuses.size
+            val imageIndex = index % profileImageDrawables.size
+            val countryIndex = index % countries.size
+            val urlIndex = index % websiteUrls.size
 
             val subscriber = Subscriber(
                 userId = (index + 1).toLong(),
                 subscriptionId = (index + 1001).toULong(),
-                displayName = dummyNames[index],
-                emailAddress = dummyEmails[index],
+                displayName = dummyNames[nameIndex],
+                emailAddress = dummyEmails[emailIndex],
                 isEmailSubscriber = statusIndex == EMAIL_SUBSCRIBER_STATUS_INDEX,
-                url = websiteUrls[index],
-                dateSubscribed = dummyDates[index],
+                url = websiteUrls[urlIndex],
+                dateSubscribed = dummyDates[dateIndex],
                 subscriptionStatus = subscriptionStatuses[statusIndex],
-                avatar = "drawable:${profileImageDrawables[index]}",
-                country = countries[index],
+                avatar = "drawable:${profileImageDrawables[imageIndex]}",
+                country = countries[countryIndex],
                 plans = emptyList()
             )
             subscribers.add(subscriber)
         }
+
         return subscribers
     }
 
