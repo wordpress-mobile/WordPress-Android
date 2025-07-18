@@ -2503,7 +2503,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
+            val isWpCom = site.isWPCom || siteModel.isWPComAtomic
             val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
                 siteModel.url,
                 isWpCom,
