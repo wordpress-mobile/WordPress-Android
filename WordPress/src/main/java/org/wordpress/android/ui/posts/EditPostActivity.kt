@@ -258,7 +258,6 @@ import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
@@ -798,9 +797,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun setupEditor() {
-        if (isGutenbergKitEditor) {
-            GutenbergWebViewPool.getPreloadedWebView(this)
-        }
         // Check whether to show the visual editor
 
         // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
@@ -2503,8 +2499,21 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
+            val isWpCom = site.isWPCom || siteModel.isWPComAtomic
+            val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
+            val settings = createGutenbergKitSettings(isWpCom)
+
+            return GutenbergKitEditorFragment.newInstance(
+                getContext(),
+                isNewPost,
+                gutenbergWebViewAuthorizationData,
+                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings
+            )
+        }
+
+        private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
+            return GutenbergWebViewAuthorizationData(
                 siteModel.url,
                 isWpCom,
                 accountStore.account.userId,
@@ -2518,21 +2527,28 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 userAgent.toString(),
                 isJetpackSsoEnabled
             )
+        }
 
+        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val authToken = accountStore.accessToken
-            val authHeader = "Bearer $authToken"
-            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
+            val siteURL = siteModel.url
+            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
+                else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
+            // Use the application password for self-hosted sites when available
+            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
+            val siteApiNamespace = if (isWpCom)
+                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else arrayOf()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            val settings = mutableMapOf<String, Any?>(
+            return mutableMapOf(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
                 "siteApiRoot" to siteApiRoot,
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
@@ -2551,14 +2567,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         }
                     )
                 )
-            )
-
-            return GutenbergKitEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
             )
         }
 
