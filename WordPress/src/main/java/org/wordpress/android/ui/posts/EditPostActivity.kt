@@ -798,9 +798,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun setupEditor() {
-        if (isGutenbergKitEditor) {
-            GutenbergWebViewPool.getPreloadedWebView(this)
-        }
         // Check whether to show the visual editor
 
         // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
