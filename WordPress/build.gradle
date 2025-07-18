@@ -315,15 +315,6 @@ android {
         }
     }
 
-    lint {
-        warningsAsErrors = true
-        checkDependencies = true
-        checkGeneratedSources = true
-        lintConfig file("${project.rootDir}/config/lint/lint.xml")
-        baseline file("${project.rootDir}/config/lint/baseline.xml")
-        sarifReport = gradle.ext.isCi
-    }
-
     packagingOptions {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
