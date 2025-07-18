@@ -27,17 +27,17 @@ fun RemoteImage(
     } else if (imageUrl.startsWith("drawable:")) {
         // Handle drawable resource ID passed as string
         val resourceId = imageUrl.removePrefix("drawable:").toIntOrNull()
-            Image(
-                painter = painterResource(
-                    id = if (resourceId != null && isValidDrawableId(LocalContext.current, resourceId)) {
-                        resourceId
-                    } else {
-                        fallbackImageRes
-                    }
-                ),
-                contentDescription = null,
-                modifier = modifier
-            )
+        Image(
+            painter = painterResource(
+                id = if (resourceId != null && isValidDrawableId(LocalContext.current, resourceId)) {
+                    resourceId
+                } else {
+                    fallbackImageRes
+                }
+            ),
+            contentDescription = null,
+            modifier = modifier
+        )
     } else {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
