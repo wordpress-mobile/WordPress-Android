@@ -74,6 +74,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+    private static final String KEY_EDITOR_STARTED = "KEY_EDITOR_STARTED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
@@ -92,6 +93,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
     @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
+    private boolean mEditorStarted;
     private boolean mEditorDidMount;
     @Nullable
     private View mRootView;
@@ -126,6 +128,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+            mEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED);
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID);
         }
@@ -262,6 +265,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+        outState.putBoolean(KEY_EDITOR_STARTED, mEditorStarted);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId);
     }
@@ -510,6 +514,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             mHistoryChangeListener = null;
             mFeaturedImageChangeListener = null;
         }
+        mEditorStarted = false;
         super.onDestroy();
     }
 
@@ -558,7 +563,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     public void startWithEditorSettings(@NonNull String editorSettings) {
-        if (mGutenbergView == null) {
+        if (mGutenbergView == null || mEditorStarted) {
             return;
         }
 
@@ -592,6 +597,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setEnableAssetCaching(true)
                 .build();
 
+        mEditorStarted = true;
         mGutenbergView.start(config);
     }
 
