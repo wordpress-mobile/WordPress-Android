@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
@@ -58,6 +59,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import static org.wordpress.gutenberg.Media.createMediaUsingMimeType;
@@ -565,6 +567,12 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             postId = -1;
         }
 
+        var siteURL = (String) mSettings.get("siteURL");
+        var siteApiRoot = (String) mSettings.get("siteApiRoot");
+        var siteApiNamespace = (String[]) mSettings.get("siteApiNamespace");
+        var firstNamespace = siteApiNamespace != null && siteApiNamespace.length > 0 ? siteApiNamespace[0] : "";
+        var editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets";
+
         EditorConfiguration config = new EditorConfiguration.Builder()
                 .setTitle((String) mSettings.get("postTitle"))
                 .setContent((String) mSettings.get("postContent"))
@@ -573,12 +581,15 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setThemeStyles((Boolean) mSettings.get("themeStyles"))
                 .setPlugins((Boolean) mSettings.get("plugins"))
                 .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
-                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
+                .setSiteApiNamespace((String[]) siteApiNamespace)
                 .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
                 .setAuthHeader((String) mSettings.get("authHeader"))
                 .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
                 .setEditorSettings(editorSettings)
                 .setLocale((String) mSettings.get("locale"))
+                .setEditorAssetsEndpoint(editorAssetsEndpoint)
+                .setCachedAssetHosts(Set.of("s0.wp.com", UrlUtils.getHost(siteURL)))
+                .setEnableAssetCaching(true)
                 .build();
 
         mGutenbergView.start(config);

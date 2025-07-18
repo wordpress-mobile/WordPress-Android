@@ -2520,10 +2520,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             )
 
             val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val authToken = accountStore.accessToken
-            val authHeader = "Bearer $authToken"
-            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
+            val siteURL = siteModel.url
+            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
+            // TODO: Use the application password for self-hosted sites
+            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
+            val siteApiNamespace = if (isWpCom) arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/") else arrayOf()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
@@ -2533,6 +2534,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
                 "siteApiRoot" to siteApiRoot,
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
