@@ -56,19 +56,7 @@ class MediaRSApiRestClient @Inject constructor(
 ) {
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-            )
-            val apiRootUrl = URL(site.buildUrl())
-            val client = WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
-                authProvider = authProvider,
-                appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication() {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
-            )
+            val client = getWpApiClient(site)
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().listWithEditContext(
                     MediaListParams(
@@ -121,19 +109,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-            )
-            val apiRootUrl = URL(site.buildUrl())
-            val client = WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
-                authProvider = authProvider,
-                appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication() {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
-            )
+            val client = getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().retrieveWithEditContext(media.mediaId)
@@ -215,19 +191,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-            )
-            val apiRootUrl = URL(site.buildUrl())
-            val client = WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
-                authProvider = authProvider,
-                appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication() {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
-            )
+            val client = getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().delete(media.mediaId)
@@ -282,19 +246,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-            )
-            val apiRootUrl = URL(site.buildUrl())
-            val client = WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
-                authProvider = authProvider,
-                appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication() {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
-                }
-            )
+            val client = getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
@@ -328,6 +280,23 @@ class MediaRSApiRestClient @Inject constructor(
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+    }
+
+    private fun getWpApiClient(site: SiteModel): WpApiClient {
+        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+            username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+        )
+        val apiRootUrl = URL(site.buildUrl())
+        val client = WpApiClient(
+            wpOrgSiteApiRootUrl = apiRootUrl,
+            authProvider = authProvider,
+            appNotifier = object : WpAppNotifier {
+                override suspend fun requestedWithInvalidAuthentication() {
+                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                }
+            }
+        )
+        return client
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(
