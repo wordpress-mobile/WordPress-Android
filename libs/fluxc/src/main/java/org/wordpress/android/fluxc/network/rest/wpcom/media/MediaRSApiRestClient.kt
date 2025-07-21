@@ -272,11 +272,6 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
 
-    private fun notifyMediaUploadCanceled(media: MediaModel) {
-        val payload = ProgressPayload(media, 0f, false, true)
-        dispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
-    }
-
     private fun getWpApiClient(site: SiteModel): WpApiClient {
         val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
             username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
