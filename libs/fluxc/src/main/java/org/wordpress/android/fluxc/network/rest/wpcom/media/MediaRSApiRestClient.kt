@@ -1,24 +1,16 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media
 
-import com.google.gson.Gson
-import com.google.gson.stream.JsonReader
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Request
-import okhttp3.Response
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -27,7 +19,6 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
-import org.wordpress.android.fluxc.utils.WPComRestClientUtils.getHttpUrlWithLocale
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -37,9 +28,8 @@ import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
-import java.io.IOException
-import java.io.StringReader
 import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -54,6 +44,9 @@ class MediaRSApiRestClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
+    // Map to store upload jobs keyed by media ID for cancellation
+    private val uploadJobs = ConcurrentHashMap<Int, Job>()
+
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
             val client = getWpApiClient(site)
@@ -245,7 +238,7 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
-        scope.launch {
+        val job = scope.launch {
             val client = getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
@@ -274,13 +267,51 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaUploaded(media, mediaError)
                 }
             }
+
+            // Clean up the job from the map after completion
+            uploadJobs.remove(media.id)
         }
+
+        // Store the job in the map
+        uploadJobs[media.id] = job
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+    }
+
+    fun cancelUpload(media: MediaModel?) {
+        if (media == null) {
+            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
+            error.logMessage = "Null media on cancel upload"
+            notifyMediaUploaded(null, error)
+            return
+        }
+
+        appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
+
+        val job = uploadJobs[media.id]
+        if (job != null) {
+            job.cancel()
+            uploadJobs.remove(media.id)
+
+            // Report the upload was successfully cancelled
+            notifyMediaUploadCanceled(media)
+
+            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
+        } else {
+            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
+
+            // Still notify cancellation even if job wasn't found, to update UI state
+            notifyMediaUploadCanceled(media)
+        }
+    }
+
+    private fun notifyMediaUploadCanceled(media: MediaModel) {
+        val payload = ProgressPayload(media, 0f, false, true)
+        dispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
     }
 
     private fun getWpApiClient(site: SiteModel): WpApiClient {
@@ -318,7 +349,7 @@ class MediaRSApiRestClient @Inject constructor(
         fileExtension = this@toMediaModel.mediaType.toString()
         uploadDate = this@toMediaModel.date
         authorId = this@toMediaModel.author
-        uploadState = org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED.toString()
+        uploadState = MediaUploadState.UPLOADED.toString()
 
         // Parse the media details
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
