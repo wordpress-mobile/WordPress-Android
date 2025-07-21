@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -40,31 +41,37 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MutableStateFlow(DataViewUiState.LOADING)
-    val uiState: StateFlow<DataViewUiState> = _uiState
-
-    private val _items = MutableStateFlow<List<DataViewItem>>(emptyList())
-    val items = _items.asStateFlow()
-
-    private val _itemFilter = MutableStateFlow<DataViewDropdownItem?>(null)
-    val itemFilter = _itemFilter.asStateFlow()
-
-    private val _itemSortBy = MutableStateFlow<DataViewDropdownItem?>(null)
-    val itemSortBy = _itemSortBy.asStateFlow()
-
-    private val _sortOrder = MutableStateFlow(WpApiParamOrder.ASC)
-    val sortOrder = _sortOrder.asStateFlow()
-
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage = _errorMessage.asStateFlow()
-
-    private val _refreshState = MutableStateFlow(false)
-    val refreshState = _refreshState.asStateFlow()
+    private val _uiState = MutableStateFlow(DataViewUiState())
+    val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
 
     private val debouncedQuery = MutableStateFlow("")
-    private var searchQuery: String = ""
-    private var page = INITIAL_PAGE
-    private var canLoadMore = true
+
+    private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
+        _uiState.update { update(it) }
+    }
+
+    private fun updateItems(items: List<DataViewItem>, isLoadingMore: Boolean = false) {
+        updateState { currentState ->
+            currentState.copy(
+                items = if (isLoadingMore) currentState.items + items else items,
+                loadingState = if (items.isEmpty()) {
+                    if (currentState.searchQuery.isNotEmpty()) LoadingState.EMPTY_SEARCH
+                    else LoadingState.EMPTY
+                } else LoadingState.LOADED,
+                canLoadMore = items.size == PAGE_SIZE
+            )
+        }
+    }
+
+    private fun resetPaging() {
+        updateState { currentState ->
+            currentState.copy(
+                currentPage = INITIAL_PAGE,
+                canLoadMore = true,
+                errorMessage = null
+            )
+        }
+    }
 
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     protected val wpComApiClient: WpComApiClient by lazy {
@@ -90,8 +97,8 @@ open class DataViewViewModel @Inject constructor(
             debouncedQuery
                 .debounce(SEARCH_DELAY_MS)
                 .collect { query ->
-                    if (searchQuery != query) {
-                        searchQuery = query
+                    if (_uiState.value.searchQuery != query) {
+                        updateState { it.copy(searchQuery = query) }
                         resetPaging()
                         fetchData()
                     }
@@ -108,80 +115,74 @@ open class DataViewViewModel @Inject constructor(
      */
     protected open fun restorePrefs() {
         val sortOrdinal = sharedPrefs.getInt(getPrefKeyName(PrefKey.SORT_ORDER), -1)
-        if (sortOrdinal > -1) {
-            WpApiParamOrder.entries.toTypedArray().getOrNull(sortOrdinal)?.let {
-                _sortOrder.value = it
-            }
-        }
+        val sortOrder = WpApiParamOrder.entries.getOrNull(sortOrdinal) ?: WpApiParamOrder.ASC
 
         val sortById = sharedPrefs.getLong(getPrefKeyName(PrefKey.SORT_BY), -1)
-        if (sortById > -1) {
-            _itemSortBy.value = getSupportedSorts().firstOrNull { it.id == sortById }
+        val sortBy = if (sortById > -1) {
+            getSupportedSorts().firstOrNull { it.id == sortById }
         } else {
-            _itemSortBy.value = getDefaultSort()
+            getDefaultSort()
         }
 
         val filterId = sharedPrefs.getLong(getPrefKeyName(PrefKey.FILTER), -1)
-        if (filterId > -1) {
-            _itemFilter.value = getSupportedFilters().firstOrNull { it.id == filterId }
+        val filter = if (filterId > -1) {
+            getSupportedFilters().firstOrNull { it.id == filterId }
+        } else {
+            null
+        }
+
+        updateState { currentState ->
+            currentState.copy(
+                sortOrder = sortOrder,
+                currentSortBy = sortBy,
+                currentFilter = filter
+            )
         }
     }
 
     private fun fetchData(isRefreshing: Boolean = false) {
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            val isLoadingMore = page > INITIAL_PAGE
-            if (isLoadingMore) {
-                updateUiState(DataViewUiState.LOADING_MORE)
-            } else {
-                updateUiState(DataViewUiState.LOADING)
-            }
-            if (isRefreshing) {
-                _refreshState.value = true
+            val currentState = _uiState.value
+            val isLoadingMore = currentState.currentPage > INITIAL_PAGE
+
+            updateState { state ->
+                state.copy(
+                    loadingState = if (isLoadingMore) LoadingState.LOADING_MORE else LoadingState.LOADING,
+                    isRefreshing = isRefreshing
+                )
             }
 
             launch {
                 val items = performNetworkRequest(
-                    page = page,
-                    searchQuery = searchQuery,
-                    filter = _itemFilter.value,
-                    sortOrder = _sortOrder.value,
-                    sortBy = _itemSortBy.value,
+                    page = currentState.currentPage,
+                    searchQuery = currentState.searchQuery,
+                    filter = currentState.currentFilter,
+                    sortOrder = currentState.sortOrder,
+                    sortBy = currentState.currentSortBy,
                 )
-                if (uiState.value == DataViewUiState.ERROR) {
-                    _refreshState.value = false
+
+                if (_uiState.value.loadingState == LoadingState.ERROR) {
+                    updateState { it.copy(isRefreshing = false) }
                     return@launch
                 }
 
-                if (isLoadingMore) {
-                    _items.value += items
-                } else {
-                    _items.value = items
-                }
-                canLoadMore = items.size == PAGE_SIZE
-                if (_items.value.isEmpty()) {
-                    if (searchQuery.isNotEmpty()) {
-                        updateUiState(DataViewUiState.EMPTY_SEARCH)
-                    } else {
-                        updateUiState(DataViewUiState.EMPTY)
-                    }
-                } else {
-                    updateUiState(DataViewUiState.LOADED)
-                }
-                _refreshState.value = false
+                updateItems(items, isLoadingMore)
+                updateState { it.copy(isRefreshing = false) }
             }
         } else {
-            updateUiState(DataViewUiState.OFFLINE)
+            updateState {
+                it.copy(
+                    loadingState = LoadingState.OFFLINE,
+                    isRefreshing = false
+                )
+            }
         }
     }
 
-    private fun resetPaging() {
-        page = INITIAL_PAGE
-        canLoadMore = true
-        _errorMessage.value = null
-    }
+    // resetPaging() is now handled by the helper function above
 
     fun onRefreshData() {
-        if (_uiState.value == DataViewUiState.LOADED) {
+        if (_uiState.value.loadingState == LoadingState.LOADED) {
             resetPaging()
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onRefreshData")
             fetchData(isRefreshing = true)
@@ -189,9 +190,10 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onFetchMoreData() {
-        if (_uiState.value != DataViewUiState.LOADING_MORE && canLoadMore) {
+        val currentState = _uiState.value
+        if (currentState.loadingState != LoadingState.LOADING_MORE && currentState.canLoadMore) {
             appLogWrapper.d(AppLog.T.MAIN, "$logTag onFetchMoreData")
-            page++
+            updateState { it.copy(currentPage = it.currentPage + 1) }
             fetchData()
         }
     }
@@ -201,11 +203,11 @@ open class DataViewViewModel @Inject constructor(
         resetPaging()
         val keyName = getPrefKeyName(PrefKey.FILTER)
         // clear the filter if it's already selected
-        if (filter == _itemFilter.value || filter == null) {
-            _itemFilter.value = null
+        if (filter == _uiState.value.currentFilter || filter == null) {
+            updateState { it.copy(currentFilter = null) }
             sharedPrefs.edit { remove(keyName) }
         } else {
-            _itemFilter.value = filter
+            updateState { it.copy(currentFilter = filter) }
             sharedPrefs.edit { putLong(keyName, filter.id) }
         }
         fetchData()
@@ -215,15 +217,15 @@ open class DataViewViewModel @Inject constructor(
      * Returns the name of the preference key for the given [prefKey]. This relies on
      * the [logTag] so descendants will have unique names for each key.
      */
-    private fun getPrefKeyName(prefKey: PrefKey) : String {
+    private fun getPrefKeyName(prefKey: PrefKey): String {
         return "${logTag}_${prefKey.name}"
     }
 
     fun onSortClick(sort: DataViewDropdownItem) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortClick: $sort")
-        if (sort != _itemSortBy.value) {
+        if (sort != _uiState.value.currentSortBy) {
             sharedPrefs.edit { putLong(getPrefKeyName(PrefKey.SORT_BY), sort.id) }
-            _itemSortBy.value = sort
+            updateState { it.copy(currentSortBy = sort) }
             resetPaging()
             fetchData()
         }
@@ -231,9 +233,9 @@ open class DataViewViewModel @Inject constructor(
 
     fun onSortOrderClick(order: WpApiParamOrder) {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag onSortOrderClick: $order")
-        if (order != _sortOrder.value) {
+        if (order != _uiState.value.sortOrder) {
             sharedPrefs.edit { putInt(getPrefKeyName(PrefKey.SORT_ORDER), order.ordinal) }
-            _sortOrder.value = order
+            updateState { it.copy(sortOrder = order) }
             resetPaging()
             fetchData()
         }
@@ -245,20 +247,18 @@ open class DataViewViewModel @Inject constructor(
     }
 
     fun onError(message: String?) {
-        _errorMessage.value = message
-        updateUiState(DataViewUiState.ERROR)
+        updateState { it.copy(errorMessage = message, loadingState = LoadingState.ERROR) }
     }
 
-    private fun updateUiState(state: DataViewUiState) {
-        _uiState.value = state
-        appLogWrapper.d(AppLog.T.MAIN, "$logTag updateUiState: $state")
-    }
+    // updateUiState is now handled by updateState and updateLoadingState helper functions
 
     /**
      * Removes an item from the local list of items
      */
     fun removeItem(id: Long) {
-        _items.value = items.value.filter { it.id != id }
+        updateState { currentState ->
+            currentState.copy(items = currentState.items.filter { it.id != id })
+        }
     }
 
     /**
