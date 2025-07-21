@@ -127,7 +127,7 @@ class MediaRSApiRestClient @Inject constructor(
     private fun parseMediaError(mediaResponse: WpRequestResult<*>): MediaError {
         return when (mediaResponse) {
             is WpRequestResult.Success -> {
-                throw IllegalStateException("Success media response shuld not be parsed as an error")
+                throw IllegalStateException("Success media response should not be parsed as an error")
             }
             is WpRequestResult.MediaFileNotFound<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Media file not found: $mediaResponse")
@@ -174,8 +174,8 @@ class MediaRSApiRestClient @Inject constructor(
     fun deleteMedia(site: SiteModel, media: MediaModel?) {
         if (media == null) {
             val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
-            error.logMessage = "Requested media is null"
-            notifyMediaFetched(site, null, error)
+            error.logMessage =  "Media to delete is null"
+            notifyMediaDeleted(site, null, error)
             return
         }
 
