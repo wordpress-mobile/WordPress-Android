@@ -128,6 +128,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError") // Allow to throw IllegalStateException
     private fun parseMediaError(mediaResponse: WpRequestResult<*>): MediaError {
         return when (mediaResponse) {
             is WpRequestResult.Success -> {
