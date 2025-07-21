@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -29,7 +28,6 @@ import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
-import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -44,9 +42,6 @@ class MediaRSApiRestClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
-    // Map to store upload jobs keyed by media ID for cancellation
-    private val uploadJobs = ConcurrentHashMap<Int, Job>()
-
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
             val client = getWpApiClient(site)
@@ -239,7 +234,7 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
-        val job = scope.launch {
+        scope.launch {
             val client = getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
@@ -268,46 +263,13 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaUploaded(media, mediaError)
                 }
             }
-
-            // Clean up the job from the map after completion
-            uploadJobs.remove(media.id)
         }
-
-        // Store the job in the map
-        uploadJobs[media.id] = job
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-    }
-
-    fun cancelUpload(media: MediaModel?) {
-        if (media == null) {
-            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
-            error.logMessage = "Null media on cancel upload"
-            notifyMediaUploaded(null, error)
-            return
-        }
-
-        appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
-
-        val job = uploadJobs[media.id]
-        if (job != null) {
-            job.cancel()
-            uploadJobs.remove(media.id)
-
-            // Report the upload was successfully cancelled
-            notifyMediaUploadCanceled(media)
-
-            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
-        } else {
-            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
-
-            // Still notify cancellation even if job wasn't found, to update UI state
-            notifyMediaUploadCanceled(media)
-        }
     }
 
     private fun notifyMediaUploadCanceled(media: MediaModel) {
