@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,18 +19,24 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.mockito.MockedStatic
+import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction
+import org.wordpress.android.fluxc.action.UploadAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.media.MediaRSApiRestClient.FileCheckWrapper
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
+import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -38,6 +45,7 @@ import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
 import uniffi.wp_api.MediaDetails
 import uniffi.wp_api.MediaDetailsPayload
+import uniffi.wp_api.MediaRequestCreateResponse
 import uniffi.wp_api.MediaRequestDeleteResponse
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
 import uniffi.wp_api.MediaRequestRetrieveWithEditContextResponse
@@ -62,6 +70,8 @@ class MediaRSApiRestClientTest {
     private lateinit var wpApiClientProvider: WpApiClientProvider
     @Mock
     private lateinit var wpApiClient: WpApiClient
+    @Mock
+    private lateinit var fileCheckWrapper: FileCheckWrapper
 
     private lateinit var testScope: CoroutineScope
     private lateinit var restClient: MediaRSApiRestClient
@@ -80,7 +90,8 @@ class MediaRSApiRestClientTest {
             scope = testScope,
             dispatcher = dispatcher,
             appLogWrapper = appLogWrapper,
-            wpApiClientProvider = wpApiClientProvider
+            wpApiClientProvider = wpApiClientProvider,
+            fileCheckWrapper= fileCheckWrapper,
         )
     }
 
@@ -275,6 +286,150 @@ class MediaRSApiRestClientTest {
         assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
+    @Test
+    fun `uploadMedia with null media dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+
+        restClient.uploadMedia(testSite, null)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertNull(payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.INVALID_ID, payload.error?.type)
+        assertEquals("Media object is null on upload", payload.error?.logMessage)
+        assertEquals(1f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+    }
+
+    @Test
+    fun `uploadMedia with media ID 0 dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            id = 0 // Invalid ID
+        }
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertEquals(testMedia, payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.INVALID_ID, payload.error?.type)
+        assertEquals("Media ID is 0 on upload", payload.error?.logMessage)
+        assertEquals(1f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+    }
+
+    @Test
+    fun `uploadMedia with null filePath dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = null
+        }
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertEquals(testMedia, payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.FS_READ_PERMISSION_DENIED, payload.error?.type)
+        assertEquals("Can't read file on upload", payload.error?.logMessage)
+        assertEquals(1f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+    }
+
+    @Test
+    fun `uploadMedia with unreadable file dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = ""  // Empty file path will fail MediaUtils.canReadFile
+        }
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertEquals(testMedia, payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.FS_READ_PERMISSION_DENIED, payload.error?.type)
+        assertEquals("Can't read file on upload", payload.error?.logMessage)
+        assertEquals(1f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+    }
+
+    @Test
+    fun `uploadMedia with success response dispatches success action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+        val mediaWithEditContext = createTestMediaWithEditContext(testMedia.id.toLong())
+        val mediaRequestResult: WpRequestResult<MediaRequestCreateResponse> =
+            WpRequestResult.Success(response = MediaRequestCreateResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>()))
+        val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<MediaRequestCreateResponse>(any())).thenReturn(mediaRequestResult)
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertTrue(payload.completed)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `uploadMedia with error response dispatches error action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        // Mock an error response
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(statusCode = 413u, response = "File too large")
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertEquals(testMedia, payload.media)
+        assertEquals(MediaUploadState.FAILED.toString(), payload.media?.uploadState)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
+        assertEquals(1f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+    }
+
     private fun createTestSite() = SiteModel().apply {
         id = 123
         url = "https://example.wordpress.com"
@@ -284,6 +439,7 @@ class MediaRSApiRestClientTest {
     }
 
     private fun createTestMedia() = MediaModel(123, 456L).apply {
+        id = 123
         mediaId = 456L
         title = "Test Media"
         url = "https://example.com/media.jpg"
@@ -356,8 +512,8 @@ class MediaRSApiRestClientTest {
 
 
     private fun MediaWithEditContext.toMediaModel(
-        siteId: Int
-    ): MediaModel = MediaModel(siteId, id).apply {
+        siteId: Int,
+    ): MediaModel = MediaModel(siteId, 123).apply {
         url = this@toMediaModel.sourceUrl
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.rendered

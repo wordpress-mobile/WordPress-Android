@@ -23,6 +23,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaRequestCreateResponse
 import uniffi.wp_api.MediaWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
@@ -37,6 +38,7 @@ class MediaRSApiRestClient @Inject constructor(
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val fileCheckWrapper: FileCheckWrapper,
 ) {
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
@@ -221,7 +223,8 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
-        if (media.filePath == null || !MediaUtils.canReadFile(media.filePath)) {
+        val filePath = media.filePath
+        if (filePath == null || !fileCheckWrapper.canReadFile(filePath)) {
             val error = MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED)
             error.logMessage = "Can't read file on upload"
             notifyMediaUploaded(media, error)
@@ -231,10 +234,10 @@ class MediaRSApiRestClient @Inject constructor(
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val mediaResponse = client.request { requestBuilder ->
+            val mediaResponse = client.request<MediaRequestCreateResponse> { requestBuilder ->
                 requestBuilder.media().create(
                     params = MediaCreateParams(title = media.title),
-                    filePath = media.filePath!!, // We have already checked the nullability but it's mutable
+                    filePath = filePath,
                     fileContentType = media.mimeType.orEmpty(),
                     requestId = null
                 )
@@ -304,5 +307,9 @@ class MediaRSApiRestClient @Inject constructor(
             is MediaDetailsPayload.Document,
             null -> {}
         }
+    }
+
+    class FileCheckWrapper {
+        fun canReadFile(filePath: String) = MediaUtils.canReadFile(filePath)
     }
 }
