@@ -25,6 +25,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
+import uniffi.wp_api.ListSubscribersIncludeField
 import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
@@ -150,7 +151,8 @@ class SubscribersViewModel @Inject constructor(
             sortOrder = sortOrder,
             search = searchQuery,
             filter = filterType,
-            sort = sortType
+            sort = sortType,
+            include = listOf(ListSubscribersIncludeField.COUNTRY)
         )
 
         val response = wpComApiClient.request { requestBuilder ->

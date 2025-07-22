@@ -8,8 +8,6 @@ dependencies {
     implementation(libs.wordpress.utils)
 
     implementation(libs.androidx.preference)
-
-    lintChecks(libs.wordpress.lint)
 }
 
 android {

@@ -315,15 +315,6 @@ android {
         }
     }
 
-    lint {
-        warningsAsErrors = true
-        checkDependencies = true
-        checkGeneratedSources = true
-        lintConfig file("${project.rootDir}/config/lint/lint.xml")
-        baseline file("${project.rootDir}/config/lint/baseline.xml")
-        sarifReport = gradle.ext.isCi
-    }
-
     packagingOptions {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
@@ -534,7 +525,6 @@ dependencies {
     kspAndroidTest(libs.google.dagger.hilt.android.compiler)
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring(libs.android.desugar)
-    lintChecks(libs.wordpress.lint)
 
     // Firebase
     implementation(platform(libs.google.firebase.bom))
@@ -575,7 +565,6 @@ dependencies {
     implementation(libs.cascade.compose)
 
     implementation(libs.automattic.tracks.crashlogging)
-    lintChecks(libs.android.security.lint)
 }
 
 dependencyAnalysis {

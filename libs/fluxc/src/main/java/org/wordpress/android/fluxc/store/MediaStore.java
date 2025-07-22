@@ -938,7 +938,9 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
@@ -983,7 +985,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
@@ -998,7 +1002,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);

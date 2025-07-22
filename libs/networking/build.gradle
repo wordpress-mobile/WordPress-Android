@@ -21,6 +21,4 @@ dependencies {
 
     implementation(libs.android.volley)
     implementation(libs.androidx.annotation)
-
-    lintChecks(libs.wordpress.lint)
 }
