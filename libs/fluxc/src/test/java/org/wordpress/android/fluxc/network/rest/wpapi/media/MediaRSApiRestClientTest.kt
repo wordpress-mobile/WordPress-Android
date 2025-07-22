@@ -22,7 +22,9 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.MimeType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -43,6 +45,8 @@ import uniffi.wp_api.MediaStatus
 import uniffi.wp_api.PostCommentStatus
 import uniffi.wp_api.PostPingStatus
 import uniffi.wp_api.WpNetworkHeaderMap
+import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaRequestListWithEditContextResponse
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -145,6 +149,56 @@ class MediaRSApiRestClientTest {
         assertNotNull(payload.error)
         assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
         assertEquals("Unknown error occurred", payload.error?.message)
+    }
+
+    @Test
+    fun `fetchMediaList with success response dispatches success action`() = runTest {
+        val testSite = createTestSite()
+        val mediaWithEditContext = listOf(createTestMediaWithEditContext(testSite.id.toLong()), createTestMediaWithEditContext(testSite.id.toLong()))
+        val mediaRequestResult: WpRequestResult<MediaRequestListWithEditContextResponse> =
+            WpRequestResult.Success(response = MediaRequestListWithEditContextResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>(), null, null))
+        val mediaResult = mediaWithEditContext.map {  it.toMediaModel(siteId = testSite.id) }
+
+        whenever(wpApiClient.request<MediaRequestListWithEditContextResponse>(any())).thenReturn(mediaRequestResult)
+
+        restClient.fetchMediaList(testSite, 10, 0, MimeType.Type.IMAGE)
+
+        // Verify dispatcher was called - the actual implementation will handle the response parsing
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as FetchMediaListResponsePayload
+        assertEquals(testSite, payload.site)
+        assertEquals(false, payload.loadedMore) // offset was 0
+        assertEquals(mediaResult, payload.mediaList)
+        assertNull(payload.error)
+        assertEquals(MimeType.Type.IMAGE, payload.mimeType)
+    }
+
+    @Test
+    fun `fetchMediaList with error response dispatches empty list action`() = runTest {
+        val testSite = createTestSite()
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<MediaRequestListWithEditContextResponse>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<MediaRequestListWithEditContextResponse>(any())).thenReturn(errorResponse)
+
+        restClient.fetchMediaList(testSite, 10, 0, MimeType.Type.IMAGE)
+
+        // Verify dispatcher was called with empty list
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as FetchMediaListResponsePayload
+        assertEquals(testSite, payload.site)
+        assertEquals(false, payload.loadedMore)
+        assertEquals(false, payload.canLoadMore)
+        assertEquals(MimeType.Type.IMAGE, payload.mimeType)
     }
 
     private fun createTestSite() = SiteModel().apply {

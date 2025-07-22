@@ -41,6 +41,7 @@ class MediaRSApiRestClient @Inject constructor(
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
+
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().listWithEditContext(
                     MediaListParams(
@@ -50,7 +51,6 @@ class MediaRSApiRestClient @Inject constructor(
                     )
                 )
             }
-
 
             val mediaModelList = when (mediaResponse) {
                 is WpRequestResult.Success -> {
