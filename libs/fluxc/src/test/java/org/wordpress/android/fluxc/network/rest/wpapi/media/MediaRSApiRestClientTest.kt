@@ -36,6 +36,7 @@ import org.mockito.kotlin.mock
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.PostTitleWithEditContext
 import uniffi.wp_api.MediaCaptionWithEditContext
+import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
 import uniffi.wp_api.MediaType
 import uniffi.wp_api.MediaDetails
@@ -46,6 +47,7 @@ import uniffi.wp_api.PostCommentStatus
 import uniffi.wp_api.PostPingStatus
 import uniffi.wp_api.WpNetworkHeaderMap
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaRequestDeleteResponse
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
 import java.util.Date
 
@@ -199,6 +201,70 @@ class MediaRSApiRestClientTest {
         assertEquals(false, payload.loadedMore)
         assertEquals(false, payload.canLoadMore)
         assertEquals(MimeType.Type.IMAGE, payload.mimeType)
+    }
+
+    @Test
+    fun `deleteMedia with null media dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+
+        restClient.deleteMedia(testSite, null)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertNull(payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.NULL_MEDIA_ARG, payload.error?.type)
+        assertEquals("Media to delete is null", payload.error?.logMessage)
+    }
+
+    @Test
+    fun `deleteMedia with success response dispatches success action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+        val mediaWithEditContext = createTestMediaWithEditContext(testSite.id.toLong())
+        val mediaDeleteResponse = MediaDeleteResponse(true, mediaWithEditContext)
+        val mediaRequestResult: WpRequestResult<MediaRequestDeleteResponse> =
+            WpRequestResult.Success(response = MediaRequestDeleteResponse(mediaDeleteResponse, mock<WpNetworkHeaderMap>()))
+        val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
+
+        whenever(wpApiClient.request<MediaRequestDeleteResponse>(any())).thenReturn(mediaRequestResult)
+
+        restClient.deleteMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertEquals(mediaResult, payload.media)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `deleteMedia with error response dispatches error action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.UnknownError(statusCode = 404u, response = "Media not found")
+        )
+
+        restClient.deleteMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertEquals(testMedia, payload.media) // Error case returns original media
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
     private fun createTestSite() = SiteModel().apply {
