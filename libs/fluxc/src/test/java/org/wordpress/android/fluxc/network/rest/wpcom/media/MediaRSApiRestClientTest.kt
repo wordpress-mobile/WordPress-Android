@@ -1,0 +1,270 @@
+package org.wordpress.android.fluxc.network.rest.wpcom.media
+
+import com.sun.jna.Pointer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import org.mockito.kotlin.any
+import org.robolectric.RobolectricTestRunner
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.mockito.kotlin.eq
+import org.wordpress.android.fluxc.action.MediaAction
+import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.store.MediaStore
+import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaWithEditContext
+import org.mockito.kotlin.mock
+import uniffi.wp_api.MediaDetailsPayload
+import uniffi.wp_api.PostTitleWithEditContext
+import uniffi.wp_api.MediaCaptionWithEditContext
+import uniffi.wp_api.MediaDescriptionWithEditContext
+import uniffi.wp_api.MediaType
+import uniffi.wp_api.MediaDetails
+import uniffi.wp_api.MediaRequestRetrieveWithEditContextResponse
+import uniffi.wp_api.PostGuidWithEditContext
+import uniffi.wp_api.MediaStatus
+import uniffi.wp_api.PostCommentStatus
+import uniffi.wp_api.PostPingStatus
+import uniffi.wp_api.WpNetworkHeaderMap
+import java.util.Date
+
+@ExperimentalCoroutinesApi
+@RunWith(RobolectricTestRunner::class)
+class MediaRSApiRestClientTest {
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    private lateinit var wpApiClientProvider: WpApiClientProvider
+    @Mock
+    private lateinit var wpApiClient: WpApiClient
+
+    private lateinit var testScope: CoroutineScope
+    private lateinit var restClient: MediaRSApiRestClient
+
+    @Before
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+
+        val testScheduler = TestCoroutineScheduler()
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        testScope = CoroutineScope(testDispatcher)
+
+        whenever(wpApiClientProvider.getWpApiClient(any())).thenReturn(wpApiClient)
+
+        restClient = MediaRSApiRestClient(
+            scope = testScope,
+            dispatcher = dispatcher,
+            appLogWrapper = appLogWrapper,
+            wpApiClientProvider = wpApiClientProvider
+        )
+    }
+
+    @Test
+    fun `fetchMedia with null media dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+
+        restClient.fetchMedia(testSite, null)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertNull(payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.NULL_MEDIA_ARG, payload.error?.type)
+    }
+
+    @Test
+    fun `fetchMedia calls wpApiClientProvider getWpApiClient when media is not null and dispatch media action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+        val mediaWithEditContext = createTestMediaWithEditContext(testSite.id.toLong())
+        val mediaRequestResult: WpRequestResult<MediaRequestRetrieveWithEditContextResponse> =
+            WpRequestResult.Success(response = MediaRequestRetrieveWithEditContextResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>()))
+        val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
+
+        whenever(wpApiClient.request<MediaRequestRetrieveWithEditContextResponse>(any())).thenReturn(mediaRequestResult)
+
+        restClient.fetchMedia(testSite, testMedia)
+
+        // Verify dispatcher was called with the media
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertEquals(mediaResult, payload.media)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `fetchMedia with error response dispatches error action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<MediaWithEditContext>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<MediaWithEditContext>(any())).thenReturn(errorResponse)
+
+        restClient.fetchMedia(testSite, testMedia)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(testSite, payload.site)
+        assertEquals(testMedia, payload.media) // Error case returns original media
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
+        assertEquals("Unknown error occurred", payload.error?.message)
+    }
+
+    private fun createTestSite() = SiteModel().apply {
+        id = 123
+        url = "https://example.wordpress.com"
+        wpApiRestUrl = "https://example.wordpress.com/wp-json"
+        apiRestUsernamePlain = "testuser"
+        apiRestPasswordPlain = "testpass"
+    }
+
+    private fun createTestMedia() = MediaModel(123, 456L).apply {
+        mediaId = 456L
+        title = "Test Media"
+        url = "https://example.com/media.jpg"
+        mimeType = "image/jpeg"
+        uploadState = MediaUploadState.UPLOADED.toString()
+    }
+
+    /**
+     * Creates a real MediaWithEditContext object with all required parameters.
+     */
+    private fun createTestMediaWithEditContext(mediaId: Long): MediaWithEditContext {
+        return MediaWithEditContext(
+            id = mediaId,
+            sourceUrl = "https://example.com/test-media.jpg",
+            link = "https://example.com/media-link",
+            title = createTestPostTitle(),
+            caption = createTestMediaCaption(),
+            description = createTestMediaDescription(),
+            altText = "Test alt text",
+            postId = null,
+            mimeType = "image/jpeg",
+            mediaType = MediaType.Image,
+            date = "2023-01-01T00:00:00",
+            dateGmt = Date(),
+            author = 1L,
+            mediaDetails = mock<MediaDetails>(),
+            guid = createTestPostGuid(),
+            modified = "2023-01-01T00:00:00",
+            modifiedGmt = Date(),
+            slug = "test-media-slug",
+            status = MediaStatus.Inherit,
+            postType = "attachment",
+            password = "",
+            permalinkTemplate = "https://example.com/%postname%",
+            generatedSlug = "test-media-slug",
+            commentStatus = PostCommentStatus.Open,
+            pingStatus = PostPingStatus.Open,
+            template = "",
+            missingImageSizes = emptyList()
+        )
+    }
+
+    private fun createTestPostTitle(): PostTitleWithEditContext {
+        return PostTitleWithEditContext(
+            raw = "Test Media Title",
+            rendered = "Test Media Title"
+        )
+    }
+
+    private fun createTestMediaCaption(): MediaCaptionWithEditContext {
+        return MediaCaptionWithEditContext(
+            raw = "Test Caption",
+            rendered = "Test Caption"
+        )
+    }
+
+    private fun createTestMediaDescription(): MediaDescriptionWithEditContext {
+        return MediaDescriptionWithEditContext(
+            raw = "Test Description",
+            rendered = "Test Description"
+        )
+    }
+
+    private fun createTestPostGuid(): PostGuidWithEditContext {
+        return PostGuidWithEditContext(
+            raw = "https://example.com/media-guid",
+            rendered = "https://example.com/media-guid"
+        )
+    }
+
+
+    private fun MediaWithEditContext.toMediaModel(
+        siteId: Int
+    ): MediaModel = MediaModel(siteId, id).apply {
+        url = this@toMediaModel.sourceUrl
+        guid = this@toMediaModel.link
+        title = this@toMediaModel.title.rendered
+        caption = this@toMediaModel.caption.rendered
+        description = this@toMediaModel.description.rendered
+        alt = this@toMediaModel.altText
+        postId = this@toMediaModel.postId ?: 0
+        mimeType = this@toMediaModel.mimeType
+        fileExtension = this@toMediaModel.mediaType.toString()
+        uploadDate = this@toMediaModel.date
+        authorId = this@toMediaModel.author
+        uploadState = MediaUploadState.UPLOADED.toString()
+
+        // Parse the media details
+        when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
+            is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
+            is MediaDetailsPayload.Image -> {
+                width = parsedType.v1.width.toInt()
+                height = parsedType.v1.height.toInt()
+                thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
+                fileUrlMediumSize = parsedType.v1.sizes?.get("medium")?.sourceUrl
+                fileUrlLargeSize = parsedType.v1.sizes?.get("large")?.sourceUrl
+            }
+            is MediaDetailsPayload.Video -> {
+                width = parsedType.v1.width.toInt()
+                height = parsedType.v1.height.toInt()
+                length = parsedType.v1.length.toInt()
+            }
+            is MediaDetailsPayload.Document,
+            null -> {}
+        }
+    }
+}
