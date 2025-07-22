@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -19,15 +19,11 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
-import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
-import uniffi.wp_api.WpAppNotifier
-import uniffi.wp_api.WpAuthenticationProvider
-import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -40,11 +36,11 @@ class MediaRSApiRestClient @Inject constructor(
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
-    private val wpAppNotifierHandler: WpAppNotifierHandler,
+    private val wpApiClientProvider: WpApiClientProvider,
 ) {
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
-            val client = getWpApiClient(site)
+            val client = wpApiClientProvider.getWpApiClient(site)
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().listWithEditContext(
                     MediaListParams(
@@ -72,8 +68,6 @@ class MediaRSApiRestClient @Inject constructor(
         }
     }
 
-    private fun SiteModel.buildUrl(): String = wpApiRestUrl ?: "${url}/wp-json"
-
     private fun notifyMediaListFetched(
         site: SiteModel,
         media: List<MediaModel>,
@@ -97,7 +91,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val client = getWpApiClient(site)
+            val client = wpApiClientProvider.getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().retrieveWithEditContext(media.mediaId)
@@ -180,7 +174,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val client = getWpApiClient(site)
+            val client = wpApiClientProvider.getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().delete(media.mediaId)
@@ -235,7 +229,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         scope.launch {
-            val client = getWpApiClient(site)
+            val client = wpApiClientProvider.getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
@@ -270,23 +264,6 @@ class MediaRSApiRestClient @Inject constructor(
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-    }
-
-    private fun getWpApiClient(site: SiteModel): WpApiClient {
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-        )
-        val apiRootUrl = URL(site.buildUrl())
-        val client = WpApiClient(
-            wpOrgSiteApiRootUrl = apiRootUrl,
-            authProvider = authProvider,
-            appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication() {
-                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                }
-            }
-        )
-        return client
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(
