@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media
+package org.wordpress.android.fluxc.network.rest.wpapi.media
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

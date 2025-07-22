@@ -1,6 +1,5 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media
+package org.wordpress.android.fluxc.network.rest.wpapi.media
 
-import com.sun.jna.Pointer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler
@@ -27,11 +26,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
-import org.mockito.kotlin.eq
-import org.wordpress.android.fluxc.action.MediaAction
-import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.store.MediaStore
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaWithEditContext
