@@ -248,7 +248,7 @@ class MediaRSApiRestClient @Inject constructor(
 
             when (mediaResponse) {
                 is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.MEDIA, "Uploaded media with ID: " + media.mediaId)
+                    appLogWrapper.d(AppLog.T.MEDIA, "Uploaded media with ID: " + media.id)
 
                     val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
                         id = media.id // be sure we are using the same local id when getting the remote response
