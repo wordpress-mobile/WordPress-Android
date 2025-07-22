@@ -90,6 +90,4 @@ dependencies {
     implementation(libs.android.volley)
     implementation(libs.google.gson)
     implementation(libs.automattic.tracks.crashlogging)
-
-    lintChecks(libs.wordpress.lint)
 }
