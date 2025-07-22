@@ -525,7 +525,6 @@ dependencies {
     kspAndroidTest(libs.google.dagger.hilt.android.compiler)
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring(libs.android.desugar)
-    lintChecks(libs.wordpress.lint)
 
     // Firebase
     implementation(platform(libs.google.firebase.bom))
@@ -566,7 +565,6 @@ dependencies {
     implementation(libs.cascade.compose)
 
     implementation(libs.automattic.tracks.crashlogging)
-    lintChecks(libs.android.security.lint)
 }
 
 dependencyAnalysis {

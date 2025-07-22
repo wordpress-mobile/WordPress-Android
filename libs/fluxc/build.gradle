@@ -124,8 +124,6 @@ dependencies {
     testImplementation libs.mockito.kotlin
     testImplementation libs.assertj.core
     testImplementation libs.androidx.arch.core.testing
-
-    lintChecks libs.wordpress.lint
 }
 
 dependencyAnalysis {
