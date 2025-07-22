@@ -5,50 +5,50 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.mockito.kotlin.any
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.MediaAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
-import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.MediaWithEditContext
-import org.mockito.kotlin.mock
-import uniffi.wp_api.MediaDetailsPayload
-import uniffi.wp_api.PostTitleWithEditContext
 import uniffi.wp_api.MediaCaptionWithEditContext
 import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
-import uniffi.wp_api.MediaType
 import uniffi.wp_api.MediaDetails
-import uniffi.wp_api.MediaRequestRetrieveWithEditContextResponse
-import uniffi.wp_api.PostGuidWithEditContext
-import uniffi.wp_api.MediaStatus
-import uniffi.wp_api.PostCommentStatus
-import uniffi.wp_api.PostPingStatus
-import uniffi.wp_api.WpNetworkHeaderMap
-import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaRequestDeleteResponse
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
+import uniffi.wp_api.MediaRequestRetrieveWithEditContextResponse
+import uniffi.wp_api.MediaStatus
+import uniffi.wp_api.MediaType
+import uniffi.wp_api.MediaWithEditContext
+import uniffi.wp_api.PostCommentStatus
+import uniffi.wp_api.PostGuidWithEditContext
+import uniffi.wp_api.PostPingStatus
+import uniffi.wp_api.PostTitleWithEditContext
+import uniffi.wp_api.WpNetworkHeaderMap
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -95,6 +95,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA)
         assertEquals(testSite, payload.site)
         assertNull(payload.media)
         assertNotNull(payload.error)
@@ -120,6 +121,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA)
         assertEquals(testSite, payload.site)
         assertEquals(mediaResult, payload.media)
         assertNull(payload.error)
@@ -146,6 +148,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA)
         assertEquals(testSite, payload.site)
         assertEquals(testMedia, payload.media) // Error case returns original media
         assertNotNull(payload.error)
@@ -171,6 +174,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as FetchMediaListResponsePayload
+        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA_LIST)
         assertEquals(testSite, payload.site)
         assertEquals(false, payload.loadedMore) // offset was 0
         assertEquals(mediaResult, payload.mediaList)
@@ -197,6 +201,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as FetchMediaListResponsePayload
+        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA_LIST)
         assertEquals(testSite, payload.site)
         assertEquals(false, payload.loadedMore)
         assertEquals(false, payload.canLoadMore)
@@ -214,6 +219,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.DELETED_MEDIA)
         assertEquals(testSite, payload.site)
         assertNull(payload.media)
         assertNotNull(payload.error)
@@ -240,6 +246,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.DELETED_MEDIA)
         assertEquals(testSite, payload.site)
         assertEquals(mediaResult, payload.media)
         assertNull(payload.error)
@@ -261,6 +268,7 @@ class MediaRSApiRestClientTest {
 
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.DELETED_MEDIA)
         assertEquals(testSite, payload.site)
         assertEquals(testMedia, payload.media) // Error case returns original media
         assertNotNull(payload.error)
