@@ -19,8 +19,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.mockito.MockedStatic
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction
@@ -36,7 +34,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -61,6 +58,7 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
+@Suppress("MaxLineLength")
 class MediaRSApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
@@ -397,6 +395,7 @@ class MediaRSApiRestClientTest {
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as ProgressPayload
         assertEquals(capturedAction.type, UploadAction.UPLOADED_MEDIA)
+        assertEquals(mediaResult.mediaId, payload.media?.mediaId)
         assertTrue(payload.completed)
         assertNull(payload.error)
     }

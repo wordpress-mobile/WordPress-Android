@@ -234,7 +234,7 @@ class MediaRSApiRestClient @Inject constructor(
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val mediaResponse = client.request<MediaRequestCreateResponse> { requestBuilder ->
+            val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
                     params = MediaCreateParams(title = media.title),
                     filePath = filePath,
