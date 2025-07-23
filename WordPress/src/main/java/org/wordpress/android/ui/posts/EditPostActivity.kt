@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -3147,7 +3148,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
         val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
         stringArray?.forEach { stringUri ->
-            uris.add(Uri.parse(stringUri))
+            uris.add(stringUri.toUri())
         }
         return uris
     }

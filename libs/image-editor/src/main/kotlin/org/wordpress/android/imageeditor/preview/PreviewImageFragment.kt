@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import androidx.core.net.toUri
 import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
@@ -237,7 +238,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProv
 
     private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
-            Uri.parse(url),
+            url.toUri(),
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
                     viewModel.onLoadIntoFileSuccess(resource.path, position)
