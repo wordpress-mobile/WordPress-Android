@@ -282,9 +282,7 @@ class MediaRSApiRestClient @Inject constructor(
 
     fun cancelUpload(media: MediaModel?) {
         if (media == null) {
-            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
-            error.logMessage = "Null media on cancel upload"
-            notifyMediaUploaded(null, error)
+            appLogWrapper.e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
             return
         }
 
@@ -333,6 +331,7 @@ class MediaRSApiRestClient @Inject constructor(
                     appLogWrapper.d(AppLog.T.MEDIA, "Updated media with ID: " + media.mediaId)
 
                     val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
+                        id = media.id // be sure we are using the same local id when getting the remote response
                         localSiteId = site.id
                     }
                     notifyMediaPushed(site, responseMedia, null)
