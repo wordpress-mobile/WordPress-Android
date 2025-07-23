@@ -84,16 +84,7 @@ class WpApiClientProvider @Inject constructor(
                 if (file == null || !file.canBeUploaded()) {
                     throw MediaUploadRequestExecutionException.MediaFileNotFound(mediaUploadRequest.filePath())
                 }
-                val fileRequestBody = file.asRequestBody(mediaUploadRequest.fileContentType().toMediaType())
-                val progressRequestBody = if (uploadProgressListener != null) {
-                    ProgressRequestBody(fileRequestBody, object : ProgressRequestBody.ProgressListener {
-                        override fun onProgress(bytesWritten: Long, contentLength: Long) {
-                            uploadProgressListener.invoke(bytesWritten, contentLength)
-                        }
-                    })
-                } else {
-                    fileRequestBody
-                }
+                val progressRequestBody = getRequestBody(file, mediaUploadRequest, uploadProgressListener)
 
                 multipartBodyBuilder.addFormDataPart(
                     name = "file",
@@ -120,6 +111,26 @@ class WpApiClientProvider @Inject constructor(
                     )
                 }
             }
+
+        private fun getRequestBody(
+            file: File,
+            mediaUploadRequest: MediaUploadRequest,
+            uploadProgressListener: ((uploadedBytes: Long, totalBytes: Long) -> Unit)?
+        ): RequestBody {
+            val fileRequestBody = file.asRequestBody(mediaUploadRequest.fileContentType().toMediaType())
+            return if (uploadProgressListener != null) {
+                ProgressRequestBody(
+                    delegate = fileRequestBody,
+                    progressListener = object : ProgressRequestBody.ProgressListener {
+                        override fun onProgress(bytesWritten: Long, contentLength: Long) {
+                            uploadProgressListener.invoke(bytesWritten, contentLength)
+                        }
+                    }
+                )
+            } else {
+                fileRequestBody
+            }
+        }
 
         private fun File.canBeUploaded() = exists() && isFile && canRead()
     }
