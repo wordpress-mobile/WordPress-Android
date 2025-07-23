@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.photopicker
 
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -501,7 +502,7 @@ class PhotoPickerViewModel @Inject constructor(
         launch {
             val mediaModels = getMediaModelUseCase
                 .loadMediaByRemoteId(requireNotNull(site), mediaIds)
-            copySelectedUrisLocally(mediaModels.map { UriWrapper(Uri.parse(it.url)) })
+            copySelectedUrisLocally(mediaModels.map { UriWrapper(it.url.toUri()) })
         }
     }
 

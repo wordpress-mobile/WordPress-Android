@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import android.net.Uri
+import androidx.core.net.toUri
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -251,7 +252,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
             AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED
         }
         analyticsTrackerWrapper.track(stat)
-        val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
+        val imageUri = iconUrl?.toUri()?.let { UriWrapper(it) }
         if (imageUri != null) {
             scope.launch(bgDispatcher) {
                 val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)

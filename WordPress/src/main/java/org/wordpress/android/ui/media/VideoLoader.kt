@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import android.provider.OpenableColumns
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +38,7 @@ class VideoLoader
             var length = MIN_SIZE
             withContext(bgDispatcher) {
                 try {
-                    val uri = Uri.parse(filePath)
+                    val uri = filePath.toUri()
                     length = if (mediaUtilsWrapper.isInMediaStore(uri)) {
                         getSizeFromContentUri(uri)
                     } else {
