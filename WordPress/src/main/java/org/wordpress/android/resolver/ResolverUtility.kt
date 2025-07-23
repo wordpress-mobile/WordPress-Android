@@ -25,10 +25,8 @@ class ResolverUtility @Inject constructor(
     ): Boolean {
         if (items.isEmpty()) return true
 
-        var wasSuccessful: Boolean
-
-        val db = dbWrapper.giveMeWritableDb()
-        wasSuccessful = try {
+        return try {
+            val db = dbWrapper.giveMeWritableDb()
             db.transaction {
                 db.delete(tableName, null, null)
                 db.delete("sqlite_sequence", "name='$tableName'", null)
@@ -52,19 +50,15 @@ class ResolverUtility @Inject constructor(
             AppLog.e(AppLog.T.DB, "Database transaction failed in copyWithIndexes", e)
             false
         }
-        return wasSuccessful
     }
 
     fun copySitesWithIndexes(sites: List<SiteModel>) {
         copyWithIndexes("SiteModel", MapperAdapter(SiteModelMapper()), sites)
     }
 
-    fun copyQsDataWithIndexes(statusList: List<QuickStartStatusModel>, taskList: List<QuickStartTaskModel>): Boolean {
-        var wasSuccessful = false
-
-        val db = dbWrapper.giveMeWritableDb()
-        wasSuccessful = try {
-            db.transaction {
+    fun copyQsDataWithIndexes(statusList: List<QuickStartStatusModel>, taskList: List<QuickStartTaskModel>): Boolean =
+        try {
+            dbWrapper.giveMeWritableDb().transaction {
                 copyWithIndexes(
                     "QuickStartStatusModel",
                     MapperAdapter(QuickStartStatusModelMapper()),
@@ -75,11 +69,9 @@ class ResolverUtility @Inject constructor(
                     taskList
                 )
             }
+            true
         } catch (e: SQLException) {
             AppLog.e(AppLog.T.DB, "Database transaction failed in copyQsDataWithIndexes", e)
             false
         }
-
-        return wasSuccessful
-    }
 }
