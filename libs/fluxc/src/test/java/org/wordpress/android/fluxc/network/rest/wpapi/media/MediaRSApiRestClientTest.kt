@@ -622,7 +622,6 @@ class MediaRSApiRestClientTest {
         )
     }
 
-
     private fun MediaWithEditContext.toMediaModel(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {

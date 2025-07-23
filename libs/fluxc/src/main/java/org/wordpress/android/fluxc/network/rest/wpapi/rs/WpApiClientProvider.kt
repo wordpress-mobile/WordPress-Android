@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.rs
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,11 +8,6 @@ import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okio.Buffer
-import okio.BufferedSink
-import okio.ForwardingSink
-import okio.buffer
-import java.io.IOException
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpcom.media.ProgressRequestBody
