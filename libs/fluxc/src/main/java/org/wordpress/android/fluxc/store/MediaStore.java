@@ -887,7 +887,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.pushMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pushMedia(payload.site, payload.media);

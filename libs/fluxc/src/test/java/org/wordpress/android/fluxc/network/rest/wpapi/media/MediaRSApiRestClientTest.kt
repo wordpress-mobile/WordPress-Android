@@ -17,6 +17,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
+import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCaptionWithEditContext
@@ -46,6 +48,7 @@ import uniffi.wp_api.MediaRequestCreateResponse
 import uniffi.wp_api.MediaRequestDeleteResponse
 import uniffi.wp_api.MediaRequestListWithEditContextResponse
 import uniffi.wp_api.MediaRequestRetrieveWithEditContextResponse
+import uniffi.wp_api.MediaRequestUpdateResponse
 import uniffi.wp_api.MediaStatus
 import uniffi.wp_api.MediaType
 import uniffi.wp_api.MediaWithEditContext
@@ -450,6 +453,95 @@ class MediaRSApiRestClientTest {
         assertEquals(false, payload.completed)
     }
 
+    @Test
+    fun `pushMedia with null media dispatches error action immediately`() = runTest {
+        val testSite = createTestSite()
+
+        restClient.pushMedia(testSite, null)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.PUSHED_MEDIA)
+        assertEquals(testSite, payload.site)
+        assertNull(payload.media)
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.NULL_MEDIA_ARG, payload.error?.type)
+        assertEquals("Pushed media is null", payload.error?.logMessage)
+    }
+
+    @Test
+    fun `pushMedia with success response dispatches success action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+        val mediaWithEditContext = createTestMediaWithEditContext(testMedia.mediaId)
+        val mediaRequestResult: WpRequestResult<MediaRequestUpdateResponse> =
+            WpRequestResult.Success(
+                response = MediaRequestUpdateResponse(
+                    mediaWithEditContext,
+                    mock<WpNetworkHeaderMap>()
+                )
+            )
+
+        whenever(wpApiClient.request<MediaRequestUpdateResponse>(any())).thenReturn(mediaRequestResult)
+
+        restClient.pushMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.PUSHED_MEDIA)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.media)
+        assertEquals(testMedia.mediaId, payload.media?.mediaId)
+        assertEquals(mediaWithEditContext.sourceUrl, payload.media?.url)
+        assertEquals(mediaWithEditContext.title.raw, payload.media?.title)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `pushMedia with error response dispatches error action`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia()
+
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<MediaRequestUpdateResponse>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<MediaRequestUpdateResponse>(any())).thenReturn(errorResponse)
+
+        restClient.pushMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as MediaPayload
+        assertEquals(capturedAction.type, MediaAction.PUSHED_MEDIA)
+        assertEquals(testSite, payload.site)
+        assertEquals(testMedia, payload.media) // Error case returns original media
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
+        assertEquals("Unknown error occurred", payload.error?.message)
+    }
+
+    @Test
+    fun `cancelUpload with null media logs error and returns without dispatching action`() = runTest {
+        restClient.cancelUpload(null)
+
+        // Verify that no action was dispatched
+        verify(dispatcher, never()).dispatch(any())
+
+        // Verify that error was logged
+        verify(appLogWrapper).e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
+    }
+
     private fun createTestSite() = SiteModel().apply {
         id = 123
         url = "https://example.wordpress.com"
@@ -530,19 +622,19 @@ class MediaRSApiRestClientTest {
         )
     }
 
-
     private fun MediaWithEditContext.toMediaModel(
-        siteId: Int,
-    ): MediaModel = MediaModel(siteId, 123).apply {
+        siteId: Int
+    ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
+        fileName = slug
+        fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
-        title = this@toMediaModel.title.rendered
-        caption = this@toMediaModel.caption.rendered
-        description = this@toMediaModel.description.rendered
+        title = this@toMediaModel.title.raw
+        caption = this@toMediaModel.caption.raw
+        description = this@toMediaModel.description.raw
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        fileExtension = this@toMediaModel.mediaType.toString()
         uploadDate = this@toMediaModel.date
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
