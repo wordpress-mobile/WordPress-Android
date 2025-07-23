@@ -1,7 +1,6 @@
 package org.wordpress.android.ui
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.widget.ListPopupWindow

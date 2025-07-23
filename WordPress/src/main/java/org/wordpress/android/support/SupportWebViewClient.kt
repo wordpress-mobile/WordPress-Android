@@ -1,6 +1,5 @@
 package org.wordpress.android.support
 
-import android.net.Uri
 import android.webkit.WebResourceRequest
 import androidx.core.net.toUri
 import android.webkit.WebResourceResponse

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.photopicker
 
-import android.net.Uri
 import androidx.core.net.toUri
 import android.os.Build
 import androidx.lifecycle.LiveData
