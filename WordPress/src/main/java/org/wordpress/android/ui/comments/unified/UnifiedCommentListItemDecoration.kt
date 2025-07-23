@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.withSave
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
@@ -26,37 +28,37 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
         if (parent.layoutManager == null || divider == null) {
             return
         }
-        canvas.save()
-        val left: Int
-        val right: Int
-        if (parent.clipToPadding) {
-            left = parent.paddingStart
-            right = parent.width - parent.paddingEnd
-            canvas.clipRect(
-                left, parent.paddingTop, right,
-                parent.height - parent.paddingBottom
-            )
-        } else {
-            left = 0
-            right = parent.width
-        }
-        val childCount = parent.childCount
-        for (i in 0 until childCount) {
-            val child = parent.getChildAt(i)
-            val viewHolder = parent.getChildViewHolder(child)
-            if (viewHolder !is UnifiedCommentSubHeaderViewHolder && viewHolder !is LoadStateViewHolder) {
-                parent.getDecoratedBoundsWithMargins(child, bounds)
-                val bottom = bounds.bottom + child.translationY.roundToInt()
-                val top = bottom - divider.intrinsicHeight
-                if (RtlUtils.isRtl(context)) {
-                    divider.setBounds(left, top, right - dividerStartOffset, bottom)
-                } else {
-                    divider.setBounds(left + dividerStartOffset, top, right, bottom)
+        canvas.withSave {
+            val left: Int
+            val right: Int
+            if (parent.clipToPadding) {
+                left = parent.paddingStart
+                right = parent.width - parent.paddingEnd
+                canvas.clipRect(
+                    left, parent.paddingTop, right,
+                    parent.height - parent.paddingBottom
+                )
+            } else {
+                left = 0
+                right = parent.width
+            }
+            val childCount = parent.childCount
+            for (i in 0 until childCount) {
+                val child = parent.getChildAt(i)
+                val viewHolder = parent.getChildViewHolder(child)
+                if (viewHolder !is UnifiedCommentSubHeaderViewHolder && viewHolder !is LoadStateViewHolder) {
+                    parent.getDecoratedBoundsWithMargins(child, bounds)
+                    val bottom = bounds.bottom + child.translationY.roundToInt()
+                    val top = bottom - divider.intrinsicHeight
+                    if (RtlUtils.isRtl(context)) {
+                        divider.setBounds(left, top, right - dividerStartOffset, bottom)
+                    } else {
+                        divider.setBounds(left + dividerStartOffset, top, right, bottom)
+                    }
+                    divider.draw(canvas)
                 }
-                divider.draw(canvas)
             }
         }
-        canvas.restore()
     }
 
     override fun getItemOffsets(
