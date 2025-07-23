@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -28,7 +29,7 @@ class SelectedTrafficGranularityManager @Inject constructor(private val sharedPr
     }
 
     fun setSelectedTrafficGranularity(selectedTrafficGranularity: StatsGranularity) {
-        sharedPrefs.edit().putString(SELECTED_TRAFFIC_GRANULARITY_KEY, selectedTrafficGranularity.name).apply()
+        sharedPrefs.edit { putString(SELECTED_TRAFFIC_GRANULARITY_KEY, selectedTrafficGranularity.name) }
         if (_liveSelectedGranularity.value != selectedTrafficGranularity) {
             _liveSelectedGranularity.value = selectedTrafficGranularity
         }
