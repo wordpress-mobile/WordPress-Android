@@ -364,14 +364,15 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
+        fileName = slug
+        fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
-        title = this@toMediaModel.title.rendered
-        caption = this@toMediaModel.caption.rendered
-        description = this@toMediaModel.description.rendered
+        title = this@toMediaModel.title.raw
+        caption = this@toMediaModel.caption.raw
+        description = this@toMediaModel.description.raw
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        fileExtension = this@toMediaModel.mediaType.toString()
         uploadDate = this@toMediaModel.date
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
