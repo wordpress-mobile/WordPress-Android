@@ -2631,7 +2631,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                             val cookieName = privateAtomicCookie.getName()
                             val cookieValue = privateAtomicCookie.getValue()
                             val cookieDomain = privateAtomicCookie.getDomain()
-                            val value = "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
+                            val value =
+                                "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
                             cookies[siteModel.url] = value
                         }
                     }
