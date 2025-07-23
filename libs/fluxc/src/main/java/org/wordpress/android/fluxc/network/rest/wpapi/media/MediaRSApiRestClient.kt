@@ -237,7 +237,12 @@ class MediaRSApiRestClient @Inject constructor(
         }
 
         val job = scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
+            val client = wpApiClientProvider.getWpApiClient(
+                site = site,
+                uploadProgressListener = { uploadedBytes, totalBytes ->
+                    notifyMediaUploading(media, uploadedBytes/totalBytes.toFloat())
+                }
+            )
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
@@ -256,13 +261,19 @@ class MediaRSApiRestClient @Inject constructor(
                         id = media.id // be sure we are using the same local id when getting the remote response
                         localSiteId = site.id
                     }
-                    notifyMediaUploaded(responseMedia, null)
+                    notifyMediaUploaded(
+                        media = responseMedia,
+                        error = null
+                    )
                 }
 
                 else -> {
                     val mediaError = parseMediaError(mediaResponse)
                     appLogWrapper.e(AppLog.T.MEDIA, "Upload media failed: ${mediaError.message}")
-                    notifyMediaUploaded(media, mediaError)
+                    notifyMediaUploaded(
+                        media = media,
+                        error = mediaError
+                    )
                 }
             }
 
@@ -277,6 +288,12 @@ class MediaRSApiRestClient @Inject constructor(
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
+        dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+    }
+
+    private fun notifyMediaUploading(media: MediaModel, progress: Float) {
+        media.setUploadState(if (progress < 1) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
+        val payload = ProgressPayload(media, progress, false, false)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
 
