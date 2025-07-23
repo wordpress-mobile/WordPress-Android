@@ -88,7 +88,7 @@ class MediaRSApiRestClientTest {
             dispatcher = dispatcher,
             appLogWrapper = appLogWrapper,
             wpApiClientProvider = wpApiClientProvider,
-            fileCheckWrapper= fileCheckWrapper,
+            fileCheckWrapper = fileCheckWrapper,
         )
     }
 
@@ -186,7 +186,7 @@ class MediaRSApiRestClientTest {
                     null,
                     null)
             )
-        val mediaResult = mediaWithEditContext.map {  it.toMediaModel(siteId = testSite.id) }
+        val mediaResult = mediaWithEditContext.map { it.toMediaModel(siteId = testSite.id) }
 
         whenever(wpApiClient.request<MediaRequestListWithEditContextResponse>(any())).thenReturn(mediaRequestResult)
 
