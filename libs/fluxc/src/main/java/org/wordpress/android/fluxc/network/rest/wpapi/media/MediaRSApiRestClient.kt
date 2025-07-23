@@ -403,7 +403,7 @@ class MediaRSApiRestClient @Inject constructor(
         description = description,
         altText = alt,
         author = if (authorId > 0) authorId else null,
-        date = uploadDate,
+        date = uploadDate
         )
 
     class FileCheckWrapper @Inject constructor() {
