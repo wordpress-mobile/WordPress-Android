@@ -84,9 +84,9 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
     }
 
     init {
-        val attrs = context.obtainStyledAttributes(ATTRS)
-        divider = attrs.getDrawable(0)
-        attrs.recycle()
+        context.withStyledAttributes(ATTRS) {
+            divider = getDrawable(0)
+        }
         dividerStartOffset = context.resources.getDimensionPixelOffset(R.dimen.comment_list_divider_start_offset)
     }
 }

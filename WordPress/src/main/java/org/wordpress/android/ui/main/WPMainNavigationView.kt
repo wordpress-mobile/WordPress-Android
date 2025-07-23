@@ -123,7 +123,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
         // overlay each item with our custom view
-        for (i in 0 until navigationBarView.menu.size()) {
+        for (i in 0 until navigationBarView.menu.size) {
             // This is a restricted NavigationBarItemView
             (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
                 val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
