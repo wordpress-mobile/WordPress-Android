@@ -1,5 +1,7 @@
 package org.wordpress.android.resolver
 
+import android.database.SQLException
+import androidx.core.database.sqlite.transaction
 import com.wellsql.generated.QuickStartStatusModelMapper
 import com.wellsql.generated.QuickStartTaskModelMapper
 import com.wellsql.generated.SiteModelMapper
@@ -25,29 +27,28 @@ class ResolverUtility @Inject constructor(
         var wasSuccessful: Boolean
 
         val db = dbWrapper.giveMeWritableDb()
-        db.beginTransaction()
-        try {
-            db.delete(tableName, null, null)
-            db.delete("sqlite_sequence", "name='$tableName'", null)
-            val orderedItems = items.sortedBy { it.id }
+        wasSuccessful = try {
+            db.transaction {
+                db.delete(tableName, null, null)
+                db.delete("sqlite_sequence", "name='$tableName'", null)
+                val orderedItems = items.sortedBy { it.id }
 
-            for ((index, item) in orderedItems.withIndex()) {
-                val sqlStatement = if (index == 0) {
-                    db.compileStatement("INSERT INTO SQLITE_SEQUENCE (name,seq) VALUES ('$tableName', ?)")
-                } else {
-                    db.compileStatement("UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='$tableName'")
+                for ((index, item) in orderedItems.withIndex()) {
+                    val sqlStatement = if (index == 0) {
+                        db.compileStatement("INSERT INTO SQLITE_SEQUENCE (name,seq) VALUES ('$tableName', ?)")
+                    } else {
+                        db.compileStatement("UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='$tableName'")
+                    }
+
+                    sqlStatement.bindLong(1, (item.id - 1).toLong())
+                    sqlStatement.execute()
+
+                    db.insert(tableName, null, mapperAdapter.toCv(item))
                 }
-
-                sqlStatement.bindLong(1, (item.id - 1).toLong())
-                sqlStatement.execute()
-
-                db.insert(tableName, null, mapperAdapter.toCv(item))
             }
-
-            db.setTransactionSuccessful()
-            wasSuccessful = true
-        } finally {
-            db.endTransaction()
+            true
+        } catch (e: SQLException) {
+            false
         }
         return wasSuccessful
     }
@@ -60,26 +61,20 @@ class ResolverUtility @Inject constructor(
         var wasSuccessful = false
 
         val db = dbWrapper.giveMeWritableDb()
-        db.beginTransaction()
-
-        try {
-            if (
+        wasSuccessful = try {
+            db.transaction {
                 copyWithIndexes(
                     "QuickStartStatusModel",
                     MapperAdapter(QuickStartStatusModelMapper()),
                     statusList
-                )
-                && copyWithIndexes(
+                ) && copyWithIndexes(
                     "QuickStartTaskModel",
                     MapperAdapter(QuickStartTaskModelMapper()),
                     taskList
                 )
-            ) {
-                db.setTransactionSuccessful()
-                wasSuccessful = true
             }
-        } finally {
-            db.endTransaction()
+        } catch (e: SQLException) {
+            false
         }
 
         return wasSuccessful

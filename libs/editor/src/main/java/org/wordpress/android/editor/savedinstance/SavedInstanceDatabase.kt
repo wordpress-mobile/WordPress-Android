@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Parcelable
+import androidx.core.database.sqlite.transaction
 import org.wordpress.android.editor.savedinstance.SavedParcelTable.createTable
 import org.wordpress.android.editor.savedinstance.SavedParcelTable.dropTable
 
@@ -36,13 +37,9 @@ class SavedInstanceDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NA
     }
 
     fun reset(db: SQLiteDatabase) {
-        db.beginTransaction()
-        try {
+        db.transaction {
             dropAllTables(db)
             createAllTables(db)
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
