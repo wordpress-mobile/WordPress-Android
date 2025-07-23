@@ -296,7 +296,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (currentPosition == RecyclerView.NO_POSITION) {
             return;
         }
-        
+
         ReaderComment comment = getItem(currentPosition);
         if (comment == null) {
             return;
@@ -316,32 +316,26 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorAvatar(), mAvatarSz);
         mImageManager.loadIntoCircle(commentHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
 
-        // tapping avatar or author name opens blog preview
-        if (comment.hasAuthorBlogId()) {
-            View.OnClickListener authorListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int authorCurrentPosition = commentHolder.getBindingAdapterPosition();
-                    if (authorCurrentPosition == RecyclerView.NO_POSITION) return;
+        View.OnClickListener authorListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int authorCurrentPosition = commentHolder.getBindingAdapterPosition();
+                if (authorCurrentPosition == RecyclerView.NO_POSITION) return;
 
-                    ReaderComment currentComment = getItem(authorCurrentPosition);
-                    if (currentComment != null && currentComment.hasAuthorBlogId()) {
-                        ReaderActivityLauncher.showReaderBlogPreview(
-                                view.getContext(),
-                                currentComment.authorBlogId,
-                                mPost.isFollowedByCurrentUser,
-                                ReaderTracker.SOURCE_COMMENT,
-                                mReaderTracker
-                        );
-                    }
+                ReaderComment currentComment = getItem(authorCurrentPosition);
+                // tapping avatar or author name opens blog preview
+                if (currentComment != null && currentComment.hasAuthorBlogId()) {
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            view.getContext(),
+                            currentComment.authorBlogId,
+                            mPost.isFollowedByCurrentUser,
+                            ReaderTracker.SOURCE_COMMENT,
+                            mReaderTracker
+                    );
                 }
-            };
-            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
-            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
-        } else {
-            commentHolder.mAuthorContainer.setOnClickListener(null);
-            commentHolder.mAuthorContainer.setOnClickListener(null);
-        }
+            }
+        };
+        commentHolder.mAuthorContainer.setOnClickListener(authorListener);
 
         // author name uses different color for comments from the post's author
         if (comment.authorId == mPost.authorId) {
