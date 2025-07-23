@@ -3,6 +3,7 @@ package org.wordpress.android.resolver
 import android.database.SQLException
 import androidx.core.database.sqlite.transaction
 import com.wellsql.generated.QuickStartStatusModelMapper
+import org.wordpress.android.util.AppLog
 import com.wellsql.generated.QuickStartTaskModelMapper
 import com.wellsql.generated.SiteModelMapper
 import com.yarolegovich.wellsql.core.Identifiable
@@ -48,6 +49,7 @@ class ResolverUtility @Inject constructor(
             }
             true
         } catch (e: SQLException) {
+            AppLog.e(AppLog.T.DB, "Database transaction failed in copyWithIndexes", e)
             false
         }
         return wasSuccessful
@@ -74,6 +76,7 @@ class ResolverUtility @Inject constructor(
                 )
             }
         } catch (e: SQLException) {
+            AppLog.e(AppLog.T.DB, "Database transaction failed in copyQsDataWithIndexes", e)
             false
         }
 
