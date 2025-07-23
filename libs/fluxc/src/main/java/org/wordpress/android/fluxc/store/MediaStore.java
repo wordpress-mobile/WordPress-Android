@@ -1022,9 +1022,7 @@ public class MediaStore extends Store {
             MediaSqlUtils.insertOrUpdateMedia(media);
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.cancelUpload(payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.cancelUpload(media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.cancelUpload(media);
