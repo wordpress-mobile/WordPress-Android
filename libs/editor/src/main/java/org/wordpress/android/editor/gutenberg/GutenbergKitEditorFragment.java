@@ -57,6 +57,7 @@ import org.wordpress.gutenberg.WebViewGlobal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -578,6 +579,12 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         var firstNamespace = siteApiNamespace != null && siteApiNamespace.length > 0 ? siteApiNamespace[0] : "";
         var editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets";
 
+        @SuppressWarnings("unchecked")
+        Map<String, String> cookies = (Map<String, String>) mSettings.get("cookies");
+        if (cookies == null) {
+            cookies = new HashMap<>();
+        }
+
         EditorConfiguration config = new EditorConfiguration.Builder()
                 .setTitle((String) mSettings.get("postTitle"))
                 .setContent((String) mSettings.get("postContent"))
@@ -595,6 +602,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 .setEditorAssetsEndpoint(editorAssetsEndpoint)
                 .setCachedAssetHosts(Set.of("s0.wp.com", UrlUtils.getHost(siteURL)))
                 .setEnableAssetCaching(true)
+                .setCookies(cookies)
                 .build();
 
         mEditorStarted = true;

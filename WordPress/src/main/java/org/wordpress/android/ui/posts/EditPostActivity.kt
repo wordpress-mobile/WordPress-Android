@@ -2608,6 +2608,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 // Limited to Simple sites until application passwords are supported
                 "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
                 "locale" to wpcomLocaleSlug,
+                "cookies" to getCookiesForPrivateSites(isWpCom),
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
@@ -2619,6 +2620,27 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     )
                 )
             )
+        }
+
+        private fun getCookiesForPrivateSites(isWpCom: Boolean): Map<String, String> {
+            val cookies = mutableMapOf<String, String>()
+            if (isWpCom && siteModel.isPrivate) {
+                when {
+                    siteModel.isWPComAtomic -> {
+                        if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
+                            val cookieName = privateAtomicCookie.getName()
+                            val cookieValue = privateAtomicCookie.getValue()
+                            val cookieDomain = privateAtomicCookie.getDomain()
+                            val value = "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
+                            cookies[siteModel.url] = value
+                        }
+                    }
+                    !siteModel.isWPComAtomic -> {
+                        // Add wordpress_logged_in cookie for Simple sites
+                    }
+                }
+            }
+            return cookies
         }
 
         private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
