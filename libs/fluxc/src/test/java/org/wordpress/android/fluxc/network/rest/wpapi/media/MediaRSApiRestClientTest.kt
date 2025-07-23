@@ -58,7 +58,6 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-@Suppress("MaxLineLength")
 class MediaRSApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
@@ -112,29 +111,36 @@ class MediaRSApiRestClientTest {
     }
 
     @Test
-    fun `fetchMedia calls wpApiClientProvider getWpApiClient when media is not null and dispatch media action`() = runTest {
-        val testSite = createTestSite()
-        val testMedia = createTestMedia()
-        val mediaWithEditContext = createTestMediaWithEditContext(testSite.id.toLong())
-        val mediaRequestResult: WpRequestResult<MediaRequestRetrieveWithEditContextResponse> =
-            WpRequestResult.Success(response = MediaRequestRetrieveWithEditContextResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>()))
-        val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
+    fun `fetchMedia calls wpApiClientProvider getWpApiClient when media is not null and dispatch media action`() =
+        runTest {
+            val testSite = createTestSite()
+            val testMedia = createTestMedia()
+            val mediaWithEditContext = createTestMediaWithEditContext(testSite.id.toLong())
+            val mediaRequestResult: WpRequestResult<MediaRequestRetrieveWithEditContextResponse> =
+                WpRequestResult.Success(
+                    response = MediaRequestRetrieveWithEditContextResponse(
+                        mediaWithEditContext,
+                        mock<WpNetworkHeaderMap>()
+                    )
+                )
+            val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
 
-        whenever(wpApiClient.request<MediaRequestRetrieveWithEditContextResponse>(any())).thenReturn(mediaRequestResult)
+            whenever(wpApiClient.request<MediaRequestRetrieveWithEditContextResponse>(any()))
+                .thenReturn(mediaRequestResult)
 
-        restClient.fetchMedia(testSite, testMedia)
+            restClient.fetchMedia(testSite, testMedia)
 
-        // Verify dispatcher was called with the media
-        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher).dispatch(actionCaptor.capture())
+            // Verify dispatcher was called with the media
+            val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+            verify(dispatcher).dispatch(actionCaptor.capture())
 
-        val capturedAction = actionCaptor.value
-        val payload = capturedAction.payload as MediaPayload
-        assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA)
-        assertEquals(testSite, payload.site)
-        assertEquals(mediaResult, payload.media)
-        assertNull(payload.error)
-    }
+            val capturedAction = actionCaptor.value
+            val payload = capturedAction.payload as MediaPayload
+            assertEquals(capturedAction.type, MediaAction.FETCHED_MEDIA)
+            assertEquals(testSite, payload.site)
+            assertEquals(mediaResult, payload.media)
+            assertNull(payload.error)
+        }
 
     @Test
     fun `fetchMedia with error response dispatches error action`() = runTest {
@@ -168,9 +174,18 @@ class MediaRSApiRestClientTest {
     @Test
     fun `fetchMediaList with success response dispatches success action`() = runTest {
         val testSite = createTestSite()
-        val mediaWithEditContext = listOf(createTestMediaWithEditContext(testSite.id.toLong()), createTestMediaWithEditContext(testSite.id.toLong()))
+        val mediaWithEditContext = listOf(
+            createTestMediaWithEditContext(testSite.id.toLong()),
+            createTestMediaWithEditContext(testSite.id.toLong())
+        )
         val mediaRequestResult: WpRequestResult<MediaRequestListWithEditContextResponse> =
-            WpRequestResult.Success(response = MediaRequestListWithEditContextResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>(), null, null))
+            WpRequestResult.Success(
+                response = MediaRequestListWithEditContextResponse(
+                    mediaWithEditContext,
+                    mock<WpNetworkHeaderMap>(),
+                    null,
+                    null)
+            )
         val mediaResult = mediaWithEditContext.map {  it.toMediaModel(siteId = testSite.id) }
 
         whenever(wpApiClient.request<MediaRequestListWithEditContextResponse>(any())).thenReturn(mediaRequestResult)
@@ -243,7 +258,11 @@ class MediaRSApiRestClientTest {
         val mediaWithEditContext = createTestMediaWithEditContext(testSite.id.toLong())
         val mediaDeleteResponse = MediaDeleteResponse(true, mediaWithEditContext)
         val mediaRequestResult: WpRequestResult<MediaRequestDeleteResponse> =
-            WpRequestResult.Success(response = MediaRequestDeleteResponse(mediaDeleteResponse, mock<WpNetworkHeaderMap>()))
+            WpRequestResult.Success(
+                response = MediaRequestDeleteResponse(
+                    mediaDeleteResponse, mock<WpNetworkHeaderMap>()
+                )
+            )
         val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
 
         whenever(wpApiClient.request<MediaRequestDeleteResponse>(any())).thenReturn(mediaRequestResult)
@@ -381,7 +400,9 @@ class MediaRSApiRestClientTest {
         }
         val mediaWithEditContext = createTestMediaWithEditContext(testMedia.id.toLong())
         val mediaRequestResult: WpRequestResult<MediaRequestCreateResponse> =
-            WpRequestResult.Success(response = MediaRequestCreateResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>()))
+            WpRequestResult.Success(
+                response = MediaRequestCreateResponse(mediaWithEditContext, mock<WpNetworkHeaderMap>())
+            )
         val mediaResult = mediaWithEditContext.toMediaModel(siteId = testSite.id)
 
         whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)

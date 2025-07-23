@@ -23,7 +23,6 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
-import uniffi.wp_api.MediaRequestCreateResponse
 import uniffi.wp_api.MediaWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
@@ -309,7 +308,7 @@ class MediaRSApiRestClient @Inject constructor(
         }
     }
 
-    class FileCheckWrapper {
+    class FileCheckWrapper @Inject constructor() {
         fun canReadFile(filePath: String) = MediaUtils.canReadFile(filePath)
     }
 }
