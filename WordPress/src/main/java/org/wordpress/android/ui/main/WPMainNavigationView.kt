@@ -52,6 +52,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
+import androidx.core.view.size
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
