@@ -292,7 +292,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        final ReaderComment comment = getItem(position);
+        int currentPosition = holder.getBindingAdapterPosition();
+        if (currentPosition == RecyclerView.NO_POSITION) {
+            return;
+        }
+
+        ReaderComment comment = getItem(currentPosition);
         if (comment == null) {
             return;
         }
@@ -311,26 +316,26 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorAvatar(), mAvatarSz);
         mImageManager.loadIntoCircle(commentHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
 
-        // tapping avatar or author name opens blog preview
-        if (comment.hasAuthorBlogId()) {
-            View.OnClickListener authorListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        View.OnClickListener authorListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int authorCurrentPosition = commentHolder.getBindingAdapterPosition();
+                if (authorCurrentPosition == RecyclerView.NO_POSITION) return;
+
+                ReaderComment currentComment = getItem(authorCurrentPosition);
+                // tapping avatar or author name opens blog preview
+                if (currentComment != null && currentComment.hasAuthorBlogId()) {
                     ReaderActivityLauncher.showReaderBlogPreview(
                             view.getContext(),
-                            comment.authorBlogId,
+                            currentComment.authorBlogId,
                             mPost.isFollowedByCurrentUser,
                             ReaderTracker.SOURCE_COMMENT,
                             mReaderTracker
                     );
                 }
-            };
-            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
-            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
-        } else {
-            commentHolder.mAuthorContainer.setOnClickListener(null);
-            commentHolder.mAuthorContainer.setOnClickListener(null);
-        }
+            }
+        };
+        commentHolder.mAuthorContainer.setOnClickListener(authorListener);
 
         // author name uses different color for comments from the post's author
         if (comment.authorId == mPost.authorId) {
@@ -382,17 +387,30 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 menuPopup.setAnchorView(commentHolder.mActionButton);
                 menuPopup.setModal(true);
                 menuPopup.setOnItemClickListener((parent, view, position1, id) -> {
-                    mCommentMenuActionListener
-                            .onCommentMenuItemTapped(comment, actions.get(position1).getType());
+                    int menuCurrentPosition = commentHolder.getBindingAdapterPosition();
+                    if (menuCurrentPosition != RecyclerView.NO_POSITION) {
+                        ReaderComment currentComment = getItem(menuCurrentPosition);
+                        if (currentComment != null) {
+                            mCommentMenuActionListener
+                                    .onCommentMenuItemTapped(currentComment, actions.get(position1).getType());
+                        }
+                    }
                     menuPopup.dismiss();
                 });
                 menuPopup.show();
             });
         } else {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_share_white_24dp);
-            commentHolder.mActionButtonContainer.setOnClickListener(
-                    v -> mCommentMenuActionListener
-                            .onCommentMenuItemTapped(comment, ReaderCommentMenuActionType.SHARE));
+            commentHolder.mActionButtonContainer.setOnClickListener(v -> {
+                int shareCurrentPosition = commentHolder.getBindingAdapterPosition();
+                if (shareCurrentPosition != RecyclerView.NO_POSITION) {
+                    ReaderComment currentComment = getItem(shareCurrentPosition);
+                    if (currentComment != null) {
+                        mCommentMenuActionListener
+                                .onCommentMenuItemTapped(currentComment, ReaderCommentMenuActionType.SHARE);
+                    }
+                }
+            });
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -441,8 +459,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mReplyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mReplyListener != null) {
-                        mReplyListener.onRequestReply(comment.commentId);
+                    int replyCurrentPosition = commentHolder.getBindingAdapterPosition();
+                    if (replyCurrentPosition == RecyclerView.NO_POSITION) return;
+
+                    ReaderComment currentComment = getItem(replyCurrentPosition);
+                    if (currentComment != null && mReplyListener != null) {
+                        mReplyListener.onRequestReply(currentComment.commentId);
                     }
                 }
             });
@@ -461,11 +483,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         }
 
-        showLikeStatus(commentHolder, position);
+        showLikeStatus(commentHolder);
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getItemCount() - NUM_HEADERS)) {
+        if (mMoreCommentsExist && mDataRequestedListener != null && (currentPosition >= getItemCount() - NUM_HEADERS)) {
             mDataRequestedListener.onRequestData();
         }
     }
@@ -495,7 +517,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private void showLikeStatus(final CommentHolder holder, int position) {
+    private void showLikeStatus(final CommentHolder holder) {
+        int position = holder.getBindingAdapterPosition();
+        if (position == RecyclerView.NO_POSITION) {
+            return;
+        }
+
         ReaderComment comment = getItem(position);
         if (comment == null) {
             return;
@@ -515,8 +542,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.mCountLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int clickedPosition = holder.getBindingAdapterPosition();
-                        toggleLike(v.getContext(), holder, clickedPosition);
+                        toggleLike(v.getContext(), holder);
                     }
                 });
             }
@@ -526,8 +552,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private void toggleLike(Context context, CommentHolder holder, int position) {
+    private void toggleLike(Context context, CommentHolder holder) {
         if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
+        int position = holder.getBindingAdapterPosition();
+        if (position == RecyclerView.NO_POSITION) {
             return;
         }
 
@@ -548,7 +579,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
         if (updatedComment != null) {
             mComments.set(position - NUM_HEADERS, updatedComment);
-            showLikeStatus(holder, position);
+            showLikeStatus(holder);
         }
 
         mReaderTracker.trackPost(isAskingToLike
