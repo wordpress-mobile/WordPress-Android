@@ -305,20 +305,24 @@ class MediaRSApiRestClient @Inject constructor(
 
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
-        val job = uploadJobs[media.id]
-        if (job != null) {
-            job.cancel()
-            uploadJobs.remove(media.id)
+        scope.launch {
+            val job = uploadJobs[media.id]
+            if (job != null) {
+                Log.d("UPLOAD_TAG", "Cancelling job ${job.isCancelled}")
+                job.cancelAndJoin()
+                Log.d("UPLOAD_TAG", "Cancelled job ${job.isCancelled}")
+                uploadJobs.remove(media.id)
 
-            // Report the upload was successfully cancelled
-            notifyMediaUploadCanceled(media)
+                // Report the upload was successfully cancelled
+                notifyMediaUploadCanceled(media)
 
-            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
-        } else {
-            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
+                appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
+            } else {
+                appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
 
-            // Still notify cancellation even if job wasn't found, to update UI state
-            notifyMediaUploadCanceled(media)
+                // Still notify cancellation even if job wasn't found, to update UI state
+                notifyMediaUploadCanceled(media)
+            }
         }
     }
 
@@ -397,6 +401,7 @@ class MediaRSApiRestClient @Inject constructor(
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
+                fileName = parsedType.v1.file
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
