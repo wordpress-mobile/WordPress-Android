@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.media
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.Call
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
@@ -11,6 +12,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.UploadListener
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -42,8 +44,11 @@ class MediaRSApiRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
-    // Map to store upload jobs keyed by media ID for cancellation
-    private val uploadJobs = ConcurrentHashMap<Int, Job>()
+    // Data class to hold both the coroutine job and the OkHttp call
+    private data class UploadHandle(var job: Job, var call: Call? = null)
+
+    // Map to store upload handles keyed by media ID for cancellation
+    private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
 
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
@@ -236,12 +241,22 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
+        // Create the handle first, before the coroutine starts
+        val handle = UploadHandle(Job())
+        uploadHandles[media.id] = handle
+
         val job = scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(
-                site = site,
-                uploadProgressListener = { uploadedBytes, totalBytes ->
+            val uploadListener = object: UploadListener {
+                override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
                     notifyMediaUploading(media, uploadedBytes/totalBytes.toFloat())
                 }
+                override fun onUploadStarted(uploadCall: Call) {
+                    handle.call = uploadCall
+                }
+            }
+            val client = wpApiClientProvider.getWpApiClient(
+                site = site,
+                uploadListener = uploadListener
             )
 
             val mediaResponse = client.request { requestBuilder ->
@@ -277,12 +292,12 @@ class MediaRSApiRestClient @Inject constructor(
                 }
             }
 
-            // Clean up the job from the map after completion
-            uploadJobs.remove(media.id)
+            // Clean up the handle from the map after completion
+            uploadHandles.remove(media.id)
         }
 
-        // Store the job in the map
-        uploadJobs[media.id] = job
+        // Update the handle with the actual job
+        handle.job = job
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
@@ -306,12 +321,13 @@ class MediaRSApiRestClient @Inject constructor(
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
         scope.launch {
-            val job = uploadJobs[media.id]
-            if (job != null) {
-                Log.d("UPLOAD_TAG", "Cancelling job ${job.isCancelled}")
-                job.cancelAndJoin()
-                Log.d("UPLOAD_TAG", "Cancelled job ${job.isCancelled}")
-                uploadJobs.remove(media.id)
+            val handle = uploadHandles[media.id]
+            if (handle != null) {
+                appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
+
+                handle.job.cancel()
+                handle.call?.cancel()
+                uploadHandles.remove(media.id)
 
                 // Report the upload was successfully cancelled
                 notifyMediaUploadCanceled(media)

@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.rs
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.Request
@@ -10,6 +12,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.UploadListener
 import org.wordpress.android.fluxc.network.rest.wpcom.media.ProgressRequestBody
 import rs.wordpress.api.kotlin.DefaultFileResolver
 import rs.wordpress.api.kotlin.FileResolver
@@ -25,13 +28,17 @@ import uniffi.wp_api.WpNetworkHeaderMap
 import uniffi.wp_api.WpNetworkRequest
 import uniffi.wp_api.WpNetworkResponse
 import java.io.File
+import java.io.IOException
 import java.net.URL
 import javax.inject.Inject
 
 class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
-    fun getWpApiClient(site: SiteModel, uploadProgressListener: ((uploadedBytes: Long, totalBytes: Long) -> Unit)? = null): WpApiClient {
+    fun getWpApiClient(
+        site: SiteModel,
+        uploadListener: UploadListener? = null
+    ): WpApiClient {
         val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
             username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
         )
@@ -39,9 +46,7 @@ class WpApiClientProvider @Inject constructor(
         val client = WpApiClient(
             wpOrgSiteApiRootUrl = apiRootUrl,
             authProvider = authProvider,
-            requestExecutor = MockedRequestExecutor(
-                uploadProgressListener = uploadProgressListener
-            ),
+            requestExecutor = MockedRequestExecutor(uploadListener = uploadListener),
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication() {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
@@ -57,7 +62,7 @@ class WpApiClientProvider @Inject constructor(
         private val httpClient: WpHttpClient = WpHttpClient.DefaultHttpClient(),
         private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
         private val fileResolver: FileResolver = DefaultFileResolver(),
-        private val uploadProgressListener: ((uploadedBytes: Long, totalBytes: Long) -> Unit)? = null
+        private val uploadListener: UploadListener? = null
     ) : RequestExecutor {
         private val wpRequestExecutor = WpRequestExecutor()
         override suspend fun execute(request: WpNetworkRequest) = wpRequestExecutor.execute(request)
@@ -78,8 +83,7 @@ class WpApiClientProvider @Inject constructor(
                 if (file == null || !file.canBeUploaded()) {
                     throw MediaUploadRequestExecutionException.MediaFileNotFound(mediaUploadRequest.filePath())
                 }
-                val progressRequestBody = getRequestBody(file, mediaUploadRequest, uploadProgressListener)
-
+                val progressRequestBody = getRequestBody(file, mediaUploadRequest, uploadListener)
                 multipartBodyBuilder.addFormDataPart(
                     name = "file",
                     filename = file.name,
@@ -95,7 +99,10 @@ class WpApiClientProvider @Inject constructor(
                     }
                 }
 
-                httpClient.getClient().newCall(requestBuilder.build()).execute().use { response ->
+                val call = httpClient.getClient().newCall(requestBuilder.build())
+                // Notify about the call creation so it can be cancelled if needed
+                uploadListener?.onUploadStarted(call)
+                call.execute().use { response ->
                     return@withContext WpNetworkResponse(
                         body = response.body?.bytes() ?: ByteArray(0),
                         statusCode = response.code.toUShort(),
@@ -109,15 +116,15 @@ class WpApiClientProvider @Inject constructor(
         private fun getRequestBody(
             file: File,
             mediaUploadRequest: MediaUploadRequest,
-            uploadProgressListener: ((uploadedBytes: Long, totalBytes: Long) -> Unit)?
+            uploadListener: UploadListener?
         ): RequestBody {
             val fileRequestBody = file.asRequestBody(mediaUploadRequest.fileContentType().toMediaType())
-            return if (uploadProgressListener != null) {
+            return if (uploadListener != null) {
                 ProgressRequestBody(
                     delegate = fileRequestBody,
                     progressListener = object : ProgressRequestBody.ProgressListener {
                         override fun onProgress(bytesWritten: Long, contentLength: Long) {
-                            uploadProgressListener.invoke(bytesWritten, contentLength)
+                            uploadListener.onProgressUpdate(bytesWritten, contentLength)
                         }
                     }
                 )
@@ -127,5 +134,10 @@ class WpApiClientProvider @Inject constructor(
         }
 
         private fun File.canBeUploaded() = exists() && isFile && canRead()
+
+        interface UploadListener {
+            fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long)
+            fun onUploadStarted(uploadCall: Call)
+        }
     }
 }
