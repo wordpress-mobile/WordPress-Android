@@ -111,6 +111,7 @@ import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_
 
 public class MediaSettingsActivity extends BaseAppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
+    private static final int TOOLBAR_HEIGHT_MULTIPLIER = 3;
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
@@ -328,7 +329,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         // set the height of the gradient scrim that appears atop the image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
         ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
-        imgScrim.getLayoutParams().height = toolbarHeight * 3;
+        imgScrim.getLayoutParams().height = toolbarHeight * TOOLBAR_HEIGHT_MULTIPLIER;
 
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
