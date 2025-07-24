@@ -52,9 +52,10 @@ public class NativeNotificationsUtils {
 
         // Check for POST_NOTIFICATIONS permission on Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) 
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
-                AppLog.w(AppLog.T.NOTIFS, "POST_NOTIFICATIONS permission not granted, skipping notification with id: " + pushId);
+                AppLog.w(AppLog.T.NOTIFS,
+                        "POST_NOTIFICATIONS permission not granted, skipping notification with id: " + pushId);
                 return;
             }
         }

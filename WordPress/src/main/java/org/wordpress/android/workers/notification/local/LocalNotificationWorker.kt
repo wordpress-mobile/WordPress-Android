@@ -85,7 +85,12 @@ class LocalNotificationWorker(
             workerParameters: WorkerParameters
         ): ListenableWorker? {
             return if (workerClassName == LocalNotificationWorker::class.java.name) {
-                LocalNotificationWorker(appContext, workerParameters, localNotificationHandlerFactory, notificationManagerWrapper)
+                LocalNotificationWorker(
+                    appContext,
+                    workerParameters,
+                    localNotificationHandlerFactory,
+                    notificationManagerWrapper
+                )
             } else {
                 null
             }

@@ -105,7 +105,8 @@ public class GCMMessageHandler {
                               NotificationsUtilsWrapper notificationsUtilsWrapper,
                               NotificationManagerWrapper notificationManagerWrapper) {
         mActiveNotificationsMap = new ArrayMap<>();
-        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper, notificationManagerWrapper);
+        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper,
+                notificationManagerWrapper);
     }
 
     synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
