@@ -180,6 +180,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("DoNotMockDataClass")
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
         val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
         whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
@@ -210,6 +211,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("DoNotMockDataClass")
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
         val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
