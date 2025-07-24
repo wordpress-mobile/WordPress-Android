@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -25,7 +26,6 @@ import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -180,15 +180,12 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Ignore("This test is ignored because it requires an 'com.sun.jna.Pointer' import")
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
+        val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
+        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
+            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
         val apiDiscoveryResult = ApiDiscoveryResult.Success(
-            AutoDiscoveryAttemptSuccess(
-                any(),
-                any(),
-                wpApiDetails,
-                authParsedUrl
-            )
+            autoDiscoveryAttemptSuccess
         )
         whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(apiDiscoveryResult)))
             .thenReturn(TEST_URL_AUTH)
@@ -213,20 +210,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Ignore("This test is ignored because it requires an 'com.sun.jna.Pointer' import")
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-            .thenReturn(
-                ApiDiscoveryResult.Success(
-                    AutoDiscoveryAttemptSuccess(
-                        any(),
-                        any(),
-                        wpApiDetails,
-                        emptyAuthParsedUrl
-                    )
-                )
-            )
-
+        val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)
