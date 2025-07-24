@@ -22,13 +22,13 @@ class NotificationManagerWrapper @Inject constructor(private val context: Contex
         }
 
         // Check for POST_NOTIFICATIONS permission on Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                AppLog.w(T.NOTIFS, "POST_NOTIFICATIONS permission not granted, skipping notification with id: $id")
-                return
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            AppLog.w(T.NOTIFS, "POST_NOTIFICATIONS permission not granted, skipping notification with id: $id")
+            return
         }
 
         NotificationManagerCompat.from(context).notify(id, notification)
