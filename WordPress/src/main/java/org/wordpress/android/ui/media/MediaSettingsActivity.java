@@ -330,8 +330,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
         imgScrim.getLayoutParams().height = toolbarHeight * 3;
 
-        adjustToolbar();
-
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
             View.OnClickListener listener = v -> showFullScreen();
@@ -517,19 +515,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
     }
 
-    /*
-     * adjust the toolbar so it doesn't overlap the status bar
-     */
-    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
-    private void adjustToolbar() {
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            int statusHeight = getResources().getDimensionPixelSize(resourceId);
-            View toolbar = findViewById(R.id.toolbar);
-            toolbar.getLayoutParams().height += statusHeight;
-            toolbar.setPadding(0, statusHeight, 0, 0);
-        }
-    }
 
     private boolean shouldShowFab() {
         // fab only shows for images
