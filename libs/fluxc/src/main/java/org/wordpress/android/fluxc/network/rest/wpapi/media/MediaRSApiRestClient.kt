@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.media
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -23,7 +24,9 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaUpdateParams
 import uniffi.wp_api.MediaWithEditContext
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -39,6 +42,9 @@ class MediaRSApiRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
+    // Map to store upload jobs keyed by media ID for cancellation
+    private val uploadJobs = ConcurrentHashMap<Int, Job>()
+
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -230,7 +236,7 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
-        scope.launch {
+        val job = scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
             val mediaResponse = client.request { requestBuilder ->
@@ -259,13 +265,94 @@ class MediaRSApiRestClient @Inject constructor(
                     notifyMediaUploaded(media, mediaError)
                 }
             }
+
+            // Clean up the job from the map after completion
+            uploadJobs.remove(media.id)
         }
+
+        // Store the job in the map
+        uploadJobs[media.id] = job
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+    }
+
+    fun cancelUpload(media: MediaModel?) {
+        if (media == null) {
+            appLogWrapper.e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
+            return
+        }
+
+        appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
+
+        val job = uploadJobs[media.id]
+        if (job != null) {
+            job.cancel()
+            uploadJobs.remove(media.id)
+
+            // Report the upload was successfully cancelled
+            notifyMediaUploadCanceled(media)
+
+            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
+        } else {
+            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
+
+            // Still notify cancellation even if job wasn't found, to update UI state
+            notifyMediaUploadCanceled(media)
+        }
+    }
+
+    private fun notifyMediaUploadCanceled(media: MediaModel) {
+        val payload = ProgressPayload(media, 0f, false, true)
+        dispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
+    }
+
+    fun pushMedia(site: SiteModel, media: MediaModel?) {
+        if (media == null) {
+            // caller may be expecting a notification
+            val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
+            error.logMessage = "Pushed media is null"
+            notifyMediaPushed(site, null, error)
+            return
+        }
+
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val mediaResponse = client.request { requestBuilder ->
+                requestBuilder.media().update(media.mediaId, media.getMediaUpdateParams())
+            }
+
+            when (mediaResponse) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.MEDIA, "Updated media with ID: " + media.mediaId)
+
+                    val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
+                        id = media.id // be sure we are using the same local id when getting the remote response
+                        localSiteId = site.id
+                    }
+                    notifyMediaPushed(site, responseMedia, null)
+                }
+
+                else -> {
+                    val mediaError = parseMediaError(mediaResponse)
+                    appLogWrapper.e(AppLog.T.MEDIA, "Update media failed: ${mediaError.message}")
+                    notifyMediaPushed(site, media, mediaError)
+                }
+            }
+        }
+    }
+
+    private fun notifyMediaPushed(
+        site: SiteModel,
+        media: MediaModel?,
+        error: MediaError?
+    ) {
+        val payload = MediaPayload(site, media, error)
+        dispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload))
     }
 
     private fun List<MediaWithEditContext>.toMediaModelList(
@@ -276,14 +363,15 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
+        fileName = slug
+        fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
-        title = this@toMediaModel.title.rendered
-        caption = this@toMediaModel.caption.rendered
-        description = this@toMediaModel.description.rendered
+        title = this@toMediaModel.title.raw
+        caption = this@toMediaModel.caption.raw
+        description = this@toMediaModel.description.raw
         alt = this@toMediaModel.altText
         postId = this@toMediaModel.postId ?: 0
         mimeType = this@toMediaModel.mimeType
-        fileExtension = this@toMediaModel.mediaType.toString()
         uploadDate = this@toMediaModel.date
         authorId = this@toMediaModel.author
         uploadState = MediaUploadState.UPLOADED.toString()
@@ -307,6 +395,16 @@ class MediaRSApiRestClient @Inject constructor(
             null -> {}
         }
     }
+
+    private fun MediaModel.getMediaUpdateParams() = MediaUpdateParams(
+        postId = if (postId > 0) postId else null,
+        title = title,
+        caption = caption,
+        description = description,
+        altText = alt,
+        author = if (authorId > 0) authorId else null,
+        date = uploadDate
+        )
 
     class FileCheckWrapper @Inject constructor() {
         fun canReadFile(filePath: String) = MediaUtils.canReadFile(filePath)
