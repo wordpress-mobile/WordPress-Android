@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.util.Log
-import androidx.core.net.toUri
 import org.wordpress.android.util.UriUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
