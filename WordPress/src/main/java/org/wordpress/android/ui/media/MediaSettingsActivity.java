@@ -355,7 +355,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     }
 
     /**
-     * Hide status bar on API 33+
+     * Enable edge-to-edge API 33+, but only hide the status bar and not the navigation bar
      */
     private void enableEdgeToEdge() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
