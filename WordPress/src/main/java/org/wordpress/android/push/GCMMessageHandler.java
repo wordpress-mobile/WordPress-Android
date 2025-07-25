@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.NotificationManagerWrapper;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -101,9 +102,11 @@ public class GCMMessageHandler {
     private final NotificationHelper mNotificationHelper;
 
     @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker,
-                              NotificationsUtilsWrapper notificationsUtilsWrapper) {
+                              NotificationsUtilsWrapper notificationsUtilsWrapper,
+                              NotificationManagerWrapper notificationManagerWrapper) {
         mActiveNotificationsMap = new ArrayMap<>();
-        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper);
+        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper,
+                notificationManagerWrapper);
     }
 
     synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
@@ -273,13 +276,16 @@ public class GCMMessageHandler {
         private SystemNotificationsTracker mSystemNotificationsTracker;
 
         private NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+        private NotificationManagerWrapper mNotificationManagerWrapper;
 
         NotificationHelper(GCMMessageHandler gCMMessageHandler,
                            SystemNotificationsTracker systemNotificationsTracker,
-                           NotificationsUtilsWrapper notificationsUtilsWrapper) {
+                           NotificationsUtilsWrapper notificationsUtilsWrapper,
+                           NotificationManagerWrapper notificationManagerWrapper) {
             mGCMMessageHandler = gCMMessageHandler;
             mSystemNotificationsTracker = systemNotificationsTracker;
             mNotificationsUtilsWrapper = notificationsUtilsWrapper;
+            mNotificationManagerWrapper = notificationManagerWrapper;
         }
 
         void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
@@ -839,8 +845,7 @@ public class GCMMessageHandler {
                         | PendingIntent.FLAG_IMMUTABLE
                 );
                 builder.setContentIntent(pendingIntent);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                notificationManager.notify(pushId, builder.build());
+                mNotificationManagerWrapper.notify(pushId, builder.build());
                 mSystemNotificationsTracker.trackShownNotification(notificationType);
             }
         }
@@ -1084,8 +1089,7 @@ public class GCMMessageHandler {
                             context, AUTH_PUSH_NOTIFICATION_ID, notificationType);
             builder.setDeleteIntent(pendingDeleteIntent);
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+            mNotificationManagerWrapper.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
             mSystemNotificationsTracker.trackShownNotification(notificationType);
         }
 
