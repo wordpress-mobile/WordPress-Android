@@ -476,7 +476,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             registerReceiver(
                 mDownloadReceiver,
                 new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                ContextWrapper.RECEIVER_NOT_EXPORTED
+                ContextWrapper.RECEIVER_EXPORTED
             );
         } else {
             registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
