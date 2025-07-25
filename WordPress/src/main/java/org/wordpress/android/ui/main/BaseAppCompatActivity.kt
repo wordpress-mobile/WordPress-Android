@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
@@ -86,7 +85,6 @@ private val excludedActivities = listOf(
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
     DebugSharedPreferenceFlagsActivity::class.java.name,
-    DesignSystemActivity::class.java.name,
     DomainManagementActivity::class.java.name,
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
@@ -104,7 +102,7 @@ private val excludedActivities = listOf(
     SubscribersActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
-    // this is excluded because it explicitly enables edge-to-edge
+    // these are excluded because they explicitly enable edge-to-edge
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping

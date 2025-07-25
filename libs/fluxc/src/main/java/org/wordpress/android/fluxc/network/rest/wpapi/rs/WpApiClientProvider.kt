@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.rs
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,7 +27,6 @@ import uniffi.wp_api.WpNetworkHeaderMap
 import uniffi.wp_api.WpNetworkRequest
 import uniffi.wp_api.WpNetworkResponse
 import java.io.File
-import java.io.IOException
 import java.net.URL
 import javax.inject.Inject
 
