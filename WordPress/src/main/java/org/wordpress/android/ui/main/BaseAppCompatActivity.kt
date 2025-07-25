@@ -102,7 +102,7 @@ private val excludedActivities = listOf(
     SubscribersActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
-    // this is excluded because it explicitly enables edge-to-edge
+    // these are excluded because they explicitly enable edge-to-edge
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping
