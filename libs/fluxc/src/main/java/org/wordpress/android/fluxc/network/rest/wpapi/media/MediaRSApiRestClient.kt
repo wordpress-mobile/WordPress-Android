@@ -464,11 +464,12 @@ class MediaRSApiRestClient @Inject constructor(
         url
     }
 
-    private fun parseFileNameFromPath(fileNameWithPath: String): String = if (fileNameWithPath.contains(PATH_SEPARATOR)) {
-        fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
-    } else {
-        fileNameWithPath
-    }
+    private fun parseFileNameFromPath(fileNameWithPath: String): String =
+        if (fileNameWithPath.contains(PATH_SEPARATOR)) {
+            fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
+        } else {
+            fileNameWithPath
+        }
 
     private fun MediaModel.getMediaUpdateParams() = MediaUpdateParams(
         postId = if (postId > 0) postId else null,
