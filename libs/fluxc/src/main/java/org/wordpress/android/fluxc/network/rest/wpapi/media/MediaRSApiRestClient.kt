@@ -407,7 +407,6 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = parseFileNameFromUrl(url)
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -438,6 +437,10 @@ class MediaRSApiRestClient @Inject constructor(
             }
             is MediaDetailsPayload.Document,
             null -> {}
+        }
+
+        if (fileName.isNullOrEmpty()) {
+            fileName = parseFileNameFromUrl(url)
         }
     }
 
