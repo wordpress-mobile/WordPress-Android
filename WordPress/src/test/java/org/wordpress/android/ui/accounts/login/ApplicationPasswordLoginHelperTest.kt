@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import com.sun.jna.Pointer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -23,6 +22,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.NoPointer
 import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
@@ -90,8 +90,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             apiRootUrlCache,
             discoverSuccessWrapper
         )
-        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
-            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
     }
 
     @Test
@@ -183,13 +181,16 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            ParsedUrl(NoPointer),
+            ParsedUrl(NoPointer),
+            wpApiDetails,
+            authParsedUrl
+        )
+        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
+            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
         val apiDiscoveryResult = ApiDiscoveryResult.Success(
-            AutoDiscoveryAttemptSuccess(
-                ParsedUrl(Pointer.createConstant(1)),
-                ParsedUrl(Pointer.createConstant(1)),
-                wpApiDetails,
-                authParsedUrl
-            )
+            autoDiscoveryAttemptSuccess
         )
         whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(apiDiscoveryResult)))
             .thenReturn(TEST_URL_AUTH)
@@ -215,18 +216,14 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-            .thenReturn(
-                ApiDiscoveryResult.Success(
-                    AutoDiscoveryAttemptSuccess(
-                        ParsedUrl(Pointer.createConstant(1)),
-                        ParsedUrl(Pointer.createConstant(1)),
-                        wpApiDetails,
-                        emptyAuthParsedUrl
-                    )
-                )
-            )
-
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            ParsedUrl(NoPointer),
+            ParsedUrl(NoPointer),
+            wpApiDetails,
+            authParsedUrl
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)
