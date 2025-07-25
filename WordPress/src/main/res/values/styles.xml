@@ -361,7 +361,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
-    
+
     <style name="WordPress.TransparentDialog" parent="WordPress.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -476,12 +476,6 @@
     </style>
 
     <style name="MediaSettings" />
-
-    <style name="WordPress.NoActionBar.TranslucentStatus" parent="WordPress.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
 
     <style name="MediaSettings.Divider">
         <item name="android:background">?android:attr/listDivider</item>
