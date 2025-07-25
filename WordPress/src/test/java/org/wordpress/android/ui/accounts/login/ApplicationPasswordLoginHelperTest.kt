@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -23,6 +22,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.NoPointer
 import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiDetails
@@ -180,9 +180,13 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("DoNotMockDataClass")
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
-        val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            ParsedUrl(NoPointer),
+            ParsedUrl(NoPointer),
+            wpApiDetails,
+            authParsedUrl
+        )
         whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
             .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
         val apiDiscoveryResult = ApiDiscoveryResult.Success(
@@ -211,9 +215,13 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("DoNotMockDataClass")
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        val autoDiscoveryAttemptSuccess = mock<AutoDiscoveryAttemptSuccess>()
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            ParsedUrl(NoPointer),
+            ParsedUrl(NoPointer),
+            wpApiDetails,
+            authParsedUrl
+        )
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
