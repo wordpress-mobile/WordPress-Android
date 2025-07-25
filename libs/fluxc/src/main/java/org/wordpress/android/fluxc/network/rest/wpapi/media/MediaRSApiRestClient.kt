@@ -417,7 +417,7 @@ class MediaRSApiRestClient @Inject constructor(
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
-                fileName = parsedType.v1.file
+                fileName = parseFileName(parsedType.v1.file)
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
@@ -432,6 +432,12 @@ class MediaRSApiRestClient @Inject constructor(
             is MediaDetailsPayload.Document,
             null -> {}
         }
+    }
+
+    private fun parseFileName(fileName: String): String = if (fileName.contains("/")) {
+        fileName.substringAfterLast("/")
+    } else {
+        fileName
     }
 
     private fun MediaModel.getMediaUpdateParams() = MediaUpdateParams(
