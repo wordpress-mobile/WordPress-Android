@@ -365,7 +365,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             window.setDecorFitsSystemWindows(false);
             WindowInsetsControllerCompat controller =
                     new WindowInsetsControllerCompat(window, window.getDecorView());
-            controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+            controller.hide(WindowInsetsCompat.Type.statusBars());
             controller.setSystemBarsBehavior(
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             );
