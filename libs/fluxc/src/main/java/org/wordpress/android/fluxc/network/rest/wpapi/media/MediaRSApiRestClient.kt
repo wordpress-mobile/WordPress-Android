@@ -45,6 +45,7 @@ class MediaRSApiRestClient @Inject constructor(
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
     // Data class to hold both the coroutine job and the OkHttp call
+    @Suppress("DataClassShouldBeImmutable")
     private data class UploadHandle(var job: Job, var call: Call? = null)
 
     // Map to store upload handles keyed by media ID for cancellation
@@ -246,14 +247,7 @@ class MediaRSApiRestClient @Inject constructor(
         uploadHandles[media.id] = handle
 
         val job = scope.launch {
-            val uploadListener = object: UploadListener {
-                override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
-                    notifyMediaUploading(media, uploadedBytes/totalBytes.toFloat())
-                }
-                override fun onUploadStarted(uploadCall: Call) {
-                    handle.call = uploadCall
-                }
-            }
+            val uploadListener = getUploadListener(media, handle)
             val client = wpApiClientProvider.getWpApiClient(
                 site = site,
                 uploadListener = uploadListener
@@ -298,6 +292,19 @@ class MediaRSApiRestClient @Inject constructor(
 
         // Update the handle with the actual job
         handle.job = job
+    }
+
+    private fun getUploadListener(
+        media: MediaModel,
+        handle: UploadHandle
+    ) = object : UploadListener {
+        override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
+            notifyMediaUploading(media, uploadedBytes / totalBytes.toFloat())
+        }
+
+        override fun onUploadStarted(uploadCall: Call) {
+            handle.call = uploadCall
+        }
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
