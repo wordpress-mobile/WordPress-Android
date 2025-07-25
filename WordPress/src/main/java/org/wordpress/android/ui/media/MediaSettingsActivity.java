@@ -23,11 +23,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -49,6 +51,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -347,6 +351,26 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             });
             ViewExtensionsKt.redirectContextClickToLongPressListener(mFabView);
         }
+    }
+
+    @Override
+    @Nullable
+    public View onCreateView(
+            @NonNull String name,
+            @NonNull Context context,
+            @NonNull AttributeSet attrs) {
+        // enable full screen for Android 33+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Window window = getWindow();
+            window.setDecorFitsSystemWindows(false);
+            WindowInsetsControllerCompat controller =
+                    new WindowInsetsControllerCompat(window, window.getDecorView());
+            controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+            controller.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
+        }
+        return super.onCreateView(name, context, attrs);
     }
 
     private boolean isMediaFromEditor() {
