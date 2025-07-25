@@ -12,6 +12,7 @@ import org.wordpress.android.push.GCMMessageHandler.PUSH_TYPE_COMMENT
 import org.wordpress.android.push.GCMMessageHandler.PUSH_ARG_MSG
 import org.wordpress.android.push.GCMMessageHandler.PUSH_ARG_TITLE
 import org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_ID
+import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import kotlin.test.assertEquals
@@ -23,8 +24,13 @@ class NotificationHelperTest : BaseUnitTest() {
     private val systemNotificationsTracker: SystemNotificationsTracker = mock()
     private val gcmMessageHandler: GCMMessageHandler = mock()
     private val notificationsUtilsWrapper = mock<NotificationsUtilsWrapper>()
-    private val notificationHelper =
-        GCMMessageHandler.NotificationHelper(gcmMessageHandler, systemNotificationsTracker, notificationsUtilsWrapper)
+    private val notificationManagerWrapper = mock<NotificationManagerWrapper>()
+    private val notificationHelper = GCMMessageHandler.NotificationHelper(
+        gcmMessageHandler,
+        systemNotificationsTracker,
+        notificationsUtilsWrapper,
+        notificationManagerWrapper
+    )
 
     @Test
     fun `WHEN a PN that is a comment has a message argument THEN then the message is used as title`() {
