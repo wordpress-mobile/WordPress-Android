@@ -400,7 +400,7 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = slug
+        fileName = parseFileNameFromUrl(url)
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -432,6 +432,17 @@ class MediaRSApiRestClient @Inject constructor(
             is MediaDetailsPayload.Document,
             null -> {}
         }
+    }
+
+    private fun parseFileNameFromUrl(url: String): String = if (url.contains("/")) {
+        val lastUrlPart = url.substringAfterLast("/")
+        if (lastUrlPart.contains("?")) {
+            lastUrlPart.substringBefore("?")
+        } else {
+            lastUrlPart
+        }
+    } else {
+        url
     }
 
     private fun parseFileName(fileName: String): String = if (fileName.contains("/")) {
