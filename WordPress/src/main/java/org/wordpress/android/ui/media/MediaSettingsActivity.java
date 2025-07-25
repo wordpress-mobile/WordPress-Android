@@ -23,7 +23,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -351,15 +350,14 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             });
             ViewExtensionsKt.redirectContextClickToLongPressListener(mFabView);
         }
+
+        enableEdgeToEdge();
     }
 
-    @Override
-    @Nullable
-    public View onCreateView(
-            @NonNull String name,
-            @NonNull Context context,
-            @NonNull AttributeSet attrs) {
-        // enable full screen for Android 33+
+    /**
+     * Hide status bar on API 33+
+     */
+    private void enableEdgeToEdge() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Window window = getWindow();
             window.setDecorFitsSystemWindows(false);
@@ -370,7 +368,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             );
         }
-        return super.onCreateView(name, context, attrs);
     }
 
     private boolean isMediaFromEditor() {
