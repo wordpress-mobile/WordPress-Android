@@ -564,6 +564,7 @@ dependencies {
     // Cascade - Compose nested menu
     implementation(libs.cascade.compose)
 
+    implementation(libs.automattic.encryptedlogging)
     implementation(libs.automattic.tracks.crashlogging)
 }
 
