@@ -94,7 +94,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     // should be a multiple of both the column counts (3 in portrait, 4 in landscape)
     private static final int NUM_MEDIA_PER_FETCH = 48;
-
+    private boolean mQuickStartUploadSnackbarShown = false; //new flag
     enum MediaFilter {
         FILTER_ALL(0),
         FILTER_IMAGES(1),
@@ -229,6 +229,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         mGridAdapter.cancelPendingRequestsForVisibleItems(mRecycler);
+        mQuickStartUploadSnackbarShown=false; //new flag
         super.onStop();
     }
 
@@ -238,17 +239,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
         mQuickStartEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
         if (mQuickStartEvent.getTask() == QuickStartExistingSiteTask.UPLOAD_MEDIA && isAdded()) {
-            showQuickStartSnackbar();
-            if (getActivity() instanceof MediaBrowserActivity) {
-                MediaBrowserActivity activity = (MediaBrowserActivity) getActivity();
-                getView().post(() -> activity.updateMenuNewMediaQuickStartFocusPoint(true));
+            if (!mQuickStartUploadSnackbarShown) {
+                showQuickStartSnackbar();
+                mQuickStartUploadSnackbarShown = true; // Set the flag to true after showing
+                if (getActivity() instanceof MediaBrowserActivity) {
+                    MediaBrowserActivity activity = (MediaBrowserActivity) getActivity();
+                    getView().post(() -> activity.updateMenuNewMediaQuickStartFocusPoint(true));
+                }
             }
+        EventBus.getDefault().removeStickyEvent(event);
         }
     }
 
     private void showQuickStartSnackbar() {
+        mQuickStartSnackbarShown = true; //new line
         Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                 requireContext(),
                 R.string.quick_start_dialog_upload_media_message_short_plus,
