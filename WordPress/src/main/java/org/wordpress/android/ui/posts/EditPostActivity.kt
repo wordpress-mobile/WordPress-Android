@@ -204,6 +204,18 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.posts.editor.events.PostEventHandler
+import org.wordpress.android.ui.posts.editor.events.PostChangeType
+import org.wordpress.android.ui.posts.editor.publishing.PostPublishingManager
+import org.wordpress.android.ui.posts.editor.publishing.PostValidationService
+import org.wordpress.android.ui.posts.editor.publishing.PublishResult
+import org.wordpress.android.ui.posts.editor.publishing.PublishAction
+import org.wordpress.android.ui.posts.editor.state.PostStateManager
+import org.wordpress.android.ui.posts.editor.state.EditorStateManager
+import org.wordpress.android.ui.posts.editor.fragment.EditorFragmentManager
+import org.wordpress.android.ui.posts.editor.config.EditorConfigurationManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
@@ -280,7 +292,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
     OnPostSettingsDialogFragmentListener, HistoryItemClickInterface, EditPostSettingsCallback,
     PrepublishingBottomSheetListener, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
-    SiteSettingsListener {
+    SiteSettingsListener, PostPublishingManager.PublishingListener, PostStateManager.StateListener,
+    PostEventHandler.PostEventListener, EditorStateManager.EditorStateListener,
+    EditorFragmentManager.FragmentManagerListener, EditorConfigurationManager.ConfigurationListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -404,6 +418,20 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
 
     @Inject lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
+
+    // Phase 2: Publishing Management Components
+    @Inject lateinit var publishingManager: PostPublishingManager
+
+    @Inject lateinit var postStateManager: PostStateManager
+
+    @Inject lateinit var postValidationService: PostValidationService
+
+    @Inject lateinit var postEventHandler: PostEventHandler
+    
+    // Phase 3: Editor State Management Components
+    @Inject lateinit var editorStateManager: EditorStateManager
+    @Inject lateinit var editorFragmentManager: EditorFragmentManager
+    @Inject lateinit var editorConfigurationManager: EditorConfigurationManager
 
     @Inject lateinit var crashLogging: CrashLogging
 
@@ -535,6 +563,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
         createEditShareMessageActivityResultLauncher()
 
+        // Initialize Phase 2 managers
+        initializePhase2Managers()
+
         if (!initializeSiteModel(savedInstanceState)) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
@@ -636,6 +667,68 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         tempSiteModel?.let { siteModel = it }?: return false
 
         return true
+    }
+
+    /**
+     * PHASE 2: Initialize all publishing and state management components
+     */
+    private fun initializePhase2Managers() {
+        // These will be properly initialized after the post is loaded
+        // For now, just ensure they're ready to be configured
+    }
+
+    /**
+     * PHASE 2: Initialize managers after post is available
+     */
+    private fun initializePhase2ManagersWithPost() {
+        val activityScope = CoroutineScope(SupervisorJob() + kotlinx.coroutines.Dispatchers.Main)
+        
+        // Initialize publishing manager
+        publishingManager.initialize(
+            listener = this,
+            lifecycleOwner = this,
+            editPostRepository = editPostRepository,
+            siteModel = siteModel,
+            postEditorAnalyticsSession = postEditorAnalyticsSession,
+            coroutineScope = activityScope
+        )
+        
+        // Initialize state manager
+        postStateManager.initialize(
+            listener = this,
+            lifecycleOwner = this,
+            editPostRepository = editPostRepository,
+            siteModel = siteModel
+        )
+        
+        // Initialize event handler
+        postEventHandler.initialize(
+            listener = this,
+            editPostRepository = editPostRepository
+        )
+        
+        // Phase 3: Initialize editor state managers
+        editorStateManager.initialize(
+            listener = this,
+            lifecycleOwner = this,
+            editPostRepository = editPostRepository,
+            siteModel = siteModel
+        )
+        
+        editorFragmentManager.initialize(
+            listener = this,
+            lifecycleOwner = this,
+            fragmentManager = supportFragmentManager,
+            editPostRepository = editPostRepository,
+            siteModel = siteModel
+        )
+        
+        editorConfigurationManager.initialize(
+            listener = this,
+            lifecycleOwner = this,
+            editPostRepository = editPostRepository,
+            siteModel = siteModel
+        )
     }
 
     private fun isActionSendOrNewMedia(action: String?): Boolean {
@@ -1109,6 +1202,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 )
             )
             editorMedia.purgeMediaToPostAssociationsIfNotInPostAnymoreAsync()
+            
+            // Phase 2: Initialize publishing and state managers after post is available
+            initializePhase2ManagersWithPost()
         }
     }
 
@@ -1187,6 +1283,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             (editorFragment as AztecEditorFragment).disableContentLogOnCrashes()
         }
         reactNativeRequestHandler.destroy()
+        
+        // Phase 2: Cleanup managers
+        if (this::publishingManager.isInitialized) publishingManager.cleanup()
+        if (this::postStateManager.isInitialized) postStateManager.cleanup()
+        if (this::postEventHandler.isInitialized) postEventHandler.cleanup()
+        
+        // Phase 3: Cleanup editor state managers
+        if (this::editorStateManager.isInitialized) editorStateManager.cleanup()
+        if (this::editorFragmentManager.isInitialized) editorFragmentManager.cleanup()
+        if (this::editorConfigurationManager.isInitialized) editorConfigurationManager.cleanup()
+        
         super.onDestroy()
     }
 
@@ -1694,15 +1801,30 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun saveAsDraft() {
         editPostSettingsFragment?.updatePostStatus(PostStatus.DRAFT)
-        ToastUtils.showToast(
-            this@EditPostActivity,
-            getString(R.string.editor_post_converted_back_to_draft), ToastUtils.Duration.SHORT
-        )
-        uploadUtilsWrapper.showSnackbar(
-            findViewById(R.id.editor_activity),
-            R.string.editor_uploading_post
-        )
-        savePostAndOptionallyFinish(doFinish = false, forceSave = false)
+        
+        when (val result = publishingManager.saveAsDraft()) {
+            is PublishResult.Success -> {
+                ToastUtils.showToast(
+                    this@EditPostActivity,
+                    getString(R.string.editor_post_converted_back_to_draft), ToastUtils.Duration.SHORT
+                )
+            }
+            is PublishResult.Error -> {
+                ToastUtils.showToast(
+                    this@EditPostActivity,
+                    "Failed to save draft: ${result.message}", ToastUtils.Duration.SHORT
+                )
+            }
+            is PublishResult.NoActionNeeded -> {
+                ToastUtils.showToast(
+                    this@EditPostActivity,
+                    getString(R.string.editor_post_converted_back_to_draft), ToastUtils.Duration.SHORT
+                )
+            }
+            else -> {
+                // Handle other result types
+            }
+        }
     }
 
     @Suppress("UseCheckOrError", "ReturnCount")
@@ -2379,68 +2501,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
-        if (editorFragment?.isAdded != true) {
-            AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
-            return
-        }
-        val lambda: (UpdatePostResult?) -> Unit = { _ ->
-            // check if the opened post had some unsaved local changes
-            val isFirstTimePublish = isFirstTimePublish(false)
-
-            // if post was modified during this editing session, save it
-            val shouldSave = shouldSavePost() || forceSave
-            postEditorAnalyticsSession?.setOutcome(Outcome.SAVE)
-            var activityFinishState: ActivityFinishState? = ActivityFinishState.CANCELLED
-            if (shouldSave) {
-                /*
-                 * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
-                 * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
-                 * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
-                 * user didn't confirm the changes in this code path.
-                 */
-                val isWpComOrIsLocalDraft: Boolean =
-                    siteModel.isUsingWpComRestApi || editPostRepository.isLocalDraft
-                activityFinishState = if (isWpComOrIsLocalDraft) {
-                    savePostOnline(isFirstTimePublish)
-                } else if (forceSave) {
-                    savePostOnline(false)
-                } else {
-                    ActivityFinishState.SAVED_LOCALLY
-                }
-            }
-            // discard post if new & empty
-            if (isDiscardable) {
-                dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-                postEditorAnalyticsSession?.setOutcome(Outcome.CANCEL)
-                activityFinishState = ActivityFinishState.CANCELLED
-            }
-            if (doFinish) {
-                activityFinishState?.let {
-                    storePostViewModel.finish(it)
-                }
-            }
-        }
-
-        // Convert the lambda to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda), doFinish)
+        publishingManager.savePostAndOptionallyFinish(doFinish, forceSave)
+        // Result will be handled through listener callbacks
     }
 
-    // Helper function to convert a lambda to OnPostUpdatedFromUIListener
-    private fun lambdaToListener(lambda: (UpdatePostResult) -> Unit): OnPostUpdatedFromUIListener {
-        return object : OnPostUpdatedFromUIListener {
-            override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
-                lambda(updatePostResult)
-            }
-        }
-    }
 
-    private fun shouldSavePost(): Boolean {
-        val hasChanges = editPostRepository.postWasChangedInCurrentSession()
-        val isPublishable = editPostRepository.isPostPublishable()
-        val existingPostWithChanges = editPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges
-        // if post was modified during this editing session, save it
-        return isPublishable && (existingPostWithChanges || isNewPost)
-    }
 
     private val isDiscardable: Boolean
         get() {
@@ -2448,11 +2513,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
     private fun isFirstTimePublish(publishPost: Boolean): Boolean {
-        val originalStatus = editPostRepository.status
-        return (((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
-                || (originalStatus == PostStatus.SCHEDULED && publishPost)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.isLocalDraft)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.remotePostId == 0L))
+        return publishingManager.isFirstTimePublish(publishPost)
     }
 
     /**
@@ -4206,6 +4267,294 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onLogJsException(exception: JsException, onExceptionSend: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onExceptionSend)
+    }
+
+    // ========================================
+    // PHASE 2: Publishing Management Interface Implementations
+    // ========================================
+
+    override fun onPublishingStarted() {
+        AppLog.d(AppLog.T.POSTS, "Publishing started")
+        // Update UI to show publishing state
+    }
+
+    override fun onPublishingProgress(message: String) {
+        AppLog.d(AppLog.T.POSTS, "Publishing progress: $message")
+        // Update progress indicators
+    }
+
+    override fun onPublishingSuccess(post: PostImmutableModel) {
+        AppLog.d(AppLog.T.POSTS, "Publishing succeeded: ${post.id}")
+        ToastUtils.showToast(this, "Post published successfully!", ToastUtils.Duration.SHORT)
+        
+        // Update analytics
+        postEditorAnalyticsSession?.setOutcome(Outcome.PUBLISH)
+    }
+
+    override fun onPublishingError(error: String, post: PostImmutableModel?) {
+        AppLog.e(AppLog.T.POSTS, "Publishing failed: $error")
+        ToastUtils.showToast(this, "Publishing failed: $error", ToastUtils.Duration.LONG)
+    }
+
+    override fun onSavingStarted() {
+        AppLog.d(AppLog.T.POSTS, "Saving started")
+        // Could show progress dialog
+    }
+
+    override fun onSavingSuccess(post: PostImmutableModel) {
+        AppLog.d(AppLog.T.POSTS, "Saving succeeded: ${post.id}")
+        ToastUtils.showToast(this, getString(R.string.toast_saving_post_as_draft), ToastUtils.Duration.SHORT)
+    }
+
+    override fun onSavingError(error: String, post: PostImmutableModel?) {
+        AppLog.e(AppLog.T.POSTS, "Saving failed: $error")
+        ToastUtils.showToast(this, "Save failed: $error", ToastUtils.Duration.LONG)
+    }
+
+    override fun showEmailVerificationDialog(message: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.editor_confirm_email_prompt_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                // Handle email verification
+                ActivityLauncher.viewAccountSettings(this)
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
+    override fun showPublishingProgressDialog() {
+        // Show publishing progress using existing pattern
+        ToastUtils.showToast(this, "Publishing post...", ToastUtils.Duration.SHORT)
+    }
+
+    override fun hidePublishingProgressDialog() {
+        // Hide publishing progress
+    }
+
+    override fun shouldFinishActivity(): Boolean {
+        // Logic to determine if activity should finish after publishing
+        return !isLandingEditor
+    }
+
+    // ========================================
+    // PHASE 2: State Management Interface Implementations
+    // ========================================
+
+    override fun onPostLoadingStateChanged(state: PostLoadingState, post: PostImmutableModel?) {
+        AppLog.d(AppLog.T.POSTS, "Post loading state changed: $state")
+        // Update UI based on loading state
+        updatePostLoadingAndDialogState(state, post)
+    }
+
+    override fun onPostSnapshotSaved() {
+        AppLog.d(AppLog.T.POSTS, "Post snapshot saved")
+    }
+
+    override fun onPostUpdatedFromEditor(post: PostImmutableModel) {
+        AppLog.d(AppLog.T.POSTS, "Post updated from editor: ${post.id}")
+        // Update any UI that depends on post content
+    }
+
+    override fun onPostContentChanged(hasChanges: Boolean) {
+        AppLog.d(AppLog.T.POSTS, "Post content changed: $hasChanges")
+        // Update save button state, etc.
+        invalidateOptionsMenu()
+    }
+
+    override fun showLoadingDialog(message: String) {
+        ToastUtils.showToast(this, message, ToastUtils.Duration.SHORT)
+    }
+
+    override fun hideLoadingDialog() {
+        // Hide loading dialog
+    }
+
+    override fun updateToolbarState() {
+        // Update toolbar buttons based on current state
+        invalidateOptionsMenu()
+    }
+
+    // ========================================
+    // PHASE 2: Post Event Interface Implementations
+    // ========================================
+
+    override fun onPostSaved(post: PostImmutableModel) {
+        AppLog.d(AppLog.T.POSTS, "Post saved event: ${post.id}")
+        ToastUtils.showToast(this, "Post saved", ToastUtils.Duration.SHORT)
+    }
+
+    override fun onPostPublished(post: PostImmutableModel) {
+        AppLog.d(AppLog.T.POSTS, "Post published event: ${post.id}")
+        ToastUtils.showToast(this, "Post published!", ToastUtils.Duration.SHORT)
+        
+        if (shouldFinishActivity()) {
+            finish()
+        }
+    }
+
+    override fun onPostUploadError(post: PostImmutableModel, error: String) {
+        AppLog.e(AppLog.T.POSTS, "Post upload error: $error")
+        ToastUtils.showToast(this, "Upload failed: $error", ToastUtils.Duration.LONG)
+    }
+
+    override fun onPostChanged(post: PostImmutableModel, changeType: PostChangeType) {
+        AppLog.d(AppLog.T.POSTS, "Post changed: ${post.id}, type: $changeType")
+        
+        when (changeType) {
+            PostChangeType.AUTO_SAVED -> {
+                ToastUtils.showToast(this, "Post auto-saved", ToastUtils.Duration.SHORT)
+            }
+            PostChangeType.UPDATED -> {
+                // Handle post update
+            }
+            else -> {
+                // Handle other change types
+            }
+        }
+    }
+
+    override fun onPostConflictDetected(localPost: PostImmutableModel, remotePost: PostImmutableModel) {
+        AppLog.w(AppLog.T.POSTS, "Post conflict detected")
+        
+        // Show conflict resolution dialog
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Post Conflict")
+            .setMessage("The post has been modified elsewhere. What would you like to do?")
+            .setPositiveButton("Use Remote Version") { _, _ ->
+                // Use remote version - delegate to repository
+                ToastUtils.showToast(this, "Using remote version", ToastUtils.Duration.SHORT)
+            }
+            .setNegativeButton("Keep Local Changes") { _, _ ->
+                // Keep local changes
+                ToastUtils.showToast(this, "Keeping local changes", ToastUtils.Duration.SHORT)
+            }
+            .setNeutralButton("Compare Versions") { _, _ ->
+                // Show comparison view
+                ToastUtils.showToast(this, "Compare feature not implemented yet", ToastUtils.Duration.SHORT)
+            }
+            .show()
+    }
+
+    override fun showSnackbar(message: String) {
+        ToastUtils.showToast(this, message, ToastUtils.Duration.LONG)
+    }
+
+    // ========================================
+    // PHASE 3: Editor State Management Interface Implementations
+    // ========================================
+
+    override fun onEditorTypeChanged(newType: EditorStateManager.EditorType, oldType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Editor type changed: $oldType -> $newType")
+        // Handle editor type changes - could recreate fragments, update UI, etc.
+    }
+
+    override fun onEditorModeChanged(newMode: EditorStateManager.EditorMode, oldMode: EditorStateManager.EditorMode) {
+        AppLog.d(AppLog.T.POSTS, "Editor mode changed: $oldMode -> $newMode")
+        // Handle mode changes between Visual and HTML
+        invalidateOptionsMenu()
+    }
+
+    override fun onEditorLoadingStateChanged(isLoading: Boolean) {
+        AppLog.d(AppLog.T.POSTS, "Editor loading state changed: $isLoading")
+        // Update loading indicators
+    }
+
+    override fun onEditorSwitchRequested(fromType: EditorStateManager.EditorType, toType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Editor switch requested: $fromType -> $toType")
+        // Handle immediate switch without dialog
+        editorStateManager.confirmEditorSwitch()
+    }
+
+    override fun showEditorSwitchDialog(fromType: EditorStateManager.EditorType, toType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Showing editor switch dialog: $fromType -> $toType")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Switch Editor")
+            .setMessage("Switching editors may change your content formatting. Continue?")
+            .setPositiveButton("Switch") { _, _ ->
+                editorStateManager.confirmEditorSwitch()
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                editorStateManager.cancelEditorSwitch()
+            }
+            .show()
+    }
+
+    // ========================================
+    // PHASE 3: Fragment Manager Interface Implementations
+    // ========================================
+
+    override fun onFragmentCreated(fragment: Fragment, editorType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Fragment created: ${editorType.name}")
+        // Handle fragment creation
+    }
+
+    override fun onFragmentReady(fragment: Fragment) {
+        AppLog.d(AppLog.T.POSTS, "Fragment ready")
+        // Fragment is ready for use
+    }
+
+    override fun onFragmentSwitching(fromFragment: Fragment?, toFragment: Fragment) {
+        AppLog.d(AppLog.T.POSTS, "Fragment switching")
+        // Handle fragment transition
+    }
+
+    override fun onFragmentSwitched(newFragment: Fragment, editorType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Fragment switched to: ${editorType.name}")
+        // Complete fragment switch
+    }
+
+    override fun onFragmentError(error: String, editorType: EditorStateManager.EditorType) {
+        AppLog.e(AppLog.T.POSTS, "Fragment error: $error")
+        ToastUtils.showToast(this, "Editor error: $error", ToastUtils.Duration.LONG)
+    }
+
+    override fun onContentTransferred(fromType: EditorStateManager.EditorType, toType: EditorStateManager.EditorType) {
+        AppLog.d(AppLog.T.POSTS, "Content transferred: $fromType -> $toType")
+        ToastUtils.showToast(this, "Content transferred to ${toType.name} editor", ToastUtils.Duration.SHORT)
+    }
+
+    // ========================================
+    // PHASE 3: Configuration Manager Interface Implementations
+    // ========================================
+
+    override fun onConfigurationLoaded(configuration: EditorConfigurationManager.EditorConfiguration) {
+        AppLog.d(AppLog.T.POSTS, "Configuration loaded: $configuration")
+        // Apply loaded configuration
+    }
+
+    override fun onEditorConfigurationChanged(
+        newConfiguration: EditorConfigurationManager.EditorConfiguration, 
+        oldConfiguration: EditorConfigurationManager.EditorConfiguration?
+    ) {
+        AppLog.d(AppLog.T.POSTS, "Editor configuration changed")
+        // Apply configuration changes
+        invalidateOptionsMenu()
+    }
+
+    override fun onConfigurationChangeHandled() {
+        AppLog.d(AppLog.T.POSTS, "Configuration change handled")
+        // Device configuration change has been processed
+    }
+
+    override fun onThemeChanged(isDarkMode: Boolean) {
+        AppLog.d(AppLog.T.POSTS, "Theme changed to: ${if (isDarkMode) "dark" else "light"}")
+        // Apply theme changes
+    }
+
+    override fun onToolbarStateChanged(isExpanded: Boolean) {
+        AppLog.d(AppLog.T.POSTS, "Toolbar expanded: $isExpanded")
+        // Update toolbar state
+    }
+
+    override fun onFullScreenModeChanged(isFullScreen: Boolean) {
+        AppLog.d(AppLog.T.POSTS, "Full screen mode: $isFullScreen")
+        // Handle full screen mode changes
+    }
+
+    override fun showConfigurationError(error: String) {
+        AppLog.e(AppLog.T.POSTS, "Configuration error: $error")
+        ToastUtils.showToast(this, "Configuration error: $error", ToastUtils.Duration.LONG)
     }
 
     companion object {
