@@ -285,3 +285,4 @@ class StorePostViewModelTest : BaseUnitTest() {
         assertThat(actual).isEqualTo(expected)
     }
 }
+

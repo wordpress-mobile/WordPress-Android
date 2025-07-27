@@ -70,3 +70,4 @@ class ImageEditorFileUtilsTest : BaseUnitTest() {
         temporaryFolder.delete()
     }
 }
+

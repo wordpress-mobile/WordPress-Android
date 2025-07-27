@@ -17,3 +17,4 @@ class AztecEditorFragmentStaticWrapper @Inject constructor(private val appContex
     fun isMediaInPostBody(postContent: String, localMediaId: String) =
         AztecEditorFragment.isMediaInPostBody(appContext, postContent, localMediaId)
 }
+

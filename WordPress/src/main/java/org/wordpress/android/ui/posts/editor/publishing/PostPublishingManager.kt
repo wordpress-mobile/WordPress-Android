@@ -43,7 +43,6 @@ class PostPublishingManager @Inject constructor(
     private val storePostViewModel: StorePostViewModel,
     private val postValidationService: PostValidationService
 ) {
-    
     interface PublishingListener {
         fun onPublishingStarted()
         fun onPublishingProgress(message: String)
@@ -368,3 +367,4 @@ enum class PublishAction {
     SCHEDULE,
     UPDATE
 }
+

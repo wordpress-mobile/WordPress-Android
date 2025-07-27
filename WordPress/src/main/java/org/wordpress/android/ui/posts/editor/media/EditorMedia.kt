@@ -315,3 +315,4 @@ class EditorMedia @Inject constructor(
         object AddingMediaIdle : AddMediaToPostUiState(false, HiddenProgressDialog)
     }
 }
+

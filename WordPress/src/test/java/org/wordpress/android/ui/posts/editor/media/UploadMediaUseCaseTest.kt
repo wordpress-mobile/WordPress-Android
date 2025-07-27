@@ -91,3 +91,4 @@ class UploadMediaUseCaseTest {
             MediaModel(0, 0).apply { this.uploadState = uploadState.name }
     }
 }
+

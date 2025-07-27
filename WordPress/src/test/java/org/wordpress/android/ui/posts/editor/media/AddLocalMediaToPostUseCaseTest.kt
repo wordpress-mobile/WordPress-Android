@@ -339,3 +339,4 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         }
     }
 }
+

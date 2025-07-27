@@ -104,3 +104,4 @@ enum class SecondaryEditorAction(@StringRes val titleResource: Int?, val isVisib
     PUBLISH_NOW(R.string.menu_publish_now, isVisible = true),
     NONE(titleResource = null, isVisible = false);
 }
+

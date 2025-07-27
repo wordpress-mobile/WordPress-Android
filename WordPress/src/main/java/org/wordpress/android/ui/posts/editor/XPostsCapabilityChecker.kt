@@ -54,3 +54,4 @@ class XPostsCapabilityChecker @Inject constructor(
                 fetchingReturnsXposts(site)
         }
 }
+

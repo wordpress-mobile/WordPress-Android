@@ -68,3 +68,4 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
         val copyingSomeMediaFailed: Boolean
     )
 }
+

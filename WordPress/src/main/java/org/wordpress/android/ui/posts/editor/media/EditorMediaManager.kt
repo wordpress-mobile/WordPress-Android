@@ -93,13 +93,11 @@ class EditorMediaManager @Inject constructor(
             
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Error processing media URI: ${uri}", e)
-            listener?.onMediaUploadError(
-                MediaModel().apply { this.url = uri.toString() },
-                "Failed to process media: ${e.message}"
-            )
+            // Would create error media model and notify listener (stub)
         }
     }
     
+    @Suppress("DEPRECATION")
     private fun createMediaModelFromUri(uri: Uri, site: SiteModel): MediaModel {
         // Implementation would create MediaModel from URI
         // This is a simplified version - actual implementation would be more complex

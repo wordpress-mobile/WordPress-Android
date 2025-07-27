@@ -75,3 +75,4 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
         assertEquals(expectedCapability, actualCapability)
     }
 }
+

@@ -94,3 +94,4 @@ class RemoveMediaUseCaseTest : BaseUnitTest() {
         verify(mediaUtilsWrapper, never()).isLocalFile(anyOrNull())
     }
 }
+

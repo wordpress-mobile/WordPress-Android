@@ -259,3 +259,4 @@ class StorePostViewModel
         SAVED_ONLINE, SAVED_LOCALLY, CANCELLED
     }
 }
+

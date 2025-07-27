@@ -40,3 +40,4 @@ class ParcelableObjectTest {
         assertEquals(initialParcel, nextParcel)
     }
 }
+

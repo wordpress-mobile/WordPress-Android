@@ -238,3 +238,4 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         }
     }
 }
+

@@ -35,7 +35,6 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class PostPublishingManagerTest {
-
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var postStore: PostStore
     @Mock private lateinit var uploadStore: UploadStore
@@ -407,3 +406,4 @@ class PostPublishingManagerTest {
  * ✅ State management during operations
  * ✅ Cleanup and resource management
  */
+

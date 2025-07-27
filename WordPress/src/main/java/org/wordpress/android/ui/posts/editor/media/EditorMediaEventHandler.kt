@@ -117,12 +117,13 @@ class EditorMediaEventHandler @Inject constructor(
     fun onProgressEvent(event: ProgressEvent) {
         val post = currentPost ?: return
         
-        if (event.media != null && isMediaForCurrentPost(event.media, post)) {
+        val media = event.media
+        if (isMediaForCurrentPost(media, post)) {
             val progress = event.progress ?: 0f
-            AppLog.d(AppLog.T.POSTS, "Media upload progress: ${event.media.id} - ${progress}%")
+            AppLog.d(AppLog.T.POSTS, "Media upload progress: ${media.id} - ${progress}%")
             
-            mediaManager.onUploadProgress(event.media, progress)
-            listener?.onMediaUploadProgress(event.media, progress)
+            mediaManager.onUploadProgress(media, progress)
+            listener?.onMediaUploadProgress(media, progress)
         }
     }
     

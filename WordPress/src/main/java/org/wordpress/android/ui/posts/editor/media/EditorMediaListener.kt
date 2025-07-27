@@ -13,3 +13,4 @@ interface EditorMediaListener {
     fun getImmutablePost(): PostImmutableModel
     fun showVideoDurationLimitWarning(fileName: String)
 }
+

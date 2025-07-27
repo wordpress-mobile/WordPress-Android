@@ -78,3 +78,4 @@ class ReattachUploadingMediaUseCaseTest {
         verify(editorMediaUploadListener, times(1)).onMediaUploadReattached(mediaModel1.id.toString(), progress)
     }
 }
+

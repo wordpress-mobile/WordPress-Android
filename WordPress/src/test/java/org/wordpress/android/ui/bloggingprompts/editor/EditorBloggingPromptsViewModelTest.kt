@@ -129,3 +129,4 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         )
     }
 }
+

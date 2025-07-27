@@ -119,3 +119,4 @@ class EditorTracker @Inject constructor(
         analyticsTrackerWrapper.track(currentStat, updatedProperties)
     }
 }
+

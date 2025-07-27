@@ -123,3 +123,4 @@ class GetMediaModelUseCase @Inject constructor(
         val loadingSomeMediaFailed: Boolean
     )
 }
+

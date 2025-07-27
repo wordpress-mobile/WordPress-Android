@@ -331,3 +331,4 @@ class EditorMediaTest : BaseUnitTest() {
         fun createMediaModel(localId: Int = 1, mediaId: Long) = MediaModel(0, mediaId).apply { id = localId }
     }
 }
+

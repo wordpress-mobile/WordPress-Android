@@ -70,3 +70,4 @@ class OptimizeMediaUseCase @Inject constructor(
         val loadingSomeMediaFailed: Boolean
     )
 }
+

@@ -138,3 +138,4 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
             }
     }
 }
+

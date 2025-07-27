@@ -81,3 +81,4 @@ class EditorTrackerTest {
             EditorTracker(mock(), analyticsTrackerWrapper)
     }
 }
+

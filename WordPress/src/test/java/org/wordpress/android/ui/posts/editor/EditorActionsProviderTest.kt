@@ -137,3 +137,4 @@ class EditorActionsProviderTest {
         actionsProvider.getSecondaryAction(postStatus, userCanPublish)
     )
 }
+

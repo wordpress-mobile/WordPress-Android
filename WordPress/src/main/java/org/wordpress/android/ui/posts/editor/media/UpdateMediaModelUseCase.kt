@@ -25,3 +25,4 @@ class UpdateMediaModelUseCase @Inject constructor(private val dispatcher: Dispat
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
     }
 }
+
