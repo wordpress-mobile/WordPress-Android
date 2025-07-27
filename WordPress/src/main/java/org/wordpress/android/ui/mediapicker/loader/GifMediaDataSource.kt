@@ -95,17 +95,20 @@ class GifMediaDataSource
     }
 
     private fun Result.toMediaItem(): MediaItem? {
-        val gifUrl = urlFromCollectionFormat(MediaCollectionFormat.GIF) ?: return null
-        val gifNanoUrl = urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO) ?: return null
-        return MediaItem(
-            identifier = GifMediaIdentifier(
-                uriUtilsWrapper.parse(gifUrl),
-                title
-            ),
-            url = uriUtilsWrapper.parse(gifNanoUrl).toString(),
-            type = IMAGE,
-            dataModified = 0
-        )
+        urlFromCollectionFormat(MediaCollectionFormat.GIF)?.let { gifUrl ->
+            urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)?.let { gifNanoUrl ->
+                return MediaItem(
+                    identifier = GifMediaIdentifier(
+                        uriUtilsWrapper.parse(gifUrl),
+                        title
+                    ),
+                    url = uriUtilsWrapper.parse(gifNanoUrl).toString(),
+                    type = IMAGE,
+                    dataModified = 0
+                )
+            }
+        }
+        return null
     }
 
     private fun Result.urlFromCollectionFormat(format: String) =

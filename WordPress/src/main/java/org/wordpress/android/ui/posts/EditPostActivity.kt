@@ -2749,13 +2749,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
                 val stringUri = matcher.group(1) ?: continue
-                val uri = stringUri.toUri()
-                val mediaFile = FluxCUtils.mediaFileFromMediaModel(
+                FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
-                        .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
-                ) ?: continue
-                val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
-                matcher.appendReplacement(stringBuffer, replacement)
+                        .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
+                )?.let { mediaFile ->
+                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    matcher.appendReplacement(stringBuffer, replacement)
+                }
             }
             matcher.appendTail(stringBuffer)
             content = stringBuffer.toString()
