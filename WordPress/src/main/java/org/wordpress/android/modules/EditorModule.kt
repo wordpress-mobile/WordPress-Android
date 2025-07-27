@@ -92,11 +92,8 @@ object EditorModule {
     
     @Provides
     @Singleton
-    fun providePostEventHandler(
-        postStateManager: PostStateManager,
-        publishingManager: PostPublishingManager
-    ): PostEventHandler {
-        return PostEventHandler(postStateManager, publishingManager)
+    fun providePostEventHandler(): PostEventHandler {
+        return PostEventHandler()
     }
     
     // ========================================

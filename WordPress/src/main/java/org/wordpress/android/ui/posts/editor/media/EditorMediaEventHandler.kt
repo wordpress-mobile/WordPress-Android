@@ -62,15 +62,16 @@ class EditorMediaEventHandler @Inject constructor(
         }
         
         // Only handle media for the current post
-        if (isMediaForCurrentPost(event.media, post)) {
+        val media = event.media
+        if (media != null && isMediaForCurrentPost(media, post)) {
             if (event.isError) {
                 AppLog.e(AppLog.T.POSTS, "Media upload failed: ${event.error?.message}")
-                mediaManager.onUploadError(event.media, event.error?.message ?: "Unknown error")
-                listener?.onMediaUploadCompleted(event.media, true)
+                mediaManager.onUploadError(media, event.error?.message ?: "Unknown error")
+                listener?.onMediaUploadCompleted(media, true)
             } else {
-                AppLog.d(AppLog.T.POSTS, "Media upload succeeded: ${event.media.id}")
-                mediaManager.onUploadSuccess(event.media)
-                listener?.onMediaUploadCompleted(event.media, false)
+                AppLog.d(AppLog.T.POSTS, "Media upload succeeded: ${media.id}")
+                mediaManager.onUploadSuccess(media)
+                listener?.onMediaUploadCompleted(media, false)
             }
         }
     }
@@ -108,7 +109,7 @@ class EditorMediaEventHandler @Inject constructor(
         if (event.isError) {
             AppLog.e(AppLog.T.POSTS, "Error fetching media list: ${event.error?.message}")
         } else {
-            AppLog.d(AppLog.T.POSTS, "Media list fetched successfully: ${event.mediaList.size} items")
+            AppLog.d(AppLog.T.POSTS, "Media list fetched successfully")
         }
     }
     
@@ -144,7 +145,7 @@ class EditorMediaEventHandler @Inject constructor(
      */
     private fun isMediaForCurrentPost(media: MediaModel, post: PostModel): Boolean {
         // Check if media is associated with the current post
-        return media.postId == post.id || 
+        return media.postId == post.id.toLong() || 
                media.localPostId == post.id ||
                isMediaInPostContent(media, post)
     }
@@ -156,7 +157,7 @@ class EditorMediaEventHandler @Inject constructor(
         val content = post.content
         return content.contains(media.id.toString()) || 
                content.contains(media.url ?: "") ||
-               (!media.filePath.isNullOrEmpty() && content.contains(media.filePath))
+               (!media.filePath.isNullOrEmpty() && content.contains(media.filePath ?: ""))
     }
     
     fun updateCurrentPost(post: PostModel) {

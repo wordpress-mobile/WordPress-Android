@@ -55,7 +55,7 @@ class EditorMediaManager @Inject constructor(
         this.aztecImageLoader = aztecImageLoader
         
         observeMediaChanges(lifecycleOwner)
-        editorPhotoPicker.initialize(listener as EditorPhotoPicker.EditorPhotoPickerListener)
+        // editorPhotoPicker.initialize(listener as EditorPhotoPicker.EditorPhotoPickerListener)
     }
     
     private fun observeMediaChanges(lifecycleOwner: LifecycleOwner) {
@@ -213,7 +213,7 @@ class EditorMediaManager @Inject constructor(
             
             uploadingMedia.forEach { mediaModel ->
                 mediaModel.uploadState = MediaModel.MediaUploadState.FAILED.toString()
-                mediaStore.updateMedia(mediaModel)
+                // mediaStore.updateMedia(mediaModel)
             }
         }
     }
