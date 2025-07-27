@@ -76,6 +76,9 @@
     <issue id="ObsoleteSdkInt">
         <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
+    <issue id="UseRequiresApi">
+        <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
+    </issue>
     <issue id="IconDensities" severity="warning" /> <!--    fluxc-->
     <!-- INTEROPERABILITY -->
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/pull/21430 -->
