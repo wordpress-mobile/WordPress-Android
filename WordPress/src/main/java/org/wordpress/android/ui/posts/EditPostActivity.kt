@@ -2748,8 +2748,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher: Matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val stringUri = matcher.group(1)
-                val uri = Uri.parse(stringUri)
+                val stringUri = matcher.group(1) ?: continue
+                val uri = stringUri.toUri()
                 val mediaFile = FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
                         .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
