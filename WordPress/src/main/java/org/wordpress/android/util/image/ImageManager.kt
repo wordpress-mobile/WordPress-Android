@@ -6,9 +6,9 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.net.toUri
 import android.text.TextUtils
 import android.util.Base64
 import android.widget.ImageView
@@ -22,6 +22,7 @@ import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -151,7 +152,7 @@ class ImageManager @Inject constructor(
             fallbackAction = {
                 if (!context.isAvailable()) return@runIfMediaNotTooBig
                 val fallbackDrawable = placeholderManager.getErrorResource(imageType)?.let {
-                    ColorDrawable(ContextCompat.getColor(context, it))
+                    ContextCompat.getColor(context, it).toDrawable()
                 }
                 Glide.with(context)
                     .load(fallbackDrawable)
@@ -292,7 +293,7 @@ class ImageManager @Inject constructor(
         val context = imageView.context
         if (!context.isAvailable()) return
         Glide.with(context)
-            .load(Uri.parse(imgUrl))
+            .load(imgUrl.toUri())
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .addThumbnail(context, thumbnailUrl, requestListener)
@@ -316,7 +317,7 @@ class ImageManager @Inject constructor(
         val context = imageView.context
         if (!context.isAvailable()) return
         Glide.with(context)
-            .load(Uri.parse(imgUrl))
+            .load(imgUrl.toUri())
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .applyScaleType(CENTER)
@@ -334,7 +335,7 @@ class ImageManager @Inject constructor(
         try {
             Glide.with(context)
                 .downloadOnly()
-                .load(Uri.parse(imgUrl))
+                .load(imgUrl.toUri())
                 .submit()
                 .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
         } catch (e: ExecutionException) {

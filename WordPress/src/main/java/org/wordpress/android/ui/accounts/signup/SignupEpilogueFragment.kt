@@ -5,8 +5,8 @@ package org.wordpress.android.ui.accounts.signup
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.net.Uri
 import android.os.Bundle
+import androidx.core.net.toUri
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -650,7 +650,7 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
         override fun run() {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val uri = MediaUtils.downloadExternalMedia(context, Uri.parse(mUrl))
+                val uri = MediaUtils.downloadExternalMedia(context, mUrl.toUri())
                 val file = File(URI(uri.toString()))
                 lifecycleScope.launch {
                     when (val result = mAvatarService.uploadCatching(file, mToken, Email(mEmail).hash(), true)) {

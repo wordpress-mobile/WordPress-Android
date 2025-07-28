@@ -51,7 +51,7 @@ class GifMediaDataSource
                     nextPosition,
                     PAGE_SIZE,
                     onSuccess = { response ->
-                        val gifList = response.results.map { it.toMediaItem() }
+                        val gifList = response.results.mapNotNull { it.toMediaItem() }
 
                         items.addAll(gifList)
                         val newPosition = response.next.toIntOrNull() ?: 0
@@ -94,15 +94,22 @@ class GifMediaDataSource
         )
     }
 
-    private fun Result.toMediaItem() = MediaItem(
-        identifier = GifMediaIdentifier(
-            uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
-            title
-        ),
-        url = uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
-        type = IMAGE,
-        dataModified = 0
-    )
+    private fun Result.toMediaItem(): MediaItem? {
+        urlFromCollectionFormat(MediaCollectionFormat.GIF)?.let { gifUrl ->
+            urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)?.let { gifNanoUrl ->
+                return MediaItem(
+                    identifier = GifMediaIdentifier(
+                        uriUtilsWrapper.parse(gifUrl),
+                        title
+                    ),
+                    url = uriUtilsWrapper.parse(gifNanoUrl).toString(),
+                    type = IMAGE,
+                    dataModified = 0
+                )
+            }
+        }
+        return null
+    }
 
     private fun Result.urlFromCollectionFormat(format: String) =
         medias.firstOrNull()?.get(format)?.url

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.photopicker
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.view.ActionMode
+import androidx.core.view.size
 import androidx.appcompat.view.ActionMode.Callback
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_START
@@ -36,7 +37,7 @@ class PhotoPickerActionModeCallback(
                     actionMode.finish()
                 }
                 is PhotoPickerViewModel.ActionModeUiModel.Visible -> {
-                    if (uiModel.showConfirmAction && menu.size() == 0) {
+                    if (uiModel.showConfirmAction && menu.size == 0) {
                         val inflater = actionMode.menuInflater
                         inflater.inflate(R.menu.photo_picker_action_mode, menu)
                     }

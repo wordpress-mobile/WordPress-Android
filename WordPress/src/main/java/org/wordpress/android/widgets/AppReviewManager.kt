@@ -3,6 +3,7 @@ package org.wordpress.android.widgets
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.google.android.play.core.review.ReviewManagerFactory
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.Note
@@ -123,7 +124,7 @@ object AppReviewManager {
      */
     private fun storeInAppReviewsShownDate() {
         inAppReviewsShownDate = Date(System.currentTimeMillis())
-        preferences.edit().putLong(IN_APP_REVIEWS_SHOWN_DATE, inAppReviewsShownDate.time)?.apply()
+        preferences.edit { putLong(IN_APP_REVIEWS_SHOWN_DATE, inAppReviewsShownDate.time) }
     }
 
     private fun resetInAppReviewsCounters() {
@@ -142,7 +143,7 @@ object AppReviewManager {
     fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
         var interactions = preferences.getInt(KEY_RATING_INTERACTIONS, 0)
         interactions++
-        preferences.edit().putInt(KEY_RATING_INTERACTIONS, interactions)?.apply()
+        preferences.edit { putInt(KEY_RATING_INTERACTIONS, interactions) }
         AnalyticsTracker.track(incrementInteractionTracker)
     }
 }

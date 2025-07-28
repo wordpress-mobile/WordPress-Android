@@ -52,6 +52,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
+import androidx.core.view.size
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -123,7 +124,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
         // overlay each item with our custom view
-        for (i in 0 until navigationBarView.menu.size()) {
+        for (i in 0 until navigationBarView.menu.size) {
             // This is a restricted NavigationBarItemView
             (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
                 val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
