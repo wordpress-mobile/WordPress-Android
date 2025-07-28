@@ -157,11 +157,11 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
 import org.wordpress.android.ui.posts.editpost.utils.EditPostCustomerSupportHelper.onContactCustomerSupport
 import org.wordpress.android.ui.posts.editpost.utils.EditPostCustomerSupportHelper.onGotoCustomerSupportOptions
-import org.wordpress.android.ui.posts.editpost.settings.EditPostPublishSettingsFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.posts.editpost.repository.EditPostActivityConstants
+import org.wordpress.android.ui.posts.editpost.settings.EditPostPublishSettingsFragment
 import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostSettingsCallback
@@ -2631,7 +2631,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
 
                 PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
-                PAGE_PUBLISH_SETTINGS -> newInstance()
+                PAGE_PUBLISH_SETTINGS -> EditPostPublishSettingsFragment.newInstance()
                 PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
                 else -> throw IllegalArgumentException("Unexpected page type")
             }
