@@ -18,6 +18,7 @@ class ApiRootUrlCacheTest {
     @Mock
     lateinit var uriUtilsWrapper: UriUtilsWrapper
     @Mock
+    @Suppress("DoNotMockDataClass") // This class is intended to be mocked in tests
     lateinit var uriWrapper: UriWrapper
 
     @Before
