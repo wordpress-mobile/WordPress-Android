@@ -58,7 +58,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Mock
     lateinit var discoverSuccessWrapper: ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
-    
+
     @Mock
     lateinit var apiRootUrlCache: ApiRootUrlCache
 

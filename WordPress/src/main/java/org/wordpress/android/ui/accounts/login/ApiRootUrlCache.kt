@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.util.Log
 import org.wordpress.android.util.UriUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,31 +19,21 @@ class ApiRootUrlCache @Inject constructor(
 
     fun put(key: String, value: String) {
         if (key.isEmpty() || value.isEmpty()) {
-            Log.d("ApiRootUrlCache", "Storing wrong entry - original key: '$key', value: '$value'")
             return
         }
         val domainKey = extractDomain(key)
         if (domainKey.isNotEmpty()) {
-            Log.d("ApiRootUrlCache", "Storing - original key: '$key', domain key: '$domainKey'")
             cache[domainKey] = value
         }
     }
 
     fun get(key: String): String? {
         if (key.isEmpty()) {
-            Log.d("ApiRootUrlCache", "Retrieving with null key")
             return null
         }
 
         val domainKey = extractDomain(key)
         val result = cache[domainKey]
-
-        Log.d("ApiRootUrlCache", "Available cache keys: ${cache.keys.joinToString()}")
-        if (result == null) {
-            Log.d("ApiRootUrlCache", "Cache miss for domain key: '$domainKey' (original: '$key')")
-        } else {
-            Log.d("ApiRootUrlCache", "Cache hit for domain key: '$domainKey'. value: '$result'")
-        }
 
         return result
     }
@@ -78,7 +67,6 @@ class ApiRootUrlCache @Inject constructor(
             }
         } catch (e: IllegalArgumentException) {
             // Fallback for malformed URLs
-            Log.w("ApiRootUrlCache", "Failed to parse URL: $urlOrDomain", e)
             urlOrDomain.trim()
         }
     }
