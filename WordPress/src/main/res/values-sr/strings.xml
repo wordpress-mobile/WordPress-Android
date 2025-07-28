@@ -1447,7 +1447,6 @@ Language: sr_RS
     <string name="invite_message_title">Прилагођена порука</string>
     <string name="invite">Позови</string>
     <string name="invite_names_title">Корисничка имена или адресе е-поште</string>
-    <string name="invite_people">Позови људе</string>
     <string name="my_site_header_external">Спољни</string>
     <string name="label_clear_search_history">Обриши историју претраге</string>
     <string name="dlg_confirm_clear_search_history">Обриши историју претраге?</string>
@@ -1459,10 +1458,8 @@ Language: sr_RS
     <string name="user_remove_confirmation_message">Ако уклоните %1$s, тај корисник више неће моћи да приступи сајту, али ће сав садржај који је креирао %1$s остати на сајту. \n\nДа ли и даље желите да уклоните овог корисника?</string>
     <string name="person_remove_confirmation_title">Уклони %1$s</string>
     <string name="role">Улога</string>
-    <string name="people">Људи</string>
     <string name="error_remove_user">Корисник није уклоњен</string>
     <string name="error_update_role">Није промењена улога корисника</string>
-    <string name="error_updating_gravatar">Грешка приликом мењања вашег Граватара</string>
     <string name="error_refreshing_gravatar">Грешка током учитавања вашег Граватара</string>
     <string name="error_locating_image">Грешка приликом налажења исечене слике</string>
     <string name="error_cropping_image">Грешка током сечења слике</string>
@@ -1563,10 +1560,6 @@ Language: sr_RS
     <string name="site_settings_image_original_size">Изворна величина</string>
     <string name="privacy_public_not_indexed">Ваша локација је видљива свима, али тражи од претраживача да је не индексирају</string>
     <string name="privacy_public">Ваша локација је видљива свима и претраживачи је могу индексирати</string>
-    <string name="about_me_hint">Неколико речи о вама …</string>
-    <string name="public_display_name_hint">Име за приказ подразумевано ће бити ваше корисничко име ако није другачије постављено</string>
-    <string name="about_me">О мени</string>
-    <string name="public_display_name">Јавно име за приказ</string>
     <string name="my_profile">Мој профил</string>
     <string name="last_name">Презиме</string>
     <string name="first_name">Име</string>
@@ -1853,7 +1846,6 @@ Language: sr_RS
     <string name="file_not_found">Није могуће пронаћи датотеку за отпремање. Да ли је можда обрисана или померена?</string>
     <string name="invalid_site_url_message">Проверите да ли је унета УРЛ адреса тачна</string>
     <string name="error_refresh_media">Тренутно није могуће освежити медије</string>
-    <string name="error_blog_hidden">Овај блог је скривен и не може се учитати. Поново га омогућите у подешавањима и покушајте поново.</string>
     <string name="notifications_empty_all">Нема обавештења … још увек.</string>
     <string name="delete_page">Обриши страницу?</string>
     <string name="delete_post">Обриши чланак?</string>
@@ -1861,7 +1853,6 @@ Language: sr_RS
     <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
-    <string name="cant_share_no_visible_blog">Не можете делити на Вордпресу без видљивог блога</string>
     <string name="reader_likes_multi">%,d људи ово воли</string>
     <string name="comment_unapproved">Коментар неодобрен</string>
     <string name="pick_photo">Одаберите фотографију</string>

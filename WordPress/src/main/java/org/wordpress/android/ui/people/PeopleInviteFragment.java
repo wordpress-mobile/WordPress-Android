@@ -189,7 +189,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.invite_people);
+            actionBar.setTitle(R.string.invite_users);
         }
 
         mInviteLinkContainer = rootView.findViewById(R.id.invite_links_container);
@@ -389,7 +389,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
         // important for accessibility - talkback
-        getActivity().setTitle(R.string.invite_people);
+        getActivity().setTitle(R.string.invite_users);
     }
 
     private void resetEditTextContent(EditText editText) {

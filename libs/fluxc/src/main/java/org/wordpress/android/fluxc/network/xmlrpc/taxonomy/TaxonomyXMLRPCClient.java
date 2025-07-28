@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -57,8 +58,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
             @NonNull final TaxonomyAction origin) {
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(term.getTaxonomy());
         params.add(term.getRemoteTermId());
 
@@ -97,8 +98,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     public void fetchTerms(@NonNull final SiteModel site, @NonNull final String taxonomyName) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(taxonomyName);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_TERMS, params,
@@ -134,8 +135,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
 
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         if (updatingExistingTerm) {
             params.add(term.getRemoteTermId());
         }
@@ -170,8 +171,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     public void deleteTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(term.getTaxonomy());
         params.add(term.getRemoteTermId());
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.withStyledAttributes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,19 +71,19 @@ class StatsWidgetConfigureFragment : Fragment() {
     @Suppress("MagicNumber")
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
-        activity?.let {
-            val styledAttributes = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
-            val views = styledAttributes.getInt(R.styleable.statsWidget_viewType, -1)
-            widgetType = when (views) {
-                0 -> WEEK_VIEWS
-                1 -> ALL_TIME_VIEWS
-                2 -> TODAY_VIEWS
-                3 -> WEEK_TOTAL
-                else -> {
-                    throw IllegalArgumentException("The view type with the value $views needs to be specified")
+        activity?.let { activity ->
+            activity.withStyledAttributes(attrs, R.styleable.statsWidget) {
+                val views = getInt(R.styleable.statsWidget_viewType, -1)
+                widgetType = when (views) {
+                    0 -> WEEK_VIEWS
+                    1 -> ALL_TIME_VIEWS
+                    2 -> TODAY_VIEWS
+                    3 -> WEEK_TOTAL
+                    else -> {
+                        throw IllegalArgumentException("The view type with the value $views needs to be specified")
+                    }
                 }
             }
-            styledAttributes.recycle()
         }
     }
 

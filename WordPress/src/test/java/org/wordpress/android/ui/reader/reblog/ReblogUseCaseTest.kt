@@ -33,11 +33,11 @@ class ReblogUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when user has no visible WPCOM site the no site flow is triggered`() = test {
+    fun `when user has no WPCOM site the no site flow is triggered`() = test {
         val post = ReaderPost()
         val visibleWPComSites = listOf<SiteModel>() // No sites
 
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(visibleWPComSites)
 
         val state = reblogUseCase.onReblogButtonClicked(post)
 
@@ -45,12 +45,12 @@ class ReblogUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when user has only one visible WPCOM site the post editor is triggered`() = test {
+    fun `when user has only one WPCOM site the post editor is triggered`() = test {
         val site = SiteModel()
         val post = ReaderPost()
         val visibleWPComSites = listOf(site) // One site
 
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(visibleWPComSites)
 
         val state = reblogUseCase.onReblogButtonClicked(post)
 
@@ -62,12 +62,12 @@ class ReblogUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when user has more than one visible WPCOM sites the site picker is triggered`() = test {
+    fun `when user has more than one WPCOM site the site picker is triggered`() = test {
         val site = SiteModel()
         val post = ReaderPost()
         val visibleWPComSites = listOf(site, site) // More sites
 
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(visibleWPComSites)
 
         val state = reblogUseCase.onReblogButtonClicked(post)
 
@@ -79,7 +79,7 @@ class ReblogUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when having more than one visible WPCOM sites and selecting site to reblog the post editor is triggered`() =
+    fun `when having more than one WPCOM sites and selecting site to reblog the post editor is triggered`() =
         test {
             val siteId = 1
             val site = SiteModel()
@@ -87,7 +87,7 @@ class ReblogUseCaseTest : BaseUnitTest() {
             val visibleWPComSites = listOf(site, site) // More sites
 
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-            whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
+            whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(visibleWPComSites)
 
             val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as MultipleSites
             val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post)

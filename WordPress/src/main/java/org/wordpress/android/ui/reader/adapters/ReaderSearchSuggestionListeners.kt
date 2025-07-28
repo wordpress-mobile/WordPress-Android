@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.reader.adapters
 
-interface OnSuggestionClickListener {
+fun interface OnSuggestionClickListener {
     fun onSuggestionClicked(query: String?)
 }
 
-interface OnSuggestionDeleteClickListener {
+fun interface OnSuggestionDeleteClickListener {
     fun onDeleteClicked(query: String?)
 }
 
-interface OnSuggestionClearClickListener {
+fun interface OnSuggestionClearClickListener {
     fun onClearClicked()
 }

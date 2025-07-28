@@ -192,8 +192,6 @@ Language: sq_AL
     <string name="notifications_action_mark_all_as_read">Vëru krejt shenjë si të lexuar</string>
     <string name="notifications_unread_content_description">Të palexuar</string>
     <string name="qrcode_media_deeplink_error">Sajti s’u gjet. Kontrolloni nëse keni bërë hyrjen te llogaria e saktë.</string>
-    <string name="gravatar_info_sync_done_button">U bë</string>
-    <string name="gravatar_info_sync_message">Përditësimet mund të duan ca kohë të njëkohësohen në profilin tuaj Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Ç’është Gravatar-i?</string>
     <string name="gravatar_info_description">Përditësimi i gravatarit, emrit dhe hollësive tuaja këtu, do t’i përditësojë ato nëpër krejt sajtet që përdorin profile Gravatar.</string>
     <string name="gravatar_info_title">Profili juaj WordPress.com furnizohet nga Gravatar</string>
@@ -2801,7 +2799,6 @@ Language: sq_AL
     <string name="signup_epilogue_error_button_positive">Riprovoni</string>
     <string name="signup_epilogue_error_button_negative">Riktheje</string>
     <string name="signup_epilogue_error_generic">Pati ca probleme me përditësimin e llogarisë tuaj. Që të vazhdohet, mund të riprovoni ose prapësoni ndryshimet.</string>
-    <string name="signup_epilogue_error_avatar">Pati ca probleme me ngarkimin e avatarit tuaj.</string>
     <string name="plugin_needs_update">Lyp përditësim</string>
     <string name="plugin_caption_search">Kërkoni Për Shtojca</string>
     <string name="plugin_caption_new">E re</string>
@@ -3276,7 +3273,6 @@ Language: sq_AL
     <string name="invite_message_title">Mesazh vetjak</string>
     <string name="invite">Ftoji</string>
     <string name="invite_names_title">Emra përdoruesish ose email-e</string>
-    <string name="invite_people">Ftoni Njerëz</string>
     <string name="my_site_header_external">I jashtëm</string>
     <string name="label_clear_search_history">Spastro historikun e kërkimeve</string>
     <string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
@@ -3289,12 +3285,10 @@ Language: sq_AL
     <string name="user_remove_confirmation_message">Nëse e hiqni %1$s, ai përdorues nuk do të jetë më në gjendje të hyjë në këtë sajt, por çfarëdo lënde e krijuar nga %1$s do të mbetet te sajti.\n\nDoni ende ta hiqni këtë përdorues?</string>
     <string name="person_remove_confirmation_title">Hiqe %1$s</string>
     <string name="role">Rol</string>
-    <string name="people">Persona</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blogjet në këtë listë s’kanë postuar gjë tani së fundi</string>
     <string name="error_remove_user">S’u hoq dot përdoruesi</string>
     <string name="error_update_role">S’u përditësua dot rol përdoruesi</string>
     <string name="error_fetch_viewers_list">S’u morën dot shikues sajti</string>
-    <string name="error_updating_gravatar">Gabim teksa përditësohej Gravatari juaj</string>
     <string name="error_refreshing_gravatar">Gabim në ringarkimin e Gravatarit tuaj</string>
     <string name="error_locating_image">Gabim në ngarkimin e figurës së qethur</string>
     <string name="error_cropping_image">Gabim teksa qethej figura</string>
@@ -3406,10 +3400,6 @@ Language: sq_AL
     <string name="privacy_private">Sajti juaj është i dukshëm vetëm për ju dhe për përdorues që miratoni</string>
     <string name="privacy_public_not_indexed">Sajti juaj është i dukshëm për këdo, por kërkon që motorët e kërkimeve të mos e indeksojnë</string>
     <string name="privacy_public">Sajti juaj është i dukshëm për këdo dhe mund të indeksohet nga motorë kërkimesh</string>
-    <string name="about_me_hint">Pak fjalë rreth jush…</string>
-    <string name="about_me">Rreth meje</string>
-    <string name="public_display_name_hint">Nëse nuk caktohet një i tillë, si emër ekrani do të përdoret emri juaj i përdoruesit</string>
-    <string name="public_display_name">Emri i shfaqur botërisht</string>
     <string name="last_name">Mbiemri</string>
     <string name="first_name">Emri</string>
     <string name="my_profile">Profili Im</string>
@@ -3689,7 +3679,6 @@ Language: sq_AL
     <string name="reader_toast_err_adding_tag">S’arrihet të shtohet kjo etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
     <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
-    <string name="error_blog_hidden">Ky blog është i fshehur dhe s’u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Rregullime figurash</string>
@@ -3737,7 +3726,6 @@ Language: sq_AL
     <string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
     <string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>
     <string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
-    <string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
     <string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
     <string name="comment_unapproved">Komentit iu hoq miratimi</string>
     <string name="reader_toast_err_get_post">I pazoti të marrë këtë postim</string>

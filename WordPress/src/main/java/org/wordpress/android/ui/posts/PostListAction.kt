@@ -100,14 +100,13 @@ fun handlePostListAction(
         }
         is PostListAction.ShowComments -> {
             ReaderActivityLauncher.showReaderPostDetail(
-                activity,
-                false,
-                action.site.siteId,
-                action.post.remotePostId,
-                ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP,
-                0,
-                false,
-                null)
+                context = activity,
+                isFeed = false,
+                blogId = action.site.siteId,
+                postId = action.post.remotePostId,
+                directOperation = ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP,
+                isRelatedPost = false,
+            )
         }
         is PostListAction.SharePost -> {
             ActivityLauncher.openShareIntent(activity, action.post.link, action.post.title)

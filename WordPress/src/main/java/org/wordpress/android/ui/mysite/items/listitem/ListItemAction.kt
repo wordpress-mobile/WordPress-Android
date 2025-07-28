@@ -9,6 +9,7 @@ enum class ListItemAction (val trackingLabel: String) {
     PAGES("pages"),
     ADMIN("admin"),
     PEOPLE("people"),
+    SUBSCRIBERS("subscribers"),
     SELF_HOSTED_USERS("self_hosted_users"),
     SHARING("sharing"),
     DOMAINS("domains"),

@@ -52,6 +52,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
+import androidx.core.view.size
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -96,6 +97,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         get() = getPageForItemId(navigationBarView.selectedItemId)
         set(pageType) = updateCurrentPosition(pages().indexOf(pageType))
 
+    private var gravatarLoaded = false
+
     interface OnPageListener {
         fun onPageChanged(position: Int)
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
@@ -121,7 +124,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
         // overlay each item with our custom view
-        for (i in 0 until navigationBarView.menu.size()) {
+        for (i in 0 until navigationBarView.menu.size) {
             // This is a restricted NavigationBarItemView
             (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
                 val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
@@ -145,7 +148,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
         }
 
-        if(getMainPageIndex() != getPosition(ME)) {
+        if (getMainPageIndex() != getPosition(ME)) {
             setImageViewSelected(getPosition(ME), false)
         }
 
@@ -168,6 +171,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 ImageType.USER,
                 object : ImageManager.RequestListener<android.graphics.drawable.Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
+                        gravatarLoaded = false
                         val appLogMessage = "onLoadFailed while loading Gravatar image!"
                         if (e == null) {
                             AppLog.e(
@@ -184,6 +188,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                     }
 
                     override fun onResourceReady(resource: android.graphics.drawable.Drawable, model: Any?) {
+                        gravatarLoaded = true
                         ImageViewCompat.setImageTintList(imgIcon, null)
                         if (resource is BitmapDrawable) {
                             var bitmap = resource.bitmap
@@ -304,16 +309,18 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
         getImageViewForPosition(position)?.let {
-            if(position == getPosition(ME)) {
-                if(!isSelected){
+            // Only change the saturation if we have loaded a Gravatar image
+            if (position == getPosition(ME) && gravatarLoaded) {
+                if (!isSelected) {
                     it.colorFilter = disabledColorFilter
-                } else
+                } else {
                     it.colorFilter = enabledColorFilter
+                }
             }
 
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
-            if(it.isSelected) {
+            if (it.isSelected) {
                 val pop = AnimationUtils.loadAnimation(it.context, R.anim.bottom_nav_icon_pop)
                 it.startAnimation(pop)
             }

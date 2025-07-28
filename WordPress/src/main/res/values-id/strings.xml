@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-01-31 14:42:25+0000
+Translation-Revision-Date: 2025-07-08 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Menonaktifkan kata sandi aplikasi akan menghapus informasi login Anda dari %1$s situs.</string>
+    <string name="application_password_disable_feature_title">Nonaktifkan Kata Sandi Aplikasi?</string>
+    <string name="application_password_invalid">Kata Sandi Aplikasi Tidak Valid</string>
+    <string name="application_password_credentials_storing_error">Terjadi error saat menyimpan kredensial kata sandi Aplikasi untuk %1$s</string>
+    <string name="subscribers_add_failed">Gagal menambahkan pelanggan</string>
+    <string name="subscribers_add_success">Berhasil menambahkan pelanggan</string>
+    <string name="subscribers_add_disclosure">\n        Dengan mengklik Kirim, Anda menyatakan bahwa Anda telah mendapatkan persetujuan yang sesuai untuk mengirim email kepada setiap orang. Keluhan spam atau tingkat bounce yang tinggi dari pelanggan dapat memicu tindakan terhadap akun Anda.\n    </string>
+    <string name="subscribers_add_email_hint">nama@contoh.com</string>
+    <string name="subscribers_add_subscribers">Tambahkan pelanggan</string>
+    <string name="subscribers_gift_content_description">Hadiah</string>
+    <string name="subscribers_renewal_interval">Interval perpanjangan</string>
+    <string name="subscribers_renewal_info">Informasi perpanjangan</string>
+    <string name="subscribers_price">Harga</string>
+    <string name="subscribers_inactive_interval">Interval tidak aktif</string>
+    <string name="subscribers_billing_interval">Interval penagihan</string>
+    <string name="subscribers_billing_info">Informasi tagihan</string>
+    <string name="subscribers_end_date">Tanggal akhir</string>
+    <string name="subscribers_start_date">Tanggal mulai</string>
+    <string name="subscribers_plan_details_label">Detail paket</string>
+    <string name="subscribers_gift_plan_label">Paket hadiah</string>
+    <string name="subscribers_delete_button">Hapus pelanggan</string>
+    <string name="subscribers_site_label">Situs</string>
+    <string name="subscribers_country_label">Negara</string>
+    <string name="subscribers_plan_label">Paket</string>
+    <string name="subscribers_status_label">Status langganan</string>
+    <string name="subscribers_date_label">Tanggal langganan</string>
+    <string name="subscribers_detail_label">Detail pelanggan</string>
+    <string name="subscribers_newsletter_label">Langganan buletin</string>
+    <string name="subscribers_clicked_label">Diklik</string>
+    <string name="subscribers_opened_label">Dibuka</string>
+    <string name="subscribers_emails_sent_label">Email</string>
+    <string name="subscribers_subscription_status">Status langganan</string>
+    <string name="subscribers_error_title">Terjadi kesalahan</string>
+    <string name="subscribers_empty_search">Hasil tidak ditemukan</string>
+    <string name="subscribers_empty">Tidak ada pelanggan</string>
+    <string name="subscribers_sort_plan">Paket</string>
+    <string name="subscribers_sort_display_name">Nama tampilan</string>
+    <string name="subscribers_sort_date">Tanggal berlangganan</string>
+    <string name="subscribers_sort_email">Alamat email</string>
+    <string name="subscribers_filter_reader_subscription">Langganan pembaca</string>
+    <string name="subscribers_filter_email_subscription">Langganan email</string>
+    <string name="about_update_email_unverified">Untuk memperbarui profil, alamat email harus diverifikasi terlebih dahulu.</string>
+    <string name="sort_by">Urutkan berdasarkan</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Situs yang disediakan tidak mendukung autentikasi Kata Sandi Aplikasi.</string>
+    <string name="application_password_title">Autentikasi menggunakan Kata Sandi Aplikasi</string>
+    <string name="application_password_credentials_stored">Kredensial kata sandi aplikasi disimpan untuk %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Terlalu lama untuk mendeteksi kode. Harap coba lagi atau gunakan kamera untuk memindai kode.</string>
+    <string name="qrcode_auth_flow_timeout_title">Waktu pemindaian habis</string>
+    <string name="invite_users">Undang pengguna</string>
+    <string name="experimental_application_password_feature_description">Aktifkan Kata Sandi Aplikasi untuk login ke situs yang di-hosting sendiri.</string>
+    <string name="experimental_application_password_feature">Login dengan Kata Sandi Aplikasi</string>
+    <string name="experimental_subscribers_feature_description">Lihat dan kelola pelanggan buletin (sedang dalam proses)</string>
+    <string name="experimental_subscribers_feature">Pelanggan eksperimental</string>
+    <string name="cant_share_no_blog">Anda tidak bisa berbagi ke WordPress tanpa memiliki blog</string>
+    <string name="coming_soon">Segera hadir!</string>
+    <string name="me_email_verification_generic_error">Tidak dapat mengirim tautan verifikasi</string>
+    <string name="me_email_verification_resend">Kirim ulang tautan verifikasi</string>
+    <string name="me_email_verification_sent_description">Periksa email konfirmasi di inbox Anda di %s</string>
+    <string name="me_email_verification_sent">Email terkirim</string>
+    <string name="me_email_verification_sending_description">Mengirim tautan verifikasi</string>
+    <string name="me_email_verification_sending">Mengirim…</string>
+    <string name="me_email_verification_verify_email_send_link">Kirim tautan verifikasi</string>
+    <string name="me_email_verification_verify_email_description">Verifikasi alamat email Anda untuk mengamankan akun dan mengakses semua fitur</string>
+    <string name="me_email_verification_verify_email">Verifikasi email Anda</string>
+    <string name="experimental_features_feedback_dialog_decline">Lain kali</string>
+    <string name="experimental_features_feedback_dialog_message">Apakah Anda bersedia untuk membagikan feedback tentang editor eksperimental?</string>
+    <string name="experimental_features_feedback_dialog_title">Bagikan feedback</string>
+    <string name="experimental_block_editor_plugins">Plugin editor blok eksperimental</string>
+    <string name="experimental_block_editor_theme_styles_description">Terapkan gaya tema pada editor</string>
+    <string name="experimental_block_editor_description">Akses jenis blok dan pengaturan lainnya</string>
+    <string name="experimental_block_editor_note">Editor blok eksperimental akan menjadi pengaturan asal di rilis mendatang dan fitur untuk menonaktifkannya akan dihapus.</string>
+    <string name="disable_experimental_block_editor_description">Tolak jenis blok dan pengaturan lainnya</string>
+    <string name="disable_experimental_block_editor">Nonaktifkan editor blok eksperimental</string>
     <string name="avatar_update_email_unverified">Untuk memperbarui avatar, alamat email Anda harus diverifikasi terlebih dahulu.</string>
     <string name="feedback_form_note_link_wordpress">forum komunitas.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
@@ -193,8 +266,6 @@ Language: id
     <string name="notifications_action_mark_all_as_read">Tandai semua sebagai sudah dibaca</string>
     <string name="notifications_unread_content_description">Belum dibaca</string>
     <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
-    <string name="gravatar_info_sync_done_button">Selesai</string>
-    <string name="gravatar_info_sync_message">Mungkin perlu beberapa saat sampai perubahan tersinkron dengan profil Gravatar Anda.</string>
     <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
     <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
     <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
@@ -2810,7 +2881,6 @@ Language: id
     <string name="signup_epilogue_error_button_positive">Coba lagi</string>
     <string name="signup_epilogue_error_button_negative">Kembalikan</string>
     <string name="signup_epilogue_error_generic">Ada beberapa masalah saat memperbarui akun. Anda dapat mencoba lagi atau mengembalikan perubahan untuk melanjutkan.</string>
-    <string name="signup_epilogue_error_avatar">Ada beberapa masalah saat mengunggah avatar Anda.</string>
     <string name="plugin_needs_update">Perlu pembaruan</string>
     <string name="plugin_caption_search">Cari Plugin</string>
     <string name="plugin_caption_new">Baru</string>
@@ -3285,7 +3355,6 @@ Language: id
     <string name="invite_message_title">Pesan khusus</string>
     <string name="invite">Undang</string>
     <string name="invite_names_title">Nama pengguna atau email</string>
-    <string name="invite_people">Undang Orang-orang</string>
     <string name="my_site_header_external">Eksternal</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
@@ -3298,12 +3367,10 @@ Language: id
     <string name="user_remove_confirmation_message">Jika Anda menghapus %1$s, pengguna tsb tak bisa mengakses situs ini lagi, tetapi semua konten yang telah dibuat oleh %1$s akan tetap ada di situs ini.\n\nApakah Anda masih ingin menghapus pengguna ini?</string>
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
     <string name="role">Peran</string>
-    <string name="people">Pengguna</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blog dalam daftar ini belum mengeposkan apa-apa akhir-akhir ini</string>
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
     <string name="error_fetch_viewers_list">Gagal menampilkan pengunjung situs</string>
-    <string name="error_updating_gravatar">Terjadi galat saat memperbarui Gravatar</string>
     <string name="error_refreshing_gravatar">Terjadi galat saat memuat ulang Gravatar</string>
     <string name="error_locating_image">Terjadi galat saat mencari gambar yang dipangkas</string>
     <string name="error_cropping_image">Terjadi galat saat memangkas gambar</string>
@@ -3415,10 +3482,6 @@ Language: id
     <string name="privacy_private">Situs Anda hanya dapat dilihat oleh Anda dan pengguna yang Anda setujui</string>
     <string name="privacy_public_not_indexed">Situs Anda dapat dilihat oleh semua orang, tetapi meminta mesin pencari untuk tidak mengindeks.</string>
     <string name="privacy_public">Situs Anda dapat dilihat oleh semua orang dan mungkin diindeks berdasarkan mesin pencarian.</string>
-    <string name="about_me_hint">Beberapa kata tentang Anda…</string>
-    <string name="about_me">Tentang saya</string>
-    <string name="public_display_name_hint">Nama tampilan secara default akan menjadi nama pengguna Anda bila tidak diatur</string>
-    <string name="public_display_name">Nama tampilan publik</string>
     <string name="last_name">Nama belakang</string>
     <string name="first_name">Nama depan</string>
     <string name="my_profile">Profil Saya</string>
@@ -3698,7 +3761,6 @@ Language: id
     <string name="reader_toast_err_adding_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
-    <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
     <string name="error_refresh_media">Media tidak bisa disegarkan saat ini</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Pengaturan gambar</string>
@@ -3746,7 +3808,6 @@ Language: id
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
-    <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
     <string name="comment_unapproved">Komentar tidak disetujui</string>
     <string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
@@ -3845,6 +3906,7 @@ Language: id
     <string name="no">Tidak</string>
     <string name="yes">Ya</string>
     <string name="notification_settings">Pengaturan Pemberitahuan</string>
+    <string name="clear">Kosongkan</string>
     <string name="add">Tambah</string>
     <string name="save">Simpan</string>
     <string name="cancel">Batal</string>

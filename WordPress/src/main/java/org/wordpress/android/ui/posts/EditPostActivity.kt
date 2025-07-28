@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -47,6 +48,7 @@ import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonObject
 import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -82,11 +84,13 @@ import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companio
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
+import org.wordpress.android.fluxc.generated.EditorSettingsActionBuilder
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.EditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.MediaModel
@@ -99,6 +103,8 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
+import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
@@ -118,6 +124,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
@@ -193,9 +201,10 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.ExperimentalFeature
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
@@ -235,6 +244,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
+import org.wordpress.android.util.config.GutenbergKitFeature
+import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
@@ -248,7 +259,6 @@ import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
@@ -412,11 +422,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    private val gutenbergKitFeatureConfig: ExperimentalFeature = ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR
-    private val gutenbergKitThemeStylesConfig: ExperimentalFeature =
-        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
-    private val gutenbergKitPluginsConfig: ExperimentalFeature =
-        ExperimentalFeature.EXPERIMENTAL_BLOCK_EDITOR_PLUGINS
+    @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
+    @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
+    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -435,10 +443,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun newPostSetup(title: String? = null, content: String? = null) {
         isNewPost = true
-        if (!siteModel.isVisible) {
-            showErrorAndFinish(R.string.error_blog_hidden)
-            return
-        }
         // Create a new post
         editPostRepository.set {
             val post = postStore.instantiatePostModel(
@@ -513,7 +517,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "ComplexMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -525,7 +529,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        isGutenbergKitEditor = gutenbergKitFeatureConfig.isEnabled()
+        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
+                gutenbergKitFeature.isEnabled()
+        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+        isGutenbergKitEditor = isGutenbergEnabled && !isGutenbergDisabled
 
         createEditShareMessageActivityResultLauncher()
 
@@ -791,9 +798,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun setupEditor() {
-        if (isGutenbergKitEditor) {
-            GutenbergWebViewPool.getPreloadedWebView(getContext())
-        }
         // Check whether to show the visual editor
 
         // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
@@ -1940,13 +1944,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         )
     }
 
-    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?) {
+    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?, isFinishing: Boolean = false) {
         if (editorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
         }
         storePostViewModel.updatePostObjectWithUIAsync(
-            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent) }
+            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent, isFinishing) }
         ) { _: PostImmutableModel?, result: UpdatePostResult ->
             storePostViewModel.isSavingPostOnEditorExit = false
             // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
@@ -1960,20 +1964,25 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      * 2. Saves the post via [EditPostActivity.updateAndSavePostAsync];
      * 3. Invokes the listener method parameter
      */
-    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?) {
+    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?,
+                                                   isFinishing: Boolean = false) {
         if (editorFragment == null) {
             return
         }
         storePostViewModel.isSavingPostOnEditorExit = true
         storePostViewModel.showSavingProgressDialog()
-        updateAndSavePostAsync(listener)
+        updateAndSavePostAsync(listener, isFinishing)
     }
 
-    private fun updateFromEditor(oldContent: String): UpdateFromEditor {
+    private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
-                val titleAndContent: Pair<CharSequence, CharSequence> = it.getTitleAndContent(oldContent)
+                val titleAndContent: Pair<CharSequence, CharSequence> = if (it is GutenbergKitEditorFragment) {
+                    it.getTitleAndContent(oldContent, isFinishing)
+                } else {
+                    it.getTitleAndContent(oldContent)
+                }
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
@@ -1990,6 +1999,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
                     onToggleUndo(!hasUndo)
                     onToggleRedo(!hasRedo)
+                }
+            })
+            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
+                override fun onFeaturedImageChanged(mediaID: Long) {
+                    setFeaturedImageId(mediaID, false, true)
                 }
             })
             editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
@@ -2409,7 +2423,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
         // Convert the lambda to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda))
+        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda), doFinish)
     }
 
     // Helper function to convert a lambda to OnPostUpdatedFromUIListener
@@ -2486,40 +2500,64 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
+            val isWpCom = site.isWPCom || siteModel.isWPComAtomic
+            val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
+            val settings = createGutenbergKitSettings(isWpCom)
+
+            return GutenbergKitEditorFragment.newInstance(
+                getContext(),
+                isNewPost,
+                gutenbergWebViewAuthorizationData,
+                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings
+            )
+        }
+
+        private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
+            return GutenbergWebViewAuthorizationData(
                 siteModel.url,
                 isWpCom,
                 accountStore.account.userId,
                 accountStore.account.userName,
                 accountStore.accessToken,
                 siteModel.selfHostedSiteId,
-                siteModel.username,
-                siteModel.password,
+                siteModel.getUserNameProcessed(),
+                siteModel.getPasswordProcessed(),
                 siteModel.isUsingWpComRestApi,
                 siteModel.webEditor,
                 userAgent.toString(),
                 isJetpackSsoEnabled
             )
+        }
 
+        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val authToken = accountStore.accessToken
-            val authHeader = "Bearer $authToken"
-            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
+            val siteURL = siteModel.url
+            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
+                else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
+            // Use the application password for self-hosted sites when available
+            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
+            val siteApiNamespace = if (isWpCom)
+                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else arrayOf()
 
-            val settings = mutableMapOf<String, Any?>(
+            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
+            val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
+
+            return mutableMapOf(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
                 "siteApiRoot" to siteApiRoot,
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to gutenbergKitThemeStylesConfig.isEnabled(),
+                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
                 // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsConfig.isEnabled() && site.isWPCom),
+                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
+                "locale" to wpcomLocaleSlug,
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
@@ -2530,14 +2568,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         }
                     )
                 )
-            )
-
-            return GutenbergKitEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
             )
         }
 
@@ -2718,14 +2748,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher: Matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val stringUri = matcher.group(1)
-                val uri = Uri.parse(stringUri)
-                val mediaFile = FluxCUtils.mediaFileFromMediaModel(
+                val stringUri = matcher.group(1) ?: continue
+                FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
-                        .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
-                ) ?: continue
-                val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
-                matcher.appendReplacement(stringBuffer, replacement)
+                        .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
+                )?.let { mediaFile ->
+                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    matcher.appendReplacement(stringBuffer, replacement)
+                }
             }
             matcher.appendTail(stringBuffer)
             content = stringBuffer.toString()
@@ -2983,7 +3013,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             RequestCodes.MULTI_SELECT_MEDIA_PICKER,
             RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
             RequestCodes.PHOTO_PICKER,
-            RequestCodes.STORIES_PHOTO_PICKER,
             RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
             RequestCodes.MEDIA_LIBRARY,
             RequestCodes.PICTURE_LIBRARY,
@@ -3119,7 +3148,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
         val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
         stringArray?.forEach { stringUri ->
-            uris.add(Uri.parse(stringUri))
+            uris.add(stringUri.toUri())
         }
         return uris
     }
@@ -3633,9 +3662,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
-        refreshEditorContent()
+        if (editorFragment !is GutenbergKitEditorFragment) {
+            refreshEditorContent()
+        }
 
         onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
+        onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
         onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
     private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
@@ -3658,6 +3690,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
         }
     }
+
+    private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
+        if (showGutenbergEditor && editorFragment is GutenbergKitEditorFragment) {
+            refreshEditorSettings()
+        }
+    }
+
     private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
         if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
@@ -4060,6 +4099,18 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (editorFragment as EditorThemeUpdateListener)
             .onEditorThemeUpdated(editorThemeSupport.toBundle(siteModel))
         postEditorAnalyticsSession?.editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
+    }
+
+    private fun refreshEditorSettings() {
+        val payload = FetchEditorSettingsPayload(siteModel)
+        dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
+        val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
+        (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
     // EditPostActivityHook methods

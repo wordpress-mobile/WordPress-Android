@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 204
+        return 209
     }
 
     override fun getDbName(): String {
@@ -2052,6 +2052,33 @@ open class WellSqlConfig : DefaultWellConfig {
                         GROUP_OF_QUANTITY INTEGER,COMBINE_VARIATION_QUANTITIES INTEGER,PASSWORD TEXT,IS_SAMPLE_PRODUCT INTEGER
                         )
                     """.trimIndent())
+                }
+
+                204 -> db.execSQL("ALTER TABLE SiteModel ADD IS_DELETED INTEGER DEFAULT 0")
+
+                205 -> migrate(version) {
+                    db.execSQL("""
+                        CREATE TABLE IF NOT EXISTS EditorSettings (
+                            _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            LOCAL_SITE_ID INTEGER NOT NULL,
+                            RAW_SETTINGS TEXT,
+                            FOREIGN KEY (LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE
+                        )
+                    """.trimIndent())
+                }
+
+                206 -> {
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USERNAME TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD TEXT")
+                }
+
+                207 -> {
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_USERNAME_IV TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD API_REST_PASSWORD_IV TEXT")
+                }
+
+                208 -> {
+                    db.execSQL("DROP TABLE IF EXISTS EncryptedLogModel")
                 }
             }
         }

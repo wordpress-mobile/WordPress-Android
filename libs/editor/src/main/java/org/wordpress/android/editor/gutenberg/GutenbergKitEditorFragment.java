@@ -41,10 +41,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.gutenberg.GutenbergView;
+import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener;
 import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
@@ -57,6 +59,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import static org.wordpress.gutenberg.Media.createMediaUsingMimeType;
@@ -71,6 +74,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Nullable private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+    private static final String KEY_EDITOR_STARTED = "KEY_EDITOR_STARTED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
@@ -85,18 +89,22 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     private final LiveTextWatcher mTextWatcher = new LiveTextWatcher();
     @Nullable private HistoryChangeListener mHistoryChangeListener = null;
+    @Nullable private FeaturedImageChangeListener mFeaturedImageChangeListener = null;
     @Nullable private OpenMediaLibraryListener mOpenMediaLibraryListener = null;
     @Nullable private LogJsExceptionListener mOnLogJsExceptionListener = null;
 
+    private boolean mEditorStarted;
     private boolean mEditorDidMount;
+    @Nullable
+    private View mRootView;
 
     @Nullable private static Map<String, Object> mSettings;
 
     public static GutenbergKitEditorFragment newInstance(Context context,
-                                                         boolean isNewPost,
-                                                         GutenbergWebViewAuthorizationData webViewAuthorizationData,
-                                                         boolean jetpackFeaturesEnabled,
-                                                         @Nullable Map<String, Object> settings) {
+            boolean isNewPost,
+            @Nullable GutenbergWebViewAuthorizationData webViewAuthorizationData,
+            boolean jetpackFeaturesEnabled,
+            @Nullable Map<String, Object> settings) {
         GutenbergKitEditorFragment fragment = new GutenbergKitEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -120,6 +128,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+            mEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED);
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID);
         }
@@ -137,45 +146,36 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
+        mEditorFragmentListener.onEditorFragmentInitialized();
+
+        mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false);
+        ViewGroup gutenbergViewContainer = mRootView.findViewById(R.id.gutenberg_view_container);
+
         mGutenbergView = GutenbergWebViewPool.getPreloadedWebView(requireContext());
         mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
+        gutenbergViewContainer.addView(mGutenbergView);
+
+        setEditorProgressBarVisibility(true);
+
         mGutenbergView.setOnFileChooserRequestedListener((intent, requestCode) -> {
             startActivityForResult(intent, requestCode);
             return null;
         });
         mGutenbergView.setContentChangeListener(mTextWatcher::postTextChanged);
         mGutenbergView.setHistoryChangeListener(mHistoryChangeListener);
+        mGutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener);
         mGutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener);
         mGutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener);
         mGutenbergView.setEditorDidBecomeAvailable(view -> {
+            mEditorDidMount = true;
             mEditorFragmentListener.onEditorFragmentContentReady(new ArrayList<>(), false);
+            setEditorProgressBarVisibility(false);
         });
 
-        Integer postId = (Integer) mSettings.get("postId");
-        if (postId != null && postId == 0) {
-            postId = -1;
-        }
-
-        EditorConfiguration config = new EditorConfiguration.Builder()
-                .setTitle((String) mSettings.get("postTitle"))
-                .setContent((String) mSettings.get("postContent"))
-                .setPostId(postId)
-                .setPostType((String) mSettings.get("postType"))
-                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
-                .setPlugins((Boolean) mSettings.get("plugins"))
-                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
-                .setSiteApiNamespace((String[]) mSettings.get("siteApiNamespace"))
-                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
-                .setAuthHeader((String) mSettings.get("authHeader"))
-                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
-                .build();
-
-        mGutenbergView.start(config);
-
-        return mGutenbergView;
+        return mRootView;
     }
 
     @Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -218,6 +218,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     @Override public void onResume() {
         super.onResume();
+        setEditorProgressBarVisibility(!mEditorDidMount);
+    }
+
+    private void setEditorProgressBarVisibility(boolean shown) {
+        if (isAdded() && mRootView != null) {
+            mRootView.findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -258,6 +265,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+        outState.putBoolean(KEY_EDITOR_STARTED, mEditorStarted);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId);
     }
@@ -335,8 +343,13 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     }
 
     @Override
-    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
-            EditorFragmentNotAddedException {
+    public @NonNull Pair<CharSequence, CharSequence> getTitleAndContent(@NonNull CharSequence originalContent)
+            throws EditorFragmentNotAddedException {
+        return getTitleAndContent(originalContent, false);
+    }
+
+    public @NonNull Pair<CharSequence, CharSequence> getTitleAndContent(@NonNull CharSequence originalContent,
+            boolean completeComposition) throws EditorFragmentNotAddedException {
         final Pair<CharSequence, CharSequence>[] result = new Pair[1];
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -346,7 +359,7 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
                 result[0] = new Pair<>(title, content);
                 latch.countDown();
             }
-        }, true);
+        }, completeComposition);
 
         try {
             latch.await();
@@ -391,6 +404,10 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     public void onEditorHistoryChanged(@NonNull HistoryChangeListener listener) {
         mHistoryChangeListener = listener;
+    }
+
+    public void onFeaturedImageChanged(@NonNull FeaturedImageChangeListener listener) {
+        mFeaturedImageChangeListener = listener;
     }
 
     public void onOpenMediaLibrary(@NonNull OpenMediaLibraryListener listener) {
@@ -495,7 +512,9 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         if (mGutenbergView != null) {
             GutenbergWebViewPool.recycleWebView(mGutenbergView);
             mHistoryChangeListener = null;
+            mFeaturedImageChangeListener = null;
         }
+        mEditorStarted = false;
         super.onDestroy();
     }
 
@@ -541,6 +560,45 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    public void startWithEditorSettings(@NonNull String editorSettings) {
+        if (mGutenbergView == null || mEditorStarted) {
+            return;
+        }
+
+        Integer postId = (Integer) mSettings.get("postId");
+        if (postId != null && postId == 0) {
+            postId = -1;
+        }
+
+        var siteURL = (String) mSettings.get("siteURL");
+        var siteApiRoot = (String) mSettings.get("siteApiRoot");
+        var siteApiNamespace = (String[]) mSettings.get("siteApiNamespace");
+        var firstNamespace = siteApiNamespace != null && siteApiNamespace.length > 0 ? siteApiNamespace[0] : "";
+        var editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets";
+
+        EditorConfiguration config = new EditorConfiguration.Builder()
+                .setTitle((String) mSettings.get("postTitle"))
+                .setContent((String) mSettings.get("postContent"))
+                .setPostId(postId)
+                .setPostType((String) mSettings.get("postType"))
+                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
+                .setPlugins((Boolean) mSettings.get("plugins"))
+                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
+                .setSiteApiNamespace((String[]) siteApiNamespace)
+                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
+                .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
+                .setEditorSettings(editorSettings)
+                .setLocale((String) mSettings.get("locale"))
+                .setEditorAssetsEndpoint(editorAssetsEndpoint)
+                .setCachedAssetHosts(Set.of("s0.wp.com", UrlUtils.getHost(siteURL)))
+                .setEnableAssetCaching(true)
+                .build();
+
+        mEditorStarted = true;
+        mGutenbergView.start(config);
     }
 
     @Override

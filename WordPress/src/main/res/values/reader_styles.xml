@@ -47,7 +47,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
-    
+
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

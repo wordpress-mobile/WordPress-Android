@@ -41,6 +41,12 @@ class QRCodeAuthUiStateMapper @Inject constructor() {
             secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
         )
 
+    fun mapToTimeout(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
+        Error.ScanTimeout(
+            primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+            secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
+        )
+
     fun mapToValidated(
         location: String?,
         browser: String?,

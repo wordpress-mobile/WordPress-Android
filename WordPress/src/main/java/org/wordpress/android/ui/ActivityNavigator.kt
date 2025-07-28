@@ -1,12 +1,17 @@
 package org.wordpress.android.ui
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.TaskStackBuilder
+import androidx.core.net.toUri
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignPage
@@ -29,6 +34,7 @@ import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -207,5 +213,55 @@ class ActivityNavigator @Inject constructor() {
         url: String
     ) {
         WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun openApplicationPasswordLogin(activity: Activity, url: String) {
+        val intent = getCustomTabsIntent(activity)
+        val loginUri = url.toUri()
+        try {
+            intent.launchUrl(activity, loginUri)
+        } catch (e: RuntimeException) {
+            when (e) {
+                is ActivityNotFoundException,
+                is SecurityException -> {
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error opening login URI in CustomTabsIntent, attempting external browser",
+                        e
+                    )
+                    ActivityLauncher.openUrlExternal(activity, loginUri.toString())
+                }
+
+                else -> {
+                    throw e
+                }
+            }
+        }
+    }
+
+    private fun getCustomTabsIntent(activity: Activity): CustomTabsIntent {
+        return CustomTabsIntent.Builder()
+            .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
+            .setStartAnimations(
+                activity,
+                R.anim.activity_slide_in_from_right,
+                R.anim.activity_slide_out_to_left
+            )
+            .setExitAnimations(
+                activity,
+                R.anim.activity_slide_in_from_left,
+                R.anim.activity_slide_out_to_right
+            )
+            .setUrlBarHidingEnabled(true)
+            .setInstantAppsEnabled(false)
+            .setShowTitle(false)
+            .build()
+    }
+
+    fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
+        val intent = Intent(activity, ApplicationPasswordReauthenticateActivity::class.java)
+        intent.putExtra(ApplicationPasswordReauthenticateActivity.EXTRA_SITE_URL, authenticationUrl)
+        activity.startActivity(intent)
     }
 }

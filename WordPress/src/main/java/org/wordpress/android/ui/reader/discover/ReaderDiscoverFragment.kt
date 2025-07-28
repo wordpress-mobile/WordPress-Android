@@ -152,37 +152,57 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         viewModel.start(parentViewModel)
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("LongMethod")
     private fun handleNavigation(event: ReaderNavigationEvents) = when (event) {
-        is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, event.post.blogId, event.post.postId)
-        is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
-        is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-        is ShowReaderComments -> context?.let {
-            ReaderActivityLauncher.showReaderComments(
-                it,
-                event.blogId,
-                event.postId,
-                READER_POST_CARD.sourceDescription
+        is ShowPostDetail -> {
+            ReaderActivityLauncher.showReaderPostDetail(
+                context = requireActivity(),
+                blogId = event.post.blogId,
+                postId = event.post.postId
             )
         }
-        is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-        is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
-            this@ReaderDiscoverFragment,
-            event.preselectedSite,
-            event.mode
-        )
-        is OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(activity, event.site, event.post, event.source)
-        is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+        is SharePost -> {
+            ReaderActivityLauncher.sharePost(requireActivity(), event.post)
+        }
+        is OpenPost -> {
+            ReaderActivityLauncher.openPost(requireActivity(), event.post)
+        }
+        is ShowReaderComments ->  {
+            ReaderActivityLauncher.showReaderComments(
+                context = requireActivity(),
+                blogId = event.blogId,
+                postId = event.postId,
+                source = READER_POST_CARD.sourceDescription
+            )
+        }
+        is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(requireActivity())
+        is ShowSitePickerForResult -> {
+            ActivityLauncher.showSitePickerForResult(
+                this@ReaderDiscoverFragment,
+                event.preselectedSite,
+                event.mode
+            )
+        }
+        is OpenEditorForReblog -> {
+            ActivityLauncher.openEditorForReblog(
+                requireActivity(),
+                event.site,
+                event.post,
+                event.source)
+        }
+        is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(requireActivity())
         is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(event)
-        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-            context,
-            event.tag,
-            ReaderTracker.SOURCE_DISCOVER,
-            readerTracker
-        )
-        is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
+        is ShowPostsByTag -> {
+            ReaderActivityLauncher.showReaderTagPreview(
+                context = requireActivity(),
+                tag = event.tag,
+                source = ReaderTracker.SOURCE_DISCOVER,
+                readerTracker = readerTracker
+            )
+        }
+        is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(requireActivity(), event.videoUrl)
         is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-            context,
+            requireActivity(),
             event.siteId,
             event.feedId,
             event.isFollowed,
@@ -190,16 +210,16 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             readerTracker
         )
         is ShowReportPost -> ReaderActivityLauncher.openUrl(
-            context,
+            requireActivity(),
             readerUtilsWrapper.getReportPostUrl(event.url),
             OpenUrlType.INTERNAL
         )
         is ShowReportUser -> ReaderActivityLauncher.openUrl(
-            context,
+            requireActivity(),
             readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
             OpenUrlType.INTERNAL
         )
-        is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
+        is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(requireActivity())
         else -> Unit // Do Nothing
     }
 

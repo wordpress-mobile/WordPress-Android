@@ -3,7 +3,6 @@ package org.wordpress.android.workers.notification.local
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -12,12 +11,14 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import org.wordpress.android.R
+import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.workers.notification.local.LocalNotification.Type
 
 class LocalNotificationWorker(
     val context: Context,
     params: WorkerParameters,
-    private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
+    private val localNotificationHandlerFactory: LocalNotificationHandlerFactory,
+    private val notificationManagerWrapper: NotificationManagerWrapper
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val id = inputData.getInt(ID, -1)
@@ -27,7 +28,7 @@ class LocalNotificationWorker(
 
         val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
         if (localNotificationHandler.shouldShowNotification()) {
-            NotificationManagerCompat.from(context).notify(id, localNotificationBuilder(id).build())
+            notificationManagerWrapper.notify(id, localNotificationBuilder(id).build())
             localNotificationHandler.onNotificationShown()
         }
 
@@ -75,7 +76,8 @@ class LocalNotificationWorker(
     }
 
     class Factory(
-        private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
+        private val localNotificationHandlerFactory: LocalNotificationHandlerFactory,
+        private val notificationManagerWrapper: NotificationManagerWrapper
     ) : WorkerFactory() {
         override fun createWorker(
             appContext: Context,
@@ -83,7 +85,12 @@ class LocalNotificationWorker(
             workerParameters: WorkerParameters
         ): ListenableWorker? {
             return if (workerClassName == LocalNotificationWorker::class.java.name) {
-                LocalNotificationWorker(appContext, workerParameters, localNotificationHandlerFactory)
+                LocalNotificationWorker(
+                    appContext,
+                    workerParameters,
+                    localNotificationHandlerFactory,
+                    notificationManagerWrapper
+                )
             } else {
                 null
             }

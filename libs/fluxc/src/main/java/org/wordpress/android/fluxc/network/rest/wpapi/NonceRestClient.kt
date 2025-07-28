@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.HtmlUtils
 import javax.inject.Inject
@@ -37,8 +39,10 @@ class NonceRestClient @Inject constructor(
      *  that became available in WordPress 5.3.
      */
     suspend fun requestNonce(site: SiteModel): Nonce {
-        if (site.username == null || site.password == null) return Unknown(site.username)
-        return requestNonce(site.url, site.username, site.password)
+        val username = site.getUserNameProcessed()
+        val password = site.getPasswordProcessed()
+        if (username == null || password == null) return Unknown(site.username)
+        return requestNonce(site.url, username, password)
     }
 
     /**

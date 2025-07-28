@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 16:54:08+0000
+Translation-Revision-Date: 2025-07-08 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">השבתה של סיסמת האפליקציה תסיר את פרטי הכניסה שלך מ-⁦%1$s⁩ אתרים.</string>
+    <string name="application_password_disable_feature_title">האם להשבית את \'סיסמת אפליקציה\'?</string>
+    <string name="application_password_invalid">סיסמת האפליקציה לא תקפה</string>
+    <string name="application_password_credentials_storing_error">אירעה שגיאה בשמירה של פרטי הכניסה עבור סיסמת האפליקציה ל-⁦%1$s⁩</string>
+    <string name="subscribers_add_failed">ההוספה של המנויים נכשלה</string>
+    <string name="subscribers_add_success">ההוספה של המנויים בוצעה בהצלחה</string>
+    <string name="subscribers_add_disclosure">\n        לחיצה על \'לשלוח\' מהווה הצהרה שקיבלת את ההסכמה המתאימה כדי לשלוח אימייל לכל אחד. תלונות על דואר זבל או שיעור גבוה של אימיילים שחזרו או נדחו מהמנויים עלולים להוביל לנקיטת פעולות נגד החשבון שלך.\n    </string>
+    <string name="subscribers_add_subscribers">להוסיף מנויים</string>
+    <string name="subscribers_gift_content_description">מתנה</string>
+    <string name="subscribers_renewal_interval">תדירות החידוש</string>
+    <string name="subscribers_renewal_info">פרטי חידוש</string>
+    <string name="subscribers_price">מחיר</string>
+    <string name="subscribers_inactive_interval">תדירות של חוסר פעילות</string>
+    <string name="subscribers_billing_interval">תדירות החיוב</string>
+    <string name="subscribers_billing_info">פרטי חיוב</string>
+    <string name="subscribers_end_date">תאריך סיום</string>
+    <string name="subscribers_start_date">תאריך התחלה</string>
+    <string name="subscribers_plan_details_label">פרטי התוכנית</string>
+    <string name="subscribers_gift_plan_label">תוכנית מתנות</string>
+    <string name="subscribers_delete_button">למחוק את המנוי</string>
+    <string name="subscribers_site_label">אתר</string>
+    <string name="subscribers_country_label">ארץ</string>
+    <string name="subscribers_email_label">אימייל</string>
+    <string name="subscribers_plan_label">תוכנית</string>
+    <string name="subscribers_status_label">סטטוס מינוי</string>
+    <string name="subscribers_date_label">תאריך המינוי</string>
+    <string name="subscribers_detail_label">פרטי המנוי</string>
+    <string name="subscribers_newsletter_label">מינוי לניוזלטר</string>
+    <string name="subscribers_clicked_label">המשתמש לחץ</string>
+    <string name="subscribers_opened_label">נפתח</string>
+    <string name="subscribers_emails_sent_label">הודעות אימייל</string>
+    <string name="subscribers_subscription_status">סטטוס מינוי</string>
+    <string name="subscribers_error_title">משהו השתבש</string>
+    <string name="subscribers_empty_search">לא נמצאו תוצאות</string>
+    <string name="subscribers_empty">אין מנויים</string>
+    <string name="subscribers_sort_plan">תוכנית</string>
+    <string name="subscribers_sort_display_name">שם תצוגה</string>
+    <string name="subscribers_sort_date">תאריך ההרשמה למינוי</string>
+    <string name="subscribers_sort_email">כתובת אימייל</string>
+    <string name="subscribers_filter_reader_subscription">מינוי ב-Reader</string>
+    <string name="subscribers_filter_email_subscription">מינוי באימייל</string>
+    <string name="about_update_email_unverified">כדי לעדכן את הפרופיל שלך, עליך לאמת את כתובת האימייל שלך תחילה.</string>
+    <string name="sort_by">למיין לפי</string>
+    <string name="filter">לסנן</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">האתר שצוין לא תומך באימות של סיסמאות אפליקציה.</string>
+    <string name="application_password_title">לאמת באמצעות סיסמת אפליקציה</string>
+    <string name="application_password_credentials_stored">פרטי הכניסה של סיסמת האפליקציה שמאוחסנים עבור ⁦%1$s⁩</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">הזמן שנדרש לזיהוי הקוד היה ארוך מדי. יש לנסות שוב או להשתמש באפליקציית המצלמה כדי לסרוק את הקוד.</string>
+    <string name="qrcode_auth_flow_timeout_title">הזמן הקצוב לסריקה הסתיים</string>
+    <string name="invite_users">להזמין משתמשים</string>
+    <string name="experimental_application_password_feature_description">יש להפעיל את סיסמת האפליקציה כדי להתחבר לאתרים באחסון עצמי.</string>
+    <string name="experimental_application_password_feature">התחברות באמצעות סיסמאות אפליקציה</string>
+    <string name="experimental_subscribers_feature_description">להציג ולנהל מנויים לניוזלטר (בתהליך בנייה)</string>
+    <string name="experimental_subscribers_feature">מנויים (ניסיוני)</string>
+    <string name="cant_share_no_blog">אין לך אפשרות לשתף ב-WordPress בלי בלוג</string>
+    <string name="coming_soon">בקרוב!</string>
+    <string name="me_email_verification_generic_error">לא ניתן לשלוח את הקישור לאימות</string>
+    <string name="me_email_verification_resend">לשלוח מחדש את הקישור לאימות</string>
+    <string name="me_email_verification_sent_description">יש לבדוק את תיבת הדואר הנכנס בכתובת %s לאימייל האישור</string>
+    <string name="me_email_verification_sent">האימייל נשלח</string>
+    <string name="me_email_verification_sending_description">שולח קישור לאימות באימייל</string>
+    <string name="me_email_verification_sending">שולח…</string>
+    <string name="me_email_verification_verify_email_send_link">לשלוח מחדש קישור לאימות</string>
+    <string name="me_email_verification_verify_email_description">עליך לאמת את כתובת האימייל שלך כדי לאבטח את החשבון ולגשת לכל האפשרויות</string>
+    <string name="me_email_verification_verify_email">לאמת את כתובת האימייל שלך</string>
+    <string name="experimental_features_feedback_dialog_decline">לא עכשיו</string>
+    <string name="experimental_features_feedback_dialog_message">האם ברצונך לשתף משוב על העורך הניסיוני?</string>
+    <string name="experimental_features_feedback_dialog_title">לשלוח משוב</string>
+    <string name="experimental_block_editor_plugins">תוספים לעורך הבלוקים הניסיוני</string>
+    <string name="experimental_block_editor_theme_styles_description">להחיל את סגנונות התבנית בעורך</string>
+    <string name="experimental_block_editor_description">לגשת להגדרות נוספות ולסוגי בלוקים נוספים</string>
+    <string name="experimental_block_editor_note">עורך הבלוקים הניסיוני יהפוך לברירת המחדל בגרסה עתידית והאפשרות להשבית אותו תוסר.</string>
+    <string name="disable_experimental_block_editor_description">לבטל את הגישה להגדרות נוספות ולסוגי בלוקים נוספים</string>
+    <string name="disable_experimental_block_editor">להשבית את עורך הבלוקים הניסיוני</string>
     <string name="avatar_update_email_unverified">כדי לעדכן את צלמית המשתמש, עליך לאמת את כתובת האימייל שלך תחילה.</string>
     <string name="feedback_form_note_link_wordpress">בפורומים של הקהילה.</string>
     <string name="feedback_form_note_link_jetpack">המסך \'לפנות לתמיכה\'.</string>
@@ -159,8 +233,6 @@ Language: he_IL
     <string name="notifications_action_mark_all_as_read">לסמן את כל ההודעות כ\'נקרא\'</string>
     <string name="notifications_unread_content_description">לא נקרא</string>
     <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
-    <string name="gravatar_info_sync_done_button">סיימנו</string>
-    <string name="gravatar_info_sync_message">ייתכן שיידרש קצת זמן לסנכרון העדכונים האלה בפרופיל שלך ב-Gravatar.</string>
     <string name="gravatar_info_learn_more_link">מה זה Gravatar?</string>
     <string name="gravatar_info_description">עדכון של תמונת הפרופיל, השם והמידע עליך כאן יעדכן את הפרטים בכל האתרים שמשתמשים בפרופילים של Gravatar.</string>
     <string name="gravatar_info_title">הפרופיל שלך ב-WordPress.com מופעל באמצעות Gravatar</string>
@@ -2766,7 +2838,6 @@ Language: he_IL
     <string name="signup_epilogue_error_button_positive">יש לנסות שנית</string>
     <string name="signup_epilogue_error_button_negative">חזרה למצב קודם</string>
     <string name="signup_epilogue_error_generic">אירעה בעיה בעדכון החשבון שלך. אפשר לנסות שוב או לבטל את השינויים כדי להמשיך.</string>
-    <string name="signup_epilogue_error_avatar">אירעה בעיה בטעינה של תמונת פרופיל שלך.</string>
     <string name="plugin_needs_update">נדרש עדכון</string>
     <string name="plugin_caption_search">חיפוש בתוספים</string>
     <string name="plugin_caption_new">חדש</string>
@@ -3240,7 +3311,6 @@ Language: he_IL
     <string name="invite_message_title">הודעה מותאמת אישית</string>
     <string name="invite">הזמנה</string>
     <string name="invite_names_title">שמות משתמשים או כתובות אימייל</string>
-    <string name="invite_people">הזמנת אנשים</string>
     <string name="my_site_header_external">חיצוני</string>
     <string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
@@ -3253,12 +3323,10 @@ Language: he_IL
     <string name="user_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>
     <string name="person_remove_confirmation_title">הסרת %1$s</string>
     <string name="role">תפקיד</string>
-    <string name="people">אנשים</string>
     <string name="reader_empty_blogs_posts_in_custom_list">הבלוגים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
     <string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
     <string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
     <string name="error_fetch_viewers_list">לא הצלחנו לאחזר את משתמשי האתר</string>
-    <string name="error_updating_gravatar">שגיאה בעדכון ה-gravatar שלך</string>
     <string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה-gravatar שלך</string>
     <string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
     <string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
@@ -3370,10 +3438,6 @@ Language: he_IL
     <string name="privacy_private">האתר גלוי רק לך ולמשתמשים שאישרת</string>
     <string name="privacy_public_not_indexed">האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</string>
     <string name="privacy_public">האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</string>
-    <string name="about_me_hint">תיאור אישי בכמה מילים…</string>
-    <string name="about_me">מי אני</string>
-    <string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
-    <string name="public_display_name">שם תצוגה ציבורי</string>
     <string name="last_name">שם משפחה</string>
     <string name="first_name">שם פרטי</string>
     <string name="my_profile">הפרופיל שלי</string>
@@ -3653,7 +3717,6 @@ Language: he_IL
     <string name="reader_toast_err_adding_tag">לא ניתן להוסיף תגית זו</string>
     <string name="reader_title_applog">יומן יישום</string>
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
-    <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
     <string name="wordpress_blog">אתר ב-WordPress</string>
     <string name="image_settings">הגדרות תמונה</string>
@@ -3701,7 +3764,6 @@ Language: he_IL
     <string name="reader_empty_posts_in_tag_updating">מביא רשומות…</string>
     <string name="reader_likes_you_and_multi">אתה ו- %,d אחרים אוהבים את זה</string>
     <string name="reader_likes_multi">%,d אנשים אוהבים את זה</string>
-    <string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
     <string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
     <string name="comment_unapproved">התגובה לא מאושרת</string>
     <string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
@@ -3800,6 +3862,7 @@ Language: he_IL
     <string name="no">לא</string>
     <string name="yes">כן</string>
     <string name="notification_settings">הגדרות התראות</string>
+    <string name="clear">נקה</string>
     <string name="add">הוסף</string>
     <string name="save">שמור</string>
     <string name="cancel">בטל</string>

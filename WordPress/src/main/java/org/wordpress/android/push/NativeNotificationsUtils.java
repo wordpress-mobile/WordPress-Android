@@ -1,11 +1,16 @@
 package org.wordpress.android.push;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 
 import static org.wordpress.android.push.NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
@@ -44,6 +49,15 @@ public class NativeNotificationsUtils {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         }
         builder.setProgress(0, 0, intermediateMessage);
+
+        // Check for POST_NOTIFICATIONS permission on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+               != PackageManager.PERMISSION_GRANTED) {
+            AppLog.w(AppLog.T.NOTIFS,
+                    "POST_NOTIFICATIONS permission not granted, skipping notification with id: " + pushId);
+            return;
+        }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(pushId, builder.build());

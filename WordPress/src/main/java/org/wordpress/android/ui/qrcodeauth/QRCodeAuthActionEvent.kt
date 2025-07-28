@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.qrcodeauth
 
 sealed class QRCodeAuthActionEvent {
-    class LaunchDismissDialog(val dialogModel: QRCodeAuthDialogModel) : QRCodeAuthActionEvent()
-    object LaunchScanner : QRCodeAuthActionEvent()
-    object FinishActivity : QRCodeAuthActionEvent()
+    data object LaunchScanner : QRCodeAuthActionEvent()
+    data object FinishActivity : QRCodeAuthActionEvent()
 }

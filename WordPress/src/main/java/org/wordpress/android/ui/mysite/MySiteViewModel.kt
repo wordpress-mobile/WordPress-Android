@@ -51,6 +51,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
+import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -76,7 +77,8 @@ class MySiteViewModel @Inject constructor(
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
     private val accountDataViewModelSlice: AccountDataViewModelSlice,
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
-    private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice
+    private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
+    private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -94,7 +96,8 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.onSnackbar,
         dashboardItemsViewModelSlice.onSnackbarMessage,
         siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
-        dashboardCardsViewModelSlice.onSnackbarMessage
+        dashboardCardsViewModelSlice.onSnackbarMessage,
+        applicationPasswordViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
@@ -104,6 +107,7 @@ class MySiteViewModel @Inject constructor(
 
     val onNavigation = merge(
         _onNavigation,
+        applicationPasswordViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
         dashboardCardsViewModelSlice.onNavigation,
         dashboardItemsViewModelSlice.onNavigation
@@ -134,26 +138,30 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
+        applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel
     ) { siteInfoHeaderCard,
+        applicationPAsswordModel,
         accountData,
         dashboardCards,
         siteItems ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + dashboardCards)
+            SiteSelected(dashboardData = headerList + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + siteItems)
+            SiteSelected(dashboardData = headerList + siteItems)
         else
-            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard))
+            SiteSelected(dashboardData = headerList)
     }.distinctUntilChanged()
 
     init {
         dispatcher.register(this)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
+        applicationPasswordViewModelSlice.initialize(viewModelScope)
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
@@ -373,6 +381,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
@@ -384,6 +393,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
+        applicationPasswordViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
@@ -458,7 +468,6 @@ class MySiteViewModel @Inject constructor(
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"

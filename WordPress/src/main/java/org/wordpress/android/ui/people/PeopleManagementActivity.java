@@ -609,7 +609,7 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
 
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(R.string.people);
+                actionBar.setTitle(R.string.users);
             }
             return true;
         }

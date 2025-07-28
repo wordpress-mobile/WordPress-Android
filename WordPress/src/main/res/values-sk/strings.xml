@@ -444,7 +444,6 @@ Language: sk
     <string name="signup_epilogue_error_button_positive">Skúsiť znova</string>
     <string name="signup_epilogue_error_button_negative">Prejsť späť</string>
     <string name="signup_epilogue_error_generic">Pri aktualizácii vášho účtu sa vyskytli problémy. Môžete to skúsiť znova alebo vrátiť zmeny, aby ste mohli pokračovať.</string>
-    <string name="signup_epilogue_error_avatar">Pri nahrávaní vášho avataru sa vyskytli problémy.</string>
     <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
     <string name="plugin_needs_update">Potrebná aktualizácia</string>
     <string name="plugin_caption_search">Hľadať pluginy</string>
@@ -918,7 +917,6 @@ Language: sk
     <string name="invite_message_title">Vlastná správa</string>
     <string name="invite">Pozvať</string>
     <string name="invite_names_title">Používateľské mená alebo emaily</string>
-    <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
     <string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
@@ -930,13 +928,11 @@ Language: sk
     <string name="person_removed">%1$s úspešne odstránený</string>
     <string name="user_remove_confirmation_message">Ak odstránite %1$s, tento používateľ nebude môcť vstúpiť na webovú stránku, ale obsah vytvorený používateľom %1$s ostane na stránke.\n\nNaozaj chcete odstrániť tohto používateľa?</string>
     <string name="person_remove_confirmation_title">Odstrániť %1$s</string>
-    <string name="people">Ľudia</string>
     <string name="role">Rola</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blogy v tomto zozname v poslednom čase nič nezverejnili</string>
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
     <string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
     <string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>
-    <string name="error_updating_gravatar">Chyba pri nahrávaní vášho Gravatu</string>
     <string name="error_refreshing_gravatar">Chyba pri znovu nahrávaní vášho Gravatu</string>
     <string name="error_locating_image">Chyba pri umiestnení zmenšeného obrázku</string>
     <string name="error_cropping_image">Chyba pri orezaní obrázku</string>
@@ -1048,10 +1044,6 @@ Language: sk
     <string name="privacy_private">Vaša stránka je viditeľná iba pre vás a vami schválených používateľov</string>
     <string name="privacy_public_not_indexed">Vaša stránka je viditeľná každému, ale indexovanie vyhľadávačmi nie je povolené</string>
     <string name="privacy_public">Vaša strána je viditeľná každému a môže byť indexovaná vyhľadávačmi</string>
-    <string name="about_me_hint">Pár slov o vás…</string>
-    <string name="public_display_name_hint">V prípade, že nemáte nastavené zobrazovacie meno, bude použité vaše užívateľské meno</string>
-    <string name="about_me">O mne</string>
-    <string name="public_display_name">Pre návštevníkov zobrazovať meno</string>
     <string name="my_profile">Profil</string>
     <string name="first_name">Meno</string>
     <string name="last_name">Priezvisko</string>
@@ -1359,7 +1351,6 @@ Language: sk
     <string name="local_draft">Lokálny koncept </string>
     <string name="media_gallery_type_thumbnail_grid">Mriežka s náhľadmi</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
-    <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
     <string name="file_error_create">Nie je možné vytvoriť dočasný súbor. Uistite sa, či máte dostatok miesta vo vašom zariadení.</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
@@ -1374,7 +1365,6 @@ Language: sk
     <string name="reader_toast_err_removing_tag">Túto značku nie je možné odstrániť</string>
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
-    <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>
@@ -1468,6 +1458,7 @@ Language: sk
     <string name="cancel">Zrušiť</string>
     <string name="save">Uložiť</string>
     <string name="add">Pridať</string>
+    <string name="clear">Vymazať</string>
     <string name="notification_settings">Nastavenie upozornení</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>

@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -60,8 +61,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         }
 
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(commentParams);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENTS, params,
@@ -88,8 +89,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         commentParams.put("status", status);
 
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(comment.getRemoteCommentId());
         params.add(commentParams);
         final XMLRPCRequest request = new XMLRPCRequest(
@@ -109,8 +110,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
             @Nullable final CommentModel comment) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
@@ -130,8 +131,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
             @Nullable final CommentModel comment) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.DELETE_COMMENT, params,
@@ -219,8 +220,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
             @NonNull Map<String, Object> commentParams) {
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(remotePostId);
         params.add(commentParams);
         final XMLRPCRequest request = new XMLRPCRequest(

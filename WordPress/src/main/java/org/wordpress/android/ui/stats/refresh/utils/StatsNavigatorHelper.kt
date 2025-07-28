@@ -49,13 +49,14 @@ object StatsNavigatorHelper {
         remoteItemId: Long,
         readerTracker: ReaderTracker
     ) {
-        val post = ReaderPostTable.getBlogPost(remoteBlogId, remoteItemId, true)
-        ReaderActivityLauncher.showReaderBlogPreview(
-            context,
-            post,
-            ReaderTracker.SOURCE_STATS,
-            readerTracker
-        )
+        ReaderPostTable.getBlogPost(remoteBlogId, remoteItemId, true)?.let { post ->
+            ReaderActivityLauncher.showReaderBlogPreview(
+                context,
+                post,
+                ReaderTracker.SOURCE_STATS,
+                readerTracker
+            )
+        }
     }
 
     private fun showPostInAppWebView(context: Context, itemUrl: String) {

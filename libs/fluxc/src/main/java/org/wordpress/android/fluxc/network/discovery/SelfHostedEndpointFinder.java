@@ -109,7 +109,7 @@ public class SelfHostedEndpointFinder {
     }
 
     @NonNull
-    private String verifyOrDiscoverXMLRPCEndpoint(@NonNull final String siteUrl) throws DiscoveryException {
+    public String verifyOrDiscoverXMLRPCEndpoint(@NonNull final String siteUrl) throws DiscoveryException {
         if (TextUtils.isEmpty(siteUrl)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }

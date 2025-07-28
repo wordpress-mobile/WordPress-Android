@@ -1,3 +1,2 @@
-25.7: slechts twee oplossingen voor de experimentele blok-editor deze keer:
-1. je kunt feedback over de editor verzenden terwijl je het gebruikt. 
-2. we hebben een bug opgelost waarbij de code weergave niet goed werkte
+26.0:
+We hebben de authenticatie van applicatie wachtwoorden toegevoegd. Het is nog experimenteel, maar zodra het volledig geïntegreerd is, kunnen we bestaande functies verbeteren en nieuwe introduceren. Rock on.

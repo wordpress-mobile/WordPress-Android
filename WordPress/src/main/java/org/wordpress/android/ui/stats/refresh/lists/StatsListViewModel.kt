@@ -141,6 +141,12 @@ abstract class StatsListViewModel(
         }
     }
 
+    fun onRefresh() {
+        launch {
+            statsUseCase.refreshData()
+        }
+    }
+
     fun onListSelected() {
         dateSelector?.updateDateSelector()
     }

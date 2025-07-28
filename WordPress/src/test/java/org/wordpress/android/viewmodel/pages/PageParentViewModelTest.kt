@@ -128,11 +128,11 @@ class PageParentViewModelTest : BaseUnitTest() {
         viewModel.start(site, 1L)
         val newParent = viewModel.pages.value?.first { (it as? ParentPage)?.id == newParentId } as ParentPage
 
-        assertThat(viewModel.isSaveButtonVisible.value).isFalse
+        assertThat(viewModel.isSaveButtonVisible.value ?: true).isFalse
 
         viewModel.onParentSelected(newParent)
 
-        assertThat(viewModel.isSaveButtonVisible.value).isTrue
+        assertThat(viewModel.isSaveButtonVisible.value ?: false).isTrue
     }
 
     @Test
@@ -144,10 +144,10 @@ class PageParentViewModelTest : BaseUnitTest() {
         val newParent = viewModel.pages.value?.first { (it as? ParentPage)?.id == newParentId } as ParentPage
 
         viewModel.onParentSelected(newParent)
-        assertThat(viewModel.isSaveButtonVisible.value).isTrue
+        assertThat(viewModel.isSaveButtonVisible.value ?: false).isTrue
 
         viewModel.onParentSelected(initialParent)
-        assertThat(viewModel.isSaveButtonVisible.value).isFalse
+        assertThat(viewModel.isSaveButtonVisible.value ?: true).isFalse
     }
 
     private suspend fun mockPageStoreGetPages() {

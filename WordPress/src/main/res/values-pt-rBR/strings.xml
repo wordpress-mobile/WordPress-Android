@@ -193,8 +193,6 @@ Language: pt_BR
     <string name="notifications_action_mark_all_as_read">Marcar todas como lidas</string>
     <string name="notifications_unread_content_description">Não lidas</string>
     <string name="qrcode_media_deeplink_error">Site não encontrado. Verifique se você está conectado à conta correta.</string>
-    <string name="gravatar_info_sync_done_button">Concluir</string>
-    <string name="gravatar_info_sync_message">Pode levar um tempo para sincronizar as atualizações do seu perfil no Gravatar.</string>
     <string name="gravatar_info_learn_more_link">O que é Gravatar?</string>
     <string name="gravatar_info_description">Se você atualizar seu avatar, nome e informações pessoais aqui, eles também serão atualizados em todos os sites que usam perfis do Gravatar.</string>
     <string name="gravatar_info_title">Seu perfil do WordPress.com usa tecnologia Gravatar</string>
@@ -2810,7 +2808,6 @@ Language: pt_BR
     <string name="signup_epilogue_error_button_positive">Tentar novamente</string>
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
-    <string name="signup_epilogue_error_avatar">Houve um problema ao enviar seu avatar.</string>
     <string name="plugin_needs_update">Precisa de atualização</string>
     <string name="plugin_caption_search">Pesquisar plugins</string>
     <string name="plugin_caption_new">Novo</string>
@@ -3285,7 +3282,6 @@ Language: pt_BR
     <string name="invite_message_title">Mensagem personalizada</string>
     <string name="invite">Convidar</string>
     <string name="invite_names_title">Nomes de usuário ou e-mails</string>
-    <string name="invite_people">Convidar pessoas</string>
     <string name="my_site_header_external">Externo</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
@@ -3298,12 +3294,10 @@ Language: pt_BR
     <string name="user_remove_confirmation_message">Caso você remova %1$s, o usuário não irá mais ser capaz de acessar este site, mas o conteúdo que foi criado por %1$s será mantido no site.\n\nAinda gostaria de remover este usuário?</string>
     <string name="person_remove_confirmation_title">Remover %1$s</string>
     <string name="role">Função</string>
-    <string name="people">Pessoas</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Não há posts recentes nos blogs desta lista</string>
     <string name="error_remove_user">Não foi possível remover usuário</string>
     <string name="error_update_role">Não foi possível atualizar a função do usuário</string>
     <string name="error_fetch_viewers_list">Não foi possível recuperar os espectadores do site</string>
-    <string name="error_updating_gravatar">Erro ao enviar o seu Gravatar</string>
     <string name="error_refreshing_gravatar">Erro ao carregar o seu Gravatar</string>
     <string name="error_locating_image">Erro ao localizar o recorte da imagem</string>
     <string name="error_cropping_image">Erro ao cortar a imagem</string>
@@ -3415,10 +3409,6 @@ Language: pt_BR
     <string name="privacy_private">Seu site é visível apenas para você e usuários aprovados</string>
     <string name="privacy_public_not_indexed">Seu site está visível para todos mas solicita aos mecanismos de busca para não indexá-lo</string>
     <string name="privacy_public">Seu site está visível para todos e pode ser indexado por mecanismos de busca</string>
-    <string name="about_me_hint">Algumas palavras sobre você…</string>
-    <string name="about_me">Sobre mim</string>
-    <string name="public_display_name_hint">O nome de exibição será o seu nome de usuário se não for configurado</string>
-    <string name="public_display_name">Nome para exibição pública</string>
     <string name="last_name">Sobrenome</string>
     <string name="first_name">Nome</string>
     <string name="my_profile">Meu perfil</string>
@@ -3698,7 +3688,6 @@ Language: pt_BR
     <string name="reader_toast_err_adding_tag">Não foi possível adicionar a tag</string>
     <string name="reader_title_applog">Log do aplicativo</string>
     <string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
-    <string name="error_blog_hidden">Este blog está oculto e não foi possível carregá-lo. Habilite-o em configurações e tente novamente.</string>
     <string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Configurações de imagem</string>
@@ -3746,7 +3735,6 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="reader_likes_you_and_multi">Você e %,d outros curtiram isso</string>
     <string name="reader_likes_multi">%,d pessoas curtiram isso</string>
-    <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
     <string name="comment_unapproved">Comentário não aprovado</string>
     <string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
@@ -3845,6 +3833,7 @@ Language: pt_BR
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="notification_settings">Configurações de notificações</string>
+    <string name="clear">Limpar</string>
     <string name="add">Adicionar</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>

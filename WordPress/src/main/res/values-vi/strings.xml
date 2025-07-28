@@ -1976,7 +1976,6 @@ Language: vi_VN
     <string name="signup_epilogue_error_button_positive">Thử lại</string>
     <string name="signup_epilogue_error_button_negative">Đảo ngược</string>
     <string name="signup_epilogue_error_generic">Xảy ra lỗi khi cập nhật tài khoản của bạn. Hãy thử lại hoặc đảo ngược những thay đổi.</string>
-    <string name="signup_epilogue_error_avatar">Xảy ra lỗi khi tải lên ảnh đại diện.</string>
     <string name="site_settings_like_header">Thích</string>
     <string name="plugin_needs_update">Cần cập nhật</string>
     <string name="plugin_caption_search">Tìm kiếm plugin</string>
@@ -2441,7 +2440,6 @@ Language: vi_VN
     <string name="invite_message_title">Tin nhắn tùy chỉnh</string>
     <string name="invite">Mời</string>
     <string name="invite_names_title">Tên người dùng hoặc Email</string>
-    <string name="invite_people">Mời nhiều người</string>
     <string name="my_site_header_external">Mở ngoài app</string>
     <string name="label_clear_search_history">Xóa lịch sử tìm kiếm</string>
     <string name="dlg_confirm_clear_search_history">Xóa lịch sử tìm kiếm?</string>
@@ -2453,12 +2451,10 @@ Language: vi_VN
     <string name="person_removed">Đã chặn @%1$s</string>
     <string name="user_remove_confirmation_message">Nếu bạn chặn %1$s, họ sẽ không còn có thể truy cập blog này, nhưng bất kì nội dung nào được tạo bởi %1$s sẽ vẫn còn trên blog.\n\nBạn vẫn muốn xóa người dùng này?</string>
     <string name="person_remove_confirmation_title">Chặn %1$s</string>
-    <string name="people">Mọi người</string>
     <string name="role">Vai trò</string>
     <string name="error_remove_user">Không thể chặn người dùng</string>
     <string name="error_fetch_viewers_list">Không tải được danh sách độc giả</string>
     <string name="error_update_role">Không thể đổi vai trò người dùng</string>
-    <string name="error_updating_gravatar">Lỗi cập nhật Gravatar của bạn</string>
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
     <string name="error_locating_image">Lỗi định vị hình ảnh được cắt</string>
     <string name="error_cropping_image">Lỗi cắt ảnh</string>
@@ -2570,10 +2566,6 @@ Language: vi_VN
     <string name="privacy_private">Chỉ bạn và những người mà bạn duyệt mới có thể xem blog</string>
     <string name="privacy_public_not_indexed">Mọi người đều có thể xem blog nhưng các cỗ máy tìm kiếm không được phép lập chỉ mục</string>
     <string name="privacy_public">Mọi người đều có thể xem blog và các cỗ máy tìm kiếm được phép lập chỉ mục</string>
-    <string name="about_me_hint">Một vài từ mô tả về bạn…</string>
-    <string name="about_me">Giới thiệu bản thân</string>
-    <string name="public_display_name_hint"> Nếu không được đặt, tên hiển thị sẽ mặc định là tên người dùng của bạn</string>
-    <string name="public_display_name">Tên hiển thị công khai</string>
     <string name="my_profile">Hồ sơ của tôi</string>
     <string name="last_name">Tên</string>
     <string name="first_name">Họ</string>
@@ -2874,7 +2866,6 @@ Language: vi_VN
     <string name="new_post">Viết bài</string>
     <string name="new_media">Tải lên media</string>
     <string name="image_settings">Cài đặt ảnh</string>
-    <string name="error_blog_hidden">Blog này bị ẩn và không xem được. Hiện lại nó trong cài đặt và thử lại.</string>
     <string name="fatal_db_error">Xảy ra lỗi khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="reader_title_applog">Nhật ký ứng dụng</string>
     <string name="add_new_category">Thêm chuyên mục mới</string>
@@ -2894,7 +2885,6 @@ Language: vi_VN
     <string name="share_link">Chia sẻ liên kết</string>
     <string name="reader_empty_posts_in_tag_updating">Đang tải bài viết…</string>
     <string name="comment_spammed">Bình luận bị đánh dấu spam</string>
-    <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog</string>
     <string name="reader_likes_you_and_multi">Bạn và %,d người khác thích bài viết này</string>
     <string name="reader_likes_multi">%,d người thích</string>
     <string name="comment_unapproved">Bình luận không được duyệt</string>

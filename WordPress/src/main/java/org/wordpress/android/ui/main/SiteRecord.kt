@@ -15,7 +15,6 @@ class SiteRecord(siteModel: SiteModel) {
     val homeURL: String
     val blavatarUrl: String
     val blavatarType: ImageType
-    var isHidden: Boolean
     var isRecentPick = false
 
     init {
@@ -27,7 +26,6 @@ class SiteRecord(siteModel: SiteModel) {
         blavatarType = SiteUtils.getSiteImageType(
             siteModel.isWpForTeamsSite, BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES
         )
-        isHidden = !siteModel.isVisible
     }
 
     val blogNameOrHomeURL: String

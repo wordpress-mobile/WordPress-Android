@@ -685,23 +685,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `camera FAB is not shown in stories when selected items`() = test {
-        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO)))
-
-        selectItem(0)
-
-        assertStoriesFabIsHidden()
-    }
-
-    @Test
-    fun `camera FAB is not shown when no stories`() = test {
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), HIDDEN))
-
-        assertStoriesFabIsHidden()
-    }
-
-    @Test
     fun `empty state is emitted when no items in picker`() = test {
         setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
 
@@ -1012,12 +995,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         defaultSearchView = false,
         title = R.string.wp_media_title
     )
-
-    private fun assertStoriesFabIsHidden() {
-        uiStates.last().fabUiModel.let { model ->
-            assertThat(model.show).isEqualTo(false)
-        }
-    }
 
     private fun assertPartialMediaAccessUi(isVisible: Boolean = false) {
         uiStates.last().isPartialMediaAccessPromptVisible.let {

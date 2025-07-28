@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:21:52+0000
+Translation-Revision-Date: 2025-07-11 04:03:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nb_NO
@@ -15,6 +15,7 @@ Language: nb_NO
     <string name="me_btn_scan_login_code">Skann innloggingskode</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt siste innlegg %1$s har fått %2$s likerklikk.</string>
     <string name="stats_most_popular_percent_views_empty">Ikke nok aktivitet. Kom tilbake senere når ditt nettsted har hatt flere besøkende!</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% av følgere totalt</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopier lenke</string>
     <string name="quick_start_sites_type_get_to_know_app">Bli kjent med appen</string>
@@ -181,6 +182,7 @@ Language: nb_NO
     <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
     <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
     <string name="site_settings_categories_title">Kategorier</string>
+    <string name="site_settings_blogging_reminders_title">Påminnelser</string>
     <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Skriv inn en URL</string>
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s-blokk</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Kolonneinnstillinger</string>
@@ -674,6 +676,7 @@ Language: nb_NO
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Legg til URL</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Legg til alt-tekst</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">LEGG TIL BLOKK HER</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Legge til en beskrivelse</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
     <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>
@@ -1364,7 +1367,6 @@ Language: nb_NO
     <string name="signup_epilogue_hint_display">Visningsnavn</string>
     <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
     <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
-    <string name="signup_epilogue_error_avatar">Det oppsto problemer med å laste opp din avatar.</string>
     <string name="plugin_needs_update">Trenger oppdatering</string>
     <string name="plugin_caption_search">Søk utvidelser</string>
     <string name="plugin_caption_new">Ny</string>
@@ -1825,7 +1827,6 @@ Language: nb_NO
     <string name="invite_message_title">Tilpasset melding</string>
     <string name="invite">Inviter</string>
     <string name="invite_names_title">Brukernavn eller e-poster</string>
-    <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
@@ -1838,11 +1839,9 @@ Language: nb_NO
     <string name="user_remove_confirmation_message">Hvis du fjerner %1$s, vil den brukeren ikke lenger få tilgang til dette nettstedet, men alt innhold som ble laget av %1$s vil forbli på nettstedet.\n\nVil du fortsatt fjerne denne brukeren?</string>
     <string name="person_remove_confirmation_title">Fjern %1$s</string>
     <string name="role">Rolle</string>
-    <string name="people">Folk</string>
     <string name="error_remove_user">Klarte ikke å fjerne brukeren</string>
     <string name="error_update_role">Klarte ikke å oppdatere brukerrollen</string>
     <string name="error_fetch_viewers_list">Klarte ikke å hente inn sideleserne</string>
-    <string name="error_updating_gravatar">Feil ved oppdatering av din Gravatar</string>
     <string name="error_refreshing_gravatar">Feil ved gjeninnlasting av din Gravatar</string>
     <string name="error_locating_image">Feil under oppsøking av det beskjærte bildet</string>
     <string name="error_cropping_image">Feil under beskjæring av bildet</string>
@@ -1954,10 +1953,6 @@ Language: nb_NO
     <string name="privacy_private">Nettstedet ditt er kun tilgjengelig for deg og for brukere som du godkjenner</string>
     <string name="privacy_public_not_indexed">Nettstedet er synlig for alle, men ber søkemotorer om å ikke indeksere den</string>
     <string name="privacy_public">Nettstedet ditt er synlig for alle, og kan bli indeksert av noen søkemotorer</string>
-    <string name="about_me_hint">Noen få ord om deg selv …</string>
-    <string name="about_me">Om meg</string>
-    <string name="public_display_name_hint">Visningsnavnet vil falle tilbake til brukernavnet ditt, dersom det ikke er spesifisert</string>
-    <string name="public_display_name">Navn som skal vises offentlig</string>
     <string name="last_name">Etternavn</string>
     <string name="first_name">Fornavn</string>
     <string name="my_profile">Min profil</string>
@@ -2231,7 +2226,6 @@ Language: nb_NO
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
     <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
-    <string name="error_blog_hidden">Bloggen er skjult og kunne ikke bli lastet inn. Aktiver den igjen i innstillingene og prøv igjen.</string>
     <string name="error_refresh_media">Media kunne ikke bli oppfrisket for øyeblikket</string>
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="image_settings">Bildeinnstillinger</string>
@@ -2278,7 +2272,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
-    <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
     <string name="comment_unapproved">Kommentar avslått</string>
     <string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>
@@ -2374,6 +2367,7 @@ Language: nb_NO
     <string name="no">Nei</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Innstillinger for varslinger</string>
+    <string name="clear">Tøm</string>
     <string name="add">Legg til</string>
     <string name="save">Lagre</string>
     <string name="cancel">Avbryt</string>

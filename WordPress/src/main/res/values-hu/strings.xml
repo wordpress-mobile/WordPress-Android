@@ -122,6 +122,7 @@ Language: hu
     <string name="cancel">Megszakítás</string>
     <string name="save">Mentés</string>
     <string name="add">Hozzáad</string>
+    <string name="clear">Kiürítés</string>
     <string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
     <string name="on"> -</string>
     <string name="reply">Válasz</string>

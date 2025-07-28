@@ -14,7 +14,8 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule
         ReleaseNetworkModule::class,
         OkHttpClientModule::class,
         ReleaseToolsModule::class,
-        DatabaseModule::class
+        DatabaseModule::class,
+        org.wordpress.android.fluxc.module.ThreadModule::class
     ]
 )
 interface FluxCModule

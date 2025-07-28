@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.withStyledAttributes
 import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
@@ -64,22 +65,22 @@ class ActionableEmptyView : LinearLayout {
         bottomImage = layout.findViewById(R.id.bottom_image)
         progressBar = layout.findViewById(R.id.actionable_empty_view_progress_bar)
 
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ActionableEmptyView, 0, 0)
-        val imageResource = typedArray.getResourceId(
-            R.styleable.ActionableEmptyView_aevImage,
-            0
-        )
-        val hideImageInLandscape = typedArray.getBoolean(
-            R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
-            false
-        )
-        val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
-        val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
-        val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
-        val buttonStyleAttribute = typedArray.getInt(
-            R.styleable.ActionableEmptyView_aevButtonStyle,
-            BUTTON_STYLE_PRIMARY
-        )
+        context.withStyledAttributes(attrs, R.styleable.ActionableEmptyView, 0, 0) {
+            val imageResource = getResourceId(
+                R.styleable.ActionableEmptyView_aevImage,
+                0
+            )
+            val hideImageInLandscape = getBoolean(
+                R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
+                false
+            )
+            val titleAttribute = getString(R.styleable.ActionableEmptyView_aevTitle)
+            val subtitleAttribute = getString(R.styleable.ActionableEmptyView_aevSubtitle)
+            val buttonAttribute = getString(R.styleable.ActionableEmptyView_aevButton)
+            val buttonStyleAttribute = getInt(
+                R.styleable.ActionableEmptyView_aevButtonStyle,
+                BUTTON_STYLE_PRIMARY
+            )
 
         if (imageResource != 0) {
             image.setImageResource(imageResource)
@@ -104,11 +105,11 @@ class ActionableEmptyView : LinearLayout {
             button.visibility = View.VISIBLE
         }
 
-        if (buttonStyleAttribute == BUTTON_STYLE_READER) {
-            button.backgroundTintList = context.getColorStateList(R.color.reader_button_primary_background_selector)
-            button.setTextColor(context.getColorStateList(R.color.reader_button_primary_text))
+            if (buttonStyleAttribute == BUTTON_STYLE_READER) {
+                button.backgroundTintList = context.getColorStateList(R.color.reader_button_primary_background_selector)
+                button.setTextColor(context.getColorStateList(R.color.reader_button_primary_text))
+            }
         }
-        typedArray.recycle()
     }
 
     /**

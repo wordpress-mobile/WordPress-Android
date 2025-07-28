@@ -31,6 +31,7 @@ sealed class SiteNavigationAction {
     ) : SiteNavigationAction()
 
     data class OpenAdmin(val site: SiteModel) : SiteNavigationAction()
+    data class OpenSubscribers(val site: SiteModel) : SiteNavigationAction()
     data class OpenPeople(val site: SiteModel) : SiteNavigationAction()
     data class OpenSelfHostedUsers(val site: SiteModel) : SiteNavigationAction()
     data class OpenSharing(val site: SiteModel) : SiteNavigationAction()
@@ -92,6 +93,8 @@ sealed class SiteNavigationAction {
 
     data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
     data class OpenSiteMonitoring(val site: SiteModel) : SiteNavigationAction()
+
+    data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

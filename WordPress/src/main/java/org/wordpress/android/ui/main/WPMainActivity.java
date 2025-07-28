@@ -46,12 +46,14 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
+import org.wordpress.android.fluxc.store.EditorSettingsStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
@@ -209,7 +211,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         QuickStartPromptClickInterface,
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
-        UpdateSelectedSiteListener {
+        UpdateSelectedSiteListener,
+        WpAppNotifierHandler.NotifierListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -271,6 +274,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
     @Inject QuickStartStore mQuickStartStore;
+    // Injected to ensure the store responds to dispatched actions
+    @Inject EditorSettingsStore mEditorSettingsStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
@@ -304,6 +309,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
+
+    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -365,8 +372,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             if (!AppPrefs.isInstallationReferrerObtained()) {
                 InstallationReferrerServiceStarter.startService(this, null);
             }
-
-            mPerAppLocaleManager.performMigrationIfNecessary();
 
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
                 && !AppPrefs.getIsJetpackMigrationInProgress()) {
@@ -1128,6 +1133,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
+        mWpAppNotifierHandler.addListener(this);
+
         // Load selected site
         initSelectedSite();
 
@@ -1473,7 +1480,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-            case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
@@ -1712,11 +1718,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
-        // Make selected site visible
-        selectedSite.setIsVisible(true);
-        mSelectedSiteRepository.updateSite(selectedSite);
-
         // When we select a site, we want to update its information or options
+        mSelectedSiteRepository.updateSite(selectedSite);
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
     }
 
@@ -1748,20 +1751,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             return;
         }
 
-        // Else select the first visible site in the list
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
-        if (sites.size() != 0) {
+        // Else select the first site in the list
+        List<SiteModel> sites = mSiteStore.getSites();
+        if (!sites.isEmpty()) {
             setSelectedSite(sites.get(0));
-            return;
+        } else {
+            // Else no site selected
+            AppLog.w(T.MAIN, "No site selected");
         }
-
-        // Else select the first in the list
-        sites = mSiteStore.getSites();
-        if (sites.size() != 0) {
-            setSelectedSite(sites.get(0));
-        }
-
-        // Else no site selected
     }
 
     // FluxC events
@@ -1928,6 +1925,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
+        mWpAppNotifierHandler.removeListener(this);
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }
 
@@ -1984,6 +1982,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 );
             }
         }
+    }
+
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
+        showApplicationPasswordOffReauthenticateDialog(authenticationUrl);
+    }
+
+    private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
     }
 
     @Nullable

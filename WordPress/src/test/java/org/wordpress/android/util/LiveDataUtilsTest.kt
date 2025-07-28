@@ -5,6 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 class LiveDataUtilsTest : BaseUnitTest() {
@@ -16,13 +17,13 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val mergedSources = mergeNotNull(sourceA, sourceB)
         mergedSources.observeForever { }
 
-        assertThat(mergedSources.value).isNull()
+        assertNull(mergedSources.value)
         val firstValue = 1
         val secondValue = 2
         sourceA.value = firstValue
-        assertThat(mergedSources.value).isEqualTo(firstValue)
+        assertThat(mergedSources.value ?: -1).isEqualTo(firstValue)
         sourceB.value = secondValue
-        assertThat(mergedSources.value).isEqualTo(secondValue)
+        assertThat(mergedSources.value ?: -1).isEqualTo(secondValue)
     }
 
     @Test

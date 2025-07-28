@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts.reactnative
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.core.util.Consumer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +24,7 @@ class ReactNativeRequestHandler @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     override val coroutineContext = bgDispatcher + Job()
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     fun performGetRequest(
         pathWithParams: String,
@@ -65,7 +68,11 @@ class ReactNativeRequestHandler @Inject constructor(
         onError: (Bundle) -> Unit
     ) {
         when (response) {
-            is Success -> onSuccess(response.result.toString())
+            is Success -> {
+                mainThreadHandler.post {
+                    onSuccess(response.result.toString())
+                }
+            }
             is Error -> {
                 val bundle = Bundle().apply {
                     response.error.volleyError?.networkResponse?.statusCode?.let {
@@ -75,7 +82,9 @@ class ReactNativeRequestHandler @Inject constructor(
                         putString("message", it)
                     }
                 }
-                onError(bundle)
+                mainThreadHandler.post {
+                    onError(bundle)
+                }
             }
         }
     }

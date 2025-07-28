@@ -136,7 +136,6 @@ Language: az
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="image_settings">Təsvir parametrləri</string>
     <string name="wordpress_blog">WordPress bloqu</string>
-    <string name="error_blog_hidden">Bu bloq gizlidir və yüklənmədi. Parametrlərdən yenidən aktivləşdirin və təkrar yoxlayın.</string>
     <string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
     <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Qeydiyyat gərəklidir</string>
     <string name="view_in_browser">Brauzerdə bax</string>
@@ -173,7 +172,6 @@ Language: az
     <string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
     <string name="reader_likes_multi">%,d şəxs bunu bəyənir</string>
     <string name="reader_likes_you_and_multi">Siz və bir digər şəxs %,d bunu bəyənir</string>
-    <string name="cant_share_no_visible_blog">Görünən bir bloqunuz olmadan WordPress ilə paylaşa bilməzsiniz</string>
     <string name="pick_photo">Foto seç</string>
     <string name="pick_video">Video seç</string>
     <string name="reader_toast_err_get_post">Bu yazını almaq mümkün deyil</string>

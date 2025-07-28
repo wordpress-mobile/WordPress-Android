@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -154,7 +155,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_status");
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         List<Object> params =
-                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
+                createFetchPostListParameters(site.getSelfHostedSiteId(),
+                        SiteModelExtensionsKt.getUserNameProcessed(site),
+                        SiteModelExtensionsKt.getPasswordProcessed(site), false,
                         offset, pageSize, listDescriptor.getStatusList(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue(),
                         listDescriptor.getSearchQuery());
@@ -191,7 +194,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusList,
                            final int offset) {
         List<Object> params =
-                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
+                createFetchPostListParameters(site.getSelfHostedSiteId(),
+                        SiteModelExtensionsKt.getUserNameProcessed(site),
+                        SiteModelExtensionsKt.getPasswordProcessed(site),
                         getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
@@ -268,8 +273,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         if (!post.isLocalDraft()) {
             params.add(post.getRemotePostId());
         }
@@ -314,8 +319,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                            final @NonNull PostDeleteActionType postDeleteActionType) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(post.getRemotePostId());
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
@@ -684,8 +689,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     private List<Object> createFetchPostParams(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         params.add(post.getRemotePostId());
         return params;
     }

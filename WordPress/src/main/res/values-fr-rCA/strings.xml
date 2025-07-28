@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-06 14:09:07+0000
+Translation-Revision-Date: 2025-07-08 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion de %1$s sites.</string>
+    <string name="application_password_disable_feature_title">Désactiver le mot de passe d’application ?</string>
+    <string name="application_password_invalid">Mot de passe d’application non valide</string>
+    <string name="application_password_credentials_storing_error">Une erreur est survenue lors du stockage des identifiants de connexion du mot de passe d’application pour %1$s</string>
+    <string name="subscribers_add_failed">Échec de l’ajout d’abonnés</string>
+    <string name="subscribers_add_success">Abonnés ajoutés avec succès</string>
+    <string name="subscribers_add_disclosure">\n        En cliquant sur Envoyer, vous confirmez avoir obtenu l’autorisation nécessaire pour envoyer des e-mails à chaque personne. Les plaintes pour spam ou le taux de rebond élevé de vos abonnés peuvent entraîner des poursuites contre votre compte.\n    </string>
+    <string name="subscribers_add_email_hint">nom@exemple.com</string>
+    <string name="subscribers_add_subscribers">Ajouter des abonnés</string>
+    <string name="subscribers_gift_content_description">Cadeau</string>
+    <string name="subscribers_renewal_interval">Intervalle de renouvellement</string>
+    <string name="subscribers_renewal_info">Informations concernant le renouvellement</string>
+    <string name="subscribers_price">Prix</string>
+    <string name="subscribers_inactive_interval">Intervalle d’inactivité</string>
+    <string name="subscribers_billing_interval">Intervalle de facturation</string>
+    <string name="subscribers_billing_info">Détails de facturation</string>
+    <string name="subscribers_end_date">Date de fin</string>
+    <string name="subscribers_start_date">Date de début</string>
+    <string name="subscribers_plan_details_label">Détails du plan</string>
+    <string name="subscribers_gift_plan_label">Plan cadeau</string>
+    <string name="subscribers_delete_button">Supprimer l’abonné</string>
+    <string name="subscribers_country_label">Pays</string>
+    <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_status_label">État de l’abonnement</string>
+    <string name="subscribers_date_label">Date d’abonnement</string>
+    <string name="subscribers_detail_label">Détails de l’abonné</string>
+    <string name="subscribers_newsletter_label">Abonnement à la newsletter</string>
+    <string name="subscribers_clicked_label">Clics</string>
+    <string name="subscribers_opened_label">Ouvertures</string>
+    <string name="subscribers_emails_sent_label">E-mails</string>
+    <string name="subscribers_subscription_status">État de l’abonnement</string>
+    <string name="subscribers_error_title">Un problème est survenu</string>
+    <string name="subscribers_empty_search">Aucun résultat</string>
+    <string name="subscribers_empty">Aucun abonné</string>
+    <string name="subscribers_sort_display_name">Nom affiché</string>
+    <string name="subscribers_sort_date">Date d’abonnement</string>
+    <string name="subscribers_sort_email">Adresse e-mail</string>
+    <string name="subscribers_filter_reader_subscription">Abonnement via le Lecteur</string>
+    <string name="subscribers_filter_email_subscription">Abonnement par e-mail</string>
+    <string name="about_update_email_unverified">Pour mettre à jour votre profil, vous devez d’abord vérifier votre adresse e-mail.</string>
+    <string name="sort_by">Trier par</string>
+    <string name="filter">Filtrer</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Le site fourni ne prend pas en charge l’authentification par mot de passe d’application.</string>
+    <string name="application_password_title">S’authentifier à l’aide du mot de passe de l’application</string>
+    <string name="application_password_credentials_stored">Identifiants de connexion du mot de passe de l’application stockés pour %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Détecter un code a pris trop de temps. Veuillez réessayer ou utiliser votre application Appareil photo pour scanner le code.</string>
+    <string name="qrcode_auth_flow_timeout_title">L’analyse a expiré</string>
+    <string name="invite_users">Inviter des utilisateurs</string>
+    <string name="experimental_application_password_feature_description">Activez le mot de passe d’application pour vous connecter aux sites auto-hébergés.</string>
+    <string name="experimental_application_password_feature">Connexion par mot de passe d’applications</string>
+    <string name="experimental_subscribers_feature_description">Afficher et gérer les abonnés à la newsletter (en cours)</string>
+    <string name="experimental_subscribers_feature">Abonnés expérimentaux</string>
+    <string name="cant_share_no_blog">Vous ne pouvez pas partager vers WordPress si vous n’avez pas au moins un blog</string>
+    <string name="coming_soon">Prochainement !</string>
+    <string name="me_email_verification_generic_error">Impossible d’envoyer le lien de vérification</string>
+    <string name="me_email_verification_resend">Renvoyer le lien de vérification</string>
+    <string name="me_email_verification_sent_description">Consulter l’e-mail de confirmation dans votre boîte de réception sur %s</string>
+    <string name="me_email_verification_sent">E-mail envoyé</string>
+    <string name="me_email_verification_sending_description">Envoi du lien de vérification</string>
+    <string name="me_email_verification_sending">Envoi en cours…</string>
+    <string name="me_email_verification_verify_email_send_link">Envoyer le lien de vérification</string>
+    <string name="me_email_verification_verify_email_description">Veuillez confirmer votre adresse e-mail pour sécuriser votre compte et débloquer toutes les fonctionnalités</string>
+    <string name="me_email_verification_verify_email">Confirmer votre adresse e-mail</string>
+    <string name="experimental_features_feedback_dialog_decline">Pas maintenant</string>
+    <string name="experimental_features_feedback_dialog_message">Souhaitez-vous partager des commentaires sur l’éditeur expérimental ?</string>
+    <string name="experimental_features_feedback_dialog_title">Partager des commentaires</string>
+    <string name="experimental_block_editor_plugins">Extensions de l’éditeur de blocs expérimental</string>
+    <string name="experimental_block_editor_theme_styles_description">Appliquer des styles de thème à l’éditeur</string>
+    <string name="experimental_block_editor_description">Accéder à des types de blocs et réglages supplémentaires</string>
+    <string name="experimental_block_editor_note">L’éditeur de blocs expérimental deviendra l’option par défaut dans une prochaine version et il ne sera plus possible de le désactiver.</string>
+    <string name="disable_experimental_block_editor_description">Se désabonner des types et réglages de blocs supplémentaires</string>
+    <string name="disable_experimental_block_editor">Désactiver l’éditeur de blocs expérimental</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">texte indicatif</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
@@ -187,8 +259,6 @@ Language: fr
     <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
     <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
-    <string name="gravatar_info_sync_done_button">Terminé</string>
-    <string name="gravatar_info_sync_message">Il se peut que les mises à jour prennent un peu de temps pour se synchroniser avec votre profil Gravatar.</string>
     <string name="gravatar_info_learn_more_link">Qu’est-ce que Gravatar ?</string>
     <string name="gravatar_info_description">Mettre à jour votre avatar, votre nom et les informations vous concernant ici les mettra également à jour sur l’ensemble des sites qui utilisent les profils Gravatar.</string>
     <string name="gravatar_info_title">Votre profil WordPress.com est propulsé par Gravatar</string>
@@ -2804,7 +2874,6 @@ Language: fr
     <string name="signup_epilogue_error_button_positive">Réessayer</string>
     <string name="signup_epilogue_error_button_negative">Annuler les modifications</string>
     <string name="signup_epilogue_error_generic">Une erreur s\'est produite lors de la mise à jour de votre compte. Vous pouvez réessayer ou annuler vos modifications pour continuer.</string>
-    <string name="signup_epilogue_error_avatar">Une erreur s\'est produite lors du chargement de votre avatar.</string>
     <string name="plugin_needs_update">Mise à jour nécessaire</string>
     <string name="plugin_caption_search">Chercher parmi les extensions</string>
     <string name="plugin_caption_new">Nouvelles</string>
@@ -3279,7 +3348,6 @@ Language: fr
     <string name="invite_message_title">Message personnalisé</string>
     <string name="invite">Invitation</string>
     <string name="invite_names_title">Identifiants ou adresses e-mail</string>
-    <string name="invite_people">Inviter des personnes</string>
     <string name="my_site_header_external">Externe</string>
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
@@ -3292,12 +3360,10 @@ Language: fr
     <string name="user_remove_confirmation_message">Si vous supprimez %1$s, cet utilisateur ne pourras plus accéder à ce site mais tout le contenu ayant été crée par %1$s restera sur le site.\n\nVoulez vous toujours supprimer cet utilisateur ?</string>
     <string name="person_remove_confirmation_title">Supprimer %1$s</string>
     <string name="role">Rôle</string>
-    <string name="people">Personnes</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Les blogs de cette liste n’ont rien publié récemment</string>
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
     <string name="error_fetch_viewers_list">Impossible de récupérer les utilisateurs du site</string>
-    <string name="error_updating_gravatar">Erreur lors de la mise à jour de votre Gravatar</string>
     <string name="error_refreshing_gravatar">Erreur lors de la mise en ligne de votre Gravatar</string>
     <string name="error_locating_image">Erreur de la localisation de l\'image recadrée</string>
     <string name="error_cropping_image">Erreur lors du recadrage de l\'image</string>
@@ -3409,10 +3475,6 @@ Language: fr
     <string name="privacy_private">Votre site est visible uniquement pour vous et les utilisateurs que vous approuvez</string>
     <string name="privacy_public_not_indexed">Votre site est visible par tous, mais demande aux moteurs de recherche de ne pas l\'indexer</string>
     <string name="privacy_public">Votre site est visible par tous et peut être indexé par les moteurs de recherche</string>
-    <string name="about_me_hint">Quelques mots à propos de vous…</string>
-    <string name="about_me">À propos de moi</string>
-    <string name="public_display_name_hint">Le nom affiché par défaut est votre identifiant s\'il n\'est pas défini.</string>
-    <string name="public_display_name">Public</string>
     <string name="last_name">Nom</string>
     <string name="first_name">Prénom</string>
     <string name="my_profile">Mon profil</string>
@@ -3673,7 +3735,7 @@ Language: fr
     <string name="error_load_comment">Ne peut pas charger le commentaire</string>
     <string name="error_edit_comment">Une erreur s\'est produite lors de la modification du commentaire</string>
     <string name="error_moderate_comment">Une erreur s\'est produite lors de la modération</string>
-    <string name="error_generic">Une erreur s\'est produite</string>
+    <string name="error_generic">Une erreur s‘est produite</string>
     <string name="error_refresh_comments">Les commentaires ne peuvent être actualisés pour l\'instant</string>
     <string name="error_refresh_pages" tools:ignore="UnusedResources">Les pages ne peuvent pas être actualisées pour l\'instant </string>
     <string name="error_refresh_posts">Les articles ne peuvent pas être actualisés pour l\'instant</string>
@@ -3692,7 +3754,6 @@ Language: fr
     <string name="reader_toast_err_adding_tag">Impossible d’ajouter cette étiquette</string>
     <string name="reader_title_applog">Journal de l\'application</string>
     <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
-    <string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
     <string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Paramètres d\'image</string>
@@ -3740,7 +3801,6 @@ Language: fr
     <string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
     <string name="reader_likes_you_and_multi">Vous et %,d personnes aiment ça</string>
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
-    <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
     <string name="comment_unapproved">Commentaire désapprouvé</string>
     <string name="reader_toast_err_get_post">Impossible de récupérer cet article</string>
@@ -3839,6 +3899,7 @@ Language: fr
     <string name="no">Non</string>
     <string name="yes">Oui</string>
     <string name="notification_settings">Paramètres de Notification</string>
+    <string name="clear">Effacer</string>
     <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>

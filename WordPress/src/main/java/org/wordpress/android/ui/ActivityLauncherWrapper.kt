@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
+import androidx.core.net.toUri
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -43,7 +43,7 @@ class ActivityLauncherWrapper @Inject constructor() {
 
         if (intent == null) {
             intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(getPlayStoreUrl(activity.application.packageName, packageName, utmCampaign))
+                data = getPlayStoreUrl(activity.application.packageName, packageName, utmCampaign).toUri()
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 setPackage("com.android.vending")
             }

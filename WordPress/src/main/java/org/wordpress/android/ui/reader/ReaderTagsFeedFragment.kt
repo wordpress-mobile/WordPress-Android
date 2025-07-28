@@ -243,19 +243,19 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
                 is ReaderNavigationEvents.ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
-                    context,
+                    requireActivity(),
                     event.post.blogId,
                     event.post.postId
                 )
 
-                is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
-                is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
+                is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(requireActivity(), event.post)
+                is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(requireActivity(), event.post)
                 is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> {
                     showBookmarkSavedLocallyDialog(event)
                 }
 
                 is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                    context,
+                    requireActivity(),
                     event.siteId,
                     event.feedId,
                     event.isFollowed,
@@ -264,13 +264,13 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
                 )
 
                 is ReaderNavigationEvents.ShowReportPost -> ReaderActivityLauncher.openUrl(
-                    context,
+                    requireActivity(),
                     readerUtilsWrapper.getReportPostUrl(event.url),
                     ReaderActivityLauncher.OpenUrlType.INTERNAL
                 )
 
                 is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
-                    context,
+                    requireActivity(),
                     readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
                     ReaderActivityLauncher.OpenUrlType.INTERNAL
                 )

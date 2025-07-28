@@ -101,6 +101,12 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
+    fun `subscribers item click emits OpenSubscribers navigation event`() {
+        val navigationAction = invokeItemClickAction(action =ListItemAction.SUBSCRIBERS)
+
+        assertEquals(navigationAction,SiteNavigationAction.OpenSubscribers(site))
+    }
+    @Test
     fun `themes item click emits OpenThemes navigation event`() {
         val navigationAction = invokeItemClickAction(action =ListItemAction.THEMES)
 

@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
+import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -173,8 +174,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 .scheme(xmlrpcUrl.getProtocol())
                 .host(xmlrpcUrl.getHost())
                 .encodedPath(xmlrpcUrl.getPath())
-                .username(site.getUsername())
-                .password(site.getPassword());
+                .username(SiteModelExtensionsKt.getUserNameProcessed(site))
+                .password(SiteModelExtensionsKt.getPasswordProcessed(site));
         if (xmlrpcUrl.getPort() > 0) {
             urlBuilder.port(xmlrpcUrl.getPort());
         }
@@ -711,8 +712,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private List<Object> getBasicParams(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         List<Object> params = new ArrayList<>();
         params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
+        params.add(SiteModelExtensionsKt.getUserNameProcessed(site));
+        params.add(SiteModelExtensionsKt.getPasswordProcessed(site));
         if (media != null) {
             params.add(media.getMediaId());
         }

@@ -59,6 +59,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
+import kotlin.test.assertNotNull
 
 @Suppress("LargeClass")
 @InternalCoroutinesApi
@@ -311,7 +312,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val promptId = 123
 
         action!!.onClickAction?.invoke(promptId, BloggingPromptAttribution.BLOGANUARY)
-        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
+        val createPostWithBloggingPromptValue = viewModel.createPostWithBloggingPrompt.value
+        assertNotNull(createPostWithBloggingPromptValue)
+        assertThat(createPostWithBloggingPromptValue).isEqualTo(promptId)
     }
 
     @Test
@@ -376,17 +379,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
             false
         )
-    }
-
-    @Test
-    fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(
-            site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false),
-            page = PageType.MY_SITE
-        )
-        assertThat(viewModel.isBottomSheetShowing.value).isNull()
-        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
     }
 
     @Test

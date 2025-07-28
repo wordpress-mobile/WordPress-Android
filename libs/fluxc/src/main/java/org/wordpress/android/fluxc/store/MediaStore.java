@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration;
 import org.wordpress.android.fluxc.network.rest.wpapi.media.ApplicationPasswordsMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.media.MediaRSApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPComV2MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -558,6 +559,7 @@ public class MediaStore extends Store {
     }
 
     private final MediaRestClient mMediaRestClient;
+    private final MediaRSApiRestClient mMediaRSApiRestClient;
     private final MediaXMLRPCClient mMediaXmlrpcClient;
     private final WPComV2MediaRestClient mWPComV2MediaRestClient;
     private final ApplicationPasswordsMediaRestClient mApplicationPasswordsMediaRestClient;
@@ -572,12 +574,14 @@ public class MediaStore extends Store {
     @Inject public MediaStore(
             Dispatcher dispatcher,
             MediaRestClient restClient,
+            MediaRSApiRestClient mediaRSApiRestClient,
             MediaXMLRPCClient xmlrpcClient,
             WPComV2MediaRestClient wpv2MediaRestClient,
             ApplicationPasswordsMediaRestClient applicationPasswordsMediaRestClient,
             ApplicationPasswordsConfiguration applicationPasswordsConfiguration) {
         super(dispatcher);
         mMediaRestClient = restClient;
+        mMediaRSApiRestClient = mediaRSApiRestClient;
         mMediaXmlrpcClient = xmlrpcClient;
         mWPComV2MediaRestClient = wpv2MediaRestClient;
         mApplicationPasswordsMediaRestClient = applicationPasswordsMediaRestClient;
@@ -883,7 +887,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.pushMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
@@ -934,7 +940,9 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
@@ -958,7 +966,9 @@ public class MediaStore extends Store {
                 offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
             }
         }
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
@@ -977,7 +987,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
@@ -992,7 +1004,9 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);

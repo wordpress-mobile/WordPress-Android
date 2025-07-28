@@ -509,16 +509,6 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given any state, when back is pressed, then dismiss dialog event is raised`() {
-        val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        testWithData(actionEvents = actionEvents) {
-            viewModel.onBackPressed()
-
-            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchDismissDialog::class.java)
-        }
-    }
-
-    @Test
     fun `when scan fails, then finish activity event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
         testWithData(actionEvents = actionEvents) {

@@ -258,7 +258,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     }
                 }
             }
-            RequestCodes.STORIES_PHOTO_PICKER,
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -597,6 +596,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.isNewSite
         )
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+        is SiteNavigationAction.OpenSubscribers -> {
+            ActivityLauncher.viewCurrentBlogSubscribers(requireActivity())
+        }
         is SiteNavigationAction.OpenPeople -> {
             ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
         }
@@ -732,6 +734,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             requireActivity(),
             action.site
         )
+
+        is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
+            activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
+        }
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
@@ -755,7 +761,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             is BloggingPromptCardNavigationAction.ViewAnswers -> {
                 ReaderActivityLauncher.showReaderTagPreview(
-                    activity,
+                    requireActivity(),
                     action.readerTag,
                     ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
                     readerTracker,

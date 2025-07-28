@@ -30,7 +30,7 @@ class ReblogUseCase @Inject constructor(
 ) {
     suspend fun onReblogButtonClicked(post: ReaderPost): ReblogState {
         return withContext(bgDispatcher) {
-            val sites = siteStore.visibleSitesAccessedViaWPCom
+            val sites = siteStore.sitesAccessedViaWPComRest
 
             when (sites.count()) {
                 0 -> NoSite

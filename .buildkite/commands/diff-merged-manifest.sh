@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/bash -eu
 
-set -euo pipefail
+if "$(dirname "${BASH_SOURCE[0]}")/should-skip-job.sh" --job-type validation; then
+  exit 0
+fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 

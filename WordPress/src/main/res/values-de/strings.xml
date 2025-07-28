@@ -1,11 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-01 16:19:30+0000
+Translation-Revision-Date: 2025-07-12 21:07:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Wenn du das Anwendungspasswort deaktivierst, werden deine Anmeldedaten von %1$s Websites entfernt.</string>
+    <string name="application_password_disable_feature_title">Anwendungspasswort deaktivieren?</string>
+    <string name="application_password_invalid">Ungültiges Anwendungspasswort</string>
+    <string name="application_password_credentials_storing_error">Beim Speichern der Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
+    <string name="subscribers_add_failed">Das Hinzufügen der Abonnenten ist fehlgeschlagen</string>
+    <string name="subscribers_add_success">Die Abonnenten wurden erfolgreich hinzugefügt</string>
+    <string name="subscribers_add_disclosure">\n        Mit deinem Klick auf „Senden“ bestätigst du, dass du die entsprechende Einwilligung eingeholt hast, um diesen Personen eine E-Mail zu senden. Spam-Beschwerden oder hohe Absprungraten von deinen Abonnenten können dazu führen, dass wir Maßnahmen gegen dein Konto ergreifen.\n    </string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
+    <string name="subscribers_add_subscribers">Abonnenten hinzufügen</string>
+    <string name="subscribers_gift_content_description">Geschenk</string>
+    <string name="subscribers_renewal_interval">Verlängerungsintervall</string>
+    <string name="subscribers_renewal_info">Verlängerungsinformationen</string>
+    <string name="subscribers_price">Preis</string>
+    <string name="subscribers_inactive_interval">Inaktives Intervall</string>
+    <string name="subscribers_billing_interval">Zahlungsintervall</string>
+    <string name="subscribers_billing_info">Rechnungsinformationen</string>
+    <string name="subscribers_end_date">Enddatum</string>
+    <string name="subscribers_start_date">Startdatum</string>
+    <string name="subscribers_plan_details_label">Tarif-Details</string>
+    <string name="subscribers_gift_plan_label">Geschenk-Tarif</string>
+    <string name="subscribers_delete_button">Abonnent löschen</string>
+    <string name="subscribers_site_label">Website</string>
+    <string name="subscribers_country_label">Land</string>
+    <string name="subscribers_email_label">E-Mail</string>
+    <string name="subscribers_plan_label">Tarif</string>
+    <string name="subscribers_status_label">Abonnement-Status</string>
+    <string name="subscribers_date_label">Abonnementdatum</string>
+    <string name="subscribers_detail_label">Details zum Abonnenten</string>
+    <string name="subscribers_newsletter_label">Newsletter-Abonnement</string>
+    <string name="subscribers_clicked_label">Geklickt</string>
+    <string name="subscribers_opened_label">Geöffnet</string>
+    <string name="subscribers_emails_sent_label">E-Mails</string>
+    <string name="subscribers_subscription_status">Abonnement-Status</string>
+    <string name="subscribers_error_title">Es ist ein Fehler aufgetreten</string>
+    <string name="subscribers_empty_search">Es wurden keine Ergebnisse gefunden</string>
+    <string name="subscribers_empty">Es sind keine Abonnenten vorhanden</string>
+    <string name="subscribers_sort_plan">Tarif</string>
+    <string name="subscribers_sort_display_name">Angezeigter Name</string>
+    <string name="subscribers_sort_date">Abonnementbeginn</string>
+    <string name="subscribers_sort_email">E-Mail-Adresse</string>
+    <string name="subscribers_filter_reader_subscription">Reader-Abonnements</string>
+    <string name="subscribers_filter_email_subscription">E-Mail-Abonnement</string>
+    <string name="about_update_email_unverified">Um dein Profil zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
+    <string name="sort_by">Sortieren nach</string>
+    <string name="filter">Filter</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Die angegebene Website unterstützt keine Authentifizierung per Anwendungspasswort.</string>
+    <string name="application_password_title">Authentifizierung per Anwendungspasswort</string>
+    <string name="application_password_credentials_stored">Anwendungsanmeldedaten gespeichert für %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Es dauerte zu lange, einen Code zu erkennen. Bitte versuche es erneut oder verwende deine Kamera-App, um den Code zu scannen.</string>
+    <string name="qrcode_auth_flow_timeout_title">Zeitüberschreitung beim Scan</string>
+    <string name="invite_users">Benutzer einladen</string>
+    <string name="experimental_application_password_feature_description">Aktiviert das Anwendungspasswort zur Anmeldung bei selbst gehosteten Websites.</string>
+    <string name="experimental_application_password_feature">Anmeldung per Anwendungspasswort</string>
+    <string name="experimental_subscribers_feature_description">Newsletter-Abonnenten anzeigen und verwalten (in Arbeit)</string>
+    <string name="experimental_subscribers_feature">Experimentelle Abonnenten</string>
+    <string name="cant_share_no_blog">Du kannst nicht auf WordPress teilen ohne ein Blog</string>
+    <string name="coming_soon">Demnächst verfügbar!</string>
+    <string name="me_email_verification_generic_error">Verifizierungslink kann nicht gesendet werden</string>
+    <string name="me_email_verification_resend">Verifizierungslink erneut senden</string>
+    <string name="me_email_verification_sent_description">Suche in deinem Posteingang unter %s nach der Bestätigungs-E-Mail</string>
+    <string name="me_email_verification_sent">E-Mail gesendet</string>
+    <string name="me_email_verification_sending_description">Bestätigungslink wird gesendet</string>
+    <string name="me_email_verification_sending">Wird gesendet …</string>
+    <string name="me_email_verification_verify_email_send_link">Bestätigungslink senden</string>
+    <string name="me_email_verification_verify_email_description">Bitte bestätige deine E-Mail-Adresse, um dein Konto zu sichern und alle Funktionen freizuschalten</string>
+    <string name="me_email_verification_verify_email">E-Mail-Adresse bestätigen</string>
+    <string name="experimental_features_feedback_dialog_decline">Nicht jetzt</string>
+    <string name="experimental_features_feedback_dialog_message">Hättest du einen Moment Zeit, um uns Feedback zum experimentellen Editor zu geben?</string>
+    <string name="experimental_features_feedback_dialog_title">Feedback teilen</string>
+    <string name="experimental_block_editor_plugins">Plugins für den experimentellen Block-Editor</string>
+    <string name="experimental_block_editor_theme_styles_description">Theme-Stile auf den Editor anwenden</string>
+    <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
+    <string name="experimental_block_editor_note">Der experimentelle Block-Editor wird in einer zukünftigen Version zum Standard und die Möglichkeit, ihn zu deaktivieren, wird entfernt.</string>
+    <string name="disable_experimental_block_editor_description">Zusätzliche Blocktypen und -einstellungen ablehnen</string>
+    <string name="disable_experimental_block_editor">Experimentellen Block-Editor deaktivieren</string>
     <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
     <string name="feedback_form_note_link_wordpress">Community-Foren.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">Platzhalter</string>
@@ -56,7 +131,7 @@ Language: de
     <string name="feedback_form_discard">Feedback verwerfen?</string>
     <string name="feedback_form_message_hint">Wir wissen dein Feedback zu schätzen!</string>
     <string name="feedback_form_title">Feedback</string>
-    <string name="submit">Übermitteln</string>
+    <string name="submit">Absenden</string>
     <string name="close">Schließen</string>
     <string name="sending">Wird gesendet</string>
     <string name="voice_to_content_generic_error">Es ist derzeit nicht möglich, Beiträge aus Audio zu erstellen. Bitte versuche es später noch einmal.</string>
@@ -193,8 +268,6 @@ Language: de
     <string name="notifications_action_mark_all_as_read">Alle als gelesen markieren</string>
     <string name="notifications_unread_content_description">Ungelesen</string>
     <string name="qrcode_media_deeplink_error">Die Website wurde nicht gefunden. Überprüfe, ob du im richtigen Konto angemeldet bist.</string>
-    <string name="gravatar_info_sync_done_button">Fertig</string>
-    <string name="gravatar_info_sync_message">Die Synchronisierung deines Gravatar-Profils mit den neuesten Updates kann einige Zeit in Anspruch nehmen.</string>
     <string name="gravatar_info_learn_more_link">Was ist Gravatar?</string>
     <string name="gravatar_info_description">Wenn du hier deinen Avatar, Namen und deine Informationen über dich aktualisierst, werden sie auch auf allen Websites aktualisiert, die Gravatar-Profile nutzen.</string>
     <string name="gravatar_info_title">Dein WordPress.com-Profil wird unterstützt von Gravatar</string>
@@ -834,7 +907,7 @@ Language: de
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s %% der Abonnenten insgesamt</string>
-    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Link kopieren</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>
@@ -1233,7 +1306,7 @@ Language: de
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">Für %s wurde eine URL festgelegt</string>
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">Für %s wurde keine URL festgelegt</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s wurde in normale Blöcke umgewandelt</string>
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s blockieren</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">Block %s</string>
     <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deckkraft</string>
     <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">Medien-Optionen</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Ungültige URL. Audiodatei nicht gefunden.</string>
@@ -1285,7 +1358,7 @@ Language: de
     <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Titel hinzufügen</string>
     <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wird geladen</string>
-    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link-Label</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link-Beschriftung</string>
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Textfarbe</string>
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s Link</string>
     <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Innenabstand</string>
@@ -1622,7 +1695,7 @@ Language: de
     <string name="reader_follow_comments_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="reader_follow_comments_null_response">Keine Antwort erhalten</string>
     <string name="activity_log_activity_type_filter_clear">Löschen</string>
-    <string name="activity_log_activity_type_filter_apply">Übernehmen</string>
+    <string name="activity_log_activity_type_filter_apply">Anwenden</string>
     <string name="cannot_retry_deleted_media_item_fatal">Die Medien wurden entfernt. Versuche, deine Story neu zu erstellen.</string>
     <string name="label_done_button">Fertig</string>
     <string name="hpp_choose_error">Beim Auswählen des Themes ist ein Fehler aufgetreten.</string>
@@ -2695,7 +2768,7 @@ Language: de
     <string name="photo_picker_camera_desc">Kamera öffnen</string>
     <string name="photo_picker_device_desc">von Gerät auswählen</string>
     <string name="people_invite_role_info_desc">Rolleninfo</string>
-    <string name="media_settings_play">abspielen</string>
+    <string name="media_settings_play">Wiedergeben</string>
     <string name="media_settings_image_preview_desc">Bildvorschau</string>
     <string name="media_preview_desc">Vorschau</string>
     <string name="media_preview_audio_desc">Audio</string>
@@ -2810,7 +2883,6 @@ Language: de
     <string name="signup_epilogue_error_button_positive">Erneut versuchen</string>
     <string name="signup_epilogue_error_button_negative">Rückgängig machen</string>
     <string name="signup_epilogue_error_generic">Es gab Probleme bei der Aktualisierung deines Kontos. Du kannst es erneut versuchen oder deine Änderungen rückgängig machen, um fortzufahren.</string>
-    <string name="signup_epilogue_error_avatar">Es gab Probleme beim Hochladen deines Avatars.</string>
     <string name="plugin_needs_update">Benötigt Update</string>
     <string name="plugin_caption_search">Plugins suchen</string>
     <string name="plugin_caption_new">Neu</string>
@@ -3190,7 +3262,7 @@ Language: de
     <string name="image_quality">Bildqualität</string>
     <string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
     <string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
-    <string name="submit_for_review">Abschicken</string>
+    <string name="submit_for_review">Absenden</string>
     <string name="title_subscriber">Abonnent</string>
     <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">Es wurde eine doppelte Website entdeckt.</string>
     <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Diese Website existiert bereits in der App, du kannst sie nicht hinzufügen.</string>
@@ -3266,7 +3338,7 @@ Language: de
     <string name="image_width">Breite</string>
     <string name="image_link_to">Link zu</string>
     <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alternativtext</string>
-    <string name="image_caption">Bildunterschrift</string>
+    <string name="image_caption">Untertitel</string>
     <string name="image_settings_save_toast">Änderungen gespeichert</string>
     <string name="image_settings_dismiss_dialog_title">Ungespeicherte Änderungen verwerfen?</string>
     <string name="stop_upload_dialog_title">Hochladen stoppen?</string>
@@ -3285,7 +3357,6 @@ Language: de
     <string name="invite_message_title">Individuelle Nachricht</string>
     <string name="invite">Einladen</string>
     <string name="invite_names_title">Benutzernamen oder E-Mail-Adressen</string>
-    <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>
     <string name="label_clear_search_history">Lösche Suchverlauf</string>
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
@@ -3298,12 +3369,10 @@ Language: de
     <string name="user_remove_confirmation_message">Falls du %1$s entfernst, kann dieser Benutzer nicht länger auf die Website zugreifen, aber alle von %1$s erstellten Beiträge verbleiben auf der Website.\n\nMöchtest du diesen Benutzter noch immer entfernen?</string>
     <string name="person_remove_confirmation_title">Entferne %1$s</string>
     <string name="role">Rolle</string>
-    <string name="people">Personen</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Die Blogs in dieser Liste haben in letzter Zeit nichts veröffentlicht</string>
     <string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
     <string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
     <string name="error_fetch_viewers_list">Website-Besucher konnten nicht abgerufen werden</string>
-    <string name="error_updating_gravatar">Beim Aktualisieren deines Gravatars ist ein Fehler aufgetreten</string>
     <string name="error_refreshing_gravatar">Beim Neuladen deines Gravatars ist ein Fehler aufgetreten</string>
     <string name="error_locating_image">Bei der Lokalisierung des zugeschnittenen Bildes ist ein Fehler aufgetreten.</string>
     <string name="error_cropping_image">Beim Zuschneiden des Bildes ist ein Fehler aufgetreten</string>
@@ -3415,10 +3484,6 @@ Language: de
     <string name="privacy_private">Deine Website ist nur für dich und freigegebene Nutzer sichtbar.</string>
     <string name="privacy_public_not_indexed">Deine Website ist für alle sichtbar. Suchmaschinen werden aufgefordert, sie nicht zu indexieren.</string>
     <string name="privacy_public">Deine Website ist für alle sichtbar. Suchmaschinen dürfen sie indexieren.</string>
-    <string name="about_me_hint">Ein paar Infos über dich …</string>
-    <string name="about_me">Über mich</string>
-    <string name="public_display_name_hint">Wenn du keinen Anzeigenamen festlegst, wird standardmäßig dein Benutzername verwendet.</string>
-    <string name="public_display_name">Öffentlich angezeigter Name</string>
     <string name="last_name">Nachname</string>
     <string name="first_name">Vorname</string>
     <string name="my_profile">Mein Profil</string>
@@ -3636,7 +3701,7 @@ Language: de
     <string name="stats_followers_a_minute_ago">Vor einer Minute</string>
     <string name="stats_followers_seconds_ago">Vor Sekunden</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_top_posts_and_pages">Beiträge &amp; Seiten</string>
+    <string name="stats_view_top_posts_and_pages">Beiträge und Seiten</string>
     <string name="stats_view_countries">Länder</string>
     <string name="stats_likes">Gefällt mir</string>
     <string name="stats_visitors">Besucher</string>
@@ -3648,7 +3713,7 @@ Language: de
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
     <string name="reader_label_like">Gefällt mir</string>
-    <string name="reader_label_view_original">Zeige Original-Beitrag</string>
+    <string name="reader_label_view_original">Original-Beitrag anzeigen</string>
     <string name="reader_label_comments_closed">Kommentare sind geschlossen</string>
     <string name="reader_title_photo_viewer">%1$d von %2$d</string>
     <string name="error_publish_empty_post">Leerer Beitrag kann nicht veröffentlicht werden</string>
@@ -3685,7 +3750,7 @@ Language: de
     <string name="error_refresh_posts">Beiträge konnten nicht aktualisiert werden</string>
     <string name="error_deleting_post">Beim Löschen des Beitrags ist ein Fehler aufgetreten</string>
     <string name="notifications_empty_list">Keine Benachrichtigungen</string>
-    <string name="sdcard_message">Eine angeschlossene SD-Karte wird für den Medienupload benötigt</string>
+    <string name="sdcard_message">Eine angeschlossene SD-Karte ist für den Medienupload erforderlich</string>
     <string name="cat_name_required">Das Feld Kategorie-Name ist erforderlich</string>
     <string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
     <string name="adding_cat_failed">Hinzufügen der Kategorie fehlgeschlagen</string>
@@ -3696,9 +3761,8 @@ Language: de
     <string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
     <string name="reader_toast_err_removing_tag">Dieses Schlagwort konnte nicht entfernt werden</string>
     <string name="reader_toast_err_adding_tag">Dieses Schlagwort konnte nicht hinzugefügt werden</string>
-    <string name="reader_title_applog">Anwendungslog</string>
+    <string name="reader_title_applog">Anwendungsprotokoll</string>
     <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
-    <string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktiviere ihn wieder in den Einstellungen und versuche es erneut.</string>
     <string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="image_settings">Bild-Einstellungen</string>
@@ -3711,7 +3775,7 @@ Language: de
     <string name="file_error_create">Konnte keine temporäre Datei für den Medienupload erstellen. Stelle sicher, dass genügend Speicherplatz auf deinem Gerät verfügbar ist.</string>
     <string name="category_name">Kategorie-Name</string>
     <string name="add_new_category">Neue Kategorie hinzufügen</string>
-    <string name="view_in_browser">Im Browser anschauen</string>
+    <string name="view_in_browser">Im Browser anzeigen</string>
     <string name="remove_account">Website entfernen</string>
     <string name="saving_changes">Änderungen speichern</string>
     <string name="trash">Papierkorb</string>
@@ -3746,7 +3810,6 @@ Language: de
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
     <string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
     <string name="reader_likes_multi">%d Leuten gefällt dies</string>
-    <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
     <string name="comment_unapproved">Kommentar nicht mehr genehmigt</string>
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
@@ -3776,14 +3839,14 @@ Language: de
     <string name="stats_timeframe_yesterday">Gestern</string>
     <string name="stats_timeframe_today">Heute</string>
     <string name="stats_view_referrers">Referrer</string>
-    <string name="stats_view_tags_and_categories">Tags &amp; Kategorien</string>
+    <string name="stats_view_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_view_clicks">Klicks</string>
     <string name="stats">Statistik</string>
     <string name="share_action">Teilen</string>
     <string name="theme_activate_button">Aktivieren</string>
     <string name="media_edit_failure">Aktualisierung fehlgeschlagen</string>
     <string name="media_edit_description_text">Beschreibung</string>
-    <string name="media_edit_caption_text">Beschriftung</string>
+    <string name="media_edit_caption_text">Untertitel</string>
     <string name="media_edit_title_text">Titel</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
     <string name="media_gallery_type_circles">Kreise</string>
@@ -3829,7 +3892,7 @@ Language: de
     <string name="title">Titel</string>
     <string name="tags_separate_with_commas">Schlagwörter (durch Kommas getrennt)</string>
     <string name="categories">Kategorien</string>
-    <string name="sdcard_title">SD-Karte benötigt</string>
+    <string name="sdcard_title">SD-Karte erforderlich</string>
     <string name="media">Medien</string>
     <string name="updating_cat_success">Kategorie erfolgreich aktualisiert</string>
     <string name="approve">Freigeben</string>
@@ -3845,6 +3908,7 @@ Language: de
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Benachrichtigungseinstellungen</string>
+    <string name="clear">Leeren</string>
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>

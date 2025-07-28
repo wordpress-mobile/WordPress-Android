@@ -109,6 +109,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         super.onStart()
         dispatcher.register(this)
         isRunning = true
+        dispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()))
     }
 
     override fun onResume() {

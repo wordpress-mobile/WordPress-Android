@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-06 10:54:11+0000
+Translation-Revision-Date: 2025-07-08 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">Uygulama şifresini devre dışı bırakırsanız oturum açma bilgileriniz %1$s siteden kaldırılır.</string>
+    <string name="application_password_disable_feature_title">Uygulama Şifresini Devre Dışı Bırak</string>
+    <string name="application_password_invalid">Geçersiz Uygulama Şifresi</string>
+    <string name="application_password_credentials_storing_error">%1$s Uygulama şifresi kimlik bilgileri saklanırken bir hata oluştu</string>
+    <string name="subscribers_add_failed">Aboneler eklenemedi</string>
+    <string name="subscribers_add_success">Aboneler başarıyla eklendi</string>
+    <string name="subscribers_add_disclosure">\n        Gönder seçeneğine tıklayarak, her bir kişiye e-posta göndermek için uygun onayı aldığınızı beyan etmiş olursunuz. Abonelerinizden gelen spam şikayetleri veya e-postaların yüksek oranda geri dönmesi, hesabınıza işlem yapılmasına neden olabilir.\n    </string>
+    <string name="subscribers_add_email_hint">isim@ornek.com</string>
+    <string name="subscribers_add_subscribers">Abone ekleyin</string>
+    <string name="subscribers_gift_content_description">Hediye</string>
+    <string name="subscribers_renewal_interval">Yenileme aralığı</string>
+    <string name="subscribers_renewal_info">Yenileme bilgileri</string>
+    <string name="subscribers_price">Fiyat</string>
+    <string name="subscribers_inactive_interval">Etkin olmayan aralık</string>
+    <string name="subscribers_billing_interval">Faturalama aralığı</string>
+    <string name="subscribers_billing_info">Fatura bilgileri</string>
+    <string name="subscribers_end_date">Bitiş tarihi</string>
+    <string name="subscribers_start_date">Başlangıç tarihi</string>
+    <string name="subscribers_plan_details_label">Paket ayrıntıları</string>
+    <string name="subscribers_gift_plan_label">Hediye paketi</string>
+    <string name="subscribers_delete_button">Aboneyi silin</string>
+    <string name="subscribers_country_label">Ülke</string>
+    <string name="subscribers_email_label">E-posta</string>
+    <string name="subscribers_plan_label">Paket</string>
+    <string name="subscribers_status_label">Abonelik durumu</string>
+    <string name="subscribers_date_label">Abonelik tarihi</string>
+    <string name="subscribers_detail_label">Abone ayrıntıları</string>
+    <string name="subscribers_newsletter_label">Haber Bülteni aboneliği</string>
+    <string name="subscribers_clicked_label">Tıklandı</string>
+    <string name="subscribers_opened_label">Açıldı</string>
+    <string name="subscribers_emails_sent_label">E-postalar</string>
+    <string name="subscribers_subscription_status">Abonelik durumu</string>
+    <string name="subscribers_error_title">Bir sorun oluştu</string>
+    <string name="subscribers_empty_search">Hiçbir sonuç bulunamadı</string>
+    <string name="subscribers_empty">Abone yok</string>
+    <string name="subscribers_sort_plan">Paket</string>
+    <string name="subscribers_sort_display_name">Görünen ad</string>
+    <string name="subscribers_sort_date">Abone olunduğu tarih</string>
+    <string name="subscribers_sort_email">E-posta adresi</string>
+    <string name="subscribers_filter_reader_subscription">Okuyucu abonelikleri</string>
+    <string name="subscribers_filter_email_subscription">E-Posta aboneliği</string>
+    <string name="about_update_email_unverified">Profilinizi güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
+    <string name="sort_by">Şuna göre sırala:</string>
+    <string name="filter">Filtrele</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">Sağlanan site Uygulama Şifresi kimlik doğrulamasını desteklemiyor.</string>
+    <string name="application_password_title">Uygulama Şifresi kullanarak yetkilendirin</string>
+    <string name="application_password_credentials_stored">Şunun için uygulama şifresi kimlik bilgileri saklandı: %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Lütfen tekrar deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
+    <string name="qrcode_auth_flow_timeout_title">Tarama zaman aşımına uğradı</string>
+    <string name="invite_users">Kullanıcıları davet et</string>
+    <string name="experimental_application_password_feature_description">Kullanıcı tarafından barındırılan sitelerde oturum açmak için Uygulama Şifresini etkinleştirin.</string>
+    <string name="experimental_application_password_feature">Uygulama Şifresiyle oturum açma</string>
+    <string name="experimental_subscribers_feature_description">Haber bülteni abonelerini görün ve yönetin (çalışma devam ediyor)</string>
+    <string name="experimental_subscribers_feature">Deneysel aboneler</string>
+    <string name="cant_share_no_blog">Blogunuz olmadan WordPress ile paylaşamazsınız</string>
+    <string name="coming_soon">Çok yakında!</string>
+    <string name="me_email_verification_generic_error">Doğrulama bağlantısı gönderilemiyor</string>
+    <string name="me_email_verification_resend">Doğrulama bağlantısını yeniden gönder</string>
+    <string name="me_email_verification_sent_description">Onay e-postası için %s adresinden gelen kutunuzu kontrol edin</string>
+    <string name="me_email_verification_sent">E-posta gönderildi</string>
+    <string name="me_email_verification_sending_description">Doğrulama bağlantısı gönderiliyor</string>
+    <string name="me_email_verification_sending">Gönderiliyor…</string>
+    <string name="me_email_verification_verify_email_send_link">Doğrulama bağlantısı gönder</string>
+    <string name="me_email_verification_verify_email_description">Lütfen hesabınızın güvenliğini sağlamak ve tüm özelliklerin kilidini açmak için e-posta adresinizi doğrulayın</string>
+    <string name="me_email_verification_verify_email">E-posta adresinizi doğrulayın</string>
+    <string name="experimental_features_feedback_dialog_decline">Şimdi değil</string>
+    <string name="experimental_features_feedback_dialog_message">Deneysel düzenleyicide geri bildirim paylaşmak istiyor musunuz?</string>
+    <string name="experimental_features_feedback_dialog_title">Görüşlerinizi paylaşın</string>
+    <string name="experimental_block_editor_plugins">Deneysel blok düzenleyici eklentileri</string>
+    <string name="experimental_block_editor_theme_styles_description">Düzenleyiciye tema stilleri uygulayın</string>
+    <string name="experimental_block_editor_description">Ek blok türlerine ve ayarlarına erişin</string>
+    <string name="experimental_block_editor_note">Deneysel blok düzenleyici gelecekteki bir sürümde varsayılan olacak ve bunu devre dışı bırakma özelliği kaldırılacak.</string>
+    <string name="disable_experimental_block_editor_description">Ek blok türlerini ve ayarlarını devre dışı bırakın</string>
+    <string name="disable_experimental_block_editor">Deneysel blok düzenleyiciyi devre dışı bırakın</string>
     <string name="avatar_update_email_unverified">Avatarınızı güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="feedback_form_note_link_wordpress">topluluk forumları.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>
@@ -34,6 +108,7 @@ Language: tr
     <string name="more_content_description_blogging_prompts">İstemler daha fazla</string>
     <string name="more_content_description_promote_blaze">Blaze daha fazla</string>
     <string name="reader_toast_success_undo">Blogun engeli kaldırıldı</string>
+    <string name="feedback_form_note_link_jetpack">Destek iletişim ekranı.</string>
     <string name="feedback_form_note_text">Bunun bir destek formu olmadığını ve yanıt veremeyeceğimizi lütfen unutmayın. Desteğe ihtiyacınız olursa lütfen şunu kullanın: \"</string>
     <string name="experimental_block_editor_theme_styles">Deneysel blok düzenleyici stilleri</string>
     <string name="experimental_block_editor">Deneysel blok düzenleyici</string>
@@ -42,6 +117,7 @@ Language: tr
     <string name="dialog_confirm_autosave_dont_restore_button">Bu uygulamadan</string>
     <string name="dialog_confirm_autosave_restore_button">Başka cihaz</string>
     <string name="item_selected">Seçildi</string>
+    <string name="send_feedback">Geri bildirim gönder</string>
     <string name="media_pager_remove_item_content_description">%1$d ürününü kaldırın</string>
     <string name="feedback_form_add_attachments">Ekleri ekleyin</string>
     <string name="feedback_form_unable_to_create_tempfile">Geçici dosya oluşturulamıyor</string>
@@ -191,8 +267,6 @@ Language: tr
     <string name="notifications_action_mark_all_as_read">Tümünü okundu olarak işaretle</string>
     <string name="notifications_unread_content_description">Okunmamış</string>
     <string name="qrcode_media_deeplink_error">Site bulunamadı. Doğru hesapta oturum açtığınızdan emin olun.</string>
-    <string name="gravatar_info_sync_done_button">Tamam</string>
-    <string name="gravatar_info_sync_message">Güncellemelerin Gravatar profilinizle eşitlenmesi biraz zaman alabilir.</string>
     <string name="gravatar_info_learn_more_link">Gravatar nedir?</string>
     <string name="gravatar_info_description">Avatarınız, adınız ve hakkında bilgilerinizi güncellerseniz bunlar, Gravatar profillerini kullanan tüm sitelerde güncellenir.</string>
     <string name="gravatar_info_title">WordPress.com profiliniz Gravatar tarafından desteklenir</string>
@@ -2808,7 +2882,6 @@ Language: tr
     <string name="signup_epilogue_error_button_positive">Yeniden dene</string>
     <string name="signup_epilogue_error_button_negative">Geri al</string>
     <string name="signup_epilogue_error_generic">Hesabınız güncellenirken bir sorun çıktı. Yeniden deneyebilir ya da ilerlemek için değişikliklerinizi geri alabilirsiniz.</string>
-    <string name="signup_epilogue_error_avatar">Avatarınız güncellenirken bir sorun çıktı.</string>
     <string name="plugin_needs_update">Güncellenmesi gerekiyor</string>
     <string name="plugin_caption_search">Eklentileri ara</string>
     <string name="plugin_caption_new">Yeni</string>
@@ -3283,7 +3356,6 @@ Language: tr
     <string name="invite_message_title">Özel ileti</string>
     <string name="invite">Davet et</string>
     <string name="invite_names_title">Kullanıcı adları veya e-posta adresleri</string>
-    <string name="invite_people">İnsanları davet edin</string>
     <string name="my_site_header_external">Dış</string>
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişi temizlensin mi?</string>
@@ -3296,12 +3368,10 @@ Language: tr
     <string name="user_remove_confirmation_message">%1$s kullanıcısını kaldırırsanız, o kullanıcı artık bu siteye erişemez fakat %1$s kullanıcısı tarafından oluşturulmuş içerik sitede kalır.\n\nBu kullanıcıyı gene de kaldırmak istiyor musunuz?</string>
     <string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
     <string name="role">Rol</string>
-    <string name="people">Kişiler</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Bu listedeki bloglarda yakın zamanda herhangi bir yazı paylaşılmamış</string>
     <string name="error_remove_user">Kullanıcı kaldırılamadı</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemedi</string>
     <string name="error_fetch_viewers_list">Site takipçileri alınamadı</string>
-    <string name="error_updating_gravatar">Gravatar güncellenirken sorun çıktı</string>
     <string name="error_refreshing_gravatar">Gravatar yenilenirken sorun çıktı</string>
     <string name="error_locating_image">Kırpılmış görsel konumlandırılırken sorun çıktı</string>
     <string name="error_cropping_image">Görsel kırpılırken sorun çıktı</string>
@@ -3413,10 +3483,6 @@ Language: tr
     <string name="privacy_private">Siteniz yalnızca siz ve onay verdiğiniz kullanıcılar tarafından görülebilir</string>
     <string name="privacy_public_not_indexed">Siteniz herkes tarafından görüntülenebilir, ancak arama motorlarından kendisini dizine eklememesini ister</string>
     <string name="privacy_public">Siteniz herkes tarafından görülebilir ve arama motorları tarafından dizine eklenebilir</string>
-    <string name="about_me_hint">Hakkınızda birkaç sözcük…</string>
-    <string name="about_me">Hakkımda</string>
-    <string name="public_display_name_hint">Ayarlanmazsa, görüntülenecek ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
-    <string name="public_display_name">Herkese açık görüntülenecek ad</string>
     <string name="last_name">Soyad</string>
     <string name="first_name">Ad</string>
     <string name="my_profile">Profilim</string>
@@ -3696,7 +3762,6 @@ Language: tr
     <string name="reader_toast_err_adding_tag">Bu etiket eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
     <string name="fatal_db_error">Uygulama veri tabanı oluşturulurken sorun çıktı. Uygulamayı yeniden kurmayı deneyin.</string>
-    <string name="error_blog_hidden">Bu blog gizli ve yüklenemedi. Ayarlar bölümünden etkinleştirip yeniden deneyin.</string>
     <string name="error_refresh_media">Ortam dosyaları şu anda yenilenemedi</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Görsel ayarları</string>
@@ -3744,7 +3809,6 @@ Language: tr
     <string name="reader_empty_posts_in_tag_updating">Yazılar alınıyor…</string>
     <string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
-    <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
     <string name="comment_unapproved">Yorumun onayı kaldırıldı</string>
     <string name="reader_toast_err_get_post">Bu yazı alınamadı</string>
@@ -3843,6 +3907,7 @@ Language: tr
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
     <string name="notification_settings">Bildirim ayarları</string>
+    <string name="clear">Temizle</string>
     <string name="add">Ekle</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>

@@ -133,7 +133,8 @@ class UnifiedLoginTracker
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
         SIGNUP("signup"),
-        GOOGLE_SIGNUP("google_signup")
+        GOOGLE_SIGNUP("google_signup"),
+        APPLICATION_PASSWORD("application_password")
     }
 
     enum class Step(val value: String) {

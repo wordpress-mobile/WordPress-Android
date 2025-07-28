@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-02-04 09:54:09+0000
+Translation-Revision-Date: 2025-07-08 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、%1$s件のサイトからログイン情報が削除されます。</string>
+    <string name="application_password_disable_feature_title">アプリケーションパスワードを無効にしますか ?</string>
+    <string name="application_password_invalid">アプリケーションパスワードが無効です</string>
+    <string name="application_password_credentials_storing_error">%1$s のアプリケーションパスワードのログイン情報を保存する際にエラーが発生しました</string>
+    <string name="subscribers_add_failed">購読者の追加に失敗しました</string>
+    <string name="subscribers_add_success">購読者を追加しました</string>
+    <string name="subscribers_add_disclosure">\n       「送信」をクリックすると、お客様は、各ユーザーへのメール送信について適切な同意を得ていることを表明するものとします。 購読者からスパムの苦情が多く寄せられたり、バウンスレートが高かったりすると、アカウントに何らかの措置がとられる可能性があります。\n    </string>
+    <string name="subscribers_add_subscribers">購読者を追加</string>
+    <string name="subscribers_gift_content_description">ギフト</string>
+    <string name="subscribers_renewal_interval">更新間隔</string>
+    <string name="subscribers_renewal_info">更新情報</string>
+    <string name="subscribers_price">価格</string>
+    <string name="subscribers_inactive_interval">無効な間隔</string>
+    <string name="subscribers_billing_interval">請求の間隔</string>
+    <string name="subscribers_billing_info">お支払い情報</string>
+    <string name="subscribers_end_date">終了日</string>
+    <string name="subscribers_start_date">開始日</string>
+    <string name="subscribers_plan_details_label">プランの詳細</string>
+    <string name="subscribers_gift_plan_label">ギフトプラン</string>
+    <string name="subscribers_delete_button">購読者を削除</string>
+    <string name="subscribers_site_label">サイト</string>
+    <string name="subscribers_country_label">国</string>
+    <string name="subscribers_email_label">メールアドレス</string>
+    <string name="subscribers_plan_label">プラン</string>
+    <string name="subscribers_status_label">講読ステータス</string>
+    <string name="subscribers_date_label">購読日</string>
+    <string name="subscribers_detail_label">購読者の詳細</string>
+    <string name="subscribers_newsletter_label">ニュースレターの購読</string>
+    <string name="subscribers_clicked_label">クリックした</string>
+    <string name="subscribers_opened_label">開いた</string>
+    <string name="subscribers_emails_sent_label">メールアドレス</string>
+    <string name="subscribers_subscription_status">講読ステータス</string>
+    <string name="subscribers_error_title">エラーが発生しました</string>
+    <string name="subscribers_empty_search">結果が見つかりませんでした</string>
+    <string name="subscribers_empty">購読者がいません</string>
+    <string name="subscribers_sort_plan">プラン</string>
+    <string name="subscribers_sort_display_name">表示名</string>
+    <string name="subscribers_sort_date">登録した日付</string>
+    <string name="subscribers_sort_email">メールアドレス</string>
+    <string name="subscribers_filter_reader_subscription">Reader 購読</string>
+    <string name="subscribers_filter_email_subscription">メール購読</string>
+    <string name="about_update_email_unverified">プロフィールを更新するには、まずメールアドレスを確認する必要があります。</string>
+    <string name="sort_by">並べ替え</string>
+    <string name="filter">フィルター</string>
+    <string name="application_password_not_supported_error" a8c-src-lib="module:login">指定されたサイトはアプリケーションパスワード認証に対応していません。</string>
+    <string name="application_password_title">アプリケーションパスワードを使用して認証</string>
+    <string name="application_password_credentials_stored">%1$s に保存されたアプリケーションパスワードのログイン情報</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">コードの検出に時間がかかりすぎました。 もう一度お試しいただくか、カメラアプリを使用してコードをスキャンしてください。</string>
+    <string name="qrcode_auth_flow_timeout_title">スキャンがタイムアウトしました</string>
+    <string name="invite_users">ユーザーを招待</string>
+    <string name="experimental_application_password_feature_description">インストール型のサイトにログインするには、アプリケーションパスワードを有効にします。</string>
+    <string name="experimental_application_password_feature">アプリケーションパスワードによるログイン</string>
+    <string name="experimental_subscribers_feature_description">ニュースレター購読者の表示と管理 (進行中)</string>
+    <string name="experimental_subscribers_feature">テスト購読者</string>
+    <string name="cant_share_no_blog">ブログがないため WordPress で共有できません</string>
+    <string name="coming_soon">まもなく公開予定です。</string>
+    <string name="me_email_verification_generic_error">認証リンクを送信できません</string>
+    <string name="me_email_verification_resend">認証リンクを再送</string>
+    <string name="me_email_verification_sent_description">%s の受信箱で確認メールを確認</string>
+    <string name="me_email_verification_sent">メールを送信しました</string>
+    <string name="me_email_verification_sending_description">認証リンクを送信しています</string>
+    <string name="me_email_verification_sending">送信中…</string>
+    <string name="me_email_verification_verify_email_send_link">認証リンクを送信</string>
+    <string name="me_email_verification_verify_email_description">アカウントを保護してすべての機能を利用するには、メールアドレスを確認してください</string>
+    <string name="me_email_verification_verify_email">メールアドレスを確認</string>
+    <string name="experimental_features_feedback_dialog_decline">後で</string>
+    <string name="experimental_features_feedback_dialog_message">試験用エディターのフィードバックを共有しますか ?</string>
+    <string name="experimental_features_feedback_dialog_title">フィードバックを共有</string>
+    <string name="experimental_block_editor_plugins">試験用のブロックエディタープラグイン</string>
+    <string name="experimental_block_editor_theme_styles_description">テーマスタイルをエディターに適用</string>
+    <string name="experimental_block_editor_description">追加のブロックタイプと設定にアクセス</string>
+    <string name="experimental_block_editor_note">試験用のブロックエディターは将来のリリースでデフォルトになり、無効化する機能は削除されます。</string>
+    <string name="disable_experimental_block_editor_description">追加のブロックタイプと設定をオプトアウト</string>
+    <string name="disable_experimental_block_editor">試験用のブロックエディターを無効化</string>
     <string name="avatar_update_email_unverified">アバターを更新するには、まずメールアドレスを確認する必要があります。</string>
     <string name="feedback_form_note_link_wordpress">コミュニティフォーラム。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">プレースホルダー</string>
@@ -185,8 +259,6 @@ Language: ja_JP
     <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
     <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
-    <string name="gravatar_info_sync_done_button">完了</string>
-    <string name="gravatar_info_sync_message">Gravatar プロフィールと更新内容が同期されるのに時間がかかる場合があります。</string>
     <string name="gravatar_info_learn_more_link">Gravatar とは</string>
     <string name="gravatar_info_description">自分のアバター、名前、概要情報をこちらで更新すると、Gravatar プロフィールを使用するすべてのサイトにも更新が反映されます。</string>
     <string name="gravatar_info_title">WordPress.com のプロフィールでは Gravatar を活用できます</string>
@@ -2797,7 +2869,6 @@ Language: ja_JP
     <string name="signup_epilogue_error_button_positive">再試行</string>
     <string name="signup_epilogue_error_button_negative">戻す</string>
     <string name="signup_epilogue_error_generic">アカウントの更新中にエラーが発生しました。変更を再試行するか、元に戻して続行できます。</string>
-    <string name="signup_epilogue_error_avatar">アバターのアップロード中にエラーが発生しました。</string>
     <string name="plugin_needs_update">更新が必要</string>
     <string name="plugin_caption_search">プラグインの検索</string>
     <string name="plugin_caption_new">新規</string>
@@ -3271,7 +3342,6 @@ Language: ja_JP
     <string name="invite_message_title">カスタムメッセージ</string>
     <string name="invite">招待</string>
     <string name="invite_names_title">ユーザー名またはメールアドレス</string>
-    <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
@@ -3284,12 +3354,10 @@ Language: ja_JP
     <string name="user_remove_confirmation_message">%1$s を削除すると、そのユーザーはこのサイトにアクセスできなくなりますが、%1$s によって作成されたコンテンツはサイト上に残ります。\n\n本当にこのユーザーを削除しますか ?</string>
     <string name="person_remove_confirmation_title">%1$s を削除</string>
     <string name="role">権限グループ</string>
-    <string name="people">人</string>
     <string name="reader_empty_blogs_posts_in_custom_list">このリスト内のブログには最近の投稿がありません</string>
     <string name="error_remove_user">ユーザーを削除できませんでした</string>
     <string name="error_update_role">ユーザー権限グループを更新できませんでした</string>
     <string name="error_fetch_viewers_list">サイト閲覧者を取得できませんでした</string>
-    <string name="error_updating_gravatar">Gravatar 更新エラー</string>
     <string name="error_refreshing_gravatar">Gravatar 再読み込みエラー</string>
     <string name="error_locating_image">切り抜き済み画像位置不明エラー</string>
     <string name="error_cropping_image">画像切り抜きエラー</string>
@@ -3401,10 +3469,6 @@ Language: ja_JP
     <string name="privacy_private">サイトはあなたと、承認したユーザーのみが表示できます</string>
     <string name="privacy_public_not_indexed">誰でもサイトを閲覧することができますが、検索エンジンにはインデックスしないよう要求します</string>
     <string name="privacy_public">誰でもサイトを閲覧することができ、検索エンジンにインデックスされる可能性があります</string>
-    <string name="about_me_hint">簡単な自己紹介</string>
-    <string name="about_me">自己紹介</string>
-    <string name="public_display_name_hint">表示名が設定されていない場合、デフォルトでユーザー名が指定されます</string>
-    <string name="public_display_name">公開表示名</string>
     <string name="last_name">姓</string>
     <string name="first_name">名</string>
     <string name="my_profile">プロフィール</string>
@@ -3684,7 +3748,6 @@ Language: ja_JP
     <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
     <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
-    <string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="wordpress_blog">WordPress ブログ</string>
     <string name="image_settings">画像設定</string>
@@ -3732,7 +3795,6 @@ Language: ja_JP
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」しました</string>
     <string name="reader_likes_multi">%,d 人が「いいね」しています</string>
-    <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
     <string name="comment_unapproved">コメントの承認を解除しました</string>
     <string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
@@ -3831,6 +3893,7 @@ Language: ja_JP
     <string name="no">いいえ</string>
     <string name="yes">はい</string>
     <string name="notification_settings">通知設定</string>
+    <string name="clear"/>
     <string name="add">追加</string>
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>

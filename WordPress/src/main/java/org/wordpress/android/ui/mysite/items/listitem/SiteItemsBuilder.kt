@@ -84,6 +84,7 @@ class SiteItemsBuilder @Inject constructor(
                 showFocusPoint = showStatsFocusPoint,
                 listItemAction = ListItemAction.STATS
             ),
+            siteListItemBuilder.buildSubscribersItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildBlazeItemIfAvailable(params.isBlazeEligible, params.onClick)
         )
     }
@@ -150,14 +151,14 @@ class SiteItemsBuilder @Inject constructor(
 
         return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             listOfNotNull(
-                    siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
-                    siteListItemBuilder.buildSelfHostedUserListItemIfAvailable(params.site, params.onClick),
-                    siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
-                    siteListItemBuilder.buildShareItemIfAvailable(
-                            params.site,
-                            params.onClick,
-                            showEnablePostSharingFocusPoint
-                    )
+                siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildSelfHostedUserListItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildShareItemIfAvailable(
+                    params.site,
+                    params.onClick,
+                    showEnablePostSharingFocusPoint
+                )
             )
         } else emptyList()
     }

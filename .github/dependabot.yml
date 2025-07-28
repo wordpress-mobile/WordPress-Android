@@ -7,8 +7,6 @@ updates:
       interval: "daily"
     labels:
       - "bot: dependencies update"
-    reviewers:
-      - "wordpress-mobile/android-developers"
     groups:
       kotlin-ksp:
         applies-to: version-updates

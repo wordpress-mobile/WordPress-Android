@@ -76,7 +76,7 @@ class UploadWorkerTest {
         operation.result.get()
 
         // Get WorkInfo and outputData
-        val workInfo = workManager.getWorkInfoById(request.id).get()
+        val workInfo = requireNotNull(workManager.getWorkInfoById(request.id).get())
 
         // Check the work was successful and the method was called with the right argument
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
@@ -98,7 +98,7 @@ class UploadWorkerTest {
         operation.result.get()
 
         // Get WorkInfo and outputData
-        val workInfo = workManager.getWorkInfoById(request.id).get()
+        val workInfo = requireNotNull(workManager.getWorkInfoById(request.id).get())
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
         verifyNoInteractions(uploadStarter)
@@ -122,7 +122,7 @@ class UploadWorkerTest {
         operation.result.get()
 
         // Get WorkInfo and outputData
-        val workInfo = workManager.getWorkInfoById(request.id).get()
+        val workInfo = requireNotNull(workManager.getWorkInfoById(request.id).get())
 
         // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
         verify(uploadStarter, times(1)).queueUploadFromAllSites()
@@ -145,7 +145,7 @@ class UploadWorkerTest {
         operation.result.get()
 
         // Periodic upload worker will stay queued after success/failure
-        val workInfo = workManager.getWorkInfoById(request.id).get()
+        val workInfo = requireNotNull(workManager.getWorkInfoById(request.id).get())
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
 
         // ############### Second round
@@ -158,7 +158,7 @@ class UploadWorkerTest {
         verify(uploadStarter, times(2)).queueUploadFromAllSites()
 
         // WorkRequest should still be queued
-        val workInfo2 = workManager.getWorkInfoById(request.id).get()
+        val workInfo2 = requireNotNull(workManager.getWorkInfoById(request.id).get())
         assertThat(workInfo2.state, `is`(WorkInfo.State.ENQUEUED))
     }
 }

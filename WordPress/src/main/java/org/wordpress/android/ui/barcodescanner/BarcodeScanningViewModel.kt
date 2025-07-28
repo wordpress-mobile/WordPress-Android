@@ -78,11 +78,11 @@ class BarcodeScanningViewModel @Inject constructor(
             val cameraLauncher: ManagedActivityResultLauncher<String, Boolean>
         ) : ScanningEvents()
 
-        object Exit : ScanningEvents()
+        data object Exit : ScanningEvents()
     }
 
     sealed class PermissionState {
-        object Granted : PermissionState()
+        data object Granted : PermissionState()
 
         data class ShouldShowRationale(
             @StringRes val title: Int,
@@ -102,6 +102,6 @@ class BarcodeScanningViewModel @Inject constructor(
             val dismissCtaAction: () -> Unit,
         ) : PermissionState()
 
-        object Unknown : PermissionState()
+        data object Unknown : PermissionState()
     }
 }

@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
@@ -21,10 +22,12 @@ class LoginViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: LoginViewModel
 
     @Before
     fun setUp() {
+        MockitoAnnotations.openMocks(this)
         viewModel = LoginViewModel(buildConfigWrapper)
     }
 

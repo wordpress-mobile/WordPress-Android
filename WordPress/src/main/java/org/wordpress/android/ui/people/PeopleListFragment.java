@@ -42,6 +42,8 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPAvatarUtils;
@@ -69,6 +71,7 @@ public class PeopleListFragment extends Fragment {
     @Inject ImageManager mImageManager;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
+    @Inject ExperimentalFeatures mExperimentalFeatures;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -117,7 +120,7 @@ public class PeopleListFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.people);
+            actionBar.setTitle(R.string.users);
         }
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
@@ -135,6 +138,14 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
+
+        // If the subscribers feature flag is enabled, hide the filter spinner and set the default filter.
+        // Once the subscribers feature is released to everyone, we can remove the filter entirely.
+        if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)) {
+            mFilteredRecyclerView.hideAppBarLayout();
+            mPeopleListFilter = PeopleListFilter.TEAM;
+            AppPrefs.setPeopleListFilter(mPeopleListFilter);
+        }
 
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
@@ -264,7 +275,7 @@ public class PeopleListFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // important for accessibility - talkback
-        getActivity().setTitle(R.string.people);
+        getActivity().setTitle(R.string.users);
     }
 
     @Override

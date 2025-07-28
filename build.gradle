@@ -91,6 +91,37 @@ allprojects {
     }
 }
 
+subprojects {
+    plugins.withType(com.android.build.gradle.AppPlugin) {
+        android {
+            lintOptions {
+                warningsAsErrors = true
+                checkDependencies true
+                checkGeneratedSources = true
+                lintConfig file("${project.rootDir}/config/lint/lint.xml")
+                baseline file("${project.rootDir}/config/lint/baseline.xml")
+                sarifReport = gradle.ext.isCi
+            }
+        }
+        dependencies {
+            lintChecks(libs.android.security.lint)
+            lintChecks(libs.wordpress.lint)
+        }
+    }
+    plugins.withType(com.android.build.gradle.LibraryPlugin) {
+        android {
+            lintOptions {
+                checkDependencies false
+                lintConfig file("${project.rootDir}/config/lint/lint.xml")
+            }
+        }
+        dependencies {
+            lintChecks(libs.android.security.lint)
+            lintChecks(libs.wordpress.lint)
+        }
+    }
+}
+
 dependencies {
     detektPlugins(libs.detekt.formatting)
 }
