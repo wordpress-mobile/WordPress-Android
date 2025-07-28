@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.editor.PostLoadingState
 import org.wordpress.android.ui.posts.editor.StorePostViewModel
 import org.wordpress.android.util.AppLog

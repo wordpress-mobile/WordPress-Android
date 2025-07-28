@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.repository
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -20,8 +20,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.NoChanges
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T

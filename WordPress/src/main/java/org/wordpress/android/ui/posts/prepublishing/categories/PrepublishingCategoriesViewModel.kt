@@ -18,9 +18,9 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
-import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
 import org.wordpress.android.ui.posts.trackPrepublishingNudges

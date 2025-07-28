@@ -44,7 +44,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment

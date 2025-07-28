@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(cat:*)",
+      "Bash(./gradlew:*)",
+      "Bash(rm:*)",
+      "Bash(open:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(kotlinc:*)",
+      "Bash(../gradlew compileWordPressVanillaDebugKotlin:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:www.onedesk.com)",
+      "Bash(grep -n \"WordPress.Media.Preview\" /Users/nbradbury/AndroidStudioProjects/WordPress-Android/WordPress/src/main/res/values/styles.xml)",
+      "Bash(grep -A 5 -B 2 \"statusBarColor.*black\" /Users/nbradbury/AndroidStudioProjects/WordPress-Android/WordPress/src/main/res/values/styles.xml)",
+      "Bash(timeout:*)",
+      "Bash(mkdir:*)"
+    ],
+    "deny": []
+  }
+}

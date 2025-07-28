@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.settings
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues

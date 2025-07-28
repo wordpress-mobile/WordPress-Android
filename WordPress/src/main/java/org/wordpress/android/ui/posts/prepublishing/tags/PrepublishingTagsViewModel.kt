@@ -7,7 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
 import org.wordpress.android.ui.utils.UiString

@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

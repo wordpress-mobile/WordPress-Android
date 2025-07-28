@@ -9,7 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase

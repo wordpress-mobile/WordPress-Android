@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.repository
 
 object EditPostActivityConstants{
     const val ACTION_REBLOG = "reblogAction"

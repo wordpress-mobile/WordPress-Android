@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.posts.EditPostJetpackSocialConnectionsContainer
+import org.wordpress.android.ui.posts.editpost.components.EditPostJetpackSocialConnectionsContainer
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.compose.DescriptionText
 import org.wordpress.android.usecase.social.JetpackSocialFlow

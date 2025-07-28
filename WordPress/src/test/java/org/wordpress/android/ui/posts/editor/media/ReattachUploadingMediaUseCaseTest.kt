@@ -10,7 +10,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 
 @RunWith(MockitoJUnitRunner::class)

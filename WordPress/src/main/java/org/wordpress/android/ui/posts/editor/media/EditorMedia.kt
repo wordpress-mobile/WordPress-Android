@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog

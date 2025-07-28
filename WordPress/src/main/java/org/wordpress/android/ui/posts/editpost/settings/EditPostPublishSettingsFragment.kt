@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.settings
 
 import android.os.Bundle
 import android.view.ViewGroup

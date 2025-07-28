@@ -9,8 +9,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.TagsFragment
 import org.wordpress.android.ui.posts.TagsSelectedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener

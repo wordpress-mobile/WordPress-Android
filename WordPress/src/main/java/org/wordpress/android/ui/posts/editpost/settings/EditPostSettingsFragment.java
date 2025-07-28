@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.editpost.settings;
 
 import android.app.Activity;
 import android.content.Context;
@@ -57,7 +57,8 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository;
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
@@ -933,7 +934,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    void updatePostStatus(PostStatus postStatus) {
+    public void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
             mUpdatePostStatusUseCase.updatePostStatus(postStatus, editPostRepository,
@@ -1380,7 +1381,7 @@ public class EditPostSettingsFragment extends Fragment {
         ).show();
     }
 
-    interface EditPostSettingsCallback {
+    public interface EditPostSettingsCallback {
         void onEditPostPublishedSettingsClick();
 
         void clearFeaturedImage();

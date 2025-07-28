@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState

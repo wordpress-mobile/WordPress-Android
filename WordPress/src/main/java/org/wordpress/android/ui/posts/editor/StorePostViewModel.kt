@@ -22,8 +22,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.IPostFreshnessChecker
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase

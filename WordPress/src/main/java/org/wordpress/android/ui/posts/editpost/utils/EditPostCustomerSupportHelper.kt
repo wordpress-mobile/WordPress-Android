@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.utils
 
 import android.content.Context
 import org.wordpress.android.fluxc.model.SiteModel

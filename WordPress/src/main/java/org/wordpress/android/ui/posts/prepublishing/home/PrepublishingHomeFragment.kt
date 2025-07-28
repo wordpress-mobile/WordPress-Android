@@ -11,8 +11,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostSettingsFragment
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider

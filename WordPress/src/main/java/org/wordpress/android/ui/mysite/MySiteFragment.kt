@@ -51,7 +51,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.editpost.repository.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment

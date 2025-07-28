@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils

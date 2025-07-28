@@ -7,7 +7,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton

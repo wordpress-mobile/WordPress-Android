@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.IPostFreshnessChecker
 import org.wordpress.android.ui.posts.PostUtilsWrapper

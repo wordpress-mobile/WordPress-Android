@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.editor.StorePostViewModel
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState

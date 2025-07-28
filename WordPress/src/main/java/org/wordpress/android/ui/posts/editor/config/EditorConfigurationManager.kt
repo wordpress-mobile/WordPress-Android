@@ -3,7 +3,7 @@ package org.wordpress.android.ui.posts.editor.config
 import android.content.res.Configuration
 import androidx.lifecycle.LifecycleOwner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.editor.state.EditorStateManager
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject

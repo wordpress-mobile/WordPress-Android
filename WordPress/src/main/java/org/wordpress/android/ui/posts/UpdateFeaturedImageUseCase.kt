@@ -2,8 +2,9 @@ package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository.UpdatePostResult.Updated
 import javax.inject.Inject
 
 class UpdateFeaturedImageUseCase @Inject constructor() {

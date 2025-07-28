@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.editpost.settings.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList

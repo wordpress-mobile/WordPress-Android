@@ -46,7 +46,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.editpost.repository.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
 import org.wordpress.android.ui.posts.PostResolutionOverlayFragment

@@ -10,7 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
 @ExperimentalCoroutinesApi

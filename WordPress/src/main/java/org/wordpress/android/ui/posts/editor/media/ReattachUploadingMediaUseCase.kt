@@ -2,7 +2,7 @@ package org.wordpress.android.ui.posts.editor.media
 
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import javax.inject.Inject
 

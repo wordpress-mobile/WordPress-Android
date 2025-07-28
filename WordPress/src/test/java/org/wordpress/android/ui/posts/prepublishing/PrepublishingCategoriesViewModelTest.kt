@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel.UiState

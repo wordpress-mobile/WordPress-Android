@@ -31,7 +31,7 @@ import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.editpost.settings.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;

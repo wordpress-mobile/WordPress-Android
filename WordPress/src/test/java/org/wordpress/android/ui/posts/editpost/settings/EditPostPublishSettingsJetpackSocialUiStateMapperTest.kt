@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.editpost.settings
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before

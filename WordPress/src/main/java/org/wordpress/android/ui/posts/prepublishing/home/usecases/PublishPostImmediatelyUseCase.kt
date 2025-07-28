@@ -3,7 +3,7 @@ package org.wordpress.android.ui.posts.prepublishing.home.usecases
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 

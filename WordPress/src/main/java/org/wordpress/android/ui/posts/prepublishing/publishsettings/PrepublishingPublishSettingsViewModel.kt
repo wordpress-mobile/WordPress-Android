@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.PostSettingsUtils
 import org.wordpress.android.ui.posts.PublishSettingsViewModel
 import org.wordpress.android.ui.utils.UiString

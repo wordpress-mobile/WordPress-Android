@@ -30,7 +30,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.editpost.repository.EditPostActivityConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.uploads.UploadActionUseCase

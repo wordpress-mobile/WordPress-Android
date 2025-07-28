@@ -13,7 +13,7 @@ import org.wordpress.android.editor.AztecEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.editpost.repository.EditPostRepository
 import org.wordpress.android.ui.posts.editor.state.EditorStateManager
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
