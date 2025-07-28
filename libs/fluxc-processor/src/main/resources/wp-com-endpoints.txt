@@ -155,8 +155,6 @@
 
 /jetpack-install/$site#String
 
-/encrypted-logging
-
 /products
 
 /plans

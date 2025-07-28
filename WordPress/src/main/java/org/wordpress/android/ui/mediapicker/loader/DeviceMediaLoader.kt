@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mediapicker.loader
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -129,7 +130,7 @@ class DeviceMediaLoader
             null
         }
         val result = nextPage.take(pageSize).map { file ->
-            val uri = Uri.parse(file.toURI().toString())
+            val uri = file.toURI().toString().toUri()
             DeviceMediaItem(
                 UriWrapper(uri),
                 file.name,

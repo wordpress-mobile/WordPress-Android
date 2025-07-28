@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
+import androidx.core.text.trimmedLength
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -165,7 +166,7 @@ class NoteViewHolder(
         // Trim the '\n\n' added by HtmlCompat.fromHtml(...)
         noteSubjectSpanned = noteSubjectSpanned.subSequence(
             0,
-            TextUtils.getTrimmedLength(noteSubjectSpanned)
+            noteSubjectSpanned.trimmedLength()
         ) as Spanned
         val spans = noteSubjectSpanned.getSpans(
             0,

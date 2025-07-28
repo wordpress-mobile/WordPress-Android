@@ -245,11 +245,6 @@
             android:label="@string/me_btn_experimental_features"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".designsystem.DesignSystemActivity"
-            android:configChanges="locale|orientation|screenSize"
-            android:label="@string/preference_design_system"
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
@@ -398,7 +393,7 @@
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/media_settings_screen_title"
-            android:theme="@style/WordPress.NoActionBar.TranslucentStatus" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Theme Activities -->
         <activity

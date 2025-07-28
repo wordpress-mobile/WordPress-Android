@@ -1,6 +1,6 @@
 package org.wordpress.android.util.signature
 
-import android.annotation.TargetApi
+import androidx.annotation.RequiresApi
 import android.content.pm.PackageManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -23,7 +23,7 @@ class SignatureUtils @Inject constructor(
         checkSignatureHashBeforeBeforeApi28(trustedPackageId, trustedSignatureHash)
     }
 
-    @TargetApi(VERSION_CODES.P)
+    @RequiresApi(VERSION_CODES.P)
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun checkSignatureHashAfterApi28(
         trustedPackageId: String,

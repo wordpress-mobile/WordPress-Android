@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewTreeObserver.OnPreDrawListener
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
@@ -42,7 +43,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         get() = getChildAt(childCount - 1) as Chip
 
     private val lastVisibleTagChipIndex
-        get() = tagChips.filter { it.visibility == View.VISIBLE }.lastIndex
+        get() = tagChips.filter { it.isVisible }.lastIndex
 
     private val lastVisibleTagChip
         get() = getChildAt(lastVisibleTagChipIndex)
