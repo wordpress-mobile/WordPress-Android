@@ -45,6 +45,7 @@ class ApiRootUrlCache @Inject constructor(
      * - "https://example.com:8080" -> "example.com"
      * - "example.com" -> "example.com"
      */
+    @Suppress("SwallowedException")
     private fun extractDomain(urlOrDomain: String): String {
         return try {
             // First try to parse as URI
