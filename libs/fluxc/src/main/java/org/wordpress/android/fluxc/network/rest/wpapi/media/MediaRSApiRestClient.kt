@@ -33,6 +33,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 private const val PATH_SEPARATOR = "/"
+private const val SUFFIX_SEPARATOR = "?"
 
 /**
  * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
@@ -327,6 +328,7 @@ class MediaRSApiRestClient @Inject constructor(
 
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
+
         val handle = uploadHandles[media.id]
         if (handle != null) {
             appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
@@ -401,7 +403,6 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = slug
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -433,6 +434,27 @@ class MediaRSApiRestClient @Inject constructor(
             is MediaDetailsPayload.Document,
             null -> {}
         }
+
+        if (fileName.isNullOrEmpty()) {
+            fileName = parseFileNameFromUrl(url)
+        }
+    }
+
+    /**
+     * We want to try getting the file name form the URL
+     * Example: http://www.mysyte.com/path/my-file.png?param1=value1&param2=value -> my-file.png
+     * The file name will always be between the last path separator "/" and the first suffix separator "?" if so
+     * Otherwise, we can't really rely on the URL to get the file name
+     */
+    private fun parseFileNameFromUrl(url: String): String = if (url.contains(PATH_SEPARATOR)) {
+        val lastUrlPart = url.substringAfterLast(PATH_SEPARATOR)
+        if (lastUrlPart.contains(SUFFIX_SEPARATOR)) {
+            lastUrlPart.substringBefore(SUFFIX_SEPARATOR)
+        } else {
+            lastUrlPart
+        }
+    } else {
+        url
     }
 
     private fun parseFileNameFromPath(fileNameWithPath: String): String =
