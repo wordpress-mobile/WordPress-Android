@@ -3389,10 +3389,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    override fun onEditPostPublishedSettingsClick() {
-        editPostNavigationViewModel.navigateTo(EditPostDestination.PublishSettings)
-    }
-
     /**
      * EditorFragmentListener methods
      */

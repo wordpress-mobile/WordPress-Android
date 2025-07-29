@@ -63,6 +63,8 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel;
+import org.wordpress.android.ui.posts.navigation.EditPostDestination;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -163,6 +165,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
     private EditorJetpackSocialViewModel mJetpackSocialViewModel;
+    private EditPostNavigationViewModel mNavigationViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -192,6 +195,7 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
+        mNavigationViewModel = ((EditPostActivity) requireActivity()).editPostNavigationViewModel;
     }
 
     @Override
@@ -401,10 +405,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof EditPostSettingsCallback) {
-                    ((EditPostSettingsCallback) activity).onEditPostPublishedSettingsClick();
-                }
+                mNavigationViewModel.navigateTo(EditPostDestination.PublishSettings.INSTANCE);
             }
         });
 
@@ -1381,8 +1382,6 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     interface EditPostSettingsCallback {
-        void onEditPostPublishedSettingsClick();
-
         void clearFeaturedImage();
     }
 }
