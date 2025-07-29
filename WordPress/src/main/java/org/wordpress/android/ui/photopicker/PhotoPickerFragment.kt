@@ -229,7 +229,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 softAskView.visibility = View.VISIBLE
             }
             is PhotoPickerViewModel.SoftAskViewUiModel.Hidden -> {
-                if (softAskView.visibility == View.VISIBLE) {
+                if (softAskView.isVisible) {
                     AniUtils.fadeOut(softAskView, MEDIUM)
                 }
             }
@@ -401,7 +401,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     }
 
     private fun isBottomBarShowing(bottomBar: View): Boolean {
-        return bottomBar.visibility == View.VISIBLE
+        return bottomBar.isVisible
     }
 
     /*

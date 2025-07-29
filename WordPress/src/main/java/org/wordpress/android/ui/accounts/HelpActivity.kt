@@ -5,7 +5,7 @@ package org.wordpress.android.ui.accounts
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
@@ -203,14 +203,14 @@ class HelpActivity : BaseAppCompatActivity() {
 
     private fun showFaq() {
         @SuppressWarnings("UnsafeImplicitIntentLaunch")
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
+        val intent = Intent(Intent.ACTION_VIEW, "http://apps.wordpress.com/mobile-app-support/".toUri())
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
     private fun showMigrationFaq() {
         @SuppressWarnings("UnsafeImplicitIntentLaunch")
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
+        val intent = Intent(Intent.ACTION_VIEW, "https://jetpack.com/support/switch-to-the-jetpack-app/".toUri())
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
     }

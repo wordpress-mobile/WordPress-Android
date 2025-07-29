@@ -24,6 +24,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.install.JetpackF
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
@@ -103,6 +104,7 @@ private val excludedActivities = listOf(
     SupportWebViewActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge
+    MediaSettingsActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping

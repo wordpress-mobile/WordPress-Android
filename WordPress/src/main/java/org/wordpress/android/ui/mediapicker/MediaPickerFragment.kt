@@ -458,7 +458,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                 softAskView.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
-                if (softAskView.visibility == View.VISIBLE) {
+                if (softAskView.isVisible) {
                     AniUtils.fadeOut(softAskView, MEDIUM)
                 }
             }

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Point
 import android.view.View
+import androidx.core.view.isVisible
 import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
@@ -89,7 +90,7 @@ class UiHelpers @Inject constructor() {
      * @param visible if true the [firstView] is shown and the [secondView] is hidden else the other way round
      */
     fun fadeInfadeOutViews(firstView: View?, secondView: View?, visible: Boolean) {
-        if (firstView == null || secondView == null || visible == (firstView.visibility == View.VISIBLE)) return
+        if (firstView == null || secondView == null || visible == firstView.isVisible) return
         if (visible) {
             AniUtils.fadeIn(firstView, Duration.SHORT)
             AniUtils.fadeOut(secondView, Duration.SHORT, View.INVISIBLE)

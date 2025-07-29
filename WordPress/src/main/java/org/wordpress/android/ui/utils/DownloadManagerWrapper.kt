@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import androidx.core.net.toUri
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
 import androidx.core.content.FileProvider
@@ -24,7 +25,7 @@ class DownloadManagerWrapper
 @Inject constructor(private val context: Context) {
     fun enqueue(request: Request): Long = downloadManager().enqueue(request)
 
-    fun buildRequest(fileUrl: String) = Request(Uri.parse(fileUrl))
+    fun buildRequest(fileUrl: String) = Request(fileUrl.toUri())
 
     fun query(query: Query): Cursor = downloadManager().query(query)
 
@@ -43,7 +44,7 @@ class DownloadManagerWrapper
     }
 
     private fun toPublicUri(fileUrl: String): Uri {
-        val fileUri = Uri.parse(fileUrl)
+        val fileUri = fileUrl.toUri()
         return if (ContentResolver.SCHEME_FILE == fileUri.scheme) {
             fileUri.path?.let { path ->
                 val file = File(path)

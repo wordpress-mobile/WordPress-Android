@@ -11,6 +11,7 @@ import android.graphics.Path.Direction.CW
 import android.graphics.RectF
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.withSave
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -104,12 +105,10 @@ class LineChartMarkerView @Inject constructor(
     override fun draw(canvas: Canvas, posX: Float, posY: Float) {
         super.draw(canvas, posX, posY)
 
-        val saveId = canvas.save()
-
-        drawToolTip(canvas, posX, posY)
-        draw(canvas)
-
-        canvas.restoreToCount(saveId)
+        canvas.withSave {
+            drawToolTip(canvas, posX, posY)
+            draw(canvas)
+        }
     }
 
     @Suppress("LongMethod")

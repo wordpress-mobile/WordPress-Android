@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.UploadListener
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -22,6 +21,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
@@ -47,9 +47,8 @@ class MediaRSApiRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
-    // Data class to hold both the coroutine job and the OkHttp call
-    @Suppress("DataClassShouldBeImmutable")
-    private data class UploadHandle(var job: Job, var call: Call? = null)
+    // Class to hold both the coroutine job and the OkHttp call
+    private class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
 
     // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
@@ -300,13 +299,13 @@ class MediaRSApiRestClient @Inject constructor(
     private fun getUploadListener(
         media: MediaModel,
         handle: UploadHandle
-    ) = object : UploadListener {
+    ) = object : WpRequestExecutor.UploadListener {
         override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
             notifyMediaUploading(media, uploadedBytes / totalBytes.toFloat())
         }
 
-        override fun onUploadStarted(uploadCall: Call) {
-            handle.call = uploadCall
+        override fun onUploadStarted(cancellableUpload: WpRequestExecutor.CancellableUpload) {
+            handle.call = cancellableUpload
         }
     }
 
@@ -317,7 +316,7 @@ class MediaRSApiRestClient @Inject constructor(
     }
 
     private fun notifyMediaUploading(media: MediaModel, progress: Float) {
-        media.setUploadState(if (progress < 1) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
+        media.setUploadState(if (progress < 1f) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
         val payload = ProgressPayload(media, progress, false, false)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
@@ -330,26 +329,21 @@ class MediaRSApiRestClient @Inject constructor(
 
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
-        scope.launch {
-            val handle = uploadHandles[media.id]
-            if (handle != null) {
-                appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
 
-                handle.job.cancel()
-                handle.call?.cancel()
-                uploadHandles.remove(media.id)
+        val handle = uploadHandles[media.id]
+        if (handle != null) {
+            appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
 
-                // Report the upload was successfully cancelled
-                notifyMediaUploadCanceled(media)
+            handle.job.cancel()
+            handle.call?.cancel()
+            uploadHandles.remove(media.id)
 
-                appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
-            } else {
-                appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
-
-                // Still notify cancellation even if job wasn't found, to update UI state
-                notifyMediaUploadCanceled(media)
-            }
+            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
+        } else {
+            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
         }
+        // Notify media cancelled in both cases since the caller could be expecting it
+        notifyMediaUploadCanceled(media)
     }
 
     private fun notifyMediaUploadCanceled(media: MediaModel) {
@@ -449,7 +443,7 @@ class MediaRSApiRestClient @Inject constructor(
 
     /**
      * We want to try getting the file name form the URL
-     * Example: http://222.mysyte.com/path/my-file.png?param1=value1&param2=value -> my-file.png
+     * Example: http://www.mysyte.com/path/my-file.png?param1=value1&param2=value -> my-file.png
      * The file name will always be between the last path separator "/" and the first suffix separator "?" if so
      * Otherwise, we can't really rely on the URL to get the file name
      */
