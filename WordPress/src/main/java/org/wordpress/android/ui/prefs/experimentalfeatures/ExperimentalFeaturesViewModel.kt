@@ -97,6 +97,11 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         }
     }
 
+    fun confirmApplicationPasswordInfo() {
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+    }
+
     private fun setFeatureSwitchState(
         feature: Feature,
         enabled: Boolean

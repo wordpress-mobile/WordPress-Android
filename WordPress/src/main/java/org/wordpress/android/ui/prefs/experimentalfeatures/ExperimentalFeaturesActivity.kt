@@ -45,7 +45,11 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                             }
                         )
                     }
-                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Info -> TODO()
+                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Info -> {
+                        ApplicationPasswordInfoDialog(
+                            onConfirm = { viewModel.confirmApplicationPasswordInfo() }
+                        )
+                    }
                     ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.None -> {
                         // Stub
                     }

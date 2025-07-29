@@ -5033,4 +5033,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
     <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
+    <string name="application_password_info_title">About Application Passwords</string>
+    <string name="application_password_info_description">Application Passwords description</string>
+    <string name="got_it">Got it</string>
 </resources>

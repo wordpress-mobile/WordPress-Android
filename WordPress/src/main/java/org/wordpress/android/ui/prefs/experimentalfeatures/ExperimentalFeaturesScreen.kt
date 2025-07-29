@@ -206,6 +206,22 @@ fun ApplicationPasswordOffConfirmationDialog(
     )
 }
 
+@Composable
+fun ApplicationPasswordInfoDialog(
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = { Text(text = stringResource(R.string.application_password_info_title)) },
+        text = { Text(text = stringResource(R.string.application_password_info_description)) },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(text = stringResource(R.string.got_it))
+            }
+        },
+    )
+}
+
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
