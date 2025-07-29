@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -22,6 +21,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
+import org.wordpress.android.ui.notifications.NotificationManagerWrapper;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 
 import javax.inject.Inject;
@@ -42,6 +42,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     @Inject QuickStartTracker mQuickStartTracker;
 
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject NotificationManagerWrapper mNotificationManagerWrapper;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -93,7 +94,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 PendingIntent.getActivity(context, NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID,
                         resultIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context,
                 context.getString(R.string.notification_channel_reminder_id))
                 .setSmallIcon(R.drawable.ic_app_white_24dp)
@@ -108,7 +108,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                                 notificationType))
                 .build();
 
-        notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
+        mNotificationManagerWrapper.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
         mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
         mSystemNotificationsTracker.trackShownNotification(notificationType);
     }

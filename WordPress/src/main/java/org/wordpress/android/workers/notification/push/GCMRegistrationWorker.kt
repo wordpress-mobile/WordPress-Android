@@ -1,6 +1,7 @@
 package org.wordpress.android.workers.notification.push
 
 import android.content.Context
+import androidx.core.content.edit
 import android.text.TextUtils
 import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
@@ -78,16 +79,17 @@ class GCMRegistrationWorker(
                 var uuid = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null)
                 if (uuid == null) {
                     uuid = UUID.randomUUID().toString()
-                    preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid).apply()
+                    preferences.edit { putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid) }
                 }
-                preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken).apply()
+                preferences.edit { putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken) }
                 NotificationsUtils.registerDeviceForPushNotifications(appContext, gcmToken)
             }
             zendeskHelper.enablePushNotifications()
         } else {
             AppLog.w(AppLog.T.NOTIFS, "Empty GCM token, can't register the id on remote services")
-            PreferenceManager.getDefaultSharedPreferences(appContext).edit()
-                .remove(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN).apply()
+            PreferenceManager.getDefaultSharedPreferences(appContext).edit {
+                remove(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN)
+            }
         }
     }
 }

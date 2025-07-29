@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ListPopupWindow
@@ -45,16 +46,12 @@ class EventItemViewHolder(
             activity.buttonIcon.drawable,
             actionButton.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         )
-        if (activity.isButtonVisible) {
-            actionButton.visibility = View.VISIBLE
-        } else {
-            actionButton.visibility = View.GONE
-        }
+        actionButton.isVisible = activity.isButtonVisible
 
         thumbnail.setImageResource(activity.icon.drawable)
         thumbnail.setBackgroundResource(activity.status.color)
         container.setOnClickListener {
-            itemClickListener(activity.copy(isButtonVisible = actionButton.visibility == View.VISIBLE))
+            itemClickListener(activity.copy(isButtonVisible = actionButton.isVisible))
         }
 
         actionButton.setOnClickListener { renderMoreMenu(activity, it) }
