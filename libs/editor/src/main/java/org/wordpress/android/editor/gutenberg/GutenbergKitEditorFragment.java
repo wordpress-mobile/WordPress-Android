@@ -54,13 +54,20 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 import org.wordpress.gutenberg.GutenbergWebViewPool;
 import org.wordpress.gutenberg.EditorConfiguration;
 import org.wordpress.gutenberg.WebViewGlobal;
+import org.wordpress.gutenberg.WebViewGlobalValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 
 import static org.wordpress.gutenberg.Media.createMediaUsingMimeType;
 
@@ -578,27 +585,14 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
         var firstNamespace = siteApiNamespace != null && siteApiNamespace.length > 0 ? siteApiNamespace[0] : "";
         var editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets";
 
-        EditorConfiguration config = new EditorConfiguration.Builder()
-                .setTitle((String) mSettings.get("postTitle"))
-                .setContent((String) mSettings.get("postContent"))
-                .setPostId(postId)
-                .setPostType((String) mSettings.get("postType"))
-                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
-                .setPlugins((Boolean) mSettings.get("plugins"))
-                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
-                .setSiteApiNamespace((String[]) siteApiNamespace)
-                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
-                .setAuthHeader((String) mSettings.get("authHeader"))
-                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
-                .setEditorSettings(editorSettings)
-                .setLocale((String) mSettings.get("locale"))
-                .setEditorAssetsEndpoint(editorAssetsEndpoint)
-                .setCachedAssetHosts(Set.of("s0.wp.com", UrlUtils.getHost(siteURL)))
-                .setEnableAssetCaching(true)
-                .build();
+        // Capture variables for use in callback (must be final or effectively final)
+        final Integer finalPostId = postId;
+        final String finalSiteURL = siteURL;
+        final String[] finalSiteApiNamespace = siteApiNamespace;
+        final String finalEditorAssetsEndpoint = editorAssetsEndpoint;
 
-        mEditorStarted = true;
-        mGutenbergView.start(config);
+        // Get authentication cookies for WordPress.com sites using utility class
+        authenticateWithWordPressCookieUtil(finalPostId, finalSiteApiNamespace, finalEditorAssetsEndpoint, finalSiteURL, editorSettings);
     }
 
     @Override
@@ -632,5 +626,208 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    /**
+     * Authenticates with WordPress.com using the new WordPressCookieAuthenticator utility class.
+     * This replaces the old getWordPressComAuthCookies method with the standalone utility.
+     */
+    private void authenticateWithWordPressCookieUtil(Integer postId, String[] siteApiNamespace, String editorAssetsEndpoint, String siteURL, String editorSettings) {
+        GutenbergWebViewAuthorizationData authData = getGutenbergWebViewAuthorizationData();
+        if (authData == null) {
+            AppLog.d(T.EDITOR, "Cookie auth skipped: No auth data available");
+            startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+            return;
+        }
+
+        String authHeader = (String) mSettings.get("authHeader");
+
+        // Only handle WordPress.com sites with Bearer tokens
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            AppLog.d(T.EDITOR, "Cookie auth skipped: No Bearer token available");
+            startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+            return;
+        }
+
+        // Check if this is a WordPress.com site that might need authentication
+        if (siteURL != null && !siteURL.contains("wordpress.com") && !authData.isWPCom()) {
+            AppLog.d(T.EDITOR, "Cookie auth skipped: Not a WordPress.com site");
+            startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+            return;
+        }
+
+        String bearerToken = authHeader.substring("Bearer ".length());
+        String username = authData.getWPComAccountUsername();
+
+        if (username == null || username.isEmpty()) {
+            AppLog.d(T.EDITOR, "Cookie auth skipped: No username available");
+            startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+            return;
+        }
+
+        // Create authentication parameters
+        WordPressCookieAuthenticator.AuthParams authParams = new WordPressCookieAuthenticator.AuthParams(
+                username,
+                bearerToken,
+                authData.getWordPressUserAgent()
+        );
+
+        // Use the new utility class for authentication with proper cookie handling
+        WordPressCookieAuthenticator authenticator = new WordPressCookieAuthenticator();
+        authenticator.authenticateForCookies(authParams, new WordPressCookieAuthenticator.AuthCallback() {
+            @Override
+            public void onResult(WordPressCookieAuthenticator.AuthResult result) {
+                // Post to main thread to avoid WebView threading issues
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (result instanceof WordPressCookieAuthenticator.AuthResult.Success) {
+                        WordPressCookieAuthenticator.AuthResult.Success success = (WordPressCookieAuthenticator.AuthResult.Success) result;
+                        Map<String, String> cookies = success.getCookies();
+
+                        // Set cookies in WebView and start editor when ready
+                        setCookiesInWebView(cookies, siteURL, new CookieLoadCallback() {
+                            @Override
+                            public void onCookiesLoaded() {
+                                startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+                            }
+
+                            @Override
+                            public void onCookieLoadFailed(String error) {
+                                AppLog.w(T.EDITOR, "Cookie loading failed: " + error);
+                                startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+                            }
+                        });
+                    } else if (result instanceof WordPressCookieAuthenticator.AuthResult.Failure) {
+                        WordPressCookieAuthenticator.AuthResult.Failure failure = (WordPressCookieAuthenticator.AuthResult.Failure) result;
+                        AppLog.w(T.EDITOR, "WordPress.com cookie authentication failed: " + failure.getError());
+                        startGutenbergEditor(postId, siteApiNamespace, editorAssetsEndpoint, siteURL, editorSettings);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Extracts domain from URL for cookie injection.
+     */
+    private String extractDomain(String url) {
+        try {
+            java.net.URL parsedUrl = new java.net.URL(url);
+            String host = parsedUrl.getHost();
+            // For WordPress.com sites, use .wordpress.com domain for cookies
+            if (host != null && host.contains("wordpress.com")) {
+                return ".wordpress.com";
+            }
+            return host;
+        } catch (java.net.MalformedURLException e) {
+            AppLog.e(T.EDITOR, "Failed to parse URL: " + url + " - " + e.getMessage());
+            return url;
+        }
+    }
+
+    /**
+     * Gets the stored authentication data.
+     */
+    private GutenbergWebViewAuthorizationData getGutenbergWebViewAuthorizationData() {
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(getContext());
+        if (db != null) {
+            return db.getParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, GutenbergWebViewAuthorizationData.CREATOR);
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to start the Gutenberg editor with the given configuration.
+     */
+    private void startGutenbergEditor(Integer postId, String[] siteApiNamespace, String editorAssetsEndpoint, String siteURL, String editorSettings) {
+        EditorConfiguration config = new EditorConfiguration.Builder()
+                .setTitle((String) mSettings.get("postTitle"))
+                .setContent((String) mSettings.get("postContent"))
+                .setPostId(postId)
+                .setPostType((String) mSettings.get("postType"))
+                .setThemeStyles((Boolean) mSettings.get("themeStyles"))
+                .setPlugins((Boolean) mSettings.get("plugins"))
+                .setSiteApiRoot((String) mSettings.get("siteApiRoot"))
+                .setSiteApiNamespace(siteApiNamespace)
+                .setNamespaceExcludedPaths((String[]) mSettings.get("namespaceExcludedPaths"))
+                .setAuthHeader((String) mSettings.get("authHeader"))
+                .setWebViewGlobals((List<WebViewGlobal>) mSettings.get("webViewGlobals"))
+                .setEditorSettings(editorSettings)
+                .setLocale((String) mSettings.get("locale"))
+                .setEditorAssetsEndpoint(editorAssetsEndpoint)
+                .setCachedAssetHosts(Set.of("s0.wp.com", UrlUtils.getHost(siteURL)))
+                .setEnableAssetCaching(true)
+                .build();
+
+        mEditorStarted = true;
+        mGutenbergView.start(config);
+    }
+
+    /**
+     * Sets authentication cookies in the WebView's CookieManager and waits for them to be loaded.
+     * This matches the iOS implementation pattern of waiting for cookies to be set before proceeding.
+     */
+    private void setCookiesInWebView(Map<String, String> cookies, String siteURL, CookieLoadCallback callback) {
+        if (cookies.isEmpty()) {
+            callback.onCookiesLoaded();
+            return;
+        }
+
+        String domain = extractDomain(siteURL);
+        CookieManager cookieManager = CookieManager.getInstance();
+
+        // Enable cookies and third-party cookies
+        cookieManager.setAcceptCookie(true);
+        cookieManager.setAcceptThirdPartyCookies(mGutenbergView, true);
+
+        AppLog.d(T.EDITOR, "Setting " + cookies.size() + " cookies in WebView for domain: " + domain);
+
+        // Track number of cookies processed to know when all are loaded
+        final int totalCookies = cookies.size();
+        final int[] cookiesProcessed = {0};
+        final int[] cookiesSet = {0};
+        final boolean[] callbackCalled = {false};
+
+        // Set each cookie individually and wait for confirmation
+        for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+            String cookieString = cookie.getKey() + "=" + cookie.getValue() + "; Domain=" + domain + "; Path=/; Secure";
+
+            AppLog.d(T.EDITOR, "Setting cookie: " + cookie.getKey());
+
+            cookieManager.setCookie(siteURL, cookieString, new ValueCallback<Boolean>() {
+                @Override
+                public void onReceiveValue(Boolean success) {
+                    cookiesProcessed[0]++;
+                    if (success) {
+                        AppLog.d(T.EDITOR, "Cookie set successfully: " + cookie.getKey());
+                        cookiesSet[0]++;
+                    } else {
+                        AppLog.w(T.EDITOR, "Failed to set cookie: " + cookie.getKey());
+                    }
+
+                    // When all cookies are processed (successfully or not)
+                    if (cookiesProcessed[0] >= totalCookies && !callbackCalled[0]) {
+                        callbackCalled[0] = true;
+
+                        // Flush cookies to ensure they're persisted
+                        cookieManager.flush();
+
+                        if (cookiesSet[0] > 0) {
+                            AppLog.d(T.EDITOR, "Successfully set " + cookiesSet[0] + " out of " + totalCookies + " cookies");
+                            callback.onCookiesLoaded();
+                        } else {
+                            callback.onCookieLoadFailed("No cookies were successfully set");
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Callback interface for cookie loading into WebView.
+     */
+    private interface CookieLoadCallback {
+        void onCookiesLoaded();
+        void onCookieLoadFailed(String error);
     }
 }
