@@ -111,7 +111,8 @@ class JetpackConnectionViewModel @Inject constructor(
          * Requirements:
          * - Self-hosted site, and
          * - The site is authenticated with application password, and
-         * - Jetpack is not installed, or the installed jetpack version is 14.2 or above
+         * - the site isn't already connected to Jetpack, and
+         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
          */
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
             if (site.isSelfHostedAdmin && site.isApplicationPasswordsSupported) {
