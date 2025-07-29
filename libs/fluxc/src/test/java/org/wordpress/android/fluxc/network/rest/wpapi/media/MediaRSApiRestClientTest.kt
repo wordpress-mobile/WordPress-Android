@@ -84,7 +84,7 @@ class MediaRSApiRestClientTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
         testScope = CoroutineScope(testDispatcher)
 
-        whenever(wpApiClientProvider.getWpApiClient(any())).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(any(), any())).thenReturn(wpApiClient)
 
         restClient = MediaRSApiRestClient(
             scope = testScope,

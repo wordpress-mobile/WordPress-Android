@@ -32,6 +32,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+private const val PATH_SEPARATOR = "/"
+
 /**
  * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
  */
@@ -423,7 +425,7 @@ class MediaRSApiRestClient @Inject constructor(
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
-                fileName = parseFileName(parsedType.v1.file)
+                fileName = parseFileNameFromPath(parsedType.v1.file)
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
@@ -440,11 +442,12 @@ class MediaRSApiRestClient @Inject constructor(
         }
     }
 
-    private fun parseFileName(fileName: String): String = if (fileName.contains("/")) {
-        fileName.substringAfterLast("/")
-    } else {
-        fileName
-    }
+    private fun parseFileNameFromPath(fileNameWithPath: String): String =
+        if (fileNameWithPath.contains(PATH_SEPARATOR)) {
+            fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
+        } else {
+            fileNameWithPath
+        }
 
     private fun MediaModel.getMediaUpdateParams() = MediaUpdateParams(
         postId = if (postId > 0) postId else null,
