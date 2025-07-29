@@ -11,8 +11,6 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.CancellableUpload
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.UploadListener
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -22,6 +20,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
@@ -46,7 +45,7 @@ class MediaRSApiRestClient @Inject constructor(
 ) {
     // Data class to hold both the coroutine job and the OkHttp call
     @Suppress("DataClassShouldBeImmutable")
-    private data class UploadHandle(var job: Job, var call: CancellableUpload? = null)
+    private data class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
 
     // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
@@ -297,12 +296,12 @@ class MediaRSApiRestClient @Inject constructor(
     private fun getUploadListener(
         media: MediaModel,
         handle: UploadHandle
-    ) = object : UploadListener {
+    ) = object : WpRequestExecutor.UploadListener {
         override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
             notifyMediaUploading(media, uploadedBytes / totalBytes.toFloat())
         }
 
-        override fun onUploadStarted(cancellableUpload: CancellableUpload) {
+        override fun onUploadStarted(cancellableUpload: WpRequestExecutor.CancellableUpload) {
             handle.call = cancellableUpload
         }
     }
