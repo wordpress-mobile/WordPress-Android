@@ -99,7 +99,7 @@ class WpApiClientProvider @Inject constructor(
 
                 val call = httpClient.getClient().newCall(requestBuilder.build())
                 // Notify about the call creation so it can be cancelled if needed
-                uploadListener?.onUploadStarted(call)
+                uploadListener?.onUploadStarted(CancellableCall(call))
                 call.execute().use { response ->
                     return@withContext WpNetworkResponse(
                         body = response.body?.bytes() ?: ByteArray(0),
@@ -135,7 +135,17 @@ class WpApiClientProvider @Inject constructor(
 
         interface UploadListener {
             fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long)
-            fun onUploadStarted(uploadCall: Call)
+            fun onUploadStarted(cancellableUpload: CancellableUpload)
+        }
+
+        interface CancellableUpload {
+            fun cancel()
+        }
+
+        class CancellableCall(private val call: Call): CancellableUpload {
+            override fun cancel() {
+                call.cancel()
+            }
         }
     }
 }

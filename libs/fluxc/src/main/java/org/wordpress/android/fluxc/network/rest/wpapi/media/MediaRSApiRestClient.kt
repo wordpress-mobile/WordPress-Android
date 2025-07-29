@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpapi.media
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.Call
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
@@ -12,6 +11,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.CancellableUpload
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.MockedRequestExecutor.UploadListener
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
@@ -46,7 +46,7 @@ class MediaRSApiRestClient @Inject constructor(
 ) {
     // Data class to hold both the coroutine job and the OkHttp call
     @Suppress("DataClassShouldBeImmutable")
-    private data class UploadHandle(var job: Job, var call: Call? = null)
+    private data class UploadHandle(var job: Job, var call: CancellableUpload? = null)
 
     // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
@@ -302,8 +302,8 @@ class MediaRSApiRestClient @Inject constructor(
             notifyMediaUploading(media, uploadedBytes / totalBytes.toFloat())
         }
 
-        override fun onUploadStarted(uploadCall: Call) {
-            handle.call = uploadCall
+        override fun onUploadStarted(cancellableUpload: CancellableUpload) {
+            handle.call = cancellableUpload
         }
     }
 
