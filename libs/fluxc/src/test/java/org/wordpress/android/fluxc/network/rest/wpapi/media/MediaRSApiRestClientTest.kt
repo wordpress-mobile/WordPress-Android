@@ -60,6 +60,9 @@ import uniffi.wp_api.PostTitleWithEditContext
 import uniffi.wp_api.WpNetworkHeaderMap
 import java.util.Date
 
+private const val PATH_SEPARATOR = "/"
+private const val SUFFIX_SEPARATOR = "?"
+
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class MediaRSApiRestClientTest {
@@ -646,7 +649,6 @@ class MediaRSApiRestClientTest {
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = slug
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -663,6 +665,7 @@ class MediaRSApiRestClientTest {
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
+                fileName = parseFileNameFromPath(parsedType.v1.file)
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
@@ -677,5 +680,27 @@ class MediaRSApiRestClientTest {
             is MediaDetailsPayload.Document,
             null -> {}
         }
+
+        if (fileName.isNullOrEmpty()) {
+            fileName = parseFileNameFromUrl(url)
+        }
     }
+
+    private fun parseFileNameFromUrl(url: String): String = if (url.contains(PATH_SEPARATOR)) {
+        val lastUrlPart = url.substringAfterLast(PATH_SEPARATOR)
+        if (lastUrlPart.contains(SUFFIX_SEPARATOR)) {
+            lastUrlPart.substringBefore(SUFFIX_SEPARATOR)
+        } else {
+            lastUrlPart
+        }
+    } else {
+        url
+    }
+
+    private fun parseFileNameFromPath(fileNameWithPath: String): String =
+        if (fileNameWithPath.contains(PATH_SEPARATOR)) {
+            fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
+        } else {
+            fileNameWithPath
+        }
 }
