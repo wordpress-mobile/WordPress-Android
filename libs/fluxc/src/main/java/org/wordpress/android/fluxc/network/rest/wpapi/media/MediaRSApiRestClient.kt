@@ -337,16 +337,12 @@ class MediaRSApiRestClient @Inject constructor(
                 handle.call?.cancel()
                 uploadHandles.remove(media.id)
 
-                // Report the upload was successfully cancelled
-                notifyMediaUploadCanceled(media)
-
                 appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
             } else {
                 appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
-
-                // Still notify cancellation even if job wasn't found, to update UI state
-                notifyMediaUploadCanceled(media)
             }
+            // Notify media cancelled in both cases since the caller could be expecting it
+            notifyMediaUploadCanceled(media)
         }
     }
 

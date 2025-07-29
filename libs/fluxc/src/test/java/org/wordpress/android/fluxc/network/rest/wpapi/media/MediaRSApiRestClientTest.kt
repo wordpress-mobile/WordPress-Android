@@ -16,6 +16,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -85,6 +86,7 @@ class MediaRSApiRestClientTest {
         testScope = CoroutineScope(testDispatcher)
 
         whenever(wpApiClientProvider.getWpApiClient(any(), any())).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(any(), eq(null))).thenReturn(wpApiClient)
 
         restClient = MediaRSApiRestClient(
             scope = testScope,
@@ -540,6 +542,24 @@ class MediaRSApiRestClientTest {
 
         // Verify that error was logged
         verify(appLogWrapper).e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
+    }
+
+    @Test
+    fun `cancelUpload with valid media dispatches cancel action`() = runTest {
+        val testMedia = createTestMedia()
+
+        restClient.cancelUpload(testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, MediaAction.CANCELED_MEDIA_UPLOAD)
+        assertEquals(testMedia, payload.media)
+        assertEquals(0f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+        assertEquals(true, payload.canceled)
     }
 
     private fun createTestSite() = SiteModel().apply {
