@@ -4,7 +4,11 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Info
@@ -214,10 +218,15 @@ fun ApplicationPasswordInfoDialog(
         onDismissRequest = {},
         title = { Text(text = stringResource(R.string.application_password_info_title)) },
         text = {
-            Column {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
                 Text(text = stringResource(R.string.application_password_info_description_1))
+                Spacer(modifier = Modifier.height(Margin.Medium.value))
                 Text(text = stringResource(R.string.application_password_info_description_2))
+                Spacer(modifier = Modifier.height(Margin.Medium.value))
                 Text(text = stringResource(R.string.application_password_info_description_3))
+                Spacer(modifier = Modifier.height(Margin.Medium.value))
                 Text(text = stringResource(R.string.application_password_info_description_4))
             }
                },
