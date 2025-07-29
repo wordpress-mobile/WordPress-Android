@@ -29,8 +29,8 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
-    private val _disableApplicationPasswordDialogState = MutableStateFlow(0)
-    val disableApplicationPasswordDialogState: StateFlow<Int> = _disableApplicationPasswordDialogState.asStateFlow()
+    private val _applicationPasswordDialogState = MutableStateFlow<ApplicationPasswordDialogState>(ApplicationPasswordDialogState.None)
+    val applicationPasswordDialogState: StateFlow<ApplicationPasswordDialogState> = _applicationPasswordDialogState.asStateFlow()
 
     init {
         val initialStates = Feature.entries
@@ -57,7 +57,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
             val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
             if (affectedSites > 0) {
-                _disableApplicationPasswordDialogState.value = affectedSites
+                _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Disable(affectedSites)
             } else {
                 confirmDisableApplicationPassword()
             }
@@ -72,12 +72,12 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     fun dismissDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = 0
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
     }
 
     @Suppress("TooGenericExceptionCaught")
     fun confirmDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = 0
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
         _switchStates.update { currentStates ->
             currentStates.toMutableMap().apply {
                 this[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE] = false
@@ -100,5 +100,22 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    sealed class ApplicationPasswordDialogState {
+        /**
+         * No dialog
+         */
+        data object None : ApplicationPasswordDialogState()
+
+        /**
+         * General info dialog
+         */
+        data object Info : ApplicationPasswordDialogState()
+
+        /**
+         * Dialog representing the disable feature state, and the affected sites if any.
+         */
+        data class Disable(val affectedSits: Int) : ApplicationPasswordDialogState()
     }
 }
