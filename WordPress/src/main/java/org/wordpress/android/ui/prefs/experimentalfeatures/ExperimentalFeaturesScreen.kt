@@ -213,7 +213,14 @@ fun ApplicationPasswordInfoDialog(
     AlertDialog(
         onDismissRequest = {},
         title = { Text(text = stringResource(R.string.application_password_info_title)) },
-        text = { Text(text = stringResource(R.string.application_password_info_description)) },
+        text = {
+            Column {
+                Text(text = stringResource(R.string.application_password_info_description_1))
+                Text(text = stringResource(R.string.application_password_info_description_2))
+                Text(text = stringResource(R.string.application_password_info_description_3))
+                Text(text = stringResource(R.string.application_password_info_description_4))
+            }
+               },
         confirmButton = {
             Button(onClick = onConfirm) {
                 Text(text = stringResource(R.string.got_it))
