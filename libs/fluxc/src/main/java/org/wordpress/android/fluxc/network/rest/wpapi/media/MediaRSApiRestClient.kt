@@ -45,9 +45,8 @@ class MediaRSApiRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
-    // Data class to hold both the coroutine job and the OkHttp call
-    @Suppress("DataClassShouldBeImmutable")
-    private data class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
+    // Class to hold both the coroutine job and the OkHttp call
+    private class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
 
     // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
@@ -328,22 +327,20 @@ class MediaRSApiRestClient @Inject constructor(
 
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
-        scope.launch {
-            val handle = uploadHandles[media.id]
-            if (handle != null) {
-                appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
+        val handle = uploadHandles[media.id]
+        if (handle != null) {
+            appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
 
-                handle.job.cancel()
-                handle.call?.cancel()
-                uploadHandles.remove(media.id)
+            handle.job.cancel()
+            handle.call?.cancel()
+            uploadHandles.remove(media.id)
 
-                appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
-            } else {
-                appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
-            }
-            // Notify media cancelled in both cases since the caller could be expecting it
-            notifyMediaUploadCanceled(media)
+            appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
+        } else {
+            appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
         }
+        // Notify media cancelled in both cases since the caller could be expecting it
+        notifyMediaUploadCanceled(media)
     }
 
     private fun notifyMediaUploadCanceled(media: MediaModel) {
