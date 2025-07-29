@@ -54,20 +54,20 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // Since FluxC has not way to access the experimental features, this is a workaround to remove the
         // Application Password credentials when the feature is disabled to avoid FluxC to use them.
         // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
-        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-            val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
-            if (affectedSites > 0) {
-                _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Disable(affectedSites)
-            } else {
-                confirmDisableApplicationPassword()
-            }
-        } else {
-            _switchStates.update { currentStates ->
-                currentStates.toMutableMap().apply {
-                    this[feature] = enabled
-                    experimentalFeatures.setEnabled(feature, enabled)
+        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
+            if (enabled) {
+                _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
+                setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+            }  else {
+                val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
+                if (affectedSites > 0) {
+                    _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Disable(affectedSites)
+                } else {
+                    confirmDisableApplicationPassword()
                 }
             }
+        } else {
+            setFeatureSwitchState(feature, enabled)
         }
     }
 
@@ -78,12 +78,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun confirmDisableApplicationPassword() {
         _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
-        _switchStates.update { currentStates ->
-            currentStates.toMutableMap().apply {
-                this[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE] = false
-                experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-            }
-        }
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
 
         viewModelScope.launch {
             try {
@@ -98,6 +93,18 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                     AppLog.T.DB,
                     "Error when trying to remove Application Password credentials: ${exception.stackTrace}"
                 )
+            }
+        }
+    }
+
+    private fun setFeatureSwitchState(
+        feature: Feature,
+        enabled: Boolean
+    ) {
+        _switchStates.update { currentStates ->
+            currentStates.toMutableMap().apply {
+                this[feature] = enabled
+                experimentalFeatures.setEnabled(feature, enabled)
             }
         }
     }
