@@ -2,11 +2,13 @@ package org.wordpress.android.ui.jetpackconnection
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.JetpackConnectionClient
@@ -63,15 +65,32 @@ class JetpackConnectionViewModel @Inject constructor(
             ConnectionStep.LoginWpCom -> {
                 jetpackConnectionClient.connectSite(getSiteId().toString())
             }
+
             ConnectionStep.ConnectSite -> {
                 jetpackConnectionClient.connectUser(accountStore.accessToken)
+            }
+
+            ConnectionStep.InstallJetpack -> {
+                // TODO
+            }
+
+            ConnectionStep.ConnectWpCom -> {
+                // TODO
+            }
+
+            ConnectionStep.Finalize -> {
+                // TODO
+            }
+
+            null -> {
+                // noop
             }
         }
     }
 
-    private fun getSiteId(): Long {
-        return selectedSiteRepository.getSelectedSite()!!.siteId
-    }
+    private fun getSiteId() = getSite().siteId
+
+    private fun getSite() = selectedSiteRepository.getSelectedSite()!!
 
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
@@ -88,6 +107,28 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     companion object {
+        /**
+         * Requirements:
+         * - Self-hosted site, and
+         * - The site is authenticated with application password, and
+         * - Jetpack is not installed, or the installed jetpack version is 14.2 or above
+         */
+        fun canInitiateJetpackConnection(site: SiteModel): Boolean {
+            if (site.isSelfHostedAdmin && site.isApplicationPasswordsSupported) {
+                return if (site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()) {
+                    false
+                } else if (site.isJetpackConnected) {
+                    false
+                } else if (site.isJetpackInstalled) {
+                    checkMinimalVersion(site.jetpackVersion, limitVersion)
+                } else {
+                    true
+                }
+            }
+            return false
+        }
+
         private const val TAG = "JetpackConnectionViewModel"
+        private const val limitVersion = "14.2"
     }
 }
