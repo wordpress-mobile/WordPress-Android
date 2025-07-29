@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpapi.media
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.Call
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
