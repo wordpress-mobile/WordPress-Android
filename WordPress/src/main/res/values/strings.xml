@@ -1003,6 +1003,18 @@
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
+    
+    <!-- Jetpack Connection Screen -->
+    <string name="jetpack_connection_title">Jetpack Connection</string>
+    <string name="jetpack_connection_setup_title">Setting up Jetpack</string>
+    <string name="jetpack_connection_step_login_wpcom">Login to WordPress.com</string>
+    <string name="jetpack_connection_step_install_jetpack">Install Jetpack Plugin</string>
+    <string name="jetpack_connection_step_connect_site">Connect Your Site</string>
+    <string name="jetpack_connection_step_connect_wpcom">Connect to WordPress.com</string>
+    <string name="jetpack_connection_step_finalize">Finalize Setup</string>
+    <string name="jetpack_connection_status_not_started">Not started</string>
+    <string name="jetpack_connection_status_in_progress">In progress…</string>
+    <string name="jetpack_connection_status_completed">Completed</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
