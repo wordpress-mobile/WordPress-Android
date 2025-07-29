@@ -314,7 +314,7 @@ class MediaRSApiRestClient @Inject constructor(
     }
 
     private fun notifyMediaUploading(media: MediaModel, progress: Float) {
-        media.setUploadState(if (progress < 1) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
+        media.setUploadState(if (progress < 1f) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
         val payload = ProgressPayload(media, progress, false, false)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
