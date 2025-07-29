@@ -40,7 +40,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.LiveData
-import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
