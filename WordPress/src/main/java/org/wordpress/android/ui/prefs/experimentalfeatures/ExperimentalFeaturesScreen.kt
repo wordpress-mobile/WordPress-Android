@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -160,7 +162,20 @@ fun ApplicationPasswordOffConfirmationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.application_password_disable_feature_title)) },
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Margin.ExtraLarge.value)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.application_password_disable_feature_title),
+                textAlign = TextAlign.Center
+            )
+                },
         text = {
             Column {
                 Text(
@@ -216,23 +231,52 @@ fun ApplicationPasswordInfoDialog(
 ) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = stringResource(R.string.application_password_info_title)) },
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Margin.ExtraLarge.value)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.application_password_info_title),
+                textAlign = TextAlign.Center
+            )
+        },
         text = {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = Margin.Small.value)
             ) {
-                Text(text = stringResource(R.string.application_password_info_description_1))
+                Text(
+                    text = stringResource(R.string.application_password_info_description_1),
+                )
                 Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(text = stringResource(R.string.application_password_info_description_2))
+                Text(
+                    text = stringResource(R.string.application_password_info_description_2),
+                )
                 Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(text = stringResource(R.string.application_password_info_description_3))
+                Text(
+                    text = stringResource(R.string.application_password_info_description_3),
+                )
                 Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(text = stringResource(R.string.application_password_info_description_4))
+                Text(
+                    text = stringResource(R.string.application_password_info_description_4),
+                )
             }
-               },
+        },
         confirmButton = {
-            Button(onClick = onConfirm) {
-                Text(text = stringResource(R.string.got_it))
+            Button(
+                onClick = onConfirm,
+                modifier = Modifier.padding(horizontal = Margin.Small.value)
+            ) {
+                Text(
+                    text = stringResource(R.string.got_it),
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         },
     )
