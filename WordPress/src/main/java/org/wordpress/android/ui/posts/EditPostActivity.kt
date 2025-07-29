@@ -1023,7 +1023,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             EditPostDestination.History -> {
                 setTitle(R.string.history_title)
                 editorPhotoPicker?.hidePhotoPicker()
-                appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
+                appBarLayout?.liftOnScrollTargetViewId = R.id.empty_recycler_view
                 toolbar?.background = null
             }
         }
@@ -1039,34 +1039,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         viewPager?.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         viewPager?.setPagingEnabled(false)
 
-        // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
-        // to do this if we have a reference to the Tab.
-        viewPager?.clearOnPageChangeListeners()
-        viewPager?.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                invalidateOptionsMenu()
-                if (position == PAGE_CONTENT) {
-                    title = SiteUtils.getSiteNameOrHomeURL(siteModel)
-                    appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                    toolbar?.setBackgroundResource(R.drawable.tab_layout_background)
-                } else if (position == PAGE_SETTINGS) {
-                    setTitle(if (editPostRepository.isPage) R.string.page_settings else R.string.post_settings)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.liftOnScrollTargetViewId = R.id.settings_fragment_root
-                    toolbar?.background = null
-                } else if (position == PAGE_PUBLISH_SETTINGS) {
-                    setTitle(R.string.publish_date)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                    toolbar?.background = null
-                } else if (position == PAGE_HISTORY) {
-                    setTitle(R.string.history_title)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.liftOnScrollTargetViewId = R.id.empty_recycler_view
-                    toolbar?.background = null
-                }
-            }
-        })
+        // UI updates are now handled by the navigation system in updateUIForDestination()
+        // ViewPager is only used for displaying content, not managing navigation state
     }
 
     @Suppress("LongMethod")
