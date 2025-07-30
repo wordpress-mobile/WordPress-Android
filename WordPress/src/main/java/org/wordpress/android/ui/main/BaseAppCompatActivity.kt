@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.install.JetpackF
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
@@ -86,7 +86,6 @@ private val excludedActivities = listOf(
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
     DebugSharedPreferenceFlagsActivity::class.java.name,
-    DesignSystemActivity::class.java.name,
     DomainManagementActivity::class.java.name,
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
@@ -104,7 +103,8 @@ private val excludedActivities = listOf(
     SubscribersActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
-    // this is excluded because it explicitly enables edge-to-edge
+    // these are excluded because they explicitly enable edge-to-edge
+    MediaSettingsActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping

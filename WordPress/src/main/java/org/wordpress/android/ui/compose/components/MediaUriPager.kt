@@ -3,6 +3,7 @@ package org.wordpress.android.ui.compose.components
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.core.net.toUri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -157,8 +158,8 @@ private fun BoxScope.ImageButton(
 )
 @Composable
 private fun MediaPagerPreview() {
-    val attachment1 = Uri.parse("/tmp/attachment.jpg")
-    val attachment2 = Uri.parse("/tmp/attachment.mp4")
+    val attachment1 = "/tmp/attachment.jpg".toUri()
+    val attachment2 = "/tmp/attachment.mp4".toUri()
     MediaUriPager(
         mediaUris = listOf(attachment1, attachment2)
     )

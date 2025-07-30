@@ -1,20 +1,12 @@
 package org.wordpress.android.util
 
+import com.automattic.encryptedlogging.EncryptedLogging
+import com.automattic.encryptedlogging.store.OnEncryptedLogUploaded
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.EncryptedLogActionBuilder
-import org.wordpress.android.fluxc.store.EncryptedLogStore
-import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded
-import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogFailedToUpload
-import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogUploadedSuccessfully
-import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPayload
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.io.File
 import java.util.UUID
@@ -24,23 +16,35 @@ import javax.inject.Singleton
 
 @Singleton
 class EncryptedLogging @Inject constructor(
-    private val dispatcher: Dispatcher,
-    private val encryptedLogStore: EncryptedLogStore,
+    private val encryptedLogging: EncryptedLogging,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
 
-    init {
-        dispatcher.register(this)
-    }
-
     fun start() {
-        dispatcher.dispatch(EncryptedLogActionBuilder.newResetUploadStatesAction())
+        encryptedLogging.resetUploadStates()
         if (networkUtilsWrapper.isNetworkAvailable()) {
+            encryptedLogging.uploadEncryptedLogs()
             coroutineScope.launch {
-                encryptedLogStore.uploadQueuedEncryptedLogs()
+                encryptedLogging.observeEncryptedLogsUploadResult().collect {
+                    when (it) {
+                        is OnEncryptedLogUploaded.EncryptedLogUploadedSuccessfully -> {
+                            analyticsTrackerWrapper.track(Stat.ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL)
+                        }
+                        is OnEncryptedLogUploaded.EncryptedLogFailedToUpload -> {
+                            // Only track final errors
+                            if (!it.willRetry) {
+                                analyticsTrackerWrapper.track(
+                                    Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
+                                    mapOf("error_type" to it.error.javaClass.simpleName)
+                                )
+                            }
+                        }
+                        null -> Unit // no-op
+                    }
+                }
             }
         }
     }
@@ -56,37 +60,15 @@ class EncryptedLogging @Inject constructor(
     fun encryptAndUploadLogFile(logFile: File, shouldStartUploadImmediately: Boolean): String? {
         if (logFile.exists()) {
             val uuid = UUID.randomUUID().toString()
-            val payload = UploadEncryptedLogPayload(
+            encryptedLogging.enqueueSendingEncryptedLogs(
                 uuid = uuid,
                 file = logFile,
                 // If the connection is not available, we shouldn't try to upload immediately
-                shouldStartUploadImmediately = shouldStartUploadImmediately &&
+                shouldUploadImmediately = shouldStartUploadImmediately &&
                         networkUtilsWrapper.isNetworkAvailable()
             )
-            dispatcher.dispatch(EncryptedLogActionBuilder.newUploadLogAction(payload))
             return uuid
         }
         return null
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ASYNC)
-    fun onEncryptedLogUploaded(event: OnEncryptedLogUploaded) {
-        when (event) {
-            is EncryptedLogUploadedSuccessfully -> {
-                AppLog.i(T.MAIN, "Encrypted log with uuid: ${event.uuid} uploaded successfully!")
-                analyticsTrackerWrapper.track(Stat.ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL)
-            }
-            is EncryptedLogFailedToUpload -> {
-                AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} failed to upload with error: ${event.error}")
-                // Only track final errors
-                if (!event.willRetry) {
-                    analyticsTrackerWrapper.track(
-                        Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
-                        mapOf("error_type" to event.error.javaClass.simpleName)
-                    )
-                }
-            }
-        }
     }
 }

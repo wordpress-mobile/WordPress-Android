@@ -41,7 +41,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import org.wordpress.android.R
-import org.wordpress.android.designsystem.heading1
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppColor
@@ -108,7 +107,7 @@ fun JetpackStaticPoster(
                             R.string.wp_jp_static_poster_title_plural else R.string.wp_jp_static_poster_title,
                         uiStringText(featureName)
                     ),
-                    style = MaterialTheme.typography.heading1.copy(
+                    style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 34.sp,
                         fontWeight = FontWeight.Bold,
                         lineHeight = 48.sp

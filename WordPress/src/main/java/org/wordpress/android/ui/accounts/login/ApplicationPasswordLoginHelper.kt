@@ -50,8 +50,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 val authorizationUrl =
                     discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
                 val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
-                // Store the ApiRootUrl for use it after the login
-                apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+                if (apiRootUrl.isNotEmpty()) {
+                    // Store the ApiRootUrl for use it after the login
+                    apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+                }
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +

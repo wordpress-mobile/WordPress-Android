@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.accounts.login
 
-import com.sun.jna.Pointer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
@@ -17,15 +17,12 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.ParseUrlException
-import uniffi.wp_api.ParsedUrl
-import uniffi.wp_api.WpApiDetails
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -60,19 +57,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
-    lateinit var wpApiDetails: WpApiDetails
+    lateinit var discoverSuccessWrapper: ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
 
     @Mock
-    lateinit var authParsedUrl: ParsedUrl
-
-    @Mock
-    lateinit var emptyAuthParsedUrl: ParsedUrl
-
-    @Mock
-    lateinit var discoverSuccessWrapper: DiscoverSuccessWrapper
-
-    private val apiRootUrlCache: ApiRootUrlCache = ApiRootUrlCache()
-
+    lateinit var apiRootUrlCache: ApiRootUrlCache
 
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
@@ -90,8 +78,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             apiRootUrlCache,
             discoverSuccessWrapper
         )
-        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
-            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
     }
 
     @Test
@@ -183,13 +169,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), mock())
+        whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
+            .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
         val apiDiscoveryResult = ApiDiscoveryResult.Success(
-            AutoDiscoveryAttemptSuccess(
-                ParsedUrl(Pointer.createConstant(1)),
-                ParsedUrl(Pointer.createConstant(1)),
-                wpApiDetails,
-                authParsedUrl
-            )
+            autoDiscoveryAttemptSuccess
         )
         whenever(discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(eq(apiDiscoveryResult)))
             .thenReturn(TEST_URL_AUTH)
@@ -215,18 +199,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-            .thenReturn(
-                ApiDiscoveryResult.Success(
-                    AutoDiscoveryAttemptSuccess(
-                        ParsedUrl(Pointer.createConstant(1)),
-                        ParsedUrl(Pointer.createConstant(1)),
-                        wpApiDetails,
-                        emptyAuthParsedUrl
-                    )
-                )
-            )
-
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), mock())
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
         assertEquals("", result)

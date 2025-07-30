@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -39,7 +40,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.LiveData
-import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
@@ -255,10 +255,11 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
+import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel
+import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.gutenberg.GutenbergWebViewPool
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
@@ -430,6 +431,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
+    @Inject lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -545,6 +547,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         isLandingEditor = intent.extras?.getBoolean(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR) ?: false
 
         refreshMobileEditorFromSiteSetting()
+
+        // Initialize navigation state management
+        initializeNavigation()
 
         // Initialize editor settings and UI components based on the siteModel
         setupEditor()
@@ -798,9 +803,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun setupEditor() {
-        if (isGutenbergKitEditor) {
-            GutenbergWebViewPool.getPreloadedWebView(this)
-        }
         // Check whether to show the visual editor
 
         // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
@@ -951,6 +953,84 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onSettingsSaved() { /* No Op */ }
     override fun onCredentialsValidated(error: Exception?) { /* No Op */ }
+
+    /**
+     * Initialize navigation state management for the edit post flow.
+     */
+    private fun initializeNavigation() {
+        AppLog.d(AppLog.T.POSTS, "EditPostActivity: Initializing navigation state management")
+
+        // Observe navigation events to update ViewPager position
+        editPostNavigationViewModel.navigationEvents.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { destination ->
+                AppLog.d(AppLog.T.POSTS, "EditPostActivity: Handling navigation event to $destination")
+                updateViewPagerPosition(destination)
+            }
+        }
+
+        // Observe current destination changes for UI updates
+        editPostNavigationViewModel.currentDestination.observe(this) { destination ->
+            AppLog.d(AppLog.T.POSTS, "EditPostActivity: Current destination changed to $destination")
+            updateUIForDestination(destination)
+        }
+    }
+
+    /**
+     * Updates ViewPager position based on navigation destination.
+     */
+    private fun updateViewPagerPosition(destination: EditPostDestination) {
+        val targetPage = when (destination) {
+            EditPostDestination.Editor -> PAGE_CONTENT
+            EditPostDestination.Settings -> PAGE_SETTINGS
+            EditPostDestination.PublishSettings -> PAGE_PUBLISH_SETTINGS
+            EditPostDestination.History -> PAGE_HISTORY
+        }
+
+        viewPager?.let { pager ->
+            if (pager.currentItem != targetPage) {
+                AppLog.d(AppLog.T.POSTS, "EditPostActivity: Moving ViewPager from ${pager.currentItem} to $targetPage")
+                pager.currentItem = targetPage
+            }
+        }
+    }
+
+    /**
+     * Updates UI elements based on current navigation destination.
+     */
+    private fun updateUIForDestination(destination: EditPostDestination) {
+        when (destination) {
+            EditPostDestination.Editor -> {
+                title = SiteUtils.getSiteNameOrHomeURL(siteModel)
+                appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
+                toolbar?.setBackgroundResource(R.drawable.tab_layout_background)
+            }
+
+            EditPostDestination.Settings -> {
+                setTitle(if (editPostRepository.isPage) R.string.page_settings else R.string.post_settings)
+                editorPhotoPicker?.hidePhotoPicker()
+                appBarLayout?.liftOnScrollTargetViewId = R.id.settings_fragment_root
+                toolbar?.background = null
+            }
+
+            EditPostDestination.PublishSettings -> {
+                setTitle(R.string.publish_date)
+                editorPhotoPicker?.hidePhotoPicker()
+                appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
+                toolbar?.background = null
+            }
+
+            EditPostDestination.History -> {
+                setTitle(R.string.history_title)
+                editorPhotoPicker?.hidePhotoPicker()
+                appBarLayout?.liftOnScrollTargetViewId = R.id.empty_recycler_view
+                toolbar?.background = null
+            }
+        }
+
+        // Refresh options menu as visibility may change based on destination
+        invalidateOptionsMenu()
+    }
+
     private fun setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
@@ -958,34 +1038,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         viewPager?.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         viewPager?.setPagingEnabled(false)
 
-        // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
-        // to do this if we have a reference to the Tab.
-        viewPager?.clearOnPageChangeListeners()
-        viewPager?.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                invalidateOptionsMenu()
-                if (position == PAGE_CONTENT) {
-                    title = SiteUtils.getSiteNameOrHomeURL(siteModel)
-                    appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                    toolbar?.setBackgroundResource(R.drawable.tab_layout_background)
-                } else if (position == PAGE_SETTINGS) {
-                    setTitle(if (editPostRepository.isPage) R.string.page_settings else R.string.post_settings)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.liftOnScrollTargetViewId = R.id.settings_fragment_root
-                    toolbar?.background = null
-                } else if (position == PAGE_PUBLISH_SETTINGS) {
-                    setTitle(R.string.publish_date)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                    toolbar?.background = null
-                } else if (position == PAGE_HISTORY) {
-                    setTitle(R.string.history_title)
-                    editorPhotoPicker?.hidePhotoPicker()
-                    appBarLayout?.liftOnScrollTargetViewId = R.id.empty_recycler_view
-                    toolbar?.background = null
-                }
-            }
-        })
+        // UI updates are now handled by the navigation system in updateUIForDestination()
+        // ViewPager is only used for displaying content, not managing navigation state
     }
 
     @Suppress("LongMethod")
@@ -1408,12 +1462,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Suppress("LongMethod", "CyclomaticComplexMethod", "SwallowedException")
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        var showMenuItems = true
-        viewPager?.let {
-            if (it.currentItem > PAGE_CONTENT) {
-                showMenuItems = false
-            }
-        }
+        val currentDestination = editPostNavigationViewModel.currentDestination.value ?: EditPostDestination.default()
+        val showMenuItems = currentDestination == EditPostDestination.Editor
 
         val undoItem = menu.findItem(R.id.menu_undo_action)
         val redoItem = menu.findItem(R.id.menu_redo_action)
@@ -1458,8 +1508,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             if (primaryAction != null) {
                 primaryAction.setTitle(primaryActionText)
                 primaryAction.setVisible(
-                    (viewPager != null) && (viewPager?.currentItem != PAGE_HISTORY
-                            ) && (viewPager?.currentItem != PAGE_PUBLISH_SETTINGS)
+                    currentDestination != EditPostDestination.History &&
+                    currentDestination != EditPostDestination.PublishSettings
                 )
             }
         }
@@ -1534,25 +1584,22 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun handleBackPressed(): Boolean {
-        viewPager?.let { pager ->
-            when {
-                pager.currentItem == PAGE_PUBLISH_SETTINGS -> {
-                    pager.currentItem = PAGE_SETTINGS
-                    invalidateOptionsMenu()
+        when {
+            editorPhotoPicker?.isPhotoPickerShowing() == true -> {
+                editorPhotoPicker?.hidePhotoPicker()
+            }
+            editPostNavigationViewModel.canNavigateBack() -> {
+                // Handle navigation-specific logic before navigating
+                val currentDest = editPostNavigationViewModel.currentDestination.value
+                if (currentDest == EditPostDestination.Settings) {
+                    editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
                 }
-                pager.currentItem > PAGE_CONTENT -> {
-                    if (pager.currentItem == PAGE_SETTINGS) {
-                        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
-                    }
-                    pager.currentItem = PAGE_CONTENT
-                    invalidateOptionsMenu()
-                }
-                editorPhotoPicker?.isPhotoPickerShowing() == true -> {
-                    editorPhotoPicker?.hidePhotoPicker()
-                }
-                else -> {
-                    savePostAndOptionallyFinish(doFinish = true, forceSave = false)
-                }
+
+                // Let the navigation ViewModel handle the back navigation
+                editPostNavigationViewModel.handleBackNavigation()
+            }
+            else -> {
+                savePostAndOptionallyFinish(doFinish = true, forceSave = false)
             }
         }
         return true
@@ -1621,7 +1668,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             if (itemId == R.id.menu_history) {
                 AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED)
                 ActivityUtils.hideKeyboard(this)
-                viewPager?.currentItem = PAGE_HISTORY
+                editPostNavigationViewModel.navigateTo(EditPostDestination.History)
             } else if (itemId == R.id.menu_preview_post) {
                 if (!showPreview()) {
                     return false
@@ -1629,7 +1676,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             } else if (itemId == R.id.menu_post_settings) {
                 editPostSettingsFragment?.refreshViews()
                 ActivityUtils.hideKeyboard(this)
-                viewPager?.currentItem = PAGE_SETTINGS
+                editPostNavigationViewModel.navigateTo(EditPostDestination.Settings)
             } else if (itemId == R.id.menu_secondary_action) {
                 return performSecondaryAction()
             } else if (itemId == R.id.menu_html_mode) {
@@ -2268,7 +2315,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun showPrepublishingNudgeBottomSheet() {
-        viewPager?.currentItem = PAGE_CONTENT
+        editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
         ActivityUtils.hideKeyboard(this)
         val delayMs = PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
         showPrepublishingBottomSheetRunnable?.let {
@@ -2503,8 +2550,21 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
+            val isWpCom = site.isWPCom || siteModel.isWPComAtomic
+            val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
+            val settings = createGutenbergKitSettings(isWpCom)
+
+            return GutenbergKitEditorFragment.newInstance(
+                getContext(),
+                isNewPost,
+                gutenbergWebViewAuthorizationData,
+                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings
+            )
+        }
+
+        private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
+            return GutenbergWebViewAuthorizationData(
                 siteModel.url,
                 isWpCom,
                 accountStore.account.userId,
@@ -2518,21 +2578,28 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 userAgent.toString(),
                 isJetpackSsoEnabled
             )
+        }
 
+        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
-            val authToken = accountStore.accessToken
-            val authHeader = "Bearer $authToken"
-            val siteApiNamespace = arrayOf("sites/${site.siteId}", "sites/${UrlUtils.removeScheme(siteModel.url)}")
+            val siteURL = siteModel.url
+            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
+                else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
+            // Use the application password for self-hosted sites when available
+            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
+            val siteApiNamespace = if (isWpCom)
+                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else arrayOf()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            val settings = mutableMapOf<String, Any?>(
+            return mutableMapOf(
                 "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
                 "postType" to postType,
                 "postTitle" to editPostRepository.getPost()?.title,
                 "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
                 "siteApiRoot" to siteApiRoot,
                 "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
                 "authHeader" to authHeader,
@@ -2551,14 +2618,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         }
                     )
                 )
-            )
-
-            return GutenbergKitEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
             )
         }
 
@@ -2739,14 +2798,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher: Matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val stringUri = matcher.group(1)
-                val uri = Uri.parse(stringUri)
-                val mediaFile = FluxCUtils.mediaFileFromMediaModel(
+                val stringUri = matcher.group(1) ?: continue
+                FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
-                        .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
-                ) ?: continue
-                val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
-                matcher.appendReplacement(stringBuffer, replacement)
+                        .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
+                )?.let { mediaFile ->
+                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    matcher.appendReplacement(stringBuffer, replacement)
+                }
             }
             matcher.appendTail(stringBuffer)
             content = stringBuffer.toString()
@@ -3098,7 +3157,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun handleHistoryDetail() {
         if (dB?.hasParcel(KEY_REVISION) == true) {
-            viewPager?.currentItem = PAGE_CONTENT
+            editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
             revision = dB?.getParcel(KEY_REVISION, parcelableCreator())
             Handler().postDelayed(
                 { loadRevision() },
@@ -3139,7 +3198,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
         val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
         stringArray?.forEach { stringUri ->
-            uris.add(Uri.parse(stringUri))
+            uris.add(stringUri.toUri())
         }
         return uris
     }
@@ -3331,7 +3390,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onEditPostPublishedSettingsClick() {
-        viewPager?.currentItem = PAGE_PUBLISH_SETTINGS
+        editPostNavigationViewModel.navigateTo(EditPostDestination.PublishSettings)
     }
 
     /**
