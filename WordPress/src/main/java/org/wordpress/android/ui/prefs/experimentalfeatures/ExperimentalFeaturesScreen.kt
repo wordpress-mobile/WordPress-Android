@@ -227,6 +227,7 @@ fun ApplicationPasswordOffConfirmationDialog(
 
 @Composable
 fun ApplicationPasswordInfoDialog(
+    onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
     AlertDialog(
@@ -269,14 +270,13 @@ fun ApplicationPasswordInfoDialog(
             }
         },
         confirmButton = {
-            Button(
-                onClick = onConfirm,
-                modifier = Modifier.padding(horizontal = Margin.Small.value)
-            ) {
-                Text(
-                    text = stringResource(R.string.got_it),
-                    style = MaterialTheme.typography.labelLarge
-                )
+            Button(onClick = onConfirm) {
+                Text(text = stringResource(R.string.enable))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
             }
         },
     )

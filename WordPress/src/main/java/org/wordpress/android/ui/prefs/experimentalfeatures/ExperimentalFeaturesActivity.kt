@@ -48,6 +48,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                     }
                     ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Info -> {
                         ApplicationPasswordInfoDialog(
+                            onDismiss = { viewModel.dismissApplicationPasswordInfo() },
                             onConfirm = { viewModel.confirmApplicationPasswordInfo() }
                         )
                     }

@@ -59,7 +59,6 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
             if (enabled) {
                 _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
-                setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
             }  else {
                 val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
                 if (affectedSites > 0) {
@@ -97,6 +96,11 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun dismissApplicationPasswordInfo() {
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
     }
 
     fun confirmApplicationPasswordInfo() {
