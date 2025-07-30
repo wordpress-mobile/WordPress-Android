@@ -36,8 +36,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -174,18 +178,29 @@ private fun ConnectionStepItem(
     status: ConnectionStatus,
     isCurrentStep: Boolean
 ) {
+    val targetAlpha = if (status == ConnectionStatus.Completed) 0.6f else 1f
+    val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
+    
+    val targetColor = when {
+        isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
+        status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
+        else -> MaterialTheme.colorScheme.surface
+    }
+    val animatedColor by animateColorAsState(targetValue = targetColor)
+    
+    val targetElevation = if (status == ConnectionStatus.Failed) 0.dp else 2.dp
+    val animatedElevation by animateDpAsState(targetValue = targetElevation)
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .alpha(if (status == ConnectionStatus.Completed) 0.6f else 1f),
+            .alpha(animatedAlpha),
         colors = CardDefaults.cardColors(
-            containerColor = when {
-                isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
-                status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
-                else -> MaterialTheme.colorScheme.surface
-            }
+            containerColor = animatedColor
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = animatedElevation
+        )
     ) {
         Row(
             modifier = Modifier
@@ -226,10 +241,13 @@ private fun ConnectionStepItem(
                     text = when (status) {
                         ConnectionStatus.NotStarted ->
                             stringResource(R.string.jetpack_connection_status_not_started)
+
                         ConnectionStatus.InProgress ->
                             stringResource(R.string.jetpack_connection_status_in_progress)
+
                         ConnectionStatus.Completed ->
                             stringResource(R.string.jetpack_connection_status_completed)
+
                         ConnectionStatus.Failed ->
                             stringResource(R.string.jetpack_connection_status_failed)
                     },
@@ -254,6 +272,7 @@ private fun ConnectionStepItem(
                         }
                     )
                 }
+
                 ConnectionStatus.Completed -> {
                     Icon(
                         imageVector = Icons.Default.Check,
@@ -262,6 +281,7 @@ private fun ConnectionStepItem(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+
                 ConnectionStatus.Failed -> {
                     Icon(
                         imageVector = Icons.Default.Warning,
@@ -270,6 +290,7 @@ private fun ConnectionStepItem(
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
+
                 ConnectionStatus.NotStarted -> {
                     // No indicator for not started
                 }
