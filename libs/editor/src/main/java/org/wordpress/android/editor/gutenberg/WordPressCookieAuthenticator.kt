@@ -32,8 +32,8 @@ import kotlin.coroutines.resumeWithException
  * Uses WPAndroid's configured OkHttpClient with proper cookie handling.
  */
 class WordPressCookieAuthenticator @Inject constructor(
-    private val okHttpClient: OkHttpClient = createDefaultOkHttpClient(),
-    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val okHttpClient: OkHttpClient,
+    private val coroutineScope: CoroutineScope
 ) {
     companion object {
         private const val WP_LOGIN_URL = "https://wordpress.com/wp-login.php"

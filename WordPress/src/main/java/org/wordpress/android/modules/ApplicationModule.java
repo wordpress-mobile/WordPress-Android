@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -48,10 +49,17 @@ import dagger.android.AndroidInjectionModule;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
-import kotlinx.coroutines.CoroutineScope;
+import okhttp3.OkHttpClient;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.concurrent.TimeUnit;
 import rs.wordpress.api.kotlin.WpLoginClient;
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.CoroutineScopeKt;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
 
 @InstallIn(SingletonComponent.class)
 @Module(includes = AndroidInjectionModule.class)
@@ -153,5 +161,24 @@ public abstract class ApplicationModule {
     @Provides
     public static WpLoginClient provideWpLoginClient() {
         return new WpLoginClient();
+    }
+
+    @Provides
+    @Singleton
+    public static OkHttpClient provideOkHttpClient() {
+        // Simple OkHttpClient for cookie authentication
+        return new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    public static CoroutineScope provideCoroutineScope() {
+        return CoroutineScopeKt.CoroutineScope(Dispatchers.getDefault());
     }
 }
