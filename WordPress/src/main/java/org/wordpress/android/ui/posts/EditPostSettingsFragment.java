@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -63,7 +62,6 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
-import org.wordpress.android.ui.posts.DialogResult;
 import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel;
 import org.wordpress.android.ui.posts.navigation.EditPostDestination;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
@@ -695,9 +693,11 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void setupSettingsViewModelObservers() {
         mSettingsViewModel.getDialogResult().observe(getViewLifecycleOwner(), event -> {
-            DialogResult result = event.getContentIfNotHandled();
-            if (result != null) {
-                handleDialogResult(result);
+            if (event != null) {
+                DialogResult result = event.getContentIfNotHandled();
+                if (result != null) {
+                    handleDialogResult(result);
+                }
             }
         });
     }
@@ -1388,5 +1388,4 @@ public class EditPostSettingsFragment extends Fragment {
                 Snackbar.LENGTH_LONG
         ).show();
     }
-
 }
