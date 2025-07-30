@@ -429,8 +429,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
-    lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
-    lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
+    private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
+    private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
 
     private lateinit var siteModel: SiteModel
 

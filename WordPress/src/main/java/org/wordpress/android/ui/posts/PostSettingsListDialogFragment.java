@@ -41,6 +41,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     @Nullable private String[] mDialogItems; // Store the actual items shown in the dialog
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+    private EditPostSettingsViewModel mSettingsViewModel;
 
     public static PostSettingsListDialogFragment newInstance(
             @NonNull DialogType dialogType,
@@ -78,6 +79,8 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         setCancelable(true);
         mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+                .get(EditPostSettingsViewModel.class);
     }
 
     @Override
@@ -165,19 +168,14 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     }
 
     private void setupPositiveButton(@NonNull Builder builder) {
-        // Capture activity reference before potential dismiss() calls
-        final EditPostActivity activity = (EditPostActivity) getActivity();
-
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(@Nullable DialogInterface dialog, int which) {
-                // Use captured activity reference to avoid null after dismiss()
-                if (activity != null) {
-                    activity.editPostSettingsViewModel.onDialogResult(
-                        mDialogType,
-                        mCheckedIndex,
-                        getSelectedItem()
-                    );
-                }
+                // Use ViewModel directly - no unsafe casting needed
+                mSettingsViewModel.onDialogResult(
+                    mDialogType,
+                    mCheckedIndex,
+                    getSelectedItem()
+                );
             }
         });
     }
