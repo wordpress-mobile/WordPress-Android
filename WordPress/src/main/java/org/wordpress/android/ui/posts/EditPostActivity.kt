@@ -40,6 +40,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
@@ -423,12 +424,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
     @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
-    @Inject lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
-    @Inject lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
+    lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
+    lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -520,6 +522,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        initializeViewModels()
+
         setContentView(R.layout.new_edit_post_activity)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -625,6 +629,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (postConflictResolutionFeatureConfig.isEnabled()) {
             storePostViewModel.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
         }
+    }
+
+    private fun initializeViewModels() {
+        editPostNavigationViewModel = ViewModelProvider(this, viewModelFactory)[EditPostNavigationViewModel::class.java]
+        editPostSettingsViewModel = ViewModelProvider(this, viewModelFactory)[EditPostSettingsViewModel::class.java]
     }
 
     private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {

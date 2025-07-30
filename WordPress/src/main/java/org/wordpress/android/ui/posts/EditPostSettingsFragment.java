@@ -195,8 +195,10 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
-        mNavigationViewModel = ((EditPostActivity) requireActivity()).editPostNavigationViewModel;
-        mSettingsViewModel = ((EditPostActivity) requireActivity()).editPostSettingsViewModel;
+        mNavigationViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+                .get(EditPostNavigationViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+                .get(EditPostSettingsViewModel.class);
     }
 
     @Override
