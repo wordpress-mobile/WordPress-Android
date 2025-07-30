@@ -22,7 +22,8 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
             JetpackConnectionScreen(
                 currentStep = viewModel.currentStep.collectAsState(),
                 stepStatuses = viewModel.stepStatuses.collectAsState(),
-                onCloseClick = viewModel::onCloseClick
+                onCloseClick = viewModel::onCloseClick,
+                showDoneButton = viewModel.showDoneButton.collectAsState()
             )
         }
 

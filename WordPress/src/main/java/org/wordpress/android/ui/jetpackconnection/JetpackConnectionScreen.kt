@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackconnection
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,17 +53,46 @@ import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.Con
 fun JetpackConnectionScreen(
     currentStep: State<ConnectionStep?>,
     stepStatuses: State<Map<ConnectionStep, ConnectionStatus>>,
-    onCloseClick: () -> Unit = {}
+    onCloseClick: () -> Unit = {},
+    showDoneButton: State<Boolean>
 ) {
     Screen(
         onCloseClick = onCloseClick,
         content = {
-            JetpackConnectionSteps(
-                currentStep = currentStep.value,
-                stepStatuses = stepStatuses.value
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                JetpackConnectionSteps(
+                    currentStep = currentStep.value,
+                    stepStatuses = stepStatuses.value
+                )
+            }
+            if (showDoneButton.value) {
+                JetpackConnectionDoneButton(onClick = onCloseClick)
+            }
         }
     )
+}
+
+@Composable
+private fun JetpackConnectionDoneButton(
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.label_done_button))
+        }
+    }
 }
 
 @Composable
@@ -137,7 +169,9 @@ private fun ConnectionStepItem(
     isCurrentStep: Boolean
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (status == ConnectionStatus.Completed) 0.6f else 1f),
         colors = CardDefaults.cardColors(
             containerColor = if (isCurrentStep) {
                 MaterialTheme.colorScheme.primaryContainer
@@ -231,7 +265,7 @@ private fun ConnectionStepItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Screen(
-    content: @Composable () -> Unit,
+    content: @Composable (ColumnScope.() -> Unit),
     onCloseClick: () -> Unit
 ) {
     AppThemeM3 {
@@ -252,7 +286,6 @@ private fun Screen(
                     .fillMaxSize()
                     .imePadding()
                     .padding(contentPadding)
-                    .verticalScroll(rememberScrollState())
             ) {
                 content()
             }

@@ -35,6 +35,9 @@ class JetpackConnectionViewModel @Inject constructor(
     private val _uiEvent = MutableStateFlow<UiEvent?>(null)
     val uiEvent = _uiEvent
 
+    private val _showDoneButton = MutableStateFlow(false)
+    val showDoneButton = _showDoneButton
+
     private val _stepStatuses = MutableStateFlow(
         mapOf<ConnectionStep, ConnectionStatus>(
             ConnectionStep.LoginWpCom to ConnectionStatus.NotStarted,
@@ -48,13 +51,8 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private lateinit var jetpackConnectionClient: JetpackConnectionClient
 
-    private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
-        _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
-            this[step] = status
-        }
-    }
-
     init {
+        // TODO this is a dummy flow for testing the UI
         launch(bgDispatcher) {
             delay(1000L)
             setCurrentStep(ConnectionStep.LoginWpCom)
@@ -69,7 +67,6 @@ class JetpackConnectionViewModel @Inject constructor(
             setCurrentStep(ConnectionStep.ConnectWpCom)
             delay(2000L)
             updateStepStatus(ConnectionStep.ConnectWpCom, ConnectionStatus.Completed)
-            delay(2000L)
             setCurrentStep(ConnectionStep.Finalize)
             delay(2000L)
             updateStepStatus(ConnectionStep.Finalize, ConnectionStatus.Completed)
@@ -80,6 +77,15 @@ class JetpackConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Setting current step to $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
+    }
+
+    private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
+        _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
+            this[step] = status
+        }
+        if (step == ConnectionStep.Finalize && status == ConnectionStatus.Completed) {
+            _showDoneButton.value = true
+        }
     }
 
     fun onCloseClick() {
