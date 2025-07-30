@@ -202,13 +202,24 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `onFeatureToggled on for application password shows info dialog`() = test {
+    fun `onFeatureToggled on for application password shows info dialog and enable`() = test {
         createViewModel()
         // Simulate dialog being shown
         viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
         assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.Info)
         // Dismiss
         viewModel.confirmApplicationPasswordInfo()
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
+    }
+
+    @Test
+    fun `onFeatureToggled on for application password shows info dialog and keep dioabled`() = test {
+        createViewModel()
+        // Simulate dialog being shown
+        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.Info)
+        // Dismiss
+        viewModel.dismissApplicationPasswordInfo()
         assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
     }
 
