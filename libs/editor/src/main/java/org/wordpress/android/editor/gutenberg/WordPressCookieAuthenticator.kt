@@ -2,7 +2,6 @@ package org.wordpress.android.editor.gutenberg
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -15,12 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
-import okhttp3.CookieJar
-import okhttp3.JavaNetCookieJar
 import okhttp3.HttpUrl
-import java.net.CookieHandler
-import java.net.CookieManager
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -208,24 +202,3 @@ class WordPressCookieAuthenticator @Inject constructor(
     }
 }
 
-/**
- * Creates an OkHttpClient with proper cookie handling for WordPress authentication
- */
-private fun createDefaultOkHttpClient(): OkHttpClient {
-    // Create CookieManager similar to ReleaseNetworkModule setup
-    val cookieManager = CookieManager()
-    CookieHandler.setDefault(cookieManager)
-    val cookieJar: CookieJar = JavaNetCookieJar(cookieManager)
-
-    // Create OkHttpClient with proper cookie handling
-    return OkHttpClient.Builder()
-        .cookieJar(cookieJar)
-        .connectTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-        .readTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-        .writeTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-        .followRedirects(true)
-        .followSslRedirects(true)
-        .build()
-}
-
-private const val DEFAULT_TIMEOUT_SECONDS = 15L

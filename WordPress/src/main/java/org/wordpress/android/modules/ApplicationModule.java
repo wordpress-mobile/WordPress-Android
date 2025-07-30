@@ -39,6 +39,10 @@ import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -49,17 +53,14 @@ import dagger.android.AndroidInjectionModule;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
-import okhttp3.OkHttpClient;
-import okhttp3.CookieJar;
-import okhttp3.Cookie;
-import okhttp3.HttpUrl;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import rs.wordpress.api.kotlin.WpLoginClient;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.CoroutineScopeKt;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
@@ -171,17 +172,17 @@ public abstract class ApplicationModule {
     public static OkHttpClient provideOkHttpClient() {
         // Create simple CookieJar for cookie authentication
         CookieJar cookieJar = new CookieJar() {
-            private final List<Cookie> cookies = new ArrayList<>();
+            private final List<Cookie> mCookies = new ArrayList<>();
             
             @Override
             public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                this.cookies.addAll(cookies);
+                this.mCookies.addAll(cookies);
             }
             
             @Override
             public List<Cookie> loadForRequest(HttpUrl url) {
                 List<Cookie> validCookies = new ArrayList<>();
-                for (Cookie cookie : cookies) {
+                for (Cookie cookie : mCookies) {
                     if (cookie.matches(url)) {
                         validCookies.add(cookie);
                     }
