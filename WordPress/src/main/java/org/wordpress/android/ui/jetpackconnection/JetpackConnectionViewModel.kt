@@ -61,15 +61,15 @@ class JetpackConnectionViewModel @Inject constructor(
     private fun startJob() {
         job?.cancel()
         job = launch {
-            delay(2000)
+            delay(1000)
             startNextStep()
         }
     }
 
     private fun startNextStep() {
-        currentStep.value?.let {
+        /*currentStep.value?.let {
             updateStepStatus(it, ConnectionStatus.Completed)
-        }
+        }*/
 
         val nextStep = when (currentStep.value) {
             null -> ConnectionStep.LoginWpCom
@@ -82,6 +82,12 @@ class JetpackConnectionViewModel @Inject constructor(
 
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
+
+        // TODO just for testing the UI
+        launch(bgDispatcher) {
+            delay(2000)
+            updateStepStatus(currentStep.value!!, ConnectionStatus.Completed)
+        }
     }
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
@@ -92,12 +98,10 @@ class JetpackConnectionViewModel @Inject constructor(
 
         if (status == ConnectionStatus.Failed) {
             job?.cancel()
-        } else if (step == ConnectionStep.Finalize && status == ConnectionStatus.Completed) {
-            _showDoneButton.value = true
-        } else {
-            // TODO this mimics the desired UI until networking is implemented
-            launch(bgDispatcher) {
-                delay(2000)
+        } else if (status == ConnectionStatus.Completed) {
+            if (step == ConnectionStep.Finalize) {
+                _showDoneButton.value = true
+            } else {
                 startNextStep()
             }
         }
