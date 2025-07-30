@@ -408,7 +408,9 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mNavigationViewModel.navigateTo(EditPostDestination.PublishSettings.INSTANCE);
+                if (mNavigationViewModel != null) {
+                    mNavigationViewModel.navigateTo(EditPostDestination.PublishSettings.INSTANCE);
+                }
             }
         });
 
@@ -694,14 +696,14 @@ public class EditPostSettingsFragment extends Fragment {
 
 
     private void setupSettingsViewModelObservers() {
-        mSettingsViewModel.getDialogResult().observe(getViewLifecycleOwner(), event -> {
-            if (event != null) {
+        if (mSettingsViewModel != null) {
+            mSettingsViewModel.getDialogResult().observe(getViewLifecycleOwner(), event -> {
                 DialogResult result = event.getContentIfNotHandled();
                 if (result != null) {
                     handleDialogResult(result);
                 }
-            }
-        });
+            });
+        }
     }
 
     private void handleDialogResult(@NonNull DialogResult result) {
@@ -1264,7 +1266,9 @@ public class EditPostSettingsFragment extends Fragment {
     private void clearFeaturedImage() {
         updateFeaturedImage(0, false);
 
-        mSettingsViewModel.onClearFeaturedImage();
+        if (mSettingsViewModel != null) {
+            mSettingsViewModel.onClearFeaturedImage();
+        }
     }
 
     private void updateFeaturedImageView(PostImmutableModel postModel) {
