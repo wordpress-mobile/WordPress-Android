@@ -78,6 +78,7 @@ import org.wordpress.android.editor.gutenberg.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
+import org.wordpress.android.editor.gutenberg.WordPressCookieAuthenticator
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.fluxc.Dispatcher
@@ -298,6 +299,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private var pendingVideoPressInfoRequests: MutableList<String>? = null
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
+    private var simpleSiteCookies: Map<String, String> = emptyMap()
 
     /**
      * The PagerAdapter that will provide
@@ -396,6 +398,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Inject lateinit var privateAtomicCookie: PrivateAtomicCookie
+
+    @Inject lateinit var wordPressCookieAuthenticator: WordPressCookieAuthenticator
 
     @Inject lateinit var imageEditorTracker: ImageEditorTracker
 
@@ -604,15 +608,24 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
-        if (siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            showIfNecessary(fragmentManager)
-            dispatcher.dispatch(
-                SiteActionBuilder.newFetchPrivateAtomicCookieAction(
-                    SiteStore.FetchPrivateAtomicCookiePayload(siteModel.siteId)
+        // and also fetch cookies for private Simple sites
+        when {
+            siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired() -> {
+                showIfNecessary(fragmentManager)
+                dispatcher.dispatch(
+                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                        SiteStore.FetchPrivateAtomicCookiePayload(siteModel.siteId)
+                    )
                 )
-            )
-        } else {
-            setupViewPager()
+            }
+            siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
+                // For private Simple sites, fetch cookies before loading editor
+                showIfNecessary(fragmentManager)
+                fetchSimpleSiteCookies()
+            }
+            else -> {
+                setupViewPager()
+            }
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR)
         setupPrepublishingBottomSheetRunnable()
@@ -1040,6 +1053,35 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
         // UI updates are now handled by the navigation system in updateUIForDestination()
         // ViewPager is only used for displaying content, not managing navigation state
+    }
+
+    private fun fetchSimpleSiteCookies() {
+        lifecycleScope.launch {
+            val authParams = WordPressCookieAuthenticator.AuthParams(
+                username = accountStore.account.userName,
+                bearerToken = accountStore.accessToken,
+                userAgent = userAgent.toString()
+            )
+
+            when (val result = wordPressCookieAuthenticator.authenticateForCookies(authParams)) {
+                is WordPressCookieAuthenticator.AuthResult.Success -> {
+                    // Store cookies for later use in getCookiesForPrivateSites
+                    simpleSiteCookies = result.cookies
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    }
+                }
+                is WordPressCookieAuthenticator.AuthResult.Failure -> {
+                    AppLog.e(AppLog.T.EDITOR, "Failed to fetch cookies for Simple site: ${result.error}")
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    }
+                    make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     @Suppress("LongMethod")
@@ -2637,7 +2679,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         }
                     }
                     !siteModel.isWPComAtomic -> {
-                        // Add wordpress_logged_in cookie for Simple sites
+                        simpleSiteCookies.forEach { (name, value) ->
+                            if (name.startsWith("wordpress_logged_in")) {
+                                val cookieDomain = siteModel.url.removePrefix("https://").removePrefix("http://")
+                                cookies[siteModel.url] = "$name=$value; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
+                            }
+                        }
                     }
                 }
             }
