@@ -2,6 +2,8 @@
 
 package org.wordpress.android.ui.posts.services
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.util.DisplayMetrics
 import com.bumptech.glide.request.target.BaseTarget
@@ -20,6 +22,8 @@ class AztecImageLoaderTest {
     private lateinit var imageManager: ImageManager
     private lateinit var callback: ImageGetter.Callbacks
     private lateinit var bitmap: Bitmap
+    private lateinit var context: Context
+    private lateinit var resources: Resources
 
     private val url = "https://testingurl.com"
 
@@ -27,7 +31,10 @@ class AztecImageLoaderTest {
     fun setUp() {
         callback = mock()
         imageManager = mock()
-        imageLoader = AztecImageLoader(mock(), imageManager, mock())
+        resources = mock()
+        context = mock()
+        whenever(context.resources).thenReturn(resources)
+        imageLoader = AztecImageLoader(context, imageManager, mock())
         bitmap = mock()
     }
 

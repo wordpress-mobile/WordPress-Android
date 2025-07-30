@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -49,6 +50,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -347,6 +350,24 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             });
             ViewExtensionsKt.redirectContextClickToLongPressListener(mFabView);
         }
+
+        enableEdgeToEdge();
+    }
+
+    /**
+     * Enable edge-to-edge API 33+, but only hide the status bar and not the navigation bar
+     */
+    private void enableEdgeToEdge() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Window window = getWindow();
+            window.setDecorFitsSystemWindows(false);
+            WindowInsetsControllerCompat controller =
+                    new WindowInsetsControllerCompat(window, window.getDecorView());
+            controller.hide(WindowInsetsCompat.Type.statusBars());
+            controller.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
+        }
     }
 
     private boolean isMediaFromEditor() {
@@ -475,7 +496,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             registerReceiver(
                 mDownloadReceiver,
                 new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                ContextWrapper.RECEIVER_NOT_EXPORTED
+                ContextWrapper.RECEIVER_EXPORTED
             );
         } else {
             registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));

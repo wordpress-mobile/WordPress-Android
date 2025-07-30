@@ -17,7 +17,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
@@ -58,10 +57,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
-    lateinit var discoverSuccessWrapper: DiscoverSuccessWrapper
+    lateinit var discoverSuccessWrapper: ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
 
-    private val apiRootUrlCache: ApiRootUrlCache = ApiRootUrlCache()
-
+    @Mock
+    lateinit var apiRootUrlCache: ApiRootUrlCache
 
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 

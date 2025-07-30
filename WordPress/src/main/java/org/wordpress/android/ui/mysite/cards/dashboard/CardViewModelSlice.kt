@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -166,7 +167,7 @@ class CardViewModelSlice @Inject constructor(
 
     private fun generateAndStoreUUID(): String {
         return UUID.randomUUID().toString().also {
-            preferences.getFluxCPreferences().edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
+            preferences.getFluxCPreferences().edit { putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it) }
         }
     }
 

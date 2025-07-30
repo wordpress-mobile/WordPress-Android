@@ -1,7 +1,7 @@
 package org.wordpress.android.support
 
-import android.net.Uri
 import android.webkit.WebResourceRequest
+import androidx.core.net.toUri
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.webkit.WebViewAssetLoader
@@ -29,7 +29,7 @@ class SupportWebViewClient(
         view: WebView,
         url: String
     ): WebResourceResponse? {
-        return assetLoader.shouldInterceptRequest(Uri.parse(url))
+        return assetLoader.shouldInterceptRequest(url.toUri())
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {

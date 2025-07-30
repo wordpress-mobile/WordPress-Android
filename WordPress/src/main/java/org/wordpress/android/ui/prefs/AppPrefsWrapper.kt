@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import androidx.core.content.edit
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -469,7 +470,7 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     }
 
     fun removePref(key: String) {
-        AppPrefs.prefs().edit().remove(key).apply()
+        AppPrefs.prefs().edit { remove(key) }
     }
 
     fun getDebugBooleanPref(key: String, default: Boolean = false) =

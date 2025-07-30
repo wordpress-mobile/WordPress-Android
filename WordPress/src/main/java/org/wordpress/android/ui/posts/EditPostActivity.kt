@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -2747,14 +2748,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher: Matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val stringUri = matcher.group(1)
-                val uri = Uri.parse(stringUri)
-                val mediaFile = FluxCUtils.mediaFileFromMediaModel(
+                val stringUri = matcher.group(1) ?: continue
+                FluxCUtils.mediaFileFromMediaModel(
                     editorMedia
-                        .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED)
-                ) ?: continue
-                val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
-                matcher.appendReplacement(stringBuffer, replacement)
+                        .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
+                )?.let { mediaFile ->
+                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    matcher.appendReplacement(stringBuffer, replacement)
+                }
             }
             matcher.appendTail(stringBuffer)
             content = stringBuffer.toString()
@@ -3147,7 +3148,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
         val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
         stringArray?.forEach { stringUri ->
-            uris.add(Uri.parse(stringUri))
+            uris.add(stringUri.toUri())
         }
         return uris
     }

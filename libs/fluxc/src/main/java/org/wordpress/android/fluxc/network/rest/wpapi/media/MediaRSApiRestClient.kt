@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.MediaDetailsPayload
@@ -30,6 +31,9 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+
+private const val PATH_SEPARATOR = "/"
+private const val SUFFIX_SEPARATOR = "?"
 
 /**
  * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
@@ -42,8 +46,11 @@ class MediaRSApiRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
 ) {
-    // Map to store upload jobs keyed by media ID for cancellation
-    private val uploadJobs = ConcurrentHashMap<Int, Job>()
+    // Class to hold both the coroutine job and the OkHttp call
+    private class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
+
+    // Map to store upload handles keyed by media ID for cancellation
+    private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
 
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         scope.launch {
@@ -236,8 +243,16 @@ class MediaRSApiRestClient @Inject constructor(
             return
         }
 
+        // Create the handle first, before the coroutine starts
+        val handle = UploadHandle(Job())
+        uploadHandles[media.id] = handle
+
         val job = scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
+            val uploadListener = getUploadListener(media, handle)
+            val client = wpApiClientProvider.getWpApiClient(
+                site = site,
+                uploadListener = uploadListener
+            )
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
@@ -256,27 +271,52 @@ class MediaRSApiRestClient @Inject constructor(
                         id = media.id // be sure we are using the same local id when getting the remote response
                         localSiteId = site.id
                     }
-                    notifyMediaUploaded(responseMedia, null)
+                    notifyMediaUploaded(
+                        media = responseMedia,
+                        error = null
+                    )
                 }
 
                 else -> {
                     val mediaError = parseMediaError(mediaResponse)
                     appLogWrapper.e(AppLog.T.MEDIA, "Upload media failed: ${mediaError.message}")
-                    notifyMediaUploaded(media, mediaError)
+                    notifyMediaUploaded(
+                        media = media,
+                        error = mediaError
+                    )
                 }
             }
 
-            // Clean up the job from the map after completion
-            uploadJobs.remove(media.id)
+            // Clean up the handle from the map after completion
+            uploadHandles.remove(media.id)
         }
 
-        // Store the job in the map
-        uploadJobs[media.id] = job
+        // Update the handle with the actual job
+        handle.job = job
+    }
+
+    private fun getUploadListener(
+        media: MediaModel,
+        handle: UploadHandle
+    ) = object : WpRequestExecutor.UploadListener {
+        override fun onProgressUpdate(uploadedBytes: Long, totalBytes: Long) {
+            notifyMediaUploading(media, uploadedBytes / totalBytes.toFloat())
+        }
+
+        override fun onUploadStarted(cancellableUpload: WpRequestExecutor.CancellableUpload) {
+            handle.call = cancellableUpload
+        }
     }
 
     private fun notifyMediaUploaded(media: MediaModel?, error: MediaError?) {
         media?.setUploadState(if (error == null) MediaUploadState.UPLOADED else MediaUploadState.FAILED)
         val payload = ProgressPayload(media, 1f, error == null, error)
+        dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+    }
+
+    private fun notifyMediaUploading(media: MediaModel, progress: Float) {
+        media.setUploadState(if (progress < 1f) { MediaUploadState.UPLOADING } else { MediaUploadState.UPLOADED })
+        val payload = ProgressPayload(media, progress, false, false)
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
 
@@ -288,21 +328,21 @@ class MediaRSApiRestClient @Inject constructor(
 
         appLogWrapper.d(AppLog.T.MEDIA, "Attempting to cancel media upload with local ID: ${media.id}")
 
-        val job = uploadJobs[media.id]
-        if (job != null) {
-            job.cancel()
-            uploadJobs.remove(media.id)
 
-            // Report the upload was successfully cancelled
-            notifyMediaUploadCanceled(media)
+        val handle = uploadHandles[media.id]
+        if (handle != null) {
+            appLogWrapper.d(AppLog.T.MEDIA, "Cancelling upload for media with local ID: ${media.id}")
+
+            handle.job.cancel()
+            handle.call?.cancel()
+            uploadHandles.remove(media.id)
 
             appLogWrapper.d(AppLog.T.MEDIA, "Successfully cancelled media upload with local ID: ${media.id}")
         } else {
             appLogWrapper.w(AppLog.T.MEDIA, "No active upload found for media with local ID: ${media.id}")
-
-            // Still notify cancellation even if job wasn't found, to update UI state
-            notifyMediaUploadCanceled(media)
         }
+        // Notify media cancelled in both cases since the caller could be expecting it
+        notifyMediaUploadCanceled(media)
     }
 
     private fun notifyMediaUploadCanceled(media: MediaModel) {
@@ -363,7 +403,6 @@ class MediaRSApiRestClient @Inject constructor(
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = slug
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -380,6 +419,7 @@ class MediaRSApiRestClient @Inject constructor(
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
+                fileName = parseFileNameFromPath(parsedType.v1.file)
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
@@ -394,7 +434,35 @@ class MediaRSApiRestClient @Inject constructor(
             is MediaDetailsPayload.Document,
             null -> {}
         }
+
+        if (fileName.isNullOrEmpty()) {
+            fileName = parseFileNameFromUrl(url)
+        }
     }
+
+    /**
+     * We want to try getting the file name form the URL
+     * Example: http://www.mysyte.com/path/my-file.png?param1=value1&param2=value -> my-file.png
+     * The file name will always be between the last path separator "/" and the first suffix separator "?" if so
+     * Otherwise, we can't really rely on the URL to get the file name
+     */
+    private fun parseFileNameFromUrl(url: String): String = if (url.contains(PATH_SEPARATOR)) {
+        val lastUrlPart = url.substringAfterLast(PATH_SEPARATOR)
+        if (lastUrlPart.contains(SUFFIX_SEPARATOR)) {
+            lastUrlPart.substringBefore(SUFFIX_SEPARATOR)
+        } else {
+            lastUrlPart
+        }
+    } else {
+        url
+    }
+
+    private fun parseFileNameFromPath(fileNameWithPath: String): String =
+        if (fileNameWithPath.contains(PATH_SEPARATOR)) {
+            fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
+        } else {
+            fileNameWithPath
+        }
 
     private fun MediaModel.getMediaUpdateParams() = MediaUpdateParams(
         postId = if (postId > 0) postId else null,

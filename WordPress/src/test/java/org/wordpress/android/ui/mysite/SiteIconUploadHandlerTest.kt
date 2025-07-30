@@ -152,6 +152,12 @@ class SiteIconUploadHandlerTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(MY_SITE_ICON_UPLOADED)
         verify(eventBusWrapper).removeStickyEvent(event)
-        assertThat(uploadedEvents).containsOnly(MediaUploaded(listOf(mediaModel), siteModel, message))
+        assertThat(uploadedEvents).containsOnly(
+            MediaUploaded(
+                media = listOf(mediaModel),
+                site = siteModel,
+                successfulMessage = message
+            )
+        )
     }
 }

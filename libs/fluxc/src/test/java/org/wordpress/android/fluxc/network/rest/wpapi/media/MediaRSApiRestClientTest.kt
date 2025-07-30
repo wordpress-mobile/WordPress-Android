@@ -16,6 +16,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -59,6 +60,9 @@ import uniffi.wp_api.PostTitleWithEditContext
 import uniffi.wp_api.WpNetworkHeaderMap
 import java.util.Date
 
+private const val PATH_SEPARATOR = "/"
+private const val SUFFIX_SEPARATOR = "?"
+
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class MediaRSApiRestClientTest {
@@ -84,7 +88,8 @@ class MediaRSApiRestClientTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
         testScope = CoroutineScope(testDispatcher)
 
-        whenever(wpApiClientProvider.getWpApiClient(any())).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(any(), any())).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(any(), eq(null))).thenReturn(wpApiClient)
 
         restClient = MediaRSApiRestClient(
             scope = testScope,
@@ -542,6 +547,24 @@ class MediaRSApiRestClientTest {
         verify(appLogWrapper).e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
     }
 
+    @Test
+    fun `cancelUpload with valid media dispatches cancel action`() = runTest {
+        val testMedia = createTestMedia()
+
+        restClient.cancelUpload(testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(capturedAction.type, MediaAction.CANCELED_MEDIA_UPLOAD)
+        assertEquals(testMedia, payload.media)
+        assertEquals(0f, payload.progress, 0.01f)
+        assertEquals(false, payload.completed)
+        assertEquals(true, payload.canceled)
+    }
+
     private fun createTestSite() = SiteModel().apply {
         id = 123
         url = "https://example.wordpress.com"
@@ -626,7 +649,6 @@ class MediaRSApiRestClientTest {
         siteId: Int
     ): MediaModel = MediaModel(siteId, id).apply {
         url = this@toMediaModel.sourceUrl
-        fileName = slug
         fileExtension = this@toMediaModel.mimeType
         guid = this@toMediaModel.link
         title = this@toMediaModel.title.raw
@@ -643,6 +665,7 @@ class MediaRSApiRestClientTest {
         when (val parsedType = this@toMediaModel.mediaDetails.parseAsMimeType(this@toMediaModel.mimeType)) {
             is MediaDetailsPayload.Audio -> length = parsedType.v1.length.toInt()
             is MediaDetailsPayload.Image -> {
+                fileName = parseFileNameFromPath(parsedType.v1.file)
                 width = parsedType.v1.width.toInt()
                 height = parsedType.v1.height.toInt()
                 thumbnailUrl = parsedType.v1.sizes?.get("thumbnail")?.sourceUrl
@@ -657,5 +680,27 @@ class MediaRSApiRestClientTest {
             is MediaDetailsPayload.Document,
             null -> {}
         }
+
+        if (fileName.isNullOrEmpty()) {
+            fileName = parseFileNameFromUrl(url)
+        }
     }
+
+    private fun parseFileNameFromUrl(url: String): String = if (url.contains(PATH_SEPARATOR)) {
+        val lastUrlPart = url.substringAfterLast(PATH_SEPARATOR)
+        if (lastUrlPart.contains(SUFFIX_SEPARATOR)) {
+            lastUrlPart.substringBefore(SUFFIX_SEPARATOR)
+        } else {
+            lastUrlPart
+        }
+    } else {
+        url
+    }
+
+    private fun parseFileNameFromPath(fileNameWithPath: String): String =
+        if (fileNameWithPath.contains(PATH_SEPARATOR)) {
+            fileNameWithPath.substringAfterLast(PATH_SEPARATOR)
+        } else {
+            fileNameWithPath
+        }
 }

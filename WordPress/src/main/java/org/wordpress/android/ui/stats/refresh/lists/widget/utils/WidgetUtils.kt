@@ -4,7 +4,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Build
 import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
@@ -164,9 +164,7 @@ class WidgetUtils
         listIntent.putViewType(widgetType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.putExtra(IS_WIDE_VIEW_KEY, isWideView)
-        listIntent.data = Uri.parse(
-            listIntent.toUri(Intent.URI_INTENT_SCHEME)
-        )
+        listIntent.data = listIntent.toUri(Intent.URI_INTENT_SCHEME).toUri()
         views.setRemoteAdapter(R.id.widget_content, listIntent)
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
         appWidgetManager.updateAppWidget(appWidgetId, views)

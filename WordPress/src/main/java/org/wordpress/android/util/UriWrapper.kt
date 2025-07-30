@@ -1,12 +1,13 @@
 package org.wordpress.android.util
 
 import android.net.Uri
+import androidx.core.net.toUri
 
 /**
  * This class is necessary because standard Uri doesn't work in unit tests (it's always null)
  */
 data class UriWrapper(val uri: Uri) {
-    constructor(uriString: String) : this(Uri.parse(uriString))
+    constructor(uriString: String) : this(uriString.toUri())
 
     val lastPathSegment: String? = uri.lastPathSegment
     val pathSegments: List<String> = uri.pathSegments

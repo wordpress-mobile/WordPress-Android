@@ -1,5 +1,6 @@
 package org.wordpress.android.resolver
 
+import android.annotation.SuppressLint
 import com.wellsql.generated.QuickStartStatusModelMapper
 import com.wellsql.generated.QuickStartTaskModelMapper
 import com.wellsql.generated.SiteModelMapper
@@ -15,6 +16,12 @@ import javax.inject.Inject
 class ResolverUtility @Inject constructor(
     private val dbWrapper: DbWrapper
 ) {
+    // UseKtx lint warning is suppressed because the transaction KTX extension doesn't provide
+    // sufficient control over transaction success/failure handling. The KTX extension automatically
+    // handles commit/rollback based on exceptions, but this implementation needs explicit control to return
+    // specific boolean values to indicate success/failure to callers like UserFlagsHelper.
+    // Manual transaction handling is required to maintain the existing API contract.
+    @SuppressLint("UseKtx")
     private fun <T : Identifiable> copyWithIndexes(
         tableName: String,
         mapperAdapter: MapperAdapter<T>,
