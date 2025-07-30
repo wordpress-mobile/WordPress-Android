@@ -3395,7 +3395,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    fun clearFeaturedImage() {
+    private fun clearFeaturedImage() {
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(0)
         }
