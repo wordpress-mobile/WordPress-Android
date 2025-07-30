@@ -128,6 +128,6 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         /**
          * Dialog representing the disable feature state, and the affected sites if any.
          */
-        data class Disable(val affectedSits: Int) : ApplicationPasswordDialogState()
+        data class Disable(val affectedSites: Int) : ApplicationPasswordDialogState()
     }
 }

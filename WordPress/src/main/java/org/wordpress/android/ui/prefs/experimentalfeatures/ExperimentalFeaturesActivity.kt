@@ -31,7 +31,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 when (applicationPasswordDialogState) {
                     is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable -> {
                         ApplicationPasswordOffConfirmationDialog(
-                            affectedSites = (applicationPasswordDialogState as ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable).affectedSits,
+                            affectedSites = (applicationPasswordDialogState as ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable).affectedSites,
                             onDismiss = { viewModel.dismissDisableApplicationPassword() },
                             onConfirm = { viewModel.confirmDisableApplicationPassword() },
                             onContactSupport = {
@@ -55,7 +55,7 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                     }
                 }
 
-                // Only sho other dialogs if we are not showing the Application Password one
+                // Only show other dialogs if we are not showing the Application Password one
                 if (applicationPasswordDialogState is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.None
                     && showDialog.value) {
                     FeedbackDialog(
