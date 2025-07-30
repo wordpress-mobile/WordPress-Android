@@ -65,7 +65,6 @@ import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
-
 @InstallIn(SingletonComponent.class)
 @Module(includes = AndroidInjectionModule.class)
 public abstract class ApplicationModule {

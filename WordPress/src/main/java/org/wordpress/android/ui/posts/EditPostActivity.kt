@@ -607,8 +607,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
-        // we need to make sure AT cookie is available when trying to edit post on private AT site
-        // and also fetch cookies for private Simple sites
+        // Ensure cookies are available for private sites, so that protected media loads successfully
         when {
             siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired() -> {
                 showIfNecessary(fragmentManager)
@@ -619,7 +618,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 )
             }
             siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
-                // For private Simple sites, fetch cookies before loading editor
                 showIfNecessary(fragmentManager)
                 fetchSimpleSiteCookies()
             }
