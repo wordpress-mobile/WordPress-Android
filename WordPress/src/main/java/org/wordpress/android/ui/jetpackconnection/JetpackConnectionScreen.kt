@@ -179,10 +179,10 @@ private fun ConnectionStepItem(
             .fillMaxWidth()
             .alpha(if (status == ConnectionStatus.Completed) 0.6f else 1f),
         colors = CardDefaults.cardColors(
-            containerColor = if (isCurrentStep) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surface
+            containerColor = when {
+                isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
+                status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
+                else -> MaterialTheme.colorScheme.surface
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -324,7 +324,7 @@ private fun JetpackConnectionScreenPreview() {
         ConnectionStep.LoginWpCom to ConnectionStatus.Completed,
         ConnectionStep.InstallJetpack to ConnectionStatus.Completed,
         ConnectionStep.ConnectSite to ConnectionStatus.InProgress,
-        ConnectionStep.ConnectWpCom to ConnectionStatus.NotStarted,
+        ConnectionStep.ConnectWpCom to ConnectionStatus.Failed,
         ConnectionStep.Finalize to ConnectionStatus.NotStarted
     )
 
