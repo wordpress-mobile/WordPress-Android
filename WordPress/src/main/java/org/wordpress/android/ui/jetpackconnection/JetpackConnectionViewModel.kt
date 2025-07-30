@@ -10,10 +10,11 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
-import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.JetpackConnectionClient
+import uniffi.wp_api.PluginCreateParams
+import uniffi.wp_api.PluginStatus
+import uniffi.wp_api.PluginWpOrgDirectorySlug
 import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,14 +41,6 @@ class JetpackConnectionViewModel @Inject constructor(
     )
     val stepStatuses = _stepStatuses
 
-    private val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(
-                WpAuthentication.Bearer(token = accountStore.accessToken!!)
-            )
-        )
-    }
-
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
@@ -63,15 +56,20 @@ class JetpackConnectionViewModel @Inject constructor(
     private suspend fun networkRequest() {
         when (currentStep.value) {
             ConnectionStep.LoginWpCom -> {
-                jetpackConnectionClient.connectSite(getSiteId().toString())
+                jetpackConnectionClient.connectSite(
+                    from = getSiteId().toString()
+                )
             }
 
             ConnectionStep.ConnectSite -> {
-                jetpackConnectionClient.connectUser(accountStore.accessToken)
+                jetpackConnectionClient.connectUser(
+                    wpComAuthentication = WpAuthentication.Bearer(token = accountStore.accessToken!!),
+                    from = getSiteId().toString()
+                )
             }
 
             ConnectionStep.InstallJetpack -> {
-                // TODO
+                installJetpackPlugin()
             }
 
             ConnectionStep.ConnectWpCom -> {
@@ -86,6 +84,14 @@ class JetpackConnectionViewModel @Inject constructor(
                 // noop
             }
         }
+    }
+
+    // TODO
+    private fun installJetpackPlugin() {
+        val params = PluginCreateParams(
+            slug = PluginWpOrgDirectorySlug("jetpack"),
+            status = PluginStatus.ACTIVE,
+        )
     }
 
     private fun getSiteId() = getSite().siteId
