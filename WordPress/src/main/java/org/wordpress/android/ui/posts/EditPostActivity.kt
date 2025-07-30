@@ -168,7 +168,6 @@ import org.wordpress.android.ui.posts.HistoryListFragment.HistoryItemClickInterf
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertType
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome
-import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
@@ -280,7 +279,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
-    OnPostSettingsDialogFragmentListener, HistoryItemClickInterface, EditPostSettingsCallback,
+    HistoryItemClickInterface, EditPostSettingsCallback,
     PrepublishingBottomSheetListener, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
     SiteSettingsListener {
     // External Access to the Image Loader
@@ -432,6 +431,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     @Inject lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
+    @Inject lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -2222,13 +2222,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         ActivityLauncher.openImageEditor(this, inputData)
     }
 
-    /*
-     * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
-     * along to the settings fragment
-     */
-    override fun onPostSettingsFragmentPositiveButtonClicked(dialog: PostSettingsListDialogFragment) {
-        editPostSettingsFragment?.onPostSettingsFragmentPositiveButtonClicked(dialog)
-    }
 
     interface OnPostUpdatedFromUIListener {
         fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult)

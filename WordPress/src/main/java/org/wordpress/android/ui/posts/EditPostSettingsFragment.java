@@ -63,6 +63,7 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.DialogResult;
 import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel;
 import org.wordpress.android.ui.posts.navigation.EditPostDestination;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
@@ -166,6 +167,7 @@ public class EditPostSettingsFragment extends Fragment {
     private EditPostPublishSettingsViewModel mPublishedViewModel;
     private EditorJetpackSocialViewModel mJetpackSocialViewModel;
     private EditPostNavigationViewModel mNavigationViewModel;
+    private EditPostSettingsViewModel mSettingsViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -196,6 +198,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
         mNavigationViewModel = ((EditPostActivity) requireActivity()).editPostNavigationViewModel;
+        mSettingsViewModel = ((EditPostActivity) requireActivity()).editPostSettingsViewModel;
     }
 
     @Override
@@ -441,6 +444,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupJetpackSocialViewModel();
+        setupSettingsViewModelObservers();
     }
 
     private void setupJetpackSocialViewModel() {
@@ -688,23 +692,30 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /*
-     * called by the activity when the user taps OK on a PostSettingsDialogFragment
-     */
-    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+
+    private void setupSettingsViewModelObservers() {
+        mSettingsViewModel.getDialogResult().observe(getViewLifecycleOwner(), event -> {
+            DialogResult result = event.getContentIfNotHandled();
+            if (result != null) {
+                handleDialogResult(result);
+            }
+        });
+    }
+
+    private void handleDialogResult(DialogResult result) {
         int index;
         PostStatus status = null;
-        switch (fragment.getDialogType()) {
+        switch (result.getDialogType()) {
             case HOMEPAGE_STATUS:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 status = getHomepageStatusAtIndex(index);
                 break;
             case POST_STATUS:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 status = getPostStatusAtIndex(index);
                 break;
             case AUTHOR:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 List<Person> authors = mPublishedViewModel.getAuthors().getValue();
                 if (authors == null) {
                     return;
@@ -713,8 +724,7 @@ public class EditPostSettingsFragment extends Fragment {
                 updateAuthor(author);
                 break;
             case POST_FORMAT:
-                String formatName = fragment.getSelectedItem();
-                updatePostFormat(getPostFormatKeyFromName(formatName));
+                updatePostFormat(getPostFormatKeyFromName(result.getSelectedItem()));
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                 break;
         }
