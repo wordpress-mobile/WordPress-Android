@@ -20,13 +20,11 @@ import javax.inject.Named
 
 class JetpackConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    private val jetpackConnectionClient: JetpackConnectionClient,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
-    @Inject
-    private lateinit var jetpackConnectionClient: JetpackConnectionClient
-
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -53,17 +51,18 @@ class JetpackConnectionViewModel @Inject constructor(
         updateStepStatus(step, ConnectionStatus.InProgress)
     }
 
+    fun onCloseClick() {
+        // TODO
+    }
+
     private suspend fun networkRequest() {
         when (currentStep.value) {
             ConnectionStep.LoginWpCom -> {
-                jetpackConnectionClient.connectSite(
-                    from = getSiteId().toString()
-                )
+                // TODO
             }
 
             ConnectionStep.ConnectSite -> {
-                jetpackConnectionClient.connectUser(
-                    wpComAuthentication = WpAuthentication.Bearer(token = accountStore.accessToken!!),
+                jetpackConnectionClient.connectSite(
                     from = getSiteId().toString()
                 )
             }
@@ -73,7 +72,10 @@ class JetpackConnectionViewModel @Inject constructor(
             }
 
             ConnectionStep.ConnectWpCom -> {
-                // TODO
+                jetpackConnectionClient.connectUser(
+                    wpComAuthentication = WpAuthentication.Bearer(token = accountStore.accessToken!!),
+                    from = getSiteId().toString()
+                )
             }
 
             ConnectionStep.Finalize -> {
@@ -123,6 +125,8 @@ class JetpackConnectionViewModel @Inject constructor(
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
             if (site.isSelfHostedAdmin && site.isApplicationPasswordsSupported) {
                 return if (site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()) {
+                    false
+                } else if (site.wpApiRestUrl.isNullOrEmpty()) {
                     false
                 } else if (site.isJetpackConnected) {
                     false
