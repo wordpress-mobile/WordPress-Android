@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpackconnection
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,12 +50,19 @@ class JetpackConnectionViewModel @Inject constructor(
     )
     val stepStatuses = _stepStatuses
 
+    private var job: Job? = null
+
     private lateinit var jetpackConnectionClient: JetpackConnectionClient
 
     init {
-        // TODO this is a dummy flow for testing the UI
-        launch(bgDispatcher) {
-            delay(1000L)
+        startJob()
+    }
+
+    private fun startJob() {
+        job?.cancel()
+        job = launch(bgDispatcher) {
+            // TODO this is a dummy flow for testing the UI
+            delay(2000L)
             setCurrentStep(ConnectionStep.LoginWpCom)
             delay(2000L)
             updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
@@ -63,7 +71,7 @@ class JetpackConnectionViewModel @Inject constructor(
             updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
             setCurrentStep(ConnectionStep.ConnectSite)
             delay(2000L)
-            updateStepStatus(ConnectionStep.ConnectSite, ConnectionStatus.Completed)
+            updateStepStatus(ConnectionStep.ConnectSite, ConnectionStatus.Failed)
             setCurrentStep(ConnectionStep.ConnectWpCom)
             delay(2000L)
             updateStepStatus(ConnectionStep.ConnectWpCom, ConnectionStatus.Completed)
@@ -83,7 +91,9 @@ class JetpackConnectionViewModel @Inject constructor(
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
         }
-        if (step == ConnectionStep.Finalize && status == ConnectionStatus.Completed) {
+        if (status == ConnectionStatus.Failed) {
+            job?.cancel()
+        } else if (step == ConnectionStep.Finalize && status == ConnectionStatus.Completed) {
             _showDoneButton.value = true
         }
     }
@@ -149,6 +159,7 @@ class JetpackConnectionViewModel @Inject constructor(
         data object NotStarted : ConnectionStatus()
         data object InProgress : ConnectionStatus()
         data object Completed : ConnectionStatus()
+        data object Failed : ConnectionStatus()
     }
 
     sealed class UiEvent {

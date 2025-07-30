@@ -1003,7 +1003,7 @@
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
-    
+
     <!-- Jetpack Connection Screen -->
     <string name="jetpack_connection_title">Jetpack Connection</string>
     <string name="jetpack_connection_setup_title">Setting up Jetpack</string>
@@ -1015,6 +1015,7 @@
     <string name="jetpack_connection_status_not_started">Not started</string>
     <string name="jetpack_connection_status_in_progress">In progress…</string>
     <string name="jetpack_connection_status_completed">Completed</string>
+    <string name="jetpack_connection_status_failed">Failed</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

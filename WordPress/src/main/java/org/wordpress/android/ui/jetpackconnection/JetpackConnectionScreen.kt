@@ -36,6 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -69,7 +72,10 @@ fun JetpackConnectionScreen(
                     stepStatuses = stepStatuses.value
                 )
             }
-            if (showDoneButton.value) {
+            AnimatedVisibility(
+                visible = showDoneButton.value,
+                enter = fadeIn()
+            ) {
                 JetpackConnectionDoneButton(onClick = onCloseClick)
             }
         }
@@ -224,6 +230,8 @@ private fun ConnectionStepItem(
                             stringResource(R.string.jetpack_connection_status_in_progress)
                         ConnectionStatus.Completed ->
                             stringResource(R.string.jetpack_connection_status_completed)
+                        ConnectionStatus.Failed ->
+                            stringResource(R.string.jetpack_connection_status_failed)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isCurrentStep) {
@@ -252,6 +260,14 @@ private fun ConnectionStepItem(
                         contentDescription = stringResource(R.string.jetpack_connection_status_completed),
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                ConnectionStatus.Failed -> {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(R.string.jetpack_connection_status_failed),
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
                 ConnectionStatus.NotStarted -> {
