@@ -107,9 +107,9 @@ class WordPressCookieAuthenticator @Inject constructor(
             // Execute request and wait for response
             val response = executeRequest(request)
             response.use {
-                handleAuthResponse(response, params)
+                handleAuthResponse(response)
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             AppLog.e(T.EDITOR, "WordPress.com cookie authentication error: ${e.message}")
             AuthResult.Failure("Authentication error: ${e.message}")
         }
@@ -157,7 +157,7 @@ class WordPressCookieAuthenticator @Inject constructor(
     /**
      * Handles the authentication response and extracts cookies
      */
-    private fun handleAuthResponse(response: Response, params: AuthParams): AuthResult {
+    private fun handleAuthResponse(response: Response): AuthResult {
         AppLog.d(T.EDITOR, "Cookie auth response code: ${response.code}")
         AppLog.d(T.EDITOR, "Cookie auth response message: ${response.message}")
         AppLog.d(T.EDITOR, "Response headers: ${response.headers}")
@@ -220,10 +220,12 @@ private fun createDefaultOkHttpClient(): OkHttpClient {
     // Create OkHttpClient with proper cookie handling
     return OkHttpClient.Builder()
         .cookieJar(cookieJar)
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        .readTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        .writeTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
         .followRedirects(true)
         .followSslRedirects(true)
         .build()
 }
+
+private const val DEFAULT_TIMEOUT_SECONDS = 15L

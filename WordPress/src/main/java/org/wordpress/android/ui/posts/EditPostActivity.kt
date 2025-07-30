@@ -1078,7 +1078,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         setupViewPager()
                         dismissIfNecessary(supportFragmentManager)
                     }
-                    make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG).show()
+                    make(
+                        findViewById(R.id.editor_activity),
+                        R.string.media_accessing_failed,
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -2665,27 +2669,36 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
         private fun getCookiesForPrivateSites(isWpCom: Boolean): Map<String, String> {
+            if (!isWpCom || !siteModel.isPrivate) {
+                return emptyMap()
+            }
+            
+            return when {
+                siteModel.isWPComAtomic -> getAtomicSiteCookies()
+                else -> getSimpleSiteCookies()
+            }
+        }
+        
+        private fun getAtomicSiteCookies(): Map<String, String> {
             val cookies = mutableMapOf<String, String>()
-            if (isWpCom && siteModel.isPrivate) {
-                when {
-                    siteModel.isWPComAtomic -> {
-                        if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
-                            val cookieName = privateAtomicCookie.getName()
-                            val cookieValue = privateAtomicCookie.getValue()
-                            val cookieDomain = privateAtomicCookie.getDomain()
-                            val value =
-                                "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
-                            cookies[siteModel.url] = value
-                        }
-                    }
-                    !siteModel.isWPComAtomic -> {
-                        simpleSiteCookies.forEach { (name, value) ->
-                            if (name.startsWith("wordpress_logged_in")) {
-                                val cookieDomain = siteModel.url.removePrefix("https://").removePrefix("http://")
-                                cookies[siteModel.url] = "$name=$value; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
-                            }
-                        }
-                    }
+            if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
+                val cookieName = privateAtomicCookie.getName()
+                val cookieValue = privateAtomicCookie.getValue()
+                val cookieDomain = privateAtomicCookie.getDomain()
+                val value = "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
+                cookies[siteModel.url] = value
+            }
+            return cookies
+        }
+        
+        private fun getSimpleSiteCookies(): Map<String, String> {
+            val cookies = mutableMapOf<String, String>()
+            simpleSiteCookies.forEach { (name, value) ->
+                if (name.startsWith("wordpress_logged_in")) {
+                    val cookieDomain = siteModel.url.removePrefix("https://").removePrefix("http://")
+                    val cookieString = "$name=$value; domain=$cookieDomain; " +
+                        "SameSite=None; Secure; HttpOnly"
+                    cookies[siteModel.url] = cookieString
                 }
             }
             return cookies
