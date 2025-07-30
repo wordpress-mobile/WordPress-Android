@@ -27,7 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -230,6 +233,8 @@ fun ApplicationPasswordInfoDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
+    var showMore by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = {},
         icon = {
@@ -255,18 +260,32 @@ fun ApplicationPasswordInfoDialog(
                 Text(
                     text = stringResource(R.string.application_password_info_description_1),
                 )
-                Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(
-                    text = stringResource(R.string.application_password_info_description_2),
-                )
-                Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(
-                    text = stringResource(R.string.application_password_info_description_3),
-                )
-                Spacer(modifier = Modifier.height(Margin.Medium.value))
-                Text(
-                    text = stringResource(R.string.application_password_info_description_4),
-                )
+
+                if (!showMore) {
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.learn_more),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .clickable { showMore = true }
+                            .padding(vertical = Margin.Small.value)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_2),
+                    )
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_3),
+                    )
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_4),
+                    )
+                }
             }
         },
         confirmButton = {
