@@ -78,7 +78,7 @@ import org.wordpress.android.editor.gutenberg.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
-import org.wordpress.android.editor.gutenberg.WordPressCookieAuthenticator
+import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.fluxc.Dispatcher

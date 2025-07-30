@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
@@ -40,12 +39,7 @@ import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -55,12 +49,6 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
-import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.CoroutineScopeKt;
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
@@ -165,47 +153,5 @@ public abstract class ApplicationModule {
     @Provides
     public static WpLoginClient provideWpLoginClient() {
         return new WpLoginClient();
-    }
-
-    @Provides
-    @Singleton
-    public static OkHttpClient provideOkHttpClient() {
-        // Create simple CookieJar for cookie authentication
-        CookieJar cookieJar = new CookieJar() {
-            private final List<Cookie> mCookies = new ArrayList<>();
-            
-            @Override
-            public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
-                this.mCookies.addAll(cookies);
-            }
-            
-            @NonNull
-            @Override
-            public List<Cookie> loadForRequest(@NonNull HttpUrl url) {
-                List<Cookie> validCookies = new ArrayList<>();
-                for (Cookie cookie : mCookies) {
-                    if (cookie.matches(url)) {
-                        validCookies.add(cookie);
-                    }
-                }
-                return validCookies;
-            }
-        };
-        
-        // OkHttpClient with proper cookie handling
-        return new OkHttpClient.Builder()
-                .cookieJar(cookieJar)
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    public static CoroutineScope provideCoroutineScope() {
-        return CoroutineScopeKt.CoroutineScope(Dispatchers.getDefault());
     }
 }

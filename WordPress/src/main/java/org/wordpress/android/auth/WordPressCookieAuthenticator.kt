@@ -1,21 +1,22 @@
-package org.wordpress.android.editor.gutenberg
+package org.wordpress.android.auth
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.wordpress.android.util.AppLog
 import java.io.IOException
-import okhttp3.HttpUrl
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -26,8 +27,8 @@ import kotlin.coroutines.resumeWithException
  * Uses WPAndroid's configured OkHttpClient with proper cookie handling.
  */
 class WordPressCookieAuthenticator @Inject constructor(
-    private val okHttpClient: OkHttpClient,
-    private val coroutineScope: CoroutineScope
+    @Named("regular") private val okHttpClient: OkHttpClient,
+    @Named("IO_THREAD") private val ioDispatcher: CoroutineDispatcher
 ) {
     companion object {
         private const val WP_LOGIN_URL = "https://wordpress.com/wp-login.php"
@@ -65,7 +66,7 @@ class WordPressCookieAuthenticator @Inject constructor(
      * @param params Authentication parameters including username, Bearer token, and user agent
      * @return AuthResult containing either success with cookies or failure with error message
      */
-    suspend fun authenticateForCookies(params: AuthParams): AuthResult = withContext(Dispatchers.IO) {
+    suspend fun authenticateForCookies(params: AuthParams): AuthResult = withContext(ioDispatcher) {
         // Validate parameters
         if (params.username.isBlank()) {
             return@withContext AuthResult.Failure("Username cannot be empty")
@@ -75,7 +76,10 @@ class WordPressCookieAuthenticator @Inject constructor(
             return@withContext AuthResult.Failure("Bearer token cannot be empty")
         }
 
-        AppLog.d(T.EDITOR, "Starting WordPress.com cookie authentication for user: ${params.username}")
+        AppLog.d(
+            AppLog.T.EDITOR,
+            "Starting WordPress.com cookie authentication for user: ${params.username}"
+        )
 
         try {
             // Build form body with authentication parameters
@@ -93,10 +97,10 @@ class WordPressCookieAuthenticator @Inject constructor(
                 .addHeader("User-Agent", params.userAgent)
                 .build()
 
-            AppLog.d(T.EDITOR, "Making POST cookie authentication request to: $WP_LOGIN_URL")
-            AppLog.d(T.EDITOR, "Request form body: log=${params.username}&rememberme=true")
-            AppLog.d(T.EDITOR, "Request User-Agent: ${params.userAgent}")
-            AppLog.d(T.EDITOR, "Request Content-Type: $CONTENT_TYPE_FORM")
+            AppLog.d(AppLog.T.EDITOR, "Making POST cookie authentication request to: $WP_LOGIN_URL")
+            AppLog.d(AppLog.T.EDITOR, "Request form body: log=${params.username}&rememberme=true")
+            AppLog.d(AppLog.T.EDITOR, "Request User-Agent: ${params.userAgent}")
+            AppLog.d(AppLog.T.EDITOR, "Request Content-Type: $CONTENT_TYPE_FORM")
 
             // Execute request and wait for response
             val response = executeRequest(request)
@@ -104,7 +108,7 @@ class WordPressCookieAuthenticator @Inject constructor(
                 handleAuthResponse(response)
             }
         } catch (e: IOException) {
-            AppLog.e(T.EDITOR, "WordPress.com cookie authentication error: ${e.message}")
+            AppLog.e(AppLog.T.EDITOR, "WordPress.com cookie authentication error: ${e.message}")
             AuthResult.Failure("Authentication error: ${e.message}")
         }
     }
@@ -117,7 +121,7 @@ class WordPressCookieAuthenticator @Inject constructor(
      * @param callback Callback to receive the authentication result
      */
     fun authenticateForCookies(params: AuthParams, callback: AuthCallback) {
-        coroutineScope.launch {
+        CoroutineScope(ioDispatcher + SupervisorJob()).launch {
             val result = authenticateForCookies(params)
             callback.onResult(result)
         }
@@ -126,58 +130,59 @@ class WordPressCookieAuthenticator @Inject constructor(
     /**
      * Executes HTTP request using coroutines with proper cancellation support
      */
-    private suspend fun executeRequest(request: Request): Response = suspendCancellableCoroutine { continuation ->
-        val call = okHttpClient.newCall(request)
+    private suspend fun executeRequest(request: Request): Response =
+        suspendCancellableCoroutine { continuation ->
+            val call = okHttpClient.newCall(request)
 
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                if (continuation.isActive) {
-                    continuation.resumeWithException(e)
+            call.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(e)
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (continuation.isActive) {
-                    continuation.resume(response)
+                override fun onResponse(call: Call, response: Response) {
+                    if (continuation.isActive) {
+                        continuation.resume(response)
+                    }
                 }
-            }
-        })
+            })
 
-        continuation.invokeOnCancellation {
-            call.cancel()
+            continuation.invokeOnCancellation {
+                call.cancel()
+            }
         }
-    }
 
     /**
      * Handles the authentication response and extracts cookies
      */
     private fun handleAuthResponse(response: Response): AuthResult {
-        AppLog.d(T.EDITOR, "Cookie auth response code: ${response.code}")
-        AppLog.d(T.EDITOR, "Cookie auth response message: ${response.message}")
-        AppLog.d(T.EDITOR, "Response headers: ${response.headers}")
+        AppLog.d(AppLog.T.EDITOR, "Cookie auth response code: ${response.code}")
+        AppLog.d(AppLog.T.EDITOR, "Cookie auth response message: ${response.message}")
+        AppLog.d(AppLog.T.EDITOR, "Response headers: ${response.headers}")
 
         if (!response.isSuccessful) {
-            AppLog.w(T.EDITOR, "WordPress.com cookie authentication unsuccessful: HTTP ${response.code}")
+            AppLog.w(AppLog.T.EDITOR, "WordPress.com cookie authentication unsuccessful: HTTP ${response.code}")
             return AuthResult.Failure("HTTP error: ${response.code}")
         }
 
         // Log all Set-Cookie headers for debugging
         val allCookieHeaders = response.headers("Set-Cookie")
-        AppLog.d(T.EDITOR, "Total Set-Cookie headers: ${allCookieHeaders.size}")
+        AppLog.d(AppLog.T.EDITOR, "Total Set-Cookie headers: ${allCookieHeaders.size}")
         for (cookieHeader in allCookieHeaders) {
-            AppLog.d(T.EDITOR, "Raw cookie header: $cookieHeader")
+            AppLog.d(AppLog.T.EDITOR, "Raw cookie header: $cookieHeader")
         }
 
         // Extract authentication cookies from CookieJar instead of headers
         val cookies = extractAuthenticationCookiesFromJar(response.request.url)
 
         return if (cookies.isEmpty()) {
-            AppLog.w(T.EDITOR, "No authentication cookies found in response")
+            AppLog.w(AppLog.T.EDITOR, "No authentication cookies found in response")
             AuthResult.Failure("No authentication cookies received")
         } else {
-            AppLog.d(T.EDITOR, "Successfully retrieved ${cookies.size} authentication cookies")
+            AppLog.d(AppLog.T.EDITOR, "Successfully retrieved ${cookies.size} authentication cookies")
             for (cookieName in cookies.keys) {
-                AppLog.d(T.EDITOR, "Received cookie: $cookieName")
+                AppLog.d(AppLog.T.EDITOR, "Received cookie: $cookieName")
             }
             AuthResult.Success(cookies)
         }
@@ -191,14 +196,13 @@ class WordPressCookieAuthenticator @Inject constructor(
 
         // Get all cookies from the CookieJar for the request URL
         val jarCookies = okHttpClient.cookieJar.loadForRequest(url)
-        AppLog.d(T.EDITOR, "Total cookies in jar for ${url.host}: ${jarCookies.size}")
+        AppLog.d(AppLog.T.EDITOR, "Total cookies in jar for ${url.host}: ${jarCookies.size}")
 
         for (cookie in jarCookies) {
             cookies[cookie.name] = cookie.value
-            AppLog.d(T.EDITOR, "Extracted auth cookie from jar: ${cookie.name}")
+            AppLog.d(AppLog.T.EDITOR, "Extracted auth cookie from jar: ${cookie.name}")
         }
 
         return cookies
     }
 }
-
