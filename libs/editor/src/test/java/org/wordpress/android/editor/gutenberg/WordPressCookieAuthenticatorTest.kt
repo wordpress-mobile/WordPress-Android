@@ -18,7 +18,6 @@ import kotlin.test.assertTrue
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class WordPressCookieAuthenticatorTest {
-
     @Mock
     private lateinit var mockCookieJar: CookieJar
 

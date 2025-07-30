@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
@@ -175,12 +176,13 @@ public abstract class ApplicationModule {
             private final List<Cookie> mCookies = new ArrayList<>();
             
             @Override
-            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
                 this.mCookies.addAll(cookies);
             }
             
+            @NonNull
             @Override
-            public List<Cookie> loadForRequest(HttpUrl url) {
+            public List<Cookie> loadForRequest(@NonNull HttpUrl url) {
                 List<Cookie> validCookies = new ArrayList<>();
                 for (Cookie cookie : mCookies) {
                     if (cookie.matches(url)) {
