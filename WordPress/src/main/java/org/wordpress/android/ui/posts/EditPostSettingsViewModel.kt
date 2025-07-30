@@ -9,11 +9,14 @@ import javax.inject.Inject
 
 /**
  * ViewModel for EditPostSettingsFragment that manages dialog communication and settings state.
- * Currently handles dialog results, with plans to expand for other settings logic.
+ * Handles both dialog results and featured image management.
  */
 class EditPostSettingsViewModel @Inject constructor() : ViewModel() {
     private val _dialogResult = MutableLiveData<Event<DialogResult>>()
     val dialogResult: LiveData<Event<DialogResult>> = _dialogResult
+
+    private val _clearFeaturedImage = MutableLiveData<Event<Unit>>()
+    val clearFeaturedImage: LiveData<Event<Unit>> = _clearFeaturedImage
 
     /**
      * Called when a dialog (status, format, author) returns a result.
@@ -21,6 +24,14 @@ class EditPostSettingsViewModel @Inject constructor() : ViewModel() {
      */
     fun onDialogResult(dialogType: DialogType, checkedIndex: Int, selectedItem: String?) {
         _dialogResult.value = Event(DialogResult(dialogType, checkedIndex, selectedItem))
+    }
+
+    /**
+     * Called when the featured image should be cleared.
+     * Emits an event for the activity to handle editor updates.
+     */
+    fun onClearFeaturedImage() {
+        _clearFeaturedImage.value = Event(Unit)
     }
 }
 

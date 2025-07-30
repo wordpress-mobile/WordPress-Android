@@ -157,7 +157,6 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList
@@ -277,11 +276,9 @@ import kotlin.math.max
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
-    ActivityCompat.OnRequestPermissionsResultCallback,
-    PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
-    HistoryItemClickInterface, EditPostSettingsCallback,
-    PrepublishingBottomSheetListener, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
-    SiteSettingsListener {
+    ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
+    EditorMediaListener, EditPostActivityHook, HistoryItemClickInterface, PrepublishingBottomSheetListener,
+    PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -1147,6 +1144,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     getString(R.string.editor_updating_content_failed),
                     ToastUtils.Duration.SHORT
                 )
+            }
+        }
+
+        // Featured image management
+        editPostSettingsViewModel.clearFeaturedImage.observe(this) { event ->
+            event?.getContentIfNotHandled()?.let {
+                clearFeaturedImage()
             }
         }
     }
@@ -3382,10 +3386,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    /**
-     * EditorFragmentListener methods
-     */
-    override fun clearFeaturedImage() {
+    fun clearFeaturedImage() {
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(0)
         }
