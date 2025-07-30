@@ -58,10 +58,25 @@ class JetpackConnectionViewModel @Inject constructor(
         launch(bgDispatcher) {
             delay(1000L)
             setCurrentStep(ConnectionStep.LoginWpCom)
+            delay(2000L)
+            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+            setCurrentStep(ConnectionStep.InstallJetpack)
+            delay(2000L)
+            updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
+            setCurrentStep(ConnectionStep.ConnectSite)
+            delay(2000L)
+            updateStepStatus(ConnectionStep.ConnectSite, ConnectionStatus.Completed)
+            setCurrentStep(ConnectionStep.ConnectWpCom)
+            delay(2000L)
+            updateStepStatus(ConnectionStep.ConnectWpCom, ConnectionStatus.Completed)
+            delay(2000L)
+            setCurrentStep(ConnectionStep.Finalize)
+            delay(2000L)
+            updateStepStatus(ConnectionStep.Finalize, ConnectionStatus.Completed)
         }
     }
 
-    fun setCurrentStep(step: ConnectionStep) {
+    private fun setCurrentStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Setting current step to $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
