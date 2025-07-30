@@ -31,7 +31,8 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 when (applicationPasswordDialogState) {
                     is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable -> {
                         ApplicationPasswordOffConfirmationDialog(
-                            affectedSites = (applicationPasswordDialogState as ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable).affectedSites,
+                            affectedSites = (applicationPasswordDialogState as
+                                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable).affectedSites,
                             onDismiss = { viewModel.dismissDisableApplicationPassword() },
                             onConfirm = { viewModel.confirmDisableApplicationPassword() },
                             onContactSupport = {

@@ -29,8 +29,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
-    private val _applicationPasswordDialogState = MutableStateFlow<ApplicationPasswordDialogState>(ApplicationPasswordDialogState.None)
-    val applicationPasswordDialogState: StateFlow<ApplicationPasswordDialogState> = _applicationPasswordDialogState.asStateFlow()
+    private val _applicationPasswordDialogState =
+        MutableStateFlow<ApplicationPasswordDialogState>(ApplicationPasswordDialogState.None)
+    val applicationPasswordDialogState: StateFlow<ApplicationPasswordDialogState> =
+        _applicationPasswordDialogState.asStateFlow()
 
     init {
         val initialStates = Feature.entries
