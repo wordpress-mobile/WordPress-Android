@@ -121,7 +121,7 @@ class JetpackConnectionViewModel @Inject constructor(
                 } else if (site.isJetpackConnected) {
                     false
                 } else if (site.isJetpackInstalled) {
-                    checkMinimalVersion(site.jetpackVersion, limitVersion)
+                    checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION)
                 } else {
                     true
                 }
@@ -130,6 +130,6 @@ class JetpackConnectionViewModel @Inject constructor(
         }
 
         private const val TAG = "JetpackConnectionViewModel"
-        private const val limitVersion = "14.2"
+        private const val LIMIT_VERSION = "14.2"
     }
 }
