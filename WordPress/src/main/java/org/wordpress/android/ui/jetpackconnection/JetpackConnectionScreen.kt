@@ -180,17 +180,17 @@ private fun ConnectionStepItem(
 ) {
     val targetAlpha = if (status == ConnectionStatus.Completed) 0.6f else 1f
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
-    
+
     val targetColor = when {
         isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
         status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
         else -> MaterialTheme.colorScheme.surface
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
-    
-    val targetElevation = if (status == ConnectionStatus.Failed) 0.dp else 2.dp
+
+    val targetElevation = 2.dp
     val animatedElevation by animateDpAsState(targetValue = targetElevation)
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()

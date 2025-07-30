@@ -60,7 +60,10 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private fun startJob() {
         job?.cancel()
-        startNextStep()
+        job = launch {
+            delay(2000)
+            startNextStep()
+        }
     }
 
     private fun startNextStep() {
@@ -79,12 +82,6 @@ class JetpackConnectionViewModel @Inject constructor(
 
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
-
-        // TODO this mimics the desired UI until networking is implemented
-        launch(bgDispatcher) {
-            delay(2000)
-            startNextStep()
-        }
     }
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
@@ -92,10 +89,17 @@ class JetpackConnectionViewModel @Inject constructor(
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
         }
+
         if (status == ConnectionStatus.Failed) {
             job?.cancel()
         } else if (step == ConnectionStep.Finalize && status == ConnectionStatus.Completed) {
             _showDoneButton.value = true
+        } else {
+            // TODO this mimics the desired UI until networking is implemented
+            launch(bgDispatcher) {
+                delay(2000)
+                startNextStep()
+            }
         }
     }
 
