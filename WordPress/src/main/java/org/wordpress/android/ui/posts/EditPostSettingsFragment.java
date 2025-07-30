@@ -164,8 +164,8 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
     private EditorJetpackSocialViewModel mJetpackSocialViewModel;
-    private EditPostNavigationViewModel mNavigationViewModel;
-    private EditPostSettingsViewModel mSettingsViewModel;
+    @Nullable private EditPostNavigationViewModel mNavigationViewModel;
+    @Nullable private EditPostSettingsViewModel mSettingsViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -702,7 +702,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
     }
 
-    private void handleDialogResult(DialogResult result) {
+    private void handleDialogResult(@NonNull DialogResult result) {
         int index;
         PostStatus status = null;
         switch (result.getDialogType()) {

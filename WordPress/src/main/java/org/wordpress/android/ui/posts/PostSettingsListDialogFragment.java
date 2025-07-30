@@ -38,7 +38,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     private DialogType mDialogType;
     private int mCheckedIndex;
     private long mPostAuthorId;
-    private String[] mDialogItems; // Store the actual items shown in the dialog
+    @Nullable private String[] mDialogItems; // Store the actual items shown in the dialog
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
