@@ -90,4 +90,15 @@ dependencies {
     implementation(libs.android.volley)
     implementation(libs.google.gson)
     implementation(libs.automattic.tracks.crashlogging)
+    implementation libs.squareup.okhttp3
+
+    // Unit tests
+    testImplementation libs.junit
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.test.core
+    testImplementation libs.robolectric
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.assertj.core
 }
