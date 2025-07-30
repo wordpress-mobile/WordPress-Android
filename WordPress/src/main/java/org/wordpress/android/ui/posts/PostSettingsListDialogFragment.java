@@ -34,14 +34,13 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         POST_FORMAT
     }
 
-
     private DialogType mDialogType;
     private int mCheckedIndex;
     private long mPostAuthorId;
     @Nullable private String[] mDialogItems; // Store the actual items shown in the dialog
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
-    private EditPostSettingsViewModel mSettingsViewModel;
+    @Nullable private EditPostSettingsViewModel mSettingsViewModel;
 
     public static PostSettingsListDialogFragment newInstance(
             @NonNull DialogType dialogType,
@@ -90,7 +89,6 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         mCheckedIndex = args.getInt(ARG_CHECKED_INDEX);
         mPostAuthorId = args.getLong(ARG_POST_AUTHOR_ID);
     }
-
 
     @NonNull
     @Override
@@ -168,9 +166,8 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     }
 
     private void setupPositiveButton(@NonNull Builder builder) {
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(@Nullable DialogInterface dialog, int which) {
-                // Use ViewModel directly - no unsafe casting needed
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            if (mSettingsViewModel != null) {
                 mSettingsViewModel.onDialogResult(
                     mDialogType,
                     mCheckedIndex,
