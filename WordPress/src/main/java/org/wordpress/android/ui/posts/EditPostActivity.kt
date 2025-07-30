@@ -1056,36 +1056,46 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun fetchSimpleSiteCookies() {
-        lifecycleScope.launch {
-            val authParams = WordPressCookieAuthenticator.AuthParams(
-                username = accountStore.account.userName,
-                bearerToken = accountStore.accessToken,
-                userAgent = userAgent.toString()
-            )
+        val authParams = WordPressCookieAuthenticator.AuthParams(
+            username = accountStore.account.userName ?: "",
+            bearerToken = accountStore.accessToken ?: "",
+            userAgent = userAgent.toString()
+        )
 
-            when (val result = wordPressCookieAuthenticator.authenticateForCookies(authParams)) {
-                is WordPressCookieAuthenticator.AuthResult.Success -> {
-                    // Store cookies for later use in getCookiesForPrivateSites
-                    simpleSiteCookies = result.cookies
-                    if (isShowing(supportFragmentManager)) {
-                        setupViewPager()
-                        dismissIfNecessary(supportFragmentManager)
+        wordPressCookieAuthenticator.authenticateForCookies(authParams,
+            object : WordPressCookieAuthenticator.AuthCallback {
+                override fun onResult(result: WordPressCookieAuthenticator.AuthResult) {
+                    when (result) {
+                        is WordPressCookieAuthenticator.AuthResult.Success -> {
+                            // Store cookies for later use in getCookiesForPrivateSites
+                            simpleSiteCookies = result.cookies
+                            if (isShowing(supportFragmentManager)) {
+                                runOnUiThread {
+                                    setupViewPager()
+                                    dismissIfNecessary(supportFragmentManager)
+                                }
+                            }
+                        }
+                        is WordPressCookieAuthenticator.AuthResult.Failure -> {
+                            AppLog.e(AppLog.T.EDITOR, "Failed to fetch cookies for Simple site: ${result.error}")
+                            if (isShowing(supportFragmentManager)) {
+                                runOnUiThread {
+                                    setupViewPager()
+                                    dismissIfNecessary(supportFragmentManager)
+                                }
+                            }
+                            runOnUiThread {
+                                make(
+                                    findViewById(R.id.editor_activity),
+                                    R.string.media_accessing_failed,
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                     }
-                }
-                is WordPressCookieAuthenticator.AuthResult.Failure -> {
-                    AppLog.e(AppLog.T.EDITOR, "Failed to fetch cookies for Simple site: ${result.error}")
-                    if (isShowing(supportFragmentManager)) {
-                        setupViewPager()
-                        dismissIfNecessary(supportFragmentManager)
-                    }
-                    make(
-                        findViewById(R.id.editor_activity),
-                        R.string.media_accessing_failed,
-                        Snackbar.LENGTH_LONG
-                    ).show()
                 }
             }
-        }
+        )
     }
 
     @Suppress("LongMethod")
@@ -2672,13 +2682,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             if (!isWpCom || !siteModel.isPrivate) {
                 return emptyMap()
             }
-            
+
             return when {
                 siteModel.isWPComAtomic -> getAtomicSiteCookies()
                 else -> getSimpleSiteCookies()
             }
         }
-        
+
         private fun getAtomicSiteCookies(): Map<String, String> {
             val cookies = mutableMapOf<String, String>()
             if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
@@ -2690,13 +2700,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             }
             return cookies
         }
-        
+
         private fun getSimpleSiteCookies(): Map<String, String> {
             val cookies = mutableMapOf<String, String>()
             simpleSiteCookies.forEach { (name, value) ->
                 if (name.startsWith("wordpress_logged_in")) {
-                    val cookieDomain = siteModel.url.removePrefix("https://").removePrefix("http://")
-                    val cookieString = "$name=$value; domain=$cookieDomain; " +
+                    val cookieString = "$name=$value; domain=.wordpress.com; " +
                         "SameSite=None; Secure; HttpOnly"
                     cookies[siteModel.url] = cookieString
                 }
