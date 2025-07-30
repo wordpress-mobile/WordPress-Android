@@ -61,33 +61,34 @@ class JetpackConnectionViewModel @Inject constructor(
     private fun startJob() {
         job?.cancel()
         job = launch(bgDispatcher) {
-            // TODO this is a dummy flow for testing the UI
-            delay(2000L)
-            setCurrentStep(ConnectionStep.LoginWpCom)
-            delay(2000L)
-            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
-            setCurrentStep(ConnectionStep.InstallJetpack)
-            delay(2000L)
-            updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
-            setCurrentStep(ConnectionStep.ConnectSite)
-            delay(2000L)
-            updateStepStatus(ConnectionStep.ConnectSite, ConnectionStatus.Failed)
-            setCurrentStep(ConnectionStep.ConnectWpCom)
-            delay(2000L)
-            updateStepStatus(ConnectionStep.ConnectWpCom, ConnectionStatus.Completed)
-            setCurrentStep(ConnectionStep.Finalize)
-            delay(2000L)
-            updateStepStatus(ConnectionStep.Finalize, ConnectionStatus.Completed)
+            delay(2000)
+            while(startNextStep()) {
+                delay(2000)
+            }
         }
     }
 
-    private fun setCurrentStep(step: ConnectionStep) {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Setting current step to $step")
-        _currentStep.value = step
-        updateStepStatus(step, ConnectionStatus.InProgress)
+    private fun startNextStep(): Boolean {
+        val nextStep = when(currentStep.value) {
+            null -> ConnectionStep.LoginWpCom
+            ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
+            ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
+            ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
+            ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
+            ConnectionStep.Finalize -> return false
+        }
+
+        currentStep.value?.let {
+            updateStepStatus(it, ConnectionStatus.Completed)
+        }
+
+        _currentStep.value = nextStep
+        updateStepStatus(nextStep, ConnectionStatus.InProgress)
+        return true
     }
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status")
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
         }
