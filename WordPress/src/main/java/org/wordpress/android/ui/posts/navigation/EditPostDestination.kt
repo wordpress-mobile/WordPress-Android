@@ -8,22 +8,22 @@ sealed class EditPostDestination {
     /**
      * The main editor screen where users write and edit post content.
      */
-    object Editor : EditPostDestination()
+    data object Editor : EditPostDestination()
 
     /**
      * The settings screen for configuring post metadata, categories, tags, etc.
      */
-    object Settings : EditPostDestination()
+    data object Settings : EditPostDestination()
 
     /**
      * The publish settings screen for scheduling and publish options.
      */
-    object PublishSettings : EditPostDestination()
+    data object PublishSettings : EditPostDestination()
 
     /**
      * The post history/revisions screen showing previous versions.
      */
-    object History : EditPostDestination()
+    data object History : EditPostDestination()
 
     companion object {
         /**
