@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
@@ -18,8 +19,12 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val currentStep = viewModel.currentStep.collectAsState()
+            val stepStatuses = viewModel.stepStatuses.collectAsState()
+            
             JetpackConnectionScreen(
-                viewModel = viewModel,
+                currentStep = currentStep,
+                stepStatuses = stepStatuses,
                 onCloseClick = viewModel::onCloseClick
             )
         }

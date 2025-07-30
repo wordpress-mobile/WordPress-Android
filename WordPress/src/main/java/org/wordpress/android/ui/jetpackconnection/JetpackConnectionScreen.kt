@@ -33,8 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -47,18 +46,16 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun JetpackConnectionScreen(
-    viewModel: JetpackConnectionViewModel,
+    currentStep: State<JetpackConnectionViewModel.ConnectionStep?>,
+    stepStatuses: State<Map<JetpackConnectionViewModel.ConnectionStep, JetpackConnectionViewModel.ConnectionStatus>>,
     onCloseClick: () -> Unit = {}
 ) {
-    val currentStep by viewModel.currentStep.collectAsState()
-    val stepStatuses by viewModel.stepStatuses.collectAsState()
-
     Screen(
         onCloseClick = onCloseClick,
         content = {
             JetpackConnectionSteps(
-                currentStep = currentStep,
-                stepStatuses = stepStatuses
+                currentStep = currentStep.value,
+                stepStatuses = stepStatuses.value
             )
         }
     )
