@@ -43,11 +43,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStep
 
 @Composable
 fun JetpackConnectionScreen(
-    currentStep: State<JetpackConnectionViewModel.ConnectionStep?>,
-    stepStatuses: State<Map<JetpackConnectionViewModel.ConnectionStep, JetpackConnectionViewModel.ConnectionStatus>>,
+    currentStep: State<ConnectionStep?>,
+    stepStatuses: State<Map<ConnectionStep, ConnectionStatus>>,
     onCloseClick: () -> Unit = {}
 ) {
     Screen(
@@ -63,8 +65,8 @@ fun JetpackConnectionScreen(
 
 @Composable
 private fun JetpackConnectionSteps(
-    currentStep: JetpackConnectionViewModel.ConnectionStep?,
-    stepStatuses: Map<JetpackConnectionViewModel.ConnectionStep, JetpackConnectionViewModel.ConnectionStatus>
+    currentStep: ConnectionStep?,
+    stepStatuses: Map<ConnectionStep, ConnectionStatus>
 ) {
     Column(
         modifier = Modifier
@@ -80,58 +82,58 @@ private fun JetpackConnectionSteps(
         )
 
         ConnectionStepItem(
-            step = JetpackConnectionViewModel.ConnectionStep.LoginWpCom,
+            step = ConnectionStep.LoginWpCom,
             title = stringResource(R.string.jetpack_connection_step_login_wpcom),
             icon = Icons.Default.AccountCircle,
-            status = stepStatuses[JetpackConnectionViewModel.ConnectionStep.LoginWpCom]
-                ?: JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-            isCurrentStep = currentStep == JetpackConnectionViewModel.ConnectionStep.LoginWpCom
+            status = stepStatuses[ConnectionStep.LoginWpCom]
+                ?: ConnectionStatus.NotStarted,
+            isCurrentStep = currentStep == ConnectionStep.LoginWpCom
         )
 
         ConnectionStepItem(
-            step = JetpackConnectionViewModel.ConnectionStep.InstallJetpack,
+            step = ConnectionStep.InstallJetpack,
             title = stringResource(R.string.jetpack_connection_step_install_jetpack),
             icon = Icons.Default.Add,
-            status = stepStatuses[JetpackConnectionViewModel.ConnectionStep.InstallJetpack]
-                ?: JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-            isCurrentStep = currentStep == JetpackConnectionViewModel.ConnectionStep.InstallJetpack
+            status = stepStatuses[ConnectionStep.InstallJetpack]
+                ?: ConnectionStatus.NotStarted,
+            isCurrentStep = currentStep == ConnectionStep.InstallJetpack
         )
 
         ConnectionStepItem(
-            step = JetpackConnectionViewModel.ConnectionStep.ConnectSite,
+            step = ConnectionStep.ConnectSite,
             title = stringResource(R.string.jetpack_connection_step_connect_site),
             icon = Icons.Default.Home,
-            status = stepStatuses[JetpackConnectionViewModel.ConnectionStep.ConnectSite]
-                ?: JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-            isCurrentStep = currentStep == JetpackConnectionViewModel.ConnectionStep.ConnectSite
+            status = stepStatuses[ConnectionStep.ConnectSite]
+                ?: ConnectionStatus.NotStarted,
+            isCurrentStep = currentStep == ConnectionStep.ConnectSite
         )
 
         ConnectionStepItem(
-            step = JetpackConnectionViewModel.ConnectionStep.ConnectWpCom,
+            step = ConnectionStep.ConnectWpCom,
             title = stringResource(R.string.jetpack_connection_step_connect_wpcom),
             icon = Icons.Default.Settings,
-            status = stepStatuses[JetpackConnectionViewModel.ConnectionStep.ConnectWpCom]
-                ?: JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-            isCurrentStep = currentStep == JetpackConnectionViewModel.ConnectionStep.ConnectWpCom
+            status = stepStatuses[ConnectionStep.ConnectWpCom]
+                ?: ConnectionStatus.NotStarted,
+            isCurrentStep = currentStep == ConnectionStep.ConnectWpCom
         )
 
         ConnectionStepItem(
-            step = JetpackConnectionViewModel.ConnectionStep.Finalize,
+            step = ConnectionStep.Finalize,
             title = stringResource(R.string.jetpack_connection_step_finalize),
             icon = Icons.Default.Done,
-            status = stepStatuses[JetpackConnectionViewModel.ConnectionStep.Finalize]
-                ?: JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-            isCurrentStep = currentStep == JetpackConnectionViewModel.ConnectionStep.Finalize
+            status = stepStatuses[ConnectionStep.Finalize]
+                ?: ConnectionStatus.NotStarted,
+            isCurrentStep = currentStep == ConnectionStep.Finalize
         )
     }
 }
 
 @Composable
 private fun ConnectionStepItem(
-    step: JetpackConnectionViewModel.ConnectionStep,
+    step: ConnectionStep,
     title: String,
     icon: ImageVector,
-    status: JetpackConnectionViewModel.ConnectionStatus,
+    status: ConnectionStatus,
     isCurrentStep: Boolean
 ) {
     Card(
@@ -182,11 +184,11 @@ private fun ConnectionStepItem(
 
                 Text(
                     text = when (status) {
-                        JetpackConnectionViewModel.ConnectionStatus.NotStarted ->
+                        ConnectionStatus.NotStarted ->
                             stringResource(R.string.jetpack_connection_status_not_started)
-                        JetpackConnectionViewModel.ConnectionStatus.InProgress ->
+                        ConnectionStatus.InProgress ->
                             stringResource(R.string.jetpack_connection_status_in_progress)
-                        JetpackConnectionViewModel.ConnectionStatus.Completed ->
+                        ConnectionStatus.Completed ->
                             stringResource(R.string.jetpack_connection_status_completed)
                     },
                     style = MaterialTheme.typography.bodyMedium,
@@ -199,7 +201,7 @@ private fun ConnectionStepItem(
             }
 
             when (status) {
-                JetpackConnectionViewModel.ConnectionStatus.InProgress -> {
+                ConnectionStatus.InProgress -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
@@ -210,7 +212,7 @@ private fun ConnectionStepItem(
                         }
                     )
                 }
-                JetpackConnectionViewModel.ConnectionStatus.Completed -> {
+                ConnectionStatus.Completed -> {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = stringResource(R.string.jetpack_connection_status_completed),
@@ -218,7 +220,7 @@ private fun ConnectionStepItem(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                JetpackConnectionViewModel.ConnectionStatus.NotStarted -> {
+                ConnectionStatus.NotStarted -> {
                     // No indicator for not started
                 }
             }
@@ -270,18 +272,18 @@ private fun Screen(
 @Composable
 private fun JetpackConnectionScreenPreview() {
     val mockStatuses = mapOf(
-        JetpackConnectionViewModel.ConnectionStep.LoginWpCom to JetpackConnectionViewModel.ConnectionStatus.Completed,
-        JetpackConnectionViewModel.ConnectionStep.InstallJetpack to JetpackConnectionViewModel.ConnectionStatus.Completed,
-        JetpackConnectionViewModel.ConnectionStep.ConnectSite to JetpackConnectionViewModel.ConnectionStatus.InProgress,
-        JetpackConnectionViewModel.ConnectionStep.ConnectWpCom to JetpackConnectionViewModel.ConnectionStatus.NotStarted,
-        JetpackConnectionViewModel.ConnectionStep.Finalize to JetpackConnectionViewModel.ConnectionStatus.NotStarted
+        ConnectionStep.LoginWpCom to ConnectionStatus.Completed,
+        ConnectionStep.InstallJetpack to ConnectionStatus.Completed,
+        ConnectionStep.ConnectSite to ConnectionStatus.InProgress,
+        ConnectionStep.ConnectWpCom to ConnectionStatus.NotStarted,
+        ConnectionStep.Finalize to ConnectionStatus.NotStarted
     )
 
     Screen(
         onCloseClick = {},
         content = {
             JetpackConnectionSteps(
-                currentStep = JetpackConnectionViewModel.ConnectionStep.ConnectSite,
+                currentStep = ConnectionStep.ConnectSite,
                 stepStatuses = mockStatuses
             )
         }

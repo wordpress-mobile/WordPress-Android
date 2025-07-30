@@ -19,12 +19,9 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val currentStep = viewModel.currentStep.collectAsState()
-            val stepStatuses = viewModel.stepStatuses.collectAsState()
-            
             JetpackConnectionScreen(
-                currentStep = currentStep,
-                stepStatuses = stepStatuses,
+                currentStep = viewModel.currentStep.collectAsState(),
+                stepStatuses = viewModel.stepStatuses.collectAsState(),
                 onCloseClick = viewModel::onCloseClick
             )
         }
