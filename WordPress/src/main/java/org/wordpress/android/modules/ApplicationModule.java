@@ -50,8 +50,11 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
-import java.net.CookieHandler;
-import java.net.CookieManager;
+import okhttp3.CookieJar;
+import okhttp3.Cookie;
+import okhttp3.HttpUrl;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import rs.wordpress.api.kotlin.WpLoginClient;
 import kotlinx.coroutines.CoroutineScope;
@@ -166,8 +169,30 @@ public abstract class ApplicationModule {
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient() {
-        // Simple OkHttpClient for cookie authentication
+        // Create simple CookieJar for cookie authentication
+        CookieJar cookieJar = new CookieJar() {
+            private final List<Cookie> cookies = new ArrayList<>();
+            
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                this.cookies.addAll(cookies);
+            }
+            
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> validCookies = new ArrayList<>();
+                for (Cookie cookie : cookies) {
+                    if (cookie.matches(url)) {
+                        validCookies.add(cookie);
+                    }
+                }
+                return validCookies;
+            }
+        };
+        
+        // OkHttpClient with proper cookie handling
         return new OkHttpClient.Builder()
+                .cookieJar(cookieJar)
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
