@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
@@ -19,6 +22,16 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
                 viewModel = viewModel,
                 onCloseClick = viewModel::onCloseClick
             )
+        }
+
+        lifecycleScope.launch {
+            viewModel.uiEvent.filterNotNull().collect { event ->
+                when (event) {
+                    JetpackConnectionViewModel.UiEvent.Close -> {
+                        finish()
+                    }
+                }
+            }
         }
     }
 

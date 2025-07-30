@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackconnection
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.fluxc.model.SiteModel
@@ -18,15 +19,18 @@ import uniffi.wp_api.WpAuthentication
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class JetpackConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    private val jetpackConnectionClient: JetpackConnectionClient,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent
 
     private val _stepStatuses = MutableStateFlow(
         mapOf<ConnectionStep, ConnectionStatus>(
@@ -38,6 +42,8 @@ class JetpackConnectionViewModel @Inject constructor(
         )
     )
     val stepStatuses = _stepStatuses
+
+    private lateinit var jetpackConnectionClient: JetpackConnectionClient
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
@@ -112,6 +118,10 @@ class JetpackConnectionViewModel @Inject constructor(
         data object NotStarted : ConnectionStatus()
         data object InProgress : ConnectionStatus()
         data object Completed : ConnectionStatus()
+    }
+
+    sealed class UiEvent {
+        data object Close : UiEvent()
     }
 
     companion object {
