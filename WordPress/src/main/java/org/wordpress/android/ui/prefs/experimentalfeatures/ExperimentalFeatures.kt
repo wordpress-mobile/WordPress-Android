@@ -35,11 +35,6 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_block_editor_theme_styles,
             R.string.experimental_block_editor_theme_styles_description
         ),
-        EXPERIMENTAL_SUBSCRIBERS_FEATURE(
-            "experimental_subscribers_feature",
-            R.string.experimental_subscribers_feature,
-            R.string.experimental_subscribers_feature_description
-        ),
         EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE(
             "experimental_application_password_feature",
             R.string.experimental_application_password_feature,
