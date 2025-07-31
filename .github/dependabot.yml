@@ -47,6 +47,7 @@ updates:
       - dependency-name: "com.automattic.tracks:crashlogging"
       - dependency-name: "rs.wordpress.api:android"
       - dependency-name: "com.gravatar:gravatar"
+      - dependency-name: "com.automattic:encryptedlogging"
       # Ignore dependencies that were added only to address security vulnerabilities of transitive WireMock dependencies
       - dependency-name: "org.eclipse.jetty:jetty-webapp"
       - dependency-name: "com.fasterxml.jackson.core:jackson-databind"
