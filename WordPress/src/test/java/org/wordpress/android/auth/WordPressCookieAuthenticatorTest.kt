@@ -12,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.auth.WordPressCookieAuthenticator
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

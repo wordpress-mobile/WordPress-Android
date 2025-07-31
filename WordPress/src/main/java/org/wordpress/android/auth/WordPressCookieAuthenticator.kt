@@ -1,9 +1,6 @@
 package org.wordpress.android.auth
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -23,7 +20,6 @@ import kotlin.coroutines.resumeWithException
 /**
  * Utility class for WordPress.com cookie authentication.
  * Handles Bearer token authentication to retrieve session cookies.
- * Supports both Kotlin coroutines and Java callback interfaces.
  * Uses WPAndroid's configured OkHttpClient with proper cookie handling.
  */
 class WordPressCookieAuthenticator @Inject constructor(
@@ -50,13 +46,6 @@ class WordPressCookieAuthenticator @Inject constructor(
     sealed class AuthResult {
         data class Success(val cookies: Map<String, String>) : AuthResult()
         data class Failure(val error: String) : AuthResult()
-    }
-
-    /**
-     * Callback interface for authentication results (for Java interoperability)
-     */
-    interface AuthCallback {
-        fun onResult(result: AuthResult)
     }
 
     /**
@@ -110,20 +99,6 @@ class WordPressCookieAuthenticator @Inject constructor(
         } catch (e: IOException) {
             AppLog.e(AppLog.T.EDITOR, "WordPress.com cookie authentication error: ${e.message}")
             AuthResult.Failure("Authentication error: ${e.message}")
-        }
-    }
-
-    /**
-     * Java-friendly callback-based version for backwards compatibility.
-     * This method can be called from Java code and delegates to the suspend function.
-     *
-     * @param params Authentication parameters including username, Bearer token, and user agent
-     * @param callback Callback to receive the authentication result
-     */
-    fun authenticateForCookies(params: AuthParams, callback: AuthCallback) {
-        CoroutineScope(ioDispatcher + SupervisorJob()).launch {
-            val result = authenticateForCookies(params)
-            callback.onResult(result)
         }
     }
 

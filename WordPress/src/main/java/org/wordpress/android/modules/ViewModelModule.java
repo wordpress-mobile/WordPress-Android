@@ -31,6 +31,7 @@ import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
+import org.wordpress.android.ui.posts.EditPostAuthViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
@@ -283,6 +284,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StorePostViewModel.class)
     abstract ViewModel storePostViewModel(StorePostViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditPostAuthViewModel.class)
+    abstract ViewModel editPostAuthViewModel(EditPostAuthViewModel viewModel);
 
     @Binds
     @IntoMap
