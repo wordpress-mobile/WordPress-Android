@@ -76,11 +76,6 @@
     <issue id="ObsoleteSdkInt">
         <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
-    <issue id="UseRequiresApi">
-        <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
-    </issue>
-    <!-- TODO: Enable this rule once all dependencies are updated to support 16KB page size alignment -->
-    <issue id="Aligned16KB" severity="warning" />
     <issue id="IconDensities" severity="warning" /> <!--    fluxc-->
     <!-- INTEROPERABILITY -->
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/pull/21430 -->

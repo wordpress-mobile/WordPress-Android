@@ -4,10 +4,16 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -156,7 +166,20 @@ fun ApplicationPasswordOffConfirmationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.application_password_disable_feature_title)) },
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Margin.ExtraLarge.value)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.application_password_disable_feature_title),
+                textAlign = TextAlign.Center
+            )
+                },
         text = {
             Column {
                 Text(
@@ -203,6 +226,79 @@ fun ApplicationPasswordOffConfirmationDialog(
                 Text(text = stringResource(R.string.cancel))
             }
         }
+    )
+}
+
+@Composable
+fun ApplicationPasswordInfoDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    var showMore by rememberSaveable { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = {},
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Margin.ExtraLarge.value)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.application_password_info_title),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = Margin.Small.value)
+            ) {
+                Text(
+                    text = stringResource(R.string.application_password_info_description_1),
+                )
+
+                if (!showMore) {
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.learn_more),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .clickable { showMore = true }
+                            .padding(vertical = Margin.Small.value)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_2),
+                    )
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_3),
+                    )
+                    Spacer(modifier = Modifier.height(Margin.Medium.value))
+                    Text(
+                        text = stringResource(R.string.application_password_info_description_4),
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(text = stringResource(R.string.enable))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        },
     )
 }
 

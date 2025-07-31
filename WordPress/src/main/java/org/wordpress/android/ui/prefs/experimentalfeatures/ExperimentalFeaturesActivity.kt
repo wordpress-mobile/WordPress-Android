@@ -24,26 +24,42 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 val features by viewModel.switchStates.collectAsStateWithLifecycle()
-                val disableApplicationPasswordDialog by
-                viewModel.disableApplicationPasswordDialogState.collectAsStateWithLifecycle()
+                val applicationPasswordDialogState by
+                viewModel.applicationPasswordDialogState.collectAsStateWithLifecycle()
                 val showDialog = remember { mutableStateOf(false) }
 
-                if (disableApplicationPasswordDialog > 0) {
-                    ApplicationPasswordOffConfirmationDialog(
-                        affectedSites = disableApplicationPasswordDialog,
-                        onDismiss = { viewModel.dismissDisableApplicationPassword() },
-                        onConfirm = { viewModel.confirmDisableApplicationPassword() },
-                        onContactSupport = {
-                            val intent = SupportWebViewActivity.createIntent(
-                                context = this,
-                                origin = HelpActivity.Origin.UNKNOWN,
-                                selectedSite = null,
-                                extraSupportTags = null
-                            )
-                            this.startActivity(intent)
-                        }
-                    )
-                } else if (showDialog.value) {
+                when (applicationPasswordDialogState) {
+                    is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable -> {
+                        ApplicationPasswordOffConfirmationDialog(
+                            affectedSites = (applicationPasswordDialogState as
+                                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable).affectedSites,
+                            onDismiss = { viewModel.dismissDisableApplicationPassword() },
+                            onConfirm = { viewModel.confirmDisableApplicationPassword() },
+                            onContactSupport = {
+                                val intent = SupportWebViewActivity.createIntent(
+                                    context = this,
+                                    origin = HelpActivity.Origin.UNKNOWN,
+                                    selectedSite = null,
+                                    extraSupportTags = null
+                                )
+                                this.startActivity(intent)
+                            }
+                        )
+                    }
+                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Info -> {
+                        ApplicationPasswordInfoDialog(
+                            onDismiss = { viewModel.dismissApplicationPasswordInfo() },
+                            onConfirm = { viewModel.confirmApplicationPasswordInfo() }
+                        )
+                    }
+                    ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.None -> {
+                        // Stub
+                    }
+                }
+
+                // Only show other dialogs if we are not showing the Application Password one
+                if (applicationPasswordDialogState is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.None
+                    && showDialog.value) {
                     FeedbackDialog(
                         onDismiss = { showDialog.value = false },
                         onSendFeedback = {
