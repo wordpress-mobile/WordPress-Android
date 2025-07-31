@@ -3,7 +3,6 @@ package org.wordpress.android.ui.jetpackconnection
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
@@ -74,7 +73,7 @@ fun JetpackConnectionScreen(
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
                 )
-                
+
                 AnimatedVisibility(
                     visible = buttonType.value != null,
                     enter = fadeIn()
@@ -329,8 +328,11 @@ private fun rememberConnectionStepStyle(
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
 
-    val targetElevation = if (status == ConnectionStatus.NotStarted) 2.dp else 0.dp
-    val animatedElevation by animateDpAsState(targetValue = targetElevation)
+    val elevation = when (status) {
+        ConnectionStatus.NotStarted -> 2.dp
+        ConnectionStatus.InProgress -> 4.dp
+        else -> 0.dp
+    }
 
     val shape = MaterialTheme.shapes.medium
 
@@ -362,7 +364,7 @@ private fun rememberConnectionStepStyle(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(
-                elevation = animatedElevation,
+                elevation = elevation,
                 shape = shape,
                 clip = false
             )
