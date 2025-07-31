@@ -192,7 +192,6 @@ private fun JetpackConnectionSteps(
     }
 }
 
-@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun ConnectionStepItem(
     step: ConnectionStep,
@@ -202,7 +201,135 @@ private fun ConnectionStepItem(
     isCurrentStep: Boolean
 ) {
     val status = stepState.status
-    val errorMessage = stepState.errorMessage
+    val style = rememberConnectionStepStyle(status, isCurrentStep)
+
+    Row(
+        modifier = style.modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ConnectionStepIcon(
+            icon = icon,
+            style = style
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        ConnectionStepContent(
+            title = title,
+            status = status,
+            errorMessage = stepState.errorMessage,
+            style = style,
+            modifier = Modifier.weight(1f)
+        )
+
+        ConnectionStepStatusIndicator(
+            status = status,
+            style = style
+        )
+    }
+}
+
+@Composable
+private fun ConnectionStepIcon(
+    icon: ImageVector,
+    style: ConnectionStepStyle
+) {
+    Icon(
+        imageVector = icon,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+        tint = style.iconColor
+    )
+}
+
+@Composable
+private fun ConnectionStepContent(
+    title: String,
+    status: ConnectionStatus,
+    errorMessage: String?,
+    style: ConnectionStepStyle,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = style.titleFontWeight,
+            color = style.titleColor
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = getStatusText(status),
+            style = MaterialTheme.typography.bodyMedium,
+            color = style.statusColor
+        )
+
+        if (errorMessage != null && status == ConnectionStatus.Failed) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+    }
+}
+
+@Composable
+private fun ConnectionStepStatusIndicator(
+    status: ConnectionStatus,
+    style: ConnectionStepStyle
+) {
+    when (status) {
+        ConnectionStatus.InProgress -> {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = style.progressColor
+            )
+        }
+
+        ConnectionStatus.Completed -> {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = stringResource(R.string.jetpack_connection_status_completed),
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        ConnectionStatus.Failed -> {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = stringResource(R.string.jetpack_connection_status_failed),
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.error
+            )
+        }
+
+        ConnectionStatus.NotStarted -> {
+            // No indicator for not started
+        }
+    }
+}
+
+@Composable
+private fun getStatusText(status: ConnectionStatus): String {
+    return when (status) {
+        ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
+        ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
+        ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
+        ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
+    }
+}
+
+@Composable
+private fun rememberConnectionStepStyle(
+    status: ConnectionStatus,
+    isCurrentStep: Boolean
+): ConnectionStepStyle {
     val targetAlpha = if (status == ConnectionStatus.Completed) 0.6f else 1f
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
 
@@ -220,7 +347,31 @@ private fun ConnectionStepItem(
 
     val shape = MaterialTheme.shapes.medium
 
-    Row(
+    val iconColor = when {
+        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
+        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    val titleColor = when {
+        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
+        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    val statusColor = when {
+        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
+        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+    }
+
+    val progressColor = when {
+        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
+        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+        else -> MaterialTheme.colorScheme.primary
+    }
+
+    return ConnectionStepStyle(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(
@@ -232,100 +383,22 @@ private fun ConnectionStepItem(
             .background(animatedColor)
             .alpha(animatedAlpha)
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = when {
-                status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
-                isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                else -> MaterialTheme.colorScheme.onSurface
-            }
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal,
-                color = when {
-                    status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
-                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                    else -> MaterialTheme.colorScheme.onSurface
-                }
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = when (status) {
-                    ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
-                    ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
-                    ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
-                    ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = when {
-                    status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
-                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                }
-            )
-
-            // Show error message if present
-            if (errorMessage != null && status == ConnectionStatus.Failed) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-        when (status) {
-            ConnectionStatus.InProgress -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    strokeWidth = 2.dp,
-                    color = when {
-                        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
-                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                        else -> MaterialTheme.colorScheme.primary
-                    }
-                )
-            }
-
-            ConnectionStatus.Completed -> {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = stringResource(R.string.jetpack_connection_status_completed),
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            ConnectionStatus.Failed -> {
-                Icon(
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(R.string.jetpack_connection_status_failed),
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.error
-                )
-            }
-
-            ConnectionStatus.NotStarted -> {
-                // No indicator for not started
-            }
-        }
-    }
+        iconColor = iconColor,
+        titleColor = titleColor,
+        statusColor = statusColor,
+        progressColor = progressColor,
+        titleFontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal
+    )
 }
+
+private data class ConnectionStepStyle(
+    val modifier: Modifier,
+    val iconColor: Color,
+    val titleColor: Color,
+    val statusColor: Color,
+    val progressColor: Color,
+    val titleFontWeight: FontWeight
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
