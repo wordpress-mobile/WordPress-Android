@@ -67,6 +67,7 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     private fun startNextStep() {
+        // TODO restore this when test code below is removed
         /*currentStep.value?.let {
             updateStepStatus(it, ConnectionStatus.Completed)
         }*/

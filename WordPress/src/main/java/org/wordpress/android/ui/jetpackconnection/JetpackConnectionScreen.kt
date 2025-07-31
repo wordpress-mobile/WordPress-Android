@@ -196,7 +196,7 @@ private fun ConnectionStepItem(
             .fillMaxWidth()
             .alpha(animatedAlpha),
         colors = CardDefaults.cardColors(
-            containerColor = animatedColor
+            containerColor = animatedColor,
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = animatedElevation
