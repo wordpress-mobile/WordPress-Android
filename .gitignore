@@ -113,3 +113,6 @@ google-upload-credentials.json
 .kotlin/
 
 developer.properties
+
+# Claude
+.claude/settings.local.json
