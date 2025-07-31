@@ -1018,6 +1018,11 @@
     <string name="jetpack_connection_status_failed">Failed</string>
     <string name="jetpack_connection_cancel_title">Cancel Jetpack Setup?</string>
     <string name="jetpack_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
+    <string name="jetpack_connection_error_jetpack_already_installed">Jetpack is already installed</string>
+    <string name="jetpack_connection_error_timeout">Timed out</string>
+    <string name="jetpack_connection_error_unknown">@string/error_generic</string>
+    <string name="jetpack_connection_error_offline">@string/no_network_title</string>
+    <string name="jetpack_connection_error_wpcom">Failed to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

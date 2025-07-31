@@ -49,7 +49,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    // TODO: Inject or initialize this properly when the actual implementation is ready
+    // TODO Inject or initialize this properly when the actual implementation is ready
     private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     init {
@@ -181,7 +181,7 @@ class JetpackConnectionViewModel @Inject constructor(
         _uiEvent.value = event
     }
 
-    @Suppress("TooGenericExceptionCaught", "Unused")
+    @Suppress("TooGenericExceptionCaught", "Unused", "UnusedPrivateMember")
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
@@ -246,7 +246,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private suspend fun installJetpackPlugin() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
-        // TODO: Implement actual plugin installation API call when ready
+        // TODO Implement actual plugin installation API call when ready
         // val params = PluginCreateParams(
         //     slug = PluginWpOrgDirectorySlug("jetpack"),
         //     status = PluginStatus.ACTIVE,
