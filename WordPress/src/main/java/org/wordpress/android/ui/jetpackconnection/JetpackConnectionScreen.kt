@@ -63,7 +63,7 @@ fun JetpackConnectionScreen(
     onRetryClick: () -> Unit = {}
 ) {
     ScreenWithTopAppBarM3(
-        titleRes = R.string.jetpack_connection_title,
+        titleRes = R.string.jetpack_connection_setup_title,
         onCloseClick = onCloseClick,
         content = {
             Column {
@@ -132,13 +132,6 @@ private fun JetpackConnectionSteps(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = stringResource(R.string.jetpack_connection_setup_title),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
         ConnectionStepItem(
             step = ConnectionStep.LoginWpCom,
             title = stringResource(R.string.jetpack_connection_step_login_wpcom),
