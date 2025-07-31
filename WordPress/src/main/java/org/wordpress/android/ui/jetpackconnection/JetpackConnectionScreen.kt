@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackconnection
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -24,8 +25,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +45,8 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -194,23 +195,22 @@ private fun ConnectionStepItem(
     val targetElevation = if (status == ConnectionStatus.NotStarted) 2.dp else 0.dp
     val animatedElevation by animateDpAsState(targetValue = targetElevation)
 
-    Card(
+    val shape = MaterialTheme.shapes.medium
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .alpha(animatedAlpha),
-        colors = CardDefaults.cardColors(
-            containerColor = animatedColor,
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = animatedElevation
-        )
+            .shadow(
+                elevation = animatedElevation,
+                shape = shape,
+                clip = false
+            )
+            .clip(shape)
+            .background(animatedColor)
+            .alpha(animatedAlpha)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -300,7 +300,6 @@ private fun ConnectionStepItem(
             }
         }
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
