@@ -36,18 +36,10 @@ class JetpackConnectionViewModel @Inject constructor(
     private val _uiEvent = MutableStateFlow<UiEvent?>(null)
     val uiEvent = _uiEvent
 
-    private val _showDoneButton = MutableStateFlow(false)
-    val showDoneButton = _showDoneButton
+    private val _buttonType = MutableStateFlow<ButtonType?>(null)
+    val buttonType = _buttonType
 
-    private val _stepStatuses = MutableStateFlow(
-        mapOf<ConnectionStep, ConnectionStatus>(
-            ConnectionStep.LoginWpCom to ConnectionStatus.NotStarted,
-            ConnectionStep.InstallJetpack to ConnectionStatus.NotStarted,
-            ConnectionStep.ConnectSite to ConnectionStatus.NotStarted,
-            ConnectionStep.ConnectWpCom to ConnectionStatus.NotStarted,
-            ConnectionStep.Finalize to ConnectionStatus.NotStarted
-        )
-    )
+    private val _stepStatuses = MutableStateFlow(initialStepStatuses)
     val stepStatuses = _stepStatuses
 
     private var job: Job? = null
@@ -87,7 +79,7 @@ class JetpackConnectionViewModel @Inject constructor(
         // TODO just for testing the UI
         launch(bgDispatcher) {
             delay(2000)
-            updateStepStatus(currentStep.value!!, ConnectionStatus.Completed)
+            updateStepStatus(currentStep.value!!, ConnectionStatus.Failed)
         }
     }
 
@@ -95,13 +87,15 @@ class JetpackConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status")
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
+            _buttonType.value = ButtonType.Retry
         }
 
         if (status == ConnectionStatus.Failed) {
             job?.cancel()
+            _buttonType.value = ButtonType.Retry
         } else if (status == ConnectionStatus.Completed) {
             if (step == ConnectionStep.Finalize) {
-                _showDoneButton.value = true
+                _buttonType.value = ButtonType.Done
             } else {
                 startNextStep()
             }
@@ -110,6 +104,13 @@ class JetpackConnectionViewModel @Inject constructor(
 
     fun onCloseClick() {
         _uiEvent.value = UiEvent.Close
+    }
+
+    fun onRetryClick() {
+        _buttonType.value = null
+        _currentStep.value = null
+        _stepStatuses.value = initialStepStatuses
+        startJob()
     }
 
     private suspend fun networkRequest() {
@@ -176,6 +177,11 @@ class JetpackConnectionViewModel @Inject constructor(
         data object Close : UiEvent()
     }
 
+    sealed class ButtonType {
+        data object Done : ButtonType()
+        data object Retry : ButtonType()
+    }
+
     companion object {
         /**
          * Requirements:
@@ -203,5 +209,13 @@ class JetpackConnectionViewModel @Inject constructor(
 
         private const val TAG = "JetpackConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
+
+        private val initialStepStatuses = mapOf<ConnectionStep, ConnectionStatus>(
+            ConnectionStep.LoginWpCom to ConnectionStatus.NotStarted,
+            ConnectionStep.InstallJetpack to ConnectionStatus.NotStarted,
+            ConnectionStep.ConnectSite to ConnectionStatus.NotStarted,
+            ConnectionStep.ConnectWpCom to ConnectionStatus.NotStarted,
+            ConnectionStep.Finalize to ConnectionStatus.NotStarted
+        )
     }
 }

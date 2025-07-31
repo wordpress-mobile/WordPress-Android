@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackconnection
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ButtonType
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStep
 
@@ -62,8 +64,9 @@ import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.Con
 fun JetpackConnectionScreen(
     currentStep: State<ConnectionStep?>,
     stepStatuses: State<Map<ConnectionStep, ConnectionStatus>>,
+    buttonType: State<ButtonType?>,
     onCloseClick: () -> Unit = {},
-    showDoneButton: State<Boolean>
+    onRetryClick: () -> Unit = {}
 ) {
     Screen(
         onCloseClick = onCloseClick,
@@ -78,18 +81,30 @@ fun JetpackConnectionScreen(
                     stepStatuses = stepStatuses.value
                 )
             }
-            AnimatedVisibility(
-                visible = showDoneButton.value,
-                enter = fadeIn()
-            ) {
-                JetpackConnectionDoneButton(onClick = onCloseClick)
+            buttonType.value?.let {
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn()
+                ) {
+                    when (it) {
+                        ButtonType.Done -> JetpackConnectionButton(
+                            labelRes = R.string.label_done_button,
+                            onClick = onCloseClick
+                        )
+                        ButtonType.Retry -> JetpackConnectionButton(
+                            labelRes = R.string.retry,
+                            onClick = onRetryClick
+                        )
+                    }
+                }
             }
         }
     )
 }
 
 @Composable
-private fun JetpackConnectionDoneButton(
+private fun JetpackConnectionButton(
+    @StringRes labelRes: Int,
     onClick: () -> Unit
 ) {
     Column(
@@ -102,7 +117,7 @@ private fun JetpackConnectionDoneButton(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(R.string.label_done_button))
+            Text(text = stringResource(labelRes))
         }
     }
 }
