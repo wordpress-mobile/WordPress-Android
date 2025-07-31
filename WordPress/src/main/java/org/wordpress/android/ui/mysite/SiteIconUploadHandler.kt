@@ -47,7 +47,8 @@ class SiteIconUploadHandler
         data class MediaUploaded(
             val media: List<MediaModel>,
             override val site: SiteModel?,
-            override val errorMessage: String? = null
+            override val errorMessage: String? = null,
+            val successfulMessage: String? = null,
         ) : ItemUploadedModel(site, errorMessage)
     }
 
@@ -84,9 +85,9 @@ class SiteIconUploadHandler
                 _onUploadedItem.postValue(
                     Event(
                         MediaUploaded(
-                            event.mediaModelList,
-                            selectedSite,
-                            event.successMessage
+                            media = event.mediaModelList,
+                            site = selectedSite,
+                            successfulMessage = event.successMessage
                         )
                     )
                 )
