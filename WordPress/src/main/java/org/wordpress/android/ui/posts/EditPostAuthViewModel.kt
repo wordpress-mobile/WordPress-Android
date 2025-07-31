@@ -55,17 +55,19 @@ class EditPostAuthViewModel @Inject constructor(
     }
 
     fun getCookiesForPrivateSites(siteModel: SiteModel, privateAtomicCookie: PrivateAtomicCookie): Map<String, String> {
-        if (!(siteModel.isWPCom || siteModel.isWPComAtomic) || !siteModel.isPrivate) {
-            return emptyMap()
-        }
         val cookies = when {
+            !siteModel.isPrivate -> emptyMap()
             siteModel.isWPComAtomic -> getAtomicSiteCookies(siteModel, privateAtomicCookie)
-            else -> getWpComCookies(siteModel)
+            siteModel.isWPCom -> getWpComCookies(siteModel)
+            else -> emptyMap()
         }
         return cookies
     }
 
-    private fun getAtomicSiteCookies(siteModel: SiteModel, privateAtomicCookie: PrivateAtomicCookie): Map<String, String> {
+    private fun getAtomicSiteCookies(
+        siteModel: SiteModel,
+        privateAtomicCookie: PrivateAtomicCookie
+    ): Map<String, String> {
         val cookies = mutableMapOf<String, String>()
         if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
             val cookieName = privateAtomicCookie.getName()
