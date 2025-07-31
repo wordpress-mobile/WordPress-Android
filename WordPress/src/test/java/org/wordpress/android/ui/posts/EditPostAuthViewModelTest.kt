@@ -65,13 +65,29 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fetchWpComCookies starts with Loading state`() {
+    fun `fetchWpComCookies posts Loading then Success states`() = test {
+        // Given
+        val stateChanges = mutableListOf<EditPostAuthViewModel.WpComCookieAuthState>()
+        val expectedCookies = mapOf("wordpress_logged_in_123" to "cookie_value")
+
+        whenever(wordPressCookieAuthenticator.authenticateForCookies(org.mockito.kotlin.any()))
+            .thenReturn(WordPressCookieAuthenticator.AuthResult.Success(expectedCookies))
+
+        // Observe state changes
+        viewModel.wpComCookieAuthState.observeForever { state ->
+            stateChanges.add(state)
+        }
+
         // When
         viewModel.fetchWpComCookies()
+        advanceUntilIdle()
 
-        // Then
-        val state = viewModel.wpComCookieAuthState.value
-        assertTrue(state is EditPostAuthViewModel.WpComCookieAuthState.Loading)
+        // Then - Should have seen Loading then Success states
+        assertTrue(stateChanges.size >= 2)
+        assertTrue(stateChanges[stateChanges.size - 2] is EditPostAuthViewModel.WpComCookieAuthState.Loading)
+        val finalState = stateChanges.last()
+        assertTrue(finalState is EditPostAuthViewModel.WpComCookieAuthState.Success)
+        assertEquals(expectedCookies, finalState.cookies)
     }
 
     @Test
@@ -109,7 +125,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getCookiesForPrivateSites returns empty for non-private sites`() {
+    fun `getCookiesForPrivateSites returns empty for non-private sites`() = test {
         // Given
         val siteModel = SiteModel().apply {
             setIsWPCom(true)
@@ -124,7 +140,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getCookiesForPrivateSites returns empty for non-WPCom sites`() {
+    fun `getCookiesForPrivateSites returns empty for non-WPCom sites`() = test {
         // Given
         val siteModel = SiteModel().apply {
             setIsWPCom(false)
@@ -139,7 +155,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getCookiesForPrivateSites returns atomic cookies for atomic sites`() {
+    fun `getCookiesForPrivateSites returns atomic cookies for atomic sites`() = test {
         // Given
         val siteModel = SiteModel().apply {
             setIsWPCom(true)
@@ -159,7 +175,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getCookiesForPrivateSites returns empty for atomic sites when cookie does not exist`() {
+    fun `getCookiesForPrivateSites returns empty for atomic sites when cookie does not exist`() = test {
         // Given
         val siteModel = SiteModel().apply {
             setIsWPCom(true)
@@ -202,7 +218,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `getCookiesForPrivateSites returns empty for simple sites before authentication`() {
+    fun `getCookiesForPrivateSites returns empty for simple sites before authentication`() = test {
         // Given
         val siteModel = SiteModel().apply {
             setIsWPCom(true)
