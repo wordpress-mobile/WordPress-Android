@@ -79,7 +79,7 @@ class JetpackConnectionViewModel @Inject constructor(
         // TODO just for testing the UI
         launch(bgDispatcher) {
             delay(2000)
-            updateStepStatus(currentStep.value!!, ConnectionStatus.Failed)
+            updateStepStatus(currentStep.value!!, ConnectionStatus.Completed)
         }
     }
 
@@ -87,7 +87,6 @@ class JetpackConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status")
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
-            _buttonType.value = ButtonType.Retry
         }
 
         if (status == ConnectionStatus.Failed) {

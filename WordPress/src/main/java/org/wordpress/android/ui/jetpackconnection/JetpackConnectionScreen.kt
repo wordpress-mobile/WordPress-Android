@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpackconnection
 
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,22 +79,20 @@ fun JetpackConnectionScreen(
                     currentStep = currentStep.value,
                     stepStatuses = stepStatuses.value
                 )
-            }
-            buttonType.value?.let {
                 AnimatedVisibility(
-                    visible = true,
+                    visible = buttonType.value != null,
                     enter = fadeIn()
                 ) {
-                    when (it) {
-                        ButtonType.Done -> JetpackConnectionButton(
-                            labelRes = R.string.label_done_button,
-                            onClick = onCloseClick
-                        )
-                        ButtonType.Retry -> JetpackConnectionButton(
-                            labelRes = R.string.retry,
-                            onClick = onRetryClick
-                        )
-                    }
+                    JetpackConnectionButton(
+                        buttonType = buttonType.value,
+                        onClick = {
+                            when (buttonType.value) {
+                                ButtonType.Done -> onCloseClick()
+                                ButtonType.Retry -> onRetryClick()
+                                null -> {}
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -104,9 +101,15 @@ fun JetpackConnectionScreen(
 
 @Composable
 private fun JetpackConnectionButton(
-    @StringRes labelRes: Int,
+    buttonType: ButtonType?,
     onClick: () -> Unit
 ) {
+    val labelRes = when (buttonType) {
+        ButtonType.Done -> R.string.label_done_button
+        ButtonType.Retry -> R.string.retry
+        null -> return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,95 +229,95 @@ private fun ConnectionStepItem(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = when {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = when {
+                status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                else -> MaterialTheme.colorScheme.onSurface
+            }
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal,
+                color = when {
                     status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
                     isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
                     else -> MaterialTheme.colorScheme.onSurface
                 }
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal,
+            Text(
+                text = when (status) {
+                    ConnectionStatus.NotStarted ->
+                        stringResource(R.string.jetpack_connection_status_not_started)
+
+                    ConnectionStatus.InProgress ->
+                        stringResource(R.string.jetpack_connection_status_in_progress)
+
+                    ConnectionStatus.Completed ->
+                        stringResource(R.string.jetpack_connection_status_completed)
+
+                    ConnectionStatus.Failed ->
+                        stringResource(R.string.jetpack_connection_status_failed)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = when {
+                    status == ConnectionStatus.InProgress -> Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
+                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                }
+            )
+        }
+
+        when (status) {
+            ConnectionStatus.InProgress -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp,
                     color = when {
                         status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
                         isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                        else -> MaterialTheme.colorScheme.onSurface
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = when (status) {
-                        ConnectionStatus.NotStarted ->
-                            stringResource(R.string.jetpack_connection_status_not_started)
-
-                        ConnectionStatus.InProgress ->
-                            stringResource(R.string.jetpack_connection_status_in_progress)
-
-                        ConnectionStatus.Completed ->
-                            stringResource(R.string.jetpack_connection_status_completed)
-
-                        ConnectionStatus.Failed ->
-                            stringResource(R.string.jetpack_connection_status_failed)
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = when {
-                        status == ConnectionStatus.InProgress -> Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
-                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        else -> MaterialTheme.colorScheme.primary
                     }
                 )
             }
 
-            when (status) {
-                ConnectionStatus.InProgress -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp,
-                        color = when {
-                            status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
-                            isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                            else -> MaterialTheme.colorScheme.primary
-                        }
-                    )
-                }
+            ConnectionStatus.Completed -> {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(R.string.jetpack_connection_status_completed),
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
 
-                ConnectionStatus.Completed -> {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(R.string.jetpack_connection_status_completed),
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
+            ConnectionStatus.Failed -> {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(R.string.jetpack_connection_status_failed),
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
 
-                ConnectionStatus.Failed -> {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = stringResource(R.string.jetpack_connection_status_failed),
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-
-                ConnectionStatus.NotStarted -> {
-                    // No indicator for not started
-                }
+            ConnectionStatus.NotStarted -> {
+                // No indicator for not started
             }
         }
     }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
