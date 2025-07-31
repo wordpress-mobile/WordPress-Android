@@ -106,10 +106,14 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     fun onRetryClick() {
-        _buttonType.value = null
-        _currentStep.value = null
-        _stepStatuses.value = initialStepStatuses
+        clearValues()
         startJob()
+    }
+
+    private fun clearValues() {
+        _buttonType.value = null
+        _stepStatuses.value = initialStepStatuses
+        _currentStep.value = null
     }
 
     private suspend fun networkRequest() {
