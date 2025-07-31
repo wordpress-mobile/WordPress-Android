@@ -29,8 +29,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
 
-    private val _disableApplicationPasswordDialogState = MutableStateFlow(0)
-    val disableApplicationPasswordDialogState: StateFlow<Int> = _disableApplicationPasswordDialogState.asStateFlow()
+    private val _applicationPasswordDialogState =
+        MutableStateFlow<ApplicationPasswordDialogState>(ApplicationPasswordDialogState.None)
+    val applicationPasswordDialogState: StateFlow<ApplicationPasswordDialogState> =
+        _applicationPasswordDialogState.asStateFlow()
 
     init {
         val initialStates = Feature.entries
@@ -54,36 +56,30 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // Since FluxC has not way to access the experimental features, this is a workaround to remove the
         // Application Password credentials when the feature is disabled to avoid FluxC to use them.
         // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
-        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE && enabled.not()) {
-            val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
-            if (affectedSites > 0) {
-                _disableApplicationPasswordDialogState.value = affectedSites
-            } else {
-                confirmDisableApplicationPassword()
-            }
-        } else {
-            _switchStates.update { currentStates ->
-                currentStates.toMutableMap().apply {
-                    this[feature] = enabled
-                    experimentalFeatures.setEnabled(feature, enabled)
+        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
+            if (enabled) {
+                _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
+            }  else {
+                val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
+                if (affectedSites > 0) {
+                    _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Disable(affectedSites)
+                } else {
+                    confirmDisableApplicationPassword()
                 }
             }
+        } else {
+            setFeatureSwitchState(feature, enabled)
         }
     }
 
     fun dismissDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = 0
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
     }
 
     @Suppress("TooGenericExceptionCaught")
     fun confirmDisableApplicationPassword() {
-        _disableApplicationPasswordDialogState.value = 0
-        _switchStates.update { currentStates ->
-            currentStates.toMutableMap().apply {
-                this[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE] = false
-                experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-            }
-        }
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
 
         viewModelScope.launch {
             try {
@@ -100,5 +96,44 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun dismissApplicationPasswordInfo() {
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
+    }
+
+    fun confirmApplicationPasswordInfo() {
+        _applicationPasswordDialogState.value = ApplicationPasswordDialogState.None
+        setFeatureSwitchState(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+    }
+
+    private fun setFeatureSwitchState(
+        feature: Feature,
+        enabled: Boolean
+    ) {
+        _switchStates.update { currentStates ->
+            currentStates.toMutableMap().apply {
+                this[feature] = enabled
+                experimentalFeatures.setEnabled(feature, enabled)
+            }
+        }
+    }
+
+    sealed class ApplicationPasswordDialogState {
+        /**
+         * No dialog
+         */
+        data object None : ApplicationPasswordDialogState()
+
+        /**
+         * General info dialog
+         */
+        data object Info : ApplicationPasswordDialogState()
+
+        /**
+         * Dialog representing the disable feature state, and the affected sites if any.
+         */
+        data class Disable(val affectedSites: Int) : ApplicationPasswordDialogState()
     }
 }

@@ -500,10 +500,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                 activity,
                 requireActivity().findViewById(R.id.coordinator),
-                isError = true,
+                isError = !itemUploadedModel.errorMessage.isNullOrEmpty(),
                 mediaList = itemUploadedModel.media,
                 site = itemUploadedModel.site,
-                messageForUser = itemUploadedModel.errorMessage
+                messageForUser = itemUploadedModel.errorMessage ?: itemUploadedModel.successfulMessage
             )
         }
     }

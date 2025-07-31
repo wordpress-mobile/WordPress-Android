@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
@@ -34,11 +35,11 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
         phase: JetpackFeatureRemovalOverlayPhase,
         timeStamp: Long
     ) {
-        sharedPrefs.edit().putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp).apply()
+        sharedPrefs.edit { putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp) }
     }
 
     fun setFeatureCollectionOverlayShown(phase: JetpackFeatureRemovalPhase) {
-        sharedPrefs.edit().putBoolean(buildFeatureCollectionOverlayShownKey(phase), true).apply()
+        sharedPrefs.edit { putBoolean(buildFeatureCollectionOverlayShownKey(phase), true) }
         if(phase == JetpackFeatureRemovalPhase.PhaseFour) {
             setPhaseFourOverlayShownTimeStamp(System.currentTimeMillis())
         }
@@ -57,7 +58,7 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
     }
 
     private fun setPhaseFourOverlayShownTimeStamp(timeStamp: Long) {
-        sharedPrefs.edit().putLong(KEY_PHASE_FOUR_OVERLAY_SHOWN_TIME_STAMP, timeStamp).apply()
+        sharedPrefs.edit { putLong(KEY_PHASE_FOUR_OVERLAY_SHOWN_TIME_STAMP, timeStamp) }
     }
 
     companion object {

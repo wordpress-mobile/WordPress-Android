@@ -4,6 +4,7 @@ import androidx.work.DelegatingWorkerFactory
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.ZendeskHelper
+import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.UploadWorker
 import org.wordpress.android.workers.notification.local.LocalNotificationHandlerFactory
@@ -26,13 +27,14 @@ class WordPressWorkersFactory @Inject constructor(
     weeklyRoundupNotifier: WeeklyRoundupNotifier,
     promptReminderNotifier: PromptReminderNotifier,
     accountStore: AccountStore,
-    zendeskHelper: ZendeskHelper
+    zendeskHelper: ZendeskHelper,
+    notificationManagerWrapper: NotificationManagerWrapper
 ) : DelegatingWorkerFactory() {
     init {
         addFactory(UploadWorker.Factory(uploadStarter, siteStore))
-        addFactory(LocalNotificationWorker.Factory(localNotificationHandlerFactory))
+        addFactory(LocalNotificationWorker.Factory(localNotificationHandlerFactory, notificationManagerWrapper))
         addFactory(ReminderWorker.Factory(reminderScheduler, reminderNotifier, promptReminderNotifier))
-        addFactory(WeeklyRoundupWorker.Factory(weeklyRoundupNotifier))
+        addFactory(WeeklyRoundupWorker.Factory(weeklyRoundupNotifier, notificationManagerWrapper))
         addFactory(GCMRegistrationWorker.Factory(accountStore, zendeskHelper))
     }
 }

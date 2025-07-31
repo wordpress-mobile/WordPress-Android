@@ -1,10 +1,10 @@
 package org.wordpress.android.ui
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.graphics.drawable.toDrawable
 import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
 
@@ -24,7 +24,7 @@ class PreviewModeSelectorPopup(val context: Context, val button: View) : ListPop
         val popupBackgroundColor = ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(
             resources.getDimension(R.dimen.popup_over_toolbar_elevation)
         )
-        setBackgroundDrawable(ColorDrawable(popupBackgroundColor))
+        setBackgroundDrawable(popupBackgroundColor.toDrawable())
     }
 
     fun show(handler: PreviewModeHandler) {

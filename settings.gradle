@@ -142,7 +142,7 @@ def checkForRemoteBuildCacheOptimizedExperience() {
     assertSecretsApplied()
     assertDeveloperPropertiesMatch("${rootDir}/libs/login/developer.properties")
     assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
-    assertJava17Amazon()
+    assertJava21Amazon()
 }
 
 def assertDeveloperPropertiesMatch(String developerPropertiesPath) {
@@ -166,9 +166,9 @@ def assertSecretsApplied() {
     }
 }
 
-boolean assertJava17Amazon() {
+boolean assertJava21Amazon() {
     def version = System.getProperty("java.version")
-    def expectedVersion = "17.0.14"
+    def expectedVersion = "21.0.6"
     def vendor = System.getProperty("java.vendor")
 
     if (!(version.contains(expectedVersion) && vendor.toLowerCase().contains("amazon"))) {

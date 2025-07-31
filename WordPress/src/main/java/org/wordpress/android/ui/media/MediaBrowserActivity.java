@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -64,6 +65,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
@@ -111,7 +113,7 @@ import static org.wordpress.android.util.ToastUtils.Duration.LONG;
  */
 public class MediaBrowserActivity extends BaseAppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        WPMediaUtils.LaunchCameraCallback {
+        WPMediaUtils.LaunchCameraCallback, WpAppNotifierHandler.NotifierListener {
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String ARG_LAUNCH_PHOTO_PICKER = "launch_photo_picker";
@@ -131,6 +133,8 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ActivityNavigator mActivityNavigator;
+    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
     private SiteModel mSite;
 
@@ -302,6 +306,14 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
+        showApplicationPasswordReauthenticateDialog(authenticationUrl);
+    }
+
+    private void showApplicationPasswordReauthenticateDialog(@NonNull String authenticationUrl) {
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
+    }
+
     public MediaDeleteService getMediaDeleteService() {
         if (mDeleteService == null) {
             return null;
@@ -419,6 +431,9 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public void onStart() {
         super.onStart();
+
+        mWpAppNotifierHandler.addListener(this);
+
         if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
             registerReceiver(
                     mReceiver,
@@ -451,6 +466,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
 
     @Override
     public void onStop() {
+        mWpAppNotifierHandler.removeListener(this);
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);

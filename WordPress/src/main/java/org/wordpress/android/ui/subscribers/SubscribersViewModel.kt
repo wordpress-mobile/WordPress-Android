@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
@@ -17,10 +19,13 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewItemImage
 import org.wordpress.android.ui.dataview.DataViewViewModel
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.IndividualSubscriberStats
 import uniffi.wp_api.IndividualSubscriberStatsParams
+import uniffi.wp_api.ListSubscribersIncludeField
 import uniffi.wp_api.ListSubscribersSortField
 import uniffi.wp_api.Subscriber
 import uniffi.wp_api.SubscriberType
@@ -34,10 +39,18 @@ class SubscribersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     sharedPrefs: SharedPreferences,
+    networkUtilsWrapper: NetworkUtilsWrapper,
+    selectedSiteRepository: SelectedSiteRepository,
+    accountStore: AccountStore,
+    @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
-    sharedPrefs = sharedPrefs
+    sharedPrefs = sharedPrefs,
+    networkUtilsWrapper = networkUtilsWrapper,
+    selectedSiteRepository = selectedSiteRepository,
+    accountStore = accountStore,
+    ioDispatcher = ioDispatcher
 ) {
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
@@ -112,6 +125,10 @@ class SubscribersViewModel @Inject constructor(
         sortBy: DataViewDropdownItem?,
         searchQuery: String
     ): List<DataViewItem> = withContext(ioDispatcher) {
+        if (USE_DUMMY_DATA) {
+            val subscribers = DummySubscribers.getDummySubscribers()
+            return@withContext subscribers.map { subscriberToDataViewItem(it) }
+        }
         val filterType = filter?.let {
             when (it.id) {
                 SubscriberFilterType.Email.id -> SubscriberType.EmailSubscriber
@@ -134,7 +151,8 @@ class SubscribersViewModel @Inject constructor(
             sortOrder = sortOrder,
             search = searchQuery,
             filter = filterType,
-            sort = sortType
+            sort = sortType,
+            include = listOf(ListSubscribersIncludeField.COUNTRY)
         )
 
         val response = wpComApiClient.request { requestBuilder ->
@@ -187,12 +205,16 @@ class SubscribersViewModel @Inject constructor(
      * it simply returns the subscriber from the existing list of items.
      */
     fun getSubscriber(userId: Long): Subscriber? {
-        val item = items.value.firstOrNull { it.id == userId }
+        val item = uiState.value.items.firstOrNull { it.id == userId }
         return item?.data as? Subscriber
     }
 
     private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
         withContext(ioDispatcher) {
+            if (USE_DUMMY_DATA) {
+                return@withContext DummySubscribers.getDummySubscriberStats()
+            }
+
             val params = IndividualSubscriberStatsParams(
                 subscriptionId = subscriptionId
             )
@@ -311,6 +333,7 @@ class SubscribersViewModel @Inject constructor(
     }
 
     companion object {
+        private const val USE_DUMMY_DATA = false
         fun Subscriber.displayNameOrEmail() = displayName.ifEmpty { emailAddress }
     }
 }

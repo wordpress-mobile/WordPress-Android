@@ -10,6 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListFixtures
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Locale
+import java.util.TimeZone
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListItemModelMapperTest : BaseUnitTest() {
@@ -19,6 +20,9 @@ class BloggingPromptsListItemModelMapperTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        // Set to UTC for consistent test results
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
         mapper = BloggingPromptsListItemModelMapper(localeManagerWrapper)
     }

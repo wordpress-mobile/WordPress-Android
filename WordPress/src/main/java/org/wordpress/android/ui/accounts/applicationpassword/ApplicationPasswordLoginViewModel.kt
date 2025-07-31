@@ -109,7 +109,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         ) = withContext(ioDispatcher) {
         try {
             if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: UriLogin is empty")
+                appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: " +
+                        "Username: $username, Password: ${password.isEmpty()}, SiteUrl: $siteUrl, " +
+                        "API Root URL: $apiRootUrl")
                 emitErrorFetching(siteUrl)
             } else {
                 val xmlRpcEndpoint =
@@ -147,8 +149,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         viewModelScope.launch {
             val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
             val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
-            if (site == null) {
-                appLogWrapper.e(AppLog.T.MAIN, "Site not found for URL: ${currentUrlLogin?.siteUrl}")
+            if (event.rowsAffected < 1 || site == null || applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
+                appLogWrapper.e(AppLog.T.MAIN, "Site not found or credentials are empty.")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,

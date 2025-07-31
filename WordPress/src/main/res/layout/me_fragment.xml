@@ -229,31 +229,6 @@
                 tools:visibility="visible"/>
 
             <LinearLayout
-                android:id="@+id/row_design_system"
-                android:visibility="gone"
-                style="@style/MeListRowLayout"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/me_design_system_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_customize_white_24dp" />
-
-                <org.wordpress.android.util.widgets.AutoResizeTextView
-                    android:id="@+id/me_design_system_settings"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/preference_design_system" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/design_system_divider"
-                android:visibility="gone"
-                style="@style/MeListSectionDividerView"
-                tools:visibility="visible"/>
-
-            <LinearLayout
                 android:id="@+id/row_support"
                 style="@style/MeListRowLayout">
 

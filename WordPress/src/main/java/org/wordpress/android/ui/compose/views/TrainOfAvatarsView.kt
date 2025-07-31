@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.withStyledAttributes
 import androidx.core.graphics.drawable.toBitmap
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
@@ -75,17 +76,17 @@ class TrainOfAvatarsView @JvmOverloads constructor(
         }
 
     init {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.TrainOfAvatarsView)
-        ta.getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconSize, -1)
-            .takeIf { it != -1 }
-            ?.let { iconSize = it }
-        ta.getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconBorderWidth, -1)
-            .takeIf { it != -1 }
-            ?.let { iconBorderWidth = it }
-        ta.getResourceId(R.styleable.TrainOfAvatarsView_placeholder, -1)
-            .takeIf { it != -1 }
-            ?.let { placeholderRes = it }
-        ta.recycle()
+        context.withStyledAttributes(attrs, R.styleable.TrainOfAvatarsView) {
+            getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconSize, -1)
+                .takeIf { it != -1 }
+                ?.let { iconSize = it }
+            getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconBorderWidth, -1)
+                .takeIf { it != -1 }
+                ?.let { iconBorderWidth = it }
+            getResourceId(R.styleable.TrainOfAvatarsView_placeholder, -1)
+                .takeIf { it != -1 }
+                ?.let { placeholderRes = it }
+        }
     }
 
     @Composable

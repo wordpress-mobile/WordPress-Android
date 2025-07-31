@@ -4,7 +4,7 @@ package org.wordpress.android.ui.posts.services
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import androidx.core.graphics.drawable.toDrawable
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.widget.ImageView.ScaleType.FIT_CENTER
@@ -60,8 +60,7 @@ class AztecImageLoader(
                 // By default, BitmapFactory.decodeFile sets the bitmap's density
                 // to the device default so, we need to correctly set the input density to 160 ourselves.
                 resource.density = DisplayMetrics.DENSITY_DEFAULT
-                val bitmapDrawable = BitmapDrawable(context.resources, resource)
-                result = bitmapDrawable
+                result = resource.toDrawable(context.resources)
                 callbacks.onImageLoaded(result)
                 mRequestsInProgress.remove(url)
             }

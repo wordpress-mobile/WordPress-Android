@@ -26,7 +26,6 @@ import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_MONITORING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -62,9 +61,6 @@ class SiteListItemBuilderTest {
     @Mock
     lateinit var selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig
 
-    @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
-
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -78,7 +74,6 @@ class SiteListItemBuilderTest {
             jetpackFeatureRemovalPhaseHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
-            experimentalFeatures
         )
     }
 

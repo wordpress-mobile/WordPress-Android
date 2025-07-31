@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
@@ -41,7 +42,7 @@ class SelectedSectionManager
     }
 
     fun setSelectedSection(selectedSection: StatsSection) {
-        sharedPrefs.edit().putString(SELECTED_SECTION_KEY, selectedSection.name).apply()
+        sharedPrefs.edit { putString(SELECTED_SECTION_KEY, selectedSection.name) }
         if (this.liveSelectedSection.value != selectedSection) {
             _liveSelectedSection.postValue(selectedSection)
         }

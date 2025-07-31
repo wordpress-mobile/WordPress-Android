@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.notifications.usecase
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -39,9 +40,9 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
     }
 
     private fun updatePref(enabled: Boolean) {
-        val editor = sharedPrefs.edit()
-        editor.putBoolean(resourceProvider.getString(R.string.wp_pref_notifications_main), enabled)
-        editor.apply()
+        sharedPrefs.edit {
+            putBoolean(resourceProvider.getString(R.string.wp_pref_notifications_main), enabled)
+        }
     }
 
     /**

@@ -89,6 +89,8 @@ WordPress/src/main/java/org/wordpress/android/
 - **Android Lint**: Built-in Android static analysis
 - **Line Length**: 120 characters max
 - **No FIXME**: Use TODO instead of FIXME in committed code
+- **No Deprecated APIs**: Avoid using deprecated methods and classes in new code
+- **No Reflection**: Avoid using reflection in new code; prefer type-safe alternatives
 
 ### Development Workflow
 - Default development flavor: `jetpackWasabi` (Jetpack app with beta suffix)
