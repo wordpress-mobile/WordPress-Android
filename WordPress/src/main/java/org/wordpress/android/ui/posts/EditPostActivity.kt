@@ -431,6 +431,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
+    @Inject lateinit var editPostAuthViewModel: EditPostAuthViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -604,16 +605,23 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
-        // we need to make sure AT cookie is available when trying to edit post on private AT site
-        if (siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            showIfNecessary(fragmentManager)
-            dispatcher.dispatch(
-                SiteActionBuilder.newFetchPrivateAtomicCookieAction(
-                    SiteStore.FetchPrivateAtomicCookiePayload(siteModel.siteId)
+        // Ensure cookies are available for private sites, so that protected media loads successfully
+        when {
+            siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired() -> {
+                showIfNecessary(fragmentManager)
+                dispatcher.dispatch(
+                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                        SiteStore.FetchPrivateAtomicCookiePayload(siteModel.siteId)
+                    )
                 )
-            )
-        } else {
-            setupViewPager()
+            }
+            siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
+                showIfNecessary(fragmentManager)
+                editPostAuthViewModel.fetchWpComCookies()
+            }
+            else -> {
+                setupViewPager()
+            }
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR)
         setupPrepublishingBottomSheetRunnable()
@@ -978,6 +986,36 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editPostNavigationViewModel.currentDestination.observe(this) { destination ->
             AppLog.d(AppLog.T.POSTS, "EditPostActivity: Current destination changed to $destination")
             updateUIForDestination(destination)
+        }
+
+        editPostAuthViewModel.wpComCookieAuthState.observe(this) { authState ->
+            when (authState) {
+                is EditPostAuthViewModel.WpComCookieAuthState.Loading -> {
+                    showIfNecessary(supportFragmentManager)
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Success -> {
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    } else {
+                        setupViewPager()
+                    }
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Error -> {
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    }
+                    make(
+                        findViewById(R.id.editor_activity),
+                        R.string.media_accessing_failed,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Idle -> {
+                    // Do nothing - wait for actual authentication to be triggered
+                }
+            }
         }
     }
 
@@ -2614,6 +2652,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 // Limited to Simple sites until application passwords are supported
                 "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
                 "locale" to wpcomLocaleSlug,
+                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
