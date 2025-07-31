@@ -209,7 +209,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onConfirm(result: Bundle?) {
-        val task = result?.getSerializableCompat(
+        val task = result?.getSerializableCompat<java.io.Serializable>(
             QuickStartFullScreenDialogFragment.RESULT_TASK
         ) as? QuickStartStore.QuickStartTask
         task?.let { viewModel.onQuickStartTaskCardClick(it) }
