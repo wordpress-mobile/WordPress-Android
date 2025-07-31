@@ -38,11 +38,13 @@ class JetpackConnectionViewModel @Inject constructor(
     private val _buttonType = MutableStateFlow<ButtonType?>(null)
     val buttonType = _buttonType
 
-    private val _stepStatuses = MutableStateFlow(initialStepStatuses)
-    val stepStatuses = _stepStatuses
+    data class StepState(
+        val status: ConnectionStatus = ConnectionStatus.NotStarted,
+        val errorMessage: String? = null
+    )
 
-    private val _stepErrors = MutableStateFlow<Map<ConnectionStep, String?>>(emptyMap())
-    val stepErrors = _stepErrors
+    private val _stepStates = MutableStateFlow(initialStepStates)
+    val stepStates = _stepStates
 
     private var job: Job? = null
 
@@ -64,7 +66,7 @@ class JetpackConnectionViewModel @Inject constructor(
     private suspend fun startNextStep() {
         // Mark current step as completed if exists
         currentStep.value?.let {
-            if (_stepStatuses.value[it] == ConnectionStatus.InProgress) {
+            if (_stepStates.value[it]?.status == ConnectionStatus.InProgress) {
                 updateStepStatus(it, ConnectionStatus.Completed)
             }
         }
@@ -91,14 +93,8 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus, error: String? = null) {
         appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status${error?.let { " (error: $it)" } ?: ""}")
-        _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
-            this[step] = status
-        }
-
-        if (error != null) {
-            _stepErrors.value = _stepErrors.value.toMutableMap().apply {
-                this[step] = error
-            }
+        _stepStates.value = _stepStates.value.toMutableMap().apply {
+            this[step] = StepState(status = status, errorMessage = error)
         }
 
         when (status) {
@@ -131,8 +127,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private fun clearValues() {
         _buttonType.value = null
-        _stepStatuses.value = initialStepStatuses
-        _stepErrors.value = emptyMap()
+        _stepStates.value = initialStepStates
         _currentStep.value = null
     }
 
@@ -269,12 +264,12 @@ class JetpackConnectionViewModel @Inject constructor(
             return false
         }
 
-        private val initialStepStatuses = mapOf<ConnectionStep, ConnectionStatus>(
-            ConnectionStep.LoginWpCom to ConnectionStatus.NotStarted,
-            ConnectionStep.InstallJetpack to ConnectionStatus.NotStarted,
-            ConnectionStep.ConnectSite to ConnectionStatus.NotStarted,
-            ConnectionStep.ConnectWpCom to ConnectionStatus.NotStarted,
-            ConnectionStep.Finalize to ConnectionStatus.NotStarted
+        private val initialStepStates = mapOf(
+            ConnectionStep.LoginWpCom to StepState(),
+            ConnectionStep.InstallJetpack to StepState(),
+            ConnectionStep.ConnectSite to StepState(),
+            ConnectionStep.ConnectWpCom to StepState(),
+            ConnectionStep.Finalize to StepState()
         )
     }
 }

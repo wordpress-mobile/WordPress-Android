@@ -58,12 +58,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ButtonType
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStep
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.StepState
 
 @Composable
 fun JetpackConnectionScreen(
     currentStep: State<ConnectionStep?>,
-    stepStatuses: State<Map<ConnectionStep, ConnectionStatus>>,
-    stepErrors: State<Map<ConnectionStep, String?>>,
+    stepStates: State<Map<ConnectionStep, StepState>>,
     buttonType: State<ButtonType?>,
     onCloseClick: () -> Unit = {},
     onRetryClick: () -> Unit = {}
@@ -78,8 +78,7 @@ fun JetpackConnectionScreen(
             ) {
                 JetpackConnectionSteps(
                     currentStep = currentStep.value,
-                    stepStatuses = stepStatuses.value,
-                    stepErrors = stepErrors.value
+                    stepStates = stepStates.value
                 )
                 AnimatedVisibility(
                     visible = buttonType.value != null,
@@ -130,8 +129,7 @@ private fun JetpackConnectionButton(
 @Composable
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
-    stepStatuses: Map<ConnectionStep, ConnectionStatus>,
-    stepErrors: Map<ConnectionStep, String?>
+    stepStates: Map<ConnectionStep, StepState>
 ) {
     Column(
         modifier = Modifier
@@ -150,9 +148,8 @@ private fun JetpackConnectionSteps(
             step = ConnectionStep.LoginWpCom,
             title = stringResource(R.string.jetpack_connection_step_login_wpcom),
             icon = Icons.Default.AccountCircle,
-            status = stepStatuses[ConnectionStep.LoginWpCom]
-                ?: ConnectionStatus.NotStarted,
-            errorMessage = stepErrors[ConnectionStep.LoginWpCom],
+            stepState = stepStates[ConnectionStep.LoginWpCom]
+                ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.LoginWpCom
         )
 
@@ -160,9 +157,8 @@ private fun JetpackConnectionSteps(
             step = ConnectionStep.InstallJetpack,
             title = stringResource(R.string.jetpack_connection_step_install_jetpack),
             icon = Icons.Default.Add,
-            status = stepStatuses[ConnectionStep.InstallJetpack]
-                ?: ConnectionStatus.NotStarted,
-            errorMessage = stepErrors[ConnectionStep.InstallJetpack],
+            stepState = stepStates[ConnectionStep.InstallJetpack]
+                ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.InstallJetpack
         )
 
@@ -170,9 +166,8 @@ private fun JetpackConnectionSteps(
             step = ConnectionStep.ConnectSite,
             title = stringResource(R.string.jetpack_connection_step_connect_site),
             icon = Icons.Default.Home,
-            status = stepStatuses[ConnectionStep.ConnectSite]
-                ?: ConnectionStatus.NotStarted,
-            errorMessage = stepErrors[ConnectionStep.ConnectSite],
+            stepState = stepStates[ConnectionStep.ConnectSite]
+                ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.ConnectSite
         )
 
@@ -180,9 +175,8 @@ private fun JetpackConnectionSteps(
             step = ConnectionStep.ConnectWpCom,
             title = stringResource(R.string.jetpack_connection_step_connect_wpcom),
             icon = Icons.Default.Settings,
-            status = stepStatuses[ConnectionStep.ConnectWpCom]
-                ?: ConnectionStatus.NotStarted,
-            errorMessage = stepErrors[ConnectionStep.ConnectWpCom],
+            stepState = stepStates[ConnectionStep.ConnectWpCom]
+                ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.ConnectWpCom
         )
 
@@ -190,9 +184,8 @@ private fun JetpackConnectionSteps(
             step = ConnectionStep.Finalize,
             title = stringResource(R.string.jetpack_connection_step_finalize),
             icon = Icons.Default.Done,
-            status = stepStatuses[ConnectionStep.Finalize]
-                ?: ConnectionStatus.NotStarted,
-            errorMessage = stepErrors[ConnectionStep.Finalize],
+            stepState = stepStates[ConnectionStep.Finalize]
+                ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.Finalize
         )
     }
@@ -203,10 +196,11 @@ private fun ConnectionStepItem(
     step: ConnectionStep,
     title: String,
     icon: ImageVector,
-    status: ConnectionStatus,
-    errorMessage: String?,
+    stepState: StepState,
     isCurrentStep: Boolean
 ) {
+    val status = stepState.status
+    val errorMessage = stepState.errorMessage
     val targetAlpha = if (status == ConnectionStatus.Completed) 0.6f else 1f
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
 
@@ -380,22 +374,17 @@ private fun Screen(
 )
 @Composable
 private fun JetpackConnectionScreenPreview() {
-    val mockStatuses = mapOf(
-        ConnectionStep.LoginWpCom to ConnectionStatus.Completed,
-        ConnectionStep.InstallJetpack to ConnectionStatus.Completed,
-        ConnectionStep.ConnectSite to ConnectionStatus.InProgress,
-        ConnectionStep.ConnectWpCom to ConnectionStatus.Failed,
-        ConnectionStep.Finalize to ConnectionStatus.NotStarted
-    )
-
     Screen(
         onCloseClick = {},
         content = {
             JetpackConnectionSteps(
                 currentStep = ConnectionStep.ConnectSite,
-                stepStatuses = mockStatuses,
-                stepErrors = mapOf(
-                    ConnectionStep.ConnectWpCom to "Failed to connect to WordPress.com"
+                stepStates = mapOf(
+                    ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
+                    ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
+                    ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
+                    ConnectionStep.ConnectWpCom to StepState(ConnectionStatus.Failed, "Failed to connect to WordPress.com"),
+                    ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
                 )
             )
         }

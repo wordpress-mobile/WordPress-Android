@@ -21,8 +21,7 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
         setContent {
             JetpackConnectionScreen(
                 currentStep = viewModel.currentStep.collectAsState(),
-                stepStatuses = viewModel.stepStatuses.collectAsState(),
-                stepErrors = viewModel.stepErrors.collectAsState(),
+                stepStates = viewModel.stepStates.collectAsState(),
                 buttonType = viewModel.buttonType.collectAsState(),
                 onCloseClick = viewModel::onCloseClick,
                 onRetryClick = viewModel::onRetryClick,
