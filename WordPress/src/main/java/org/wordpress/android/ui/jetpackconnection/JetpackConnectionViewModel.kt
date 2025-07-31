@@ -64,6 +64,13 @@ class JetpackConnectionViewModel @Inject constructor(
         }
     }
 
+    private fun onJobCompleted() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
+        job?.cancel()
+        _buttonType.value = ButtonType.Done
+        _currentStep.value = null
+    }
+
     private suspend fun startNextStep() {
         // Mark current step as completed if exists
         currentStep.value?.let {
@@ -79,7 +86,6 @@ class JetpackConnectionViewModel @Inject constructor(
             ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
             ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
             ConnectionStep.Finalize -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Connection process completed")
                 return
             }
         }
@@ -112,8 +118,7 @@ class JetpackConnectionViewModel @Inject constructor(
             }
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
-                    _buttonType.value = ButtonType.Done
-                    job?.cancel()
+                    onJobCompleted()
                 } else {
                     launch {
                         startNextStep()
@@ -163,8 +168,9 @@ class JetpackConnectionViewModel @Inject constructor(
         return if (job?.isActive == true) {
             true
         } else {
-            val step = currentStep.value ?: false
-            _stepStates.value[step]?.status != ConnectionStatus.Failed
+            // if there's a current step, and it's not failed, then it's active
+            val step = currentStep.value
+            step != null && _stepStates.value[step]?.status != ConnectionStatus.Failed
         }
     }
 
