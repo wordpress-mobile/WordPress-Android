@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -15,9 +17,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.JetpackConnectionClient
-import uniffi.wp_api.PluginCreateParams
-import uniffi.wp_api.PluginStatus
-import uniffi.wp_api.PluginWpOrgDirectorySlug
 import uniffi.wp_api.WpAuthentication
 import javax.inject.Inject
 import javax.inject.Named
@@ -42,27 +41,33 @@ class JetpackConnectionViewModel @Inject constructor(
     private val _stepStatuses = MutableStateFlow(initialStepStatuses)
     val stepStatuses = _stepStatuses
 
+    private val _stepErrors = MutableStateFlow<Map<ConnectionStep, String?>>(emptyMap())
+    val stepErrors = _stepErrors
+
     private var job: Job? = null
 
-    private lateinit var jetpackConnectionClient: JetpackConnectionClient
+    // TODO: Inject or initialize this properly when the actual implementation is ready
+    private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     init {
-        startJob()
+        startConnection()
     }
 
-    private fun startJob() {
+    private fun startConnection() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection process")
         job?.cancel()
         job = launch {
-            delay(1000)
             startNextStep()
         }
     }
 
-    private fun startNextStep() {
-        // TODO restore this when test code below is removed
-        /*currentStep.value?.let {
-            updateStepStatus(it, ConnectionStatus.Completed)
-        }*/
+    private suspend fun startNextStep() {
+        // Mark current step as completed if exists
+        currentStep.value?.let {
+            if (_stepStatuses.value[it] == ConnectionStatus.InProgress) {
+                updateStepStatus(it, ConnectionStatus.Completed)
+            }
+        }
 
         val nextStep = when (currentStep.value) {
             null -> ConnectionStep.LoginWpCom
@@ -70,34 +75,47 @@ class JetpackConnectionViewModel @Inject constructor(
             ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
             ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
             ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
-            ConnectionStep.Finalize -> return
+            ConnectionStep.Finalize -> {
+                appLogWrapper.d(AppLog.T.API, "$TAG: Connection process completed")
+                return
+            }
         }
 
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
 
-        // TODO just for testing the UI
-        launch(bgDispatcher) {
-            delay(2000)
-            updateStepStatus(currentStep.value!!, ConnectionStatus.Completed)
-        }
+        // Execute the network request for this step
+        executeStepWithErrorHandling(nextStep)
     }
 
-    private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus) {
-        appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status")
+    private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus, error: String? = null) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status${error?.let { " (error: $it)" } ?: ""}")
         _stepStatuses.value = _stepStatuses.value.toMutableMap().apply {
             this[step] = status
         }
 
-        if (status == ConnectionStatus.Failed) {
-            job?.cancel()
-            _buttonType.value = ButtonType.Retry
-        } else if (status == ConnectionStatus.Completed) {
-            if (step == ConnectionStep.Finalize) {
-                _buttonType.value = ButtonType.Done
-            } else {
-                startNextStep()
+        if (error != null) {
+            _stepErrors.value = _stepErrors.value.toMutableMap().apply {
+                this[step] = error
             }
+        }
+
+        when (status) {
+            ConnectionStatus.Failed -> {
+                job?.cancel()
+                _buttonType.value = ButtonType.Retry
+            }
+            ConnectionStatus.Completed -> {
+                if (step == ConnectionStep.Finalize) {
+                    _buttonType.value = ButtonType.Done
+                } else {
+                    launch {
+                        startNextStep()
+                    }
+                }
+            }
+            else -> {}
         }
     }
 
@@ -106,55 +124,92 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     fun onRetryClick() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Retry clicked")
         clearValues()
-        startJob()
+        startConnection()
     }
 
     private fun clearValues() {
         _buttonType.value = null
         _stepStatuses.value = initialStepStatuses
+        _stepErrors.value = emptyMap()
         _currentStep.value = null
     }
 
-    private suspend fun networkRequest() {
-        when (currentStep.value) {
-            ConnectionStep.LoginWpCom -> {
-                // TODO
+    private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
+        try {
+            withContext(bgDispatcher) {
+                withTimeout(STEP_TIMEOUT_MS) {
+                    executeNetworkRequest(step)
+                }
             }
+            updateStepStatus(step, ConnectionStatus.Completed)
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
+            val errorMessage = when (e) {
+                is kotlinx.coroutines.TimeoutCancellationException -> "Operation timed out"
+                else -> e.message ?: "Unknown error occurred"
+            }
+            updateStepStatus(step, ConnectionStatus.Failed, errorMessage)
+        }
+    }
 
-            ConnectionStep.ConnectSite -> {
-                jetpackConnectionClient.connectSite(
-                    from = getSiteId().toString()
-                )
+    private suspend fun executeNetworkRequest(step: ConnectionStep) {
+        when (step) {
+            ConnectionStep.LoginWpCom -> {
+                // Check if user is already logged in
+                if (accountStore.hasAccessToken()) {
+                    appLogWrapper.d(AppLog.T.API, "$TAG: User already logged in")
+                } else {
+                    throw IllegalStateException("User must be logged in to WordPress.com")
+                }
             }
 
             ConnectionStep.InstallJetpack -> {
-                installJetpackPlugin()
+                val site = getSite()
+                if (site.isJetpackInstalled) {
+                    appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack already installed")
+                } else {
+                    installJetpackPlugin()
+                }
+            }
+
+            ConnectionStep.ConnectSite -> {
+                appLogWrapper.d(AppLog.T.API, "$TAG: Connecting site")
+                jetpackConnectionClient?.connectSite(
+                    from = getSiteId().toString()
+                ) ?: throw IllegalStateException("JetpackConnectionClient not initialized")
             }
 
             ConnectionStep.ConnectWpCom -> {
-                jetpackConnectionClient.connectUser(
-                    wpComAuthentication = WpAuthentication.Bearer(token = accountStore.accessToken!!),
+                val token = accountStore.accessToken 
+                    ?: throw IllegalStateException("No access token available")
+                
+                appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
+                jetpackConnectionClient?.connectUser(
+                    wpComAuthentication = WpAuthentication.Bearer(token = token),
                     from = getSiteId().toString()
-                )
+                ) ?: throw IllegalStateException("JetpackConnectionClient not initialized")
             }
 
             ConnectionStep.Finalize -> {
-                // TODO
-            }
-
-            null -> {
-                // noop
+                appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
+                // Add any finalization logic here
+                delay(500) // Small delay to show completion
             }
         }
     }
 
-    // TODO
-    private fun installJetpackPlugin() {
-        val params = PluginCreateParams(
-            slug = PluginWpOrgDirectorySlug("jetpack"),
-            status = PluginStatus.ACTIVE,
-        )
+    private suspend fun installJetpackPlugin() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
+        // TODO: Implement actual plugin installation API call when ready
+        // val params = PluginCreateParams(
+        //     slug = PluginWpOrgDirectorySlug("jetpack"),
+        //     status = PluginStatus.ACTIVE,
+        // )
+        // TODO: Implement actual plugin installation API call
+        // For now, simulate network delay
+        delay(2000)
     }
 
     private fun getSiteId() = getSite().siteId
@@ -186,6 +241,10 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     companion object {
+        private const val TAG = "JetpackConnectionViewModel"
+        private const val LIMIT_VERSION = "14.2"
+        private const val STEP_TIMEOUT_MS = 30000L // 30 seconds timeout per step
+
         /**
          * Requirements:
          * - Self-hosted site, and
@@ -209,9 +268,6 @@ class JetpackConnectionViewModel @Inject constructor(
             }
             return false
         }
-
-        private const val TAG = "JetpackConnectionViewModel"
-        private const val LIMIT_VERSION = "14.2"
 
         private val initialStepStatuses = mapOf<ConnectionStep, ConnectionStatus>(
             ConnectionStep.LoginWpCom to ConnectionStatus.NotStarted,

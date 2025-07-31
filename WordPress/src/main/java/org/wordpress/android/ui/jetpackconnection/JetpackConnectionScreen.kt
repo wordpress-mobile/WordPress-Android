@@ -63,6 +63,7 @@ import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.Con
 fun JetpackConnectionScreen(
     currentStep: State<ConnectionStep?>,
     stepStatuses: State<Map<ConnectionStep, ConnectionStatus>>,
+    stepErrors: State<Map<ConnectionStep, String?>>,
     buttonType: State<ButtonType?>,
     onCloseClick: () -> Unit = {},
     onRetryClick: () -> Unit = {}
@@ -77,7 +78,8 @@ fun JetpackConnectionScreen(
             ) {
                 JetpackConnectionSteps(
                     currentStep = currentStep.value,
-                    stepStatuses = stepStatuses.value
+                    stepStatuses = stepStatuses.value,
+                    stepErrors = stepErrors.value
                 )
                 AnimatedVisibility(
                     visible = buttonType.value != null,
@@ -128,7 +130,8 @@ private fun JetpackConnectionButton(
 @Composable
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
-    stepStatuses: Map<ConnectionStep, ConnectionStatus>
+    stepStatuses: Map<ConnectionStep, ConnectionStatus>,
+    stepErrors: Map<ConnectionStep, String?>
 ) {
     Column(
         modifier = Modifier
@@ -149,6 +152,7 @@ private fun JetpackConnectionSteps(
             icon = Icons.Default.AccountCircle,
             status = stepStatuses[ConnectionStep.LoginWpCom]
                 ?: ConnectionStatus.NotStarted,
+            errorMessage = stepErrors[ConnectionStep.LoginWpCom],
             isCurrentStep = currentStep == ConnectionStep.LoginWpCom
         )
 
@@ -158,6 +162,7 @@ private fun JetpackConnectionSteps(
             icon = Icons.Default.Add,
             status = stepStatuses[ConnectionStep.InstallJetpack]
                 ?: ConnectionStatus.NotStarted,
+            errorMessage = stepErrors[ConnectionStep.InstallJetpack],
             isCurrentStep = currentStep == ConnectionStep.InstallJetpack
         )
 
@@ -167,6 +172,7 @@ private fun JetpackConnectionSteps(
             icon = Icons.Default.Home,
             status = stepStatuses[ConnectionStep.ConnectSite]
                 ?: ConnectionStatus.NotStarted,
+            errorMessage = stepErrors[ConnectionStep.ConnectSite],
             isCurrentStep = currentStep == ConnectionStep.ConnectSite
         )
 
@@ -176,6 +182,7 @@ private fun JetpackConnectionSteps(
             icon = Icons.Default.Settings,
             status = stepStatuses[ConnectionStep.ConnectWpCom]
                 ?: ConnectionStatus.NotStarted,
+            errorMessage = stepErrors[ConnectionStep.ConnectWpCom],
             isCurrentStep = currentStep == ConnectionStep.ConnectWpCom
         )
 
@@ -185,6 +192,7 @@ private fun JetpackConnectionSteps(
             icon = Icons.Default.Done,
             status = stepStatuses[ConnectionStep.Finalize]
                 ?: ConnectionStatus.NotStarted,
+            errorMessage = stepErrors[ConnectionStep.Finalize],
             isCurrentStep = currentStep == ConnectionStep.Finalize
         )
     }
@@ -196,6 +204,7 @@ private fun ConnectionStepItem(
     title: String,
     icon: ImageVector,
     status: ConnectionStatus,
+    errorMessage: String?,
     isCurrentStep: Boolean
 ) {
     val targetAlpha = if (status == ConnectionStatus.Completed) 0.6f else 1f
@@ -279,6 +288,16 @@ private fun ConnectionStepItem(
                     else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 }
             )
+
+            // Show error message if present
+            if (errorMessage != null && status == ConnectionStatus.Failed) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
 
         when (status) {
@@ -374,7 +393,10 @@ private fun JetpackConnectionScreenPreview() {
         content = {
             JetpackConnectionSteps(
                 currentStep = ConnectionStep.ConnectSite,
-                stepStatuses = mockStatuses
+                stepStatuses = mockStatuses,
+                stepErrors = mapOf(
+                    ConnectionStep.ConnectWpCom to "Failed to connect to WordPress.com"
+                )
             )
         }
     )
