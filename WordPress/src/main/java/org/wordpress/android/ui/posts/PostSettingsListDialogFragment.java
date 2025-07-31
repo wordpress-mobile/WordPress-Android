@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,7 +17,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
 
@@ -29,23 +27,20 @@ public class PostSettingsListDialogFragment extends DialogFragment {
 
     public static final String TAG = "post_list_settings_dialog_fragment";
 
-    enum DialogType {
+    public enum DialogType {
         HOMEPAGE_STATUS,
         POST_STATUS,
         AUTHOR,
         POST_FORMAT
     }
 
-    interface OnPostSettingsDialogFragmentListener {
-        void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment);
-    }
-
     private DialogType mDialogType;
     private int mCheckedIndex;
-    private OnPostSettingsDialogFragmentListener mListener;
     private long mPostAuthorId;
+    @Nullable private String[] mDialogItems; // Store the actual items shown in the dialog
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+    @Nullable private EditPostSettingsViewModel mSettingsViewModel;
 
     public static PostSettingsListDialogFragment newInstance(
             @NonNull DialogType dialogType,
@@ -83,6 +78,8 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         setCancelable(true);
         mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+                .get(EditPostSettingsViewModel.class);
     }
 
     @Override
@@ -93,43 +90,36 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         mPostAuthorId = args.getLong(ARG_POST_AUTHOR_ID);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnPostSettingsDialogFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnPostSettingsDialogFragmentListener");
-        }
-    }
-
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder =
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
 
         DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@Nullable DialogInterface dialog, int which) {
                 mCheckedIndex = which;
-                getArguments().putInt(ARG_CHECKED_INDEX, mCheckedIndex);
+                if (getArguments() != null) {
+                    getArguments().putInt(ARG_CHECKED_INDEX, mCheckedIndex);
+                }
             }
         };
 
         switch (mDialogType) {
             case HOMEPAGE_STATUS:
                 builder.setTitle(R.string.post_settings_status);
+                mDialogItems = getResources().getStringArray(R.array.post_settings_homepage_statuses);
                 builder.setSingleChoiceItems(
-                        R.array.post_settings_homepage_statuses,
+                        mDialogItems,
                         mCheckedIndex,
                         clickListener);
                 break;
             case POST_STATUS:
                 builder.setTitle(R.string.post_settings_status);
+                mDialogItems = getResources().getStringArray(R.array.post_settings_statuses);
                 builder.setSingleChoiceItems(
-                        R.array.post_settings_statuses,
+                        mDialogItems,
                         mCheckedIndex,
                         clickListener);
                 break;
@@ -141,51 +131,57 @@ public class PostSettingsListDialogFragment extends DialogFragment {
                     dismiss();
 
                     builder.setMessage(null);
-                    String[] authorNames = authors.stream().map(Person::getDisplayName).toArray(String[]::new);
+                    mDialogItems = authors.stream().map(Person::getDisplayName).toArray(String[]::new);
                     builder.setSingleChoiceItems(
-                            authorNames,
+                            mDialogItems,
                             mPublishedViewModel.getAuthorIndex(mPostAuthorId),
                             clickListener
-                    ).create().show();
+                    );
+                    setupPositiveButton(builder);
+                    builder.setNegativeButton(R.string.cancel, null);
+                    builder.create().show();
                 });
                 break;
             case POST_FORMAT:
                 builder.setTitle(R.string.post_settings_post_format);
+                mDialogItems = getResources().getStringArray(R.array.post_format_display_names);
                 builder.setSingleChoiceItems(
-                        R.array.post_format_display_names,
+                        mDialogItems,
                         mCheckedIndex,
                         clickListener);
                 break;
         }
 
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                mListener.onPostSettingsFragmentPositiveButtonClicked(PostSettingsListDialogFragment.this);
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
+        // Only add buttons to dialogs that are ready for user interaction
+        // AUTHOR dialog sets up buttons after authors load, but needs cancel button during loading
+        if (mDialogType != DialogType.AUTHOR) {
+            setupPositiveButton(builder);
+            builder.setNegativeButton(R.string.cancel, null);
+        } else {
+            // Loading dialog should at least have cancel button for user to back out
+            builder.setNegativeButton(R.string.cancel, null);
+        }
 
         return builder.create();
     }
 
-    public DialogType getDialogType() {
-        return mDialogType;
-    }
-
-    public int getCheckedIndex() {
-        return mCheckedIndex;
+    private void setupPositiveButton(@NonNull Builder builder) {
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            if (mSettingsViewModel != null) {
+                mSettingsViewModel.onDialogResult(
+                    mDialogType,
+                    mCheckedIndex,
+                    getSelectedItem()
+                );
+            }
+        });
     }
 
     public @Nullable String getSelectedItem() {
-        ListView listView = ((AlertDialog) getDialog()).getListView();
-        if (listView != null) {
-            try {
-                return (String) listView.getItemAtPosition(mCheckedIndex);
-            } catch (IndexOutOfBoundsException e) {
-                AppLog.e(AppLog.T.POSTS, e);
-            }
+        if (mCheckedIndex < 0 || mDialogItems == null || mCheckedIndex >= mDialogItems.length) {
+            return null;
         }
-        return null;
+        return mDialogItems[mCheckedIndex];
     }
 }
 
