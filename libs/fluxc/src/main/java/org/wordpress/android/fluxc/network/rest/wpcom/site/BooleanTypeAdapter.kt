@@ -16,9 +16,7 @@ internal class BooleanTypeAdapter : JsonDeserializer<Boolean?> {
         return when {
             jsonPrimitive.isBoolean -> jsonPrimitive.asBoolean
             jsonPrimitive.isNumber -> jsonPrimitive.asNumber.toInt() == 1
-            jsonPrimitive.isString -> TRUE_STRINGS.contains(jsonPrimitive.asString.toLowerCase(
-                Locale.getDefault()
-            ))
+            jsonPrimitive.isString -> TRUE_STRINGS.contains(jsonPrimitive.asString.lowercase(Locale.getDefault()))
             else -> false
         }
     }
