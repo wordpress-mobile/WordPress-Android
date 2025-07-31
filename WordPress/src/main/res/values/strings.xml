@@ -1016,6 +1016,8 @@
     <string name="jetpack_connection_status_in_progress">In progress…</string>
     <string name="jetpack_connection_status_completed">Completed</string>
     <string name="jetpack_connection_status_failed">Failed</string>
+    <string name="jetpack_connection_cancel_title">Cancel Jetpack Setup?</string>
+    <string name="jetpack_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

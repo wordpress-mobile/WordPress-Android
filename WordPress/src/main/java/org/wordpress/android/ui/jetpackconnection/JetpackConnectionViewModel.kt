@@ -126,7 +126,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     fun onCloseClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Close clicked")
-        if (job?.isActive == true) {
+        if (isActive()) {
             // Connection is in progress, show confirmation dialog
             appLogWrapper.d(AppLog.T.API, "$TAG: Connection in progress, showing confirmation")
             _uiEvent.value = UiEvent.ShowCancelConfirmation
@@ -158,6 +158,15 @@ class JetpackConnectionViewModel @Inject constructor(
         _stepStates.value = initialStepStates
         _buttonType.value = null
         _currentStep.value = null
+    }
+
+    private fun isActive(): Boolean {
+        return if (job?.isActive == true) {
+            true
+        } else {
+            val step = currentStep.value ?: false
+            _stepStates.value[step]?.status != ConnectionStatus.Failed
+        }
     }
 
     @Suppress("TooGenericExceptionCaught", "Unused")
