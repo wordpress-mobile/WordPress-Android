@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.util.ToastUtils
@@ -35,11 +36,13 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         initViewModel()
         setContent {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator()
+            AppThemeM3 {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

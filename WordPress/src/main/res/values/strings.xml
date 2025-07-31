@@ -976,7 +976,7 @@
     <string name="experimental_subscribers_feature">Experimental subscribers</string>
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites.</string>
+    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -5032,5 +5032,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
-    <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
+    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
+    <string name="application_password_info_title">Application Passwords</string>
+    <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
+    <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
+    <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
+    <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
+    <string name="enable">Enable</string>
 </resources>
