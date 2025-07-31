@@ -41,7 +41,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -182,14 +181,13 @@ private fun ConnectionStepItem(
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
 
     val targetColor = when {
-        isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
+        status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        status == ConnectionStatus.InProgress -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f)
         status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
+        isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surface
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
-
-    val targetElevation = 2.dp
-    val animatedElevation by animateDpAsState(targetValue = targetElevation)
 
     Card(
         modifier = Modifier
@@ -199,7 +197,7 @@ private fun ConnectionStepItem(
             containerColor = animatedColor,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = animatedElevation
+            defaultElevation = 0.dp
         )
     ) {
         Row(
