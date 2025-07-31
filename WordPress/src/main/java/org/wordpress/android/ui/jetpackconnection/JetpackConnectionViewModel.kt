@@ -3,7 +3,6 @@ package org.wordpress.android.ui.jetpackconnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withContext
@@ -17,6 +16,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
+import kotlinx.coroutines.delay
 import uniffi.wp_api.JetpackConnectionClient
 import uniffi.wp_api.WpAuthentication
 import javax.inject.Inject
@@ -49,15 +49,15 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    // TODO Inject or initialize this properly when the actual implementation is ready
+    // TODO: Inject or initialize this properly when the actual implementation is ready
     private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     init {
-        startConnection()
+        startConnectionJob()
     }
 
-    private fun startConnection() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection process")
+    private fun startConnectionJob() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job")
         job?.cancel()
         job = launch {
             startNextStep()
@@ -149,7 +149,7 @@ class JetpackConnectionViewModel @Inject constructor(
     fun onRetryClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Retry clicked")
         clearValues()
-        startConnection()
+        startConnectionJob()
     }
 
     private fun clearValues() {
@@ -175,7 +175,7 @@ class JetpackConnectionViewModel @Inject constructor(
         _uiEvent.value = event
     }
 
-    @Suppress("TooGenericExceptionCaught", "UnusedPrivateMember")
+    @Suppress("TooGenericExceptionCaught", "Unused")
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
@@ -234,13 +234,15 @@ class JetpackConnectionViewModel @Inject constructor(
         }
     }
 
-    private fun installJetpackPlugin() {
+    private suspend fun installJetpackPlugin() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
-        // TODO Implement actual plugin installation API call when ready
+        // TODO: Implement actual plugin installation API call when ready
         // val params = PluginCreateParams(
         //     slug = PluginWpOrgDirectorySlug("jetpack"),
         //     status = PluginStatus.ACTIVE,
         // )
+        // For now, simulate network delay
+        delay(STEP_DELAY_MS)
     }
 
     private fun getSiteId() = getSite().siteId
