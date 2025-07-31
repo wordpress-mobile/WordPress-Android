@@ -94,6 +94,7 @@ fun DataViewScreen(
         ) {
             SearchAndFilterBar(
                 onSearchQueryChange = onSearchQueryChange,
+                currentSearchQuery = uiState.value.searchQuery,
                 onFilterClick = onFilterClick,
                 supportedFilters = supportedFilters,
                 currentFilter = uiState.value.currentFilter,
@@ -125,6 +126,7 @@ fun DataViewScreen(
 @Composable
 private fun SearchAndFilterBar(
     onSearchQueryChange: (String) -> Unit,
+    currentSearchQuery: String,
     onFilterClick: (DataViewDropdownItem) -> Unit,
     currentFilter: DataViewDropdownItem? = null,
     supportedFilters: List<DataViewDropdownItem>,
@@ -135,6 +137,11 @@ private fun SearchAndFilterBar(
     supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    
+    // Sync local search query with the current search query from UI state
+    LaunchedEffect(currentSearchQuery) {
+        searchQuery = currentSearchQuery
+    }
 
     Row(
         modifier = Modifier

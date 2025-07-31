@@ -42,13 +42,11 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -71,7 +69,6 @@ public class PeopleListFragment extends Fragment {
     @Inject ImageManager mImageManager;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
-    @Inject ExperimentalFeatures mExperimentalFeatures;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -139,13 +136,14 @@ public class PeopleListFragment extends Fragment {
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
 
-        // If the subscribers feature flag is enabled, hide the filter spinner and set the default filter.
-        // Once the subscribers feature is released to everyone, we can remove the filter entirely.
-        if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_SUBSCRIBERS_FEATURE)) {
-            mFilteredRecyclerView.hideAppBarLayout();
-            mPeopleListFilter = PeopleListFilter.TEAM;
-            AppPrefs.setPeopleListFilter(mPeopleListFilter);
-        }
+
+        // We hid the app bar layout in July 2025 because we don't want the filter to be visible. This is because the
+        // logic and UI for subscribers is now in the separate subscribers feature. At some point we'll want to simplify
+        // this fragment and remove the filter entirely, but since so much of the logic relies on FilteredRecyclerView
+        // we'll leave it as is for now.
+        mFilteredRecyclerView.hideAppBarLayout();
+        mPeopleListFilter = PeopleListFilter.TEAM;
+        AppPrefs.setPeopleListFilter(mPeopleListFilter);
 
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
