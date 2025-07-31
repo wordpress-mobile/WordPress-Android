@@ -16,6 +16,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesViewModel.ApplicationPasswordDialogState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.config.GutenbergKitFeature
 
@@ -156,30 +157,31 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `dismissDisableApplicationPassword sets dialog state to false`() = test {
+    fun `dismissDisableApplicationPassword sets dialog state to none`() = test {
         createViewModel()
         whenever(applicationPasswordLoginHelper.getApplicationPasswordSitesCount()).thenReturn(1)
         // Simulate dialog being shown
         viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-        assertThat(viewModel.disableApplicationPasswordDialogState.value).isEqualTo(1)
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.Disable(1))
         // Dismiss
         viewModel.dismissDisableApplicationPassword()
-        assertThat(viewModel.disableApplicationPasswordDialogState.value).isEqualTo(0)
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
     }
 
     @Test
-    fun `confirmDisableApplicationPassword disables feature, removes credentials, and sets dialog state to false`() =
+    fun `confirmDisableApplicationPassword disables feature, removes credentials, and sets dialog state to none`() =
         test {
             createViewModel()
             whenever(applicationPasswordLoginHelper.getApplicationPasswordSitesCount()).thenReturn(1)
             // Simulate dialog being shown
             viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
-            assertThat(viewModel.disableApplicationPasswordDialogState.value).isEqualTo(1)
+            assertThat(viewModel.applicationPasswordDialogState.value)
+                .isEqualTo(ApplicationPasswordDialogState.Disable(1))
             // Confirm
             viewModel.confirmDisableApplicationPassword()
             advanceUntilIdle()
             // Dialog should be dismissed
-            assertThat(viewModel.disableApplicationPasswordDialogState.value).isEqualTo(0)
+            assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
             // Feature should be disabled
             assertThat(viewModel.switchStates.value[Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE]).isFalse()
             // Credentials should be removed
@@ -193,10 +195,33 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
             whenever(applicationPasswordLoginHelper.getApplicationPasswordSitesCount()).thenReturn(1)
             viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, false)
             // Dialog should be shown
-            assertThat(viewModel.disableApplicationPasswordDialogState.value).isEqualTo(1)
+            assertThat(viewModel.applicationPasswordDialogState.value)
+                .isEqualTo(ApplicationPasswordDialogState.Disable(1))
             // Credentials should not be removed yet
             verify(applicationPasswordLoginHelper, never()).removeAllApplicationPasswordCredentials()
         }
+
+    @Test
+    fun `onFeatureToggled on for application password shows info dialog and enable`() = test {
+        createViewModel()
+        // Simulate dialog being shown
+        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.Info)
+        // Dismiss
+        viewModel.confirmApplicationPasswordInfo()
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
+    }
+
+    @Test
+    fun `onFeatureToggled on for application password shows info dialog and keep dioabled`() = test {
+        createViewModel()
+        // Simulate dialog being shown
+        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.Info)
+        // Dismiss
+        viewModel.dismissApplicationPasswordInfo()
+        assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
+    }
 
     private fun createViewModel() {
         viewModel = ExperimentalFeaturesViewModel(
