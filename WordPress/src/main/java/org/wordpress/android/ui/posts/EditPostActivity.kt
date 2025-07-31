@@ -78,7 +78,6 @@ import org.wordpress.android.editor.gutenberg.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
-import org.wordpress.android.editor.gutenberg.WordPressCookieAuthenticator
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.fluxc.Dispatcher
@@ -299,7 +298,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private var pendingVideoPressInfoRequests: MutableList<String>? = null
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
-    private var simpleSiteCookies: Map<String, String> = emptyMap()
 
     /**
      * The PagerAdapter that will provide
@@ -399,8 +397,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var privateAtomicCookie: PrivateAtomicCookie
 
-    @Inject lateinit var wordPressCookieAuthenticator: WordPressCookieAuthenticator
-
     @Inject lateinit var imageEditorTracker: ImageEditorTracker
 
     @Inject lateinit var reblogUtils: ReblogUtils
@@ -436,6 +432,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     @Inject lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
+    @Inject lateinit var editPostAuthViewModel: EditPostAuthViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -619,7 +616,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             }
             siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
                 showIfNecessary(fragmentManager)
-                fetchSimpleSiteCookies()
+                editPostAuthViewModel.fetchWpComCookies()
             }
             else -> {
                 setupViewPager()
@@ -984,6 +981,36 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             AppLog.d(AppLog.T.POSTS, "EditPostActivity: Current destination changed to $destination")
             updateUIForDestination(destination)
         }
+
+        editPostAuthViewModel.wpComCookieAuthState.observe(this) { authState ->
+            when (authState) {
+                is EditPostAuthViewModel.WpComCookieAuthState.Loading -> {
+                    showIfNecessary(supportFragmentManager)
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Success -> {
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    } else {
+                        setupViewPager()
+                    }
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Error -> {
+                    if (isShowing(supportFragmentManager)) {
+                        setupViewPager()
+                        dismissIfNecessary(supportFragmentManager)
+                    }
+                    make(
+                        findViewById(R.id.editor_activity),
+                        R.string.media_accessing_failed,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                is EditPostAuthViewModel.WpComCookieAuthState.Idle -> {
+                    // Do nothing - wait for actual authentication to be triggered
+                }
+            }
+        }
     }
 
     /**
@@ -1051,49 +1078,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
         // UI updates are now handled by the navigation system in updateUIForDestination()
         // ViewPager is only used for displaying content, not managing navigation state
-    }
-
-    private fun fetchSimpleSiteCookies() {
-        val authParams = WordPressCookieAuthenticator.AuthParams(
-            username = accountStore.account.userName ?: "",
-            bearerToken = accountStore.accessToken ?: "",
-            userAgent = userAgent.toString()
-        )
-
-        wordPressCookieAuthenticator.authenticateForCookies(authParams,
-            object : WordPressCookieAuthenticator.AuthCallback {
-                override fun onResult(result: WordPressCookieAuthenticator.AuthResult) {
-                    when (result) {
-                        is WordPressCookieAuthenticator.AuthResult.Success -> {
-                            // Store cookies for later use in getCookiesForPrivateSites
-                            simpleSiteCookies = result.cookies
-                            if (isShowing(supportFragmentManager)) {
-                                runOnUiThread {
-                                    setupViewPager()
-                                    dismissIfNecessary(supportFragmentManager)
-                                }
-                            }
-                        }
-                        is WordPressCookieAuthenticator.AuthResult.Failure -> {
-                            AppLog.e(AppLog.T.EDITOR, "Failed to fetch cookies for Simple site: ${result.error}")
-                            if (isShowing(supportFragmentManager)) {
-                                runOnUiThread {
-                                    setupViewPager()
-                                    dismissIfNecessary(supportFragmentManager)
-                                }
-                            }
-                            runOnUiThread {
-                                make(
-                                    findViewById(R.id.editor_activity),
-                                    R.string.media_accessing_failed,
-                                    Snackbar.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                }
-            }
-        )
     }
 
     @Suppress("LongMethod")
@@ -2662,7 +2646,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 // Limited to Simple sites until application passwords are supported
                 "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
                 "locale" to wpcomLocaleSlug,
-                "cookies" to getCookiesForPrivateSites(isWpCom),
+                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
                 "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
@@ -2674,41 +2658,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     )
                 )
             )
-        }
-
-        private fun getCookiesForPrivateSites(isWpCom: Boolean): Map<String, String> {
-            if (!isWpCom || !siteModel.isPrivate) {
-                return emptyMap()
-            }
-
-            return when {
-                siteModel.isWPComAtomic -> getAtomicSiteCookies()
-                else -> getSimpleSiteCookies()
-            }
-        }
-
-        private fun getAtomicSiteCookies(): Map<String, String> {
-            val cookies = mutableMapOf<String, String>()
-            if (privateAtomicCookie.exists() && !privateAtomicCookie.isExpired()) {
-                val cookieName = privateAtomicCookie.getName()
-                val cookieValue = privateAtomicCookie.getValue()
-                val cookieDomain = privateAtomicCookie.getDomain()
-                val value = "$cookieName=$cookieValue; domain=$cookieDomain; SameSite=None; Secure; HttpOnly"
-                cookies[siteModel.url] = value
-            }
-            return cookies
-        }
-
-        private fun getSimpleSiteCookies(): Map<String, String> {
-            val cookies = mutableMapOf<String, String>()
-            simpleSiteCookies.forEach { (name, value) ->
-                if (name.startsWith("wordpress_logged_in")) {
-                    val cookieString = "$name=$value; domain=.wordpress.com; " +
-                        "SameSite=None; Secure; HttpOnly"
-                    cookies[siteModel.url] = cookieString
-                }
-            }
-            return cookies
         }
 
         private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
