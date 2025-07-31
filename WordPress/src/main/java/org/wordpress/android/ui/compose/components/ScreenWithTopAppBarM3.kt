@@ -25,7 +25,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun ScreenWithTopAppBarM3(
     @StringRes titleRes: Int,
     content: @Composable (ColumnScope.() -> Unit),
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     AppThemeM3 {
         Scaffold(
@@ -39,6 +40,7 @@ fun ScreenWithTopAppBarM3(
                     },
                 )
             },
+            modifier = modifier,
         ) { contentPadding ->
             Column(
                 modifier = Modifier
