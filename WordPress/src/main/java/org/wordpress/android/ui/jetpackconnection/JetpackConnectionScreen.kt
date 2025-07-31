@@ -206,16 +206,11 @@ private fun ConnectionStepItem(
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
 
     val targetColor = when {
-        status == ConnectionStatus.Completed ->
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-        status == ConnectionStatus.InProgress ->
-            Color(IN_PROGRESS_BACKGROUND_COLOR)
-        status == ConnectionStatus.Failed ->
-            MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
-        isCurrentStep ->
-            MaterialTheme.colorScheme.primaryContainer
-        else ->
-            MaterialTheme.colorScheme.surface
+        status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_BACKGROUND_COLOR)
+        status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
+        isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
+        else -> MaterialTheme.colorScheme.surface
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
 
@@ -269,26 +264,16 @@ private fun ConnectionStepItem(
 
             Text(
                 text = when (status) {
-                    ConnectionStatus.NotStarted ->
-                        stringResource(R.string.jetpack_connection_status_not_started)
-
-                    ConnectionStatus.InProgress ->
-                        stringResource(R.string.jetpack_connection_status_in_progress)
-
-                    ConnectionStatus.Completed ->
-                        stringResource(R.string.jetpack_connection_status_completed)
-
-                    ConnectionStatus.Failed ->
-                        stringResource(R.string.jetpack_connection_status_failed)
+                    ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
+                    ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
+                    ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
+                    ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = when {
-                    status == ConnectionStatus.InProgress ->
-                        Color(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
-                    isCurrentStep ->
-                        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    else ->
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
+                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 }
             )
 
@@ -309,12 +294,9 @@ private fun ConnectionStepItem(
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp,
                     color = when {
-                        status == ConnectionStatus.InProgress ->
-                            Color(IN_PROGRESS_FOREGROUND_COLOR)
-                        isCurrentStep ->
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        else ->
-                            MaterialTheme.colorScheme.primary
+                        status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
+                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                        else -> MaterialTheme.colorScheme.primary
                     }
                 )
             }
@@ -407,4 +389,4 @@ private fun JetpackConnectionScreenPreview() {
 }
 
 private const val IN_PROGRESS_BACKGROUND_COLOR = 0xFFFFF9C4 // Light yellow
-private const val IN_PROGRESS_FOREGROUND_COLOR = 0xFF5D4037  // Dark brown for readability on the above
+private const val IN_PROGRESS_FOREGROUND_COLOR = 0xFF5D4037 // Dark brown for readability on the above

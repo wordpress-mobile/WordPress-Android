@@ -86,6 +86,7 @@ class JetpackConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
+        delay(STEP_DELAY_MS)
 
         // Execute the network request for this step
         executeStepWithErrorHandling(nextStep)
