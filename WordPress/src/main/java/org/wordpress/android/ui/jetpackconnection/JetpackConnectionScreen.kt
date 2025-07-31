@@ -209,7 +209,7 @@ private fun ConnectionStepItem(
         status == ConnectionStatus.Completed ->
             MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
         status == ConnectionStatus.InProgress ->
-            Color(0xFFFFF9C4) // Light yellow
+            Color(IN_PROGRESS_BACKGROUND_COLOR)
         status == ConnectionStatus.Failed ->
             MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
         isCurrentStep ->
@@ -243,7 +243,7 @@ private fun ConnectionStepItem(
             contentDescription = null,
             modifier = Modifier.size(24.dp),
             tint = when {
-                status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
                 isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
                 else -> MaterialTheme.colorScheme.onSurface
             }
@@ -259,7 +259,7 @@ private fun ConnectionStepItem(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal,
                 color = when {
-                    status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                    status == ConnectionStatus.InProgress -> Color(IN_PROGRESS_FOREGROUND_COLOR)
                     isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
                     else -> MaterialTheme.colorScheme.onSurface
                 }
@@ -284,7 +284,7 @@ private fun ConnectionStepItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = when {
                     status == ConnectionStatus.InProgress ->
-                        Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
+                        Color(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
                     isCurrentStep ->
                         MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     else ->
@@ -310,7 +310,7 @@ private fun ConnectionStepItem(
                     strokeWidth = 2.dp,
                     color = when {
                         status == ConnectionStatus.InProgress ->
-                            Color(0xFF5D4037) // Dark brown for readability on yellow
+                            Color(IN_PROGRESS_FOREGROUND_COLOR)
                         isCurrentStep ->
                             MaterialTheme.colorScheme.onPrimaryContainer
                         else ->
@@ -405,3 +405,6 @@ private fun JetpackConnectionScreenPreview() {
         }
     )
 }
+
+private const val IN_PROGRESS_BACKGROUND_COLOR = 0xFFFFF9C4 // Light yellow
+private const val IN_PROGRESS_FOREGROUND_COLOR = 0xFF5D4037  // Dark brown for readability on the above
