@@ -5032,7 +5032,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
-    <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
+    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
     <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
