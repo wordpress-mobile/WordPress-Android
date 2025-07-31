@@ -41,10 +41,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -182,12 +184,15 @@ private fun ConnectionStepItem(
 
     val targetColor = when {
         status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-        status == ConnectionStatus.InProgress -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f)
+        status == ConnectionStatus.InProgress -> Color(0xFFFFF9C4) // Light yellow
         status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
         isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surface
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
+
+    val targetElevation = if (status == ConnectionStatus.NotStarted) 2.dp else 0.dp
+    val animatedElevation by animateDpAsState(targetValue = targetElevation)
 
     Card(
         modifier = Modifier
@@ -197,7 +202,7 @@ private fun ConnectionStepItem(
             containerColor = animatedColor,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 0.dp
+            defaultElevation = animatedElevation
         )
     ) {
         Row(
@@ -210,10 +215,10 @@ private fun ConnectionStepItem(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = if (isCurrentStep) {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurface
+                tint = when {
+                    status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                    else -> MaterialTheme.colorScheme.onSurface
                 }
             )
 
@@ -226,10 +231,10 @@ private fun ConnectionStepItem(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = if (isCurrentStep) FontWeight.Bold else FontWeight.Normal,
-                    color = if (isCurrentStep) {
-                        MaterialTheme.colorScheme.onPrimaryContainer
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
+                    color = when {
+                        status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                        else -> MaterialTheme.colorScheme.onSurface
                     }
                 )
 
@@ -250,10 +255,10 @@ private fun ConnectionStepItem(
                             stringResource(R.string.jetpack_connection_status_failed)
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isCurrentStep) {
-                        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    } else {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = when {
+                        status == ConnectionStatus.InProgress -> Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
+                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     }
                 )
             }
@@ -263,10 +268,10 @@ private fun ConnectionStepItem(
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = if (isCurrentStep) {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.primary
+                        color = when {
+                            status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
+                            isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                            else -> MaterialTheme.colorScheme.primary
                         }
                     )
                 }
