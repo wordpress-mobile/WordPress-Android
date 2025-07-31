@@ -65,6 +65,15 @@ class WordPressCookieAuthenticator @Inject constructor(
     )
 
     /**
+     * Data class for validated authentication parameters (internal use)
+     */
+    private data class ValidatedAuthParams(
+        val username: String,
+        val bearerToken: String,
+        val userAgent: String
+    )
+
+    /**
      * Data class for authentication result
      */
     sealed class AuthResult {
@@ -110,10 +119,25 @@ class WordPressCookieAuthenticator @Inject constructor(
             "WordPress.com account cookie cache miss for user: ${params.username}, making network request"
         )
 
+        // Create validated parameters after validation checks pass
+        val validatedParams = ValidatedAuthParams(
+            username = params.username,
+            bearerToken = params.bearerToken,
+            userAgent = params.userAgent
+        )
+
+        return@withContext performAuthenticationRequest(validatedParams)
+    }
+
+    /**
+     * Performs the actual authentication request and handles caching of successful results.
+     * Accepts only validated parameters, ensuring all validation has been completed.
+     */
+    private suspend fun performAuthenticationRequest(validatedParams: ValidatedAuthParams): AuthResult {
         try {
             // Build form body with authentication parameters
             val formBody = FormBody.Builder()
-                .add("log", params.username)
+                .add("log", validatedParams.username)
                 .add("rememberme", "true")
                 .build()
 
@@ -122,29 +146,29 @@ class WordPressCookieAuthenticator @Inject constructor(
                 .url(WP_LOGIN_URL)
                 .post(formBody)
                 .addHeader("Content-Type", CONTENT_TYPE_FORM)
-                .addHeader("Authorization", "Bearer ${params.bearerToken}")
-                .addHeader("User-Agent", params.userAgent)
+                .addHeader("Authorization", "Bearer ${validatedParams.bearerToken}")
+                .addHeader("User-Agent", validatedParams.userAgent)
                 .build()
 
             AppLog.d(
                 AppLog.T.API,
                 "Making POST account cookie authentication request to: $WP_LOGIN_URL"
             )
-            AppLog.d(AppLog.T.API, "Request form body: log=${params.username}&rememberme=true")
-            AppLog.d(AppLog.T.API, "Request User-Agent: ${params.userAgent}")
+            AppLog.d(AppLog.T.API, "Request form body: log=${validatedParams.username}&rememberme=true")
+            AppLog.d(AppLog.T.API, "Request User-Agent: ${validatedParams.userAgent}")
             AppLog.d(AppLog.T.API, "Request Content-Type: $CONTENT_TYPE_FORM")
 
             // Execute request and wait for response
             val response = executeRequest(request)
-            response.use {
+            return response.use {
                 val result = handleAuthResponse(response)
 
                 // Cache successful results
                 if (result is AuthResult.Success) {
-                    cacheCookies(params.username, result.cookies)
+                    cacheCookies(validatedParams.username, result.cookies)
                     AppLog.d(
                         AppLog.T.API,
-                        "WordPress.com account cookies cached for user: ${params.username}"
+                        "WordPress.com account cookies cached for user: ${validatedParams.username}"
                     )
                 }
 
@@ -155,7 +179,7 @@ class WordPressCookieAuthenticator @Inject constructor(
                 AppLog.T.API,
                 "WordPress.com account cookie authentication error: ${e.message}"
             )
-            AuthResult.Failure("Authentication error: ${e.message}")
+            return AuthResult.Failure("Authentication error: ${e.message}")
         }
     }
 
