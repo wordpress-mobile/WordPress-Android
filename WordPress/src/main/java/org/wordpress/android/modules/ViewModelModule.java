@@ -34,6 +34,8 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
+import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel;
+import org.wordpress.android.ui.posts.EditPostSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PostResolutionOverlayViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
@@ -288,6 +290,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditPostPublishSettingsViewModel.class)
     abstract ViewModel editPostPublishedSettingsViewModel(EditPostPublishSettingsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditPostNavigationViewModel.class)
+    abstract ViewModel editPostNavigationViewModel(EditPostNavigationViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditPostSettingsViewModel.class)
+    abstract ViewModel editPostSettingsViewModel(EditPostSettingsViewModel viewModel);
 
     @Binds
     @IntoMap

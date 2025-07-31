@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -63,6 +62,8 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel;
+import org.wordpress.android.ui.posts.navigation.EditPostDestination;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -163,6 +164,8 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
     private EditorJetpackSocialViewModel mJetpackSocialViewModel;
+    @Nullable private EditPostNavigationViewModel mNavigationViewModel;
+    @Nullable private EditPostSettingsViewModel mSettingsViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -192,6 +195,10 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
+        mNavigationViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+                .get(EditPostNavigationViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+                .get(EditPostSettingsViewModel.class);
     }
 
     @Override
@@ -401,9 +408,8 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof EditPostSettingsCallback) {
-                    ((EditPostSettingsCallback) activity).onEditPostPublishedSettingsClick();
+                if (mNavigationViewModel != null) {
+                    mNavigationViewModel.navigateTo(EditPostDestination.PublishSettings.INSTANCE);
                 }
             }
         });
@@ -440,6 +446,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupJetpackSocialViewModel();
+        setupSettingsViewModelObservers();
     }
 
     private void setupJetpackSocialViewModel() {
@@ -687,23 +694,32 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /*
-     * called by the activity when the user taps OK on a PostSettingsDialogFragment
-     */
-    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+
+    private void setupSettingsViewModelObservers() {
+        if (mSettingsViewModel != null) {
+            mSettingsViewModel.getDialogResult().observe(getViewLifecycleOwner(), event -> {
+                DialogResult result = event.getContentIfNotHandled();
+                if (result != null) {
+                    handleDialogResult(result);
+                }
+            });
+        }
+    }
+
+    private void handleDialogResult(@NonNull DialogResult result) {
         int index;
         PostStatus status = null;
-        switch (fragment.getDialogType()) {
+        switch (result.getDialogType()) {
             case HOMEPAGE_STATUS:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 status = getHomepageStatusAtIndex(index);
                 break;
             case POST_STATUS:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 status = getPostStatusAtIndex(index);
                 break;
             case AUTHOR:
-                index = fragment.getCheckedIndex();
+                index = result.getCheckedIndex();
                 List<Person> authors = mPublishedViewModel.getAuthors().getValue();
                 if (authors == null) {
                     return;
@@ -712,8 +728,7 @@ public class EditPostSettingsFragment extends Fragment {
                 updateAuthor(author);
                 break;
             case POST_FORMAT:
-                String formatName = fragment.getSelectedItem();
-                updatePostFormat(getPostFormatKeyFromName(formatName));
+                updatePostFormat(getPostFormatKeyFromName(result.getSelectedItem()));
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                 break;
         }
@@ -1251,8 +1266,8 @@ public class EditPostSettingsFragment extends Fragment {
     private void clearFeaturedImage() {
         updateFeaturedImage(0, false);
 
-        if (getActivity() instanceof EditPostSettingsCallback) {
-            ((EditPostSettingsCallback) getActivity()).clearFeaturedImage();
+        if (mSettingsViewModel != null) {
+            mSettingsViewModel.onClearFeaturedImage();
         }
     }
 
@@ -1378,11 +1393,5 @@ public class EditPostSettingsFragment extends Fragment {
                 message,
                 Snackbar.LENGTH_LONG
         ).show();
-    }
-
-    interface EditPostSettingsCallback {
-        void onEditPostPublishedSettingsClick();
-
-        void clearFeaturedImage();
     }
 }
