@@ -66,15 +66,15 @@ fun JetpackConnectionScreen(
         titleRes = R.string.jetpack_connection_title,
         onCloseClick = onCloseClick,
         content = {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-            ) {
+            Column {
                 JetpackConnectionSteps(
                     currentStep = currentStep.value,
-                    stepStates = stepStates.value
+                    stepStates = stepStates.value,
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
                 )
+                
                 AnimatedVisibility(
                     visible = buttonType.value != null,
                     enter = fadeIn()
@@ -123,10 +123,11 @@ private fun JetpackConnectionButton(
 @Composable
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
-    stepStates: Map<ConnectionStep, StepState>
+    stepStates: Map<ConnectionStep, StepState>,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
