@@ -129,22 +129,21 @@ class JetpackConnectionViewModel @Inject constructor(
         if (isActive()) {
             // Connection is in progress, show confirmation dialog
             appLogWrapper.d(AppLog.T.API, "$TAG: Connection in progress, showing confirmation")
-            _uiEvent.value = UiEvent.ShowCancelConfirmation
+            setUiEvent(UiEvent.ShowCancelConfirmation)
         } else {
             // No active connection, close immediately
-            _uiEvent.value = UiEvent.Close
+            setUiEvent(UiEvent.Close)
         }
     }
 
     fun onCancelConfirmed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Cancel confirmed")
         job?.cancel()
-        _uiEvent.value = UiEvent.Close
+        setUiEvent(UiEvent.Close)
     }
 
     fun onCancelDismissed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Cancel dismissed, continuing connection")
-        // Just dismiss the dialog, connection continues
     }
 
     fun onRetryClick() {
@@ -169,7 +168,14 @@ class JetpackConnectionViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "Unused")
+    private fun setUiEvent(event: UiEvent) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: setUiEvent $event")
+        // Clear the event first or else it won't be observed if its the same as the previous event
+        _uiEvent.value = null
+        _uiEvent.value = event
+    }
+
+    @Suppress("TooGenericExceptionCaught", "UnusedPrivateMember")
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
