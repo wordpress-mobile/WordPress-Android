@@ -2141,7 +2141,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     )
 
                     val callback = object : JsExceptionCallback {
-                        override fun onReportSent(success: Boolean) {
+                        override fun onReportSent(sent: Boolean) {
                             // Do nothing
                         }
                     }
