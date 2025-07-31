@@ -87,9 +87,6 @@ class JetpackConnectionViewModel @Inject constructor(
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
         delay(STEP_DELAY_MS)
-
-        // Execute the network request for this step
-        executeStepWithErrorHandling(nextStep)
     }
 
     private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus, error: String? = null) {
@@ -205,9 +202,6 @@ class JetpackConnectionViewModel @Inject constructor(
         //     slug = PluginWpOrgDirectorySlug("jetpack"),
         //     status = PluginStatus.ACTIVE,
         // )
-        // TODO Implement actual plugin installation API call
-        // For now, simulate network delay
-        delay(STEP_DELAY_MS)
     }
 
     private fun getSiteId() = getSite().siteId
