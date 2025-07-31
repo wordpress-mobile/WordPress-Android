@@ -38,7 +38,7 @@ class WordPressCookieAuthenticator @Inject constructor(
         private const val WP_LOGIN_URL = "https://wordpress.com/wp-login.php"
         private const val CONTENT_TYPE_FORM = "application/x-www-form-urlencoded"
         private const val WPCOM_COOKIE_CACHE_PREFIX = "WPCOM_COOKIE_CACHE_"
-        private const val COOKIE_CACHE_EXPIRATION_HOURS = 6 // 6 hours like PrivateAtomicCookie
+        private const val COOKIE_CACHE_EXPIRATION_HOURS = 24 * 30 * 6 // 6 months (approximately)
         private const val MILLIS_PER_SECOND = 1000L
         private const val SECONDS_PER_HOUR = 3600L
     }
