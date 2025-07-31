@@ -178,6 +178,7 @@ private fun JetpackConnectionSteps(
     }
 }
 
+@Suppress("UnusedParameter")
 @Composable
 private fun ConnectionStepItem(
     step: ConnectionStep,
