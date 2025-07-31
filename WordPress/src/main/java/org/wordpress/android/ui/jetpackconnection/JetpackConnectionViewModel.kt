@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
@@ -86,10 +87,18 @@ class JetpackConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
         _currentStep.value = nextStep
         updateStepStatus(nextStep, ConnectionStatus.InProgress)
+        // TODO executeStepWithErrorHandling(nextStep)
+
+        // TODO this is just to test the UI
         delay(STEP_DELAY_MS)
+        updateStepStatus(nextStep, ConnectionStatus.Completed)
     }
 
-    private fun updateStepStatus(step: ConnectionStep, status: ConnectionStatus, error: String? = null) {
+    private fun updateStepStatus(
+        step: ConnectionStep,
+        status: ConnectionStatus,
+        error: String? = null
+    ) {
         appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status${error?.let { " (error: $it)" } ?: ""}")
         _stepStates.value = _stepStates.value.toMutableMap().apply {
             this[step] = StepState(status = status, errorMessage = error)
@@ -125,12 +134,13 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     private fun clearValues() {
-        _buttonType.value = null
+        _uiEvent.value = null
         _stepStates.value = initialStepStates
+        _buttonType.value = null
         _currentStep.value = null
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "Unused")
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
@@ -142,7 +152,7 @@ class JetpackConnectionViewModel @Inject constructor(
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorMessage = when (e) {
-                is kotlinx.coroutines.TimeoutCancellationException -> "Operation timed out"
+                is TimeoutCancellationException -> "Operation timed out"
                 else -> e.message ?: "Unknown error occurred"
             }
             updateStepStatus(step, ConnectionStatus.Failed, errorMessage)
@@ -152,17 +162,13 @@ class JetpackConnectionViewModel @Inject constructor(
     private suspend fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                // Check if user is already logged in
-                if (accountStore.hasAccessToken()) {
-                    appLogWrapper.d(AppLog.T.API, "$TAG: User already logged in")
-                } else {
-                    error("User must be logged in to WordPress.com")
-                }
+                // TODO
             }
 
             ConnectionStep.InstallJetpack -> {
                 val site = getSite()
                 if (site.isJetpackInstalled) {
+                    // TODO check version
                     appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack already installed")
                 } else {
                     installJetpackPlugin()
@@ -189,13 +195,11 @@ class JetpackConnectionViewModel @Inject constructor(
 
             ConnectionStep.Finalize -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
-                // Add any finalization logic here
-                delay(STEP_DELAY_MS) // Small delay to show completion
             }
         }
     }
 
-    private suspend fun installJetpackPlugin() {
+    private fun installJetpackPlugin() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
         // TODO Implement actual plugin installation API call when ready
         // val params = PluginCreateParams(
@@ -245,6 +249,7 @@ class JetpackConnectionViewModel @Inject constructor(
          * - the site isn't already connected to Jetpack, and
          * - Jetpack is not installed or the installed jetpack version is 14.2 or above
          */
+        @Suppress("Unused")
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
             if (site.isSelfHostedAdmin && site.isApplicationPasswordsSupported) {
                 return if (site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()) {

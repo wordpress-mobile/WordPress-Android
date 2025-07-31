@@ -191,7 +191,7 @@ private fun JetpackConnectionSteps(
     }
 }
 
-@Suppress("UnusedParameter", "CyclomaticComplexMethod")
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun ConnectionStepItem(
     step: ConnectionStep,
