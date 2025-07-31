@@ -41,7 +41,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     data class StepState(
         val status: ConnectionStatus = ConnectionStatus.NotStarted,
-        val errorMessage: String? = null
+        val errorEvent: ErrorEvent? = null,
     )
 
     private val _stepStates = MutableStateFlow(initialStepStates)
@@ -103,11 +103,11 @@ class JetpackConnectionViewModel @Inject constructor(
     private fun updateStepStatus(
         step: ConnectionStep,
         status: ConnectionStatus,
-        error: String? = null
+        error: ErrorEvent? = null
     ) {
         appLogWrapper.d(AppLog.T.API, "$TAG: updateStepStatus $step -> $status${error?.let { " (error: $it)" } ?: ""}")
         _stepStates.value = _stepStates.value.toMutableMap().apply {
-            this[step] = StepState(status = status, errorMessage = error)
+            this[step] = StepState(status = status, errorEvent = error)
         }
 
         when (status) {
@@ -192,11 +192,11 @@ class JetpackConnectionViewModel @Inject constructor(
             updateStepStatus(step, ConnectionStatus.Completed)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
-            val errorMessage = when (e) {
-                is TimeoutCancellationException -> "Operation timed out"
-                else -> e.message ?: "Unknown error occurred"
+            val errorEvent = when (e) {
+                is TimeoutCancellationException -> ErrorEvent.Timeout
+                else -> ErrorEvent.Unknown
             }
-            updateStepStatus(step, ConnectionStatus.Failed, errorMessage)
+            updateStepStatus(step, ConnectionStatus.Failed, errorEvent)
         }
     }
 
@@ -209,8 +209,12 @@ class JetpackConnectionViewModel @Inject constructor(
             ConnectionStep.InstallJetpack -> {
                 val site = getSite()
                 if (site.isJetpackInstalled) {
-                    // TODO check version
                     appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack already installed")
+                    updateStepStatus(
+                        step = step,
+                        status = ConnectionStatus.Failed,
+                        error = ErrorEvent.JetpackAlreadyInstalled
+                    )
                 } else {
                     installJetpackPlugin()
                 }
@@ -273,6 +277,14 @@ class JetpackConnectionViewModel @Inject constructor(
     sealed class UiEvent {
         data object Close : UiEvent()
         data object ShowCancelConfirmation : UiEvent()
+    }
+
+    sealed class ErrorEvent {
+        data object JetpackAlreadyInstalled : ErrorEvent()
+        data object FailedToConnectWpCom : ErrorEvent()
+        data object Timeout : ErrorEvent()
+        data object Offline : ErrorEvent()
+        data object Unknown : ErrorEvent()
     }
 
     sealed class ButtonType {

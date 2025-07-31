@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackconnection
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ButtonType
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStep
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ErrorEvent
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.StepState
 
 @Composable
@@ -204,7 +206,7 @@ private fun ConnectionStepItem(
         ConnectionStepContent(
             title = title,
             status = status,
-            errorMessage = stepState.errorMessage,
+            errorEvent = stepState.errorEvent,
             style = style,
             modifier = Modifier.weight(1f)
         )
@@ -233,7 +235,7 @@ private fun ConnectionStepIcon(
 private fun ConnectionStepContent(
     title: String,
     status: ConnectionStatus,
-    errorMessage: String?,
+    errorEvent: ErrorEvent?,
     style: ConnectionStepStyle,
     modifier: Modifier = Modifier
 ) {
@@ -253,14 +255,25 @@ private fun ConnectionStepContent(
             color = style.statusColor
         )
 
-        if (errorMessage != null && status == ConnectionStatus.Failed) {
+        if (errorEvent != null && status == ConnectionStatus.Failed) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = errorMessage,
+                text = stringResource(errorMessage(errorEvent)),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
             )
         }
+    }
+}
+
+@StringRes
+private fun errorMessage(errorEvent: ErrorEvent): Int {
+    return when (errorEvent) {
+        ErrorEvent.JetpackAlreadyInstalled -> R.string.jetpack_connection_error_jetpack_already_installed
+        ErrorEvent.Timeout -> R.string.jetpack_connection_error_timeout
+        ErrorEvent.Offline -> R.string.jetpack_connection_error_offline
+        ErrorEvent.Unknown -> R.string.jetpack_connection_error_unknown
+        ErrorEvent.FailedToConnectWpCom -> R.string.jetpack_connection_error_wpcom
     }
 }
 
@@ -410,7 +423,7 @@ private fun JetpackConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectWpCom to StepState(
                     ConnectionStatus.Failed,
-                    "Failed to connect to WordPress.com"
+                    ErrorEvent.FailedToConnectWpCom
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )
