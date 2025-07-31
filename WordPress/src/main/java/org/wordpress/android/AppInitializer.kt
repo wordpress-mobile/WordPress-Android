@@ -56,6 +56,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
+import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged
@@ -164,6 +165,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var privateAtomicCookie: PrivateAtomicCookie
+
+    @Inject
+    lateinit var wordPressCookieAuthenticator: WordPressCookieAuthenticator
 
     @Inject
     lateinit var imageEditorTracker: ImageEditorTracker
@@ -722,6 +726,9 @@ class AppInitializer @Inject constructor(
 
         // Remove private Atomic cookie
         privateAtomicCookie.clearCookie()
+
+        // Clear WordPress.com account cookie cache
+        wordPressCookieAuthenticator.clearAllCachedCookies()
 
         // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
         exPlat.clear()

@@ -1,5 +1,7 @@
 package org.wordpress.android.auth
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -10,26 +12,48 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import androidx.core.content.edit
 
 /**
  * Utility class for WordPress.com cookie authentication.
  * Handles Bearer token authentication to retrieve session cookies.
  * Uses WPAndroid's configured OkHttpClient with proper cookie handling.
+ * Implements automatic caching to avoid unnecessary network requests.
  */
+@Singleton
 class WordPressCookieAuthenticator @Inject constructor(
     @Named("regular") private val okHttpClient: OkHttpClient,
-    @Named("IO_THREAD") private val ioDispatcher: CoroutineDispatcher
+    @Named("IO_THREAD") private val ioDispatcher: CoroutineDispatcher,
+    private val preferenceUtils: PreferenceUtilsWrapper
 ) {
     companion object {
         private const val WP_LOGIN_URL = "https://wordpress.com/wp-login.php"
         private const val CONTENT_TYPE_FORM = "application/x-www-form-urlencoded"
+        private const val WPCOM_COOKIE_CACHE_PREFIX = "WPCOM_COOKIE_CACHE_"
+        private const val COOKIE_CACHE_EXPIRATION_HOURS = 6 // 6 hours like PrivateAtomicCookie
+        private const val MILLIS_PER_SECOND = 1000L
+        private const val SECONDS_PER_HOUR = 3600L
     }
+
+    private val gson: Gson by lazy {
+        GsonBuilder().create()
+    }
+
+    /**
+     * Data class for cached cookie information
+     */
+    private data class CachedCookieData(
+        val cookies: Map<String, String>,
+        val expirationTimestamp: Long
+    )
 
     /**
      * Data class for authentication parameters
@@ -51,6 +75,7 @@ class WordPressCookieAuthenticator @Inject constructor(
     /**
      * Authenticates with WordPress.com and retrieves session cookies using coroutines.
      * This is the preferred method for Kotlin callers.
+     * Automatically handles caching to avoid unnecessary network requests.
      *
      * @param params Authentication parameters including username, Bearer token, and user agent
      * @return AuthResult containing either success with cookies or failure with error message
@@ -66,8 +91,23 @@ class WordPressCookieAuthenticator @Inject constructor(
         }
 
         AppLog.d(
-            AppLog.T.EDITOR,
-            "Starting WordPress.com cookie authentication for user: ${params.username}"
+            AppLog.T.API,
+            "Starting WordPress.com account cookie authentication for user: ${params.username}"
+        )
+
+        // Check cache first
+        val cachedCookies = getCachedCookies(params.username)
+        if (cachedCookies != null) {
+            AppLog.d(
+                AppLog.T.API,
+                "WordPress.com account cookie cache hit for user: ${params.username}"
+            )
+            return@withContext AuthResult.Success(cachedCookies)
+        }
+
+        AppLog.d(
+            AppLog.T.API,
+            "WordPress.com account cookie cache miss for user: ${params.username}, making network request"
         )
 
         try {
@@ -86,18 +126,35 @@ class WordPressCookieAuthenticator @Inject constructor(
                 .addHeader("User-Agent", params.userAgent)
                 .build()
 
-            AppLog.d(AppLog.T.EDITOR, "Making POST cookie authentication request to: $WP_LOGIN_URL")
-            AppLog.d(AppLog.T.EDITOR, "Request form body: log=${params.username}&rememberme=true")
-            AppLog.d(AppLog.T.EDITOR, "Request User-Agent: ${params.userAgent}")
-            AppLog.d(AppLog.T.EDITOR, "Request Content-Type: $CONTENT_TYPE_FORM")
+            AppLog.d(
+                AppLog.T.API,
+                "Making POST account cookie authentication request to: $WP_LOGIN_URL"
+            )
+            AppLog.d(AppLog.T.API, "Request form body: log=${params.username}&rememberme=true")
+            AppLog.d(AppLog.T.API, "Request User-Agent: ${params.userAgent}")
+            AppLog.d(AppLog.T.API, "Request Content-Type: $CONTENT_TYPE_FORM")
 
             // Execute request and wait for response
             val response = executeRequest(request)
             response.use {
-                handleAuthResponse(response)
+                val result = handleAuthResponse(response)
+
+                // Cache successful results
+                if (result is AuthResult.Success) {
+                    cacheCookies(params.username, result.cookies)
+                    AppLog.d(
+                        AppLog.T.API,
+                        "WordPress.com account cookies cached for user: ${params.username}"
+                    )
+                }
+
+                result
             }
         } catch (e: IOException) {
-            AppLog.e(AppLog.T.EDITOR, "WordPress.com cookie authentication error: ${e.message}")
+            AppLog.e(
+                AppLog.T.API,
+                "WordPress.com account cookie authentication error: ${e.message}"
+            )
             AuthResult.Failure("Authentication error: ${e.message}")
         }
     }
@@ -132,32 +189,38 @@ class WordPressCookieAuthenticator @Inject constructor(
      * Handles the authentication response and extracts cookies
      */
     private fun handleAuthResponse(response: Response): AuthResult {
-        AppLog.d(AppLog.T.EDITOR, "Cookie auth response code: ${response.code}")
-        AppLog.d(AppLog.T.EDITOR, "Cookie auth response message: ${response.message}")
-        AppLog.d(AppLog.T.EDITOR, "Response headers: ${response.headers}")
+        AppLog.d(AppLog.T.API, "Account cookie auth response code: ${response.code}")
+        AppLog.d(AppLog.T.API, "Account cookie auth response message: ${response.message}")
+        AppLog.d(AppLog.T.API, "Response headers: ${response.headers}")
 
         if (!response.isSuccessful) {
-            AppLog.w(AppLog.T.EDITOR, "WordPress.com cookie authentication unsuccessful: HTTP ${response.code}")
+            AppLog.w(
+                AppLog.T.API,
+                "WordPress.com account cookie authentication unsuccessful: HTTP ${response.code}"
+            )
             return AuthResult.Failure("HTTP error: ${response.code}")
         }
 
         // Log all Set-Cookie headers for debugging
         val allCookieHeaders = response.headers("Set-Cookie")
-        AppLog.d(AppLog.T.EDITOR, "Total Set-Cookie headers: ${allCookieHeaders.size}")
+        AppLog.d(AppLog.T.API, "Total Set-Cookie headers: ${allCookieHeaders.size}")
         for (cookieHeader in allCookieHeaders) {
-            AppLog.d(AppLog.T.EDITOR, "Raw cookie header: $cookieHeader")
+            AppLog.d(AppLog.T.API, "Raw cookie header: $cookieHeader")
         }
 
         // Extract authentication cookies from CookieJar instead of headers
         val cookies = extractAuthenticationCookiesFromJar(response.request.url)
 
         return if (cookies.isEmpty()) {
-            AppLog.w(AppLog.T.EDITOR, "No authentication cookies found in response")
+            AppLog.w(AppLog.T.API, "No WordPress.com account cookies found in response")
             AuthResult.Failure("No authentication cookies received")
         } else {
-            AppLog.d(AppLog.T.EDITOR, "Successfully retrieved ${cookies.size} authentication cookies")
+            AppLog.d(
+                AppLog.T.API,
+                "Successfully retrieved ${cookies.size} WordPress.com account cookies"
+            )
             for (cookieName in cookies.keys) {
-                AppLog.d(AppLog.T.EDITOR, "Received cookie: $cookieName")
+                AppLog.d(AppLog.T.API, "Received WordPress.com account cookie: $cookieName")
             }
             AuthResult.Success(cookies)
         }
@@ -171,13 +234,123 @@ class WordPressCookieAuthenticator @Inject constructor(
 
         // Get all cookies from the CookieJar for the request URL
         val jarCookies = okHttpClient.cookieJar.loadForRequest(url)
-        AppLog.d(AppLog.T.EDITOR, "Total cookies in jar for ${url.host}: ${jarCookies.size}")
+        AppLog.d(AppLog.T.API, "Total cookies in jar for ${url.host}: ${jarCookies.size}")
 
         for (cookie in jarCookies) {
             cookies[cookie.name] = cookie.value
-            AppLog.d(AppLog.T.EDITOR, "Extracted auth cookie from jar: ${cookie.name}")
+            AppLog.d(
+                AppLog.T.API,
+                "Extracted WordPress.com account cookie from jar: ${cookie.name}"
+            )
         }
 
         return cookies
+    }
+
+    /**
+     * Gets cached cookies for a user if they exist and are not expired
+     */
+    private fun getCachedCookies(username: String): Map<String, String>? {
+        val cacheKey = getCacheKey(username)
+        val cachedDataJson = preferenceUtils.getFluxCPreferences().getString(cacheKey, null)
+
+        if (cachedDataJson == null) {
+            AppLog.d(
+                AppLog.T.API,
+                "No cached WordPress.com account cookie data found for user: $username"
+            )
+            return null
+        }
+
+        return try {
+            val cachedData = gson.fromJson(cachedDataJson, CachedCookieData::class.java)
+            val currentTime = System.currentTimeMillis() / MILLIS_PER_SECOND
+
+            if (currentTime >= cachedData.expirationTimestamp) {
+                AppLog.d(
+                    AppLog.T.API,
+                    "Cached WordPress.com account cookies expired for user: $username, clearing cache"
+                )
+                clearCachedCookies(username)
+                null
+            } else {
+                AppLog.d(
+                    AppLog.T.API,
+                    "Valid cached WordPress.com account cookies found for user: $username"
+                )
+                cachedData.cookies
+            }
+        } catch (e: com.google.gson.JsonSyntaxException) {
+            AppLog.w(
+                AppLog.T.API,
+                "Failed to parse cached WordPress.com account cookie data for " +
+                        "user: $username, clearing cache: ${e.message}"
+            )
+            clearCachedCookies(username)
+            null
+        }
+    }
+
+    /**
+     * Caches cookies for a user with expiration timestamp
+     */
+    private fun cacheCookies(username: String, cookies: Map<String, String>) {
+        val cacheKey = getCacheKey(username)
+        val currentTime = System.currentTimeMillis() / MILLIS_PER_SECOND
+        val expirationTime = currentTime + (COOKIE_CACHE_EXPIRATION_HOURS * SECONDS_PER_HOUR)
+
+        val cachedData = CachedCookieData(
+            cookies = cookies,
+            expirationTimestamp = expirationTime
+        )
+
+        val cachedDataJson = gson.toJson(cachedData)
+        preferenceUtils.getFluxCPreferences().edit {
+            putString(cacheKey, cachedDataJson)
+        }
+
+        AppLog.d(
+            AppLog.T.API,
+            "Cached ${cookies.size} WordPress.com account cookies for user: $username, expires at: $expirationTime"
+        )
+    }
+
+    /**
+     * Clears cached cookies for a specific user
+     */
+    fun clearCachedCookies(username: String) {
+        val cacheKey = getCacheKey(username)
+        preferenceUtils.getFluxCPreferences().edit {
+            remove(cacheKey)
+        }
+
+        AppLog.d(AppLog.T.API, "Cleared cached WordPress.com account cookies for user: $username")
+    }
+
+    /**
+     * Clears all cached cookies (useful for logout)
+     */
+    fun clearAllCachedCookies() {
+        val preferences = preferenceUtils.getFluxCPreferences()
+        val editor = preferences.edit()
+        val allKeys = preferences.all.keys
+
+        var clearedCount = 0
+        for (key in allKeys) {
+            if (key.startsWith(WPCOM_COOKIE_CACHE_PREFIX)) {
+                editor.remove(key)
+                clearedCount++
+            }
+        }
+
+        editor.apply()
+        AppLog.d(AppLog.T.API, "Cleared $clearedCount cached WordPress.com account cookie entries")
+    }
+
+    /**
+     * Generates cache key for a user
+     */
+    private fun getCacheKey(username: String): String {
+        return WPCOM_COOKIE_CACHE_PREFIX + username
     }
 }
