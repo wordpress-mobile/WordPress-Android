@@ -20,6 +20,9 @@ import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+/**
+ * Simple shell for a screen with a top app bar and a close button
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenWithTopAppBarM3(

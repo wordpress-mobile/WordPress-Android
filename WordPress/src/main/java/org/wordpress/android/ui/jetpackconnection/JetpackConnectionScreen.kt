@@ -20,9 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
@@ -150,7 +150,7 @@ private fun JetpackConnectionSteps(
         ConnectionStepItem(
             step = ConnectionStep.InstallJetpack,
             title = stringResource(R.string.jetpack_connection_step_install_jetpack),
-            icon = Icons.Default.Add,
+            icon = Icons.Default.Build,
             stepState = stepStates[ConnectionStep.InstallJetpack]
                 ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.InstallJetpack
@@ -177,7 +177,7 @@ private fun JetpackConnectionSteps(
         ConnectionStepItem(
             step = ConnectionStep.Finalize,
             title = stringResource(R.string.jetpack_connection_step_finalize),
-            icon = Icons.Default.Done,
+            icon = Icons.Default.CheckCircle,
             stepState = stepStates[ConnectionStep.Finalize]
                 ?: StepState(),
             isCurrentStep = currentStep == ConnectionStep.Finalize
