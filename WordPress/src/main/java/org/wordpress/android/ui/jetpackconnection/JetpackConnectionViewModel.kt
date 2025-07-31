@@ -48,7 +48,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    // TODO: Inject or initialize this properly when the actual implementation is ready
+    // TODO Inject or initialize this properly when the actual implementation is ready
     private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     init {
@@ -116,6 +116,7 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     fun onCloseClick() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Close clicked")
         _uiEvent.value = UiEvent.Close
     }
 
@@ -131,6 +132,7 @@ class JetpackConnectionViewModel @Inject constructor(
         _currentStep.value = null
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
@@ -156,7 +158,7 @@ class JetpackConnectionViewModel @Inject constructor(
                 if (accountStore.hasAccessToken()) {
                     appLogWrapper.d(AppLog.T.API, "$TAG: User already logged in")
                 } else {
-                    throw IllegalStateException("User must be logged in to WordPress.com")
+                    error("User must be logged in to WordPress.com")
                 }
             }
 
@@ -173,38 +175,38 @@ class JetpackConnectionViewModel @Inject constructor(
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting site")
                 jetpackConnectionClient?.connectSite(
                     from = getSiteId().toString()
-                ) ?: throw IllegalStateException("JetpackConnectionClient not initialized")
+                ) ?: error("JetpackConnectionClient not initialized")
             }
 
             ConnectionStep.ConnectWpCom -> {
-                val token = accountStore.accessToken 
-                    ?: throw IllegalStateException("No access token available")
-                
+                val token = accountStore.accessToken
+                    ?: error("No access token available")
+
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
                 jetpackConnectionClient?.connectUser(
                     wpComAuthentication = WpAuthentication.Bearer(token = token),
                     from = getSiteId().toString()
-                ) ?: throw IllegalStateException("JetpackConnectionClient not initialized")
+                ) ?: error("JetpackConnectionClient not initialized")
             }
 
             ConnectionStep.Finalize -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
                 // Add any finalization logic here
-                delay(500) // Small delay to show completion
+                delay(STEP_DELAY_MS) // Small delay to show completion
             }
         }
     }
 
     private suspend fun installJetpackPlugin() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
-        // TODO: Implement actual plugin installation API call when ready
+        // TODO Implement actual plugin installation API call when ready
         // val params = PluginCreateParams(
         //     slug = PluginWpOrgDirectorySlug("jetpack"),
         //     status = PluginStatus.ACTIVE,
         // )
-        // TODO: Implement actual plugin installation API call
+        // TODO Implement actual plugin installation API call
         // For now, simulate network delay
-        delay(2000)
+        delay(STEP_DELAY_MS)
     }
 
     private fun getSiteId() = getSite().siteId
@@ -239,6 +241,7 @@ class JetpackConnectionViewModel @Inject constructor(
         private const val TAG = "JetpackConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 30000L // 30 seconds timeout per step
+        private const val STEP_DELAY_MS = 2000L
 
         /**
          * Requirements:

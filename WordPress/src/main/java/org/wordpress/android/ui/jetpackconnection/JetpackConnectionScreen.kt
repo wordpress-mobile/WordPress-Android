@@ -191,6 +191,7 @@ private fun JetpackConnectionSteps(
     }
 }
 
+@Suppress("UnusedParameter", "CyclomaticComplexMethod")
 @Composable
 private fun ConnectionStepItem(
     step: ConnectionStep,
@@ -205,11 +206,16 @@ private fun ConnectionStepItem(
     val animatedAlpha by animateFloatAsState(targetValue = targetAlpha)
 
     val targetColor = when {
-        status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-        status == ConnectionStatus.InProgress -> Color(0xFFFFF9C4) // Light yellow
-        status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
-        isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
-        else -> MaterialTheme.colorScheme.surface
+        status == ConnectionStatus.Completed ->
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        status == ConnectionStatus.InProgress ->
+            Color(0xFFFFF9C4) // Light yellow
+        status == ConnectionStatus.Failed ->
+            MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
+        isCurrentStep ->
+            MaterialTheme.colorScheme.primaryContainer
+        else ->
+            MaterialTheme.colorScheme.surface
     }
     val animatedColor by animateColorAsState(targetValue = targetColor)
 
@@ -277,9 +283,12 @@ private fun ConnectionStepItem(
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = when {
-                    status == ConnectionStatus.InProgress -> Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
-                    isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    status == ConnectionStatus.InProgress ->
+                        Color(0xFF5D4037).copy(alpha = 0.7f) // Dark brown for readability on yellow
+                    isCurrentStep ->
+                        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    else ->
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 }
             )
 
@@ -300,9 +309,12 @@ private fun ConnectionStepItem(
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp,
                     color = when {
-                        status == ConnectionStatus.InProgress -> Color(0xFF5D4037) // Dark brown for readability on yellow
-                        isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                        else -> MaterialTheme.colorScheme.primary
+                        status == ConnectionStatus.InProgress ->
+                            Color(0xFF5D4037) // Dark brown for readability on yellow
+                        isCurrentStep ->
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else ->
+                            MaterialTheme.colorScheme.primary
                     }
                 )
             }
@@ -383,7 +395,10 @@ private fun JetpackConnectionScreenPreview() {
                     ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
                     ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
                     ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
-                    ConnectionStep.ConnectWpCom to StepState(ConnectionStatus.Failed, "Failed to connect to WordPress.com"),
+                    ConnectionStep.ConnectWpCom to StepState(
+                        ConnectionStatus.Failed,
+                        "Failed to connect to WordPress.com"
+                    ),
                     ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
                 )
             )
