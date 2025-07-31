@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +35,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.animateColorAsState
@@ -54,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ButtonType
 import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
@@ -117,12 +119,11 @@ private fun JetpackConnectionButton(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
+        PrimaryButtonM3(
             onClick = onClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(labelRes))
-        }
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(labelRes),
+        )
     }
 }
 
@@ -368,23 +369,29 @@ private fun Screen(
 )
 @Composable
 private fun JetpackConnectionScreenPreview() {
-    Screen(
-        onCloseClick = {},
-        content = {
-            JetpackConnectionSteps(
-                currentStep = ConnectionStep.ConnectSite,
-                stepStates = mapOf(
-                    ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
-                    ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
-                    ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
-                    ConnectionStep.ConnectWpCom to StepState(
-                        ConnectionStatus.Failed,
-                        "Failed to connect to WordPress.com"
-                    ),
-                    ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
-                )
+    val currentStep = remember { mutableStateOf(ConnectionStep.ConnectSite) }
+    val stepStates = remember {
+        mutableStateOf(
+            mapOf(
+                ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
+                ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
+                ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
+                ConnectionStep.ConnectWpCom to StepState(
+                    ConnectionStatus.Failed,
+                    "Failed to connect to WordPress.com"
+                ),
+                ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )
-        }
+        )
+    }
+    val buttonType = remember { mutableStateOf<ButtonType?>(ButtonType.Done) }
+
+    JetpackConnectionScreen(
+        currentStep = currentStep,
+        stepStates = stepStates,
+        buttonType = buttonType,
+        onCloseClick = {},
+        onRetryClick = {}
     )
 }
 
