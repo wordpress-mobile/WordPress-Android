@@ -4293,8 +4293,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return getDatabase(getContext())
         }
 
-    override fun onLogJsException(exception: JsException, onExceptionSend: JsExceptionCallback) {
-        crashLogging.sendJavaScriptReport(exception, onExceptionSend)
+    override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
+        crashLogging.sendJavaScriptReport(exception, onSendJsException)
     }
 
     companion object {
