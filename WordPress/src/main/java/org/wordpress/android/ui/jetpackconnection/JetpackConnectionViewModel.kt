@@ -107,11 +107,13 @@ class JetpackConnectionViewModel @Inject constructor(
         when (status) {
             ConnectionStatus.Failed -> {
                 job?.cancel()
+                _currentStep.value = null
                 _buttonType.value = ButtonType.Retry
             }
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
                     _buttonType.value = ButtonType.Done
+                    job?.cancel()
                 } else {
                     launch {
                         startNextStep()
@@ -124,7 +126,25 @@ class JetpackConnectionViewModel @Inject constructor(
 
     fun onCloseClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Close clicked")
+        if (job?.isActive == true) {
+            // Connection is in progress, show confirmation dialog
+            appLogWrapper.d(AppLog.T.API, "$TAG: Connection in progress, showing confirmation")
+            _uiEvent.value = UiEvent.ShowCancelConfirmation
+        } else {
+            // No active connection, close immediately
+            _uiEvent.value = UiEvent.Close
+        }
+    }
+
+    fun onCancelConfirmed() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Cancel confirmed")
+        job?.cancel()
         _uiEvent.value = UiEvent.Close
+    }
+
+    fun onCancelDismissed() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Cancel dismissed, continuing connection")
+        // Just dismiss the dialog, connection continues
     }
 
     fun onRetryClick() {
@@ -229,6 +249,7 @@ class JetpackConnectionViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object Close : UiEvent()
+        data object ShowCancelConfirmation : UiEvent()
     }
 
     sealed class ButtonType {

@@ -6,9 +6,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
@@ -34,9 +36,26 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
                     JetpackConnectionViewModel.UiEvent.Close -> {
                         finish()
                     }
+                    JetpackConnectionViewModel.UiEvent.ShowCancelConfirmation -> {
+                        showCancelConfirmationDialog()
+                    }
                 }
             }
         }
+    }
+
+    private fun showCancelConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.jetpack_connection_cancel_title)
+            .setMessage(R.string.jetpack_connection_cancel_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                viewModel.onCancelConfirmed()
+            }
+            .setNegativeButton(R.string.no) { _, _ ->
+                viewModel.onCancelDismissed()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     companion object {
