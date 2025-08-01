@@ -54,30 +54,11 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.ui.posts.GutenbergKitSettings
 import org.wordpress.android.ui.posts.GutenbergKitViewModel
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-data class GutenbergKitSettings(
-    val postId: Int? = null,
-    val postType: String,
-    val postTitle: String? = null,
-    val postContent: String? = null,
-    val siteURL: String,
-    val siteApiRoot: String,
-    val namespaceExcludedPaths: List<String> = emptyList(),
-    val authHeader: String,
-    val siteApiNamespace: List<String> = emptyList(),
-    val themeStyles: Boolean = false,
-    val plugins: Boolean = false,
-    val locale: String,
-    val cookies: Map<String, String> = emptyMap(),
-    val webViewGlobals: List<WebViewGlobal> = emptyList()
-) : Serializable {
-    companion object {
-        private const val serialVersionUID: Long = 1L
-    }
-}
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
