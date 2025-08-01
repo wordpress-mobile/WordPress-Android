@@ -26,19 +26,15 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
                 stepStates = viewModel.stepStates.collectAsState(),
                 buttonType = viewModel.buttonType.collectAsState(),
                 onCloseClick = viewModel::onCloseClick,
-                onRetryClick = viewModel::onRetryClick,
+                onRetryClick = viewModel::onRetryClick
             )
         }
 
         lifecycleScope.launch {
             viewModel.uiEvent.filterNotNull().collect { event ->
                 when (event) {
-                    JetpackConnectionViewModel.UiEvent.Close -> {
-                        finish()
-                    }
-                    JetpackConnectionViewModel.UiEvent.ShowCancelConfirmation -> {
-                        showCancelConfirmationDialog()
-                    }
+                    JetpackConnectionViewModel.UiEvent.Close -> finish()
+                    JetpackConnectionViewModel.UiEvent.ShowCancelConfirmation -> showCancelConfirmationDialog()
                 }
             }
         }
@@ -48,12 +44,8 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.jetpack_connection_cancel_title)
             .setMessage(R.string.jetpack_connection_cancel_message)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                viewModel.onCancelConfirmed()
-            }
-            .setNegativeButton(R.string.no) { _, _ ->
-                viewModel.onCancelDismissed()
-            }
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.onCancelConfirmed() }
+            .setNegativeButton(R.string.no) { _, _ -> viewModel.onCancelDismissed() }
             .setCancelable(false)
             .show()
     }
