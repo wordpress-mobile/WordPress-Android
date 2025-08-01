@@ -1022,7 +1022,7 @@
     <string name="jetpack_connection_error_timeout">Timed out</string>
     <string name="jetpack_connection_error_unknown">@string/error_generic</string>
     <string name="jetpack_connection_error_offline">@string/no_network_title</string>
-    <string name="jetpack_connection_error_wpcom">Failed to connect to WordPress.com</string>
+    <string name="jetpack_connection_error_wpcom">Unable to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

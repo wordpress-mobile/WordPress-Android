@@ -429,7 +429,7 @@ private fun JetpackConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectWpCom to StepState(
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom("Something went wrong")
+                    ErrorType.FailedToConnectWpCom()
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )
