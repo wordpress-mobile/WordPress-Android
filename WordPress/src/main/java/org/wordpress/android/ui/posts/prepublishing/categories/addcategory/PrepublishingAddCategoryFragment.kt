@@ -137,7 +137,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             viewModelFactory
         )[PrepublishingAddCategoryViewModel::class.java]
         parentViewModel = ViewModelProvider(
-            requireParentFragment(),
+            requireActivity(),
             viewModelFactory
         )[PrepublishingViewModel::class.java]
 
