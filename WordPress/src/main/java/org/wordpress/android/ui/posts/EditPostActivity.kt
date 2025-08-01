@@ -2155,7 +2155,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     )
 
                     val callback = object : JsExceptionCallback {
-                        override fun onReportSent(success: Boolean) {
+                        override fun onReportSent(sent: Boolean) {
                             // Do nothing
                         }
                     }
@@ -4301,8 +4301,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return getDatabase(getContext())
         }
 
-    override fun onLogJsException(exception: JsException, onExceptionSend: JsExceptionCallback) {
-        crashLogging.sendJavaScriptReport(exception, onExceptionSend)
+    override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
+        crashLogging.sendJavaScriptReport(exception, onSendJsException)
     }
 
     companion object {
