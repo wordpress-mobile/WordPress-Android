@@ -50,15 +50,12 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.GutenbergWebViewPool.getPreloadedWebView
 import org.wordpress.gutenberg.GutenbergWebViewPool.recycleWebView
 import org.wordpress.gutenberg.Media
-import org.wordpress.gutenberg.WebViewGlobal
-import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.ui.posts.GutenbergKitSettings
 import org.wordpress.android.ui.posts.GutenbergKitViewModel
 import org.wordpress.android.WordPress
 import javax.inject.Inject
-
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
