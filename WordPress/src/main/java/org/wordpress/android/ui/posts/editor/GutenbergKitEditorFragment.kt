@@ -117,18 +117,10 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
                     textWatcher.postTextChanged()
                 }
             })
-            if (historyChangeListener != null) {
-                gutenbergView.setHistoryChangeListener(historyChangeListener!!)
-            }
-            if (featuredImageChangeListener != null) {
-                gutenbergView.setFeaturedImageChangeListener(featuredImageChangeListener!!)
-            }
-            if (openMediaLibraryListener != null) {
-                gutenbergView.setOpenMediaLibraryListener(openMediaLibraryListener!!)
-            }
-            if (onLogJsExceptionListener != null) {
-                gutenbergView.setLogJsExceptionListener(onLogJsExceptionListener!!)
-            }
+            historyChangeListener?.let(gutenbergView::setHistoryChangeListener)
+            featuredImageChangeListener?.let(gutenbergView::setFeaturedImageChangeListener)
+            openMediaLibraryListener?.let(gutenbergView::setOpenMediaLibraryListener)
+            onLogJsExceptionListener?.let(gutenbergView::setLogJsExceptionListener)
             gutenbergView.setEditorDidBecomeAvailable { _: GutenbergView? ->
                 isEditorDidMount = true
                 mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
@@ -211,22 +203,16 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         super.onAttach(context)
         val activity = context as Activity
 
-        try {
-            mEditorDragAndDropListener = activity as EditorDragAndDropListener?
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement EditorDragAndDropListener: $e")
-        }
+        mEditorDragAndDropListener = requireActivityImplements<EditorDragAndDropListener>(activity)
+        mEditorImagePreviewListener = requireActivityImplements<EditorImagePreviewListener>(activity)
+        mEditorEditMediaListener = requireActivityImplements<EditorEditMediaListener>(activity)
+    }
 
-        try {
-            mEditorImagePreviewListener = activity as EditorImagePreviewListener?
+    private inline fun <reified T> requireActivityImplements(activity: Activity): T? {
+        return try {
+            activity as T?
         } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement EditorImagePreviewListener: $e")
-        }
-
-        try {
-            mEditorEditMediaListener = activity as EditorEditMediaListener?
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement EditorEditMediaListener: $e")
+            throw ClassCastException("$activity must implement ${T::class.simpleName}: $e")
         }
     }
 
@@ -518,42 +504,51 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             return
         }
 
-        var postId = settings!!["postId"] as Int?
-        if (postId != null && postId == 0) {
-            postId = -1
-        }
-
-        val siteURL = settings!!["siteURL"] as String?
-        val siteApiRoot = settings!!["siteApiRoot"] as String?
-
-        @Suppress("UNCHECKED_CAST") val siteApiNamespace = settings!!["siteApiNamespace"] as Array<String?>?
-        val firstNamespace = if (siteApiNamespace != null && siteApiNamespace.isNotEmpty()) siteApiNamespace[0] else ""
-        val editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets"
-
-        @Suppress("UNCHECKED_CAST") var cookies = settings!!["cookies"] as Map<String, String>?
-        if (cookies == null) {
-            cookies = HashMap()
-        }
-
-        @Suppress("UNCHECKED_CAST") val namespaceExcludedPaths =
-            (settings!!["namespaceExcludedPaths"] as Array<String>?) ?: emptyArray()
-
-        @Suppress("UNCHECKED_CAST") val webViewGlobals =
-            (settings!!["webViewGlobals"] as List<WebViewGlobal>?) ?: emptyList()
-
-        val config = EditorConfiguration.Builder().setTitle(settings!!["postTitle"] as String)
-            .setContent(settings!!["postContent"] as String).setPostId(postId)
-            .setPostType(settings!!["postType"] as String?).setThemeStyles(settings!!["themeStyles"] as Boolean)
-            .setPlugins(settings!!["plugins"] as Boolean).setSiteApiRoot(settings!!["siteApiRoot"] as String)
-            .setSiteApiNamespace(siteApiNamespace?.filterNotNull()?.toTypedArray() ?: emptyArray())
-            .setNamespaceExcludedPaths(namespaceExcludedPaths).setAuthHeader(settings!!["authHeader"] as String)
-            .setWebViewGlobals(webViewGlobals).setEditorSettings(editorSettings)
-            .setLocale(settings!!["locale"] as String?).setEditorAssetsEndpoint(editorAssetsEndpoint)
-            .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL))).setEnableAssetCaching(true)
-            .setCookies(cookies).build()
-
+        val config = buildEditorConfiguration(editorSettings)
         isEditorStarted = true
         gutenbergView?.start(config)
+    }
+
+    private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
+        val settingsMap = settings!!
+        
+        val postId = (settingsMap["postId"] as Int?).let { if (it == 0) -1 else it }
+        val siteURL = settingsMap["siteURL"] as String?
+        val siteApiRoot = settingsMap["siteApiRoot"] as String?
+        
+        @Suppress("UNCHECKED_CAST") 
+        val siteApiNamespace = settingsMap["siteApiNamespace"] as Array<String?>?
+        val firstNamespace = siteApiNamespace?.firstOrNull() ?: ""
+        val editorAssetsEndpoint = "$siteApiRoot/wpcom/v2/$firstNamespace/editor-assets"
+        
+        @Suppress("UNCHECKED_CAST")
+        val cookies = (settingsMap["cookies"] as Map<String, String>?) ?: emptyMap()
+        
+        @Suppress("UNCHECKED_CAST")
+        val namespaceExcludedPaths = (settingsMap["namespaceExcludedPaths"] as Array<String>?) ?: emptyArray()
+        
+        @Suppress("UNCHECKED_CAST")
+        val webViewGlobals = (settingsMap["webViewGlobals"] as List<WebViewGlobal>?) ?: emptyList()
+
+        return EditorConfiguration.Builder()
+            .setTitle(settingsMap["postTitle"] as String)
+            .setContent(settingsMap["postContent"] as String)
+            .setPostId(postId)
+            .setPostType(settingsMap["postType"] as String?)
+            .setThemeStyles(settingsMap["themeStyles"] as Boolean)
+            .setPlugins(settingsMap["plugins"] as Boolean)
+            .setSiteApiRoot(settingsMap["siteApiRoot"] as String)
+            .setSiteApiNamespace(siteApiNamespace?.filterNotNull()?.toTypedArray() ?: emptyArray())
+            .setNamespaceExcludedPaths(namespaceExcludedPaths)
+            .setAuthHeader(settingsMap["authHeader"] as String)
+            .setWebViewGlobals(webViewGlobals)
+            .setEditorSettings(editorSettings)
+            .setLocale(settingsMap["locale"] as String?)
+            .setEditorAssetsEndpoint(editorAssetsEndpoint)
+            .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
+            .setEnableAssetCaching(true)
+            .setCookies(cookies)
+            .build()
     }
 
     override fun showNotice(message: String?) {
