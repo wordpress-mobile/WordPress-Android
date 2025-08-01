@@ -290,7 +290,7 @@ class JetpackConnectionViewModel @Inject constructor(
     private fun getSiteId() = getSite().siteId
 
     private fun getSite() = selectedSiteRepository.getSelectedSite()
-        ?: throw IllegalStateException("No site is currently selected in SelectedSiteRepository")
+        ?: error("No site is currently selected in SelectedSiteRepository")
 
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
