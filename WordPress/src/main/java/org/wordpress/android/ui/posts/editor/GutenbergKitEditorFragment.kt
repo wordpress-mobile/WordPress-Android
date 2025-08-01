@@ -102,41 +102,40 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
         val gutenbergViewContainer = mRootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        val gutenbergView = getPreloadedWebView(requireContext()).also { view ->
-            mGutenbergView = view
+        mGutenbergView = getPreloadedWebView(requireContext()).also { view ->
             view.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
             gutenbergViewContainer.addView(view)
-        }
-
-        setEditorProgressBarVisibility(true)
-
-        gutenbergView.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
-            @Suppress("DEPRECATION") startActivityForResult(intent!!, requestCode!!)
-            null
-        }
-        gutenbergView.setContentChangeListener(object : ContentChangeListener {
-            override fun onContentChanged() {
-                mTextWatcher.postTextChanged()
+            
+            setEditorProgressBarVisibility(true)
+            
+            view.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
+                @Suppress("DEPRECATION") startActivityForResult(intent!!, requestCode!!)
+                null
             }
-        })
-        if (mHistoryChangeListener != null) {
-            gutenbergView.setHistoryChangeListener(mHistoryChangeListener!!)
-        }
-        if (mFeaturedImageChangeListener != null) {
-            gutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
-        }
-        if (mOpenMediaLibraryListener != null) {
-            gutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
-        }
-        if (mOnLogJsExceptionListener != null) {
-            gutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
-        }
-        gutenbergView.setEditorDidBecomeAvailable { view: GutenbergView? ->
-            mEditorDidMount = true
-            mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
-            setEditorProgressBarVisibility(false)
+            view.setContentChangeListener(object : ContentChangeListener {
+                override fun onContentChanged() {
+                    mTextWatcher.postTextChanged()
+                }
+            })
+            if (mHistoryChangeListener != null) {
+                view.setHistoryChangeListener(mHistoryChangeListener!!)
+            }
+            if (mFeaturedImageChangeListener != null) {
+                view.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
+            }
+            if (mOpenMediaLibraryListener != null) {
+                view.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
+            }
+            if (mOnLogJsExceptionListener != null) {
+                view.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
+            }
+            view.setEditorDidBecomeAvailable { _: GutenbergView? ->
+                mEditorDidMount = true
+                mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
+                setEditorProgressBarVisibility(false)
+            }
         }
 
         return mRootView
