@@ -102,41 +102,41 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
         val gutenbergViewContainer = mRootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        mGutenbergView = getPreloadedWebView(requireContext()).also { view ->
-            view.layoutParams = ViewGroup.LayoutParams(
+        mGutenbergView = getPreloadedWebView(requireContext()).also { gutenbergView ->
+            gutenbergView.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
-            gutenbergViewContainer.addView(view)
-            
-            setEditorProgressBarVisibility(true)
-            
-            view.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
+            gutenbergViewContainer.addView(gutenbergView)
+
+            gutenbergView.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
                 @Suppress("DEPRECATION") startActivityForResult(intent!!, requestCode!!)
                 null
             }
-            view.setContentChangeListener(object : ContentChangeListener {
+            gutenbergView.setContentChangeListener(object : ContentChangeListener {
                 override fun onContentChanged() {
                     mTextWatcher.postTextChanged()
                 }
             })
             if (mHistoryChangeListener != null) {
-                view.setHistoryChangeListener(mHistoryChangeListener!!)
+                gutenbergView.setHistoryChangeListener(mHistoryChangeListener!!)
             }
             if (mFeaturedImageChangeListener != null) {
-                view.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
+                gutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
             }
             if (mOpenMediaLibraryListener != null) {
-                view.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
+                gutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
             }
             if (mOnLogJsExceptionListener != null) {
-                view.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
+                gutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
             }
-            view.setEditorDidBecomeAvailable { _: GutenbergView? ->
+            gutenbergView.setEditorDidBecomeAvailable { _: GutenbergView? ->
                 mEditorDidMount = true
                 mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
                 setEditorProgressBarVisibility(false)
             }
         }
+
+        setEditorProgressBarVisibility(true)
 
         return mRootView
     }
@@ -314,7 +314,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         originalContent: CharSequence, completeComposition: Boolean
     ): Pair<CharSequence, CharSequence> {
         val gutenbergView = mGutenbergView ?: return Pair("", "")
-        
+
         val result: Array<Pair<CharSequence, CharSequence>?> = arrayOfNulls(1)
         val latch = CountDownLatch(1)
 
