@@ -525,7 +525,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             val siteApiRoot = getSetting<String>("siteApiRoot")
             val siteApiNamespace = getStringArray("siteApiNamespace")
             val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
-            val editorAssetsEndpoint = "$siteApiRoot/wpcom/v2/$firstNamespace/editor-assets"
+            val editorAssetsEndpoint = "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
             val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
             val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
             val webViewGlobals = getWebViewGlobals("webViewGlobals")
