@@ -55,7 +55,7 @@ class PrepublishingSocialFragment : Fragment(R.layout.prepublishing_social_fragm
 
     private fun setupViewModels() {
         parentViewModel = ViewModelProvider(
-            requireParentFragment(),
+            requireActivity(),
             viewModelFactory
         )[PrepublishingViewModel::class.java]
 

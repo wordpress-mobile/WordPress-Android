@@ -41,7 +41,6 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragme
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
-import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
@@ -69,7 +68,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private lateinit var viewModel: PrepublishingViewModel
     private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
-    private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
     private var jetpackSocialViewModel: EditorJetpackSocialViewModel? = null
     private lateinit var editShareMessageActivityResultLauncher: ActivityResultLauncher<Intent>
@@ -81,11 +79,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        prepublishingBottomSheetListener = if (context is PrepublishingBottomSheetListener) {
-            context
-        } else {
-            throw RuntimeException("$context must implement PrepublishingBottomSheetListener")
-        }
 
         editShareMessageActivityResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -99,11 +92,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 }
             }
         }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        prepublishingBottomSheetListener = null
     }
 
     override fun onCreateView(
@@ -179,7 +167,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[PrepublishingViewModel::class.java]
 
         viewModel.navigationTarget.observeEvent(this) { navigationState ->
             navigateToScreen(navigationState)
@@ -189,9 +177,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             dismiss()
         }
 
-        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this) { publishPost ->
-            prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
-        }
 
         viewModel.dismissKeyboard.observeEvent(this) {
             ActivityUtils.hideKeyboardForced(view)
