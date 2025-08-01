@@ -1214,7 +1214,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
             }
         }
-
     }
 
     private fun initializePostObject() {
