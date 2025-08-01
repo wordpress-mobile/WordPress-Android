@@ -57,18 +57,18 @@ import java.util.concurrent.CountDownLatch
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
-    private var mGutenbergView: GutenbergView? = null
-    private var mHtmlModeEnabled = false
+    private var gutenbergView: GutenbergView? = null
+    private var isHtmlModeEnabled = false
 
-    private val mTextWatcher = LiveTextWatcher()
-    private var mHistoryChangeListener: HistoryChangeListener? = null
-    private var mFeaturedImageChangeListener: FeaturedImageChangeListener? = null
-    private var mOpenMediaLibraryListener: OpenMediaLibraryListener? = null
-    private var mOnLogJsExceptionListener: LogJsExceptionListener? = null
+    private val textWatcher = LiveTextWatcher()
+    private var historyChangeListener: HistoryChangeListener? = null
+    private var featuredImageChangeListener: FeaturedImageChangeListener? = null
+    private var openMediaLibraryListener: OpenMediaLibraryListener? = null
+    private var onLogJsExceptionListener: LogJsExceptionListener? = null
 
-    private var mEditorStarted = false
-    private var mEditorDidMount = false
-    private var mRootView: View? = null
+    private var isEditorStarted = false
+    private var isEditorDidMount = false
+    private var rootView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +77,9 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         ProfilingUtils.split("EditorFragment.onCreate")
 
         if (savedInstanceState != null) {
-            mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
-            mEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED)
-            mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT)
+            isHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
+            isEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED)
+            isEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT)
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID)
         }
     }
@@ -89,7 +89,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     ): View? {
         if (arguments != null) {
             @Suppress("UNCHECKED_CAST", "DEPRECATION")
-            mSettings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as Map<String, Any?>?
+            settings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as Map<String, Any?>?
         }
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -99,10 +99,10 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
         mEditorFragmentListener.onEditorFragmentInitialized()
 
-        mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
-        val gutenbergViewContainer = mRootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
+        rootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
+        val gutenbergViewContainer = rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        mGutenbergView = getPreloadedWebView(requireContext()).also { gutenbergView ->
+        gutenbergView = getPreloadedWebView(requireContext()).also { gutenbergView ->
             gutenbergView.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
@@ -114,23 +114,23 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             }
             gutenbergView.setContentChangeListener(object : ContentChangeListener {
                 override fun onContentChanged() {
-                    mTextWatcher.postTextChanged()
+                    textWatcher.postTextChanged()
                 }
             })
-            if (mHistoryChangeListener != null) {
-                gutenbergView.setHistoryChangeListener(mHistoryChangeListener!!)
+            if (historyChangeListener != null) {
+                gutenbergView.setHistoryChangeListener(historyChangeListener!!)
             }
-            if (mFeaturedImageChangeListener != null) {
-                gutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
+            if (featuredImageChangeListener != null) {
+                gutenbergView.setFeaturedImageChangeListener(featuredImageChangeListener!!)
             }
-            if (mOpenMediaLibraryListener != null) {
-                gutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
+            if (openMediaLibraryListener != null) {
+                gutenbergView.setOpenMediaLibraryListener(openMediaLibraryListener!!)
             }
-            if (mOnLogJsExceptionListener != null) {
-                gutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
+            if (onLogJsExceptionListener != null) {
+                gutenbergView.setLogJsExceptionListener(onLogJsExceptionListener!!)
             }
             gutenbergView.setEditorDidBecomeAvailable { _: GutenbergView? ->
-                mEditorDidMount = true
+                isEditorDidMount = true
                 mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
                 setEditorProgressBarVisibility(false)
             }
@@ -138,13 +138,13 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
         setEditorProgressBarVisibility(true)
 
-        return mRootView
+        return rootView
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        mGutenbergView?.invalidate()
+        gutenbergView?.invalidate()
     }
 
     @Deprecated("Deprecated in Java")
@@ -152,7 +152,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         @Suppress("DEPRECATION") super.onActivityResult(requestCode, resultCode, data)
 
-        mGutenbergView?.let { gutenbergView ->
+        gutenbergView?.let { gutenbergView ->
             if (requestCode == gutenbergView.pickImageRequestCode) {
                 val filePathCallback = gutenbergView.filePathCallback
 
@@ -182,12 +182,14 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     override fun onResume() {
         super.onResume()
-        setEditorProgressBarVisibility(!mEditorDidMount)
+        setEditorProgressBarVisibility(!isEditorDidMount)
     }
 
     private fun setEditorProgressBarVisibility(shown: Boolean) {
-        if (isAdded && mRootView != null) {
-            mRootView!!.findViewById<View?>(R.id.editor_progress)?.visibility = if (shown) View.VISIBLE else View.GONE
+        if (isAdded) {
+            rootView?.let {
+                it.findViewById<View?>(R.id.editor_progress)?.visibility = if (shown) View.VISIBLE else View.GONE
+            }
         }
     }
 
@@ -229,9 +231,9 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled)
-        outState.putBoolean(KEY_EDITOR_STARTED, mEditorStarted)
-        outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount)
+        outState.putBoolean(KEY_HTML_MODE_ENABLED, isHtmlModeEnabled)
+        outState.putBoolean(KEY_EDITOR_STARTED, isEditorStarted)
+        outState.putBoolean(KEY_EDITOR_DID_MOUNT, isEditorDidMount)
         outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId)
     }
 
@@ -282,7 +284,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             text = ""
         }
 
-        mGutenbergView?.setContent(text as String)
+        gutenbergView?.setContent(text as String)
     }
 
     override fun updateContent(text: CharSequence?) {
@@ -298,10 +300,10 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     private fun toggleHtmlMode() {
-        mHtmlModeEnabled = !mHtmlModeEnabled
+        isHtmlModeEnabled = !isHtmlModeEnabled
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED)
         mEditorFragmentListener.onHtmlModeToggledInToolbar()
-        mGutenbergView?.textEditorEnabled = mHtmlModeEnabled
+        gutenbergView?.textEditorEnabled = isHtmlModeEnabled
     }
 
     @Throws(EditorFragmentNotAddedException::class)
@@ -313,7 +315,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     fun getTitleAndContent(
         originalContent: CharSequence, completeComposition: Boolean
     ): Pair<CharSequence, CharSequence> {
-        val gutenbergView = mGutenbergView ?: return Pair("", "")
+        val gutenbergView = gutenbergView ?: return Pair("", "")
 
         val result: Array<Pair<CharSequence, CharSequence>?> = arrayOfNulls(1)
         val latch = CountDownLatch(1)
@@ -367,23 +369,23 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onEditorHistoryChanged(listener: HistoryChangeListener) {
-        mHistoryChangeListener = listener
+        historyChangeListener = listener
     }
 
     override fun onFeaturedImageChanged(listener: FeaturedImageChangeListener) {
-        mFeaturedImageChangeListener = listener
+        featuredImageChangeListener = listener
     }
 
     override fun onOpenMediaLibrary(listener: OpenMediaLibraryListener) {
-        mOpenMediaLibraryListener = listener
+        openMediaLibraryListener = listener
     }
 
     override fun onLogJsException(listener: LogJsExceptionListener) {
-        mOnLogJsExceptionListener = listener
+        onLogJsExceptionListener = listener
     }
 
     override fun getTitleOrContentChanged(): LiveData<Editable> {
-        return mTextWatcher.afterTextChanged
+        return textWatcher.afterTextChanged
     }
 
     override fun appendMediaFile(
@@ -411,7 +413,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         val isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl)
 
         // Disable upload handling until supported--e.g., media shared to the app
-        if (mGutenbergView == null || !isNetworkUrl) {
+        if (gutenbergView == null || !isNetworkUrl) {
             return
         }
 
@@ -434,7 +436,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         }
 
         val mediaString = Gson().toJson(processedMediaList)
-        mGutenbergView?.setMediaUploadAttachment(mediaString)
+        gutenbergView?.setMediaUploadAttachment(mediaString)
     }
 
     override fun appendGallery(mediaGallery: MediaGallery?) {
@@ -464,12 +466,12 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onDestroy() {
-        mGutenbergView?.let { gutenbergView ->
+        gutenbergView?.let { gutenbergView ->
             recycleWebView(gutenbergView)
-            mHistoryChangeListener = null
-            mFeaturedImageChangeListener = null
+            historyChangeListener = null
+            featuredImageChangeListener = null
         }
-        mEditorStarted = false
+        isEditorStarted = false
         super.onDestroy()
     }
 
@@ -512,46 +514,46 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     fun startWithEditorSettings(editorSettings: String) {
-        if (mGutenbergView == null || mEditorStarted) {
+        if (gutenbergView == null || isEditorStarted) {
             return
         }
 
-        var postId = mSettings!!["postId"] as Int?
+        var postId = settings!!["postId"] as Int?
         if (postId != null && postId == 0) {
             postId = -1
         }
 
-        val siteURL = mSettings!!["siteURL"] as String?
-        val siteApiRoot = mSettings!!["siteApiRoot"] as String?
+        val siteURL = settings!!["siteURL"] as String?
+        val siteApiRoot = settings!!["siteApiRoot"] as String?
 
-        @Suppress("UNCHECKED_CAST") val siteApiNamespace = mSettings!!["siteApiNamespace"] as Array<String?>?
+        @Suppress("UNCHECKED_CAST") val siteApiNamespace = settings!!["siteApiNamespace"] as Array<String?>?
         val firstNamespace = if (siteApiNamespace != null && siteApiNamespace.isNotEmpty()) siteApiNamespace[0] else ""
         val editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets"
 
-        @Suppress("UNCHECKED_CAST") var cookies = mSettings!!["cookies"] as Map<String, String>?
+        @Suppress("UNCHECKED_CAST") var cookies = settings!!["cookies"] as Map<String, String>?
         if (cookies == null) {
             cookies = HashMap()
         }
 
         @Suppress("UNCHECKED_CAST") val namespaceExcludedPaths =
-            (mSettings!!["namespaceExcludedPaths"] as Array<String>?) ?: emptyArray()
+            (settings!!["namespaceExcludedPaths"] as Array<String>?) ?: emptyArray()
 
         @Suppress("UNCHECKED_CAST") val webViewGlobals =
-            (mSettings!!["webViewGlobals"] as List<WebViewGlobal>?) ?: emptyList()
+            (settings!!["webViewGlobals"] as List<WebViewGlobal>?) ?: emptyList()
 
-        val config = EditorConfiguration.Builder().setTitle(mSettings!!["postTitle"] as String)
-            .setContent(mSettings!!["postContent"] as String).setPostId(postId)
-            .setPostType(mSettings!!["postType"] as String?).setThemeStyles(mSettings!!["themeStyles"] as Boolean)
-            .setPlugins(mSettings!!["plugins"] as Boolean).setSiteApiRoot(mSettings!!["siteApiRoot"] as String)
+        val config = EditorConfiguration.Builder().setTitle(settings!!["postTitle"] as String)
+            .setContent(settings!!["postContent"] as String).setPostId(postId)
+            .setPostType(settings!!["postType"] as String?).setThemeStyles(settings!!["themeStyles"] as Boolean)
+            .setPlugins(settings!!["plugins"] as Boolean).setSiteApiRoot(settings!!["siteApiRoot"] as String)
             .setSiteApiNamespace(siteApiNamespace?.filterNotNull()?.toTypedArray() ?: emptyArray())
-            .setNamespaceExcludedPaths(namespaceExcludedPaths).setAuthHeader(mSettings!!["authHeader"] as String)
+            .setNamespaceExcludedPaths(namespaceExcludedPaths).setAuthHeader(settings!!["authHeader"] as String)
             .setWebViewGlobals(webViewGlobals).setEditorSettings(editorSettings)
-            .setLocale(mSettings!!["locale"] as String?).setEditorAssetsEndpoint(editorAssetsEndpoint)
+            .setLocale(settings!!["locale"] as String?).setEditorAssetsEndpoint(editorAssetsEndpoint)
             .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL))).setEnableAssetCaching(true)
             .setCookies(cookies).build()
 
-        mEditorStarted = true
-        mGutenbergView?.start(config)
+        isEditorStarted = true
+        gutenbergView?.start(config)
     }
 
     override fun showNotice(message: String?) {
@@ -563,11 +565,11 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onUndoPressed() {
-        mGutenbergView?.undo()
+        gutenbergView?.undo()
     }
 
     override fun onRedoPressed() {
-        mGutenbergView?.redo()
+        gutenbergView?.redo()
     }
 
     override fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int) {
@@ -596,7 +598,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
 
-        private var mSettings: Map<String, Any?>? = null
+        private var settings: Map<String, Any?>? = null
 
         fun newInstance(
             context: Context,
@@ -612,7 +614,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             args.putSerializable(ARG_GUTENBERG_KIT_SETTINGS, settings as Serializable?)
             fragment.setArguments(args)
             val db = getDatabase(context)
-            mSettings = settings
+            GutenbergKitEditorFragment.settings = settings
             db?.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData)
             return fragment
         }
