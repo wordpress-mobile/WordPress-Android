@@ -434,6 +434,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
     private lateinit var editPostAuthViewModel: EditPostAuthViewModel
+    private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -646,6 +647,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editPostSettingsViewModel = ViewModelProvider(this, viewModelFactory)[EditPostSettingsViewModel::class.java]
         prepublishingViewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
         editPostAuthViewModel = ViewModelProvider(this, viewModelFactory)[EditPostAuthViewModel::class.java]
+        gutenbergKitViewModel = ViewModelProvider(this, viewModelFactory)[GutenbergKitViewModel::class.java]
     }
 
     private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {
@@ -2607,13 +2609,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
             val settings = createGutenbergKitSettings(isWpCom)
 
-            return GutenbergKitEditorFragment.newInstance(
+            val fragment = GutenbergKitEditorFragment.newInstance(
                 getContext(),
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
             )
+
+            // Set settings in ViewModel for fragment to observe
+            gutenbergKitViewModel.updateEditorSettings(settings)
+
+            return fragment
         }
 
         private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {

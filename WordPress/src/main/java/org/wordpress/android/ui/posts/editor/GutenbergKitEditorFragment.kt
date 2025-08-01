@@ -53,6 +53,10 @@ import org.wordpress.gutenberg.Media
 import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
+import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.ui.posts.GutenbergKitViewModel
+import org.wordpress.android.WordPress
+import javax.inject.Inject
 
 data class GutenbergKitSettings(
     val postId: Int? = null,
@@ -78,6 +82,9 @@ data class GutenbergKitSettings(
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
+
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -91,11 +98,28 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     private var isEditorDidMount = false
     private var rootView: View? = null
 
+    // Access settings through ViewModel
+    private val settings: GutenbergKitSettings?
+        get() = if (::gutenbergKitViewModel.isInitialized) {
+            gutenbergKitViewModel.editorSettings.value
+        } else {
+            null
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ProfilingUtils.start("Visual Editor Startup")
         ProfilingUtils.split("EditorFragment.onCreate")
+
+        // Trigger dependency injection
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+
+        // Initialize shared ViewModel (same scope as Activity) - after DI is complete
+        gutenbergKitViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[GutenbergKitViewModel::class.java]
 
         if (savedInstanceState != null) {
             isHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
@@ -108,11 +132,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        if (arguments != null) {
-            @Suppress("DEPRECATION")
-            settings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as GutenbergKitSettings?
-        }
-
         // request dependency injection. Do this after setting min/max dimensions
         if (activity is EditorFragmentActivity) {
             (activity as EditorFragmentActivity).initializeEditorFragment()
@@ -591,28 +610,22 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         private const val ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data"
         const val ARG_FEATURED_IMAGE_ID: String = "featured_image_id"
         const val ARG_JETPACK_FEATURES_ENABLED: String = "jetpack_features_enabled"
-        const val ARG_GUTENBERG_KIT_SETTINGS: String = "gutenberg_kit_settings"
 
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
-
-        private var settings: GutenbergKitSettings? = null
 
         fun newInstance(
             context: Context,
             isNewPost: Boolean,
             webViewAuthorizationData: GutenbergWebViewAuthorizationData?,
             jetpackFeaturesEnabled: Boolean,
-            settings: GutenbergKitSettings?
         ): GutenbergKitEditorFragment {
             val fragment = GutenbergKitEditorFragment()
             val args = Bundle()
             args.putBoolean(ARG_IS_NEW_POST, isNewPost)
             args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled)
-            args.putSerializable(ARG_GUTENBERG_KIT_SETTINGS, settings)
             fragment.setArguments(args)
             val db = getDatabase(context)
-            GutenbergKitEditorFragment.settings = settings
             db?.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData)
             return fragment
         }
