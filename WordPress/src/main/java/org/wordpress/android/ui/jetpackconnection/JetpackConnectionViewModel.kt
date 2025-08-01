@@ -56,11 +56,25 @@ class JetpackConnectionViewModel @Inject constructor(
         startConnectionJob()
     }
 
-    private fun startConnectionJob() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job")
+    private fun startConnectionJob(fromStep: ConnectionStep? = null) {
+        val message = if (fromStep != null) {
+            "$TAG: Starting Jetpack connection job from step: $fromStep"
+        } else {
+            "$TAG: Starting Jetpack connection job"
+        }
+        appLogWrapper.d(AppLog.T.API, message)
         job?.cancel()
         job = launch {
-            startNextStep()
+            if (fromStep != null) {
+                _currentStep.value = fromStep
+                updateStepStatus(fromStep, ConnectionStatus.InProgress)
+                // TODO executeStepWithErrorHandling(fromStep)
+                // TODO this is just to test the UI
+                delay(STEP_DELAY_MS)
+                updateStepStatus(fromStep, ConnectionStatus.Completed)
+            } else {
+                startNextStep()
+            }
         }
     }
 
@@ -153,8 +167,24 @@ class JetpackConnectionViewModel @Inject constructor(
 
     fun onRetryClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Retry clicked")
-        clearValues()
-        startConnectionJob()
+        // Find the failed step from stepStates
+        val stepToRetry = _stepStates.value.entries.find { (_, state) ->
+            state.status == ConnectionStatus.Failed
+        }?.key
+
+        if (stepToRetry != null) {
+            // Only reset the failed step status, keep other steps intact
+            _stepStates.value = _stepStates.value.toMutableMap().apply {
+                this[stepToRetry] = StepState()
+            }
+            _buttonType.value = null
+            _uiEvent.value = null
+            startConnectionJob(fromStep = stepToRetry)
+        } else {
+            // Fallback to original behavior if no failed step found
+            clearValues()
+            startConnectionJob()
+        }
     }
 
     private fun clearValues() {
