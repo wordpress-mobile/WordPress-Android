@@ -216,6 +216,12 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         }
     }
 
+    // Type-safe settings accessors
+    private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
+    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T = getSetting(key) ?: default
+    private fun Map<String, Any?>.getStringArray(key: String): Array<String> = (getSetting<Array<String?>>(key))?.filterNotNull()?.toTypedArray() ?: emptyArray()
+    private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> = getSetting<List<WebViewGlobal>>(key) ?: emptyList()
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, isHtmlModeEnabled)
         outState.putBoolean(KEY_EDITOR_STARTED, isEditorStarted)
@@ -512,43 +518,37 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
         val settingsMap = settings!!
         
-        val postId = (settingsMap["postId"] as Int?).let { if (it == 0) -1 else it }
-        val siteURL = settingsMap["siteURL"] as String?
-        val siteApiRoot = settingsMap["siteApiRoot"] as String?
-        
-        @Suppress("UNCHECKED_CAST") 
-        val siteApiNamespace = settingsMap["siteApiNamespace"] as Array<String?>?
-        val firstNamespace = siteApiNamespace?.firstOrNull() ?: ""
-        val editorAssetsEndpoint = "$siteApiRoot/wpcom/v2/$firstNamespace/editor-assets"
-        
-        @Suppress("UNCHECKED_CAST")
-        val cookies = (settingsMap["cookies"] as Map<String, String>?) ?: emptyMap()
-        
-        @Suppress("UNCHECKED_CAST")
-        val namespaceExcludedPaths = (settingsMap["namespaceExcludedPaths"] as Array<String>?) ?: emptyArray()
-        
-        @Suppress("UNCHECKED_CAST")
-        val webViewGlobals = (settingsMap["webViewGlobals"] as List<WebViewGlobal>?) ?: emptyList()
+        return settingsMap.run {
+            val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
+            val siteURL = getSetting<String>("siteURL")
+            val siteApiRoot = getSetting<String>("siteApiRoot")
+            val siteApiNamespace = getStringArray("siteApiNamespace")
+            val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
+            val editorAssetsEndpoint = "$siteApiRoot/wpcom/v2/$firstNamespace/editor-assets"
+            val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
+            val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
+            val webViewGlobals = getWebViewGlobals("webViewGlobals")
 
-        return EditorConfiguration.Builder()
-            .setTitle(settingsMap["postTitle"] as String)
-            .setContent(settingsMap["postContent"] as String)
-            .setPostId(postId)
-            .setPostType(settingsMap["postType"] as String?)
-            .setThemeStyles(settingsMap["themeStyles"] as Boolean)
-            .setPlugins(settingsMap["plugins"] as Boolean)
-            .setSiteApiRoot(settingsMap["siteApiRoot"] as String)
-            .setSiteApiNamespace(siteApiNamespace?.filterNotNull()?.toTypedArray() ?: emptyArray())
-            .setNamespaceExcludedPaths(namespaceExcludedPaths)
-            .setAuthHeader(settingsMap["authHeader"] as String)
-            .setWebViewGlobals(webViewGlobals)
-            .setEditorSettings(editorSettings)
-            .setLocale(settingsMap["locale"] as String?)
-            .setEditorAssetsEndpoint(editorAssetsEndpoint)
-            .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
-            .setEnableAssetCaching(true)
-            .setCookies(cookies)
-            .build()
+            EditorConfiguration.Builder()
+                .setTitle(getSetting<String>("postTitle") ?: "")
+                .setContent(getSetting<String>("postContent") ?: "")
+                .setPostId(postId)
+                .setPostType(getSetting<String>("postType"))
+                .setThemeStyles(getSettingOrDefault("themeStyles", false))
+                .setPlugins(getSettingOrDefault("plugins", false))
+                .setSiteApiRoot(getSetting<String>("siteApiRoot") ?: "")
+                .setSiteApiNamespace(siteApiNamespace)
+                .setNamespaceExcludedPaths(namespaceExcludedPaths)
+                .setAuthHeader(getSetting<String>("authHeader") ?: "")
+                .setWebViewGlobals(webViewGlobals)
+                .setEditorSettings(editorSettings)
+                .setLocale(getSetting<String>("locale"))
+                .setEditorAssetsEndpoint(editorAssetsEndpoint)
+                .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
+                .setEnableAssetCaching(true)
+                .setCookies(cookies)
+                .build()
+        }
     }
 
     override fun showNotice(message: String?) {
