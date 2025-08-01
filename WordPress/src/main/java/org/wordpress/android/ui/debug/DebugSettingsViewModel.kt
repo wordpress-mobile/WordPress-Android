@@ -128,11 +128,10 @@ class DebugSettingsViewModel
         }.sortedBy { it.remoteKey }
     }
 
-    private fun FeatureFlagConfigDao.FeatureFlagValueSource.toUiValue(): String? {
+    private fun FeatureFlagConfigDao.FeatureFlagValueSource.toUiValue(): String {
         return when (this) {
             FeatureFlagConfigDao.FeatureFlagValueSource.BUILD_CONFIG -> "Local value"
             FeatureFlagConfigDao.FeatureFlagValueSource.REMOTE -> "Remote Value"
-            else -> null
         }
     }
 
