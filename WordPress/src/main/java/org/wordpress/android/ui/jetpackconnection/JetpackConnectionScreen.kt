@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpackconnection
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -342,7 +343,7 @@ private fun rememberConnectionStepStyle(
 
     val targetColor = when {
         status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-        status == ConnectionStatus.InProgress -> colorResource(R.color.jetpack_connection_in_progress_background)
+            status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_BACKGROUND_COLOR)
         status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
         isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surface
@@ -358,28 +359,25 @@ private fun rememberConnectionStepStyle(
     val shape = MaterialTheme.shapes.medium
 
     val iconColor = when {
-        status == ConnectionStatus.InProgress -> colorResource(R.color.jetpack_connection_in_progress_foreground)
+        status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_FOREGROUND_COLOR)
         isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     val titleColor = when {
-        status == ConnectionStatus.InProgress -> colorResource(R.color.jetpack_connection_in_progress_foreground)
+        status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_FOREGROUND_COLOR)
         isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     val statusColor = when {
-        status == ConnectionStatus.InProgress -> colorResource(R.color.jetpack_connection_in_progress_foreground).copy(
-            alpha = 0.7f
-        )
-
+        status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_FOREGROUND_COLOR).copy(alpha = 0.7f)
         isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
         else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
     }
 
     val progressColor = when {
-        status == ConnectionStatus.InProgress -> colorResource(R.color.jetpack_connection_in_progress_foreground)
+        status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_FOREGROUND_COLOR)
         isCurrentStep -> MaterialTheme.colorScheme.onPrimaryContainer
         else -> MaterialTheme.colorScheme.primary
     }
@@ -449,3 +447,6 @@ private fun JetpackConnectionScreenPreview() {
         onRetryClick = {}
     )
 }
+
+@ColorRes private val IN_PROGRESS_BACKGROUND_COLOR = R.color.yellow_10 // Light yellow
+@ColorRes private val IN_PROGRESS_FOREGROUND_COLOR = R.color.yellow_90 // Dark brown for readability on the above

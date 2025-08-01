@@ -159,8 +159,4 @@
 
     <!-- Post Editing -->
     <color name="post_editing_updating">#EDD6C5</color>
-
-    <!-- Jetpack Connection -->
-    <color name="jetpack_connection_in_progress_background">#FFFFF9C4</color>"
-    <color name="jetpack_connection_in_progress_foreground">#FF5D4037</color>"
 </resources>
