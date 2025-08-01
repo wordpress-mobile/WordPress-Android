@@ -69,7 +69,11 @@ data class GutenbergKitSettings(
     val locale: String,
     val cookies: Map<String, String> = emptyMap(),
     val webViewGlobals: List<WebViewGlobal> = emptyList()
-) : Serializable
+) : Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+}
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
