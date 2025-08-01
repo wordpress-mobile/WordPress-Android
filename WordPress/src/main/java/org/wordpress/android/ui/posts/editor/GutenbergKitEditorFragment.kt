@@ -1,0 +1,617 @@
+package org.wordpress.android.ui.posts.editor
+
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
+import android.net.Uri
+import android.os.Bundle
+import android.text.Editable
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.URLUtil
+import androidx.core.util.Pair
+import androidx.lifecycle.LiveData
+import com.android.volley.toolbox.ImageLoader
+import com.google.gson.Gson
+import org.wordpress.android.R
+import org.wordpress.android.editor.BuildConfig
+import org.wordpress.android.editor.EditorEditMediaListener
+import org.wordpress.android.editor.EditorFragmentAbstract
+import org.wordpress.android.editor.EditorFragmentActivity
+import org.wordpress.android.editor.EditorImagePreviewListener
+import org.wordpress.android.editor.EditorMediaUploadListener
+import org.wordpress.android.editor.EditorThemeUpdateListener
+import org.wordpress.android.editor.LiveTextWatcher
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface
+import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.PermissionUtils
+import org.wordpress.android.util.ProfilingUtils
+import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.util.helpers.MediaGallery
+import org.wordpress.aztec.IHistoryListener
+import org.wordpress.gutenberg.EditorConfiguration
+import org.wordpress.gutenberg.GutenbergView
+import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
+import org.wordpress.gutenberg.GutenbergView.EditorAvailableListener
+import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener
+import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener
+import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener
+import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener
+import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
+import org.wordpress.gutenberg.GutenbergWebViewPool.getPreloadedWebView
+import org.wordpress.gutenberg.GutenbergWebViewPool.recycleWebView
+import org.wordpress.gutenberg.Media
+import org.wordpress.gutenberg.WebViewGlobal
+import java.io.Serializable
+import java.util.Set
+import java.util.concurrent.CountDownLatch
+
+class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener,
+    IHistoryListener, EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface,
+    GutenbergDialogNegativeClickInterface, GutenbergNetworkConnectionListener {
+    private var mGutenbergView: GutenbergView? = null
+    private var mHtmlModeEnabled = false
+
+    private val mTextWatcher = LiveTextWatcher()
+    private var mHistoryChangeListener: HistoryChangeListener? = null
+    private var mFeaturedImageChangeListener: FeaturedImageChangeListener? = null
+    private var mOpenMediaLibraryListener: OpenMediaLibraryListener? = null
+    private var mOnLogJsExceptionListener: LogJsExceptionListener? = null
+
+    private var mEditorStarted = false
+    private var mEditorDidMount = false
+    private var mRootView: View? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        ProfilingUtils.start("Visual Editor Startup")
+        ProfilingUtils.split("EditorFragment.onCreate")
+
+        if (savedInstanceState != null) {
+            mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
+            mEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED)
+            mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT)
+            mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID)
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (getArguments() != null) {
+            mSettings =
+                getArguments()!!.getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as MutableMap<String?, Any?>?
+        }
+
+        // request dependency injection. Do this after setting min/max dimensions
+        if (getActivity() is EditorFragmentActivity) {
+            (getActivity() as EditorFragmentActivity).initializeEditorFragment()
+        }
+
+        mEditorFragmentListener.onEditorFragmentInitialized()
+
+        mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
+        val gutenbergViewContainer =
+            mRootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
+
+        mGutenbergView = getPreloadedWebView(requireContext())
+        mGutenbergView!!.setLayoutParams(
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        gutenbergViewContainer.addView(mGutenbergView)
+
+        setEditorProgressBarVisibility(true)
+
+        mGutenbergView!!.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
+            startActivityForResult(intent!!, requestCode!!)
+            null
+        }
+        mGutenbergView.contentChangeListener =
+            ContentChangeListener { mTextWatcher.postTextChanged() }
+        mGutenbergView.historyChangeListener = mHistoryChangeListener
+        mGutenbergView.featuredImageChangeListener = mFeaturedImageChangeListener
+        mGutenbergView.openMediaLibraryListener = mOpenMediaLibraryListener
+        mGutenbergView.logJsExceptionListener = mOnLogJsExceptionListener
+        mGutenbergView!!.setEditorDidBecomeAvailable(EditorAvailableListener { view: GutenbergView? ->
+            mEditorDidMount = true
+            mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
+            setEditorProgressBarVisibility(false)
+        })
+
+        return mRootView
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if (mGutenbergView != null) {
+            mGutenbergView!!.invalidate()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == mGutenbergView!!.pickImageRequestCode) {
+            val filePathCallback = mGutenbergView!!.filePathCallback
+
+            if (filePathCallback != null) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    if (data.getClipData() != null) {
+                        val clipData = data.getClipData()
+                        val uris = arrayOfNulls<Uri>(clipData!!.getItemCount())
+                        for (i in 0..<clipData.getItemCount()) {
+                            uris[i] = clipData.getItemAt(i).getUri()
+                        }
+                        filePathCallback.onReceiveValue(uris)
+                    } else if (data.getData() != null) {
+                        val uri = data.getData()
+                        filePathCallback.onReceiveValue(arrayOf<Uri?>(uri))
+                    } else {
+                        filePathCallback.onReceiveValue(null)
+                    }
+                } else {
+                    filePathCallback.onReceiveValue(null)
+                }
+                mGutenbergView!!.resetFilePathCallback()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setEditorProgressBarVisibility(!mEditorDidMount)
+    }
+
+    private fun setEditorProgressBarVisibility(shown: Boolean) {
+        if (isAdded() && mRootView != null) {
+            mRootView!!.findViewById<View?>(R.id.editor_progress)
+                .setVisibility(if (shown) View.VISIBLE else View.GONE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        if (PermissionUtils.checkCameraAndStoragePermissions(this.getActivity())) {
+            if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked()
+            } else if (requestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked()
+            }
+        }
+    }
+
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity!!)
+
+        try {
+            mEditorDragAndDropListener = activity as EditorDragAndDropListener?
+        } catch (e: ClassCastException) {
+            throw ClassCastException(activity.toString() + " must implement EditorDragAndDropListener")
+        }
+
+        try {
+            mEditorImagePreviewListener = activity as EditorImagePreviewListener?
+        } catch (e: ClassCastException) {
+            throw ClassCastException(activity.toString() + " must implement EditorImagePreviewListener")
+        }
+
+        try {
+            mEditorEditMediaListener = activity as EditorEditMediaListener?
+        } catch (e: ClassCastException) {
+            throw ClassCastException(activity.toString() + " must implement EditorEditMediaListener")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled)
+        outState.putBoolean(KEY_EDITOR_STARTED, mEditorStarted)
+        outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount)
+        outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(org.wordpress.android.editor.R.menu.menu_gutenberg, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val debugMenuItem = menu.findItem(org.wordpress.android.editor.R.id.debugmenu)
+        debugMenuItem.setVisible(BuildConfig.DEBUG)
+
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return false
+    }
+
+    override fun onRedoEnabled() {
+        // Currently unsupported
+    }
+
+    override fun onUndoEnabled() {
+        // Currently unsupported
+    }
+
+    override fun onUndo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
+    override fun onRedo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
+    override fun setTitle(title: CharSequence?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun setContent(text: CharSequence?) {
+        var text = text
+        if (text == null) {
+            text = ""
+        }
+
+        mGutenbergView!!.setContent(text as String)
+    }
+
+    override fun updateContent(text: CharSequence?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    fun onToggleHtmlMode() {
+        if (!isAdded()) {
+            return
+        }
+
+        toggleHtmlMode()
+    }
+
+    private fun toggleHtmlMode() {
+        mHtmlModeEnabled = !mHtmlModeEnabled
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED)
+        mEditorFragmentListener.onHtmlModeToggledInToolbar()
+        mGutenbergView!!.textEditorEnabled = mHtmlModeEnabled
+    }
+
+    @Throws(EditorFragmentNotAddedException::class)
+    override fun getTitleAndContent(originalContent: CharSequence): Pair<CharSequence?, CharSequence?> {
+        return getTitleAndContent(originalContent, false)
+    }
+
+    @Throws(EditorFragmentNotAddedException::class)
+    fun getTitleAndContent(
+        originalContent: CharSequence,
+        completeComposition: Boolean
+    ): Pair<CharSequence?, CharSequence?> {
+        val result: Array<Pair<CharSequence?, CharSequence?>> = arrayOfNulls<Pair<*, *>>(1)
+        val latch = CountDownLatch(1)
+
+        mGutenbergView!!.getTitleAndContent(originalContent, object : TitleAndContentCallback {
+            override fun onResult(title: CharSequence, content: CharSequence) {
+                result[0] = Pair<CharSequence?, CharSequence?>(title, content)
+                latch.countDown()
+            }
+        }, completeComposition)
+
+        try {
+            latch.await()
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            return Pair<CharSequence?, CharSequence?>("", "")
+        }
+
+        return if (result[0] != null) result[0] else Pair<CharSequence?, CharSequence?>("", "")
+    }
+
+    override fun getEditorName(): String {
+        return GUTENBERG_EDITOR_NAME
+    }
+
+    override fun isActionInProgress(): Boolean {
+        return false
+    }
+
+    /**
+     * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
+     * where possible.
+     */
+    @Throws(EditorFragmentNotAddedException::class)
+    override fun getContent(originalContent: CharSequence?): CharSequence {
+        if (!isAdded()) {
+            throw EditorFragmentNotAddedException()
+        }
+
+        return ""
+    }
+
+    @Throws(EditorFragmentNotAddedException::class)
+    override fun showContentInfo() {
+        if (!isAdded()) {
+            throw EditorFragmentNotAddedException()
+        }
+    }
+
+    override fun onEditorHistoryChanged(listener: HistoryChangeListener) {
+        mHistoryChangeListener = listener
+    }
+
+    override fun onFeaturedImageChanged(listener: FeaturedImageChangeListener) {
+        mFeaturedImageChangeListener = listener
+    }
+
+    override fun onOpenMediaLibrary(listener: OpenMediaLibraryListener) {
+        mOpenMediaLibraryListener = listener
+    }
+
+    override fun onLogJsException(listener: LogJsExceptionListener) {
+        mOnLogJsExceptionListener = listener
+    }
+
+    override fun getTitleOrContentChanged(): LiveData<Editable?>? {
+        return mTextWatcher.getAfterTextChanged()
+    }
+
+    override fun appendMediaFile(
+        mediaFile: MediaFile?,
+        mediaUrl: String?,
+        imageLoader: ImageLoader?
+    ) {
+        // noop implementation for shared interface with Aztec
+    }
+
+    override fun appendMediaFiles(mediaList: MutableMap<String?, MediaFile?>) {
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(AppLog.T.MEDIA, "appendMediaFiles() called but Activity is null!")
+            return
+        }
+
+        // Get media URL of first of media first to check if it is network or local one.
+        var mediaUrl: String? = ""
+        val mediaUrls: Array<Any?> = mediaList.keys.toTypedArray()
+        if (mediaUrls.size > 0) {
+            mediaUrl = mediaUrls[0] as String?
+        }
+
+        val isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl)
+
+        // Disable upload handling until supported--e.g., media shared to the app
+        if (mGutenbergView == null || !isNetworkUrl) {
+            return
+        }
+
+        val processedMediaList = ArrayList<Media?>()
+
+        for (mediaEntry in mediaList.entries) {
+            val mediaId = mediaEntry.value!!.getMediaId().toInt()
+            val url: String = mediaEntry.key!!
+            val mediaFile: MediaFile = mediaEntry.value!!
+            val metadata = Bundle()
+            val videoPressGuid = mediaFile.getVideoPressGuid()
+            if (videoPressGuid != null) {
+                metadata.putString("videopressGUID", videoPressGuid)
+            }
+            processedMediaList.add(
+                createMediaUsingMimeType.createMediaUsingMimeType(
+                    mediaId,
+                    url,
+                    mediaFile.getMimeType(),
+                    mediaFile.getCaption(),
+                    mediaFile.getTitle(),
+                    mediaFile.getAlt()
+                )
+            )
+        }
+
+        val mediaString = Gson().toJson(processedMediaList)
+        mGutenbergView!!.setMediaUploadAttachment(mediaString)
+    }
+
+    override fun appendGallery(mediaGallery: MediaGallery?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun setUrlForVideoPressId(videoId: String?, videoUrl: String?, posterUrl: String?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun isUploadingMedia(): Boolean {
+        // Unused, no-op retained for the shared interface with Gutenberg
+        return false
+    }
+
+    override fun hasFailedMediaUploads(): Boolean {
+        // Unused, no-op retained for the shared interface with Gutenberg
+        return false
+    }
+
+    override fun removeAllFailedMediaUploads() {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun removeMedia(mediaId: String?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onDestroy() {
+        if (mGutenbergView != null) {
+            recycleWebView(mGutenbergView!!)
+            mHistoryChangeListener = null
+            mFeaturedImageChangeListener = null
+        }
+        mEditorStarted = false
+        super.onDestroy()
+    }
+
+    override fun mediaSelectionCancelled() {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadReattached(localMediaId: String?, currentProgress: Float) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadRetry(localMediaId: String?, mediaType: MediaType?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadSucceeded(localMediaId: String?, mediaFile: MediaFile?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadProgress(localMediaId: String?, progress: Float) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadFailed(localMediaId: String?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onMediaUploadPaused(localMediaId: String?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onGalleryMediaUploadSucceeded(
+        galleryId: Long,
+        remoteMediaId: Long,
+        remaining: Int
+    ) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onEditorThemeUpdated(editorTheme: Bundle?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    fun startWithEditorSettings(editorSettings: String) {
+        if (mGutenbergView == null || mEditorStarted) {
+            return
+        }
+
+        var postId = mSettings!!.get("postId") as Int?
+        if (postId != null && postId == 0) {
+            postId = -1
+        }
+
+        val siteURL = mSettings!!.get("siteURL") as String?
+        val siteApiRoot = mSettings!!.get("siteApiRoot") as String?
+        val siteApiNamespace = mSettings!!.get("siteApiNamespace") as Array<String?>?
+        val firstNamespace =
+            if (siteApiNamespace != null && siteApiNamespace.size > 0) siteApiNamespace[0] else ""
+        val editorAssetsEndpoint = siteApiRoot + "wpcom/v2/" + firstNamespace + "editor-assets"
+
+        var cookies = mSettings!!.get("cookies") as MutableMap<String?, String?>?
+        if (cookies == null) {
+            cookies = HashMap<String?, String?>()
+        }
+
+        val config = EditorConfiguration.Builder()
+            .setTitle((GutenbergKitEditorFragment.Companion.mSettings!!.get("postTitle") as kotlin.String?)!!)
+            .setContent((GutenbergKitEditorFragment.Companion.mSettings!!.get("postContent") as kotlin.String?)!!)
+            .setPostId(postId)
+            .setPostType(mSettings!!.get("postType") as String?)
+            .setThemeStyles((GutenbergKitEditorFragment.Companion.mSettings!!.get("themeStyles") as kotlin.Boolean?)!!)
+            .setPlugins((GutenbergKitEditorFragment.Companion.mSettings!!.get("plugins") as kotlin.Boolean?)!!)
+            .setSiteApiRoot((GutenbergKitEditorFragment.Companion.mSettings!!.get("siteApiRoot") as kotlin.String?)!!)
+            .setSiteApiNamespace(siteApiNamespace)
+            .setNamespaceExcludedPaths(mSettings!!.get("namespaceExcludedPaths") as Array<String?>?)
+            .setAuthHeader((GutenbergKitEditorFragment.Companion.mSettings!!.get("authHeader") as kotlin.String?)!!)
+            .setWebViewGlobals(mSettings!!.get("webViewGlobals") as MutableList<WebViewGlobal?>?)
+            .setEditorSettings(editorSettings)
+            .setLocale(mSettings!!.get("locale") as String?)
+            .setEditorAssetsEndpoint(editorAssetsEndpoint)
+            .setCachedAssetHosts(Set.of<String?>("s0.wp.com", UrlUtils.getHost(siteURL)))
+            .setEnableAssetCaching(true)
+            .setCookies(cookies)
+            .build()
+
+        mEditorStarted = true
+        mGutenbergView!!.start(config)
+    }
+
+    override fun showNotice(message: String?) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun showEditorHelp() {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onUndoPressed() {
+        mGutenbergView!!.undo()
+    }
+
+    override fun onRedoPressed() {
+        mGutenbergView!!.redo()
+    }
+
+    override fun onGutenbergDialogPositiveClicked(instanceTag: String, mediaId: Int) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onGutenbergDialogNegativeClicked(instanceTag: String) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    override fun onConnectionStatusChange(isConnected: Boolean) {
+        // Unused, no-op retained for the shared interface with Gutenberg
+    }
+
+    companion object {
+        private const val GUTENBERG_EDITOR_NAME = "gutenberg"
+        private const val KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED"
+        private const val KEY_EDITOR_STARTED = "KEY_EDITOR_STARTED"
+        private const val KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT"
+        private const val ARG_IS_NEW_POST = "param_is_new_post"
+        private const val ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data"
+        const val ARG_FEATURED_IMAGE_ID: String = "featured_image_id"
+        const val ARG_JETPACK_FEATURES_ENABLED: String = "jetpack_features_enabled"
+        const val ARG_GUTENBERG_KIT_SETTINGS: String = "gutenberg_kit_settings"
+
+        private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
+        private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
+
+        private var mSettings: MutableMap<String?, Any?>? = null
+
+        fun newInstance(
+            context: Context,
+            isNewPost: Boolean,
+            webViewAuthorizationData: GutenbergWebViewAuthorizationData?,
+            jetpackFeaturesEnabled: Boolean,
+            settings: MutableMap<String?, Any?>?
+        ): GutenbergKitEditorFragment {
+            val fragment = GutenbergKitEditorFragment()
+            val args = Bundle()
+            args.putBoolean(ARG_IS_NEW_POST, isNewPost)
+            args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled)
+            args.putSerializable(ARG_GUTENBERG_KIT_SETTINGS, settings as Serializable?)
+            fragment.setArguments(args)
+            val db = getDatabase(context)
+            mSettings = settings
+            if (db != null) {
+                db.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData)
+            }
+            return fragment
+        }
+    }
+}
