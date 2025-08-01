@@ -86,13 +86,8 @@ fun JetpackConnectionScreen(
                 ) {
                     JetpackConnectionButton(
                         buttonType = buttonType.value,
-                        onClick = {
-                            when (buttonType.value) {
-                                ButtonType.Done -> onCloseClick()
-                                ButtonType.Retry -> onRetryClick()
-                                null -> {}
-                            }
-                        }
+                        onDoneClick = onCloseClick,
+                        onRetryClick = onRetryClick
                     )
                 }
             }
@@ -103,11 +98,12 @@ fun JetpackConnectionScreen(
 @Composable
 private fun JetpackConnectionButton(
     buttonType: ButtonType?,
-    onClick: () -> Unit
+    onDoneClick: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
-    val labelRes = when (buttonType) {
-        ButtonType.Done -> R.string.label_done_button
-        ButtonType.Retry -> R.string.retry
+    val (labelRes, onClick) = when (buttonType) {
+        ButtonType.Done -> R.string.label_done_button to onDoneClick
+        ButtonType.Retry -> R.string.retry to onRetryClick
         null -> return
     }
 
@@ -125,6 +121,20 @@ private fun JetpackConnectionButton(
     }
 }
 
+private data class StepConfig(
+    val step: ConnectionStep,
+    val titleRes: Int,
+    val icon: ImageVector
+)
+
+private val stepConfigs = listOf(
+    StepConfig(ConnectionStep.LoginWpCom, R.string.jetpack_connection_step_login_wpcom, Icons.Default.AccountCircle),
+    StepConfig(ConnectionStep.InstallJetpack, R.string.jetpack_connection_step_install_jetpack, Icons.Default.Build),
+    StepConfig(ConnectionStep.ConnectSite, R.string.jetpack_connection_step_connect_site, Icons.Default.Home),
+    StepConfig(ConnectionStep.ConnectWpCom, R.string.jetpack_connection_step_connect_wpcom, Icons.Default.Settings),
+    StepConfig(ConnectionStep.Finalize, R.string.jetpack_connection_step_finalize, Icons.Default.CheckCircle)
+)
+
 @Composable
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
@@ -137,57 +147,19 @@ private fun JetpackConnectionSteps(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ConnectionStepItem(
-            step = ConnectionStep.LoginWpCom,
-            title = stringResource(R.string.jetpack_connection_step_login_wpcom),
-            icon = Icons.Default.AccountCircle,
-            stepState = stepStates[ConnectionStep.LoginWpCom]
-                ?: StepState(),
-            isCurrentStep = currentStep == ConnectionStep.LoginWpCom
-        )
-
-        ConnectionStepItem(
-            step = ConnectionStep.InstallJetpack,
-            title = stringResource(R.string.jetpack_connection_step_install_jetpack),
-            icon = Icons.Default.Build,
-            stepState = stepStates[ConnectionStep.InstallJetpack]
-                ?: StepState(),
-            isCurrentStep = currentStep == ConnectionStep.InstallJetpack
-        )
-
-        ConnectionStepItem(
-            step = ConnectionStep.ConnectSite,
-            title = stringResource(R.string.jetpack_connection_step_connect_site),
-            icon = Icons.Default.Home,
-            stepState = stepStates[ConnectionStep.ConnectSite]
-                ?: StepState(),
-            isCurrentStep = currentStep == ConnectionStep.ConnectSite
-        )
-
-        ConnectionStepItem(
-            step = ConnectionStep.ConnectWpCom,
-            title = stringResource(R.string.jetpack_connection_step_connect_wpcom),
-            icon = Icons.Default.Settings,
-            stepState = stepStates[ConnectionStep.ConnectWpCom]
-                ?: StepState(),
-            isCurrentStep = currentStep == ConnectionStep.ConnectWpCom
-        )
-
-        ConnectionStepItem(
-            step = ConnectionStep.Finalize,
-            title = stringResource(R.string.jetpack_connection_step_finalize),
-            icon = Icons.Default.CheckCircle,
-            stepState = stepStates[ConnectionStep.Finalize]
-                ?: StepState(),
-            isCurrentStep = currentStep == ConnectionStep.Finalize
-        )
+        stepConfigs.forEach { config ->
+            ConnectionStepItem(
+                title = stringResource(config.titleRes),
+                icon = config.icon,
+                stepState = stepStates[config.step] ?: StepState(),
+                isCurrentStep = currentStep == config.step
+            )
+        }
     }
 }
 
-@Suppress("UnusedParameter")
 @Composable
 private fun ConnectionStepItem(
-    step: ConnectionStep,
     title: String,
     icon: ImageVector,
     stepState: StepState,
@@ -278,11 +250,8 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         is ErrorType.Unknown -> R.string.jetpack_connection_error_unknown
         is ErrorType.FailedToConnectWpCom -> R.string.jetpack_connection_error_wpcom
     }
-    return if (errorType.message != null) {
-        context.getString(messageRes) + ": " + errorType.message
-    } else {
-        context.getString(messageRes)
-    }
+    val baseMessage = context.getString(messageRes)
+    return errorType.message?.let { "$baseMessage: $it" } ?: baseMessage
 }
 
 @Composable
@@ -324,13 +293,11 @@ private fun ConnectionStepStatusIndicator(
 }
 
 @Composable
-private fun getStatusText(status: ConnectionStatus): String {
-    return when (status) {
-        ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
-        ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
-        ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
-        ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
-    }
+private fun getStatusText(status: ConnectionStatus): String = when (status) {
+    ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
+    ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
+    ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
+    ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
 }
 
 @Composable
@@ -343,7 +310,7 @@ private fun rememberConnectionStepStyle(
 
     val targetColor = when {
         status == ConnectionStatus.Completed -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-            status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_BACKGROUND_COLOR)
+        status == ConnectionStatus.InProgress -> colorResource(IN_PROGRESS_BACKGROUND_COLOR)
         status == ConnectionStatus.Failed -> MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
         isCurrentStep -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surface
