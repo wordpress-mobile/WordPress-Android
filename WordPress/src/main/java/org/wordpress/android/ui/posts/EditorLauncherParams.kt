@@ -67,10 +67,14 @@ data class EditorLauncherParams(
         fun isPromo(isPromo: Boolean) = apply { this.isPromo = isPromo }
         fun postLocalId(postLocalId: Int?) = apply { this.postLocalId = postLocalId }
         fun postRemoteId(postRemoteId: Long?) = apply { this.postRemoteId = postRemoteId }
-        fun loadAutoSaveRevision(loadAutoSaveRevision: Boolean) = apply { this.loadAutoSaveRevision = loadAutoSaveRevision }
+        fun loadAutoSaveRevision(loadAutoSaveRevision: Boolean) = apply {
+            this.loadAutoSaveRevision = loadAutoSaveRevision
+        }
         fun isQuickPress(isQuickPress: Boolean) = apply { this.isQuickPress = isQuickPress }
         fun isLandingEditor(isLandingEditor: Boolean) = apply { this.isLandingEditor = isLandingEditor }
-        fun isLandingEditorOpenedForNewSite(isLandingEditorOpenedForNewSite: Boolean) = apply { this.isLandingEditorOpenedForNewSite = isLandingEditorOpenedForNewSite }
+        fun isLandingEditorOpenedForNewSite(isLandingEditorOpenedForNewSite: Boolean) = apply {
+            this.isLandingEditorOpenedForNewSite = isLandingEditorOpenedForNewSite
+        }
         fun reblogPostTitle(reblogPostTitle: String?) = apply { this.reblogPostTitle = reblogPostTitle }
         fun reblogPostQuote(reblogPostQuote: String?) = apply { this.reblogPostQuote = reblogPostQuote }
         fun reblogPostImage(reblogPostImage: String?) = apply { this.reblogPostImage = reblogPostImage }

@@ -2,9 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import org.wordpress.android.WordPress.Companion.getContext
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
@@ -23,8 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class EditorLauncher @Inject constructor(
     private val gutenbergKitFeature: GutenbergKitFeature,
-    private val experimentalFeatures: ExperimentalFeatures,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val experimentalFeatures: ExperimentalFeatures
 ) {
 
     companion object {
@@ -49,7 +46,7 @@ class EditorLauncher @Inject constructor(
         val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
 
         // For now, always route to EditPostActivity as scaffold
-        // TODO: Route to EditPostGutenbergKitActivity when it exists
+        // Will route to EditPostGutenbergKitActivity when it exists
         val targetActivity = EditPostActivity::class.java
 
         val editorType = if (shouldUseGutenbergKit) "gutenberg_kit" else "legacy"
@@ -99,10 +96,20 @@ class EditorLauncher @Inject constructor(
      * Adds all editor parameters as Intent extras.
      */
     private fun Intent.addEditorExtras(params: EditorLauncherParams) {
+        addBasicExtras(params)
+        addPostExtras(params)
+        addReblogExtras(params)
+        addPageExtras(params)
+        addMiscExtras(params)
+    }
+
+    private fun Intent.addBasicExtras(params: EditorLauncherParams) {
         putExtra(WordPress.SITE, params.site)
         putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, params.isPage)
         putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, params.isPromo)
+    }
 
+    private fun Intent.addPostExtras(params: EditorLauncherParams) {
         params.postLocalId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, it) }
         params.postRemoteId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, it) }
         putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, params.loadAutoSaveRevision)
@@ -112,20 +119,25 @@ class EditorLauncher @Inject constructor(
             EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE,
             params.isLandingEditorOpenedForNewSite
         )
+    }
 
+    private fun Intent.addReblogExtras(params: EditorLauncherParams) {
         params.reblogPostTitle?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, it) }
         params.reblogPostQuote?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, it) }
         params.reblogPostImage?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, it) }
         params.reblogPostCitation?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, it) }
         params.reblogAction?.let { action = it }
+    }
 
+    private fun Intent.addPageExtras(params: EditorLauncherParams) {
         params.pageTitle?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, it) }
         params.pageContent?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, it) }
         params.pageTemplate?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, it) }
+    }
+
+    private fun Intent.addMiscExtras(params: EditorLauncherParams) {
         params.voiceContent?.let { putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, it) }
         params.insertMedia?.let { putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, it) }
-        // Note: No direct EXTRA_SOURCE constant exists in EditPostActivityConstants
-        // Source tracking is handled via analytics in getParamsSource()
         params.promptId?.let { putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, it) }
         params.entryPoint?.let { putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, it) }
     }
@@ -140,7 +152,7 @@ class EditorLauncher @Inject constructor(
             "launch_method" to launchMethod
         )
 
-        // TODO: Add proper analytics tracking with appropriate event name
+        // Analytics tracking will be implemented with appropriate event name
         AppLog.i(T.EDITOR, "Editor launch tracked: $properties")
     }
 }
