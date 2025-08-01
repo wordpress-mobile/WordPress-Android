@@ -146,29 +146,32 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
         gutenbergView?.let { gutenbergView ->
             if (requestCode == gutenbergView.pickImageRequestCode) {
-                val filePathCallback = gutenbergView.filePathCallback
-
-                if (filePathCallback != null) {
-                    if (resultCode == Activity.RESULT_OK && data != null) {
-                        if (data.clipData != null) {
-                            val clipData = data.clipData
-                            val uris = arrayOfNulls<Uri>(clipData!!.itemCount)
-                            for (i in 0..<clipData.itemCount) {
-                                uris[i] = clipData.getItemAt(i).uri
-                            }
-                            filePathCallback.onReceiveValue(uris)
-                        } else if (data.data != null) {
-                            val uri = data.data
-                            filePathCallback.onReceiveValue(arrayOf(uri))
-                        } else {
-                            filePathCallback.onReceiveValue(null)
-                        }
-                    } else {
-                        filePathCallback.onReceiveValue(null)
-                    }
-                    gutenbergView.resetFilePathCallback()
-                }
+                handleFileChooserResult(gutenbergView, resultCode, data)
             }
+        }
+    }
+
+    private fun handleFileChooserResult(gutenbergView: GutenbergView, resultCode: Int, data: Intent?) {
+        val filePathCallback = gutenbergView.filePathCallback ?: return
+
+        val uris = extractUrisFromIntent(resultCode, data)
+        filePathCallback.onReceiveValue(uris)
+        gutenbergView.resetFilePathCallback()
+    }
+
+    private fun extractUrisFromIntent(resultCode: Int, data: Intent?): Array<Uri?>? {
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return null
+        }
+
+        return when {
+            data.clipData != null -> {
+                val clipData = data.clipData!!
+                Array(clipData.itemCount) { i -> clipData.getItemAt(i).uri }
+            }
+
+            data.data != null -> arrayOf(data.data)
+            else -> null
         }
     }
 
@@ -216,10 +219,14 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     // Type-safe settings accessors
     private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
-    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T = getSetting(key) ?: default
-    private fun Map<String, Any?>.getStringArray(key: String): Array<String> = 
+    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T =
+        getSetting(key) ?: default
+
+    private fun Map<String, Any?>.getStringArray(key: String): Array<String> =
         getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
-    private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> = getSetting<List<WebViewGlobal>>(key) ?: emptyList()
+
+    private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> =
+        getSetting<List<WebViewGlobal>>(key) ?: emptyList()
 
     // View extension functions
     private fun View?.setVisibleOrGone(visible: Boolean) {
@@ -323,17 +330,18 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             }
         }, completeComposition)
 
-        try {
+        val finalResult = try {
             latch.await()
+            result[0]
         } catch (e: InterruptedException) {
             AppLog.w(
                 AppLog.T.EDITOR, "Thread interrupted while waiting for title and content from Gutenberg editor: $e"
             )
             Thread.currentThread().interrupt()
-            return Pair("", "")
+            null
         }
 
-        return result[0] ?: Pair("", "")
+        return finalResult ?: Pair("", "")
     }
 
     override fun getEditorName(): String {
@@ -510,7 +518,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
         val settingsMap = settings!!
-        
+
         return settingsMap.run {
             val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
             val siteURL = getSetting<String>("siteURL")
