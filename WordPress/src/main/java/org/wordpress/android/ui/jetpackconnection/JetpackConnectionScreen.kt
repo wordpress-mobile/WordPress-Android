@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackconnection
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -258,7 +260,7 @@ private fun ConnectionStepContent(
         if (errorType != null && status == ConnectionStatus.Failed) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(errorMessage(errorType)),
+                text = getErrorText(LocalContext.current, errorType),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
             )
@@ -266,14 +268,18 @@ private fun ConnectionStepContent(
     }
 }
 
-@StringRes
-private fun errorMessage(errorType: ErrorType): Int {
-    return when (errorType) {
-        ErrorType.JetpackAlreadyInstalled -> R.string.jetpack_connection_error_jetpack_already_installed
-        ErrorType.Timeout -> R.string.jetpack_connection_error_timeout
-        ErrorType.Offline -> R.string.jetpack_connection_error_offline
-        ErrorType.Unknown -> R.string.jetpack_connection_error_unknown
-        ErrorType.FailedToConnectWpCom -> R.string.jetpack_connection_error_wpcom
+private fun getErrorText(context: Context, errorType: ErrorType): String {
+    @StringRes val messageRes = when (errorType) {
+        is ErrorType.JetpackAlreadyInstalled -> R.string.jetpack_connection_error_jetpack_already_installed
+        is ErrorType.Timeout -> R.string.jetpack_connection_error_timeout
+        is ErrorType.Offline -> R.string.jetpack_connection_error_offline
+        is ErrorType.Unknown -> R.string.jetpack_connection_error_unknown
+        is ErrorType.FailedToConnectWpCom -> R.string.jetpack_connection_error_wpcom
+    }
+    return if (errorType.message != null) {
+        context.getString(messageRes) + ": " + errorType.message
+    } else {
+        context.getString(messageRes)
     }
 }
 
@@ -423,7 +429,7 @@ private fun JetpackConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectWpCom to StepState(
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom
+                    ErrorType.FailedToConnectWpCom("Something went wrong")
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )

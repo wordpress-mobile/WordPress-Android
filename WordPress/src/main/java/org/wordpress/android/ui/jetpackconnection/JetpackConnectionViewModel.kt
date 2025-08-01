@@ -225,8 +225,8 @@ class JetpackConnectionViewModel @Inject constructor(
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
-                is TimeoutCancellationException -> ErrorType.Timeout
-                else -> ErrorType.Unknown
+                is TimeoutCancellationException -> ErrorType.Timeout(e.message)
+                else -> ErrorType.Unknown(e.message)
             }
             updateStepStatus(step, ConnectionStatus.Failed, errorType)
         }
@@ -245,7 +245,7 @@ class JetpackConnectionViewModel @Inject constructor(
                     updateStepStatus(
                         step = step,
                         status = ConnectionStatus.Failed,
-                        error = ErrorType.JetpackAlreadyInstalled
+                        error = ErrorType.JetpackAlreadyInstalled()
                     )
                 } else {
                     installJetpackPlugin()
@@ -311,12 +311,12 @@ class JetpackConnectionViewModel @Inject constructor(
         data object ShowCancelConfirmation : UiEvent()
     }
 
-    sealed class ErrorType {
-        data object JetpackAlreadyInstalled : ErrorType()
-        data object FailedToConnectWpCom : ErrorType()
-        data object Timeout : ErrorType()
-        data object Offline : ErrorType()
-        data object Unknown : ErrorType()
+    sealed class ErrorType(open val message: String? = null) {
+        data class JetpackAlreadyInstalled(override val message: String? = null) : ErrorType(message)
+        data class FailedToConnectWpCom(override val message: String? = null) : ErrorType(message)
+        data class Timeout(override val message: String? = null) : ErrorType(message)
+        data class Offline(override val message: String? = null) : ErrorType(message)
+        data class Unknown(override val message: String? = null) : ErrorType(message)
     }
 
     sealed class ButtonType {
