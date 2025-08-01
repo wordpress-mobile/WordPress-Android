@@ -85,6 +85,17 @@ class JetpackConnectionViewModel @Inject constructor(
         _currentStep.value = null
     }
 
+    private fun getNextStep(): ConnectionStep? {
+        return when (currentStep.value) {
+            null -> ConnectionStep.LoginWpCom
+            ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
+            ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
+            ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
+            ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
+            ConnectionStep.Finalize -> null
+        }
+    }
+
     private suspend fun startNextStep() {
         // Mark current step as completed if exists
         currentStep.value?.let {
@@ -93,25 +104,16 @@ class JetpackConnectionViewModel @Inject constructor(
             }
         }
 
-        val nextStep = when (currentStep.value) {
-            null -> ConnectionStep.LoginWpCom
-            ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
-            ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
-            ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
-            ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
-            ConnectionStep.Finalize -> {
-                return
-            }
+        getNextStep()?.let { nextStep ->
+            appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
+            _currentStep.value = nextStep
+            updateStepStatus(nextStep, ConnectionStatus.InProgress)
+            // TODO executeStepWithErrorHandling(nextStep)
+
+            // TODO this is just to test the UI
+            delay(STEP_DELAY_MS)
+            updateStepStatus(nextStep, ConnectionStatus.Completed)
         }
-
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
-        _currentStep.value = nextStep
-        updateStepStatus(nextStep, ConnectionStatus.InProgress)
-        // TODO executeStepWithErrorHandling(nextStep)
-
-        // TODO this is just to test the UI
-        delay(STEP_DELAY_MS)
-        updateStepStatus(nextStep, ConnectionStatus.Completed)
     }
 
     private fun updateStepStatus(
