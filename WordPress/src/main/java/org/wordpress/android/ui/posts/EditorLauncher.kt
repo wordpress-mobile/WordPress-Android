@@ -65,30 +65,6 @@ class EditorLauncher @Inject constructor(
         }
     }
 
-    /**
-     * Legacy method for backward compatibility with Intent-based approach.
-     * @deprecated Use createEditorIntent(context, EditorLauncherParams) instead
-     */
-    @Deprecated("Use createEditorIntent(context, EditorLauncherParams) instead")
-    fun createEditorIntent(context: Context, baseIntent: Intent? = null): Intent {
-        val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
-
-        // For now, always route to EditPostActivity as scaffold
-        // TODO: Route to EditPostGutenbergKitActivity when it exists
-        val targetActivity = EditPostActivity::class.java
-
-        val editorType = if (shouldUseGutenbergKit) "gutenberg_kit" else "legacy"
-        val source = baseIntent?.let { getIntentSource(it) } ?: "unknown"
-
-        AppLog.d(T.EDITOR, "EditorLauncher: routing to $editorType editor from $source")
-
-        // Track launch method for analytics
-        trackEditorLaunch(editorType, source, "helper")
-
-        return Intent(context, targetActivity).apply {
-            baseIntent?.let { putExtras(it.extras ?: Bundle()) }
-        }
-    }
 
     /**
      * Determines if GutenbergKit editor should be used based on feature flags.
@@ -118,24 +94,6 @@ class EditorLauncher @Inject constructor(
         }
     }
 
-    /**
-     * Identifies the source of the editor launch based on intent extras (legacy).
-     */
-    private fun getIntentSource(intent: Intent): String {
-        return when {
-            intent.hasExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS) -> "quickpress"
-            intent.hasExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE) -> "reblog"
-            intent.hasExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA) -> "media_upload"
-            intent.action == EditPostActivityConstants.ACTION_REBLOG -> "reblog_action"
-            intent.hasExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR) -> "landing_editor"
-            intent.hasExtra(EditPostActivityConstants.EXTRA_IS_PROMO) -> "promo"
-            intent.hasExtra(EditPostActivityConstants.EXTRA_IS_PAGE) -> {
-                if (intent.getBooleanExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false)) "page" else "post"
-            }
-
-            else -> "direct"
-        }
-    }
 
     /**
      * Adds all editor parameters as Intent extras.

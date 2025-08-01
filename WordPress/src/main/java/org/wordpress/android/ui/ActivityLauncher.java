@@ -991,14 +991,17 @@ public class ActivityLauncher {
             return;
         }
 
-        Intent baseIntent = new Intent();
-        baseIntent.putExtra(WordPress.SITE, site);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
-        baseIntent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, content);
-
-        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, baseIntent);
+        EditorLauncherParams params = new EditorLauncherParams.Builder()
+            .site(site)
+            .isPage(false)
+            .isPromo(isPromo)
+            .source(source)
+            .voiceContent(content)
+            .build();
+        
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
+        // Add extra analytics field that's expected by legacy code
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1139,16 +1142,19 @@ public class ActivityLauncher {
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
     ) {
-        Intent baseIntent = new Intent();
-        baseIntent.putExtra(WordPress.SITE, site);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
-        baseIntent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-
-        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, baseIntent);
+        EditorLauncherParams params = new EditorLauncherParams.Builder()
+            .site(site)
+            .isPage(true)
+            .isPromo(false)
+            .pageTitle(title)
+            .pageContent(content)
+            .pageTemplate(template)
+            .source(source)
+            .build();
+        
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
+        // Add extra analytics field that's expected by legacy code
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1159,16 +1165,19 @@ public class ActivityLauncher {
             @NonNull String content,
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
-        Intent baseIntent = new Intent();
-        baseIntent.putExtra(WordPress.SITE, site);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
-        baseIntent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
-        baseIntent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-
-        Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), baseIntent);
+        EditorLauncherParams params = new EditorLauncherParams.Builder()
+            .site(site)
+            .isPage(true)
+            .isPromo(false)
+            .pageTitle(title)
+            .pageContent(content)
+            .pageTemplate(template)
+            .source(source)
+            .build();
+        
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), params);
+        // Add extra analytics field that's expected by legacy code
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
