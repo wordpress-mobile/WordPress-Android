@@ -102,36 +102,38 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         mRootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
         val gutenbergViewContainer = mRootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        mGutenbergView = getPreloadedWebView(requireContext())
-        mGutenbergView!!.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        gutenbergViewContainer.addView(mGutenbergView)
+        val gutenbergView = getPreloadedWebView(requireContext()).also { view ->
+            mGutenbergView = view
+            view.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            gutenbergViewContainer.addView(view)
+        }
 
         setEditorProgressBarVisibility(true)
 
-        mGutenbergView!!.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
+        gutenbergView.setOnFileChooserRequestedListener { intent: Intent?, requestCode: Int? ->
             @Suppress("DEPRECATION") startActivityForResult(intent!!, requestCode!!)
             null
         }
-        mGutenbergView!!.setContentChangeListener(object : ContentChangeListener {
+        gutenbergView.setContentChangeListener(object : ContentChangeListener {
             override fun onContentChanged() {
                 mTextWatcher.postTextChanged()
             }
         })
         if (mHistoryChangeListener != null) {
-            mGutenbergView!!.setHistoryChangeListener(mHistoryChangeListener!!)
+            gutenbergView.setHistoryChangeListener(mHistoryChangeListener!!)
         }
         if (mFeaturedImageChangeListener != null) {
-            mGutenbergView!!.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
+            gutenbergView.setFeaturedImageChangeListener(mFeaturedImageChangeListener!!)
         }
         if (mOpenMediaLibraryListener != null) {
-            mGutenbergView!!.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
+            gutenbergView.setOpenMediaLibraryListener(mOpenMediaLibraryListener!!)
         }
         if (mOnLogJsExceptionListener != null) {
-            mGutenbergView!!.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
+            gutenbergView.setLogJsExceptionListener(mOnLogJsExceptionListener!!)
         }
-        mGutenbergView!!.setEditorDidBecomeAvailable { view: GutenbergView? ->
+        gutenbergView.setEditorDidBecomeAvailable { view: GutenbergView? ->
             mEditorDidMount = true
             mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
             setEditorProgressBarVisibility(false)
@@ -143,9 +145,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        if (mGutenbergView != null) {
-            mGutenbergView!!.invalidate()
-        }
+        mGutenbergView?.invalidate()
     }
 
     @Deprecated("Deprecated in Java")
@@ -153,28 +153,30 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         @Suppress("DEPRECATION") super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == mGutenbergView!!.pickImageRequestCode) {
-            val filePathCallback = mGutenbergView!!.filePathCallback
+        mGutenbergView?.let { gutenbergView ->
+            if (requestCode == gutenbergView.pickImageRequestCode) {
+                val filePathCallback = gutenbergView.filePathCallback
 
-            if (filePathCallback != null) {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (data.clipData != null) {
-                        val clipData = data.clipData
-                        val uris = arrayOfNulls<Uri>(clipData!!.itemCount)
-                        for (i in 0..<clipData.itemCount) {
-                            uris[i] = clipData.getItemAt(i).uri
+                if (filePathCallback != null) {
+                    if (resultCode == Activity.RESULT_OK && data != null) {
+                        if (data.clipData != null) {
+                            val clipData = data.clipData
+                            val uris = arrayOfNulls<Uri>(clipData!!.itemCount)
+                            for (i in 0..<clipData.itemCount) {
+                                uris[i] = clipData.getItemAt(i).uri
+                            }
+                            filePathCallback.onReceiveValue(uris)
+                        } else if (data.data != null) {
+                            val uri = data.data
+                            filePathCallback.onReceiveValue(arrayOf(uri))
+                        } else {
+                            filePathCallback.onReceiveValue(null)
                         }
-                        filePathCallback.onReceiveValue(uris)
-                    } else if (data.data != null) {
-                        val uri = data.data
-                        filePathCallback.onReceiveValue(arrayOf(uri))
                     } else {
                         filePathCallback.onReceiveValue(null)
                     }
-                } else {
-                    filePathCallback.onReceiveValue(null)
+                    gutenbergView.resetFilePathCallback()
                 }
-                mGutenbergView!!.resetFilePathCallback()
             }
         }
     }
@@ -281,7 +283,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             text = ""
         }
 
-        mGutenbergView!!.setContent(text as String)
+        mGutenbergView?.setContent(text as String)
     }
 
     override fun updateContent(text: CharSequence?) {
@@ -300,7 +302,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         mHtmlModeEnabled = !mHtmlModeEnabled
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED)
         mEditorFragmentListener.onHtmlModeToggledInToolbar()
-        mGutenbergView!!.textEditorEnabled = mHtmlModeEnabled
+        mGutenbergView?.textEditorEnabled = mHtmlModeEnabled
     }
 
     @Throws(EditorFragmentNotAddedException::class)
@@ -312,10 +314,12 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     fun getTitleAndContent(
         originalContent: CharSequence, completeComposition: Boolean
     ): Pair<CharSequence, CharSequence> {
+        val gutenbergView = mGutenbergView ?: return Pair("", "")
+        
         val result: Array<Pair<CharSequence, CharSequence>?> = arrayOfNulls(1)
         val latch = CountDownLatch(1)
 
-        mGutenbergView!!.getTitleAndContent(originalContent, object : TitleAndContentCallback {
+        gutenbergView.getTitleAndContent(originalContent, object : TitleAndContentCallback {
             override fun onResult(title: CharSequence, content: CharSequence) {
                 result[0] = Pair(title, content)
                 latch.countDown()
@@ -431,7 +435,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         }
 
         val mediaString = Gson().toJson(processedMediaList)
-        mGutenbergView!!.setMediaUploadAttachment(mediaString)
+        mGutenbergView?.setMediaUploadAttachment(mediaString)
     }
 
     override fun appendGallery(mediaGallery: MediaGallery?) {
@@ -461,8 +465,8 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onDestroy() {
-        if (mGutenbergView != null) {
-            recycleWebView(mGutenbergView!!)
+        mGutenbergView?.let { gutenbergView ->
+            recycleWebView(gutenbergView)
             mHistoryChangeListener = null
             mFeaturedImageChangeListener = null
         }
@@ -548,7 +552,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             .setCookies(cookies).build()
 
         mEditorStarted = true
-        mGutenbergView!!.start(config)
+        mGutenbergView?.start(config)
     }
 
     override fun showNotice(message: String?) {
@@ -560,11 +564,11 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun onUndoPressed() {
-        mGutenbergView!!.undo()
+        mGutenbergView?.undo()
     }
 
     override fun onRedoPressed() {
-        mGutenbergView!!.redo()
+        mGutenbergView?.redo()
     }
 
     override fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int) {
