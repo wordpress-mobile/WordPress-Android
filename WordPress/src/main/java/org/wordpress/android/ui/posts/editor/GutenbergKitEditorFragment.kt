@@ -54,6 +54,23 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
+data class GutenbergKitSettings(
+    val postId: Int? = null,
+    val postType: String,
+    val postTitle: String? = null,
+    val postContent: String? = null,
+    val siteURL: String,
+    val siteApiRoot: String,
+    val namespaceExcludedPaths: List<String> = emptyList(),
+    val authHeader: String,
+    val siteApiNamespace: List<String> = emptyList(),
+    val themeStyles: Boolean = false,
+    val plugins: Boolean = false,
+    val locale: String,
+    val cookies: Map<String, String> = emptyMap(),
+    val webViewGlobals: List<WebViewGlobal> = emptyList()
+) : Serializable
+
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
@@ -88,8 +105,8 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         if (arguments != null) {
-            @Suppress("UNCHECKED_CAST", "DEPRECATION")
-            settings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as Map<String, Any?>?
+            @Suppress("DEPRECATION")
+            settings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as GutenbergKitSettings?
         }
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -216,17 +233,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             throw ClassCastException("$activity must implement ${T::class.simpleName}: $e")
         }
     }
-
-    // Type-safe settings accessors
-    private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
-    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T =
-        getSetting(key) ?: default
-
-    private fun Map<String, Any?>.getStringArray(key: String): Array<String> =
-        getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
-
-    private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> =
-        getSetting<List<WebViewGlobal>>(key) ?: emptyList()
 
     // View extension functions
     private fun View?.setVisibleOrGone(visible: Boolean) {
@@ -517,39 +523,31 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
-        val settingsMap = settings!!
+        val kitSettings = settings!!
 
-        return settingsMap.run {
-            val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
-            val siteURL = getSetting<String>("siteURL")
-            val siteApiRoot = getSetting<String>("siteApiRoot")
-            val siteApiNamespace = getStringArray("siteApiNamespace")
-            val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
-            val editorAssetsEndpoint = "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
-            val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
-            val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
-            val webViewGlobals = getWebViewGlobals("webViewGlobals")
+        val postId = kitSettings.postId?.let { if (it == 0) -1 else it }
+        val firstNamespace = kitSettings.siteApiNamespace.firstOrNull() ?: ""
+        val editorAssetsEndpoint = "${kitSettings.siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
 
-            EditorConfiguration.Builder()
-                .setTitle(getSetting<String>("postTitle") ?: "")
-                .setContent(getSetting<String>("postContent") ?: "")
-                .setPostId(postId)
-                .setPostType(getSetting<String>("postType"))
-                .setThemeStyles(getSettingOrDefault("themeStyles", false))
-                .setPlugins(getSettingOrDefault("plugins", false))
-                .setSiteApiRoot(getSetting<String>("siteApiRoot") ?: "")
-                .setSiteApiNamespace(siteApiNamespace)
-                .setNamespaceExcludedPaths(namespaceExcludedPaths)
-                .setAuthHeader(getSetting<String>("authHeader") ?: "")
-                .setWebViewGlobals(webViewGlobals)
-                .setEditorSettings(editorSettings)
-                .setLocale(getSetting<String>("locale"))
-                .setEditorAssetsEndpoint(editorAssetsEndpoint)
-                .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
-                .setEnableAssetCaching(true)
-                .setCookies(cookies)
-                .build()
-        }
+        return EditorConfiguration.Builder()
+            .setTitle(kitSettings.postTitle ?: "")
+            .setContent(kitSettings.postContent ?: "")
+            .setPostId(postId)
+            .setPostType(kitSettings.postType)
+            .setThemeStyles(kitSettings.themeStyles)
+            .setPlugins(kitSettings.plugins)
+            .setSiteApiRoot(kitSettings.siteApiRoot)
+            .setSiteApiNamespace(kitSettings.siteApiNamespace.toTypedArray())
+            .setNamespaceExcludedPaths(kitSettings.namespaceExcludedPaths.toTypedArray())
+            .setAuthHeader(kitSettings.authHeader)
+            .setWebViewGlobals(kitSettings.webViewGlobals)
+            .setEditorSettings(editorSettings)
+            .setLocale(kitSettings.locale)
+            .setEditorAssetsEndpoint(editorAssetsEndpoint)
+            .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(kitSettings.siteURL)))
+            .setEnableAssetCaching(true)
+            .setCookies(kitSettings.cookies)
+            .build()
     }
 
     override fun showNotice(message: String?) {
@@ -594,20 +592,20 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
 
-        private var settings: Map<String, Any?>? = null
+        private var settings: GutenbergKitSettings? = null
 
         fun newInstance(
             context: Context,
             isNewPost: Boolean,
             webViewAuthorizationData: GutenbergWebViewAuthorizationData?,
             jetpackFeaturesEnabled: Boolean,
-            settings: Map<String, Any?>?
+            settings: GutenbergKitSettings?
         ): GutenbergKitEditorFragment {
             val fragment = GutenbergKitEditorFragment()
             val args = Bundle()
             args.putBoolean(ARG_IS_NEW_POST, isNewPost)
             args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled)
-            args.putSerializable(ARG_GUTENBERG_KIT_SETTINGS, settings as Serializable?)
+            args.putSerializable(ARG_GUTENBERG_KIT_SETTINGS, settings)
             fragment.setArguments(args)
             val db = getDatabase(context)
             GutenbergKitEditorFragment.settings = settings

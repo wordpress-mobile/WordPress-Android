@@ -76,6 +76,7 @@ import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
+import org.wordpress.android.ui.posts.editor.GutenbergKitSettings
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
@@ -2632,7 +2633,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
+        private fun createGutenbergKitSettings(isWpCom: Boolean): GutenbergKitSettings {
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteURL = siteModel.url
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
@@ -2640,28 +2641,27 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             // Use the application password for self-hosted sites when available
             val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
             val siteApiNamespace = if (isWpCom)
-                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
-                else arrayOf()
+                listOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else emptyList()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            return mutableMapOf(
-                "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
-                "postType" to postType,
-                "postTitle" to editPostRepository.getPost()?.title,
-                "postContent" to editPostRepository.getPost()?.content,
-                "siteURL" to siteURL,
-                "siteApiRoot" to siteApiRoot,
-                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-                "authHeader" to authHeader,
-                "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
-                "locale" to wpcomLocaleSlug,
-                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                "webViewGlobals" to listOf(
+            return GutenbergKitSettings(
+                postId = editPostRepository.getPost()?.remotePostId?.toInt(),
+                postType = postType,
+                postTitle = editPostRepository.getPost()?.title,
+                postContent = editPostRepository.getPost()?.content,
+                siteURL = siteURL,
+                siteApiRoot = siteApiRoot,
+                namespaceExcludedPaths = listOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
+                authHeader = authHeader,
+                siteApiNamespace = siteApiNamespace,
+                themeStyles = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
+                plugins = gutenbergKitPluginsFeature.isEnabled() && site.isWPCom,
+                locale = wpcomLocaleSlug,
+                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
+                webViewGlobals = listOf(
                     WebViewGlobal(
                         "_currentSiteType",
                         when {
