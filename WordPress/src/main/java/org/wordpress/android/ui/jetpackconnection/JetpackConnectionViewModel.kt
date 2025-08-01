@@ -57,19 +57,11 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
-        val message = if (fromStep != null) {
-            "$TAG: Starting Jetpack connection job from step: $fromStep"
-        } else {
-            "$TAG: Starting Jetpack connection job"
-        }
-        appLogWrapper.d(AppLog.T.API, message)
+        val stepInfo = fromStep?.let { " from step: $it" } ?: ""
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
         job?.cancel()
         job = launch {
-            if (fromStep != null) {
-                startStep(fromStep)
-            } else {
-                startStep(ConnectionStep.LoginWpCom)
-            }
+            startStep(fromStep ?: ConnectionStep.LoginWpCom)
         }
     }
 
@@ -80,15 +72,13 @@ class JetpackConnectionViewModel @Inject constructor(
         _currentStep.value = null
     }
 
-    private fun getNextStep(): ConnectionStep? {
-        return when (currentStep.value) {
-            null -> ConnectionStep.LoginWpCom
-            ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
-            ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
-            ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
-            ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
-            ConnectionStep.Finalize -> null
-        }
+    private fun getNextStep(): ConnectionStep? = when (currentStep.value) {
+        null -> ConnectionStep.LoginWpCom
+        ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
+        ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
+        ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
+        ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
+        ConnectionStep.Finalize -> null
     }
 
     private suspend fun startNextStep() {
@@ -174,15 +164,15 @@ class JetpackConnectionViewModel @Inject constructor(
             state.status == ConnectionStatus.Failed
         }?.key
 
-        if (stepToRetry != null) {
+        stepToRetry?.let { step ->
             // Only reset the failed step status, keep other steps intact
             _stepStates.value = _stepStates.value.toMutableMap().apply {
-                this[stepToRetry] = StepState()
+                this[step] = StepState()
             }
             _buttonType.value = null
             _uiEvent.value = null
-            startConnectionJob(fromStep = stepToRetry)
-        } else {
+            startConnectionJob(fromStep = step)
+        } ?: run {
             // Fallback to original behavior if no failed step found
             clearValues()
             startConnectionJob()
@@ -196,14 +186,10 @@ class JetpackConnectionViewModel @Inject constructor(
         _currentStep.value = null
     }
 
-    private fun isActive(): Boolean {
-        return if (job?.isActive == true) {
-            true
-        } else {
-            // if there's a current step, and it's not failed, then it's active
-            val step = currentStep.value
-            step != null && _stepStates.value[step]?.status != ConnectionStatus.Failed
-        }
+    private fun isActive(): Boolean = job?.isActive == true || run {
+        // if there's a current step, and it's not failed, then it's active
+        val step = currentStep.value
+        step != null && _stepStates.value[step]?.status != ConnectionStatus.Failed
     }
 
     private fun setUiEvent(event: UiEvent) {
@@ -340,20 +326,12 @@ class JetpackConnectionViewModel @Inject constructor(
          */
         @Suppress("Unused")
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
-            if (site.isSelfHostedAdmin && site.isApplicationPasswordsSupported) {
-                return if (site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()) {
-                    false
-                } else if (site.wpApiRestUrl.isNullOrEmpty()) {
-                    false
-                } else if (site.isJetpackConnected) {
-                    false
-                } else if (site.isJetpackInstalled) {
-                    checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION)
-                } else {
-                    true
-                }
-            }
-            return false
+            return site.isSelfHostedAdmin 
+                && site.isApplicationPasswordsSupported
+                && !site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()
+                && !site.wpApiRestUrl.isNullOrEmpty()
+                && !site.isJetpackConnected
+                && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(
