@@ -179,9 +179,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     private fun setEditorProgressBarVisibility(shown: Boolean) {
         if (isAdded) {
-            rootView?.let {
-                it.findViewById<View?>(R.id.editor_progress)?.visibility = if (shown) View.VISIBLE else View.GONE
-            }
+            rootView?.findViewById<View?>(R.id.editor_progress).setVisibleOrGone(shown)
         }
     }
 
@@ -222,6 +220,11 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     private fun Map<String, Any?>.getStringArray(key: String): Array<String> = 
         getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
     private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> = getSetting<List<WebViewGlobal>>(key) ?: emptyList()
+
+    // View extension functions
+    private fun View?.setVisibleOrGone(visible: Boolean) {
+        this?.visibility = if (visible) View.VISIBLE else View.GONE
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, isHtmlModeEnabled)
