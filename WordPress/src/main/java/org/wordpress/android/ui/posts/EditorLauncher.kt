@@ -10,6 +10,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
+import org.wordpress.android.WordPress
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,9 +42,34 @@ class EditorLauncher @Inject constructor(
      * Creates an Intent for launching the appropriate editor activity.
      *
      * @param context The context to create the Intent from
-     * @param baseIntent Optional intent to copy extras from
+     * @param params Type-safe parameters for editor launch
      * @return Intent configured for the appropriate editor activity
      */
+    fun createEditorIntent(context: Context, params: EditorLauncherParams): Intent {
+        val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
+
+        // For now, always route to EditPostActivity as scaffold
+        // TODO: Route to EditPostGutenbergKitActivity when it exists
+        val targetActivity = EditPostActivity::class.java
+
+        val editorType = if (shouldUseGutenbergKit) "gutenberg_kit" else "legacy"
+        val source = getParamsSource(params)
+
+        AppLog.d(T.EDITOR, "EditorLauncher: routing to $editorType editor from $source")
+
+        // Track launch method for analytics
+        trackEditorLaunch(editorType, source, "helper")
+
+        return Intent(context, targetActivity).apply {
+            addEditorExtras(params)
+        }
+    }
+
+    /**
+     * Legacy method for backward compatibility with Intent-based approach.
+     * @deprecated Use createEditorIntent(context, EditorLauncherParams) instead
+     */
+    @Deprecated("Use createEditorIntent(context, EditorLauncherParams) instead")
     fun createEditorIntent(context: Context, baseIntent: Intent? = null): Intent {
         val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
 
@@ -75,7 +101,25 @@ class EditorLauncher @Inject constructor(
     }
 
     /**
-     * Identifies the source of the editor launch based on intent extras.
+     * Identifies the source of the editor launch based on EditorLauncherParams.
+     */
+    private fun getParamsSource(params: EditorLauncherParams): String {
+        return when {
+            params.isQuickPress -> "quickpress"
+            params.reblogPostTitle != null -> "reblog"
+            params.insertMedia != null -> "media_upload"
+            params.reblogAction != null -> "reblog_action"
+            params.isLandingEditor -> "landing_editor"
+            params.isPromo -> "promo"
+            params.isPage -> "page"
+            params.postLocalId != null || params.postRemoteId != null -> "edit_post"
+            params.source != null -> params.source.toString().lowercase()
+            else -> "new_post"
+        }
+    }
+
+    /**
+     * Identifies the source of the editor launch based on intent extras (legacy).
      */
     private fun getIntentSource(intent: Intent): String {
         return when {
@@ -91,6 +135,41 @@ class EditorLauncher @Inject constructor(
 
             else -> "direct"
         }
+    }
+
+    /**
+     * Adds all editor parameters as Intent extras.
+     */
+    private fun Intent.addEditorExtras(params: EditorLauncherParams) {
+        putExtra(WordPress.SITE, params.site)
+        putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, params.isPage)
+        putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, params.isPromo)
+
+        params.postLocalId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, it) }
+        params.postRemoteId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, it) }
+        putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, params.loadAutoSaveRevision)
+        putExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS, params.isQuickPress)
+        putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, params.isLandingEditor)
+        putExtra(
+            EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE,
+            params.isLandingEditorOpenedForNewSite
+        )
+
+        params.reblogPostTitle?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, it) }
+        params.reblogPostQuote?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, it) }
+        params.reblogPostImage?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, it) }
+        params.reblogPostCitation?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, it) }
+        params.reblogAction?.let { action = it }
+
+        params.pageTitle?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, it) }
+        params.pageContent?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, it) }
+        params.pageTemplate?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, it) }
+        params.voiceContent?.let { putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, it) }
+        params.insertMedia?.let { putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, it) }
+        // Note: No direct EXTRA_SOURCE constant exists in EditPostActivityConstants
+        // Source tracking is handled via analytics in getParamsSource()
+        params.promptId?.let { putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, it) }
+        params.entryPoint?.let { putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, it) }
     }
 
     /**
