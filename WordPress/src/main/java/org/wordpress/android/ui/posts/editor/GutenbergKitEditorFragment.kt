@@ -219,7 +219,8 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     // Type-safe settings accessors
     private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
     private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T = getSetting(key) ?: default
-    private fun Map<String, Any?>.getStringArray(key: String): Array<String> = (getSetting<Array<String?>>(key))?.filterNotNull()?.toTypedArray() ?: emptyArray()
+    private fun Map<String, Any?>.getStringArray(key: String): Array<String> = 
+        getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
     private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> = getSetting<List<WebViewGlobal>>(key) ?: emptyList()
 
     override fun onSaveInstanceState(outState: Bundle) {
