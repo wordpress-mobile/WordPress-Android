@@ -1,4 +1,4 @@
-package org.wordpress.android.editor.gutenberg;
+package org.wordpress.android.ui.posts.editor;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -33,10 +33,12 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
-import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
+import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PermissionUtils;
@@ -273,12 +275,12 @@ public class GutenbergKitEditorFragment extends EditorFragmentAbstract implement
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_gutenberg, menu);
+        inflater.inflate(org.wordpress.android.editor.R.menu.menu_gutenberg, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
+        MenuItem debugMenuItem = menu.findItem(org.wordpress.android.editor.R.id.debugmenu);
         debugMenuItem.setVisible(BuildConfig.DEBUG);
 
         super.onPrepareOptionsMenu(menu);

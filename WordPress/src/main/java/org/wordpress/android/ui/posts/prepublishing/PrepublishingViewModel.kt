@@ -28,8 +28,8 @@ import javax.inject.Inject
 const val KEY_SCREEN_STATE = "key_screen_state"
 
 class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
-    private var isStarted = false
     private lateinit var site: SiteModel
+    private var tagsFetched = false
 
     private val _navigationTarget = MutableLiveData<Event<PrepublishingNavigationTarget>>()
     val navigationTarget: LiveData<Event<PrepublishingNavigationTarget>> = _navigationTarget
@@ -64,16 +64,20 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         site: SiteModel,
         currentScreenFromSavedState: PrepublishingScreen?
     ) {
-        if (isStarted) return
-        isStarted = true
-
         this.site = site
-        this.currentScreen = currentScreenFromSavedState ?: HOME
 
-        currentScreen?.let { screen ->
-            navigateToScreen(screen)
+        // Set screen: use saved state if available (config change), otherwise reset to HOME (dismissal + reopen)
+        val targetScreen = currentScreenFromSavedState ?: HOME
+        this.currentScreen = targetScreen
+
+        // Always navigate to ensure proper UI state on fragment recreation
+        navigateToScreen(targetScreen)
+
+        // Fetch tags only once per ViewModel instance
+        if (!tagsFetched) {
+            tagsFetched = true
+            fetchTags()
         }
-        fetchTags()
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen, bundle: Bundle? = null) {

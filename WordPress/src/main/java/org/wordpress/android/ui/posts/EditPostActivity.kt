@@ -75,7 +75,7 @@ import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
-import org.wordpress.android.editor.gutenberg.GutenbergKitEditorFragment
+import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
@@ -192,7 +192,6 @@ import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
-import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler
 import org.wordpress.android.ui.posts.services.AztecImageLoader
 import org.wordpress.android.ui.posts.services.AztecVideoLoader
@@ -255,6 +254,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
 import org.wordpress.android.ui.posts.navigation.EditPostNavigationViewModel
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
@@ -278,7 +278,7 @@ import kotlin.math.max
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
-    EditorMediaListener, EditPostActivityHook, HistoryItemClickInterface, PrepublishingBottomSheetListener,
+    EditorMediaListener, EditPostActivityHook, HistoryItemClickInterface,
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
@@ -431,7 +431,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
-    @Inject lateinit var editPostAuthViewModel: EditPostAuthViewModel
+    private lateinit var prepublishingViewModel: PrepublishingViewModel
+    private lateinit var editPostAuthViewModel: EditPostAuthViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -642,6 +643,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun initializeViewModels() {
         editPostNavigationViewModel = ViewModelProvider(this, viewModelFactory)[EditPostNavigationViewModel::class.java]
         editPostSettingsViewModel = ViewModelProvider(this, viewModelFactory)[EditPostSettingsViewModel::class.java]
+        prepublishingViewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
+        editPostAuthViewModel = ViewModelProvider(this, viewModelFactory)[EditPostAuthViewModel::class.java]
     }
 
     private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {
@@ -1198,6 +1201,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editPostSettingsViewModel.clearFeaturedImage.observe(this) { event ->
             event?.getContentIfNotHandled()?.let {
                 clearFeaturedImage()
+            }
+        }
+
+        // Observe prepublishing submit button events
+        prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { publishPost ->
+                AppLog.d(AppLog.T.POSTS, "EditPostActivity: Handling prepublishing submit event")
+                uploadPost(publishPost)
+                if (publishPost) {
+                    incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
+                }
             }
         }
     }
@@ -2367,12 +2381,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    override fun onSubmitButtonClicked(publishPost: Boolean) {
-        uploadPost(publishPost)
-        if (publishPost) {
-            incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE)
-        }
-    }
 
     private fun uploadPost(publishPost: Boolean) {
         updateAndSavePostAsyncOnEditorExit(object : OnPostUpdatedFromUIListener {
