@@ -90,6 +90,7 @@ import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
+import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
@@ -271,6 +272,8 @@ public interface AppComponent {
     void inject(EditPostActivity object);
 
     void inject(EditPostSettingsFragment object);
+
+    void inject(GutenbergKitEditorFragment object);
 
     void inject(PostSettingsListDialogFragment object);
 
