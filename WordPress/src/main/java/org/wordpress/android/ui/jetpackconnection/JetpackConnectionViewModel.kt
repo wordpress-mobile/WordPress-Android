@@ -66,14 +66,9 @@ class JetpackConnectionViewModel @Inject constructor(
         job?.cancel()
         job = launch {
             if (fromStep != null) {
-                _currentStep.value = fromStep
-                updateStepStatus(fromStep, ConnectionStatus.InProgress)
-                // TODO executeStepWithErrorHandling(fromStep)
-                // TODO this is just to test the UI
-                delay(STEP_DELAY_MS)
-                updateStepStatus(fromStep, ConnectionStatus.Completed)
+                startStep(fromStep)
             } else {
-                startNextStep()
+                startStep(ConnectionStep.LoginWpCom)
             }
         }
     }
@@ -104,16 +99,21 @@ class JetpackConnectionViewModel @Inject constructor(
             }
         }
 
-        getNextStep()?.let { nextStep ->
-            appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $nextStep")
-            _currentStep.value = nextStep
-            updateStepStatus(nextStep, ConnectionStatus.InProgress)
-            // TODO executeStepWithErrorHandling(nextStep)
-
-            // TODO this is just to test the UI
-            delay(STEP_DELAY_MS)
-            updateStepStatus(nextStep, ConnectionStatus.Completed)
+        // Start the next step if there is one
+        getNextStep()?.let {
+            startStep(it)
         }
+    }
+
+    private suspend fun startStep(step: ConnectionStep) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
+        _currentStep.value = step
+        updateStepStatus(step, ConnectionStatus.InProgress)
+        // TODO executeStepWithErrorHandling(nextStep)
+
+        // TODO this is just to test the UI
+        delay(STEP_DELAY_MS)
+        updateStepStatus(step, ConnectionStatus.Completed)
     }
 
     private fun updateStepStatus(
