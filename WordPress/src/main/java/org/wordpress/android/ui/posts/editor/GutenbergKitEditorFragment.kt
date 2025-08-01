@@ -409,21 +409,10 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             return
         }
 
-        val processedMediaList = ArrayList<Media?>()
-
-        for (mediaEntry in mediaList.entries) {
-            val mediaId = mediaEntry.value!!.mediaId.toInt()
-            val url: String = mediaEntry.key!!
-            val mediaFile: MediaFile = mediaEntry.value!!
-            val metadata = Bundle()
-            val videoPressGuid = mediaFile.videoPressGuid
-            if (videoPressGuid != null) {
-                metadata.putString("videopressGUID", videoPressGuid)
-            }
-            processedMediaList.add(
-                Media.createMediaUsingMimeType(
-                    mediaId, url, mediaFile.mimeType, mediaFile.caption, mediaFile.title, mediaFile.alt
-                )
+        val processedMediaList = mediaList.entries.map { (url, mediaFile) ->
+            val mediaId = mediaFile!!.mediaId.toInt()
+            Media.createMediaUsingMimeType(
+                mediaId, url!!, mediaFile.mimeType, mediaFile.caption, mediaFile.title, mediaFile.alt
             )
         }
 
