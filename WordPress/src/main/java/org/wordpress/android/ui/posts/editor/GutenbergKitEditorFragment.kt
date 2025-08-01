@@ -121,7 +121,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             featuredImageChangeListener?.let(gutenbergView::setFeaturedImageChangeListener)
             openMediaLibraryListener?.let(gutenbergView::setOpenMediaLibraryListener)
             onLogJsExceptionListener?.let(gutenbergView::setLogJsExceptionListener)
-            gutenbergView.setEditorDidBecomeAvailable { _: GutenbergView? ->
+            gutenbergView.setEditorDidBecomeAvailable {
                 isEditorDidMount = true
                 mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
                 setEditorProgressBarVisibility(false)
