@@ -6,6 +6,8 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
+APP=$1
+
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
@@ -13,4 +15,7 @@ echo "--- :closed_lock_with_key: Installing Secrets"
 bundle exec fastlane run configure_apply
 
 echo "--- :hammer_and_wrench: Building"
-bundle exec fastlane "build_and_upload_$1_prototype_build"
+bundle exec fastlane "build_and_upload_${APP}_prototype_build"
+
+echo "--- :${APP}: Assemble instrumented tests"
+./gradlew WordPress:assemble"${APP^}"VanillaDebugAndroidTest

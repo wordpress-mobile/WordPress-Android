@@ -154,21 +154,6 @@ steps:
           - "**/build/test-results/merged-test-results.xml"
 
   #################
-  # Assemble Instrumented (aka UI) Tests
-  #################
-  - group: "🔬 Assemble instrumented tests"
-    steps:
-       - label: ":wordpress: 🔬 Assemble instrumented tests"
-         command: ./gradlew WordPress:assembleWordpressVanillaDebugAndroidTest
-         plugins:
-           - $CI_TOOLKIT
-
-       - label: ":jetpack: 🔬 Assemble instrumented tests"
-         command: ./gradlew WordPress:assembleJetpackVanillaDebugAndroidTest
-         plugins:
-           - $CI_TOOLKIT
-
-  #################
   # Instrumented (aka UI) Tests
   #################
   # - group: "🔬 Instrumented tests"
