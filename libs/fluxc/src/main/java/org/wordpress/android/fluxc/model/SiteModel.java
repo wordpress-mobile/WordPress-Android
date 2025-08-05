@@ -104,11 +104,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Nullable
     @Column(name = "API_REST_USERNAME")
     private String mApiRestUsernameEncrypted;
+    /**
+     * This field is populated by decrypting {mApiRestUsernameEncrypted} at runtime when reading the field form the DB
+     */
     @Nullable
     private String mApiRestUsernamePlain;
     @Nullable
     @Column(name = "API_REST_PASSWORD")
     private String mApiRestPasswordEncrypted;
+    /**
+     * This field is populated by decrypting {mApiRestUsernameEncrypted} at runtime when reading the field form the DB
+     */
     @Nullable
     private String mApiRestPasswordPlain;
     @Nullable
@@ -1169,6 +1175,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mApplicationPasswordsAuthorizeUrl = applicationPasswordsAuthorizeUrl;
     }
 
+    /**
+     * Deprecated
+     * Use isUsingSelfHostedRestApi() to know if Application Password is supported and set
+     */
+    @Deprecated
     public boolean isApplicationPasswordsSupported() {
         return mApplicationPasswordsAuthorizeUrl != null && !mApplicationPasswordsAuthorizeUrl.isEmpty();
     }
