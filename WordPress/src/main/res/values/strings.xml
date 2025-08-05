@@ -1004,6 +1004,26 @@
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
 
+    <!-- Jetpack Connection Screen -->
+    <string name="jetpack_connection_title">Jetpack Connection</string>
+    <string name="jetpack_connection_setup_title">Setting up Jetpack</string>
+    <string name="jetpack_connection_step_login_wpcom">Login to WordPress.com</string>
+    <string name="jetpack_connection_step_install_jetpack">Install Jetpack Plugin</string>
+    <string name="jetpack_connection_step_connect_site">Connect Your Site</string>
+    <string name="jetpack_connection_step_connect_wpcom">Connect to WordPress.com</string>
+    <string name="jetpack_connection_step_finalize">Finalize Setup</string>
+    <string name="jetpack_connection_status_not_started">Not started</string>
+    <string name="jetpack_connection_status_in_progress">In progress…</string>
+    <string name="jetpack_connection_status_completed">Completed</string>
+    <string name="jetpack_connection_status_failed">Failed</string>
+    <string name="jetpack_connection_cancel_title">Cancel Jetpack Setup?</string>
+    <string name="jetpack_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
+    <string name="jetpack_connection_error_jetpack_already_installed">Jetpack is already installed</string>
+    <string name="jetpack_connection_error_timeout">Timed out</string>
+    <string name="jetpack_connection_error_unknown">@string/error_generic</string>
+    <string name="jetpack_connection_error_offline">@string/no_network_title</string>
+    <string name="jetpack_connection_error_wpcom">Unable to connect to WordPress.com</string>
+
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
     <string name="stats_no_data_for_period">No data for this period</string>

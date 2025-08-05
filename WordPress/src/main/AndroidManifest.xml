@@ -849,6 +849,11 @@
             android:name=".ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
+        <!-- Jetpack connection -->
+        <activity
+            android:name=".ui.jetpackconnection.JetpackConnectionActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <!-- Domain Management -->
         <activity
             android:name=".ui.domains.management.DomainManagementActivity"
