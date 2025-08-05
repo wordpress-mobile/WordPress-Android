@@ -18,4 +18,4 @@ echo "--- :hammer_and_wrench: Building"
 bundle exec fastlane "build_and_upload_${APP}_prototype_build"
 
 echo "--- :${APP}: Assemble instrumented tests"
-./gradlew WordPress:assemble"${APP^}"JalapenoDebugAndroidTest
+./gradlew WordPress:assemble"${APP^}"VanillaDebugAndroidTest
