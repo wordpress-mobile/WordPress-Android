@@ -105,7 +105,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column(name = "API_REST_USERNAME")
     private String mApiRestUsernameEncrypted;
     /**
-     * This field is populated by decrypting {mApiRestUsernameEncrypted} at runtime when reading the field form the DB
+     * This field is populated by decrypting {mApiRestUsernameEncrypted} at runtime when reading the field from the DB
      */
     @Nullable
     private String mApiRestUsernamePlain;
@@ -113,7 +113,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column(name = "API_REST_PASSWORD")
     private String mApiRestPasswordEncrypted;
     /**
-     * This field is populated by decrypting {mApiRestUsernameEncrypted} at runtime when reading the field form the DB
+     * This field is populated by decrypting {mApiRestPasswordEncrypted} at runtime when reading the field from the DB
      */
     @Nullable
     private String mApiRestPasswordPlain;
