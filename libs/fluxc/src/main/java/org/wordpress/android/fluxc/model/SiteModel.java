@@ -1176,7 +1176,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     /**
-     * Deprecated
+     * @deprecated
      * Use isUsingSelfHostedRestApi() to know if Application Password is supported and set
      */
     @Deprecated
