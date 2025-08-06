@@ -64,9 +64,8 @@ class ApplicationPasswordsViewModel @Inject constructor(
         val filteredPasswords = if (searchQuery.isBlank()) {
             allApplicationPasswords
         } else {
-            allApplicationPasswords.filter { password ->
-                password.name.contains(searchQuery, ignoreCase = true) ||
-                password.appId.toString().contains(searchQuery, ignoreCase = true)
+            allApplicationPasswords.filter { applicationPassword ->
+                applicationPassword.name.contains(searchQuery, ignoreCase = true)
             }
         }
 
