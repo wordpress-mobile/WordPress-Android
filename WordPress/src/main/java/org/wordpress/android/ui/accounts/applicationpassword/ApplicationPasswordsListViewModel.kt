@@ -26,7 +26,7 @@ class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
                 appId = ApplicationPasswordAppId("wordpress-mobile"),
                 created = "2024-01-01T00:00:00Z",
                 lastUsed = "Used yesterday",
-                lastIp = IpAddress("192.168.1.1")
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-2"),
@@ -34,7 +34,7 @@ class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
                 appId = ApplicationPasswordAppId("jetpack-mobile"),
                 created = "2024-01-02T00:00:00Z",
                 lastUsed = "Used 3 days ago",
-                lastIp = IpAddress("192.168.1.2")
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-3"),
@@ -42,7 +42,7 @@ class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
                 appId = ApplicationPasswordAppId("desktop-app"),
                 created = "2024-01-03T00:00:00Z",
                 lastUsed = "Used 2 weeks ago",
-                lastIp = IpAddress("192.168.1.3")
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-4"),
@@ -58,7 +58,7 @@ class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
                 appId = ApplicationPasswordAppId("legacy-client"),
                 created = "2024-01-05T00:00:00Z",
                 lastUsed = "Used 6 months ago",
-                lastIp = IpAddress("192.168.1.5")
+                lastIp = IpAddress("IP")
             )
         )
         _applicationPasswords.value = dummyPasswords

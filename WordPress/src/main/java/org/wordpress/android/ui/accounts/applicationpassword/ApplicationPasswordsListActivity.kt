@@ -175,7 +175,7 @@ fun ApplicationPasswordItemPreview() {
                 appId = ApplicationPasswordAppId("wordpress-mobile"),
                 created = "2024-01-01T00:00:00Z",
                 lastUsed = "Used yesterday",
-                lastIp = IpAddress("192.168.1.1")
+                lastIp = IpAddress("IP")
             )
         )
     }
@@ -240,6 +240,7 @@ private fun ApplicationPasswordsScreenContent(
     }
 }
 
+@Suppress("MagicNumber")
 private fun createSampleApplicationPasswords(): List<ApplicationPasswordWithViewContext> {
     return (1..5).map {
         ApplicationPasswordWithViewContext(
