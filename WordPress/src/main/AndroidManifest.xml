@@ -851,7 +851,7 @@
 
         <!-- Jetpack connection -->
         <activity
-            android:name=".ui.jetpackconnection.JetpackConnectionActivity"
+            android:name=".ui.jetpackrestconnection.JetpackRestConnectionActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Domain Management -->

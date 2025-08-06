@@ -18,8 +18,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionActivity
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
@@ -135,10 +135,10 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
     private fun startJetpackConnectionFlow(siteModel: SiteModel) {
         // if the experimental Jetpack REST Connection feature is enabled and this site is able to use it, launch
         // the experimental flow instead of the old web-based one
-        if (mExperimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_JETPACK_CONNECTION)) {
+        if (mExperimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)) {
             mSelectedSiteRepository.getSelectedSite()?.let { site ->
-                if (JetpackConnectionViewModel.canInitiateJetpackConnection(site)) {
-                    val intent = JetpackConnectionActivity.createIntent(this)
+                if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
+                    val intent = JetpackRestConnectionActivity.createIntent(this)
                     startActivity(intent)
                     finish()
                     return

@@ -40,10 +40,10 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_application_password_feature,
             R.string.experimental_application_password_feature_description
         ),
-        EXPERIMENTAL_JETPACK_CONNECTION(
+        EXPERIMENTAL_JETPACK_REST_CONNECTION(
             "experimental_jetpack_connection",
-            R.string.experimental_jetpack_connection,
-            R.string.experimental_jetpack_connection_description
+            R.string.experimental_jetpack_rest_connection,
+            R.string.experimental_jetpack_rest_connection_description
         );
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpackconnection
+package org.wordpress.android.ui.jetpackrestconnection
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class JetpackConnectionViewModel @Inject constructor(
+class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -312,7 +312,7 @@ class JetpackConnectionViewModel @Inject constructor(
     }
 
     companion object {
-        private const val TAG = "JetpackConnectionViewModel"
+        private const val TAG = "JetpackRestConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 30000L // 30 seconds timeout per step
         private const val STEP_DELAY_MS = 2000L
@@ -323,7 +323,7 @@ class JetpackConnectionViewModel @Inject constructor(
          * - the site isn't already connected to Jetpack, and
          * - Jetpack is not installed or the installed jetpack version is 14.2 or above
          */
-        fun canInitiateJetpackConnection(site: SiteModel): Boolean {
+        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return site.isUsingSelfHostedRestApi
                 && !site.wpApiRestUrl.isNullOrEmpty()
                 && !site.isJetpackConnected
