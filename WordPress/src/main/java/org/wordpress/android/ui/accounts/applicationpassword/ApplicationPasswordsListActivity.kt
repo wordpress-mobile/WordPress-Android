@@ -209,7 +209,7 @@ private fun ApplicationPasswordsScreenContent(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Application Passwords")
+                    Text(text = stringResource(R.string.application_password_info_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
