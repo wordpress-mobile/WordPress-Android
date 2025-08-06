@@ -128,11 +128,31 @@ private data class StepConfig(
 )
 
 private val stepConfigs = listOf(
-    StepConfig(ConnectionStep.LoginWpCom, R.string.jetpack_rest_connection_step_login_wpcom, Icons.Default.AccountCircle),
-    StepConfig(ConnectionStep.InstallJetpack, R.string.jetpack_rest_connection_step_install_jetpack, Icons.Default.Build),
-    StepConfig(ConnectionStep.ConnectSite, R.string.jetpack_rest_connection_step_connect_site, Icons.Default.Home),
-    StepConfig(ConnectionStep.ConnectWpCom, R.string.jetpack_rest_connection_step_connect_wpcom, Icons.Default.Settings),
-    StepConfig(ConnectionStep.Finalize, R.string.jetpack_rest_connection_step_finalize, Icons.Default.CheckCircle)
+    StepConfig(
+        step = ConnectionStep.LoginWpCom,
+        titleRes = R.string.jetpack_rest_connection_step_login_wpcom,
+        icon = Icons.Default.AccountCircle
+    ),
+    StepConfig(
+        step = ConnectionStep.InstallJetpack,
+        titleRes = R.string.jetpack_rest_connection_step_install_jetpack,
+        icon = Icons.Default.Build
+    ),
+    StepConfig(
+        step = ConnectionStep.ConnectSite,
+        titleRes = R.string.jetpack_rest_connection_step_connect_site,
+        icon = Icons.Default.Home
+    ),
+    StepConfig(
+        step = ConnectionStep.ConnectWpCom,
+        titleRes = R.string.jetpack_rest_connection_step_connect_wpcom,
+        icon = Icons.Default.Settings
+    ),
+    StepConfig(
+        step = ConnectionStep.Finalize,
+        titleRes = R.string.jetpack_rest_connection_step_finalize,
+        icon = Icons.Default.CheckCircle
+    )
 )
 
 @Composable
