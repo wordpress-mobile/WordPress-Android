@@ -75,6 +75,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     private var isEditorStarted = false
     private var isEditorDidMount = false
     private var rootView: View? = null
+    private var isXPostsEnabled: Boolean = false
 
     // Access settings through ViewModel
     private val settings: GutenbergKitSettings?
@@ -146,16 +147,20 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
                     when (type) {
                         "at-symbol" -> mEditorFragmentListener.showUserSuggestions { result ->
                             result?.let {
-                                // Append empty string to suggestion to complete GutenbergKit's autocomplete session,
+                                // Append space to suggestion to complete GutenbergKit's autocomplete session,
                                 // otherwise it will immediately restart
                                 gutenbergView.appendTextAtCursor("$it ")
                             }
                         }
-                        "plus-symbol" -> mEditorFragmentListener.showXpostSuggestions { result ->
-                            result?.let {
-                                // Append empty string to suggestion to complete GutenbergKit's autocomplete session,
-                                // otherwise it will immediately restart
-                                gutenbergView.appendTextAtCursor("$it ")
+                        "plus-symbol" -> {
+                            if (isXPostsEnabled) {
+                                mEditorFragmentListener.showXpostSuggestions { result ->
+                                    result?.let {
+                                        // Append space to suggestion to complete GutenbergKit's autocomplete session,
+                                        // otherwise it will immediately restart
+                                        gutenbergView.appendTextAtCursor("$it ")
+                                    }
+                                }
                             }
                         }
                     }
@@ -544,6 +549,10 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         val config = buildEditorConfiguration(editorSettings)
         isEditorStarted = true
         gutenbergView?.start(config)
+    }
+
+    fun setXPostsEnabled(enabled: Boolean) {
+        isXPostsEnabled = enabled
     }
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
