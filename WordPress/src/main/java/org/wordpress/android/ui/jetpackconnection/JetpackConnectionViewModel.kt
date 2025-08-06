@@ -326,8 +326,7 @@ class JetpackConnectionViewModel @Inject constructor(
          */
         @Suppress("Unused")
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
-            return site.isSelfHostedAdmin 
-                && site.isApplicationPasswordsSupported
+            return site.isUsingSelfHostedRestApi
                 && !site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()
                 && !site.wpApiRestUrl.isNullOrEmpty()
                 && !site.isJetpackConnected
