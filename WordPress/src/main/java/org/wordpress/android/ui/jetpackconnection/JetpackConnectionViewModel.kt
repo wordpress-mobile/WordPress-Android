@@ -319,15 +319,12 @@ class JetpackConnectionViewModel @Inject constructor(
 
         /**
          * Requirements:
-         * - Self-hosted site, and
-         * - The site is authenticated with application password, and
+         * - Self-hosted site authenticated with application password, and
          * - the site isn't already connected to Jetpack, and
          * - Jetpack is not installed or the installed jetpack version is 14.2 or above
          */
-        @Suppress("Unused")
         fun canInitiateJetpackConnection(site: SiteModel): Boolean {
             return site.isUsingSelfHostedRestApi
-                && !site.applicationPasswordsAuthorizeUrl.isNullOrEmpty()
                 && !site.wpApiRestUrl.isNullOrEmpty()
                 && !site.isJetpackConnected
                 && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
