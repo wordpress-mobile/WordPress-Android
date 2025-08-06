@@ -32,11 +32,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
+import uniffi.wp_api.ApplicationPasswordWithViewContext
+import uniffi.wp_api.ApplicationPasswordUuid
+import uniffi.wp_api.ApplicationPasswordAppId
+import uniffi.wp_api.IpAddress
 
 @AndroidEntryPoint
 class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
@@ -122,39 +121,11 @@ fun ApplicationPasswordItem(applicationPassword: ApplicationPasswordWithViewCont
 }
 
 @Composable
-private fun formatLastUsed(lastUsed: Date?): String {
-    if (lastUsed == null) {
-        return stringResource(R.string.application_password_never_used)
-    }
-
-    val now = Calendar.getInstance().time
-    val diffInMillis = now.time - lastUsed.time
-    val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
-
-    return when {
-        diffInDays == 0L -> stringResource(R.string.application_password_used_today)
-        diffInDays == 1L -> stringResource(R.string.application_password_used_yesterday)
-        diffInDays < 7 -> stringResource(R.string.application_password_used_days_ago, diffInDays)
-        diffInDays < 30 -> {
-            val weeks = diffInDays / 7
-            if (weeks == 1L) {
-                stringResource(R.string.application_password_used_week_ago)
-            } else {
-                stringResource(R.string.application_password_used_weeks_ago, weeks)
-            }
-        }
-        diffInDays < 365 -> {
-            val months = diffInDays / 30
-            if (months == 1L) {
-                stringResource(R.string.application_password_used_month_ago)
-            } else {
-                stringResource(R.string.application_password_used_months_ago, months)
-            }
-        }
-        else -> {
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-            stringResource(R.string.application_password_used_on_date, dateFormat.format(lastUsed))
-        }
+private fun formatLastUsed(lastUsed: String?): String {
+    return if (lastUsed.isNullOrEmpty()) {
+        stringResource(R.string.application_password_never_used)
+    } else {
+        lastUsed
     }
 }
 
@@ -175,11 +146,12 @@ fun ApplicationPasswordItemPreview() {
     AppThemeM3 {
         ApplicationPasswordItem(
             applicationPassword = ApplicationPasswordWithViewContext(
-                uuid = "uuid-1",
+                uuid = ApplicationPasswordUuid("uuid-1"),
                 name = "WordPress Mobile App",
-                lastUsed = Calendar.getInstance().apply {
-                    add(Calendar.DAY_OF_MONTH, -1)
-                }.time
+                appId = ApplicationPasswordAppId("wordpress-mobile"),
+                created = "2024-01-01T00:00:00Z",
+                lastUsed = "Used yesterday",
+                lastIp = IpAddress("192.168.1.1")
             )
         )
     }
@@ -191,9 +163,12 @@ fun ApplicationPasswordItemNeverUsedPreview() {
     AppThemeM3 {
         ApplicationPasswordItem(
             applicationPassword = ApplicationPasswordWithViewContext(
-                uuid = "uuid-2",
+                uuid = ApplicationPasswordUuid("uuid-2"),
                 name = "Third Party Integration Tool",
-                lastUsed = null
+                appId = ApplicationPasswordAppId("third-party-tool"),
+                created = "2024-01-02T00:00:00Z",
+                lastUsed = null,
+                lastIp = null
             )
         )
     }
@@ -240,37 +215,44 @@ private fun ApplicationPasswordsScreenContent(
 private fun createSampleApplicationPasswords(): List<ApplicationPasswordWithViewContext> {
     return listOf(
         ApplicationPasswordWithViewContext(
-            uuid = "uuid-1",
+            uuid = ApplicationPasswordUuid("uuid-1"),
             name = "WordPress Mobile App",
-            lastUsed = Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_MONTH, -1)
-            }.time
+            appId = ApplicationPasswordAppId("wordpress-mobile"),
+            created = "2024-01-01T00:00:00Z",
+            lastUsed = "Used yesterday",
+            lastIp = IpAddress("192.168.1.1")
         ),
         ApplicationPasswordWithViewContext(
-            uuid = "uuid-2",
+            uuid = ApplicationPasswordUuid("uuid-2"),
             name = "Jetpack Mobile App",
-            lastUsed = Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_MONTH, -3)
-            }.time
+            appId = ApplicationPasswordAppId("jetpack-mobile"),
+            created = "2024-01-02T00:00:00Z",
+            lastUsed = "Used 3 days ago",
+            lastIp = IpAddress("192.168.1.2")
         ),
         ApplicationPasswordWithViewContext(
-            uuid = "uuid-3",
+            uuid = ApplicationPasswordUuid("uuid-3"),
             name = "Desktop Publisher",
-            lastUsed = Calendar.getInstance().apply {
-                add(Calendar.WEEK_OF_YEAR, -2)
-            }.time
+            appId = ApplicationPasswordAppId("desktop-app"),
+            created = "2024-01-03T00:00:00Z",
+            lastUsed = "Used 2 weeks ago",
+            lastIp = IpAddress("192.168.1.3")
         ),
         ApplicationPasswordWithViewContext(
-            uuid = "uuid-4",
+            uuid = ApplicationPasswordUuid("uuid-4"),
             name = "Third Party Integration",
-            lastUsed = null
+            appId = ApplicationPasswordAppId("third-party"),
+            created = "2024-01-04T00:00:00Z",
+            lastUsed = null,
+            lastIp = null
         ),
         ApplicationPasswordWithViewContext(
-            uuid = "uuid-5",
+            uuid = ApplicationPasswordUuid("uuid-5"),
             name = "Legacy API Client",
-            lastUsed = Calendar.getInstance().apply {
-                add(Calendar.MONTH, -6)
-            }.time
+            appId = ApplicationPasswordAppId("legacy-client"),
+            created = "2024-01-05T00:00:00Z",
+            lastUsed = "Used 6 months ago",
+            lastIp = IpAddress("192.168.1.5")
         )
     )
 }

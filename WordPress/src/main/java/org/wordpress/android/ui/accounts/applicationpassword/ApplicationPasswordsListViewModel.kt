@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.Calendar
+import uniffi.wp_api.ApplicationPasswordWithViewContext
+import uniffi.wp_api.ApplicationPasswordUuid
+import uniffi.wp_api.ApplicationPasswordAppId
+import uniffi.wp_api.IpAddress
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,37 +21,44 @@ class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
     fun loadDummyApplicationPasswords() {
         val dummyPasswords = listOf(
             ApplicationPasswordWithViewContext(
-                uuid = "uuid-1",
+                uuid = ApplicationPasswordUuid("uuid-1"),
                 name = "WordPress Mobile App",
-                lastUsed = Calendar.getInstance().apply {
-                    add(Calendar.DAY_OF_MONTH, -1)
-                }.time
+                appId = ApplicationPasswordAppId("wordpress-mobile"),
+                created = "2024-01-01T00:00:00Z",
+                lastUsed = "Used yesterday",
+                lastIp = IpAddress("192.168.1.1")
             ),
             ApplicationPasswordWithViewContext(
-                uuid = "uuid-2",
+                uuid = ApplicationPasswordUuid("uuid-2"),
                 name = "Jetpack Mobile App",
-                lastUsed = Calendar.getInstance().apply {
-                    add(Calendar.DAY_OF_MONTH, -3)
-                }.time
+                appId = ApplicationPasswordAppId("jetpack-mobile"),
+                created = "2024-01-02T00:00:00Z",
+                lastUsed = "Used 3 days ago",
+                lastIp = IpAddress("192.168.1.2")
             ),
             ApplicationPasswordWithViewContext(
-                uuid = "uuid-3",
+                uuid = ApplicationPasswordUuid("uuid-3"),
                 name = "Desktop Publisher",
-                lastUsed = Calendar.getInstance().apply {
-                    add(Calendar.WEEK_OF_YEAR, -2)
-                }.time
+                appId = ApplicationPasswordAppId("desktop-app"),
+                created = "2024-01-03T00:00:00Z",
+                lastUsed = "Used 2 weeks ago",
+                lastIp = IpAddress("192.168.1.3")
             ),
             ApplicationPasswordWithViewContext(
-                uuid = "uuid-4",
+                uuid = ApplicationPasswordUuid("uuid-4"),
                 name = "Third Party Integration",
-                lastUsed = null
+                appId = ApplicationPasswordAppId("third-party"),
+                created = "2024-01-04T00:00:00Z",
+                lastUsed = null,
+                lastIp = null
             ),
             ApplicationPasswordWithViewContext(
-                uuid = "uuid-5",
+                uuid = ApplicationPasswordUuid("uuid-5"),
                 name = "Legacy API Client",
-                lastUsed = Calendar.getInstance().apply {
-                    add(Calendar.MONTH, -6)
-                }.time
+                appId = ApplicationPasswordAppId("legacy-client"),
+                created = "2024-01-05T00:00:00Z",
+                lastUsed = "Used 6 months ago",
+                lastIp = IpAddress("192.168.1.5")
             )
         )
         _applicationPasswords.value = dummyPasswords
