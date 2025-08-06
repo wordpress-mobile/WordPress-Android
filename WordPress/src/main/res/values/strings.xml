@@ -5038,15 +5038,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
-    <string name="application_passwords">Application Passwords</string>
-    <string name="application_password_never_used">Never used</string>
-    <string name="application_password_used_today">Used today</string>
-    <string name="application_password_used_yesterday">Used yesterday</string>
-    <string name="application_password_used_days_ago">Used %1$d days ago</string>
-    <string name="application_password_used_week_ago">Used 1 week ago</string>
-    <string name="application_password_used_weeks_ago">Used %1$d weeks ago</string>
-    <string name="application_password_used_month_ago">Used 1 month ago</string>
-    <string name="application_password_used_months_ago">Used %1$d months ago</string>
-    <string name="application_password_used_on_date">Used on %1$s</string>
     <string name="enable">Enable</string>
 </resources>
