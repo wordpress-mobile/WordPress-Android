@@ -139,6 +139,29 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             featuredImageChangeListener?.let(gutenbergView::setFeaturedImageChangeListener)
             openMediaLibraryListener?.let(gutenbergView::setOpenMediaLibraryListener)
             onLogJsExceptionListener?.let(gutenbergView::setLogJsExceptionListener)
+
+            // Set up autocomplete listener for user mentions and cross-post suggestions
+            gutenbergView.setAutocompleterTriggeredListener(object : GutenbergView.AutocompleterTriggeredListener {
+                override fun onAutocompleterTriggered(type: String) {
+                    when (type) {
+                        "at-symbol" -> mEditorFragmentListener.showUserSuggestions { result ->
+                            result?.let {
+                                // Append empty string to suggestion to complete GutenbergKit's autocomplete session,
+                                // otherwise it will immediately restart
+                                gutenbergView.appendTextAtCursor("$it ")
+                            }
+                        }
+                        "plus-symbol" -> mEditorFragmentListener.showXpostSuggestions { result ->
+                            result?.let {
+                                // Append empty string to suggestion to complete GutenbergKit's autocomplete session,
+                                // otherwise it will immediately restart
+                                gutenbergView.appendTextAtCursor("$it ")
+                            }
+                        }
+                    }
+                }
+            })
+
             gutenbergView.setEditorDidBecomeAvailable {
                 isEditorDidMount = true
                 mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
