@@ -1175,15 +1175,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mApplicationPasswordsAuthorizeUrl = applicationPasswordsAuthorizeUrl;
     }
 
-    /**
-     * @deprecated
-     * Use isUsingSelfHostedRestApi() to know if Application Password is supported and set
-     */
-    @Deprecated
-    public boolean isApplicationPasswordsSupported() {
-        return mApplicationPasswordsAuthorizeUrl != null && !mApplicationPasswordsAuthorizeUrl.isEmpty();
-    }
-
     public int getPublishedStatus() {
         return mPublishedStatus;
     }
