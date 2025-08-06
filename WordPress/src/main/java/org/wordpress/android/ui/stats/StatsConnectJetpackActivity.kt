@@ -18,7 +18,11 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionActivity
+import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
@@ -38,6 +42,12 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
+
+    @Inject
+    lateinit var mExperimentalFeatures: ExperimentalFeatures
+
+    @Inject
+    lateinit var mSelectedSiteRepository: SelectedSiteRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +133,19 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
     }
 
     private fun startJetpackConnectionFlow(siteModel: SiteModel) {
+        // if the experimental Jetpack REST Connection feature is enabled and this site is able to use it, launch
+        // the experimental flow instead of the old web-based one
+        if (mExperimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_JETPACK_CONNECTION)) {
+            mSelectedSiteRepository.getSelectedSite()?.let { site ->
+                if (JetpackConnectionViewModel.canInitiateJetpackConnection(site)) {
+                    val intent = JetpackConnectionActivity.createIntent(this)
+                    startActivity(intent)
+                    finish()
+                    return
+                }
+            }
+        }
+
         mIsJetpackConnectStarted = true
         JetpackConnectionWebViewActivity
             .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
