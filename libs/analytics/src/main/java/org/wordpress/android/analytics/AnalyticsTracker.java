@@ -293,6 +293,7 @@ public final class AnalyticsTracker {
         ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
         ME_GRAVATAR_UPLOAD_EXCEPTION,
         EXPERIMENTAL_FEATURES_OPENED,
+        APPLICATION_PASSWORD_LIST_OPENED,
         MY_SITE_ACCESSED("my_site_tab_accessed"),
         MY_SITE_ICON_TAPPED,
         MY_SITE_ICON_REMOVED,

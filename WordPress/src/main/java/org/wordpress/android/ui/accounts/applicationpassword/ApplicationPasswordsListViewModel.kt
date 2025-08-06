@@ -9,11 +9,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationPasswordsListViewModel @Inject constructor() : ViewModel() {
-
     private val _applicationPasswords = MutableLiveData<List<ApplicationPasswordWithViewContext>>()
     val applicationPasswords: LiveData<List<ApplicationPasswordWithViewContext>> = _applicationPasswords
 
     fun loadApplicationPasswords() {
+        loadDummyApplicationPasswords()
+    }
+    fun loadDummyApplicationPasswords() {
         val dummyPasswords = listOf(
             ApplicationPasswordWithViewContext(
                 uuid = "uuid-1",
