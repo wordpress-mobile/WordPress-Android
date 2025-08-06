@@ -221,7 +221,7 @@ fun ApplicationPasswordDetailsScreenPreview() {
                 appId = ApplicationPasswordAppId("wordpress-mobile"),
                 created = "2024-01-01T00:00:00Z",
                 lastUsed = "Used yesterday",
-                lastIp = IpAddress("192.168.1.1")
+                lastIp = IpAddress("IP")
             ),
             onNavigateBack = {}
         )

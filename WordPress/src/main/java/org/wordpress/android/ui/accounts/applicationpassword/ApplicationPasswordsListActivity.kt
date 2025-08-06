@@ -241,46 +241,14 @@ private fun ApplicationPasswordsScreenContent(
 }
 
 private fun createSampleApplicationPasswords(): List<ApplicationPasswordWithViewContext> {
-    return listOf(
+    return (1..5).map {
         ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid("uuid-1"),
-            name = "WordPress Mobile App",
+            uuid = ApplicationPasswordUuid("uuid-$it"),
+            name = "WordPress Mobile App - $it",
             appId = ApplicationPasswordAppId("wordpress-mobile"),
             created = "2024-01-01T00:00:00Z",
             lastUsed = "Used yesterday",
-            lastIp = IpAddress("192.168.1.1")
-        ),
-        ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid("uuid-2"),
-            name = "Jetpack Mobile App",
-            appId = ApplicationPasswordAppId("jetpack-mobile"),
-            created = "2024-01-02T00:00:00Z",
-            lastUsed = "Used 3 days ago",
-            lastIp = IpAddress("192.168.1.2")
-        ),
-        ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid("uuid-3"),
-            name = "Desktop Publisher",
-            appId = ApplicationPasswordAppId("desktop-app"),
-            created = "2024-01-03T00:00:00Z",
-            lastUsed = "Used 2 weeks ago",
-            lastIp = IpAddress("192.168.1.3")
-        ),
-        ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid("uuid-4"),
-            name = "Third Party Integration",
-            appId = ApplicationPasswordAppId("third-party"),
-            created = "2024-01-04T00:00:00Z",
-            lastUsed = null,
-            lastIp = null
-        ),
-        ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid("uuid-5"),
-            name = "Legacy API Client",
-            appId = ApplicationPasswordAppId("legacy-client"),
-            created = "2024-01-05T00:00:00Z",
-            lastUsed = "Used 6 months ago",
-            lastIp = IpAddress("192.168.1.5")
+            lastIp = IpAddress("IP")
         )
-    )
+    }
 }
