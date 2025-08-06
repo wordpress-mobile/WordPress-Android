@@ -7,11 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -42,7 +40,6 @@ import uniffi.wp_api.ApplicationPasswordAppId
 import uniffi.wp_api.IpAddress
 
 class ApplicationPasswordDetailsActivity : BaseAppCompatActivity() {
-
     companion object {
         private const val EXTRA_NAME = "extra_name"
         private const val EXTRA_UUID = "extra_uuid"
@@ -73,17 +70,12 @@ class ApplicationPasswordDetailsActivity : BaseAppCompatActivity() {
         val lastUsed = intent.getStringExtra(EXTRA_LAST_USED)
         val lastIp = intent.getStringExtra(EXTRA_LAST_IP)
 
-        if (name == null || uuid == null || appId == null || created == null) {
-            finish()
-            return
-        }
-
         // Recreate the ApplicationPasswordWithViewContext object for display
         val applicationPassword = ApplicationPasswordWithViewContext(
-            uuid = ApplicationPasswordUuid(uuid),
-            name = name,
-            appId = ApplicationPasswordAppId(appId),
-            created = created,
+            uuid = ApplicationPasswordUuid(uuid.orEmpty()),
+            name = name.orEmpty(),
+            appId = ApplicationPasswordAppId(appId.orEmpty()),
+            created = created.orEmpty(),
             lastUsed = lastUsed,
             lastIp = lastIp?.let { IpAddress(it) }
         )
