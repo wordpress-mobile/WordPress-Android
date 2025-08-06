@@ -144,31 +144,31 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 uuid = ApplicationPasswordUuid("uuid-1"),
                 name = "WordPress Mobile App",
                 appId = ApplicationPasswordAppId("wordpress-mobile"),
-                created = "2024-01-01T00:00:00Z",
-                lastUsed = "Used yesterday",
-                lastIp = IpAddress("192.168.1.1")
+                created = "January 15, 2024",
+                lastUsed = "August 05, 2025",
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-2"),
                 name = "Jetpack Mobile App",
                 appId = ApplicationPasswordAppId("jetpack-mobile"),
-                created = "2024-01-02T00:00:00Z",
-                lastUsed = "Used 3 days ago",
-                lastIp = IpAddress("192.168.1.2")
+                created = "March 22, 2024",
+                lastUsed = "August 03, 2025",
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-3"),
                 name = "Desktop Publisher",
                 appId = ApplicationPasswordAppId("desktop-app"),
-                created = "2024-01-03T00:00:00Z",
-                lastUsed = "Used 2 weeks ago",
-                lastIp = IpAddress("192.168.1.3")
+                created = "May 10, 2024",
+                lastUsed = "July 22, 2025",
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-4"),
                 name = "Third Party Integration",
                 appId = ApplicationPasswordAppId("third-party"),
-                created = "2024-01-04T00:00:00Z",
+                created = "June 18, 2024",
                 lastUsed = null,
                 lastIp = null
             ),
@@ -176,17 +176,17 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 uuid = ApplicationPasswordUuid("uuid-5"),
                 name = "Legacy API Client",
                 appId = ApplicationPasswordAppId("legacy-client"),
-                created = "2024-01-05T00:00:00Z",
-                lastUsed = "Used 6 months ago",
-                lastIp = IpAddress("192.168.1.4")
+                created = "February 28, 2024",
+                lastUsed = "January 15, 2025",
+                lastIp = IpAddress("IP")
             ),
             ApplicationPasswordWithViewContext(
                 uuid = ApplicationPasswordUuid("uuid-6"),
                 name = "Development Testing Tool",
                 appId = ApplicationPasswordAppId("dev-tool"),
-                created = "2024-01-06T00:00:00Z",
-                lastUsed = "Used today",
-                lastIp = IpAddress("192.168.1.5")
+                created = "July 31, 2025",
+                lastUsed = "August 06, 2025",
+                lastIp = IpAddress("IP")
             )
         )
     }
