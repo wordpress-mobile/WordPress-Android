@@ -216,7 +216,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_application_passwords_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/application_passwords" />
+                    android:text="@string/application_password_info_title" />
 
             </LinearLayout>
 
