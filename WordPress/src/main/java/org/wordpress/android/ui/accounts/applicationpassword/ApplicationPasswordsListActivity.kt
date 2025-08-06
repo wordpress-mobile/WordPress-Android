@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.applicationpassword.test
+package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordDetailsActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -26,7 +25,7 @@ import uniffi.wp_api.ApplicationPasswordWithViewContext
 
 @AndroidEntryPoint
 class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
-    private val viewModel: ApplicationPasswordsTestViewModel by viewModels()
+    private val viewModel: ApplicationPasswordsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +50,7 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicationPasswordsDataViewScreen(
-    viewModel: ApplicationPasswordsTestViewModel,
+    viewModel: ApplicationPasswordsViewModel,
     onNavigateBack: () -> Unit,
     onItemClick: (ApplicationPasswordWithViewContext) -> Unit
 ) {

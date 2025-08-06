@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.applicationpassword.test
+package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class ApplicationPasswordsTestViewModel @Inject constructor(
+class ApplicationPasswordsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     appLogWrapper: AppLogWrapper,
