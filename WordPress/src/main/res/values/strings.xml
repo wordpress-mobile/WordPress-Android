@@ -977,6 +977,8 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="experimental_jetpack_connection">Experimental Jetpack Connection</string>
+    <string name="experimental_jetpack_connection_description">Enable experimental Jetpack Connection flow</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -1020,8 +1022,8 @@
     <string name="jetpack_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
     <string name="jetpack_connection_error_jetpack_already_installed">Jetpack is already installed</string>
     <string name="jetpack_connection_error_timeout">Timed out</string>
-    <string name="jetpack_connection_error_unknown">@string/error_generic</string>
-    <string name="jetpack_connection_error_offline">@string/no_network_title</string>
+    <string name="jetpack_connection_error_unknown" translatable="false">@string/error_generic</string>
+    <string name="jetpack_connection_error_offline" translatable="false">@string/no_network_title</string>
     <string name="jetpack_connection_error_wpcom">Unable to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
