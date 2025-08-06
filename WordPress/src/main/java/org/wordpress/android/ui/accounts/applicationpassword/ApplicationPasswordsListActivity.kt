@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.applicationpassword
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -47,7 +49,11 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
             AppThemeM3 {
                 ApplicationPasswordsScreen(
                     viewModel = viewModel,
-                    onNavigateBack = { onBackPressedDispatcher.onBackPressed() }
+                    onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
+                    onItemClick = { applicationPassword ->
+                        val intent = ApplicationPasswordDetailsActivity.createIntent(this, applicationPassword)
+                        startActivity(intent)
+                    }
                 )
             }
         }
@@ -60,7 +66,8 @@ class ApplicationPasswordsListActivity : BaseAppCompatActivity() {
 @Composable
 fun ApplicationPasswordsScreen(
     viewModel: ApplicationPasswordsListViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onItemClick: (ApplicationPasswordWithViewContext) -> Unit
 ) {
     val applicationPasswords by viewModel.applicationPasswords.observeAsState(emptyList())
 
@@ -86,7 +93,10 @@ fun ApplicationPasswordsScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(applicationPasswords) { applicationPassword ->
-                    ApplicationPasswordItem(applicationPassword = applicationPassword)
+                    ApplicationPasswordItem(
+                        applicationPassword = applicationPassword,
+                        onItemClick = onItemClick
+                    )
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
@@ -97,7 +107,10 @@ fun ApplicationPasswordsScreen(
 }
 
 @Composable
-fun ApplicationPasswordItem(applicationPassword: ApplicationPasswordWithViewContext) {
+fun ApplicationPasswordItem(
+    applicationPassword: ApplicationPasswordWithViewContext,
+    onItemClick: ((ApplicationPasswordWithViewContext) -> Unit)? = null
+) {
     ListItem(
         headlineContent = {
             Text(
@@ -115,6 +128,18 @@ fun ApplicationPasswordItem(applicationPassword: ApplicationPasswordWithViewCont
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+        },
+        trailingContent = if (onItemClick != null) {
+            {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = stringResource(R.string.application_password_info_title),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else null,
+        modifier = Modifier.clickable(enabled = onItemClick != null) {
+            onItemClick?.invoke(applicationPassword)
         }
     )
 }
@@ -177,7 +202,8 @@ fun ApplicationPasswordItemNeverUsedPreview() {
 @Composable
 private fun ApplicationPasswordsScreenContent(
     applicationPasswords: List<ApplicationPasswordWithViewContext>,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onItemClick: (ApplicationPasswordWithViewContext) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -201,7 +227,10 @@ private fun ApplicationPasswordsScreenContent(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(applicationPasswords) { password ->
-                    ApplicationPasswordItem(applicationPassword = password)
+                    ApplicationPasswordItem(
+                        applicationPassword = password,
+                        onItemClick = onItemClick
+                    )
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
