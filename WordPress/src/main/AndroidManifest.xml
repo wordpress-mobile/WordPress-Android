@@ -249,10 +249,6 @@
             android:label="@string/application_password_info_title"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".ui.accounts.applicationpassword.ApplicationPasswordDetailsActivity"
-            android:label="@string/application_password_info_title"
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"

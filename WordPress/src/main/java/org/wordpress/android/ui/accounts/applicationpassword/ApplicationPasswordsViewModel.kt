@@ -46,9 +46,9 @@ class ApplicationPasswordsViewModel @Inject constructor(
     ioDispatcher = ioDispatcher
 ) {
     override fun getSupportedSorts(): List<DataViewDropdownItem> = listOf(
-        DataViewDropdownItem(id = 1L, titleRes = R.string.application_password_name_sort),
-        DataViewDropdownItem(id = 2L, titleRes = R.string.application_password_created_sort),
-        DataViewDropdownItem(id = 3L, titleRes = R.string.application_password_last_used_sort)
+        DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.application_password_name_sort),
+        DataViewDropdownItem(id = SORT_BY_CREATED_ID, titleRes = R.string.application_password_created_sort),
+        DataViewDropdownItem(id = SORT_BY_LAST_USED_ID, titleRes = R.string.application_password_last_used_sort)
     )
 
     override suspend fun performNetworkRequest(
@@ -72,21 +72,21 @@ class ApplicationPasswordsViewModel @Inject constructor(
 
         // Sort the results
         val sortedPasswords = when (sortBy?.id) {
-            1L -> { // Sort by name
+            SORT_BY_NAME_ID -> { // Sort by name
                 if (sortOrder == WpApiParamOrder.ASC) {
                     filteredPasswords.sortedBy { it.name }
                 } else {
                     filteredPasswords.sortedByDescending { it.name }
                 }
             }
-            2L -> { // Sort by created date
+            SORT_BY_CREATED_ID -> { // Sort by created date
                 if (sortOrder == WpApiParamOrder.ASC) {
                     filteredPasswords.sortedBy { it.created }
                 } else {
                     filteredPasswords.sortedByDescending { it.created }
                 }
             }
-            3L -> { // Sort by last used
+            SORT_BY_LAST_USED_ID -> { // Sort by last used
                 if (sortOrder == WpApiParamOrder.ASC) {
                     filteredPasswords.sortedBy { it.lastUsed ?: "" }
                 } else {
@@ -100,6 +100,13 @@ class ApplicationPasswordsViewModel @Inject constructor(
         sortedPasswords.map { password ->
             convertToDataViewItem(password)
         }
+    }
+
+    fun getApplicationPassword(uuid: String): ApplicationPasswordWithViewContext? {
+        val item = uiState.value.items.firstOrNull {
+            (it.data as? ApplicationPasswordWithViewContext)?.uuid?.uuid == uuid
+        }
+        return item?.data as? ApplicationPasswordWithViewContext
     }
 
     private fun convertToDataViewItem(applicationPassword: ApplicationPasswordWithViewContext): DataViewItem {
@@ -182,5 +189,11 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 lastIp = IpAddress("192.168.1.5")
             )
         )
+    }
+
+    companion object {
+        private const val SORT_BY_NAME_ID = 1L
+        private const val SORT_BY_CREATED_ID = 2L
+        private const val SORT_BY_LAST_USED_ID = 3L
     }
 }
