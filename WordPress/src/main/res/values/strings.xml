@@ -977,8 +977,8 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
-    <string name="experimental_jetpack_connection">Experimental Jetpack Connection</string>
-    <string name="experimental_jetpack_connection_description">Enable experimental Jetpack Connection flow</string>
+    <string name="experimental_jetpack_rest_connection">Experimental Jetpack Connection</string>
+    <string name="experimental_jetpack_rest_connection_description">Enable experimental Jetpack Connection flow</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -1006,25 +1006,25 @@
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
 
-    <!-- Jetpack Connection Screen -->
-    <string name="jetpack_connection_title">Jetpack Connection</string>
-    <string name="jetpack_connection_setup_title">Setting up Jetpack</string>
-    <string name="jetpack_connection_step_login_wpcom">Login to WordPress.com</string>
-    <string name="jetpack_connection_step_install_jetpack">Install Jetpack Plugin</string>
-    <string name="jetpack_connection_step_connect_site">Connect Your Site</string>
-    <string name="jetpack_connection_step_connect_wpcom">Connect to WordPress.com</string>
-    <string name="jetpack_connection_step_finalize">Finalize Setup</string>
-    <string name="jetpack_connection_status_not_started">Not started</string>
-    <string name="jetpack_connection_status_in_progress">In progress…</string>
-    <string name="jetpack_connection_status_completed">Completed</string>
-    <string name="jetpack_connection_status_failed">Failed</string>
-    <string name="jetpack_connection_cancel_title">Cancel Jetpack Setup?</string>
-    <string name="jetpack_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
-    <string name="jetpack_connection_error_jetpack_already_installed">Jetpack is already installed</string>
-    <string name="jetpack_connection_error_timeout">Timed out</string>
-    <string name="jetpack_connection_error_unknown" translatable="false">@string/error_generic</string>
-    <string name="jetpack_connection_error_offline" translatable="false">@string/no_network_title</string>
-    <string name="jetpack_connection_error_wpcom">Unable to connect to WordPress.com</string>
+    <!-- Jetpack Rest Connection Screen -->
+    <string name="jetpack_rest_connection_title">Jetpack Connection</string>
+    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Login to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack Plugin</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connect Your Site</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_finalize">Finalize Setup</string>
+    <string name="jetpack_rest_connection_status_not_started">Not started</string>
+    <string name="jetpack_rest_connection_status_in_progress">In progress…</string>
+    <string name="jetpack_rest_connection_status_completed">Completed</string>
+    <string name="jetpack_rest_connection_status_failed">Failed</string>
+    <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
+    <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is already installed</string>
+    <string name="jetpack_rest_connection_error_timeout">Timed out</string>
+    <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
+    <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
+    <string name="jetpack_rest_connection_error_wpcom">Unable to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

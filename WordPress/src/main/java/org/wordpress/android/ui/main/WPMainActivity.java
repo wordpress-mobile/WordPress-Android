@@ -94,8 +94,8 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsRemind
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionActivity;
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel;
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity;
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
@@ -522,8 +522,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
 
         // TODO remove this
-        if (JetpackConnectionViewModel.Companion.canInitiateJetpackConnection(getSelectedSite())) {
-            Intent intent = JetpackConnectionActivity.createIntent(this);
+        if (JetpackRestConnectionViewModel.Companion.canInitiateJetpackRestConnection(getSelectedSite())) {
+            Intent intent = JetpackRestConnectionActivity.createIntent(this);
             startActivity(intent);
         }
     }

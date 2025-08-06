@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpackconnection
+package org.wordpress.android.ui.jetpackrestconnection
 
 import android.content.Context
 import android.content.res.Configuration
@@ -53,11 +53,11 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ScreenWithTopAppBarM3
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButtonM3
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ButtonType
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStatus
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ConnectionStep
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.ErrorType
-import org.wordpress.android.ui.jetpackconnection.JetpackConnectionViewModel.StepState
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ButtonType
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ConnectionStatus
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ConnectionStep
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ErrorType
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.StepState
 
 @Composable
 fun JetpackConnectionScreen(
@@ -68,7 +68,7 @@ fun JetpackConnectionScreen(
     onRetryClick: () -> Unit = {}
 ) {
     ScreenWithTopAppBarM3(
-        titleRes = R.string.jetpack_connection_setup_title,
+        titleRes = R.string.jetpack_rest_connection_setup_title,
         onCloseClick = onCloseClick,
         content = {
             Column {
@@ -128,11 +128,11 @@ private data class StepConfig(
 )
 
 private val stepConfigs = listOf(
-    StepConfig(ConnectionStep.LoginWpCom, R.string.jetpack_connection_step_login_wpcom, Icons.Default.AccountCircle),
-    StepConfig(ConnectionStep.InstallJetpack, R.string.jetpack_connection_step_install_jetpack, Icons.Default.Build),
-    StepConfig(ConnectionStep.ConnectSite, R.string.jetpack_connection_step_connect_site, Icons.Default.Home),
-    StepConfig(ConnectionStep.ConnectWpCom, R.string.jetpack_connection_step_connect_wpcom, Icons.Default.Settings),
-    StepConfig(ConnectionStep.Finalize, R.string.jetpack_connection_step_finalize, Icons.Default.CheckCircle)
+    StepConfig(ConnectionStep.LoginWpCom, R.string.jetpack_rest_connection_step_login_wpcom, Icons.Default.AccountCircle),
+    StepConfig(ConnectionStep.InstallJetpack, R.string.jetpack_rest_connection_step_install_jetpack, Icons.Default.Build),
+    StepConfig(ConnectionStep.ConnectSite, R.string.jetpack_rest_connection_step_connect_site, Icons.Default.Home),
+    StepConfig(ConnectionStep.ConnectWpCom, R.string.jetpack_rest_connection_step_connect_wpcom, Icons.Default.Settings),
+    StepConfig(ConnectionStep.Finalize, R.string.jetpack_rest_connection_step_finalize, Icons.Default.CheckCircle)
 )
 
 @Composable
@@ -244,11 +244,11 @@ private fun ConnectionStepContent(
 
 private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
-        is ErrorType.JetpackAlreadyInstalled -> R.string.jetpack_connection_error_jetpack_already_installed
-        is ErrorType.Timeout -> R.string.jetpack_connection_error_timeout
-        is ErrorType.Offline -> R.string.jetpack_connection_error_offline
-        is ErrorType.Unknown -> R.string.jetpack_connection_error_unknown
-        is ErrorType.FailedToConnectWpCom -> R.string.jetpack_connection_error_wpcom
+        is ErrorType.JetpackAlreadyInstalled -> R.string.jetpack_rest_connection_error_jetpack_already_installed
+        is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
+        is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
+        is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
+        is ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_wpcom
     }
     val baseMessage = context.getString(messageRes)
     return errorType.message?.let { "$baseMessage: $it" } ?: baseMessage
@@ -271,7 +271,7 @@ private fun ConnectionStepStatusIndicator(
         ConnectionStatus.Completed -> {
             Icon(
                 imageVector = Icons.Default.Check,
-                contentDescription = stringResource(R.string.jetpack_connection_status_completed),
+                contentDescription = stringResource(R.string.jetpack_rest_connection_status_completed),
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
@@ -280,7 +280,7 @@ private fun ConnectionStepStatusIndicator(
         ConnectionStatus.Failed -> {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.jetpack_connection_status_failed),
+                contentDescription = stringResource(R.string.jetpack_rest_connection_status_failed),
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.error
             )
@@ -294,10 +294,10 @@ private fun ConnectionStepStatusIndicator(
 
 @Composable
 private fun getStatusText(status: ConnectionStatus): String = when (status) {
-    ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_connection_status_not_started)
-    ConnectionStatus.InProgress -> stringResource(R.string.jetpack_connection_status_in_progress)
-    ConnectionStatus.Completed -> stringResource(R.string.jetpack_connection_status_completed)
-    ConnectionStatus.Failed -> stringResource(R.string.jetpack_connection_status_failed)
+    ConnectionStatus.NotStarted -> stringResource(R.string.jetpack_rest_connection_status_not_started)
+    ConnectionStatus.InProgress -> stringResource(R.string.jetpack_rest_connection_status_in_progress)
+    ConnectionStatus.Completed -> stringResource(R.string.jetpack_rest_connection_status_completed)
+    ConnectionStatus.Failed -> stringResource(R.string.jetpack_rest_connection_status_failed)
 }
 
 @Composable
