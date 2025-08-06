@@ -51,11 +51,11 @@ class ApplicationPasswordDetailsActivity : BaseAppCompatActivity() {
         fun createIntent(context: Context, applicationPassword: ApplicationPasswordWithViewContext): Intent {
             return Intent(context, ApplicationPasswordDetailsActivity::class.java).apply {
                 putExtra(EXTRA_NAME, applicationPassword.name)
-                putExtra(EXTRA_UUID, applicationPassword.uuid.toString())
-                putExtra(EXTRA_APP_ID, applicationPassword.appId.toString())
+                putExtra(EXTRA_UUID, applicationPassword.uuid.uuid)
+                putExtra(EXTRA_APP_ID, applicationPassword.appId.appId)
                 putExtra(EXTRA_CREATED, applicationPassword.created)
                 putExtra(EXTRA_LAST_USED, applicationPassword.lastUsed)
-                putExtra(EXTRA_LAST_IP, applicationPassword.lastIp?.toString())
+                putExtra(EXTRA_LAST_IP, applicationPassword.lastIp?.value)
             }
         }
     }
