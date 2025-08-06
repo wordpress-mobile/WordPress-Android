@@ -5045,4 +5045,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_last_used_label">Last used:</string>
     <string name="application_password_last_ip_label">Last IP:</string>
     <string name="application_password_no_ip">No IP recorded</string>
+    <string name="application_password_name_sort">Name</string>
+    <string name="application_password_created_sort">Created date</string>
+    <string name="application_password_last_used_sort">Last used</string>
 </resources>
