@@ -24,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -85,9 +87,11 @@ fun ApplicationPasswordsScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(applicationPasswords) { password ->
-                    ApplicationPasswordItem(password = password)
-                    HorizontalDivider()
+                items(applicationPasswords) { ApplicationPassword ->
+                    ApplicationPasswordItem(applicationPassword = ApplicationPassword)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
@@ -95,21 +99,24 @@ fun ApplicationPasswordsScreen(
 }
 
 @Composable
-fun ApplicationPasswordItem(password: ApplicationPasswordWithViewContext) {
+fun ApplicationPasswordItem(applicationPassword: ApplicationPasswordWithViewContext) {
     ListItem(
         headlineContent = {
             Text(
-                text = password.name,
+                text = applicationPassword.name,
                 style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         },
         supportingContent = {
             Text(
-                text = formatLastUsed(password.lastUsed),
+                text = formatLastUsed(applicationPassword.lastUsed),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     )
@@ -168,7 +175,7 @@ fun ApplicationPasswordsScreenPreview() {
 fun ApplicationPasswordItemPreview() {
     AppThemeM3 {
         ApplicationPasswordItem(
-            password = ApplicationPasswordWithViewContext(
+            applicationPassword = ApplicationPasswordWithViewContext(
                 uuid = "uuid-1",
                 name = "WordPress Mobile App",
                 lastUsed = Calendar.getInstance().apply {
@@ -184,7 +191,7 @@ fun ApplicationPasswordItemPreview() {
 fun ApplicationPasswordItemNeverUsedPreview() {
     AppThemeM3 {
         ApplicationPasswordItem(
-            password = ApplicationPasswordWithViewContext(
+            applicationPassword = ApplicationPasswordWithViewContext(
                 uuid = "uuid-2",
                 name = "Third Party Integration Tool",
                 lastUsed = null
@@ -221,8 +228,10 @@ private fun ApplicationPasswordsScreenContent(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(applicationPasswords) { password ->
-                    ApplicationPasswordItem(password = password)
-                    HorizontalDivider()
+                    ApplicationPasswordItem(applicationPassword = password)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
