@@ -105,7 +105,6 @@ fun ApplicationPasswordItem(applicationPassword: ApplicationPasswordWithViewCont
             Text(
                 text = applicationPassword.name,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(horizontal = 16.dp)
