@@ -119,6 +119,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 _currentStep.value = null
                 _buttonType.value = ButtonType.Retry
             }
+
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
                     onJobCompleted()
@@ -128,6 +129,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -269,9 +271,34 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 ErrorType.DiscoveryFailed
             )
         } else {
-            appLogWrapper.d(AppLog.T.API, "$TAG: Starting app password flow with URL: $discoveryUrl")
+            // Tell the activity to start the app password flow and notify us when the flow completes
+            // via onAppPasswordFlowCompleted()
+            appLogWrapper.d(
+                AppLog.T.API,
+                "$TAG: Starting app password flow with URL: $discoveryUrl"
+            )
             _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
-            // TODO: Wait for completion
+        }
+    }
+
+    /**
+     * Called by the activity when the app password flow completes.
+     */
+    fun onAppPasswordFlowCompleted(success: Boolean) {
+        launch {
+            if (success) {
+                // Authentication successful
+                appLogWrapper.d(AppLog.T.API, "$TAG: Application password authentication successful")
+                updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+            } else {
+                // Authentication failed or was cancelled
+                appLogWrapper.e(AppLog.T.API, "$TAG: Application password authentication failed or cancelled")
+                updateStepStatus(
+                    ConnectionStep.LoginWpCom,
+                    ConnectionStatus.Failed,
+                    ErrorType.FailedToConnectWpCom("Authentication failed or was cancelled")
+                )
+            }
         }
     }
 
@@ -328,9 +355,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
          */
         fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return site.isUsingSelfHostedRestApi
-                && !site.wpApiRestUrl.isNullOrEmpty()
-                && !site.isJetpackConnected
-                && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
+                    && !site.wpApiRestUrl.isNullOrEmpty()
+                    && !site.isJetpackConnected
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(

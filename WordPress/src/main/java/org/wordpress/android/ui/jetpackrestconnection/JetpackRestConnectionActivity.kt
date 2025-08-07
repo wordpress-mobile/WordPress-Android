@@ -11,17 +11,26 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     private val viewModel: JetpackRestConnectionViewModel by viewModels()
+    private var isWaitingForAppPassword = false
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var siteStore: SiteStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +60,35 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     }
 
     private fun startAppPasswordFlow(url: String) {
+        isWaitingForAppPassword = true
         activityNavigator.openApplicationPasswordLogin(
             activity = this,
             url = url
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Check if we're returning from the app password flow
+        if (isWaitingForAppPassword) {
+            isWaitingForAppPassword = false
+
+            // Get the updated site from the store to check if credentials were saved
+            val site = selectedSiteRepository.getSelectedSite()
+            if (site != null) {
+                // Refresh from store to get latest data
+                val updatedSite = siteStore.getSiteByLocalId(site.id)
+                val hasCredentials = updatedSite != null &&
+                                    !updatedSite.apiRestUsernamePlain.isNullOrEmpty() &&
+                                    !updatedSite.apiRestPasswordPlain.isNullOrEmpty()
+
+                viewModel.onAppPasswordFlowCompleted(success = hasCredentials)
+            } else {
+                // No site selected, authentication must have failed
+                viewModel.onAppPasswordFlowCompleted(success = false)
+            }
+        }
     }
 
     private fun showCancelConfirmationDialog() {
