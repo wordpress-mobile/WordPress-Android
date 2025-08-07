@@ -39,7 +39,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
+    accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -53,10 +53,12 @@ class ApplicationPasswordsViewModel @Inject constructor(
     accountStore = accountStore,
     ioDispatcher = ioDispatcher
 ) {
+    init {
+
+    }
     override fun getSupportedSorts(): List<DataViewDropdownItem> = listOf(
         DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.application_password_name_sort),
         DataViewDropdownItem(id = SORT_BY_CREATED_ID, titleRes = R.string.application_password_created_sort),
-        DataViewDropdownItem(id = SORT_BY_LAST_USED_ID, titleRes = R.string.application_password_last_used_sort)
     )
 
     override suspend fun performNetworkRequest(
@@ -100,13 +102,6 @@ class ApplicationPasswordsViewModel @Inject constructor(
                     filteredPasswords.sortedBy { it.created }
                 } else {
                     filteredPasswords.sortedByDescending { it.created }
-                }
-            }
-            SORT_BY_LAST_USED_ID -> { // Sort by last used
-                if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredPasswords.sortedBy { it.lastUsed ?: "" }
-                } else {
-                    filteredPasswords.sortedByDescending { it.lastUsed ?: "" }
                 }
             }
             else -> filteredPasswords
@@ -205,6 +200,5 @@ class ApplicationPasswordsViewModel @Inject constructor(
     companion object {
         private const val SORT_BY_NAME_ID = 1L
         private const val SORT_BY_CREATED_ID = 2L
-        private const val SORT_BY_LAST_USED_ID = 3L
     }
 }
