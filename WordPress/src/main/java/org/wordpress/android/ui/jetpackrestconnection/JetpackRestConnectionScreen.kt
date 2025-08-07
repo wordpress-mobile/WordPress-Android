@@ -268,6 +268,7 @@ private fun ConnectionStepContent(
 
 private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
+        is ErrorType.DiscoveryFailed -> R.string.jetpack_rest_connection_error_discovery_failed
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown

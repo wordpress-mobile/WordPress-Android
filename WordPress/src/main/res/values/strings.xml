@@ -1025,6 +1025,7 @@
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
     <string name="jetpack_rest_connection_error_wpcom">Unable to connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_discovery_failed">Discovery failed</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

@@ -28,7 +28,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
-    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
+    private val appPasswordLoginHelper: ApplicationPasswordLoginHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -259,21 +259,20 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Logging in to WordPress.com")
         val site = getSite()
-        val discoveryUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
-        
+        val discoveryUrl = appPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
+
         if (discoveryUrl.isEmpty()) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Failed to get discovery URL for ${site.url}")
             updateStepStatus(
                 ConnectionStep.LoginWpCom,
                 ConnectionStatus.Failed,
-                ErrorType.Unknown("Failed to discover application password URL")
+                ErrorType.DiscoveryFailed
             )
-            return
+        } else {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Starting app password flow with URL: $discoveryUrl")
+            _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
+            // TODO: Wait for completion
         }
-        
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting app password flow with URL: $discoveryUrl")
-        _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
-        // TODO: Wait for completion
     }
 
     @Suppress("Unused")
@@ -302,6 +301,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class ErrorType(open val message: String? = null) {
+        data object DiscoveryFailed : ErrorType()
         data class FailedToConnectWpCom(override val message: String? = null) : ErrorType(message)
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
