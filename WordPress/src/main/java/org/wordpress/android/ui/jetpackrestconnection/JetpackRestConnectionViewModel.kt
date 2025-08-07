@@ -52,14 +52,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
     // TODO Inject or initialize this properly when the actual implementation is ready
     private var jetpackConnectionClient: JetpackConnectionClient? = null
 
-    init {
-        // startConnectionJob()
-    }
-
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
+
         _buttonType.value = null
+        _uiEvent.value = null
+
         job?.cancel()
         job = launch {
             startStep(fromStep ?: ConnectionStep.LoginWpCom)
@@ -175,8 +174,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _stepStates.value = _stepStates.value.toMutableMap().apply {
                 this[step] = StepState()
             }
-            _buttonType.value = null
-            _uiEvent.value = null
             startConnectionJob(fromStep = step)
         } ?: run {
             // Fallback to original behavior if no failed step found
