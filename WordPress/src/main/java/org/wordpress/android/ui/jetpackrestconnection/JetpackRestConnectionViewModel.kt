@@ -53,12 +53,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     init {
-        startConnectionJob()
+        // startConnectionJob()
     }
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
+        _buttonType.value = null
         job?.cancel()
         job = launch {
             startStep(fromStep ?: ConnectionStep.LoginWpCom)
@@ -133,6 +134,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
             }
             else -> {}
         }
+    }
+
+    fun onStartClick() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Start clicked")
+        startConnectionJob()
     }
 
     fun onCloseClick() {

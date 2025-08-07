@@ -107,7 +107,7 @@ private fun JetpackConnectionButton(
     val (labelRes, onClick) = when (buttonType) {
         ButtonType.Done -> R.string.label_done_button to onDoneClick
         ButtonType.Retry -> R.string.retry to onRetryClick
-        ButtonType.Start -> R.string.jetpack_rest_connection_button_start to onStartClick
+        ButtonType.Start -> R.string.start to onStartClick
         null -> return
     }
 
