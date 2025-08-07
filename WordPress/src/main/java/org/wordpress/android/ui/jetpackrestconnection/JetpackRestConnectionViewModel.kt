@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
@@ -27,6 +28,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
+    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -254,11 +256,24 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private fun loginWpCom() {
+    private suspend fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Logging in to WordPress.com")
-        val url = getSite().wpApiRestUrl
-        _uiEvent.value = UiEvent.StartAppPasswordFlow(url)
-        // TODO
+        val site = getSite()
+        val discoveryUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
+        
+        if (discoveryUrl.isEmpty()) {
+            appLogWrapper.e(AppLog.T.API, "$TAG: Failed to get discovery URL for ${site.url}")
+            updateStepStatus(
+                ConnectionStep.LoginWpCom,
+                ConnectionStatus.Failed,
+                ErrorType.Unknown("Failed to discover application password URL")
+            )
+            return
+        }
+        
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting app password flow with URL: $discoveryUrl")
+        _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
+        // TODO: Wait for completion
     }
 
     @Suppress("Unused")
