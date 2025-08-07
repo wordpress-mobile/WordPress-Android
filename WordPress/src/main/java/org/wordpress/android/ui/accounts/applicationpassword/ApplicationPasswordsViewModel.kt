@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.applicationpassword
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordAppId
 import uniffi.wp_api.ApplicationPasswordUuid
@@ -37,10 +39,10 @@ class ApplicationPasswordsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
-    accountStore: AccountStore,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
@@ -153,19 +155,46 @@ class ApplicationPasswordsViewModel @Inject constructor(
     }
 
     private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val wpApiClient = wpApiClientProvider.getWpApiClient(site)
 
-        val currentApplicationPasswordResponse = client.request { requestBuilder ->
-            requestBuilder.applicationPasswords().retrieveCurrentWithViewContext()
+        val currentUserId = getCurrentUserId(wpApiClient)
+        return if (currentUserId == null) {
+            emptyList()
+        } else {
+            getAllApplicationPasswords(currentUserId, wpApiClient)
+        }
+    }
+
+    private suspend fun getCurrentUserId(wpApiClient: WpApiClient):Long? {
+        val userIdResponse = wpApiClient.request { requestBuilder ->
+            requestBuilder.users().retrieveMeWithViewContext()
+        }
+        return when (userIdResponse) {
+            is WpRequestResult.Success -> {
+                userIdResponse.response.data.id
+            }
+
+            else -> {
+                val error = "Error getting current user Id"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+        }
+    }
+
+    private suspend fun getAllApplicationPasswords(userId: Long, wpApiClient: WpApiClient): List<ApplicationPasswordWithViewContext> {
+        val currentApplicationPasswordResponse = wpApiClient.request { requestBuilder ->
+            requestBuilder.applicationPasswords().listWithViewContext(userId)
         }
 
         return when (currentApplicationPasswordResponse) {
             is WpRequestResult.Success -> {
-                listOf(currentApplicationPasswordResponse.response.data)
+                currentApplicationPasswordResponse.response.data
             }
 
             else -> {
-                val error = "Error getting current Application Password"
+                val error = "Error getting current user Id"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 emptyList()
