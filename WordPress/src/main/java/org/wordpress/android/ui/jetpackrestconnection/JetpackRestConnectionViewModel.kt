@@ -3,8 +3,9 @@ package org.wordpress.android.ui.jetpackrestconnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,9 +17,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
-import kotlinx.coroutines.delay
-import uniffi.wp_api.JetpackConnectionClient
-import uniffi.wp_api.WpAuthentication
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -48,9 +46,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     val stepStates = _stepStates
 
     private var job: Job? = null
-
-    // TODO Inject or initialize this properly when the actual implementation is ready
-    private var jetpackConnectionClient: JetpackConnectionClient? = null
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
@@ -224,60 +219,41 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                // TODO
+                if (accountStore.accessToken?.isNotEmpty() == true) {
+                    appLogWrapper.d(AppLog.T.API, "$TAG: Already logged in to WordPress.com")
+                } else {
+                    loginWpCom()
+                }
             }
 
             ConnectionStep.InstallJetpack -> {
-                val site = getSite()
-                if (site.isJetpackInstalled) {
-                    appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack already installed")
-                    updateStepStatus(
-                        step = step,
-                        status = ConnectionStatus.Failed,
-                        error = ErrorType.JetpackAlreadyInstalled()
-                    )
-                } else {
-                    installJetpackPlugin()
-                }
+                appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack")
+                // TODO
             }
 
             ConnectionStep.ConnectSite -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting site")
-                jetpackConnectionClient?.connectSite(
-                    from = getSiteId().toString()
-                ) ?: error("JetpackConnectionClient not initialized")
+                // TODO
             }
 
             ConnectionStep.ConnectWpCom -> {
-                val token = accountStore.accessToken
-                    ?: error("No access token available")
-
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
-                jetpackConnectionClient?.connectUser(
-                    wpComAuthentication = WpAuthentication.Bearer(token = token),
-                    from = getSiteId().toString()
-                ) ?: error("JetpackConnectionClient not initialized")
+                // TODO
             }
 
             ConnectionStep.Finalize -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
+                // TODO
             }
         }
     }
 
-    private suspend fun installJetpackPlugin() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
-        // TODO Implement actual plugin installation API call when ready
-        // val params = PluginCreateParams(
-        //     slug = PluginWpOrgDirectorySlug("jetpack"),
-        //     status = PluginStatus.ACTIVE,
-        // )
-        // For now, simulate network delay
-        delay(STEP_DELAY_MS)
+    private suspend fun loginWpCom() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Logging in to WordPress.com")
+        // TODO
     }
 
-    private fun getSiteId() = getSite().siteId
-
+    @Suppress("Unused")
     private fun getSite() = selectedSiteRepository.getSelectedSite()
         ?: error("No site is currently selected in SelectedSiteRepository")
 
@@ -302,7 +278,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class ErrorType(open val message: String? = null) {
-        data class JetpackAlreadyInstalled(override val message: String? = null) : ErrorType(message)
         data class FailedToConnectWpCom(override val message: String? = null) : ErrorType(message)
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
