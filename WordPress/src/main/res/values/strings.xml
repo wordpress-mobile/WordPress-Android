@@ -1021,7 +1021,6 @@
     <string name="jetpack_rest_connection_status_failed">Failed</string>
     <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
     <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is already installed</string>
     <string name="jetpack_rest_connection_error_timeout">Timed out</string>
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
