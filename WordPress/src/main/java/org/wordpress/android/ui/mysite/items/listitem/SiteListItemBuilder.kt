@@ -295,6 +295,15 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    fun buildApplicationPasswordsItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem {
+        return ListItem(
+            R.drawable.ic_outline_key_vertical_24,
+            UiStringRes(R.string.application_password_info_title),
+            onClick = ListItemInteraction.create(ListItemAction.APPLICATION_PASSWORDS, onClick),
+            listItemAction = ListItemAction.APPLICATION_PASSWORDS
+        )
+    }
+
     companion object {
         const val HIDE_WP_ADMIN_YEAR = 2015
         const val HIDE_WP_ADMIN_MONTH = 9

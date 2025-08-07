@@ -142,6 +142,7 @@ class SiteItemsBuilder @Inject constructor(
             siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
             siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable),
+            siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.onClick),
         )
     }
 
