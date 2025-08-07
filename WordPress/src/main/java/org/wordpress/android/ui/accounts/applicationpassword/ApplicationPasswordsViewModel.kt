@@ -173,59 +173,6 @@ class ApplicationPasswordsViewModel @Inject constructor(
         }
     }
 
-    private fun createDummyApplicationPasswords(): List<ApplicationPasswordWithViewContext> {
-        return listOf(
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-1"),
-                name = "WordPress Mobile App",
-                appId = ApplicationPasswordAppId("wordpress-mobile"),
-                created = "January 15, 2024",
-                lastUsed = "August 05, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-2"),
-                name = "Jetpack Mobile App",
-                appId = ApplicationPasswordAppId("jetpack-mobile"),
-                created = "March 22, 2024",
-                lastUsed = "August 03, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-3"),
-                name = "Desktop Publisher",
-                appId = ApplicationPasswordAppId("desktop-app"),
-                created = "May 10, 2024",
-                lastUsed = "July 22, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-4"),
-                name = "Third Party Integration",
-                appId = ApplicationPasswordAppId("third-party"),
-                created = "June 18, 2024",
-                lastUsed = null,
-                lastIp = null
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-5"),
-                name = "Legacy API Client",
-                appId = ApplicationPasswordAppId("legacy-client"),
-                created = "February 28, 2024",
-                lastUsed = "January 15, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-6"),
-                name = "Development Testing Tool",
-                appId = ApplicationPasswordAppId("dev-tool"),
-                created = "July 31, 2025",
-                lastUsed = "August 06, 2025",
-                lastIp = IpAddress("IP")
-            )
-        )
-    }
-
     companion object {
         private const val SORT_BY_NAME_ID = 1L
         private const val SORT_BY_CREATED_ID = 2L
