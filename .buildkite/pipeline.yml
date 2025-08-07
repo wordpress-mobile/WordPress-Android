@@ -8,7 +8,7 @@ common_params:
       format: "junit"
 
 agents:
-  queue: "android"
+  queue: "android-staging"
 
 steps:
   #################
