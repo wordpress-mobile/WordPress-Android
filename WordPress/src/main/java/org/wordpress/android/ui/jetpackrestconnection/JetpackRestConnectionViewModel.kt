@@ -4,6 +4,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -93,8 +94,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        val stepState = executeStepWithErrorHandling(step)
-        updateStepStatus(step, stepState.status, stepState.errorType)
+        executeStepWithErrorHandling(step)
 
         // TODO this is just to test the UI
         // delay(STEP_DELAY_MS)
@@ -198,29 +198,35 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught", "Unused", "UnusedPrivateMember")
-    private suspend fun executeStepWithErrorHandling(step: ConnectionStep): StepState {
+    private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
                 withTimeout(STEP_TIMEOUT_MS) {
                     executeNetworkRequest(step)
                 }
             }
-            return StepState(ConnectionStatus.Completed)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
                 is TimeoutCancellationException -> ErrorType.Timeout(e.message)
                 else -> ErrorType.Unknown(e.message)
             }
-            return StepState(ConnectionStatus.Failed, errorType)
+            updateStepStatus(
+                step = step,
+                status = ConnectionStatus.Failed,
+                error = errorType,
+            )
         }
     }
 
     private suspend fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
+                // if we have a token then the user is already logged in, so move to the next step after a delay
                 if (accountStore.accessToken?.isNotEmpty() == true) {
                     appLogWrapper.d(AppLog.T.API, "$TAG: Already logged in to WordPress.com")
+                    delay(STEP_DELAY_MS)
+                    updateStepStatus(step, ConnectionStatus.Completed)
                 } else {
                     loginWpCom()
                 }
