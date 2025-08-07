@@ -4,7 +4,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -94,11 +93,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        // TODO executeStepWithErrorHandling(nextStep)
+        val stepState = executeStepWithErrorHandling(step)
+        updateStepStatus(step, stepState.status, stepState.errorType)
 
         // TODO this is just to test the UI
-        delay(STEP_DELAY_MS)
-        updateStepStatus(step, ConnectionStatus.Completed)
+        // delay(STEP_DELAY_MS)
+        // updateStepStatus(step, ConnectionStatus.Completed)
     }
 
     private fun updateStepStatus(
@@ -198,21 +198,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught", "Unused", "UnusedPrivateMember")
-    private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
+    private suspend fun executeStepWithErrorHandling(step: ConnectionStep): StepState {
         try {
             withContext(bgDispatcher) {
                 withTimeout(STEP_TIMEOUT_MS) {
                     executeNetworkRequest(step)
                 }
             }
-            updateStepStatus(step, ConnectionStatus.Completed)
+            return StepState(ConnectionStatus.Completed)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
                 is TimeoutCancellationException -> ErrorType.Timeout(e.message)
                 else -> ErrorType.Unknown(e.message)
             }
-            updateStepStatus(step, ConnectionStatus.Failed, errorType)
+            return StepState(ConnectionStatus.Failed, errorType)
         }
     }
 
@@ -248,8 +248,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loginWpCom() {
+    private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Logging in to WordPress.com")
+        val url = getSite().wpApiRestUrl
+        _uiEvent.value = UiEvent.StartAppPasswordFlow(url)
         // TODO
     }
 
@@ -273,6 +275,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
+        data class StartAppPasswordFlow(val url: String) : UiEvent()
         data object Close : UiEvent()
         data object ShowCancelConfirmation : UiEvent()
     }

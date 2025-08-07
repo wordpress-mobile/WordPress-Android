@@ -11,12 +11,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     private val viewModel: JetpackRestConnectionViewModel by viewModels()
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +39,22 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiEvent.filterNotNull().collect { event ->
                 when (event) {
-                    JetpackRestConnectionViewModel.UiEvent.Close -> finish()
-                    JetpackRestConnectionViewModel.UiEvent.ShowCancelConfirmation -> showCancelConfirmationDialog()
+                    is JetpackRestConnectionViewModel.UiEvent.StartAppPasswordFlow ->
+                        startAppPasswordFlow(event.url)
+                    JetpackRestConnectionViewModel.UiEvent.Close ->
+                        finish()
+                    JetpackRestConnectionViewModel.UiEvent.ShowCancelConfirmation ->
+                        showCancelConfirmationDialog()
                 }
             }
         }
+    }
+
+    private fun startAppPasswordFlow(url: String) {
+        activityNavigator.openApplicationPasswordLogin(
+            activity = this,
+            url = url
+        )
     }
 
     private fun showCancelConfirmationDialog() {
