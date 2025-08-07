@@ -155,7 +155,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCurrentUserId(wpApiClient: WpApiClient):Long? {
+    private suspend fun getCurrentUserId(wpApiClient: WpApiClient): Long? {
         val userIdResponse = wpApiClient.request { requestBuilder ->
             requestBuilder.users().retrieveMeWithViewContext()
         }
@@ -187,7 +187,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
             }
 
             else -> {
-                val error = "Error getting current user Id"
+                val error = "Error getting Application Password list"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 emptyList()
