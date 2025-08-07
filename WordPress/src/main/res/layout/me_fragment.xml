@@ -204,6 +204,27 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_application_passwords"
+                style="@style/MeListRowLayout">
+
+                <ImageView
+                    android:id="@+id/me_application_passwords_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_outline_key_vertical_24" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_application_passwords_text_view"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/application_password_info_title" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/application_password_divider"
+                style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/row_debug_settings"
                 android:visibility="gone"
                 style="@style/MeListRowLayout"

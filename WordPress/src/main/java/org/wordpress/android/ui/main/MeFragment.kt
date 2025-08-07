@@ -180,6 +180,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowAccountSettings.setOnClickListener {
             ActivityLauncher.viewAccountSettings(activity)
         }
+        rowApplicationPasswords.isVisible = false
+        applicationPasswordDivider.isVisible = false
+        rowApplicationPasswords.setOnClickListener {
+            ActivityLauncher.viewApplicationPasswordList(requireContext())
+        }
         rowAppSettings.setOnClickListener {
             ActivityLauncher.viewAppSettingsForResult(activity)
         }
