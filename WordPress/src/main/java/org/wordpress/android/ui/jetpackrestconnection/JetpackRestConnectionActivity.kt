@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpackconnection
+package org.wordpress.android.ui.jetpackrestconnection
 
 import android.content.Context
 import android.content.Intent
@@ -15,13 +15,13 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class JetpackConnectionActivity : BaseAppCompatActivity() {
-    private val viewModel: JetpackConnectionViewModel by viewModels()
+class JetpackRestConnectionActivity : BaseAppCompatActivity() {
+    private val viewModel: JetpackRestConnectionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetpackConnectionScreen(
+            JetpackRestConnectionScreen(
                 currentStep = viewModel.currentStep.collectAsState(),
                 stepStates = viewModel.stepStates.collectAsState(),
                 buttonType = viewModel.buttonType.collectAsState(),
@@ -33,8 +33,8 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiEvent.filterNotNull().collect { event ->
                 when (event) {
-                    JetpackConnectionViewModel.UiEvent.Close -> finish()
-                    JetpackConnectionViewModel.UiEvent.ShowCancelConfirmation -> showCancelConfirmationDialog()
+                    JetpackRestConnectionViewModel.UiEvent.Close -> finish()
+                    JetpackRestConnectionViewModel.UiEvent.ShowCancelConfirmation -> showCancelConfirmationDialog()
                 }
             }
         }
@@ -42,8 +42,8 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
 
     private fun showCancelConfirmationDialog() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.jetpack_connection_cancel_title)
-            .setMessage(R.string.jetpack_connection_cancel_message)
+            .setTitle(R.string.jetpack_rest_connection_cancel_title)
+            .setMessage(R.string.jetpack_rest_connection_cancel_message)
             .setPositiveButton(R.string.yes) { _, _ -> viewModel.onCancelConfirmed() }
             .setNegativeButton(R.string.no) { _, _ -> viewModel.onCancelDismissed() }
             .setCancelable(false)
@@ -53,6 +53,6 @@ class JetpackConnectionActivity : BaseAppCompatActivity() {
     companion object {
         @JvmStatic
         fun createIntent(context: Context) =
-            Intent(context, JetpackConnectionActivity::class.java)
+            Intent(context, JetpackRestConnectionActivity::class.java)
     }
 }
