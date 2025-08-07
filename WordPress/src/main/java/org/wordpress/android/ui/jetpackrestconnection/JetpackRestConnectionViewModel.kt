@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
@@ -28,7 +27,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
-    private val appPasswordLoginHelper: ApplicationPasswordLoginHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -49,11 +47,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
     
-    // Track if we're waiting for app password flow to complete
+    // Track if we're waiting for WordPress.com login to complete
     // This survives configuration changes
-    private var _isWaitingForAppPassword = false
-    val isWaitingForAppPassword: Boolean
-        get() = _isWaitingForAppPassword
+    private var _isWaitingForWPComLogin = false
+    val isWaitingForWPComLogin: Boolean
+        get() = _isWaitingForWPComLogin
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
@@ -265,46 +263,30 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     private suspend fun loginWpCom() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Logging in to WordPress.com")
-        val site = getSite()
-        val discoveryUrl = appPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
-
-        if (discoveryUrl.isEmpty()) {
-            appLogWrapper.e(AppLog.T.API, "$TAG: Failed to get discovery URL for ${site.url}")
-            updateStepStatus(
-                ConnectionStep.LoginWpCom,
-                ConnectionStatus.Failed,
-                ErrorType.DiscoveryFailed
-            )
-        } else {
-            // Tell the activity to start the app password flow and notify us when the flow completes
-            // via onAppPasswordFlowCompleted()
-            appLogWrapper.d(
-                AppLog.T.API,
-                "$TAG: Starting app password flow with URL: $discoveryUrl"
-            )
-            _isWaitingForAppPassword = true
-            _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
-        }
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
+        
+        // Tell the activity to start WordPress.com login and notify us when complete
+        _isWaitingForWPComLogin = true
+        _uiEvent.value = UiEvent.StartWPComLogin
     }
 
     /**
-     * Called by the activity when the app password flow completes.
+     * Called by the activity when WordPress.com login flow completes.
      */
-    fun onAppPasswordFlowCompleted(success: Boolean) {
-        _isWaitingForAppPassword = false
+    fun onWPComLoginCompleted(success: Boolean) {
+        _isWaitingForWPComLogin = false
         launch {
             if (success) {
-                // Authentication successful
-                appLogWrapper.d(AppLog.T.API, "$TAG: Application password authentication successful")
+                // Login successful
+                appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
                 updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
             } else {
-                // Authentication failed or was cancelled
-                appLogWrapper.e(AppLog.T.API, "$TAG: Application password authentication failed or cancelled")
+                // Login failed or was cancelled
+                appLogWrapper.e(AppLog.T.API, "$TAG: WordPress.com login failed or cancelled")
                 updateStepStatus(
                     ConnectionStep.LoginWpCom,
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom("Authentication failed or was cancelled")
+                    ErrorType.FailedToConnectWpCom("Login failed or was cancelled")
                 )
             }
         }
@@ -330,7 +312,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        data class StartAppPasswordFlow(val url: String) : UiEvent()
+        data object StartWPComLogin : UiEvent()
         data object Close : UiEvent()
         data object ShowCancelConfirmation : UiEvent()
     }

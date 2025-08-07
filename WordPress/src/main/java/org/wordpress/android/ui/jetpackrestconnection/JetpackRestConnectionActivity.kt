@@ -11,10 +11,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
@@ -24,12 +25,9 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-
+    
     @Inject
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var siteStore: SiteStore
+    lateinit var accountStore: AccountStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +45,8 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiEvent.filterNotNull().collect { event ->
                 when (event) {
-                    is JetpackRestConnectionViewModel.UiEvent.StartAppPasswordFlow ->
-                        startAppPasswordFlow(event.url)
+                    JetpackRestConnectionViewModel.UiEvent.StartWPComLogin ->
+                        startWPComLogin()
                     JetpackRestConnectionViewModel.UiEvent.Close ->
                         finish()
                     JetpackRestConnectionViewModel.UiEvent.ShowCancelConfirmation ->
@@ -58,31 +56,17 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun startAppPasswordFlow(url: String) {
-        activityNavigator.openApplicationPasswordLogin(
-            activity = this,
-            url = url
-        )
+    private fun startWPComLogin() {
+        ActivityLauncher.showSignInForResultWpComOnly(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // Check if we're returning from the app password flow
-        // The flag is stored in ViewModel so it survives configuration changes
-        if (viewModel.isWaitingForAppPassword) {
-            // Get the updated site from the store to check if credentials were saved
-            selectedSiteRepository.getSelectedSite()?.let { site ->
-                // Refresh from store to get latest data
-                val updatedSite = siteStore.getSiteByLocalId(site.id)
-                val hasCredentials = updatedSite != null &&
-                                    !updatedSite.apiRestUsernamePlain.isNullOrEmpty() &&
-                                    !updatedSite.apiRestPasswordPlain.isNullOrEmpty()
-                viewModel.onAppPasswordFlowCompleted(success = hasCredentials)
-            } ?: run {
-                // No site selected, authentication must have failed
-                viewModel.onAppPasswordFlowCompleted(success = false)
-            }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == RequestCodes.ADD_ACCOUNT && viewModel.isWaitingForWPComLogin) {
+            // User returned from WordPress.com login
+            val loginSuccessful = resultCode == RESULT_OK
+            viewModel.onWPComLoginCompleted(success = loginSuccessful)
         }
     }
 
