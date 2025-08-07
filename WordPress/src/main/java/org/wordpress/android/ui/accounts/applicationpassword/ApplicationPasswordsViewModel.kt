@@ -7,6 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -17,23 +19,27 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordAppId
 import uniffi.wp_api.ApplicationPasswordUuid
 import uniffi.wp_api.ApplicationPasswordWithViewContext
 import uniffi.wp_api.IpAddress
 import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.parseAsWpSiteHealthTestsRequestFilterBackgroundUpdatesResponse
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class ApplicationPasswordsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val wpApiClientProvider: WpApiClientProvider,
+    private val appLogWrapper: AppLogWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    appLogWrapper: AppLogWrapper,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
-    selectedSiteRepository: SelectedSiteRepository,
     accountStore: AccountStore,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
 ) : DataViewViewModel(
@@ -58,7 +64,16 @@ class ApplicationPasswordsViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
-        val allApplicationPasswords = createDummyApplicationPasswords()
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+
+        if (selectedSite == null) {
+            val error = "No selected site to get Application Passwords"
+            appLogWrapper.e(AppLog.T.API, error)
+            onError(error)
+            return@withContext emptyList()
+        }
+
+        val allApplicationPasswords = getApplicationPasswordsList(selectedSite)
 
         // Filter by search query
         val filteredPasswords = if (searchQuery.isBlank()) {
@@ -134,6 +149,27 @@ class ApplicationPasswordsViewModel @Inject constructor(
             context.resources.getString(R.string.application_password_never_used)
         } else {
             lastUsed
+        }
+    }
+
+    private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val currentApplicationPasswordResponse = client.request { requestBuilder ->
+            requestBuilder.applicationPasswords().retrieveCurrentWithViewContext()
+        }
+
+        return when (currentApplicationPasswordResponse) {
+            is WpRequestResult.Success -> {
+                listOf(currentApplicationPasswordResponse.response.data)
+            }
+
+            else -> {
+                val error = "Error getting current Application Password"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
         }
     }
 
