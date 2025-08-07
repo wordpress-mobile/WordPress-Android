@@ -21,7 +21,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     private val viewModel: JetpackRestConnectionViewModel by viewModels()
-    private var isWaitingForAppPassword = false
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
@@ -60,7 +59,6 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     }
 
     private fun startAppPasswordFlow(url: String) {
-        isWaitingForAppPassword = true
         activityNavigator.openApplicationPasswordLogin(
             activity = this,
             url = url
@@ -71,20 +69,17 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         super.onResume()
 
         // Check if we're returning from the app password flow
-        if (isWaitingForAppPassword) {
-            isWaitingForAppPassword = false
-
+        // The flag is stored in ViewModel so it survives configuration changes
+        if (viewModel.isWaitingForAppPassword) {
             // Get the updated site from the store to check if credentials were saved
-            val site = selectedSiteRepository.getSelectedSite()
-            if (site != null) {
+            selectedSiteRepository.getSelectedSite()?.let { site ->
                 // Refresh from store to get latest data
                 val updatedSite = siteStore.getSiteByLocalId(site.id)
                 val hasCredentials = updatedSite != null &&
                                     !updatedSite.apiRestUsernamePlain.isNullOrEmpty() &&
                                     !updatedSite.apiRestPasswordPlain.isNullOrEmpty()
-
                 viewModel.onAppPasswordFlowCompleted(success = hasCredentials)
-            } else {
+            } ?: run {
                 // No site selected, authentication must have failed
                 viewModel.onAppPasswordFlowCompleted(success = false)
             }

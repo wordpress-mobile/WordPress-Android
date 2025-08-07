@@ -48,6 +48,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
     val stepStates = _stepStates
 
     private var job: Job? = null
+    
+    // Track if we're waiting for app password flow to complete
+    // This survives configuration changes
+    private var _isWaitingForAppPassword = false
+    val isWaitingForAppPassword: Boolean
+        get() = _isWaitingForAppPassword
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
@@ -277,6 +283,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 AppLog.T.API,
                 "$TAG: Starting app password flow with URL: $discoveryUrl"
             )
+            _isWaitingForAppPassword = true
             _uiEvent.value = UiEvent.StartAppPasswordFlow(discoveryUrl)
         }
     }
@@ -285,6 +292,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Called by the activity when the app password flow completes.
      */
     fun onAppPasswordFlowCompleted(success: Boolean) {
+        _isWaitingForAppPassword = false
         launch {
             if (success) {
                 // Authentication successful
