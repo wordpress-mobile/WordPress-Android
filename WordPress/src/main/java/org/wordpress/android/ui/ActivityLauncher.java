@@ -1000,8 +1000,6 @@ public class ActivityLauncher {
             .build();
         
         Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
-        // Add extra analytics field that's expected by legacy code
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1023,8 +1021,6 @@ public class ActivityLauncher {
                 .build();
 
         Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
-        // Add extra analytics field that's expected by legacy code
-        editorIntent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
     }
 
@@ -1153,8 +1149,6 @@ public class ActivityLauncher {
             .build();
         
         Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
-        // Add extra analytics field that's expected by legacy code
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1176,8 +1170,6 @@ public class ActivityLauncher {
             .build();
         
         Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), params);
-        // Add extra analytics field that's expected by legacy code
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

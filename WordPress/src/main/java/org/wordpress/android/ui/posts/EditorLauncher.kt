@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -138,6 +139,7 @@ class EditorLauncher @Inject constructor(
     private fun Intent.addMiscExtras(params: EditorLauncherParams) {
         params.voiceContent?.let { putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, it) }
         params.insertMedia?.let { putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, it) }
+        params.source?.let { putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, it) }
         params.promptId?.let { putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, it) }
         params.entryPoint?.let { putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, it) }
     }
