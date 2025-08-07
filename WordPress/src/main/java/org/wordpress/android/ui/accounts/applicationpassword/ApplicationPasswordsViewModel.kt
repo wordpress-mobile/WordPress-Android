@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -26,18 +23,13 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.ApplicationPasswordAppId
-import uniffi.wp_api.ApplicationPasswordUuid
 import uniffi.wp_api.ApplicationPasswordWithViewContext
-import uniffi.wp_api.IpAddress
 import uniffi.wp_api.WpApiParamOrder
-import uniffi.wp_api.parseAsWpSiteHealthTestsRequestFilterBackgroundUpdatesResponse
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class ApplicationPasswordsViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -138,7 +130,8 @@ class ApplicationPasswordsViewModel @Inject constructor(
      * Formats a date string from "2025-08-07T11:02:34" format to "July 31, 2025" format.
      * If the input doesn't match the expected format, returns the input as-is.
      */
-    fun formatDateString(dateString: String): String {
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun formatDateString(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val outputFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
@@ -180,7 +173,10 @@ class ApplicationPasswordsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAllApplicationPasswords(userId: Long, wpApiClient: WpApiClient): List<ApplicationPasswordWithViewContext> {
+    private suspend fun getAllApplicationPasswords(
+        userId: Long,
+        wpApiClient: WpApiClient
+    ): List<ApplicationPasswordWithViewContext> {
         val currentApplicationPasswordResponse = wpApiClient.request { requestBuilder ->
             requestBuilder.applicationPasswords().listWithViewContext(userId)
         }
