@@ -125,7 +125,8 @@ class SiteItemsBuilder @Inject constructor(
         return listOfNotNull(
             siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildMeItemIfAvailable(params.site, params.onClick),
-            siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
+            siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick),
+            siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.onClick),
         )
     }
 
@@ -142,7 +143,6 @@ class SiteItemsBuilder @Inject constructor(
             siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
             siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable),
-            siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.onClick),
         )
     }
 
