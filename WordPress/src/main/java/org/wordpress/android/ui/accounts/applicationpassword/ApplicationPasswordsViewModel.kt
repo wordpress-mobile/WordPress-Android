@@ -22,6 +22,8 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.text.SimpleDateFormat
+import java.util.Locale
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordAppId
@@ -53,9 +55,6 @@ class ApplicationPasswordsViewModel @Inject constructor(
     accountStore = accountStore,
     ioDispatcher = ioDispatcher
 ) {
-    init {
-
-    }
     override fun getSupportedSorts(): List<DataViewDropdownItem> = listOf(
         DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.application_password_name_sort),
         DataViewDropdownItem(id = SORT_BY_CREATED_ID, titleRes = R.string.application_password_created_sort),
@@ -127,25 +126,28 @@ class ApplicationPasswordsViewModel @Inject constructor(
             title = applicationPassword.name,
             fields = listOf(
                 DataViewItemField(
-                    value = formatLastUsed(applicationPassword.lastUsed),
-                    valueType = DataViewFieldType.TEXT,
-                    weight = 1f
-                ),
-                DataViewItemField(
-                    value = applicationPassword.created,
+                    value = formatDateString(applicationPassword.created),
                     valueType = DataViewFieldType.DATE,
-                    weight = 0.8f
                 )
             ),
             data = applicationPassword // Store the original object for click handling
         )
     }
 
-    private fun formatLastUsed(lastUsed: String?): String {
-        return if (lastUsed.isNullOrEmpty()) {
-            context.resources.getString(R.string.application_password_never_used)
-        } else {
-            lastUsed
+    /**
+     * Formats a date string from "2025-08-07T11:02:34" format to "July 31, 2025" format.
+     * If the input doesn't match the expected format, returns the input as-is.
+     */
+    fun formatDateString(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+
+            val parsedDate = inputFormat.parse(dateString)
+            parsedDate?.let { outputFormat.format(it) } ?: dateString
+        } catch (e: Exception) {
+            // If parsing fails, return the original string
+            dateString
         }
     }
 
