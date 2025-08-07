@@ -36,7 +36,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val _uiEvent = MutableStateFlow<UiEvent?>(null)
     val uiEvent = _uiEvent
 
-    private val _buttonType = MutableStateFlow<ButtonType?>(null)
+    private val _buttonType = MutableStateFlow<ButtonType?>(ButtonType.Start)
     val buttonType = _buttonType
 
     data class StepState(
@@ -307,6 +307,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class ButtonType {
+        data object Start : ButtonType()
         data object Done : ButtonType()
         data object Retry : ButtonType()
     }
