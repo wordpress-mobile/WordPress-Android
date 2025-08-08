@@ -47,8 +47,10 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
                 when (event) {
                     JetpackRestConnectionViewModel.UiEvent.StartWPComLogin ->
                         startWPComLogin()
+
                     JetpackRestConnectionViewModel.UiEvent.Close ->
                         finish()
+
                     JetpackRestConnectionViewModel.UiEvent.ShowCancelConfirmation ->
                         showCancelConfirmationDialog()
                 }
@@ -63,7 +65,8 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // User returned from WordPress.com login
+        // User returned from WordPress.com login - note the resultCode will always be RESULT_OK but
+        // we check it here in case that ever changes
         if (requestCode == RequestCodes.ADD_ACCOUNT && viewModel.isWaitingForWPComLogin) {
             val loginSuccessful = resultCode == RESULT_OK && (accountStore.accessToken?.isNotEmpty() == true)
             viewModel.onWPComLoginCompleted(success = loginSuccessful)

@@ -268,11 +268,11 @@ private fun ConnectionStepContent(
 
 private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
-        ErrorType.DiscoveryFailed -> R.string.jetpack_rest_connection_error_discovery_failed
+        ErrorType.FailedToLoginWpCom -> R.string.jetpack_rest_connection_error_login_wpcom
+        ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_connect_wpcom
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
-        is ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_wpcom
     }
     val baseMessage = context.getString(messageRes)
     return errorType.message?.let { "$baseMessage: $it" } ?: baseMessage
@@ -422,7 +422,7 @@ private fun JetpackRestConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectWpCom to StepState(
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom()
+                    ErrorType.FailedToConnectWpCom
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )
@@ -439,5 +439,7 @@ private fun JetpackRestConnectionScreenPreview() {
     )
 }
 
-@ColorRes private val IN_PROGRESS_BACKGROUND_COLOR = R.color.yellow_10 // Light yellow
-@ColorRes private val IN_PROGRESS_FOREGROUND_COLOR = R.color.yellow_90 // Dark brown for readability on the above
+@ColorRes
+private val IN_PROGRESS_BACKGROUND_COLOR = R.color.yellow_10 // Light yellow
+@ColorRes
+private val IN_PROGRESS_FOREGROUND_COLOR = R.color.yellow_90 // Dark brown for readability on the above

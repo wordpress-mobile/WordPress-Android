@@ -274,7 +274,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called by the activity when WordPress.com login flow completes.
+     * Called by the activity when WordPress.com login flow completes
      */
     fun onWPComLoginCompleted(success: Boolean) {
         _isWaitingForWPComLogin = false
@@ -289,7 +289,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     ConnectionStep.LoginWpCom,
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom("Login failed or was cancelled")
+                    ErrorType.FailedToLoginWpCom
                 )
             }
         }
@@ -321,8 +321,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class ErrorType(open val message: String? = null) {
-        data object DiscoveryFailed : ErrorType()
-        data class FailedToConnectWpCom(override val message: String? = null) : ErrorType(message)
+        data object FailedToLoginWpCom : ErrorType()
+        data object FailedToConnectWpCom : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
         data class Unknown(override val message: String? = null) : ErrorType(message)
