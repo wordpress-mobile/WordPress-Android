@@ -3,13 +3,13 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.content.Intent
 import org.wordpress.android.WordPress.Companion.getContext
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,9 +22,9 @@ import javax.inject.Singleton
 @Singleton
 class EditorLauncher @Inject constructor(
     private val gutenbergKitFeature: GutenbergKitFeature,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val experimentalFeatures: ExperimentalFeatures,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-
     companion object {
         /**
          * Static accessor for use in static utility classes like ActivityLauncher.
@@ -50,19 +50,15 @@ class EditorLauncher @Inject constructor(
         // Will route to EditPostGutenbergKitActivity when it exists
         val targetActivity = EditPostActivity::class.java
 
-        val editorType = if (shouldUseGutenbergKit) "gutenberg_kit" else "legacy"
-        val source = getParamsSource(params)
-
-        AppLog.d(T.EDITOR, "EditorLauncher: routing to $editorType editor from $source")
-
-        // Track launch method for analytics
-        trackEditorLaunch(editorType, source, "helper")
+        val properties = mapOf(
+            "should_use_gutenberg_kit" to shouldUseGutenbergKit
+        )
+        analyticsTrackerWrapper.track(stat = AnalyticsTracker.Stat.EDITOR_LAUNCHER, properties)
 
         return Intent(context, targetActivity).apply {
             addEditorExtras(params)
         }
     }
-
 
     /**
      * Determines if GutenbergKit editor should be used based on feature flags.
@@ -73,25 +69,6 @@ class EditorLauncher @Inject constructor(
         val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
         return isGutenbergEnabled && !isGutenbergDisabled
     }
-
-    /**
-     * Identifies the source of the editor launch based on EditorLauncherParams.
-     */
-    private fun getParamsSource(params: EditorLauncherParams): String {
-        return when {
-            params.isQuickPress -> "quickpress"
-            params.reblogPostTitle != null -> "reblog"
-            params.insertMedia != null -> "media_upload"
-            params.reblogAction != null -> "reblog_action"
-            params.isLandingEditor -> "landing_editor"
-            params.isPromo -> "promo"
-            params.isPage -> "page"
-            params.postLocalId != null || params.postRemoteId != null -> "edit_post"
-            params.source != null -> params.source.toString().lowercase()
-            else -> "new_post"
-        }
-    }
-
 
     /**
      * Adds all editor parameters as Intent extras.
@@ -142,19 +119,5 @@ class EditorLauncher @Inject constructor(
         params.source?.let { putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, it) }
         params.promptId?.let { putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, it) }
         params.entryPoint?.let { putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, it) }
-    }
-
-    /**
-     * Track editor launch events for analytics.
-     */
-    private fun trackEditorLaunch(editorType: String, source: String, launchMethod: String) {
-        val properties = mapOf(
-            "editor_type" to editorType,
-            "source" to source,
-            "launch_method" to launchMethod
-        )
-
-        // Analytics tracking will be implemented with appropriate event name
-        AppLog.i(T.EDITOR, "Editor launch tracked: $properties")
     }
 }

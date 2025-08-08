@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.posts
 
-import androidx.annotation.NonNull
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 
 /**
  * Type-safe parameters for launching editor activities.
- * 
+ *
  * This data class replaces the Bundle-based approach with named parameters in Kotlin
  * and provides a builder pattern for Java compatibility.
  */
@@ -35,11 +34,11 @@ data class EditorLauncherParams(
     val promptId: Int? = null,
     val entryPoint: EntryPoint? = null
 ) {
-    
+
     /**
      * Java-friendly builder pattern for EditorLauncherParams.
      */
-    class Builder(@NonNull private val site: SiteModel) {
+    class Builder(private val site: SiteModel) {
         private var isPage: Boolean = false
         private var isPromo: Boolean = false
         private var postLocalId: Int? = null
@@ -61,7 +60,7 @@ data class EditorLauncherParams(
         private var source: PagePostCreationSourcesDetail? = null
         private var promptId: Int? = null
         private var entryPoint: EntryPoint? = null
-        
+
         fun isPage(isPage: Boolean) = apply { this.isPage = isPage }
         fun isPromo(isPromo: Boolean) = apply { this.isPromo = isPromo }
         fun postLocalId(postLocalId: Int?) = apply { this.postLocalId = postLocalId }
@@ -69,11 +68,13 @@ data class EditorLauncherParams(
         fun loadAutoSaveRevision(loadAutoSaveRevision: Boolean) = apply {
             this.loadAutoSaveRevision = loadAutoSaveRevision
         }
+
         fun isQuickPress(isQuickPress: Boolean) = apply { this.isQuickPress = isQuickPress }
         fun isLandingEditor(isLandingEditor: Boolean) = apply { this.isLandingEditor = isLandingEditor }
         fun isLandingEditorOpenedForNewSite(isLandingEditorOpenedForNewSite: Boolean) = apply {
             this.isLandingEditorOpenedForNewSite = isLandingEditorOpenedForNewSite
         }
+
         fun reblogPostTitle(reblogPostTitle: String?) = apply { this.reblogPostTitle = reblogPostTitle }
         fun reblogPostQuote(reblogPostQuote: String?) = apply { this.reblogPostQuote = reblogPostQuote }
         fun reblogPostImage(reblogPostImage: String?) = apply { this.reblogPostImage = reblogPostImage }
@@ -87,7 +88,7 @@ data class EditorLauncherParams(
         fun source(source: PagePostCreationSourcesDetail?) = apply { this.source = source }
         fun promptId(promptId: Int?) = apply { this.promptId = promptId }
         fun entryPoint(entryPoint: EntryPoint?) = apply { this.entryPoint = entryPoint }
-        
+
         fun build(): EditorLauncherParams {
             return EditorLauncherParams(
                 site = site,
