@@ -9,5 +9,7 @@ data class DataViewItem(
     val image: DataViewItemImage?,
     val title: String,
     val fields: List<DataViewItemField>,
+    // Avoid adding the last field to the end of the card and follow regular alignment instead
+    val skipEndPositioning: Boolean = false,
     val data: Any? = null
 )

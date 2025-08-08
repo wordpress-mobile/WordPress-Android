@@ -44,6 +44,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.BLAZE -> onBlazeMenuItemClick()
             ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite, quickStartEvent)
             ListItemAction.SITE_MONITORING -> SiteNavigationAction.OpenSiteMonitoring(selectedSite)
+            ListItemAction.APPLICATION_PASSWORDS -> SiteNavigationAction.OpenApplicationPasswordsList
         }
     }
 
