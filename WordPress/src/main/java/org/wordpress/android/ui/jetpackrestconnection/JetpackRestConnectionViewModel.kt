@@ -46,7 +46,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     val stepStates = _stepStates
 
     private var job: Job? = null
-    
+
     // Track if we're waiting for WordPress.com login to complete
     // This survives configuration changes
     private var _isWaitingForWPComLogin = false
@@ -82,7 +82,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         ConnectionStep.Finalize -> null
     }
 
-    private suspend fun startNextStep() {
+    private fun startNextStep() {
         // Mark current step as completed if exists
         currentStep.value?.let {
             if (_stepStates.value[it]?.status == ConnectionStatus.InProgress) {
@@ -96,15 +96,20 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun startStep(step: ConnectionStep) {
+    private fun startStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        executeStepWithErrorHandling(step)
-
-        // TODO this is just to test the UI
-        // delay(STEP_DELAY_MS)
-        // updateStepStatus(step, ConnectionStatus.Completed)
+        if (step == ConnectionStep.LoginWpCom) {
+            loginWpCom()
+        } else {
+            launch {
+                executeStepWithErrorHandling(step)
+                // TODO this is just to test the UI
+                delay(STEP_DELAY_MS)
+                updateStepStatus(step, ConnectionStatus.Completed)
+            }
+        }
     }
 
     private fun updateStepStatus(
@@ -128,9 +133,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 if (step == ConnectionStep.Finalize) {
                     onJobCompleted()
                 } else {
-                    launch {
-                        startNextStep()
-                    }
+                    startNextStep()
                 }
             }
 
@@ -227,17 +230,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun executeNetworkRequest(step: ConnectionStep) {
+    private fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                // if we have a token then the user is already logged in, so move to the next step after a delay
-                if (accountStore.accessToken?.isNotEmpty() == true) {
-                    appLogWrapper.d(AppLog.T.API, "$TAG: Already logged in to WordPress.com")
-                    delay(STEP_DELAY_MS)
-                    updateStepStatus(step, ConnectionStatus.Completed)
-                } else {
-                    loginWpCom()
-                }
+                // noop - this is handled separately since it doesn't use a coroutine
             }
 
             ConnectionStep.InstallJetpack -> {
@@ -262,10 +258,17 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loginWpCom() {
+    private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
-        
-        // Tell the activity to start WordPress.com login and notify us when complete
+        // if we have a token then the user is already logged in so move to the next step after a delay, otherwise
+        // tell the activity to start WordPress.com login and notify us when complete
+        /*if (accountStore.accessToken?.isNotEmpty() == true) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Already logged in to WordPress.com")
+            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+        } else {
+            _isWaitingForWPComLogin = true
+            _uiEvent.value = UiEvent.StartWPComLogin
+        }*/
         _isWaitingForWPComLogin = true
         _uiEvent.value = UiEvent.StartWPComLogin
     }

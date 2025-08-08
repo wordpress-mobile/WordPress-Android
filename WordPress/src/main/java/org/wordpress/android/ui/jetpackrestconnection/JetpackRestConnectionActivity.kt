@@ -14,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
@@ -57,7 +56,6 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun startWPComLogin() {
         ActivityLauncher.showSignInForResultWpComOnly(this)
     }
@@ -65,9 +63,9 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // User returned from WordPress.com login
         if (requestCode == RequestCodes.ADD_ACCOUNT && viewModel.isWaitingForWPComLogin) {
-            // User returned from WordPress.com login
-            val loginSuccessful = resultCode == RESULT_OK
+            val loginSuccessful = resultCode == RESULT_OK && (accountStore.accessToken?.isNotEmpty() == true)
             viewModel.onWPComLoginCompleted(success = loginSuccessful)
         }
     }
