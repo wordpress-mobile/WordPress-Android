@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.NonNull
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
@@ -38,8 +39,7 @@ data class EditorLauncherParams(
     /**
      * Java-friendly builder pattern for EditorLauncherParams.
      */
-    class Builder {
-        private var site: SiteModel? = null
+    class Builder(@NonNull private val site: SiteModel) {
         private var isPage: Boolean = false
         private var isPromo: Boolean = false
         private var postLocalId: Int? = null
@@ -62,7 +62,6 @@ data class EditorLauncherParams(
         private var promptId: Int? = null
         private var entryPoint: EntryPoint? = null
         
-        fun site(site: SiteModel) = apply { this.site = site }
         fun isPage(isPage: Boolean) = apply { this.isPage = isPage }
         fun isPromo(isPromo: Boolean) = apply { this.isPromo = isPromo }
         fun postLocalId(postLocalId: Int?) = apply { this.postLocalId = postLocalId }
@@ -90,10 +89,8 @@ data class EditorLauncherParams(
         fun entryPoint(entryPoint: EntryPoint?) = apply { this.entryPoint = entryPoint }
         
         fun build(): EditorLauncherParams {
-            requireNotNull(site) { "site is required" }
-            
             return EditorLauncherParams(
-                site = site!!,
+                site = site,
                 isPage = isPage,
                 isPromo = isPromo,
                 postLocalId = postLocalId,

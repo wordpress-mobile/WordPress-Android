@@ -32,7 +32,7 @@ class EditorLauncher @Inject constructor(
          */
         @JvmStatic
         fun getInstance(): EditorLauncher {
-            return (getContext().applicationContext as org.wordpress.android.WordPress).component().editorLauncher()
+            return (getContext().applicationContext as WordPress).component().editorLauncher()
         }
     }
 
