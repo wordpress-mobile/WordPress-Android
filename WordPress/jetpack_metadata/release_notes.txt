@@ -1,1 +1,0 @@
-We’ve added Application Passwords authentication. It’s still experimental, but once it’s fully integrated, we’ll be able to improve existing features and introduce new ones. Rock on.
