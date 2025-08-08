@@ -1041,7 +1041,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, PostModel post) {
+    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, @Nullable PostModel post) {
+        if (post == null) {
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         EditorLauncherParams params = new EditorLauncherParams.Builder(site)
                 .postLocalId(post.getId())
                 .loadAutoSaveRevision(false)
@@ -1051,8 +1056,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, PostModel post,
+    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, @Nullable PostModel post,
                                                boolean loadAutoSaveRevision) {
+        if (post == null) {
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         EditorLauncherParams params = new EditorLauncherParams.Builder(site)
             .postLocalId(post.getId())
             .loadAutoSaveRevision(loadAutoSaveRevision)
