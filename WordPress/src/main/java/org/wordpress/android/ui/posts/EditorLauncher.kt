@@ -27,6 +27,11 @@ class EditorLauncher @Inject constructor(
 ) {
     companion object {
         /**
+         * Intent extra key to indicate the Intent was created through EditorLauncher.
+         * Used for analytics to distinguish between EditorLauncher and direct Intent creation.
+         */
+        const val EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER = "launched_via_editor_launcher"
+        /**
          * Static accessor for use in static utility classes like ActivityLauncher.
          * Prefer constructor injection when possible.
          */
@@ -88,6 +93,7 @@ class EditorLauncher @Inject constructor(
         putExtra(WordPress.SITE, params.site)
         putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, params.isPage)
         putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, params.isPromo)
+        putExtra(EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, true)
     }
 
     private fun Intent.addPostExtras(params: EditorLauncherParams) {
