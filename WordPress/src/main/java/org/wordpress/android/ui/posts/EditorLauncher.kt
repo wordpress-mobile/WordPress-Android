@@ -51,7 +51,7 @@ class EditorLauncher @Inject constructor(
         val targetActivity = EditPostActivity::class.java
 
         val properties = mapOf(
-            "should_use_gutenberg_kit" to shouldUseGutenbergKit
+            "will_use_gutenberg_kit" to shouldUseGutenbergKit
         )
         analyticsTrackerWrapper.track(stat = AnalyticsTracker.Stat.EDITOR_LAUNCHER, properties)
 
@@ -72,7 +72,7 @@ class EditorLauncher @Inject constructor(
 
     /**
      * Adds all editor parameters as Intent extras.
-     * 
+     *
      * Each field in EditorLauncherParams must be handled by one of the add*Extras methods.
      * See EditorLauncherTest for complete field-to-method mapping documentation.
      */
