@@ -22,7 +22,8 @@ class EditorLauncherTest {
             "loadAutoSaveRevision", // -> EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION
             "isQuickPress",   // -> EditPostActivityConstants.EXTRA_IS_QUICKPRESS
             "isLandingEditor", // -> EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR
-            "isLandingEditorOpenedForNewSite", // -> EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
+            "isLandingEditorOpenedForNewSite", // -> EditPostActivityConstants
+                                               //    .EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
 
             // addReblogExtras()
             "reblogPostTitle", // -> EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE

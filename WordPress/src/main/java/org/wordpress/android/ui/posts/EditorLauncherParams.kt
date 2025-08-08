@@ -37,7 +37,6 @@ data class EditorLauncherParams(
     val promptId: Int? = null,
     val entryPoint: EntryPoint? = null
 ) {
-
     /**
      * Java-friendly builder pattern for EditorLauncherParams.
      */
