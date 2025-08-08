@@ -1417,9 +1417,14 @@ public class ActivityLauncher {
     }
 
     /**
-     * Sign in to wp.com from the Jetpack REST connection flow
+     * Sign in to WordPress.com from the Jetpack REST connection flow.
+     * This method is specifically for the Jetpack connection process where
+     * we need to authenticate with WordPress.com to establish the connection
+     * and return immediately to the connection flow.
+     *
+     * @param activity The activity requesting the sign-in
      */
-    public static void showJpRestConnectWpComSignInForResult(@NonNull Activity activity) {
+    public static void showWpComSignInForRestConnect(@NonNull Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
         JETPACK_REST_CONNECT.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
