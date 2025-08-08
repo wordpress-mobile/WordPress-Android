@@ -1,0 +1,4 @@
+- New Subscribers screen shows all your email and Reader subscribers—now you know who's reading your content.
+- Media now displays properly on private sites in the experimental editor.
+- Enhanced media uploads with better authentication and improved performance.
+- Fixed various upload bugs and improved overall media handling.
