@@ -297,9 +297,10 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    fun buildApplicationPasswordsItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (experimentalFeatures.isEnabled(
-                ExperimentalFeatures.Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)
+    fun buildApplicationPasswordsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) &&
+            site.isUsingSelfHostedRestApi
             ) {
             ListItem(
                 R.drawable.ic_outline_key_vertical_24,

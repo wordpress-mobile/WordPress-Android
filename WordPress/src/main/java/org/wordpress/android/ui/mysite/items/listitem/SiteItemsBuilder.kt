@@ -126,7 +126,7 @@ class SiteItemsBuilder @Inject constructor(
             siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildMeItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick),
-            siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.onClick),
+            siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(params.site, params.onClick),
         )
     }
 
