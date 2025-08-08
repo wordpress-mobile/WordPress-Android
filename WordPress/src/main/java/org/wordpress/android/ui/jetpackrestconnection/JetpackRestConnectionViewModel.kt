@@ -258,6 +258,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
+        // TODO skip if the account store token already exists, but for now don't do this to make testing easier
         _isWaitingForWPComLogin = true
         _uiEvent.value = UiEvent.StartWPComLogin
     }
