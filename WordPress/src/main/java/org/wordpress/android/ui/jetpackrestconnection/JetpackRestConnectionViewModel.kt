@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -25,7 +24,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -260,15 +258,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
-        // if we have a token then the user is already logged in so move to the next step after a delay, otherwise
-        // tell the activity to start WordPress.com login and notify us when complete
-        /*if (accountStore.accessToken?.isNotEmpty() == true) {
-            appLogWrapper.d(AppLog.T.API, "$TAG: Already logged in to WordPress.com")
-            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
-        } else {
-            _isWaitingForWPComLogin = true
-            _uiEvent.value = UiEvent.StartWPComLogin
-        }*/
         _isWaitingForWPComLogin = true
         _uiEvent.value = UiEvent.StartWPComLogin
     }
