@@ -359,6 +359,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case JETPACK_REST_CONNECT:
+                // for the Jetpack REST connection we want to return to the caller activity instead of
+                // showing the login epilogue
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
