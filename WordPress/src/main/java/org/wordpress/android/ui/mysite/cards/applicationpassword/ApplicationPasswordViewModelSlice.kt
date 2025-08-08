@@ -42,6 +42,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     fun buildCard(siteModel: SiteModel) {
         if (shouldBuildCard()) {
             buildApplicationPasswordDiscovery(siteModel)
+        } else {
+            // Be sure we are not showing the card
+            uiModelMutable.postValue(null)
         }
     }
 
