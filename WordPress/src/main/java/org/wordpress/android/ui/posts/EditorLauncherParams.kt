@@ -15,14 +15,14 @@ import org.wordpress.android.ui.posts.PostUtils.EntryPoint
  */
 data class EditorLauncherParams(
     val site: SiteModel,
-    val isPage: Boolean = false,
-    val isPromo: Boolean = false,
+    val isPage: Boolean? = null,
+    val isPromo: Boolean? = null,
     val postLocalId: Int? = null,
     val postRemoteId: Long? = null,
-    val loadAutoSaveRevision: Boolean = false,
-    val isQuickPress: Boolean = false,
-    val isLandingEditor: Boolean = false,
-    val isLandingEditorOpenedForNewSite: Boolean = false,
+    val loadAutoSaveRevision: Boolean? = null,
+    val isQuickPress: Boolean? = null,
+    val isLandingEditor: Boolean? = null,
+    val isLandingEditorOpenedForNewSite: Boolean? = null,
     val reblogPostTitle: String? = null,
     val reblogPostQuote: String? = null,
     val reblogPostImage: String? = null,
@@ -41,14 +41,14 @@ data class EditorLauncherParams(
      * Java-friendly builder pattern for EditorLauncherParams.
      */
     class Builder(private val site: SiteModel) {
-        private var isPage: Boolean = false
-        private var isPromo: Boolean = false
+        private var isPage: Boolean? = null
+        private var isPromo: Boolean? = null
         private var postLocalId: Int? = null
         private var postRemoteId: Long? = null
-        private var loadAutoSaveRevision: Boolean = false
-        private var isQuickPress: Boolean = false
-        private var isLandingEditor: Boolean = false
-        private var isLandingEditorOpenedForNewSite: Boolean = false
+        private var loadAutoSaveRevision: Boolean? = null
+        private var isQuickPress: Boolean? = null
+        private var isLandingEditor: Boolean? = null
+        private var isLandingEditorOpenedForNewSite: Boolean? = null
         private var reblogPostTitle: String? = null
         private var reblogPostQuote: String? = null
         private var reblogPostImage: String? = null
@@ -63,17 +63,17 @@ data class EditorLauncherParams(
         private var promptId: Int? = null
         private var entryPoint: EntryPoint? = null
 
-        fun isPage(isPage: Boolean) = apply { this.isPage = isPage }
-        fun isPromo(isPromo: Boolean) = apply { this.isPromo = isPromo }
+        fun isPage(isPage: Boolean?) = apply { this.isPage = isPage }
+        fun isPromo(isPromo: Boolean?) = apply { this.isPromo = isPromo }
         fun postLocalId(postLocalId: Int?) = apply { this.postLocalId = postLocalId }
         fun postRemoteId(postRemoteId: Long?) = apply { this.postRemoteId = postRemoteId }
-        fun loadAutoSaveRevision(loadAutoSaveRevision: Boolean) = apply {
+        fun loadAutoSaveRevision(loadAutoSaveRevision: Boolean?) = apply {
             this.loadAutoSaveRevision = loadAutoSaveRevision
         }
 
-        fun isQuickPress(isQuickPress: Boolean) = apply { this.isQuickPress = isQuickPress }
-        fun isLandingEditor(isLandingEditor: Boolean) = apply { this.isLandingEditor = isLandingEditor }
-        fun isLandingEditorOpenedForNewSite(isLandingEditorOpenedForNewSite: Boolean) = apply {
+        fun isQuickPress(isQuickPress: Boolean?) = apply { this.isQuickPress = isQuickPress }
+        fun isLandingEditor(isLandingEditor: Boolean?) = apply { this.isLandingEditor = isLandingEditor }
+        fun isLandingEditorOpenedForNewSite(isLandingEditorOpenedForNewSite: Boolean?) = apply {
             this.isLandingEditorOpenedForNewSite = isLandingEditorOpenedForNewSite
         }
 

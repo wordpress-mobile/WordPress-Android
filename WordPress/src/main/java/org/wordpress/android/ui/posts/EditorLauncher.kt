@@ -91,21 +91,20 @@ class EditorLauncher @Inject constructor(
 
     private fun Intent.addBasicExtras(params: EditorLauncherParams) {
         putExtra(WordPress.SITE, params.site)
-        putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, params.isPage)
-        putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, params.isPromo)
+        params.isPage?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, it) }
+        params.isPromo?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, it) }
         putExtra(EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, true)
     }
 
     private fun Intent.addPostExtras(params: EditorLauncherParams) {
         params.postLocalId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, it) }
         params.postRemoteId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, it) }
-        putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, params.loadAutoSaveRevision)
-        putExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS, params.isQuickPress)
-        putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, params.isLandingEditor)
-        putExtra(
-            EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE,
-            params.isLandingEditorOpenedForNewSite
-        )
+        params.loadAutoSaveRevision?.let { putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, it) }
+        params.isQuickPress?.let { putExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS, it) }
+        params.isLandingEditor?.let { putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, it) }
+        params.isLandingEditorOpenedForNewSite?.let {
+            putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, it)
+        }
     }
 
     private fun Intent.addReblogExtras(params: EditorLauncherParams) {
