@@ -467,7 +467,6 @@ public class ActivityLauncher {
                 .reblogPostImage(post.getFeaturedImage())
                 .reblogPostCitation(post.getUrl())
                 .reblogAction(EditPostActivityConstants.ACTION_REBLOG)
-                .source(reblogSource)
                 .build();
 
         Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
