@@ -72,6 +72,9 @@ class EditorLauncher @Inject constructor(
 
     /**
      * Adds all editor parameters as Intent extras.
+     * 
+     * Each field in EditorLauncherParams must be handled by one of the add*Extras methods.
+     * See EditorLauncherTest for complete field-to-method mapping documentation.
      */
     private fun Intent.addEditorExtras(params: EditorLauncherParams) {
         addBasicExtras(params)

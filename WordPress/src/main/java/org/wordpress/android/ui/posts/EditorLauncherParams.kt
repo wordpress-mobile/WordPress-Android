@@ -9,6 +9,9 @@ import org.wordpress.android.ui.posts.PostUtils.EntryPoint
  *
  * This data class replaces the Bundle-based approach with named parameters in Kotlin
  * and provides a builder pattern for Java compatibility.
+ *
+ * All fields are mapped to Intent extras in EditorLauncher.addEditorExtras().
+ * See EditorLauncherTest for field-to-method mapping documentation.
  */
 data class EditorLauncherParams(
     val site: SiteModel,
