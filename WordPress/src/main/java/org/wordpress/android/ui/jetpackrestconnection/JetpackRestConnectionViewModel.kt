@@ -285,7 +285,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    @Suppress("Unused")
+    @Suppress("Unused", "UnusedPrivateMember")
     private fun getSite() = selectedSiteRepository.getSelectedSite()
         ?: error("No site is currently selected in SelectedSiteRepository")
 
