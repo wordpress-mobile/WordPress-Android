@@ -147,8 +147,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
                     when (type) {
                         "at-symbol" -> mEditorFragmentListener.showUserSuggestions { result ->
                             result?.let {
-                                // Append space to suggestion to complete GutenbergKit's autocomplete session,
-                                // otherwise it will immediately restart
+                                // Appended space completes the autocomplete session
                                 gutenbergView.appendTextAtCursor("$it ")
                             }
                         }
@@ -156,8 +155,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
                             if (isXPostsEnabled) {
                                 mEditorFragmentListener.showXpostSuggestions { result ->
                                     result?.let {
-                                        // Append space to suggestion to complete GutenbergKit's autocomplete session,
-                                        // otherwise it will immediately restart
+                                        // Appended space completes the autocomplete session
                                         gutenbergView.appendTextAtCursor("$it ")
                                     }
                                 }
