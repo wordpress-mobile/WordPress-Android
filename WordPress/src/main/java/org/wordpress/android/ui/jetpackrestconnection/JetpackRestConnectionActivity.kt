@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
@@ -25,7 +25,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-    
+
     @Inject
     lateinit var accountStore: AccountStore
 
@@ -56,13 +56,20 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun startWPComLogin() {
-        ActivityLauncher.showSignInForResultWpComOnly(this)
+        // Go directly to WordPress.com webview login to skip email step
+        val intent = Intent(this, WPWebViewActivity::class.java).apply {
+            putExtra(WPWebViewActivity.URL_TO_LOAD, "https://wordpress.com/log-in")
+            putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.WPCOM_LOGIN_URL)
+            putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true)
+        }
+        startActivityForResult(intent, RequestCodes.ADD_ACCOUNT)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
+
         if (requestCode == RequestCodes.ADD_ACCOUNT && viewModel.isWaitingForWPComLogin) {
             // User returned from WordPress.com login
             val loginSuccessful = resultCode == RESULT_OK
