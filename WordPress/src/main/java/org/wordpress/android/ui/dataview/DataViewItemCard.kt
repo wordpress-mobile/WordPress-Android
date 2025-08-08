@@ -102,7 +102,7 @@ fun DataViewItemCard(
                             maxLines = maxLinesFor(field.valueType),
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = if (index == item.fields.size - 1) {
+                            textAlign = if (index == item.fields.size - 1 && !item.skipEndPositioning) {
                                 TextAlign.End
                             } else {
                                 TextAlign.Start

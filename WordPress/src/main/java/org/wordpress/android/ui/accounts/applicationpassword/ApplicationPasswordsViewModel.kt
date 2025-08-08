@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.accounts.applicationpassword
 
+import android.content.Context
 import android.content.SharedPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -30,6 +32,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class ApplicationPasswordsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -118,12 +121,31 @@ class ApplicationPasswordsViewModel @Inject constructor(
             title = applicationPassword.name,
             fields = listOf(
                 DataViewItemField(
+                    value = context.resources.getString(R.string.application_password_last_used_label),
+                    valueType = DataViewFieldType.TEXT,
+                ),
+                DataViewItemField(
+                    value = formatLastUsed(applicationPassword.lastUsed),
+                    valueType = DataViewFieldType.DATE,
+                ),
+                DataViewItemField(
+                    value = context.resources.getString(R.string.application_password_created_label),
+                    valueType = DataViewFieldType.TEXT,
+                ),
+                DataViewItemField(
                     value = formatDateString(applicationPassword.created),
                     valueType = DataViewFieldType.DATE,
-                )
+                ),
             ),
+            skipEndPositioning = true,
             data = applicationPassword // Store the original object for click handling
         )
+    }
+
+    private fun formatLastUsed(lastUsed: String?): String = if (lastUsed.isNullOrEmpty()) {
+        context.resources.getString(R.string.application_password_never_used)
+    } else {
+        formatDateString(lastUsed)
     }
 
     /**
@@ -134,7 +156,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     private fun formatDateString(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
 
             val parsedDate = inputFormat.parse(dateString)
             parsedDate?.let { outputFormat.format(it) } ?: dateString
