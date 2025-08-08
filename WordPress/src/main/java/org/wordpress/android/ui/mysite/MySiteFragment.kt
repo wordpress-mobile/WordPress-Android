@@ -735,6 +735,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.site
         )
 
+        is SiteNavigationAction.OpenApplicationPasswordsList -> {
+            ActivityLauncher.viewApplicationPasswordList(requireActivity())
+        }
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
             activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
         }

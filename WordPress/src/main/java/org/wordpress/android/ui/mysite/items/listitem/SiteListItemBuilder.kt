@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SUBSCRIBERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -47,6 +48,7 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
+    private val experimentalFeatures: ExperimentalFeatures
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -293,6 +295,22 @@ class SiteListItemBuilder @Inject constructor(
                 listItemAction = ListItemAction.SITE_MONITORING
             )
         } else null
+    }
+
+    fun buildApplicationPasswordsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (
+            experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) &&
+            site.isUsingSelfHostedRestApi
+            ) {
+            ListItem(
+                R.drawable.ic_outline_key_vertical_24,
+                UiStringRes(R.string.application_password_info_title),
+                onClick = ListItemInteraction.create(ListItemAction.APPLICATION_PASSWORDS, onClick),
+                listItemAction = ListItemAction.APPLICATION_PASSWORDS
+            )
+        } else {
+            null
+        }
     }
 
     companion object {

@@ -7,6 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -17,11 +19,13 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import uniffi.wp_api.ApplicationPasswordAppId
-import uniffi.wp_api.ApplicationPasswordUuid
+import java.text.SimpleDateFormat
+import java.util.Locale
+import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
-import uniffi.wp_api.IpAddress
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,12 +33,13 @@ import javax.inject.Named
 @HiltViewModel
 class ApplicationPasswordsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val wpApiClientProvider: WpApiClientProvider,
+    private val appLogWrapper: AppLogWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    appLogWrapper: AppLogWrapper,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
-    selectedSiteRepository: SelectedSiteRepository,
-    accountStore: AccountStore,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
@@ -58,7 +63,16 @@ class ApplicationPasswordsViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
-        val allApplicationPasswords = createDummyApplicationPasswords()
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+
+        if (selectedSite == null) {
+            val error = "No selected site to get Application Passwords"
+            appLogWrapper.e(AppLog.T.API, error)
+            onError(error)
+            return@withContext emptyList()
+        }
+
+        val allApplicationPasswords = getApplicationPasswordsList(selectedSite)
 
         // Filter by search query
         val filteredPasswords = if (searchQuery.isBlank()) {
@@ -115,79 +129,100 @@ class ApplicationPasswordsViewModel @Inject constructor(
             title = applicationPassword.name,
             fields = listOf(
                 DataViewItemField(
-                    value = formatLastUsed(applicationPassword.lastUsed),
+                    value = context.resources.getString(R.string.application_password_last_used_label),
                     valueType = DataViewFieldType.TEXT,
-                    weight = 1f
                 ),
                 DataViewItemField(
-                    value = applicationPassword.created,
+                    value = formatLastUsed(applicationPassword.lastUsed),
                     valueType = DataViewFieldType.DATE,
-                    weight = 0.8f
-                )
+                ),
+                DataViewItemField(
+                    value = context.resources.getString(R.string.application_password_created_label),
+                    valueType = DataViewFieldType.TEXT,
+                ),
+                DataViewItemField(
+                    value = formatDateString(applicationPassword.created),
+                    valueType = DataViewFieldType.DATE,
+                ),
             ),
+            skipEndPositioning = true,
             data = applicationPassword // Store the original object for click handling
         )
     }
 
-    private fun formatLastUsed(lastUsed: String?): String {
-        return if (lastUsed.isNullOrEmpty()) {
-            context.resources.getString(R.string.application_password_never_used)
-        } else {
-            lastUsed
+    private fun formatLastUsed(lastUsed: String?): String = if (lastUsed.isNullOrEmpty()) {
+        context.resources.getString(R.string.application_password_never_used)
+    } else {
+        formatDateString(lastUsed)
+    }
+
+    /**
+     * Formats a date string from "2025-08-07T11:02:34" format to "July 31, 2025" format.
+     * If the input doesn't match the expected format, returns the input as-is.
+     */
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun formatDateString(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+
+            val parsedDate = inputFormat.parse(dateString)
+            parsedDate?.let { outputFormat.format(it) } ?: dateString
+        } catch (e: Exception) {
+            // If parsing fails, return the original string
+            dateString
         }
     }
 
-    private fun createDummyApplicationPasswords(): List<ApplicationPasswordWithViewContext> {
-        return listOf(
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-1"),
-                name = "WordPress Mobile App",
-                appId = ApplicationPasswordAppId("wordpress-mobile"),
-                created = "January 15, 2024",
-                lastUsed = "August 05, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-2"),
-                name = "Jetpack Mobile App",
-                appId = ApplicationPasswordAppId("jetpack-mobile"),
-                created = "March 22, 2024",
-                lastUsed = "August 03, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-3"),
-                name = "Desktop Publisher",
-                appId = ApplicationPasswordAppId("desktop-app"),
-                created = "May 10, 2024",
-                lastUsed = "July 22, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-4"),
-                name = "Third Party Integration",
-                appId = ApplicationPasswordAppId("third-party"),
-                created = "June 18, 2024",
-                lastUsed = null,
-                lastIp = null
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-5"),
-                name = "Legacy API Client",
-                appId = ApplicationPasswordAppId("legacy-client"),
-                created = "February 28, 2024",
-                lastUsed = "January 15, 2025",
-                lastIp = IpAddress("IP")
-            ),
-            ApplicationPasswordWithViewContext(
-                uuid = ApplicationPasswordUuid("uuid-6"),
-                name = "Development Testing Tool",
-                appId = ApplicationPasswordAppId("dev-tool"),
-                created = "July 31, 2025",
-                lastUsed = "August 06, 2025",
-                lastIp = IpAddress("IP")
-            )
-        )
+    private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
+        val wpApiClient = wpApiClientProvider.getWpApiClient(site)
+
+        val currentUserId = getCurrentUserId(wpApiClient)
+        return if (currentUserId == null) {
+            emptyList()
+        } else {
+            getAllApplicationPasswords(currentUserId, wpApiClient)
+        }
+    }
+
+    private suspend fun getCurrentUserId(wpApiClient: WpApiClient): Long? {
+        val userIdResponse = wpApiClient.request { requestBuilder ->
+            requestBuilder.users().retrieveMeWithViewContext()
+        }
+        return when (userIdResponse) {
+            is WpRequestResult.Success -> {
+                userIdResponse.response.data.id
+            }
+
+            else -> {
+                val error = "Error getting current user Id"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+        }
+    }
+
+    private suspend fun getAllApplicationPasswords(
+        userId: Long,
+        wpApiClient: WpApiClient
+    ): List<ApplicationPasswordWithViewContext> {
+        val currentApplicationPasswordResponse = wpApiClient.request { requestBuilder ->
+            requestBuilder.applicationPasswords().listWithViewContext(userId)
+        }
+
+        return when (currentApplicationPasswordResponse) {
+            is WpRequestResult.Success -> {
+                currentApplicationPasswordResponse.response.data
+            }
+
+            else -> {
+                val error = "Error getting Application Password list"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+        }
     }
 
     companion object {
