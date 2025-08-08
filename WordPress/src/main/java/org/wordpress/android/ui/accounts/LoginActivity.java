@@ -194,6 +194,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
+                case JETPACK_REST_CONNECT:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
                     mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
@@ -356,6 +357,10 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 break;
             case JETPACK_STATS:
                 ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
+                break;
+            case JETPACK_REST_CONNECT:
+                setResult(Activity.RESULT_OK);
+                finish();
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:

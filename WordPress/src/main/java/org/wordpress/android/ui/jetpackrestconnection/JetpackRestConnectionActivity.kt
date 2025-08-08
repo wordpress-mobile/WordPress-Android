@@ -57,7 +57,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     }
 
     private fun startWPComLogin() {
-        ActivityLauncher.showSignInForResultWpComOnly(this)
+        ActivityLauncher.showJpRestConnectWpComSignInForResult(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
