@@ -526,9 +526,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         initializeViewModels()
-        
+
         // Track if this editor launch came via EditorLauncher (only on initial creation)
-        if (savedInstanceState == null && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
             analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
         }
 
