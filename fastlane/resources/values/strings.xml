@@ -117,6 +117,9 @@
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
     <string name="sort_by">Sort by</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="start">Start</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -221,7 +224,6 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
@@ -973,9 +975,11 @@
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
     <string name="experimental_subscribers_feature">Experimental subscribers</string>
-    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers (work in progress)</string>
+    <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites.</string>
+    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="experimental_jetpack_rest_connection">Experimental Jetpack REST Connection</string>
+    <string name="experimental_jetpack_rest_connection_description">Enable experimental Jetpack REST Connection flow</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -1002,6 +1006,26 @@
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
+
+    <!-- Jetpack REST Connection Screen -->
+    <string name="jetpack_rest_connection_title">Jetpack Connection</string>
+    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack (Simulated)</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Login to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connect your site</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_finalize">Finalize setup</string>
+    <string name="jetpack_rest_connection_status_not_started">Not started</string>
+    <string name="jetpack_rest_connection_status_in_progress">In progress…</string>
+    <string name="jetpack_rest_connection_status_completed">Completed</string>
+    <string name="jetpack_rest_connection_status_failed">Failed</string>
+    <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
+    <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is already installed</string>
+    <string name="jetpack_rest_connection_error_timeout">Timed out</string>
+    <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
+    <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
+    <string name="jetpack_rest_connection_error_wpcom">Unable to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
@@ -2494,7 +2518,6 @@
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
-    <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
@@ -3605,7 +3628,6 @@
 
     <string name="create_post_fab_tooltip">Create a post</string>
     <string name="create_page_fab_tooltip">Create a page</string>
-    <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
@@ -3741,7 +3763,6 @@
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
-    <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
@@ -4984,10 +5005,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Subscribers -->
     <string name="subscribers_filter_email_subscription">Email subscription</string>
     <string name="subscribers_filter_reader_subscription">Reader subscription</string>
-    <string name="subscribers_sort_email">Email address</string>
     <string name="subscribers_sort_date">Date subscribed</string>
-    <string name="subscribers_sort_display_name">Display name</string>
-    <string name="subscribers_sort_plan">Plan</string>
+    <string name="subscribers_sort_name">Name</string>
     <string name="subscribers_empty">There are no subscribers</string>
     <string name="subscribers_empty_search">No results found</string>
     <string name="subscribers_error_title">Something went wrong</string>
@@ -5022,6 +5041,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     </string>
     <string name="subscribers_add_success">Successfully added subscribers</string>
     <string name="subscribers_add_failed">Failed to add subscribers</string>
+    <string name="subscribers_delete_confirmation_title">Delete subscriber</string>
+    <string name="subscribers_delete_confirmation_message">Are you sure you want to delete this subscriber?</string>
+    <string name="subscribers_delete_success_title">Subscriber deleted</string>
+    <string name="subscribers_delete_success_message">The subscriber has been deleted, but it may take a minute for the deletion to take effect</string>
+    <string name="subscribers_delete_failed">Failed to delete subscriber</string>
 
     <!-- Application Password authentication -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
@@ -5029,6 +5053,22 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
+    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
-    <string name="application_password_disable_feature_description">Disabling application password will remove your login info from %1$s sites.</string>
+    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
+    <string name="application_password_info_title">Application Passwords</string>
+    <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
+    <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
+    <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
+    <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
+    <string name="enable">Enable</string>
+    <string name="application_password_never_used">Never used</string>
+    <string name="application_password_name_label">Name:</string>
+    <string name="application_password_created_label">Created:</string>
+    <string name="application_password_last_used_label">Last used:</string>
+    <string name="application_password_last_ip_label">Last IP:</string>
+    <string name="application_password_no_ip">No IP recorded</string>
+    <string name="application_password_name_sort">Name</string>
+    <string name="application_password_created_sort">Created</string>
+    <string name="application_password_last_used_sort">Last used</string>
 </resources>
