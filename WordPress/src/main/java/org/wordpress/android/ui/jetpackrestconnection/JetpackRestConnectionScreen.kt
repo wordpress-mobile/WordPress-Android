@@ -249,18 +249,17 @@ private fun ConnectionStepContent(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            text = getStatusText(status),
-            style = MaterialTheme.typography.bodyMedium,
-            color = style.statusColor
-        )
-
         if (errorType != null && status == ConnectionStatus.Failed) {
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = getErrorText(LocalContext.current, errorType),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
+            )
+        } else {
+            Text(
+                text = getStatusText(status),
+                style = MaterialTheme.typography.bodyMedium,
+                color = style.statusColor
             )
         }
     }
