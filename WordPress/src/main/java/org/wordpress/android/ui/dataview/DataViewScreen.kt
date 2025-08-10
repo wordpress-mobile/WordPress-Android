@@ -114,12 +114,12 @@ fun DataViewScreen(
                 LoadingState.ERROR -> ErrorDataView(uiState.value.errorMessage)
                 LoadingState.OFFLINE -> OfflineDataView()
                 LoadingState.LOADING_MORE,
-                LoadingState.LOADED -> EmptyDataView(emptyView)/*LoadedDataView(
+                LoadingState.LOADED -> LoadedDataView(
                     items = uiState.value.items,
                     onItemClick = onItemClick,
                     onFetchMore = onFetchMore,
                     showProgress = uiState.value.loadingState == LoadingState.LOADING_MORE,
-                )*/
+                )
             }
         }
     }
