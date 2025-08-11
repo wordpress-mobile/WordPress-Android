@@ -24,7 +24,6 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
-import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface
@@ -56,7 +55,7 @@ import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(),
-    EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
+    GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
@@ -463,9 +462,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(),
     }
 
 
-    override fun onEditorThemeUpdated(editorTheme: Bundle?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
 
     fun startWithEditorSettings(editorSettings: String) {
         if (gutenbergView == null || isEditorStarted) {
