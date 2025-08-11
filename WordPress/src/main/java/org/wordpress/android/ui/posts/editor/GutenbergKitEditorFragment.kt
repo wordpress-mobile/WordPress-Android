@@ -25,8 +25,6 @@ import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
@@ -55,7 +53,6 @@ import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(),
-    GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
@@ -265,7 +262,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(),
         return false
     }
 
-
     override fun setTitle(title: CharSequence?) {
         // Unused, no-op retained for the shared interface with Gutenberg
     }
@@ -461,8 +457,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(),
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
-
-
     fun startWithEditorSettings(editorSettings: String) {
         if (gutenbergView == null || isEditorStarted) {
             return
@@ -517,13 +511,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(),
         gutenbergView?.redo()
     }
 
-    override fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onGutenbergDialogNegativeClicked(instanceTag: String) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
 
     override fun onConnectionStatusChange(isConnected: Boolean) {
         // Unused, no-op retained for the shared interface with Gutenberg
