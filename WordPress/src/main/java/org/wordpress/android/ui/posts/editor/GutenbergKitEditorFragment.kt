@@ -37,7 +37,6 @@ import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
-import org.wordpress.aztec.IHistoryListener
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
@@ -56,7 +55,7 @@ import org.wordpress.android.ui.posts.GutenbergKitViewModel
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract(), IHistoryListener,
+class GutenbergKitEditorFragment : EditorFragmentAbstract(),
     EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
     GutenbergNetworkConnectionListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -267,21 +266,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), IHistoryListener,
         return false
     }
 
-    override fun onRedoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndo() {
-        // Analytics tracking is not available in GB mobile
-    }
-
-    override fun onRedo() {
-        // Analytics tracking is not available in GB mobile
-    }
 
     override fun setTitle(title: CharSequence?) {
         // Unused, no-op retained for the shared interface with Gutenberg
