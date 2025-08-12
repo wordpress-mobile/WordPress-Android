@@ -249,18 +249,17 @@ private fun ConnectionStepContent(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            text = getStatusText(status),
-            style = MaterialTheme.typography.bodyMedium,
-            color = style.statusColor
-        )
-
         if (errorType != null && status == ConnectionStatus.Failed) {
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = getErrorText(LocalContext.current, errorType),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
+            )
+        } else {
+            Text(
+                text = getStatusText(status),
+                style = MaterialTheme.typography.bodyMedium,
+                color = style.statusColor
             )
         }
     }
@@ -268,11 +267,11 @@ private fun ConnectionStepContent(
 
 private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
-        is ErrorType.JetpackAlreadyInstalled -> R.string.jetpack_rest_connection_error_jetpack_already_installed
+        ErrorType.FailedToLoginWpCom -> R.string.jetpack_rest_connection_error_login_wpcom
+        ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_connect_wpcom
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
-        is ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_wpcom
     }
     val baseMessage = context.getString(messageRes)
     return errorType.message?.let { "$baseMessage: $it" } ?: baseMessage
@@ -422,7 +421,7 @@ private fun JetpackRestConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectWpCom to StepState(
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToConnectWpCom()
+                    ErrorType.FailedToConnectWpCom
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )
@@ -439,5 +438,7 @@ private fun JetpackRestConnectionScreenPreview() {
     )
 }
 
-@ColorRes private val IN_PROGRESS_BACKGROUND_COLOR = R.color.yellow_10 // Light yellow
-@ColorRes private val IN_PROGRESS_FOREGROUND_COLOR = R.color.yellow_90 // Dark brown for readability on the above
+@ColorRes
+private val IN_PROGRESS_BACKGROUND_COLOR = R.color.yellow_10 // Light yellow
+@ColorRes
+private val IN_PROGRESS_FOREGROUND_COLOR = R.color.yellow_90 // Dark brown for readability on the above
