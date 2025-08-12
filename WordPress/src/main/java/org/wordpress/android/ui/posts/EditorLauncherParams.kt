@@ -5,11 +5,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 
 /**
- * Site parameter for EditorLauncherParams - supports direct SiteModel or QuickPress blog ID.
+ * Site source for EditorLauncherParams - supports direct SiteModel or QuickPress blog ID.
  */
-sealed class EditorLauncherSiteParameter {
-    data class EditorLauncherSite(val siteModel: SiteModel) : EditorLauncherSiteParameter()
-    data class QuickPressBlogId(val quickPressBlogId: Int) : EditorLauncherSiteParameter()
+sealed class EditorLauncherSiteSource {
+    data class DirectSite(val siteModel: SiteModel) : EditorLauncherSiteSource()
+    data class QuickPressSiteId(val siteId: Int) : EditorLauncherSiteSource()
 }
 
 /**
@@ -22,7 +22,7 @@ sealed class EditorLauncherSiteParameter {
  * See EditorLauncherTest for field-to-method mapping documentation.
  */
 data class EditorLauncherParams(
-    val siteParameter: EditorLauncherSiteParameter,
+    val siteSource: EditorLauncherSiteSource,
     val isPage: Boolean? = null,
     val isPromo: Boolean? = null,
     val postLocalId: Int? = null,
@@ -48,20 +48,20 @@ data class EditorLauncherParams(
     /**
      * Java-friendly builder pattern for EditorLauncherParams.
      */
-    class Builder(private val siteParameter: EditorLauncherSiteParameter) {
+    class Builder(private val siteSource: EditorLauncherSiteSource) {
         companion object {
             /**
              * Create builder for SiteModel (most common case)
              */
             @JvmStatic
-            fun forSite(site: SiteModel): Builder = Builder(EditorLauncherSiteParameter.EditorLauncherSite(site))
+            fun forSite(site: SiteModel): Builder = Builder(EditorLauncherSiteSource.DirectSite(site))
 
             /**
              * Create builder for QuickPress blog ID (for shortcuts that resolve site at launch time)
              */
             @JvmStatic
             fun forQuickPressBlogId(blogId: Int): Builder =
-                Builder(EditorLauncherSiteParameter.QuickPressBlogId(blogId))
+                Builder(EditorLauncherSiteSource.QuickPressSiteId(blogId))
         }
         private var isPage: Boolean? = null
         private var isPromo: Boolean? = null
@@ -115,7 +115,7 @@ data class EditorLauncherParams(
 
         fun build(): EditorLauncherParams {
             return EditorLauncherParams(
-                siteParameter = siteParameter,
+                siteSource = siteSource,
                 isPage = isPage,
                 isPromo = isPromo,
                 postLocalId = postLocalId,
