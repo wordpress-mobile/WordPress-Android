@@ -12,11 +12,11 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackrestconnection.JetpackInstaller.InstallJetpackStatus
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.PluginStatus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -330,14 +330,15 @@ class JetpackRestConnectionViewModel @Inject constructor(
         refreshSite()
 
         when (status) {
-            InstallJetpackStatus.ACTIVE -> {
+            PluginStatus.ACTIVE,
+            PluginStatus.NETWORK_ACTIVE -> {
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Completed
                 )
             }
 
-            InstallJetpackStatus.INACTIVE -> {
+            PluginStatus.INACTIVE -> {
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
@@ -345,7 +346,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 )
             }
 
-            InstallJetpackStatus.FAILED -> {
+            else -> {
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
