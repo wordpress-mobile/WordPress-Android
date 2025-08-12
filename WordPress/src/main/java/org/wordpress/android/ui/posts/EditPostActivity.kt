@@ -2564,11 +2564,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
     private fun isFirstTimePublish(publishPost: Boolean): Boolean {
-        val originalStatus = editPostRepository.status
-        return (((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
-                || (originalStatus == PostStatus.SCHEDULED && publishPost)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.isLocalDraft)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.remotePostId == 0L))
+        return editPostRepository.isFirstTimePublish(publishPost)
     }
 
     /**
