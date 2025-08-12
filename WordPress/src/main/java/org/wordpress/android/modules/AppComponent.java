@@ -109,6 +109,7 @@ import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCate
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
@@ -561,4 +562,7 @@ public interface AppComponent {
     void inject(PostResolutionOverlayFragment object);
 
     void inject(LoginSiteApplicationPasswordFragment object);
+
+    // Provide access to EditorLauncher for static utility classes
+    EditorLauncher editorLauncher();
 }
