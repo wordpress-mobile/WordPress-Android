@@ -95,8 +95,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        launch {
-            executeStepWithErrorHandling(step)
+        if (step == ConnectionStep.LoginWpCom) {
+            loginWpCom()
+        } else {
+            launch {
+                executeStepWithErrorHandling(step)
+            }
         }
     }
 
@@ -221,8 +225,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun executeStep(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Logging into wordpress.com")
-                loginWpCom()
+                // handled separately since it doesn't require a coroutine and shouldn't time out
             }
 
             ConnectionStep.InstallJetpack -> {
@@ -248,7 +251,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Starts the WordPress.com login flow if not already logged in
+     * Starts the WordPress.com login flow
      */
     private fun loginWpCom() {
         isWaitingForWPComLogin = true
@@ -260,7 +263,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private suspend fun installJetpack() {
         val status = jetpackInstaller.installJetpack(getSite())
-        when (status) {
+        when (status.first) {
             InstallJetpackStatus.ACTIVE,
             InstallJetpackStatus.INACTIVE -> {
                 updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
@@ -347,7 +350,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
         private const val TAG = "JetpackRestConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 30000L // 30 seconds timeout per step
-        private const val STEP_DELAY_MS = 2000L
 
         /**
          * Requirements:

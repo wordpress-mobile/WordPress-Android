@@ -18,19 +18,19 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
-    suspend fun installJetpack(site: SiteModel): InstallJetpackStatus {
+    suspend fun installJetpack(site: SiteModel): Pair<InstallJetpackStatus, Int> {
         if (site.isJetpackInstalled) {
             return if (site.isJetpackConnected) {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and active")
-                InstallJetpackStatus.ACTIVE
+                Pair(InstallJetpackStatus.ACTIVE, 200)
             } else {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and inactive")
-                InstallJetpackStatus.INACTIVE
+                Pair(InstallJetpackStatus.INACTIVE, 200)
             }
         }
 
         val wpApiClient = WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.url),
+            wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
             authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
                 requireNotNull(site.apiRestUsernamePlain) { "Username is required but was null" },
                 requireNotNull(site.apiRestPasswordPlain) { "Password is required but was null" }
@@ -50,38 +50,31 @@ class JetpackInstaller @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install response = $response")
         when (response) {
             is WpRequestResult.Success -> {
-                return when (response.successfulResponse()?.data?.status) {
-                    PluginStatus.ACTIVE -> {
-                        InstallJetpackStatus.ACTIVE
+                return when (response.response.data.status) {
+                    PluginStatus.ACTIVE,
+                    PluginStatus.NETWORK_ACTIVE -> {
+                        Pair(InstallJetpackStatus.ACTIVE, 200)
                     }
 
                     PluginStatus.INACTIVE -> {
-                        InstallJetpackStatus.INACTIVE
-                    }
-                    // TODO not sure what NETWORK_ACTIVE means
-                    PluginStatus.NETWORK_ACTIVE -> {
-                        InstallJetpackStatus.ACTIVE
-                    }
-
-                    null -> {
-                        InstallJetpackStatus.FAILED
+                        Pair(InstallJetpackStatus.INACTIVE, 200)
                     }
                 }
             }
 
             is WpRequestResult.WpError<*> -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.errorCode}")
-                return InstallJetpackStatus.FAILED
+                return Pair(InstallJetpackStatus.FAILED, 0)
             }
 
             is WpRequestResult.UnknownError<*> -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.statusCode}")
-                return InstallJetpackStatus.FAILED
+                return Pair(InstallJetpackStatus.FAILED, response.statusCode.toInt())
             }
 
             else -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = unknown")
-                return InstallJetpackStatus.FAILED
+                return Pair(InstallJetpackStatus.FAILED, 0)
             }
         }
     }
