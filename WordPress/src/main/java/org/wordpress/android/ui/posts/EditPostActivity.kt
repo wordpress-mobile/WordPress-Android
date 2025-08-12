@@ -2216,9 +2216,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 val exceptionHandler: AztecExceptionHandler.ExceptionHandlerHelper =
                     object : AztecExceptionHandler.ExceptionHandlerHelper {
                         override fun shouldLog(ex: Throwable): Boolean {
-                            // Do not log private or password protected post
-                            return editPostRepository.hasPost() && editPostRepository.password.isEmpty()
-                                    && !editPostRepository.hasStatus(PostStatus.PRIVATE)
+                            return editPostRepository.shouldLog()
                         }
                     }
                 aztecEditorFragment.enableContentLogOnCrashes(exceptionHandler)
