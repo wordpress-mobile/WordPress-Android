@@ -13,6 +13,22 @@ import org.wordpress.android.util.AppLog
 /**
  * Pure utility functions extracted from EditPostActivity.
  * These functions take parameters, return values, and don't access class state.
+ * 
+ * Implementation note: This is an `object` (singleton) rather than a class to prevent
+ * accidental introduction of mutable state. Since these are pure functions with no 
+ * side effects, they don't typically need mocking at call sites - tests can use real
+ * data and verify actual behavior.
+ * 
+ * If mockability becomes necessary for complex test scenarios, consider refactoring to:
+ * ```
+ * interface EditorUnitFunctions {
+ *     fun isActionSendOrNewMedia(action: String?): Boolean = ...
+ *     // ... other functions with default implementations
+ *     companion object : EditorUnitFunctions
+ * }
+ * ```
+ * This would provide mockability while maintaining default implementations and 
+ * discouraging stateful modifications.
  */
 object EditorUnitFunctions {
     /**
