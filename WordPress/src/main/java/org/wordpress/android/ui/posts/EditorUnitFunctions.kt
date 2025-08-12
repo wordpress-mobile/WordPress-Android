@@ -137,4 +137,18 @@ object EditorUnitFunctions {
             }
         }
     }
+
+    /**
+     * Generates HTML for displaying a failed media upload with retry functionality.
+     */
+    fun getUploadErrorHtml(mediaId: String, path: String, tapToTryAgainString: String): String {
+        return String.format(
+            java.util.Locale.US,
+            ("<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
+                    + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
+                    + "contenteditable=\"false\"></progress>"
+                    + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>"),
+            mediaId, tapToTryAgainString, mediaId, mediaId, path
+        )
+    }
 }

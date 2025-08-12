@@ -265,11 +265,9 @@ import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsExcep
 import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.MediaType
 import org.wordpress.gutenberg.WebViewGlobal
 import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
-import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -2839,16 +2837,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
     private var mediaCapturePath: String? = ""
-    private fun getUploadErrorHtml(mediaId: String, path: String): String {
-        return String.format(
-            Locale.US,
-            ("<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
-                    + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
-                    + "contenteditable=\"false\"></progress>"
-                    + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>"),
-            mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path
-        )
-    }
 
     private fun migrateLegacyDraft(inputContent: String): String {
         var content = inputContent
@@ -2865,7 +2853,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     editorMedia
                         .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
                 )?.let { mediaFile ->
-                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    val replacement = EditorUnitFunctions.getUploadErrorHtml(
+                        mediaFile.id.toString(),
+                        mediaFile.filePath,
+                        getString(R.string.tap_to_try_again)
+                    )
                     matcher.appendReplacement(stringBuffer, replacement)
                 }
             }
