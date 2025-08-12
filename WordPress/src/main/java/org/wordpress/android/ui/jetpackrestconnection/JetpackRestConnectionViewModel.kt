@@ -4,12 +4,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -23,10 +21,9 @@ import javax.inject.Named
 
 @HiltViewModel
 class JetpackRestConnectionViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
     private val jetpackInstaller: JetpackInstaller,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -98,15 +95,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        if (step == ConnectionStep.LoginWpCom) {
-            loginWpCom()
-        } else {
-            launch {
-                executeStepWithErrorHandling(step)
-                // TODO this is just to test the UI
-                delay(STEP_DELAY_MS)
-                updateStepStatus(step, ConnectionStatus.Completed)
-            }
+        launch {
+            executeStepWithErrorHandling(step)
         }
     }
 
@@ -211,7 +201,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         try {
             withContext(bgDispatcher) {
                 withTimeout(STEP_TIMEOUT_MS) {
-                    executeNetworkRequest(step)
+                    executeStep(step)
                 }
             }
         } catch (e: Exception) {
@@ -228,10 +218,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun executeNetworkRequest(step: ConnectionStep) {
+    private suspend fun executeStep(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                // noop - this is handled separately since it doesn't use a coroutine
+                appLogWrapper.d(AppLog.T.API, "$TAG: Logging into wordpress.com")
+                loginWpCom()
             }
 
             ConnectionStep.InstallJetpack -> {
@@ -260,13 +251,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Starts the WordPress.com login flow if not already logged in
      */
     private fun loginWpCom() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
-        if (accountStore.hasAccessToken()) {
-            appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists, skipping login")
-        } else {
-            isWaitingForWPComLogin = true
-            _uiEvent.value = UiEvent.StartWPComLogin
-        }
+        isWaitingForWPComLogin = true
+        setUiEvent(UiEvent.StartWPComLogin)
     }
 
     /**
@@ -275,15 +261,17 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun installJetpack() {
         val status = jetpackInstaller.installJetpack(getSite())
         when (status) {
-            InstallJetpackStatus.ACTIVE -> {
-                // TODO should we skip the next step if the plugin is already active?
-                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
-            }
+            InstallJetpackStatus.ACTIVE,
             InstallJetpackStatus.INACTIVE -> {
                 updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
             }
+
             InstallJetpackStatus.FAILED -> {
-                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Failed, ErrorType.FailedToInstallJetpack)
+                updateStepStatus(
+                    ConnectionStep.InstallJetpack,
+                    ConnectionStatus.Failed,
+                    ErrorType.FailedToInstallJetpack
+                )
             }
         }
     }
