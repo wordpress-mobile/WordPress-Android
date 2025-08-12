@@ -269,7 +269,7 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
         ErrorType.FailedToLoginWpCom -> R.string.jetpack_rest_connection_error_login_wpcom
         ErrorType.FailedToConnectWpCom -> R.string.jetpack_rest_connection_error_connect_wpcom
-        ErrorType.FailedToInstallJetpack -> R.string.jetpack_rest_connection_error_install_jetpack
+        is ErrorType.FailedToInstallJetpack -> R.string.jetpack_rest_connection_error_install_jetpack
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown

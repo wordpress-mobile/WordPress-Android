@@ -251,7 +251,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Starts the WordPress.com login flow
+     * Starts the WordPress.com login flow - handled by the activity
      */
     private fun loginWpCom() {
         isWaitingForWPComLogin = true
@@ -259,11 +259,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Installs Jetpack if not already installed
+     * Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
-        val status = jetpackInstaller.installJetpack(getSite())
-        when (status.first) {
+        val result = jetpackInstaller.installJetpack(getSite())
+        when (result.first) {
             InstallJetpackStatus.ACTIVE,
             InstallJetpackStatus.INACTIVE -> {
                 updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
@@ -273,7 +273,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     ConnectionStep.InstallJetpack,
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToInstallJetpack
+                    ErrorType.FailedToInstallJetpack("Status ${result.second}")
                 )
             }
         }
@@ -333,7 +333,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class ErrorType(open val message: String? = null) {
         data object FailedToLoginWpCom : ErrorType()
-        data object FailedToInstallJetpack : ErrorType()
+        data class FailedToInstallJetpack(override val message: String? = null) : ErrorType()
         data object FailedToConnectWpCom : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)

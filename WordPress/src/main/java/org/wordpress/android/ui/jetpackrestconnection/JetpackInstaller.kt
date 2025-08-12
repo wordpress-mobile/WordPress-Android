@@ -18,14 +18,18 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
-    suspend fun installJetpack(site: SiteModel): Pair<InstallJetpackStatus, Int> {
+    data class InstallJetpackResult(
+        val status: InstallJetpackStatus,
+        val httpStatusCode: Int
+    )
+    suspend fun installJetpack(site: SiteModel): InstallJetpackResult {
         if (site.isJetpackInstalled) {
             return if (site.isJetpackConnected) {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and active")
-                Pair(InstallJetpackStatus.ACTIVE, 200)
+                InstallJetpackResult(InstallJetpackStatus.ACTIVE, 200)
             } else {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and inactive")
-                Pair(InstallJetpackStatus.INACTIVE, 200)
+                InstallJetpackResult(InstallJetpackStatus.INACTIVE, 200)
             }
         }
 
@@ -47,34 +51,33 @@ class JetpackInstaller @Inject constructor(
             )
         }
 
-        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install response = $response")
         when (response) {
             is WpRequestResult.Success -> {
                 return when (response.response.data.status) {
                     PluginStatus.ACTIVE,
                     PluginStatus.NETWORK_ACTIVE -> {
-                        Pair(InstallJetpackStatus.ACTIVE, 200)
+                        InstallJetpackResult(InstallJetpackStatus.ACTIVE, 200)
                     }
 
                     PluginStatus.INACTIVE -> {
-                        Pair(InstallJetpackStatus.INACTIVE, 200)
+                        InstallJetpackResult(InstallJetpackStatus.INACTIVE, 200)
                     }
                 }
             }
 
             is WpRequestResult.WpError<*> -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.errorCode}")
-                return Pair(InstallJetpackStatus.FAILED, 0)
+                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.statusCode}")
+                return InstallJetpackResult(InstallJetpackStatus.FAILED, 0)
             }
 
             is WpRequestResult.UnknownError<*> -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.statusCode}")
-                return Pair(InstallJetpackStatus.FAILED, response.statusCode.toInt())
+                return InstallJetpackResult(InstallJetpackStatus.FAILED, response.statusCode.toInt())
             }
 
             else -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = unknown")
-                return Pair(InstallJetpackStatus.FAILED, 0)
+                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = $response")
+                return InstallJetpackResult(InstallJetpackStatus.FAILED, 0)
             }
         }
     }
