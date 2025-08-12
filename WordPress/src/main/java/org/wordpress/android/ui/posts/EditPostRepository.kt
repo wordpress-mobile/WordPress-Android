@@ -259,6 +259,14 @@ class EditPostRepository
                 || (originalStatus == PostStatus.PUBLISHED && remotePostId == 0L))
     }
 
+    fun shouldSavePost(isNewPost: Boolean): Boolean {
+        val hasChanges = postWasChangedInCurrentSession()
+        val isPublishable = isPostPublishable()
+        val existingPostWithChanges = hasPostSnapshotWhenEditorOpened() && hasChanges
+        // if post was modified during this editing session, save it
+        return isPublishable && (existingPostWithChanges || isNewPost)
+    }
+
     sealed class UpdatePostResult {
         object Updated : UpdatePostResult()
         object NoChanges : UpdatePostResult()

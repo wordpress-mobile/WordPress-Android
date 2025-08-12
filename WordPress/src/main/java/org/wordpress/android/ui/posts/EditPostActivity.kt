@@ -2551,11 +2551,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun shouldSavePost(): Boolean {
-        val hasChanges = editPostRepository.postWasChangedInCurrentSession()
-        val isPublishable = editPostRepository.isPostPublishable()
-        val existingPostWithChanges = editPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges
-        // if post was modified during this editing session, save it
-        return isPublishable && (existingPostWithChanges || isNewPost)
+        return editPostRepository.shouldSavePost(isNewPost)
     }
 
     private val isDiscardable: Boolean
