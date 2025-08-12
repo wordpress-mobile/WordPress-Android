@@ -229,6 +229,7 @@ class SubscribersActivity : BaseAppCompatActivity() {
             onSortOrderClick = { order ->
                 viewModel.onSortOrderClick(order)
             },
+            emptyView = viewModel.emptyView,
             modifier = modifier
         )
     }

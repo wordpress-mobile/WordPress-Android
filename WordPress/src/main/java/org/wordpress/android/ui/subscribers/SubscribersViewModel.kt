@@ -57,6 +57,11 @@ class SubscribersViewModel @Inject constructor(
 
     private var statsJob: Job? = null
 
+    override val emptyView = DataViewEmptyView(
+        messageRes = R.string.subscribers_empty,
+        imageRes = R.drawable.img_jetpack_empty_state
+    )
+
     @Inject
     lateinit var dateFormatWrapper: SimpleDateFormatWrapper
 
