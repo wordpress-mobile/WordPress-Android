@@ -21,6 +21,7 @@ class JetpackInstaller @Inject constructor(
     suspend fun installJetpack(site: SiteModel): InstallJetpackStatus {
         // Skip installation if Jetpack is already active
         if (site.isJetpackInstalled && site.isJetpackConnected) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and connected")
             return InstallJetpackStatus.ACTIVE
         }
 
