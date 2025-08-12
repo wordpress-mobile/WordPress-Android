@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -24,6 +25,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -224,7 +226,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private fun executeNetworkRequest(step: ConnectionStep) {
+    private suspend fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
                 // noop - this is handled separately since it doesn't use a coroutine
@@ -232,7 +234,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
             ConnectionStep.InstallJetpack -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack")
-                // TODO
+                installJetpack()
             }
 
             ConnectionStep.ConnectSite -> {
@@ -254,9 +256,16 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
-        // TODO skip if the account store token already exists, but for now don't do this to make testing easier
-        isWaitingForWPComLogin = true
-        _uiEvent.value = UiEvent.StartWPComLogin
+        if (accountStore.hasAccessToken()) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists, skipping login")
+        } else {
+            isWaitingForWPComLogin = true
+            _uiEvent.value = UiEvent.StartWPComLogin
+        }
+    }
+
+    private suspend fun installJetpack() {
+        // TODO
     }
 
     /**
