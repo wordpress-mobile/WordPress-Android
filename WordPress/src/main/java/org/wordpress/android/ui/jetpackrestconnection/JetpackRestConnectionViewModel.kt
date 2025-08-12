@@ -263,7 +263,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private suspend fun installJetpack() {
         val result = jetpackInstaller.installJetpack(getSite())
-        when (result.first) {
+        when (result.status) {
             InstallJetpackStatus.ACTIVE,
             InstallJetpackStatus.INACTIVE -> {
                 updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
@@ -273,7 +273,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     ConnectionStep.InstallJetpack,
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToInstallJetpack("Status ${result.second}")
+                    ErrorType.FailedToInstallJetpack("HTTP status ${result.httpStatusCode}")
                 )
             }
         }
