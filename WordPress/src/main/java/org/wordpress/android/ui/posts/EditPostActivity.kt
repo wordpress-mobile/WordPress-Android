@@ -2762,6 +2762,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).updateCapabilities(gutenbergPropsBuilder)
         }
+        if (editorFragment is GutenbergKitEditorFragment) {
+            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
+            (editorFragment as GutenbergKitEditorFragment).setXPostsEnabled(enableXPosts)
+        }
     }
 
     private val gutenbergPropsBuilder: GutenbergPropsBuilder
