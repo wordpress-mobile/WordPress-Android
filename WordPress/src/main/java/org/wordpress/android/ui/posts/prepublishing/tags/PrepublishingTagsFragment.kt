@@ -10,7 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.TagsFragment
 import org.wordpress.android.ui.posts.TagsSelectedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
@@ -104,20 +104,20 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+        val editorDataProvider = requireNotNull(getEditorDataProvider()) {
             "This is possibly null because it's " +
                     "called during config changes."
         }
 
-        return editPostActivityHook.editPostRepository
+        return editorDataProvider.editPostRepository
     }
 
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
+    private fun getEditorDataProvider(): EditPostSettingsFragment.EditorDataProvider? {
         val activity = activity ?: return null
-        return if (activity is EditPostActivityHook) {
+        return if (activity is EditPostSettingsFragment.EditorDataProvider) {
             activity
         } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
+            throw RuntimeException("$activity must implement EditorDataProvider")
         }
     }
 
