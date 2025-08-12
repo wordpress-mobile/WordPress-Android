@@ -665,7 +665,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent categoriesIntent = new Intent(requireActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
-        categoriesIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
+        categoriesIntent.putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 

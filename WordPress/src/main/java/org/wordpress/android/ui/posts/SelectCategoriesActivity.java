@@ -49,7 +49,7 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditorConstants.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class SelectCategoriesActivity extends BaseAppCompatActivity {

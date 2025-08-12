@@ -51,7 +51,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
@@ -296,7 +296,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.checkAndStartQuickStart(
                     data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(
-                        EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                        EditorConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
                     )
                 )
             }

@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -108,7 +108,7 @@ public class AnalyticsUtils {
             // Post created from the media library
             normalizedSourceName = "media-library";
         }
-        if (intent != null && intent.hasExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
+        if (intent != null && intent.hasExtra(EditorConstants.EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
         }

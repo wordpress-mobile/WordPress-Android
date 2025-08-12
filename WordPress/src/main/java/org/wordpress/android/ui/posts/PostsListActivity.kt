@@ -439,7 +439,7 @@ class PostsListActivity : BaseAppCompatActivity(),
                 if (data != null && EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data, this, site,
-                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
                     // a restart will happen so, no need to continue here
                     return
