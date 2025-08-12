@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.PluginStatus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,6 +27,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
+    private val jetpackInstaller: JetpackInstaller,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -254,6 +256,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Starts the WordPress.com login flow if not already logged in
+     */
     private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
         if (accountStore.hasAccessToken()) {
@@ -264,8 +269,24 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Installs Jetpack if not already installed
+     */
     private suspend fun installJetpack() {
-        // TODO
+        val status = jetpackInstaller.installJetpack(getSite())
+        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install status: $status")
+        when (status) {
+            PluginStatus.ACTIVE, PluginStatus.INACTIVE -> {
+                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
+            }
+            PluginStatus.NETWORK_ACTIVE -> {
+                updateStepStatus(
+                    ConnectionStep.InstallJetpack,
+                    ConnectionStatus.Failed,
+                    ErrorType.FailedToInstallJetpack
+                )
+            }
+        }
     }
 
     /**
@@ -322,6 +343,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class ErrorType(open val message: String? = null) {
         data object FailedToLoginWpCom : ErrorType()
+        data object FailedToInstallJetpack : ErrorType()
         data object FailedToConnectWpCom : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
