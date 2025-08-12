@@ -358,9 +358,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     /**
      * Gets the current site from the store
      */
-    private fun getSite(): SiteModel {
-        return selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
-    }
+    private fun getSite() =
+        selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
 
     /**
      * Refreshes the current site from the server to ensure we have the latest data in the store. Note we won't

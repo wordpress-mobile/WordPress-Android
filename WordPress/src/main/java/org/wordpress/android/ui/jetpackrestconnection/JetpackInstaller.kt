@@ -18,6 +18,7 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
+    @Suppress("ReturnCount")
     suspend fun installJetpack(site: SiteModel): InstallJetpackResult {
         if (site.isJetpackInstalled && site.isJetpackConnected) {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and connected")
