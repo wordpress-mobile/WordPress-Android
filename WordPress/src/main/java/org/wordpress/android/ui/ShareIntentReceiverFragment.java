@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,8 +22,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.ui.main.SiteRecord;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.List;
@@ -211,15 +210,12 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     enum ShareAction {
-        SHARE_TO_POST("new_post", EditPostActivity.class),
-        SHARE_TO_MEDIA_LIBRARY("media_library", MediaBrowserActivity.class);
+        SHARE_TO_POST("new_post"),
+        SHARE_TO_MEDIA_LIBRARY("media_library");
 
-        public final Class targetClass;
-        public final String analyticsName;
+        @NonNull public final String analyticsName;
 
-
-        ShareAction(String analyticsName, Class targetClass) {
-            this.targetClass = targetClass;
+        ShareAction(@NonNull String analyticsName) {
             this.analyticsName = analyticsName;
         }
     }
