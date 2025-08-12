@@ -527,6 +527,12 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (application as WordPress).component().inject(this)
         initializeViewModels()
 
+        // Track if this editor launch came via EditorLauncher (only on initial creation)
+        if (savedInstanceState == null
+            && intent.getBooleanExtra(EditorLauncher.EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, false)) {
+            analyticsTrackerWrapper.track(Stat.EDITOR_LAUNCHED_VIA_EDITOR_LAUNCHER)
+        }
+
         setContentView(R.layout.new_edit_post_activity)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -2755,6 +2761,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         isXPostsCapable = isXpostsCapable
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).updateCapabilities(gutenbergPropsBuilder)
+        }
+        if (editorFragment is GutenbergKitEditorFragment) {
+            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
+            (editorFragment as GutenbergKitEditorFragment).setXPostsEnabled(enableXPosts)
         }
     }
 
