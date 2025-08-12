@@ -18,65 +18,57 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
-    @Suppress("ReturnCount")
-    suspend fun installJetpack(site: SiteModel): InstallJetpackResult {
+    suspend fun installJetpack(site: SiteModel): InstallJetpackStatus {
+        // Skip installation if Jetpack is already active
         if (site.isJetpackInstalled && site.isJetpackConnected) {
-            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and connected")
-            return InstallJetpackResult(InstallJetpackStatus.ACTIVE, HTTP_SUCCESS)
+            return InstallJetpackStatus.ACTIVE
         }
 
-        val wpApiClient = WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
-            authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                requireNotNull(site.apiRestUsernamePlain) { "Username is required but was null" },
-                requireNotNull(site.apiRestPasswordPlain) { "Password is required but was null" }
-            ),
-        )
-
-        val params = PluginCreateParams(
-            slug = PluginWpOrgDirectorySlug(PLUGIN_SLUG),
-            status = PluginStatus.ACTIVE,
-        )
-        val response = wpApiClient.request { requestBuilder ->
-            requestBuilder.plugins().create(
-                params = params
-            )
+        // Validate required credentials
+        if (site.apiRestUsernamePlain.isNullOrBlank() || site.apiRestPasswordPlain.isNullOrBlank()) {
+            appLogWrapper.e(AppLog.T.API, "$TAG: Missing credentials for Jetpack installation")
+            return InstallJetpackStatus.FAILED
         }
-        when (response) {
-            is WpRequestResult.Success -> {
-                return when (response.response.data.status) {
-                    PluginStatus.ACTIVE,
-                    PluginStatus.NETWORK_ACTIVE -> {
-                        InstallJetpackResult(InstallJetpackStatus.ACTIVE, HTTP_SUCCESS)
-                    }
 
-                    PluginStatus.INACTIVE -> {
-                        InstallJetpackResult(InstallJetpackStatus.INACTIVE, HTTP_SUCCESS)
-                    }
+        return try {
+            val response = createApiClient(site).request { requestBuilder ->
+                requestBuilder.plugins().create(
+                    PluginCreateParams(
+                        slug = PluginWpOrgDirectorySlug(PLUGIN_SLUG),
+                        status = PluginStatus.ACTIVE
+                    )
+                )
+            }
+
+            when (response) {
+                is WpRequestResult.Success -> mapPluginStatus(response.response.data.status)
+                is WpRequestResult.WpError<*> -> {
+                    appLogWrapper.e(AppLog.T.API, "$TAG: Installation failed - ${response.errorCode}")
+                    InstallJetpackStatus.FAILED
+                }
+                else -> {
+                    appLogWrapper.e(AppLog.T.API, "$TAG: Installation failed")
+                    InstallJetpackStatus.FAILED
                 }
             }
-
-            is WpRequestResult.WpError<*> -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.statusCode}")
-                return InstallJetpackResult(InstallJetpackStatus.FAILED, response.statusCode)
-            }
-
-            is WpRequestResult.UnknownError<*> -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = ${response.statusCode}")
-                return InstallJetpackResult(InstallJetpackStatus.FAILED, response.statusCode)
-            }
-
-            else -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install error = $response")
-                return InstallJetpackResult(InstallJetpackStatus.FAILED, 0u)
-            }
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.API, "$TAG: Installation exception - ${e.message}")
+            InstallJetpackStatus.FAILED
         }
     }
 
-    data class InstallJetpackResult(
-        val status: InstallJetpackStatus,
-        val httpStatusCode: UShort
+    private fun createApiClient(site: SiteModel) = WpApiClient(
+        wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
+        authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
+            site.apiRestUsernamePlain!!,
+            site.apiRestPasswordPlain!!
+        )
     )
+
+    private fun mapPluginStatus(status: PluginStatus) = when (status) {
+        PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> InstallJetpackStatus.ACTIVE
+        PluginStatus.INACTIVE -> InstallJetpackStatus.INACTIVE
+    }
 
     enum class InstallJetpackStatus {
         ACTIVE,
@@ -87,6 +79,5 @@ class JetpackInstaller @Inject constructor(
     companion object {
         private const val TAG = "JetpackInstaller"
         private const val PLUGIN_SLUG = "jetpack"
-        private const val HTTP_SUCCESS: UShort = 200u
     }
 }
