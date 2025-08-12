@@ -67,7 +67,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
 
         // User returned from WordPress.com login - note the resultCode will always be RESULT_OK but
         // we check it here in case that ever changes
-        if (requestCode == RequestCodes.ADD_ACCOUNT && viewModel.isWaitingForWPComLogin) {
+        if (requestCode == RequestCodes.ADD_ACCOUNT) {
             val loginSuccessful = resultCode == RESULT_OK && (accountStore.accessToken?.isNotEmpty() == true)
             viewModel.onWPComLoginCompleted(success = loginSuccessful)
         }

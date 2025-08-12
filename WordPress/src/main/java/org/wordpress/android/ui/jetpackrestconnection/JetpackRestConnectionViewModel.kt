@@ -45,11 +45,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    // Track if we're waiting for WordPress.com login to complete
-    // This survives configuration changes
-    private var _isWaitingForWPComLogin = false
-    val isWaitingForWPComLogin: Boolean
-        get() = _isWaitingForWPComLogin
+    private var isWaitingForWPComLogin = false
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
@@ -259,7 +255,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private fun loginWpCom() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
         // TODO skip if the account store token already exists, but for now don't do this to make testing easier
-        _isWaitingForWPComLogin = true
+        isWaitingForWPComLogin = true
         _uiEvent.value = UiEvent.StartWPComLogin
     }
 
@@ -267,7 +263,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Called by the activity when WordPress.com login flow completes
      */
     fun onWPComLoginCompleted(success: Boolean) {
-        _isWaitingForWPComLogin = false
+        if (!isWaitingForWPComLogin) {
+            appLogWrapper.w(AppLog.T.API, "$TAG: WordPress.com login completed, but not waiting for it")
+            return
+        }
+
+        isWaitingForWPComLogin = false
         launch {
             if (success) {
                 // Login successful
