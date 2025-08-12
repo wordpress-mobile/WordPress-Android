@@ -13,7 +13,7 @@ import java.net.URL
 import javax.inject.Inject
 
 /**
- * Installs the Jetpack plugin on the given site using wordpress-rs if it's not already installed
+ * Installs the Jetpack plugin on the given site using wordpress-rs
  */
 @Suppress("ReturnCount")
 class JetpackInstaller @Inject constructor(
@@ -25,14 +25,9 @@ class JetpackInstaller @Inject constructor(
     )
 
     suspend fun installJetpack(site: SiteModel): InstallJetpackResult {
-        if (site.isJetpackInstalled) {
-            return if (site.isJetpackConnected) {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and active")
-                InstallJetpackResult(InstallJetpackStatus.ACTIVE, HTTP_SUCCESS)
-            } else {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and inactive")
-                InstallJetpackResult(InstallJetpackStatus.INACTIVE, HTTP_SUCCESS)
-            }
+        if (site.isJetpackInstalled && site.isJetpackConnected) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and active")
+            return InstallJetpackResult(InstallJetpackStatus.ACTIVE, HTTP_SUCCESS)
         }
 
         val wpApiClient = WpApiClient(

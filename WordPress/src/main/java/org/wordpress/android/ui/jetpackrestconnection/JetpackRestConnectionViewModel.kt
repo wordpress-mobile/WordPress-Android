@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -24,8 +23,7 @@ import javax.inject.Named
 class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    selectedSiteRepository: SelectedSiteRepository,
-    private val siteRestClient: SiteRestClient,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackInstaller: JetpackInstaller,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -47,8 +45,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     val stepStates = _stepStates
 
     private var job: Job? = null
-    private var site =
-        selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
     private var isWaitingForWPComLogin = false
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
@@ -64,6 +60,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Called when the job is completed successfully
+     */
     private fun onJobCompleted() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
         job?.cancel()
@@ -80,15 +79,16 @@ class JetpackRestConnectionViewModel @Inject constructor(
         ConnectionStep.Finalize -> null
     }
 
+    /**
+     * Mark current step as completed if exists then start the next step if there is one
+     */
     private fun startNextStep() {
-        // Mark current step as completed if exists
         currentStep.value?.let {
             if (_stepStates.value[it]?.status == ConnectionStatus.InProgress) {
                 updateStepStatus(it, ConnectionStatus.Completed)
             }
         }
 
-        // Start the next step if there is one
         getNextStep()?.let {
             startStep(it)
         }
@@ -107,6 +107,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Updates the status of the passed step, start the next step if the current step is completed successfully
+     */
     private fun updateStepStatus(
         step: ConnectionStep,
         status: ConnectionStatus,
@@ -136,33 +139,46 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * User clicked the button to start the connection flow
+     */
     fun onStartClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Start clicked")
         startConnectionJob()
     }
 
+    /**
+     * User clicked the close button, confirm closing if the connection is in progress, otherwise close immediately
+     */
     fun onCloseClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Close clicked")
         if (isActive()) {
-            // Connection is in progress, show confirmation dialog
             appLogWrapper.d(AppLog.T.API, "$TAG: Connection in progress, showing confirmation")
             setUiEvent(UiEvent.ShowCancelConfirmation)
         } else {
-            // No active connection, close immediately
             setUiEvent(UiEvent.Close)
         }
     }
 
+    /**
+     * User confirmed the cancel dialog
+     */
     fun onCancelConfirmed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Cancel confirmed")
         job?.cancel()
         setUiEvent(UiEvent.Close)
     }
 
+    /**
+     * User dismissed the cancel dialog
+     */
     fun onCancelDismissed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Cancel dismissed, continuing connection")
     }
 
+    /**
+     * User clicked the retry button after a step failed, retry from the failed step
+     */
     fun onRetryClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Retry clicked")
         // Find the failed step from stepStates
@@ -190,15 +206,20 @@ class JetpackRestConnectionViewModel @Inject constructor(
         _currentStep.value = null
     }
 
+    /**
+     * Returns true if the connection job is active
+     */
     private fun isActive(): Boolean = job?.isActive == true || run {
-        // if there's a current step, and it's not failed, then it's active
         val step = currentStep.value
         step != null && _stepStates.value[step]?.status != ConnectionStatus.Failed
     }
 
+    /**
+     * Sets the UI event to be observed by the UI. Note it's cleared first or else it won't be observed if it's
+     * the same as the previous event
+     */
     private fun setUiEvent(event: UiEvent) {
         appLogWrapper.d(AppLog.T.API, "$TAG: setUiEvent $event")
-        // Clear the event first or else it won't be observed if its the same as the previous event
         _uiEvent.value = null
         _uiEvent.value = event
     }
@@ -262,30 +283,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Installs Jetpack to the current site if not already installed
-     */
-    private suspend fun installJetpack() {
-        // make sure we have the latest info about the site since it may have changed
-        refreshSite()
-
-        val result = jetpackInstaller.installJetpack(site)
-        when (result.status) {
-            InstallJetpackStatus.ACTIVE,
-            InstallJetpackStatus.INACTIVE -> {
-                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
-            }
-
-            InstallJetpackStatus.FAILED -> {
-                updateStepStatus(
-                    ConnectionStep.InstallJetpack,
-                    ConnectionStatus.Failed,
-                    ErrorType.FailedToInstallJetpack("HTTP status ${result.httpStatusCode}")
-                )
-            }
-        }
-    }
-
-    /**
      * Called by the activity when WordPress.com login flow completes
      */
     fun onWPComLoginCompleted(success: Boolean) {
@@ -312,10 +309,43 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Refreshes the current site from the server to ensure we have the latest data
+     * Installs Jetpack to the current site if not already installed
      */
-    private suspend fun refreshSite() {
-        site = siteRestClient.fetchSite(site)
+    private suspend fun installJetpack() {
+        val result = jetpackInstaller.installJetpack(getSite())
+
+        // refresh the selected site from the server in case the above call changed anything
+        refreshSite()
+
+        when (result.status) {
+            InstallJetpackStatus.ACTIVE,
+            InstallJetpackStatus.INACTIVE -> {
+                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
+            }
+
+            InstallJetpackStatus.FAILED -> {
+                updateStepStatus(
+                    ConnectionStep.InstallJetpack,
+                    ConnectionStatus.Failed,
+                    ErrorType.FailedToInstallJetpack("HTTP status ${result.httpStatusCode}")
+                )
+            }
+        }
+    }
+
+    /**
+     * Gets the current site from the store
+     */
+    private fun getSite(): SiteModel {
+        return selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
+    }
+
+    /**
+     * Refreshes the current site from the server to ensure we have the latest data in the store. Note we won't
+     * have any changes here until getSite() is called again.
+     */
+    private fun refreshSite() {
+        selectedSiteRepository.refresh()
     }
 
     sealed class ConnectionStep {
