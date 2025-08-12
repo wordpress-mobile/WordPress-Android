@@ -119,8 +119,8 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditorConstants;
+import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -1383,7 +1383,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-                if (EditPostActivity.checkToRestart(data)) {
+                if (EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site,
                             data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0));
 

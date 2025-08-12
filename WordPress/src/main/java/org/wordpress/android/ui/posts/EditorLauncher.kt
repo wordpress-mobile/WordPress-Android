@@ -9,6 +9,7 @@ import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.posts.EditorConstants.RestartEditorOptions
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,6 +39,18 @@ class EditorLauncher @Inject constructor(
         @JvmStatic
         fun getInstance(): EditorLauncher {
             return (getContext().applicationContext as WordPress).component().editorLauncher()
+        }
+
+        /**
+         * Checks if the editor should restart based on intent extras.
+         * Moved from EditPostActivity companion object to make it shareable
+         * between editor activities and centralize launch-related logic.
+         */
+        @JvmStatic
+        fun checkToRestart(data: Intent): Boolean {
+            val extraRestartEditor = data.getStringExtra(EditorConstants.EXTRA_RESTART_EDITOR)
+            return extraRestartEditor != null
+                    && RestartEditorOptions.valueOf(extraRestartEditor) != RestartEditorOptions.NO_RESTART
         }
     }
 

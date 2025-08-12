@@ -50,8 +50,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
 import org.wordpress.android.ui.posts.EditorConstants
+import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderEvents.DoSignIn
 import org.wordpress.android.ui.reader.ReaderEvents.PostSlugsRequestCompleted
@@ -998,7 +998,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
                 val post = postStore.getPostByLocalPostId(localId)
 
-                if (checkToRestart(data)) {
+                if (EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data,
                         this@ReaderPostPagerActivity, site,

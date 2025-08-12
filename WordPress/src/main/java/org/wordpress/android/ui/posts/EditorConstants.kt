@@ -43,4 +43,23 @@ object EditorConstants{
     const val STATE_KEY_REDO = "stateKeyRedo"
     const val STATE_KEY_IS_VOICE_CONTENT_SET = "stateKeyIsVoiceContentSet"
     const val STATE_KEY_IS_GUTENBERG_KIT = "stateKeyIsGutenbergKit"
+
+    // Media post constants (moved from EditPostActivity companion object)
+    const val NEW_MEDIA_POST = "NEW_MEDIA_POST"
+    const val NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS"
+
+    // UI timing constants (moved from EditPostActivity companion object)
+    const val MIN_UPDATING_POST_DISPLAY_TIME = 2000L // Minimum display time in milliseconds
+    const val PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY = 100L
+    const val SNACKBAR_DURATION = 4000
+
+    // Regex group constants (moved from EditPostActivity companion object)
+    const val GROUP_ONE = 1
+    const val GROUP_TWO = 2
+    const val GROUP_THREE = 3
+
+    // Editor restart options (moved from EditPostActivity inner enum)
+    enum class RestartEditorOptions {
+        NO_RESTART, RESTART_SUPPRESS_GUTENBERG, RESTART_DONT_SUPPRESS_GUTENBERG
+    }
 }
