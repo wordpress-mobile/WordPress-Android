@@ -13,11 +13,11 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpackrestconnection.JetpackInstaller.InstallJetpackStatus
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
-import uniffi.wp_api.PluginStatus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -274,17 +274,16 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private suspend fun installJetpack() {
         val status = jetpackInstaller.installJetpack(getSite())
-        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack install status: $status")
         when (status) {
-            PluginStatus.ACTIVE, PluginStatus.INACTIVE -> {
+            InstallJetpackStatus.ACTIVE -> {
+                // TODO should we skip the next step if the plugin is already active?
                 updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
             }
-            PluginStatus.NETWORK_ACTIVE -> {
-                updateStepStatus(
-                    ConnectionStep.InstallJetpack,
-                    ConnectionStatus.Failed,
-                    ErrorType.FailedToInstallJetpack
-                )
+            InstallJetpackStatus.INACTIVE -> {
+                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
+            }
+            InstallJetpackStatus.FAILED -> {
+                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Failed, ErrorType.FailedToInstallJetpack)
             }
         }
     }
