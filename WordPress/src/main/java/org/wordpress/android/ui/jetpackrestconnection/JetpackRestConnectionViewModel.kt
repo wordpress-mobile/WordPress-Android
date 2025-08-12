@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -24,8 +24,8 @@ import javax.inject.Named
 class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteStore: SiteStore,
+    selectedSiteRepository: SelectedSiteRepository,
+    private val siteRestClient: SiteRestClient,
     private val jetpackInstaller: JetpackInstaller,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -47,7 +47,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     val stepStates = _stepStates
 
     private var job: Job? = null
-    private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
+    private var site =
+        selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
     private var isWaitingForWPComLogin = false
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
@@ -264,7 +265,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
+        // make sure we have the latest info about the site since it may have changed
         refreshSite()
+
         val result = jetpackInstaller.installJetpack(site)
         when (result.status) {
             InstallJetpackStatus.ACTIVE,
@@ -295,7 +298,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
         launch {
             if (success) {
                 appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
-                refreshSite()
                 updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
             } else {
                 // Login failed or was cancelled
@@ -313,8 +315,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Refreshes the current site from the server to ensure we have the latest data
      */
     private suspend fun refreshSite() {
-        siteStore.fetchSite(site)
-        site = selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
+        site = siteRestClient.fetchSite(site)
     }
 
     sealed class ConnectionStep {

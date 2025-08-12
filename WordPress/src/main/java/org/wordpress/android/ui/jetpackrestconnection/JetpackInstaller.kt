@@ -15,6 +15,7 @@ import javax.inject.Inject
 /**
  * Installs the Jetpack plugin on the given site using wordpress-rs if it's not already installed
  */
+@Suppress("ReturnCount")
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
@@ -22,6 +23,7 @@ class JetpackInstaller @Inject constructor(
         val status: InstallJetpackStatus,
         val httpStatusCode: UShort
     )
+
     suspend fun installJetpack(site: SiteModel): InstallJetpackResult {
         if (site.isJetpackInstalled) {
             return if (site.isJetpackConnected) {
