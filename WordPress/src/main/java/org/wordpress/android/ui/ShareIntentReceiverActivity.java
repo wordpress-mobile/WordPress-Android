@@ -189,7 +189,7 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
 
         switch (shareAction) {
             case SHARE_TO_POST:
-                EditorLauncherParams params = new EditorLauncherParams.Builder(selectedSite)
+                EditorLauncherParams params = EditorLauncherParams.Builder.forSite(selectedSite)
                         .build();
                 intent = EditorLauncher.getInstance().createEditorIntent(this, params);
                 break;

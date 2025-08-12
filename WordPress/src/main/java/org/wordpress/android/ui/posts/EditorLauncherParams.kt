@@ -5,6 +5,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 
 /**
+ * Site parameter for EditorLauncherParams - supports direct SiteModel or QuickPress blog ID.
+ */
+sealed class EditorLauncherSiteParameter {
+    data class EditorLauncherSite(val siteModel: SiteModel) : EditorLauncherSiteParameter()
+    data class QuickPressBlogId(val quickPressBlogId: Int) : EditorLauncherSiteParameter()
+}
+
+/**
  * Type-safe parameters for launching editor activities.
  *
  * This data class replaces the Bundle-based approach with named parameters in Kotlin
@@ -14,7 +22,7 @@ import org.wordpress.android.ui.posts.PostUtils.EntryPoint
  * See EditorLauncherTest for field-to-method mapping documentation.
  */
 data class EditorLauncherParams(
-    val site: SiteModel,
+    val siteParameter: EditorLauncherSiteParameter,
     val isPage: Boolean? = null,
     val isPromo: Boolean? = null,
     val postLocalId: Int? = null,
@@ -40,7 +48,20 @@ data class EditorLauncherParams(
     /**
      * Java-friendly builder pattern for EditorLauncherParams.
      */
-    class Builder(private val site: SiteModel) {
+    class Builder(private val siteParameter: EditorLauncherSiteParameter) {
+        companion object {
+            /**
+             * Create builder for SiteModel (most common case)
+             */
+            @JvmStatic
+            fun forSite(site: SiteModel): Builder = Builder(EditorLauncherSiteParameter.EditorLauncherSite(site))
+
+            /**
+             * Create builder for QuickPress blog ID (for shortcuts that resolve site at launch time)
+             */
+            @JvmStatic
+            fun forQuickPressBlogId(blogId: Int): Builder = Builder(EditorLauncherSiteParameter.QuickPressBlogId(blogId))
+        }
         private var isPage: Boolean? = null
         private var isPromo: Boolean? = null
         private var postLocalId: Int? = null
@@ -93,7 +114,7 @@ data class EditorLauncherParams(
 
         fun build(): EditorLauncherParams {
             return EditorLauncherParams(
-                site = site,
+                siteParameter = siteParameter,
                 isPage = isPage,
                 isPromo = isPromo,
                 postLocalId = postLocalId,
