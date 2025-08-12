@@ -320,7 +320,7 @@ open class DataViewViewModel @Inject constructor(
         FILTER,
     }
 
-    class DataViewEmptyView (
+    class DataViewEmptyView(
         @StringRes val messageRes: Int = R.string.dataview_default_empty_message,
         @DrawableRes val imageRes: Int = R.drawable.img_jetpack_empty_state,
     )
