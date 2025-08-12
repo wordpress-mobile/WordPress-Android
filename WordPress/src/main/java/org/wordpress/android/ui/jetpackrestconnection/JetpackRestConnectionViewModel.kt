@@ -65,7 +65,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called when the job is completed successfully
+     * Called when all steps have completed successfully
      */
     private fun onJobCompleted() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
@@ -84,7 +84,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Mark current step as completed if exists then start the next step if there is one
+     * Mark current step as completed if it exists then start the next step if there is one
      */
     private fun startNextStep() {
         currentStep.value?.let {
@@ -112,7 +112,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Updates the status of the passed step, start the next step if the current step is completed successfully
+     * Updates the status of the passed step, starts the next step if the current step was completed successfully
      */
     private fun updateStepStatus(
         step: ConnectionStep,
