@@ -27,7 +27,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.pages.PagesActivity;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.PostUtils;

@@ -60,7 +60,8 @@ data class EditorLauncherParams(
              * Create builder for QuickPress blog ID (for shortcuts that resolve site at launch time)
              */
             @JvmStatic
-            fun forQuickPressBlogId(blogId: Int): Builder = Builder(EditorLauncherSiteParameter.QuickPressBlogId(blogId))
+            fun forQuickPressBlogId(blogId: Int): Builder =
+                Builder(EditorLauncherSiteParameter.QuickPressBlogId(blogId))
         }
         private var isPage: Boolean? = null
         private var isPromo: Boolean? = null

@@ -14,7 +14,6 @@ import androidx.annotation.StringRes;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;

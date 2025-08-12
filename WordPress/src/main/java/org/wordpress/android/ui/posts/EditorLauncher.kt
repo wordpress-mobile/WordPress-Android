@@ -91,8 +91,14 @@ class EditorLauncher @Inject constructor(
 
     private fun Intent.addBasicExtras(params: EditorLauncherParams) {
         when (params.siteParameter) {
-            is EditorLauncherSiteParameter.EditorLauncherSite -> putExtra(WordPress.SITE, params.siteParameter.siteModel)
-            is EditorLauncherSiteParameter.QuickPressBlogId -> putExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, params.siteParameter.quickPressBlogId)
+            is EditorLauncherSiteParameter.EditorLauncherSite -> putExtra(
+                WordPress.SITE, params.siteParameter.siteModel
+            )
+
+            is EditorLauncherSiteParameter.QuickPressBlogId -> putExtra(
+                EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID,
+                params.siteParameter.quickPressBlogId
+            )
         }
         params.isPage?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, it) }
         params.isPromo?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, it) }
