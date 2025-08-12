@@ -1,0 +1,124 @@
+package org.wordpress.android.ui.posts
+
+import android.content.Intent
+import android.net.Uri
+import android.webkit.MimeTypeMap
+import androidx.core.net.toUri
+import androidx.core.util.Consumer
+import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.gutenberg.MediaType
+import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.util.AppLog
+
+/**
+ * Pure utility functions extracted from EditPostActivity.
+ * These functions take parameters, return values, and don't access class state.
+ */
+object EditorUnitFunctions {
+    /**
+     * Checks if the given action is a send or new media action.
+     */
+    fun isActionSendOrNewMedia(action: String?): Boolean {
+        return action == Intent.ACTION_SEND
+                || action == Intent.ACTION_SEND_MULTIPLE
+                || action == EditorConstants.NEW_MEDIA_POST
+    }
+
+    /**
+     * Converts a list of revisions to an array of revision IDs.
+     */
+    fun getRevisionsIds(revisions: List<Revision>): LongArray {
+        val idsArray = LongArray(revisions.size)
+        for (i in revisions.indices) {
+            val current: Revision = revisions[i]
+            idsArray[i] = current.revisionId
+        }
+        return idsArray
+    }
+
+    /**
+     * Migrates content to Gutenberg editor format by wrapping it in a paragraph block.
+     */
+    fun migrateToGutenbergEditor(content: String): String {
+        return "<!-- wp:paragraph --><p>$content</p><!-- /wp:paragraph -->"
+    }
+
+    /**
+     * Checks if an intent contains media (image or video) content.
+     */
+    fun isMediaTypeIntent(intent: Intent, uri: Uri?): Boolean {
+        var type: String? = null
+        if (uri != null) {
+            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            }
+        } else {
+            type = intent.type
+        }
+        return type != null && (type.startsWith("image") || type.startsWith("video"))
+    }
+
+    /**
+     * Converts an array of string URIs to a list of Uri objects.
+     */
+    fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
+        val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
+        stringArray?.forEach { stringUri ->
+            uris.add(stringUri.toUri())
+        }
+        return uris
+    }
+
+    /**
+     * Creates an exception logger consumer that logs exceptions to AppLog.
+     */
+    fun getExceptionLogger(): Consumer<Exception> {
+        return Consumer { e: Exception? ->
+            AppLog.e(
+                AppLog.T.EDITOR,
+                e
+            )
+        }
+    }
+
+    /**
+     * Creates a breadcrumb logger consumer that logs strings to AppLog.
+     */
+    fun getBreadcrumbLogger(): Consumer<String> {
+        return Consumer { s: String? ->
+            AppLog.e(
+                AppLog.T.EDITOR,
+                s
+            )
+        }
+    }
+
+    /**
+     * Maps allowed media types to the appropriate MediaBrowserType.
+     */
+    fun mapAllowedTypesToMediaBrowserType(allowedTypes: Array<MediaType>, multiple: Boolean): MediaBrowserType {
+        return when {
+            allowedTypes.contains(MediaType.IMAGE) && allowedTypes.contains(MediaType.VIDEO) -> {
+                if (multiple) MediaBrowserType.GUTENBERG_MEDIA_PICKER
+                else MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER
+            }
+
+            allowedTypes.contains(MediaType.IMAGE) -> {
+                if (multiple) MediaBrowserType.GUTENBERG_IMAGE_PICKER
+                else MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
+            }
+
+            allowedTypes.contains(MediaType.VIDEO) -> {
+                if (multiple) MediaBrowserType.GUTENBERG_VIDEO_PICKER
+                else MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
+            }
+
+            allowedTypes.contains(MediaType.AUDIO) -> MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER
+            else -> {
+                if (multiple) MediaBrowserType.GUTENBERG_MEDIA_PICKER
+                else MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER
+            }
+        }
+    }
+}
