@@ -47,6 +47,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var job: Job? = null
     private var isWaitingForWPComLogin = false
 
+    init {
+        refreshSite()
+    }
+
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
@@ -302,7 +306,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     ConnectionStep.LoginWpCom,
                     ConnectionStatus.Failed,
-                    ErrorType.FailedToLoginWpCom
+                    ErrorType.LoginWpComFailed
                 )
             }
         }
@@ -318,16 +322,26 @@ class JetpackRestConnectionViewModel @Inject constructor(
         refreshSite()
 
         when (result.status) {
-            InstallJetpackStatus.ACTIVE,
+            InstallJetpackStatus.ACTIVE -> {
+                updateStepStatus(
+                    step = ConnectionStep.InstallJetpack,
+                    status = ConnectionStatus.Completed
+                )
+            }
+
             InstallJetpackStatus.INACTIVE -> {
-                updateStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
+                updateStepStatus(
+                    step = ConnectionStep.InstallJetpack,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.InstallJetpackInactive
+                )
             }
 
             InstallJetpackStatus.FAILED -> {
                 updateStepStatus(
-                    ConnectionStep.InstallJetpack,
-                    ConnectionStatus.Failed,
-                    ErrorType.FailedToInstallJetpack("HTTP status ${result.httpStatusCode}")
+                    step = ConnectionStep.InstallJetpack,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.InstallJetpackFailed("HTTP status ${result.httpStatusCode}")
                 )
             }
         }
@@ -370,9 +384,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class ErrorType(open val message: String? = null) {
-        data object FailedToLoginWpCom : ErrorType()
-        data class FailedToInstallJetpack(override val message: String? = null) : ErrorType()
-        data object FailedToConnectWpCom : ErrorType()
+        data object LoginWpComFailed : ErrorType()
+        data class InstallJetpackFailed(override val message: String? = null) : ErrorType()
+        data object InstallJetpackInactive: ErrorType()
+        data object ConnectWpComFailed : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
         data class Unknown(override val message: String? = null) : ErrorType(message)
