@@ -239,7 +239,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
-                is TimeoutCancellationException -> ErrorType.Timeout(e.message)
+                is TimeoutCancellationException -> ErrorType.Timeout
                 else -> ErrorType.Unknown(e.message)
             }
             updateStepStatus(
@@ -445,8 +445,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object ConnectSiteFailed : ErrorType()
         data object ConnectUserFailed : ErrorType()
         data object MissingAccessToken : ErrorType()
-        data class Timeout(override val message: String? = null) : ErrorType(message)
-        data class Offline(override val message: String? = null) : ErrorType(message)
+        data object Timeout : ErrorType()
+        data object Offline : ErrorType()
         data class Unknown(override val message: String? = null) : ErrorType(message)
     }
 

@@ -272,10 +272,10 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
         ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
         ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
-        is ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
-        is ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
-        is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
-        is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
+        ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
+        ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
+        ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
+        ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
     }
     val baseMessage = context.getString(messageRes)
