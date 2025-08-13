@@ -1028,6 +1028,7 @@
     <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
     <string name="jetpack_rest_connection_error_install_jetpack">Failed to install Jetpack</string>
     <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
+    <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

@@ -270,6 +270,7 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.LoginWpComFailed -> R.string.jetpack_rest_connection_error_login_wpcom
         ErrorType.ConnectWpComFailed -> R.string.jetpack_rest_connection_error_connect_wpcom
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
+        is ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
         is ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
