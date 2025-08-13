@@ -404,7 +404,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ConnectSiteFailed
+                    error = ErrorType.ConnectUserFailed
                 )
             }
         )
