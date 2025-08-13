@@ -1,99 +1,157 @@
-# WordPress for Android #
+#  WordPress for Android
 
-If you're just looking to install WordPress for Android, you can find it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.android&referrer=utm_source%3Dgithub%26utm_medium%3Dwebsite).
-If you're a developer wanting to contribute, read on.
+[![Build Status](https://img.shields.io/github/actions/workflow/status/wordpress-mobile/WordPress-Android/ci.yml?branch=trunk)](https://github.com/wordpress-mobile/WordPress-Android/actions)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](LICENSE.md)
+[![Contributors](https://img.shields.io/github/contributors/wordpress-mobile/WordPress-Android)](https://github.com/wordpress-mobile/WordPress-Android/graphs/contributors)
+[![Google Play](https://img.shields.io/badge/Get_it_on-Google_Play-green.svg)](https://play.google.com/store/apps/details?id=org.wordpress.android)
 
-## Build Instructions ##
+> The official **WordPress** app for Android — publish posts, check stats, and manage your site from anywhere.  
+>  **Install**: https://play.google.com/store/apps/details?id=org.wordpress.android  
+>  **Build from source**: follow the guide below.
 
-1. Make sure you've installed [Android Studio](https://developer.android.com/studio).
-1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/getting-started/devenv/#quickstart)
-1. `cd WordPress-Android` to enter the working directory.
-1. In Android Studio, open the project from the local repository. This will auto-generate `local.properties` with the SDK location.
-1. Recommended: The CI uses JDK11 to build the app and run the tests. Some tests won't pass on the JDK embedded in Android Studio (JDK8). You might want to set JAVA_HOME and JDK location in Android Studio to JDK11.
-1. Go to Tools → AVD Manager and create an emulated device.
-1. Run.
+---
 
-Notes:
+##  Build Instructions
 
-* While loading/building the app in Android Studio, ignore the prompt to update the Gradle plugin version, as that will probably introduce build errors. On the other hand, feel free to update if you are planning to work on ensuring the compatibility of the newer version.
+1) Install **Android Studio**: https://developer.android.com/studio  
+2) Install **npm** via **nvm** (see step 1 of the Block Editor Quickstart): https://developer.wordpress.org/block-editor/getting-started/devenv/#quickstart  
+3) Clone the repo and open it in Android Studio (this will generate `local.properties`):
 
-## Build and Test ##
+    git clone https://github.com/wordpress-mobile/WordPress-Android.git
+    cd WordPress-Android
 
-To build, install, and test the project from the command line:
+4) **JDK 11 recommended**: set `JAVA_HOME` and Android Studio’s JDK to 11 for best CI/test compatibility.  
+5) Create an emulator: **Tools → AVD Manager**.  
+6) Hit **Run**.
 
-    $ ./gradlew assembleWordPressVanillaDebug                        # assemble the debug .apk
-    $ ./gradlew installWordPressVanillaDebug                         # install the debug .apk if you have an
-                                                                     # emulator or an Android device connected
-    $ ./gradlew :WordPress:testWordPressVanillaDebugUnitTest         # assemble, install and run unit tests
-    $ ./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest # assemble, install and run Android tests
+**Note:** Ignore the Gradle plugin update prompt unless you plan to handle compatibility fixes.
 
-## Running the app ##
+---
 
-You can use your own WordPress site for developing and testing the app. If you don't have one, you can create a temporary test site for free at https://jurassic.ninja/.
-On the app start up screen, choose "Enter your existing site address" and enter the URL of your site and your credentials.
+##  Build & Test (CLI)
 
-Note: Access to WordPress.com features is temporarily disabled in the development environment.
+    # Build debug APK
+    ./gradlew assembleWordPressVanillaDebug
 
-## Directory structure ##
+    # Install debug APK to connected device/emulator
+    ./gradlew installWordPressVanillaDebug
+
+    # Run unit tests
+    ./gradlew :WordPress:testWordPressVanillaDebugUnitTest
+
+    # Run instrumented Android tests
+    ./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest
+
+---
+
+## 📲 Running the App
+
+You can test using your own WordPress site or a free temporary site from **https://jurassic.ninja**.
+
+**Steps**  
+1. Launch the app.  
+2. Tap **“Enter your existing site address”**.  
+3. Enter your site URL and credentials.
+
+**Note:** WordPress.com features are disabled in development builds.
+
+---
+
+##  Directory Structure
+
     .
-    ├── libs                    # dependencies used to build debug variants
-    ├── tools                   # script collection
-    ├── gradle.properties       # properties imported by the build script
-    ├── WordPress
-    │   |-- build.gradle        # main build script
-    │   └── src
-    │       ├── androidTest     # Android test assets, resources and code
-    │       ├── test            # Unit tests
-    │       ├── main
-    │       │   ├── assets      # main project assets
-    │       │   ├── java        # main project java code
-    │       │   └── res         # main project resources
-    │       ├── debug           # debug variant
-    │       └── wasabi          # wasabi variant specific resources and manifest
+    ├── libs/                    # Debug variant dependencies
+    ├── tools/                   # Helper scripts
+    ├── gradle.properties        # Build script properties
+    ├── WordPress/
+    │   ├── build.gradle         # Main module build script
+    │   └── src/
+    │       ├── main/            # App source code, assets, resources
+    │       ├── test/            # Unit tests
+    │       ├── androidTest/     # Instrumented tests
+    │       ├── debug/           # Debug variant
+    │       └── wasabi/          # Wasabi variant-specific files
 
-## Google Configuration ##
+---
 
-Google Sign-In is only available for WordPress.com accounts through the [official app][1].
-Contributors can build and run the app without issue, but Google Sign-In will always fail.
-Google Sign-In requires configuration files which contain client and server information
-that can't be shared publicly. More documentation and guides can be found on the
-[Google Identity Platform website][8].
+## 🔑 Google Configuration
 
-## Contributing
+- Google Sign-In works **only** for WordPress.com accounts in the **official Play Store** build.  
+- Development builds **will fail** Google Sign-In (private config files are not included).  
+- Learn more: https://developers.google.com/identity/
 
-Read our [Contributing Guide](CONTRIBUTING.md) to learn about reporting issues, contributing code, and more ways to contribute.
+---
 
-## Security
+## 🤝 Contributing
 
-If you happen to find a security vulnerability, we would appreciate you letting us know at https://hackerone.com/automattic and allowing us to respond before disclosing the issue publicly.
+See **CONTRIBUTING.md** for details on:
+- Reporting issues  
+- Submitting pull requests  
+- Coding style & PR guidelines
 
-## Getting in Touch
+**Quick workflow**
 
-If you have questions or just want to say hi, join the [WordPress Slack](https://chat.wordpress.org) and drop a message on the `#mobile` channel.
+    # Create a feature branch
+    git checkout -b feature/short-description
 
-## Documentation
+    # Make focused commits, run tests, push, open a PR
 
-- [Coding Style](docs/coding-style.md) - guidelines and validation and auto-formatting tools
-- [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests
+**Commit message tips**
+- Use present tense: `Fix crash when opening editor without network`  
+- Reference issues: `Fixes #1234`
 
-Please read the [docs](docs/) for more.
+**Pull request tips**
+- Keep PRs small & focused  
+- Describe the change, rationale, and user impact  
+- Include test notes and screenshots (for UI changes)  
+- Ensure CI checks pass
 
-## Resources
+---
 
-- [WordPress Mobile Blog](http://make.wordpress.org/mobile)
-- [WordPress Mobile Handbook](http://make.wordpress.org/mobile/handbook/)
+## 📜 Code of Conduct
 
-## License ##
+This project follows the **Contributor Covenant** (v2.1).  
+Be respectful, inclusive, and constructive. No harassment or hate speech.  
+Full text: https://www.contributor-covenant.org/version/2/1/code_of_conduct/  
+Community chat: https://chat.wordpress.org (`#mobile`)
 
-WordPress for Android is an Open Source project covered by the
-[GNU General Public License version 2](LICENSE.md). Note: code
-in the `libs/` directory comes from external libraries, which might
-be covered by a different license compatible with the GPLv2.
+---
 
-[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[3]: https://developer.android.com/studio
-[4]: https://make.wordpress.org/chat/
-[5]: https://developer.wordpress.com/apps/
-[6]: https://developer.wordpress.com/docs/oauth2/
-[7]: https://developer.wordpress.com/docs/api/
-[8]: https://developers.google.com/identity/
+## 🛡 Security
+
+Please **do not** open public issues for security problems.  
+Report privately via **HackerOne (Automattic)**: https://hackerone.com/automattic
+
+---
+
+## 📚 Documentation
+
+- Coding Style: `docs/coding-style.md`  
+- Pull Request Guidelines: `docs/pull-request-guidelines.md`  
+- More docs in `docs/`
+
+---
+
+## 🌐 Resources
+
+- WordPress Mobile Blog: http://make.wordpress.org/mobile  
+- WordPress Mobile Handbook: http://make.wordpress.org/mobile/handbook/
+
+---
+
+## 📄 License (GPL-2.0)
+
+WordPress for Android is licensed under the **GNU General Public License v2**.  
+Some code in `libs/` may be under separate, GPL-compatible licenses.
+
+    WordPress for Android
+    Copyright (C) 2025 Automattic
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Full license: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
