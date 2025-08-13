@@ -18,45 +18,45 @@ class JetpackConnectionHelper @Inject constructor(
     private val appLogWrapper: AppLogWrapper
 ) {
     fun initWpApiClient(site: SiteModel): WpApiClient {
-        requireCredentials(site)
+        requireRestCredentials(site)
         return WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
-            authProvider = createAuthProvider(site)
+            wpOrgSiteApiRootUrl = URL(resolveRestApiUrl(site)),
+            authProvider = createRestAuthProvider(site)
         )
     }
 
     fun initJetpackConnectionClient(site: SiteModel): JetpackConnectionClient {
-        requireCredentials(site)
-        
+        requireRestCredentials(site)
+
         val delegate = WpApiClientDelegate(
-            authProvider = createAuthProvider(site),
+            authProvider = createRestAuthProvider(site),
             requestExecutor = WpRequestExecutor(),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = InvalidAuthNotifier()
         )
 
         return JetpackConnectionClient(
-            apiRootUrl = ParsedUrl.parse(resolveApiUrl(site)),
+            apiRootUrl = ParsedUrl.parse(resolveRestApiUrl(site)),
             delegate = delegate
         )
     }
 
-    private fun createAuthProvider(site: SiteModel) = 
+    private fun createRestAuthProvider(site: SiteModel) =
         WpAuthenticationProvider.staticWithUsernameAndPassword(
             site.apiRestUsernamePlain!!,
             site.apiRestPasswordPlain!!
         )
 
-    private fun requireCredentials(site: SiteModel) {
-        require(!site.apiRestUsernamePlain.isNullOrBlank()) { 
-            "API username is required" 
+    private fun requireRestCredentials(site: SiteModel) {
+        require(!site.apiRestUsernamePlain.isNullOrBlank()) {
+            "API username is required"
         }
-        require(!site.apiRestPasswordPlain.isNullOrBlank()) { 
-            "API password is required" 
+        require(!site.apiRestPasswordPlain.isNullOrBlank()) {
+            "API password is required"
         }
     }
 
-    private fun resolveApiUrl(site: SiteModel) = 
+    private fun resolveRestApiUrl(site: SiteModel) =
         site.wpApiRestUrl ?: "${site.url}/wp-json"
 
     private inner class InvalidAuthNotifier : WpAppNotifier {
