@@ -116,7 +116,7 @@ class JetpackInstaller @Inject constructor(
     }
 
     /**
-     * Get the Jetpack plugin on the given site using wordpress-rs, returns null if not installed
+     * Get the Jetpack plugin info on the given site using wordpress-rs, returns null if not installed
      */
     private suspend fun getPluginInfo(site: SiteModel): PluginInfo? {
         val response = createApiClient(site).request { requestBuilder ->
@@ -130,7 +130,7 @@ class JetpackInstaller @Inject constructor(
             is WpRequestResult.Success -> {
                 val plugins = response.response.data
                 plugins.firstOrNull {
-                    it.plugin.slug.equals(JETPACK_SLUG.slug)
+                    it.plugin.slug == JETPACK_SLUG.slug
                 }?.let { jetpack ->
                     PluginInfo(
                         name = jetpack.name,

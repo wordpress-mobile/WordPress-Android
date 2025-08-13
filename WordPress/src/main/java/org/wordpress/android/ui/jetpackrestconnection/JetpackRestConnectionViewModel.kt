@@ -410,7 +410,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
-        private const val STEP_TIMEOUT_MS = 60000L // 60 seconds timeout per step
+        private const val STEP_TIMEOUT_MS = 45 * 1000L // 45 seconds timeout per step
 
         /**
          * Requirements:
