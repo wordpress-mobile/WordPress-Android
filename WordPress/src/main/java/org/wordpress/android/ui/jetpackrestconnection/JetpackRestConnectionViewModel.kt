@@ -78,8 +78,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         null -> ConnectionStep.LoginWpCom
         ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
         ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
-        ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
-        ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
+        ConnectionStep.ConnectSite -> ConnectionStep.ConnectUser
+        ConnectionStep.ConnectUser -> ConnectionStep.Finalize
         ConnectionStep.Finalize -> null
     }
 
@@ -266,9 +266,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 connectSite()
             }
 
-            ConnectionStep.ConnectWpCom -> {
+            ConnectionStep.ConnectUser -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
-                // TODO
+                connectUser()
             }
 
             ConnectionStep.Finalize -> {
@@ -335,6 +335,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                             status = ConnectionStatus.Completed
                         )
                     }
+
                     PluginStatus.INACTIVE -> {
                         updateStepStatus(
                             step = ConnectionStep.InstallJetpack,
@@ -377,6 +378,39 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
+     * Connects the user to the current site to Jetpack
+     */
+    private suspend fun connectUser() {
+        if (!accountStore.hasAccessToken()) {
+            updateStepStatus(
+                step = ConnectionStep.ConnectUser,
+                status = ConnectionStatus.Failed,
+                error = ErrorType.MissingAccessToken
+            )
+            return
+        }
+        val result = jetpackConnector.connectUser(
+            site = getSite(),
+            accessToken = accountStore.accessToken!!
+        )
+        result.fold(
+            onSuccess = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectSite,
+                    status = ConnectionStatus.Completed
+                )
+            },
+            onFailure = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectSite,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.ConnectSiteFailed
+                )
+            }
+        )
+    }
+
+    /**
      * Gets the current site from the store
      */
     private fun getSite() =
@@ -386,7 +420,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object LoginWpCom : ConnectionStep()
         data object InstallJetpack : ConnectionStep()
         data object ConnectSite : ConnectionStep()
-        data object ConnectWpCom : ConnectionStep()
+        data object ConnectUser : ConnectionStep()
         data object Finalize : ConnectionStep()
     }
 
@@ -409,6 +443,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object InstallJetpackInactive : ErrorType()
         data object ConnectWpComFailed : ErrorType()
         data object ConnectSiteFailed : ErrorType()
+        data object ConnectUserFailed : ErrorType()
+        data object MissingAccessToken : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
         data class Unknown(override val message: String? = null) : ErrorType(message)
@@ -443,7 +479,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             ConnectionStep.LoginWpCom to StepState(),
             ConnectionStep.InstallJetpack to StepState(),
             ConnectionStep.ConnectSite to StepState(),
-            ConnectionStep.ConnectWpCom to StepState(),
+            ConnectionStep.ConnectUser to StepState(),
             ConnectionStep.Finalize to StepState()
         )
     }

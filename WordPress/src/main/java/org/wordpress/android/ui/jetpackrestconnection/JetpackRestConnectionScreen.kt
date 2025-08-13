@@ -148,7 +148,7 @@ private val stepConfigs = listOf(
         icon = Icons.Default.Home
     ),
     StepConfig(
-        step = ConnectionStep.ConnectWpCom,
+        step = ConnectionStep.ConnectUser,
         titleRes = R.string.jetpack_rest_connection_step_connect_wpcom,
         icon = Icons.Default.Settings
     ),
@@ -270,6 +270,8 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.LoginWpComFailed -> R.string.jetpack_rest_connection_error_login_wpcom
         ErrorType.ConnectWpComFailed -> R.string.jetpack_rest_connection_error_connect_wpcom
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
+        ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
+        ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
         is ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
         is ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
         is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
@@ -422,7 +424,7 @@ private fun JetpackRestConnectionScreenPreview() {
                 ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
                 ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
-                ConnectionStep.ConnectWpCom to StepState(
+                ConnectionStep.ConnectUser to StepState(
                     ConnectionStatus.Failed,
                     ErrorType.ConnectWpComFailed
                 ),

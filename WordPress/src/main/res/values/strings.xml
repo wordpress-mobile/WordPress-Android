@@ -1029,6 +1029,8 @@
     <string name="jetpack_rest_connection_error_install_jetpack">Failed to install Jetpack</string>
     <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
     <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
+    <string name="jetpack_rest_connection_error_connect_user">Failed to connect user to site</string>
+    <string name="jetpack_rest_connection_error_access_token">Access token missing</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
