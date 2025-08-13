@@ -396,13 +396,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
         result.fold(
             onSuccess = {
                 updateStepStatus(
-                    step = ConnectionStep.ConnectSite,
+                    step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Completed
                 )
             },
             onFailure = {
                 updateStepStatus(
-                    step = ConnectionStep.ConnectSite,
+                    step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Failed,
                     error = ErrorType.ConnectSiteFailed
                 )
