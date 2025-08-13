@@ -49,7 +49,7 @@ class JetpackConnectionHelper @Inject constructor(
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication() {
                     appLogWrapper.d(AppLog.T.API, "$TAG: requestedWithInvalidAuthentication")
-                    // wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    throw IllegalArgumentException("Invalid credentials for JetpackConnectionClient")
                 }
             }
         )
