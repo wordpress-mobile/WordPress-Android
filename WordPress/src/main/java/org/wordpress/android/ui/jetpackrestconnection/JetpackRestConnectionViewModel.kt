@@ -379,7 +379,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     sealed class ErrorType(open val message: String? = null) {
         data object LoginWpComFailed : ErrorType()
         data object InstallJetpackFailed : ErrorType()
-        data object InstallJetpackInactive: ErrorType()
+        data object InstallJetpackInactive : ErrorType()
         data object ConnectWpComFailed : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
