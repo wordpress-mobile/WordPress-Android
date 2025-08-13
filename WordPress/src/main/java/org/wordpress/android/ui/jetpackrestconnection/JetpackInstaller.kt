@@ -21,13 +21,14 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
+    @Suppress("TooGenericExceptionCaught")
     suspend fun installJetpack(site: SiteModel): Result<PluginStatus> {
         if (!validateCredentials(site)) {
             return Result.failure(IllegalArgumentException("Missing credentials for Jetpack installation"))
         }
 
         val apiClient = initApiClient(site)
-        
+
         return try {
             val info = getPluginInfo(apiClient)
             when (info?.status) {
