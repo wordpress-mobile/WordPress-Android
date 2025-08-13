@@ -1021,11 +1021,11 @@
     <string name="jetpack_rest_connection_status_failed">Failed</string>
     <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
     <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is already installed</string>
     <string name="jetpack_rest_connection_error_timeout">Timed out</string>
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
-    <string name="jetpack_rest_connection_error_wpcom">Unable to connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
@@ -5071,4 +5071,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_name_sort">Name</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_last_used_sort">Last used</string>
+
+    <!-- DataView -->
+    <string name="dataview_default_empty_message">There\'s nothing here</string>
 </resources>

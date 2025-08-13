@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.dataview
 
 import android.content.SharedPreferences
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.content.edit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -45,6 +48,8 @@ open class DataViewViewModel @Inject constructor(
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
 
     private val debouncedQuery = MutableStateFlow("")
+
+    open val emptyView = DataViewEmptyView()
 
     private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
         _uiState.update { update(it) }
@@ -314,6 +319,11 @@ open class DataViewViewModel @Inject constructor(
         SORT_BY,
         FILTER,
     }
+
+    class DataViewEmptyView(
+        @StringRes val messageRes: Int = R.string.dataview_default_empty_message,
+        @DrawableRes val imageRes: Int = R.drawable.img_jetpack_empty_state,
+    )
 
     companion object {
         private const val SEARCH_DELAY_MS = 500L

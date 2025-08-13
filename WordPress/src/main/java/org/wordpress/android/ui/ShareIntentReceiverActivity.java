@@ -23,6 +23,8 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.posts.EditorLauncher;
+import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
@@ -175,7 +177,30 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
         mClickedSiteLocalId = selectedSiteLocalId;
 
         bumpAnalytics(shareAction, selectedSiteLocalId);
-        Intent intent = new Intent(this, shareAction.targetClass);
+
+        SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        if (selectedSite == null) {
+            ToastUtils.showToast(this, R.string.cant_share_no_blog, ToastUtils.Duration.LONG);
+            finish();
+            return;
+        }
+
+        Intent intent;
+
+        switch (shareAction) {
+            case SHARE_TO_POST:
+                EditorLauncherParams params = EditorLauncherParams.Builder.forSite(selectedSite)
+                        .build();
+                intent = EditorLauncher.getInstance().createEditorIntent(this, params);
+                break;
+            case SHARE_TO_MEDIA_LIBRARY:
+                intent = new Intent(this, MediaBrowserActivity.class);
+                intent.putExtra(WordPress.SITE, selectedSite);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown share action: " + shareAction);
+        }
+
         startActivityAndFinish(intent, selectedSiteLocalId);
     }
 

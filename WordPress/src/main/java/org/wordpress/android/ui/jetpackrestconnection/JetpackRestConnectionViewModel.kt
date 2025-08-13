@@ -3,12 +3,12 @@ package org.wordpress.android.ui.jetpackrestconnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -16,9 +16,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.viewmodel.ScopedViewModel
-import kotlinx.coroutines.delay
-import uniffi.wp_api.JetpackConnectionClient
-import uniffi.wp_api.WpAuthentication
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,7 +24,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -49,8 +45,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    // TODO Inject or initialize this properly when the actual implementation is ready
-    private var jetpackConnectionClient: JetpackConnectionClient? = null
+    private var isWaitingForWPComLogin = false
 
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
@@ -81,7 +76,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         ConnectionStep.Finalize -> null
     }
 
-    private suspend fun startNextStep() {
+    private fun startNextStep() {
         // Mark current step as completed if exists
         currentStep.value?.let {
             if (_stepStates.value[it]?.status == ConnectionStatus.InProgress) {
@@ -95,15 +90,20 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun startStep(step: ConnectionStep) {
+    private fun startStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
         updateStepStatus(step, ConnectionStatus.InProgress)
-        // TODO executeStepWithErrorHandling(nextStep)
-
-        // TODO this is just to test the UI
-        delay(STEP_DELAY_MS)
-        updateStepStatus(step, ConnectionStatus.Completed)
+        if (step == ConnectionStep.LoginWpCom) {
+            loginWpCom()
+        } else {
+            launch {
+                executeStepWithErrorHandling(step)
+                // TODO this is just to test the UI
+                delay(STEP_DELAY_MS)
+                updateStepStatus(step, ConnectionStatus.Completed)
+            }
+        }
     }
 
     private fun updateStepStatus(
@@ -122,15 +122,15 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 _currentStep.value = null
                 _buttonType.value = ButtonType.Retry
             }
+
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
                     onJobCompleted()
                 } else {
-                    launch {
-                        startNextStep()
-                    }
+                    startNextStep()
                 }
             }
+
             else -> {}
         }
     }
@@ -210,74 +210,83 @@ class JetpackRestConnectionViewModel @Inject constructor(
                     executeNetworkRequest(step)
                 }
             }
-            updateStepStatus(step, ConnectionStatus.Completed)
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
                 is TimeoutCancellationException -> ErrorType.Timeout(e.message)
                 else -> ErrorType.Unknown(e.message)
             }
-            updateStepStatus(step, ConnectionStatus.Failed, errorType)
+            updateStepStatus(
+                step = step,
+                status = ConnectionStatus.Failed,
+                error = errorType,
+            )
         }
     }
 
-    private suspend fun executeNetworkRequest(step: ConnectionStep) {
+    private fun executeNetworkRequest(step: ConnectionStep) {
         when (step) {
             ConnectionStep.LoginWpCom -> {
-                // TODO
+                // noop - this is handled separately since it doesn't use a coroutine
             }
 
             ConnectionStep.InstallJetpack -> {
-                val site = getSite()
-                if (site.isJetpackInstalled) {
-                    appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack already installed")
-                    updateStepStatus(
-                        step = step,
-                        status = ConnectionStatus.Failed,
-                        error = ErrorType.JetpackAlreadyInstalled()
-                    )
-                } else {
-                    installJetpackPlugin()
-                }
+                appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack")
+                // TODO
             }
 
             ConnectionStep.ConnectSite -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting site")
-                jetpackConnectionClient?.connectSite(
-                    from = getSiteId().toString()
-                ) ?: error("JetpackConnectionClient not initialized")
+                // TODO
             }
 
             ConnectionStep.ConnectWpCom -> {
-                val token = accountStore.accessToken
-                    ?: error("No access token available")
-
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
-                jetpackConnectionClient?.connectUser(
-                    wpComAuthentication = WpAuthentication.Bearer(token = token),
-                    from = getSiteId().toString()
-                ) ?: error("JetpackConnectionClient not initialized")
+                // TODO
             }
 
             ConnectionStep.Finalize -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
+                // TODO
             }
         }
     }
 
-    private suspend fun installJetpackPlugin() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Installing Jetpack plugin")
-        // TODO Implement actual plugin installation API call when ready
-        // val params = PluginCreateParams(
-        //     slug = PluginWpOrgDirectorySlug("jetpack"),
-        //     status = PluginStatus.ACTIVE,
-        // )
-        // For now, simulate network delay
-        delay(STEP_DELAY_MS)
+    private fun loginWpCom() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting WordPress.com login")
+        // TODO skip if the account store token already exists, but for now don't do this to make testing easier
+        isWaitingForWPComLogin = true
+        _uiEvent.value = UiEvent.StartWPComLogin
     }
 
-    private fun getSiteId() = getSite().siteId
+    /**
+     * Called by the activity when WordPress.com login flow completes
+     */
+    fun onWPComLoginCompleted(success: Boolean) {
+        if (!isWaitingForWPComLogin) {
+            appLogWrapper.w(AppLog.T.API, "$TAG: WordPress.com login completed, but not waiting for it")
+            return
+        }
 
+        isWaitingForWPComLogin = false
+        launch {
+            if (success) {
+                // Login successful
+                appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
+                updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+            } else {
+                // Login failed or was cancelled
+                appLogWrapper.e(AppLog.T.API, "$TAG: WordPress.com login failed or cancelled")
+                updateStepStatus(
+                    ConnectionStep.LoginWpCom,
+                    ConnectionStatus.Failed,
+                    ErrorType.FailedToLoginWpCom
+                )
+            }
+        }
+    }
+
+    @Suppress("Unused", "UnusedPrivateMember")
     private fun getSite() = selectedSiteRepository.getSelectedSite()
         ?: error("No site is currently selected in SelectedSiteRepository")
 
@@ -297,13 +306,14 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
+        data object StartWPComLogin : UiEvent()
         data object Close : UiEvent()
         data object ShowCancelConfirmation : UiEvent()
     }
 
     sealed class ErrorType(open val message: String? = null) {
-        data class JetpackAlreadyInstalled(override val message: String? = null) : ErrorType(message)
-        data class FailedToConnectWpCom(override val message: String? = null) : ErrorType(message)
+        data object FailedToLoginWpCom : ErrorType()
+        data object FailedToConnectWpCom : ErrorType()
         data class Timeout(override val message: String? = null) : ErrorType(message)
         data class Offline(override val message: String? = null) : ErrorType(message)
         data class Unknown(override val message: String? = null) : ErrorType(message)
@@ -329,9 +339,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
          */
         fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return site.isUsingSelfHostedRestApi
-                && !site.wpApiRestUrl.isNullOrEmpty()
-                && !site.isJetpackConnected
-                && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
+                    && !site.wpApiRestUrl.isNullOrEmpty()
+                    && !site.isJetpackConnected
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(

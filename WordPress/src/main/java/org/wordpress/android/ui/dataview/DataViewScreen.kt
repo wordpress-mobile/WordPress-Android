@@ -50,6 +50,7 @@ import org.wordpress.android.ui.compose.components.EmptyContentM3
 import org.wordpress.android.ui.dataview.DummyDataViewItems.getDummyDataViewItems
 import uniffi.wp_api.WpApiParamOrder
 import java.util.Locale
+import org.wordpress.android.ui.dataview.DataViewViewModel.DataViewEmptyView
 
 /**
  * Provides a basic screen for displaying a list of [DataViewItem]s
@@ -68,7 +69,8 @@ fun DataViewScreen(
     onSortOrderClick: (WpApiParamOrder) -> Unit,
     onRefresh: () -> Unit,
     onFetchMore: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    emptyView: DataViewEmptyView = DataViewEmptyView(),
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -107,7 +109,7 @@ fun DataViewScreen(
 
             when (uiState.value.loadingState) {
                 LoadingState.LOADING -> LoadingDataView()
-                LoadingState.EMPTY -> EmptyDataView()
+                LoadingState.EMPTY -> EmptyDataView(emptyView)
                 LoadingState.EMPTY_SEARCH -> EmptySearchDataView()
                 LoadingState.ERROR -> ErrorDataView(uiState.value.errorMessage)
                 LoadingState.OFFLINE -> OfflineDataView()
@@ -116,7 +118,7 @@ fun DataViewScreen(
                     items = uiState.value.items,
                     onItemClick = onItemClick,
                     onFetchMore = onFetchMore,
-                    showProgress = uiState.value.loadingState == LoadingState.LOADING_MORE
+                    showProgress = uiState.value.loadingState == LoadingState.LOADING_MORE,
                 )
             }
         }
@@ -137,7 +139,7 @@ private fun SearchAndFilterBar(
     supportedSorts: List<DataViewDropdownItem>,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    
+
     // Sync local search query with the current search query from UI state
     LaunchedEffect(currentSearchQuery) {
         searchQuery = currentSearchQuery
@@ -432,16 +434,18 @@ private fun LoadingDataView() {
 }
 
 @Composable
-private fun EmptyDataView() {
+private fun EmptyDataView(
+    emptyView: DataViewEmptyView
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmptyContentM3(
-            title = stringResource(R.string.subscribers_empty),
-            image = R.drawable.img_jetpack_empty_state,
-            imageContentDescription = stringResource(R.string.subscribers_empty),
+            title = stringResource(emptyView.messageRes),
+            image = emptyView.imageRes,
+            imageContentDescription = stringResource(emptyView.messageRes),
         )
     }
 }

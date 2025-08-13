@@ -316,7 +316,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         if (tabPosition == Unread.ordinal) {
-            ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW, -1, null)
+            selectedSite?.let {
+                ActivityLauncher.addNewPostForResult(activity, it, false, POST_FROM_NOTIFS_EMPTY_VIEW, -1, null)
+            }
         } else if (activity is WPMainActivity) {
             (requireActivity() as WPMainActivity).setReaderPageActive()
         }

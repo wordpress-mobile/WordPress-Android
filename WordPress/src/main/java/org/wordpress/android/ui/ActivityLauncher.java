@@ -87,8 +87,9 @@ import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorLauncher;
+import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -149,6 +150,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
+import static org.wordpress.android.login.LoginMode.JETPACK_REST_CONNECT;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -400,9 +402,11 @@ public class ActivityLauncher {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent editorIntent = new Intent(context, EditPostActivity.class);
-        editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+            .isPage(false)
+            .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(context, params);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -414,10 +418,12 @@ public class ActivityLauncher {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent editorIntent = new Intent(context, EditPostActivity.class);
-        editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, localPostId);
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(localPostId)
+                .isPage(false)
+                .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(context, params);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -456,12 +462,15 @@ public class ActivityLauncher {
             site.getSiteId()
         );
 
-        Intent editorIntent = new Intent(activity, EditPostActivity.class);
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, post.getTitle());
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
-        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, post.getUrl());
-        editorIntent.setAction(EditPostActivityConstants.ACTION_REBLOG);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .reblogPostTitle(post.getTitle())
+                .reblogPostQuote(post.getExcerpt())
+                .reblogPostImage(post.getFeaturedImage())
+                .reblogPostCitation(post.getUrl())
+                .reblogAction(EditPostActivityConstants.ACTION_REBLOG)
+                .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
 
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
@@ -979,26 +988,35 @@ public class ActivityLauncher {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, content);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+            .isPage(false)
+            .isPromo(isPromo)
+            .source(source)
+            .voiceContent(content)
+            .build();
+
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void addNewPostForResult(
             Activity activity,
-            SiteModel site,
+            @NonNull SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
             final int promptId,
             final EntryPoint entryPoint
     ) {
-        addNewPostForResult(
-            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, entryPoint
-        );
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .isPage(false)
+                .isPromo(isPromo)
+                .source(source)
+                .promptId(promptId)
+                .entryPoint(entryPoint)
+                .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
+        activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
     }
 
     public static void addNewPostForResult(
@@ -1023,14 +1041,35 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
-        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
+    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, @Nullable PostModel post) {
+        if (post == null) {
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(post.getId())
+                .loadAutoSaveRevision(false)
+                .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
+        activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
     }
 
-    public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post,
+    public static void editPostOrPageForResult(Activity activity, @NonNull SiteModel site, @Nullable PostModel post,
                                                boolean loadAutoSaveRevision) {
-        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(),
-                loadAutoSaveRevision);
+        if (post == null) {
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(post.getId())
+                .loadAutoSaveRevision(loadAutoSaveRevision)
+                .build();
+
+        Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
+        activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
     }
 
     public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId) {
@@ -1055,8 +1094,14 @@ public class ActivityLauncher {
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(pageLocalId)
+                .loadAutoSaveRevision(loadAutoSaveRevision)
+                .isPage(true)
+                .build();
+
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), params);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
@@ -1066,10 +1111,16 @@ public class ActivityLauncher {
 
     public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
                                                 boolean isNewSite) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, true);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
-        editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(homeLocalId)
+                .loadAutoSaveRevision(false)
+                .isPage(true)
+                .isLandingEditor(true)
+                .isLandingEditorOpenedForNewSite(isNewSite)
+                .build();
+
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), params);
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_LANDING_PAGE);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
@@ -1088,14 +1139,16 @@ public class ActivityLauncher {
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
     ) {
-        Intent intent = new Intent(activity, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .isPage(true)
+                .isPromo(false)
+                .pageTitle(title)
+                .pageContent(content)
+                .pageTemplate(template)
+                .source(source)
+                .build();
+
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1106,14 +1159,16 @@ public class ActivityLauncher {
             @NonNull String content,
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+            .isPage(true)
+            .isPromo(false)
+            .pageTitle(title)
+            .pageContent(content)
+            .pageTemplate(template)
+            .source(source)
+            .build();
+
+        Intent intent = EditorLauncher.getInstance().createEditorIntent(fragment.getContext(), params);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1412,6 +1467,20 @@ public class ActivityLauncher {
     public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
         WPCOM_LOGIN_ONLY.putInto(intent);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    /**
+     * Sign in to WordPress.com from the Jetpack REST connection flow.
+     * This method is specifically for the Jetpack connection process where
+     * we need to authenticate with WordPress.com to establish the connection
+     * and return immediately to the connection flow.
+     *
+     * @param activity The activity requesting the sign-in
+     */
+    public static void showWpComSignInForRestConnect(@NonNull Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        JETPACK_REST_CONNECT.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
