@@ -12,42 +12,27 @@ class JetpackConnector @Inject constructor(
     /**
      * Connects the Jetpack site to WordPress.com and returns the site ID
      */
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun connectSite(site: SiteModel): Result<WpComSiteId> {
-        try {
-            val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
-            val wpComSiteId = client.connectSite(CONNECT_FROM)
-            return checkWpComIdResult(wpComSiteId)
-        } catch (e: Exception) {
-            return Result.failure(e)
-        }
+    suspend fun connectSite(site: SiteModel): Result<WpComSiteId> = runCatching {
+        val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
+        val wpComSiteId = client.connectSite(CONNECT_FROM)
+        requireValidSiteId(wpComSiteId)
     }
 
     /**
      * Connects the Jetpack user to WordPress.com and returns the site ID
      */
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun connectUser(site: SiteModel, accessToken: String): Result<WpComSiteId> {
-        try {
-            val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
-            val wpComAuthentication = WpAuthentication.Bearer(token = accessToken)
-            val wpComSiteId = client.connectUser(
-                wpComAuthentication = wpComAuthentication,
-                from = CONNECT_FROM
-            )
-            return checkWpComIdResult(wpComSiteId)
-        } catch (e: Exception) {
-            return Result.failure(e)
-        }
+    suspend fun connectUser(site: SiteModel, accessToken: String): Result<WpComSiteId> = runCatching {
+        val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
+        val wpComAuthentication = WpAuthentication.Bearer(token = accessToken)
+        val wpComSiteId = client.connectUser(
+            wpComAuthentication = wpComAuthentication,
+            from = CONNECT_FROM
+        )
+        requireValidSiteId(wpComSiteId)
     }
 
-    private fun checkWpComIdResult(wpComSiteId: WpComSiteId): Result<WpComSiteId> {
-        return if (wpComSiteId > 0UL) {
-            return Result.success(wpComSiteId)
-        } else {
-            Result.failure(
-                Exception("Jetpacks connection failed, no site ID returned")
-            )
-        }
+    private fun requireValidSiteId(wpComSiteId: WpComSiteId): WpComSiteId {
+        require(wpComSiteId > 0UL) { "Jetpack connection failed, no site ID returned" }
+        return wpComSiteId
     }
 }
