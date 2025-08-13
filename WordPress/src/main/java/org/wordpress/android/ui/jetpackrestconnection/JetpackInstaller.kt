@@ -21,14 +21,11 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
-    private lateinit var apiClient: WpApiClient
-
     suspend fun installJetpack(site: SiteModel): PluginStatus? {
         if (!validateCredentials(site)) return null
 
-        initApiClient(site)
-
-        val info = getPluginInfo()
+        val apiClient = initApiClient(site)
+        val info = getPluginInfo(apiClient)
         return when (info?.status) {
             PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
                 logDebug("Jetpack is already installed and activated")
@@ -41,11 +38,11 @@ class JetpackInstaller @Inject constructor(
                 } else {
                     PluginStatus.ACTIVE
                 }
-                activatePlugin(targetStatus)
+                activatePlugin(apiClient, targetStatus)
             }
             null -> {
                 logDebug("Jetpack is not installed")
-                createAndActivatePlugin()
+                createAndActivatePlugin(apiClient)
             }
         }
     }
@@ -58,8 +55,8 @@ class JetpackInstaller @Inject constructor(
         return true
     }
 
-    private fun initApiClient(site: SiteModel) {
-        apiClient = WpApiClient(
+    private fun initApiClient(site: SiteModel): WpApiClient {
+        return WpApiClient(
             wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
             authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
                 site.apiRestUsernamePlain!!,
@@ -68,7 +65,7 @@ class JetpackInstaller @Inject constructor(
         )
     }
 
-    private suspend fun getPluginInfo(): PluginInfo? {
+    private suspend fun getPluginInfo(apiClient: WpApiClient): PluginInfo? {
         val response = apiClient.request { requestBuilder ->
             requestBuilder.plugins().listWithEditContext(
                 params = PluginListParams(search = JETPACK_SLUG.slug)
@@ -93,7 +90,7 @@ class JetpackInstaller @Inject constructor(
         }
     }
 
-    private suspend fun activatePlugin(targetStatus: PluginStatus): PluginStatus? {
+    private suspend fun activatePlugin(apiClient: WpApiClient, targetStatus: PluginStatus): PluginStatus? {
         logDebug("Activating Jetpack plugin with status: $targetStatus")
 
         val response = apiClient.request { requestBuilder ->
@@ -116,7 +113,7 @@ class JetpackInstaller @Inject constructor(
         }
     }
 
-    private suspend fun createAndActivatePlugin(): PluginStatus? {
+    private suspend fun createAndActivatePlugin(apiClient: WpApiClient): PluginStatus? {
         logDebug("Installing and activating Jetpack plugin")
 
         val response = apiClient.request { requestBuilder ->
