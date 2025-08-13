@@ -11,25 +11,19 @@ import uniffi.wp_api.PluginSlug
 import uniffi.wp_api.PluginStatus
 import uniffi.wp_api.PluginUpdateParams
 import uniffi.wp_api.PluginWpOrgDirectorySlug
-import uniffi.wp_api.WpAuthenticationProvider
-import java.net.URL
 import javax.inject.Inject
 
 /**
  * Installs the Jetpack plugin on the given site using wordpress-rs
  */
 class JetpackInstaller @Inject constructor(
+    private val jetpackConnectionHelper: JetpackConnectionHelper,
     private val appLogWrapper: AppLogWrapper,
 ) {
     @Suppress("TooGenericExceptionCaught")
     suspend fun installJetpack(site: SiteModel): Result<PluginStatus> {
-        if (!validateCredentials(site)) {
-            return Result.failure(IllegalArgumentException("Missing credentials for Jetpack installation"))
-        }
-
-        val apiClient = initApiClient(site)
-
         return try {
+            val apiClient = jetpackConnectionHelper.initWpApiClient(site)
             val info = getPluginInfo(apiClient)
             when (info?.status) {
                 PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
@@ -54,20 +48,6 @@ class JetpackInstaller @Inject constructor(
             logError("Failed to install Jetpack: ${e.message}")
             Result.failure(e)
         }
-    }
-
-    private fun validateCredentials(site: SiteModel): Boolean {
-        return !site.apiRestUsernamePlain.isNullOrBlank() && !site.apiRestPasswordPlain.isNullOrBlank()
-    }
-
-    private fun initApiClient(site: SiteModel): WpApiClient {
-        return WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
-            authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                site.apiRestUsernamePlain!!,
-                site.apiRestPasswordPlain!!
-            )
-        )
     }
 
     private suspend fun getPluginInfo(apiClient: WpApiClient): PluginInfo? {
