@@ -320,33 +320,35 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
-        val status = jetpackInstaller.installJetpack(getSite())
+        val result = jetpackInstaller.installJetpack(getSite())
 
-        when (status) {
-            PluginStatus.ACTIVE,
-            PluginStatus.NETWORK_ACTIVE -> {
-                updateStepStatus(
-                    step = ConnectionStep.InstallJetpack,
-                    status = ConnectionStatus.Completed
-                )
-            }
-
-            PluginStatus.INACTIVE -> {
-                updateStepStatus(
-                    step = ConnectionStep.InstallJetpack,
-                    status = ConnectionStatus.Failed,
-                    error = ErrorType.InstallJetpackInactive
-                )
-            }
-
-            else -> {
+        result.fold(
+            onSuccess = { status ->
+                when (status) {
+                    PluginStatus.ACTIVE,
+                    PluginStatus.NETWORK_ACTIVE -> {
+                        updateStepStatus(
+                            step = ConnectionStep.InstallJetpack,
+                            status = ConnectionStatus.Completed
+                        )
+                    }
+                    PluginStatus.INACTIVE -> {
+                        updateStepStatus(
+                            step = ConnectionStep.InstallJetpack,
+                            status = ConnectionStatus.Failed,
+                            error = ErrorType.InstallJetpackInactive
+                        )
+                    }
+                }
+            },
+            onFailure = {
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
                     error = ErrorType.InstallJetpackFailed
                 )
             }
-        }
+        )
     }
 
     /**

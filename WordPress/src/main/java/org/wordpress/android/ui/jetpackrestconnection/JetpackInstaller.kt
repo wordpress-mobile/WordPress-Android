@@ -21,38 +21,42 @@ import javax.inject.Inject
 class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
-    suspend fun installJetpack(site: SiteModel): PluginStatus? {
-        if (!validateCredentials(site)) return null
+    suspend fun installJetpack(site: SiteModel): Result<PluginStatus> {
+        if (!validateCredentials(site)) {
+            return Result.failure(IllegalArgumentException("Missing credentials for Jetpack installation"))
+        }
 
         val apiClient = initApiClient(site)
-        val info = getPluginInfo(apiClient)
-        return when (info?.status) {
-            PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
-                logDebug("Jetpack is already installed and activated")
-                info.status
-            }
-            PluginStatus.INACTIVE -> {
-                logDebug("Jetpack is installed but inactive")
-                val targetStatus = if (info.isNetworkOnly) {
-                    PluginStatus.NETWORK_ACTIVE
-                } else {
-                    PluginStatus.ACTIVE
+        
+        return try {
+            val info = getPluginInfo(apiClient)
+            when (info?.status) {
+                PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
+                    logDebug("Jetpack is already installed and activated")
+                    Result.success(info.status)
                 }
-                activatePlugin(apiClient, targetStatus)
+                PluginStatus.INACTIVE -> {
+                    logDebug("Jetpack is installed but inactive")
+                    val targetStatus = if (info.isNetworkOnly) {
+                        PluginStatus.NETWORK_ACTIVE
+                    } else {
+                        PluginStatus.ACTIVE
+                    }
+                    activatePlugin(apiClient, targetStatus)
+                }
+                null -> {
+                    logDebug("Jetpack is not installed")
+                    createAndActivatePlugin(apiClient)
+                }
             }
-            null -> {
-                logDebug("Jetpack is not installed")
-                createAndActivatePlugin(apiClient)
-            }
+        } catch (e: Exception) {
+            logError("Failed to install Jetpack: ${e.message}")
+            Result.failure(e)
         }
     }
 
     private fun validateCredentials(site: SiteModel): Boolean {
-        if (site.apiRestUsernamePlain.isNullOrBlank() || site.apiRestPasswordPlain.isNullOrBlank()) {
-            logError("Missing credentials for Jetpack installation")
-            return false
-        }
-        return true
+        return !site.apiRestUsernamePlain.isNullOrBlank() && !site.apiRestPasswordPlain.isNullOrBlank()
     }
 
     private fun initApiClient(site: SiteModel): WpApiClient {
@@ -90,7 +94,7 @@ class JetpackInstaller @Inject constructor(
         }
     }
 
-    private suspend fun activatePlugin(apiClient: WpApiClient, targetStatus: PluginStatus): PluginStatus? {
+    private suspend fun activatePlugin(apiClient: WpApiClient, targetStatus: PluginStatus): Result<PluginStatus> {
         logDebug("Activating Jetpack plugin with status: $targetStatus")
 
         val response = apiClient.request { requestBuilder ->
@@ -101,19 +105,21 @@ class JetpackInstaller @Inject constructor(
         }
 
         return when (response) {
-            is WpRequestResult.Success -> response.response.data.status
+            is WpRequestResult.Success -> Result.success(response.response.data.status)
             is WpRequestResult.WpError<*> -> {
-                logError("Activation failed - ${response.errorCode}")
-                null
+                val error = Exception("Activation failed - ${response.errorCode}")
+                logError(error.message ?: "Activation failed")
+                Result.failure(error)
             }
             else -> {
-                logError("Activation failed")
-                null
+                val error = Exception("Activation failed")
+                logError(error.message ?: "Activation failed")
+                Result.failure(error)
             }
         }
     }
 
-    private suspend fun createAndActivatePlugin(apiClient: WpApiClient): PluginStatus? {
+    private suspend fun createAndActivatePlugin(apiClient: WpApiClient): Result<PluginStatus> {
         logDebug("Installing and activating Jetpack plugin")
 
         val response = apiClient.request { requestBuilder ->
@@ -128,15 +134,17 @@ class JetpackInstaller @Inject constructor(
         return when (response) {
             is WpRequestResult.Success -> {
                 logDebug("Installation successful")
-                response.response.data.status
+                Result.success(response.response.data.status)
             }
             is WpRequestResult.WpError<*> -> {
-                logError("Installation failed - ${response.errorCode}")
-                null
+                val error = Exception("Installation failed - ${response.errorCode}")
+                logError(error.message ?: "Installation failed")
+                Result.failure(error)
             }
             else -> {
-                logError("Installation failed")
-                null
+                val error = Exception("Installation failed")
+                logError(error.message ?: "Installation failed")
+                Result.failure(error)
             }
         }
     }
