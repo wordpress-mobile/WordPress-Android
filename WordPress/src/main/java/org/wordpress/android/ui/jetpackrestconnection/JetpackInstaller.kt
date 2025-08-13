@@ -31,12 +31,12 @@ class JetpackInstaller @Inject constructor(
         val info = getPluginInfo(site)
         return when (info?.status) {
             PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed")
+                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is already installed and activated")
                 PluginStatus.ACTIVE
             }
 
             PluginStatus.INACTIVE -> {
-                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is inactive")
+                appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack is installed but inactive")
                 val newStatus = if (info.isNetworkOnly) {
                     PluginStatus.NETWORK_ACTIVE
                 } else {
@@ -59,7 +59,7 @@ class JetpackInstaller @Inject constructor(
         val response = createApiClient(site).request { requestBuilder ->
             requestBuilder.plugins().create(
                 PluginCreateParams(
-                    slug = PluginWpOrgDirectorySlug(PLUGIN_SLUG),
+                    slug = JETPACK_SLUG_WPORG_DIRECTORY,
                     status = PluginStatus.ACTIVE
                 )
             )
@@ -113,7 +113,7 @@ class JetpackInstaller @Inject constructor(
         )
         val response = createApiClient(site).request { requestBuilder ->
             requestBuilder.plugins().update(
-                pluginSlug = PluginSlug(PLUGIN_SLUG),
+                pluginSlug = JETPACK_SLUG,
                 params = params
             )
         }
@@ -141,7 +141,7 @@ class JetpackInstaller @Inject constructor(
         val response = createApiClient(site).request { requestBuilder ->
             requestBuilder.plugins().listWithEditContext(
                 params = PluginListParams(
-                    search = PLUGIN_SLUG
+                    search = JETPACK_SLUG.slug
                 )
             )
         }
@@ -149,7 +149,7 @@ class JetpackInstaller @Inject constructor(
             is WpRequestResult.Success -> {
                 val plugins = response.response.data
                 plugins.firstOrNull {
-                    it.name.equals(PLUGIN_SLUG, ignoreCase = true)
+                    it.plugin.slug.equals(JETPACK_SLUG.slug)
                 }?.let { jetpack ->
                     PluginInfo(
                         name = jetpack.name,
@@ -188,6 +188,7 @@ class JetpackInstaller @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackInstaller"
-        private const val PLUGIN_SLUG = "jetpack"
+        private val JETPACK_SLUG = PluginSlug("jetpack/jetpack")
+        private val JETPACK_SLUG_WPORG_DIRECTORY = PluginWpOrgDirectorySlug("jetpack")
     }
 }
