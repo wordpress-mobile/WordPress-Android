@@ -27,8 +27,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.pages.PagesActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorLauncher;
+import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListActivityKt;
@@ -441,12 +441,15 @@ class PostUploadNotifier {
         if (mediaList != null && !mediaList.isEmpty()) {
             ArrayList<MediaModel> mediaToIncludeInPost = new ArrayList<>(mediaList);
 
-            Intent writePostIntent = new Intent(mContext, EditPostActivity.class);
+            EditorLauncherParams params = EditorLauncherParams.Builder
+                    .forSite(site)
+                    .isPage(false)
+                    .insertMedia(mediaToIncludeInPost)
+                    .build();
+
+            Intent writePostIntent = EditorLauncher.getInstance().createEditorIntent(mContext, params);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            writePostIntent.putExtra(WordPress.SITE, site);
-            writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-            writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
             writePostIntent.setAction(String.valueOf(notificationId));
 
             PendingIntent actionPendingIntent =

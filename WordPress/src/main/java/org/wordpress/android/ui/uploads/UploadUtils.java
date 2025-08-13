@@ -14,7 +14,6 @@ import androidx.annotation.StringRes;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -29,8 +28,9 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorLauncher;
+import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
@@ -610,13 +610,16 @@ public class UploadUtils {
                                 ArrayList<MediaModel> mediaListToInsertInPost = new ArrayList<>();
                                 mediaListToInsertInPost.addAll(mediaList);
 
-                                Intent writePostIntent = new Intent(activity, EditPostActivity.class);
+                                EditorLauncherParams params = EditorLauncherParams.Builder
+                                        .forSite(site)
+                                        .isPage(false)
+                                        .insertMedia(mediaListToInsertInPost)
+                                        .build();
+
+                                Intent writePostIntent =
+                                        EditorLauncher.getInstance().createEditorIntent(activity, params);
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                writePostIntent.putExtra(WordPress.SITE, site);
-                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA,
-                                        mediaListToInsertInPost);
                                 activity.startActivity(writePostIntent);
                             }
                         }, sequencer);

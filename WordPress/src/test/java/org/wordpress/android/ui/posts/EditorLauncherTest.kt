@@ -12,7 +12,7 @@ class EditorLauncherTest {
 
         val handledFields = setOf(
             // addBasicExtras()
-            "site",           // -> WordPress.SITE
+            "siteSource",     // -> WordPress.SITE or EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID
             "isPage",         // -> EditPostActivityConstants.EXTRA_IS_PAGE
             "isPromo",        // -> EditPostActivityConstants.EXTRA_IS_PROMO
 

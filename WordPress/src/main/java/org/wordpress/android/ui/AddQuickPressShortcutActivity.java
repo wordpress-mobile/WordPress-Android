@@ -35,8 +35,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorLauncher;
+import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -140,12 +140,15 @@ public class AddQuickPressShortcutActivity extends BaseAppCompatActivity {
                     ToastUtils.showToast(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error,
                             ToastUtils.Duration.LONG);
                 } else {
-                    Intent shortcutIntent = new Intent(getApplicationContext(), EditPostActivity.class);
+                    EditorLauncherParams params =
+                            EditorLauncherParams.Builder.forQuickPressBlogId(siteIds[position]).isQuickPress(true)
+                                                        .build();
+
+                    Intent shortcutIntent =
+                            EditorLauncher.getInstance().createEditorIntent(getApplicationContext(), params);
                     shortcutIntent.setAction(Intent.ACTION_MAIN);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    shortcutIntent.putExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
-                    shortcutIntent.putExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS, true);
 
                     String shortcutName = quickPressShortcutName.getText().toString();
 

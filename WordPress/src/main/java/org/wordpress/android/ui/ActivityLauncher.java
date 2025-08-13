@@ -402,7 +402,7 @@ public class ActivityLauncher {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
             .isPage(false)
             .build();
 
@@ -418,7 +418,7 @@ public class ActivityLauncher {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .postLocalId(localPostId)
                 .isPage(false)
                 .build();
@@ -462,7 +462,7 @@ public class ActivityLauncher {
             site.getSiteId()
         );
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .reblogPostTitle(post.getTitle())
                 .reblogPostQuote(post.getExcerpt())
                 .reblogPostImage(post.getFeaturedImage())
@@ -988,7 +988,7 @@ public class ActivityLauncher {
             return;
         }
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
             .isPage(false)
             .isPromo(isPromo)
             .source(source)
@@ -1007,7 +1007,7 @@ public class ActivityLauncher {
             final int promptId,
             final EntryPoint entryPoint
     ) {
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .isPage(false)
                 .isPromo(isPromo)
                 .source(source)
@@ -1047,7 +1047,7 @@ public class ActivityLauncher {
             return;
         }
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .postLocalId(post.getId())
                 .loadAutoSaveRevision(false)
                 .build();
@@ -1063,10 +1063,10 @@ public class ActivityLauncher {
             return;
         }
 
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
-            .postLocalId(post.getId())
-            .loadAutoSaveRevision(loadAutoSaveRevision)
-            .build();
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .postLocalId(post.getId())
+                .loadAutoSaveRevision(loadAutoSaveRevision)
+                .build();
 
         Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
         activity.startActivityForResult(editorIntent, RequestCodes.EDIT_POST);
@@ -1094,7 +1094,7 @@ public class ActivityLauncher {
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision) {
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .postLocalId(pageLocalId)
                 .loadAutoSaveRevision(loadAutoSaveRevision)
                 .isPage(true)
@@ -1111,7 +1111,7 @@ public class ActivityLauncher {
 
     public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
                                                 boolean isNewSite) {
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
                 .postLocalId(homeLocalId)
                 .loadAutoSaveRevision(false)
                 .isPage(true)
@@ -1139,14 +1139,14 @@ public class ActivityLauncher {
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
     ) {
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
-            .isPage(true)
-            .isPromo(false)
-            .pageTitle(title)
-            .pageContent(content)
-            .pageTemplate(template)
-            .source(source)
-            .build();
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
+                .isPage(true)
+                .isPromo(false)
+                .pageTitle(title)
+                .pageContent(content)
+                .pageTemplate(template)
+                .source(source)
+                .build();
 
         Intent intent = EditorLauncher.getInstance().createEditorIntent(activity, params);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
@@ -1159,7 +1159,7 @@ public class ActivityLauncher {
             @NonNull String content,
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
-        EditorLauncherParams params = new EditorLauncherParams.Builder(site)
+        EditorLauncherParams params = EditorLauncherParams.Builder.forSite(site)
             .isPage(true)
             .isPromo(false)
             .pageTitle(title)
