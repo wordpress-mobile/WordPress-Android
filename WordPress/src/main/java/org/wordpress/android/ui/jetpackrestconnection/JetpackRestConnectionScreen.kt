@@ -26,7 +26,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -149,8 +149,8 @@ private val stepConfigs = listOf(
     ),
     StepConfig(
         step = ConnectionStep.ConnectUser,
-        titleRes = R.string.jetpack_rest_connection_step_connect_wpcom,
-        icon = Icons.Default.Settings
+        titleRes = R.string.jetpack_rest_connection_step_connect_user,
+        icon = Icons.Default.Person
     ),
     StepConfig(
         step = ConnectionStep.Finalize,
