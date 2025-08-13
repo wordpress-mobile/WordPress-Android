@@ -9,10 +9,10 @@ import javax.inject.Inject
 class JetpackConnector @Inject constructor(
     private val jetpackConnectionHelper: JetpackConnectionHelper
 ) {
-    @Suppress("TooGenericExceptionCaught")
     /**
      * Connects the Jetpack site to WordPress.com and returns the site ID
      */
+    @Suppress("TooGenericExceptionCaught")
     suspend fun connectSite(site: SiteModel): Result<WpComSiteId> {
         try {
             val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
@@ -23,10 +23,10 @@ class JetpackConnector @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     /**
      * Connects the Jetpack user to WordPress.com and returns the site ID
      */
+    @Suppress("TooGenericExceptionCaught")
     suspend fun connectUser(site: SiteModel, accessToken: String): Result<WpComSiteId> {
         try {
             val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
