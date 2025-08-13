@@ -18,51 +18,52 @@ class JetpackConnectionHelper @Inject constructor(
     private val appLogWrapper: AppLogWrapper
 ) {
     fun initWpApiClient(site: SiteModel): WpApiClient {
-        if (!validateCredentials(site)) {
-            throw IllegalArgumentException("Missing credentials for WpApiClient")
-        }
+        requireCredentials(site)
         return WpApiClient(
             wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
-            authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-                site.apiRestUsernamePlain!!,
-                site.apiRestPasswordPlain!!
-            )
+            authProvider = createAuthProvider(site)
         )
     }
 
     fun initJetpackConnectionClient(site: SiteModel): JetpackConnectionClient {
-        if (!validateCredentials(site)) {
-            throw IllegalArgumentException("Missing credentials for JetpackConnectionClient")
-        }
-
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            site.apiRestUsernamePlain!!,
-            site.apiRestPasswordPlain!!
-        )
-
+        requireCredentials(site)
+        
         val delegate = WpApiClientDelegate(
-            authProvider = authProvider,
+            authProvider = createAuthProvider(site),
             requestExecutor = WpRequestExecutor(),
-            middlewarePipeline = WpApiMiddlewarePipeline(
-                emptyList()
-            ),
-            appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication() {
-                    appLogWrapper.d(AppLog.T.API, "$TAG: requestedWithInvalidAuthentication")
-                    throw IllegalArgumentException("Invalid credentials for JetpackConnectionClient")
-                }
-            }
+            middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
+            appNotifier = InvalidAuthNotifier()
         )
 
-        val apiUrl = site.wpApiRestUrl ?: "${site.url}/wp-json"
         return JetpackConnectionClient(
-            apiRootUrl = ParsedUrl.parse(apiUrl),
+            apiRootUrl = ParsedUrl.parse(resolveApiUrl(site)),
             delegate = delegate
         )
     }
 
-    private fun validateCredentials(site: SiteModel): Boolean {
-        return !site.apiRestUsernamePlain.isNullOrBlank() && !site.apiRestPasswordPlain.isNullOrBlank()
+    private fun createAuthProvider(site: SiteModel) = 
+        WpAuthenticationProvider.staticWithUsernameAndPassword(
+            site.apiRestUsernamePlain!!,
+            site.apiRestPasswordPlain!!
+        )
+
+    private fun requireCredentials(site: SiteModel) {
+        require(!site.apiRestUsernamePlain.isNullOrBlank()) { 
+            "API username is required" 
+        }
+        require(!site.apiRestPasswordPlain.isNullOrBlank()) { 
+            "API password is required" 
+        }
+    }
+
+    private fun resolveApiUrl(site: SiteModel) = 
+        site.wpApiRestUrl ?: "${site.url}/wp-json"
+
+    private inner class InvalidAuthNotifier : WpAppNotifier {
+        override suspend fun requestedWithInvalidAuthentication() {
+            appLogWrapper.d(AppLog.T.API, "$TAG: requestedWithInvalidAuthentication")
+            throw IllegalArgumentException("Invalid credentials")
+        }
     }
 
     companion object {
