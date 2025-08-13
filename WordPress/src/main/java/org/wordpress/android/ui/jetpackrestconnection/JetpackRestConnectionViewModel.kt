@@ -4,6 +4,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -277,13 +278,16 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Returns immediately if the user is already logged into wp.com, otherwise starts the wp.com login flow
-     * which is handled by the activity
+     * Starts the wp.com login flow if the user isn't logged into wp.com
      */
     private fun loginWpCom() {
         if (accountStore.hasAccessToken()) {
+            // User is already logged in, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
-            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+            launch {
+                delay(UI_DELAY_MS)
+                updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+            }
         } else {
             isWaitingForWPComLogin = true
             setUiEvent(UiEvent.StartWPComLogin)
@@ -397,7 +401,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
-        private const val STEP_TIMEOUT_MS = 45 * 1000L // 45 seconds timeout per step
+        private const val STEP_TIMEOUT_MS = 45 * 1000L
+        private const val UI_DELAY_MS = 1000L
 
         /**
          * Requirements:
