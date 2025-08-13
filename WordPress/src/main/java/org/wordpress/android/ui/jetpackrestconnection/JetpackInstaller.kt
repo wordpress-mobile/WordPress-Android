@@ -82,25 +82,6 @@ class JetpackInstaller @Inject constructor(
         }
     }
 
-
-    /* iOS
-       func performInstall() async throws {
-        let plugins = try await client.api.plugins.listWithEditContext(params: .init())
-            let jetpack = plugins.data.first { $0.plugin == .jetpack }
-
-            if let jetpack {
-                if jetpack.status == .inactive {
-                    let _ = try await client.api.plugins.update(
-                        pluginSlug: jetpack.plugin,
-                    params: .init(status: jetpack.networkOnly ? .networkActive : .active)
-                    )
-                }
-            } else {
-                let _ = try await client.api.plugins.create(params: .init(slug: .jetpack, status: .active))
-                }
-            }*/
-
-
     /**
      * Activates the Jetpack plugin on the given site using wordpress-rs, returns null on failure
      */
