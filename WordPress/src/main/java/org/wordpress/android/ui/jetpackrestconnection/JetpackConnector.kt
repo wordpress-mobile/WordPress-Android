@@ -12,7 +12,13 @@ class JetpackConnector @Inject constructor(
         try {
             val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
             val wpComSiteId = client.connectSite(CONNECT_FROM)
-            return Result.success(wpComSiteId)
+            return if (wpComSiteId > 0u) {
+                return Result.success(wpComSiteId)
+            } else (
+                Result.failure(
+                    Exception("Jetpack connection failed, no site ID returned")
+                )
+            )
         } catch (e: Exception) {
             return Result.failure(e)
         }
