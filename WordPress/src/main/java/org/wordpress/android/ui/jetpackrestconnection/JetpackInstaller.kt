@@ -22,12 +22,12 @@ class JetpackInstaller @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) {
     private lateinit var apiClient: WpApiClient
-    
+
     suspend fun installJetpack(site: SiteModel): PluginStatus? {
         if (!validateCredentials(site)) return null
-        
+
         initApiClient(site)
-        
+
         val info = getPluginInfo()
         return when (info?.status) {
             PluginStatus.ACTIVE, PluginStatus.NETWORK_ACTIVE -> {
@@ -49,7 +49,7 @@ class JetpackInstaller @Inject constructor(
             }
         }
     }
-    
+
     private fun validateCredentials(site: SiteModel): Boolean {
         if (site.apiRestUsernamePlain.isNullOrBlank() || site.apiRestPasswordPlain.isNullOrBlank()) {
             logError("Missing credentials for Jetpack installation")
@@ -57,7 +57,7 @@ class JetpackInstaller @Inject constructor(
         }
         return true
     }
-    
+
     private fun initApiClient(site: SiteModel) {
         apiClient = WpApiClient(
             wpOrgSiteApiRootUrl = URL(site.wpApiRestUrl),
@@ -67,18 +67,18 @@ class JetpackInstaller @Inject constructor(
             )
         )
     }
-    
+
     private suspend fun getPluginInfo(): PluginInfo? {
         val response = apiClient.request { requestBuilder ->
             requestBuilder.plugins().listWithEditContext(
                 params = PluginListParams(search = JETPACK_SLUG.slug)
             )
         }
-        
+
         return when (response) {
             is WpRequestResult.Success -> {
-                response.response.data.firstOrNull { 
-                    it.plugin.slug == JETPACK_SLUG.slug 
+                response.response.data.firstOrNull {
+                    it.plugin.slug == JETPACK_SLUG.slug
                 }?.let {
                     PluginInfo(
                         status = it.status,
@@ -92,22 +92,17 @@ class JetpackInstaller @Inject constructor(
             }
         }
     }
-    
-    private data class PluginInfo(
-        val status: PluginStatus,
-        val isNetworkOnly: Boolean
-    )
-    
+
     private suspend fun activatePlugin(targetStatus: PluginStatus): PluginStatus? {
         logDebug("Activating Jetpack plugin with status: $targetStatus")
-        
+
         val response = apiClient.request { requestBuilder ->
             requestBuilder.plugins().update(
                 pluginSlug = JETPACK_SLUG,
                 params = PluginUpdateParams(status = targetStatus)
             )
         }
-        
+
         return when (response) {
             is WpRequestResult.Success -> response.response.data.status
             is WpRequestResult.WpError<*> -> {
@@ -120,10 +115,10 @@ class JetpackInstaller @Inject constructor(
             }
         }
     }
-    
+
     private suspend fun createAndActivatePlugin(): PluginStatus? {
         logDebug("Installing and activating Jetpack plugin")
-        
+
         val response = apiClient.request { requestBuilder ->
             requestBuilder.plugins().create(
                 PluginCreateParams(
@@ -132,9 +127,12 @@ class JetpackInstaller @Inject constructor(
                 )
             )
         }
-        
+
         return when (response) {
-            is WpRequestResult.Success -> response.response.data.status
+            is WpRequestResult.Success -> {
+                logDebug("Installation successful")
+                response.response.data.status
+            }
             is WpRequestResult.WpError<*> -> {
                 logError("Installation failed - ${response.errorCode}")
                 null
@@ -145,14 +143,19 @@ class JetpackInstaller @Inject constructor(
             }
         }
     }
-    
+
     private fun logDebug(message: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: $message")
     }
-    
+
     private fun logError(message: String) {
         appLogWrapper.e(AppLog.T.API, "$TAG: $message")
     }
+
+    private data class PluginInfo(
+        val status: PluginStatus,
+        val isNetworkOnly: Boolean
+    )
 
     companion object {
         private const val TAG = "JetpackInstaller"
