@@ -10,23 +10,23 @@ class JetpackConnector @Inject constructor(
     private val jetpackConnectionHelper: JetpackConnectionHelper
 ) {
     @Suppress("TooGenericExceptionCaught")
+    /**
+     * Connects the Jetpack site to WordPress.com and returns the site ID
+     */
     suspend fun connectSite(site: SiteModel): Result<WpComSiteId> {
         try {
             val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
             val wpComSiteId = client.connectSite(CONNECT_FROM)
-            return if (wpComSiteId > 0u) {
-                return Result.success(wpComSiteId)
-            } else {
-                Result.failure(
-                    Exception("Jetpacks site connection failed, no site ID returned")
-                )
-            }
+            return checkWpComIdResult(wpComSiteId)
         } catch (e: Exception) {
             return Result.failure(e)
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
+    /**
+     * Connects the Jetpack user to WordPress.com and returns the site ID
+     */
     suspend fun connectUser(site: SiteModel, accessToken: String): Result<WpComSiteId> {
         try {
             val client = jetpackConnectionHelper.initJetpackConnectionClient(site)
@@ -35,15 +35,19 @@ class JetpackConnector @Inject constructor(
                 wpComAuthentication = wpComAuthentication,
                 from = CONNECT_FROM
             )
-            return if (wpComSiteId > 0u) {
-                return Result.success(wpComSiteId)
-            } else {
-                Result.failure(
-                    Exception("Jetpack user connection failed, no site ID returned")
-                )
-            }
+            return checkWpComIdResult(wpComSiteId)
         } catch (e: Exception) {
             return Result.failure(e)
+        }
+    }
+
+    private fun checkWpComIdResult(wpComSiteId: WpComSiteId): Result<WpComSiteId> {
+        return if (wpComSiteId > 0UL) {
+            return Result.success(wpComSiteId)
+        } else {
+            Result.failure(
+                Exception("Jetpacks connection failed, no site ID returned")
+            )
         }
     }
 }
