@@ -304,19 +304,17 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
 
         isWaitingForWPComLogin = false
-        launch {
-            if (success) {
-                appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
-                updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
-            } else {
-                // Login failed or was cancelled
-                appLogWrapper.e(AppLog.T.API, "$TAG: WordPress.com login failed or cancelled")
-                updateStepStatus(
-                    ConnectionStep.LoginWpCom,
-                    ConnectionStatus.Failed,
-                    ErrorType.LoginWpComFailed
-                )
-            }
+        if (success) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
+            updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
+        } else {
+            // Login failed or was cancelled
+            appLogWrapper.e(AppLog.T.API, "$TAG: WordPress.com login failed or cancelled")
+            updateStepStatus(
+                ConnectionStep.LoginWpCom,
+                ConnectionStatus.Failed,
+                ErrorType.LoginWpComFailed
+            )
         }
     }
 
