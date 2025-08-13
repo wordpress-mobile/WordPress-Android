@@ -49,10 +49,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var job: Job? = null
     private var isWaitingForWPComLogin = false
 
-    init {
-        refreshSite()
-    }
-
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
@@ -326,9 +322,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun installJetpack() {
         val status = jetpackInstaller.installJetpack(getSite())
 
-        // refresh the selected site from the server in case the above call changed anything
-        refreshSite()
-
         when (status) {
             PluginStatus.ACTIVE,
             PluginStatus.NETWORK_ACTIVE -> {
@@ -361,14 +354,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private fun getSite() =
         selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
-
-    /**
-     * Refreshes the current site from the server to ensure we have the latest data in the store. Note we won't
-     * have any changes here until getSite() is called again.
-     */
-    private fun refreshSite() {
-        selectedSiteRepository.refresh()
-    }
 
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
