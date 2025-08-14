@@ -66,7 +66,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     private var openMediaLibraryListener: OpenMediaLibraryListener? = null
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
 
-    private var isEditorStarted = false
     private var isEditorDidMount = false
     private var rootView: View? = null
 
@@ -78,7 +77,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
         if (savedInstanceState != null) {
             isHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
-            isEditorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED)
             isEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT)
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID)
         }
@@ -235,7 +233,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, isHtmlModeEnabled)
-        outState.putBoolean(KEY_EDITOR_STARTED, isEditorStarted)
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, isEditorDidMount)
         outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId)
     }
@@ -464,7 +461,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             historyChangeListener = null
             featuredImageChangeListener = null
         }
-        isEditorStarted = false
         super.onDestroy()
     }
 
@@ -507,12 +503,11 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     fun startWithEditorSettings(editorSettings: String) {
-        if (gutenbergView == null || isEditorStarted) {
+        if (gutenbergView == null) {
             return
         }
 
         val config = buildEditorConfiguration(editorSettings)
-        isEditorStarted = true
         gutenbergView?.start(config)
     }
 
@@ -583,7 +578,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     companion object {
         private const val GUTENBERG_EDITOR_NAME = "gutenberg"
         private const val KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED"
-        private const val KEY_EDITOR_STARTED = "KEY_EDITOR_STARTED"
         private const val KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT"
         private const val ARG_IS_NEW_POST = "param_is_new_post"
         private const val ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data"
