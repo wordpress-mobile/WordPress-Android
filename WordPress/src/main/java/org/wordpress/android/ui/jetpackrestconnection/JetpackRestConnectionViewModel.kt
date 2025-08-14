@@ -69,7 +69,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private fun onJobCompleted() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
-        job?.cancel()
         _buttonType.value = ButtonType.Done
         _currentStep.value = null
     }
