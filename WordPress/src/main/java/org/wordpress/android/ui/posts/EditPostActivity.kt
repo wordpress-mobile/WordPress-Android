@@ -158,6 +158,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
+import org.wordpress.android.ui.posts.EditorConstants.RestartEditorOptions
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial
@@ -273,6 +274,13 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
 
+// ViewPager configuration constants
+private const val VIEW_PAGER_PAGE_CONTENT = 0
+private const val VIEW_PAGER_PAGE_SETTINGS = 1
+private const val VIEW_PAGER_PAGE_PUBLISH_SETTINGS = 2
+private const val VIEW_PAGER_PAGE_HISTORY = 3
+private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
+
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
@@ -281,12 +289,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
-
-    internal enum class RestartEditorOptions {
-        NO_RESTART,
-        RESTART_SUPPRESS_GUTENBERG,
-        RESTART_DONT_SUPPRESS_GUTENBERG
-    }
 
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
     private var showAztecEditor: Boolean = false
@@ -565,7 +567,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         setupToolbar()
 
         val fragmentManager: FragmentManager = supportFragmentManager
-        val isRestarting = checkToRestart(intent)
+        val isRestarting = EditorLauncher.checkToRestart(intent)
 
         if (savedInstanceState == null) {
             handleIntentExtras(intent.extras, isRestarting)
@@ -669,7 +671,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun isActionSendOrNewMedia(action: String?): Boolean {
-        return action == Intent.ACTION_SEND || action == Intent.ACTION_SEND_MULTIPLE || action == NEW_MEDIA_POST
+        return action == Intent.ACTION_SEND
+                || action == Intent.ACTION_SEND_MULTIPLE
+                || action == EditorConstants.NEW_MEDIA_POST
     }
 
     private fun refreshMobileEditorFromSiteSetting() {
@@ -873,7 +877,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun hideUpdatingPostArea() {
         val elapsedTime = System.currentTimeMillis() - updatingPostStartTime
-        val delay: Long = MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime
+        val delay: Long = EditorConstants.MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime
         if (delay > 0) {
             // Delay hiding the view if the elapsed time is less than the minimum display time
             hideUpdatingPostAreaWithDelay(delay)
@@ -1034,10 +1038,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      */
     private fun updateViewPagerPosition(destination: EditPostDestination) {
         val targetPage = when (destination) {
-            EditPostDestination.Editor -> PAGE_CONTENT
-            EditPostDestination.Settings -> PAGE_SETTINGS
-            EditPostDestination.PublishSettings -> PAGE_PUBLISH_SETTINGS
-            EditPostDestination.History -> PAGE_HISTORY
+            EditPostDestination.Editor -> VIEW_PAGER_PAGE_CONTENT
+            EditPostDestination.Settings -> VIEW_PAGER_PAGE_SETTINGS
+            EditPostDestination.PublishSettings -> VIEW_PAGER_PAGE_PUBLISH_SETTINGS
+            EditPostDestination.History -> VIEW_PAGER_PAGE_HISTORY
         }
 
         viewPager?.let { pager ->
@@ -1089,7 +1093,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
         viewPager?.adapter = sectionsPagerAdapter
-        viewPager?.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+        viewPager?.offscreenPageLimit = VIEW_PAGER_OFFSCREEN_PAGE_LIMIT
         viewPager?.setPagingEnabled(false)
 
         // UI updates are now handled by the navigation system in updateUIForDestination()
@@ -2334,7 +2338,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             if (result === Updated) {
                 refreshEditorContent()
                 viewPager?.let {
-                    make(it, getString(R.string.history_loaded_revision), SNACKBAR_DURATION)
+                    make(it, getString(R.string.history_loaded_revision), EditorConstants.SNACKBAR_DURATION)
                         .setAction(getString(R.string.undo)) { _: View? ->
                             AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE)
                             val payload = RemotePostPayload(editPostRepository.getPostForUndo(), siteModel)
@@ -2382,7 +2386,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun showPrepublishingNudgeBottomSheet() {
         editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
         ActivityUtils.hideKeyboard(this)
-        val delayMs = PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
+        val delayMs = EditorConstants.PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.postDelayed(it, delayMs)
         }
@@ -2584,7 +2588,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                PAGE_CONTENT -> {
+                VIEW_PAGER_PAGE_CONTENT -> {
                     if (isGutenbergKitEditor && showGutenbergEditor) {
                         createGutenbergKitEditorFragment()
                     } else if (showGutenbergEditor) {
@@ -2594,9 +2598,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded())
                     }
                 }
-                PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
-                PAGE_PUBLISH_SETTINGS -> newInstance()
-                PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
+                VIEW_PAGER_PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
+                VIEW_PAGER_PAGE_PUBLISH_SETTINGS -> newInstance()
+                VIEW_PAGER_PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
                 else -> throw IllegalArgumentException("Unexpected page type")
             }
         }
@@ -2721,7 +2725,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val fragment: Fragment = super.instantiateItem(container, position) as Fragment
             when (position) {
-                PAGE_CONTENT -> {
+                VIEW_PAGER_PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
                     editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
@@ -2735,7 +2739,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         reattachUploadingMediaForAztec()
                     }
                 }
-                PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
+                VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }
             return fragment
         }
@@ -2883,9 +2887,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val group1 = matcher.group(GROUP_ONE)
-                val group2 = matcher.group(GROUP_TWO)
-                val group3 = matcher.group(GROUP_THREE)
+                val group1 = matcher.group(EditorConstants.GROUP_ONE)
+                val group2 = matcher.group(EditorConstants.GROUP_TWO)
+                val group3 = matcher.group(EditorConstants.GROUP_THREE)
                 if (group1 != null && group2 != null && group3 != null) {
                     val replacement = group1 + group2 + group3
                     matcher.appendReplacement(stringBuffer, replacement)
@@ -2910,8 +2914,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val action = intent.action
             if ((Intent.ACTION_SEND_MULTIPLE == action)) {
                 setPostContentFromShareAction()
-            } else if ((NEW_MEDIA_POST == action)) {
-                intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.let {
+            } else if ((EditorConstants.NEW_MEDIA_POST == action)) {
+                intent.getLongArrayExtra(EditorConstants.NEW_MEDIA_POST_EXTRA_IDS)?.let {
                     editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, it)
                 }
             }
@@ -4317,31 +4321,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onSendJsException)
-    }
-
-    companion object {
-        private const val PAGE_CONTENT: Int = 0
-        private const val PAGE_SETTINGS: Int = 1
-        private const val PAGE_PUBLISH_SETTINGS: Int = 2
-        private const val PAGE_HISTORY: Int = 3
-        private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
-        private const val OFFSCREEN_PAGE_LIMIT = 4
-        private const val PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY = 100L
-        private const val SNACKBAR_DURATION = 4000
-
-        @JvmStatic fun checkToRestart(data: Intent): Boolean {
-            val extraRestartEditor = data.getStringExtra(EditorConstants.EXTRA_RESTART_EDITOR)
-            return extraRestartEditor != null &&
-                    RestartEditorOptions.valueOf(extraRestartEditor) != RestartEditorOptions.NO_RESTART
-        }
-
-        // Moved from EditPostContentFragment
-        const val NEW_MEDIA_POST: String = "NEW_MEDIA_POST"
-        const val NEW_MEDIA_POST_EXTRA_IDS: String = "NEW_MEDIA_POST_EXTRA_IDS"
-
-        const val GROUP_ONE = 1
-        const val GROUP_TWO = 2
-        const val GROUP_THREE = 3
     }
 }
 

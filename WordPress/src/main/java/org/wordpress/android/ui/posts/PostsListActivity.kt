@@ -436,7 +436,7 @@ class PostsListActivity : BaseAppCompatActivity(),
 
         when {
             requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
-                if (data != null && EditPostActivity.checkToRestart(data)) {
+                if (data != null && EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data, this, site,
                         data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)

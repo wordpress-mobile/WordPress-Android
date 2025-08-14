@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditorConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
@@ -103,7 +102,7 @@ public class AnalyticsUtils {
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
         }
-        if (EditPostActivity.NEW_MEDIA_POST.equals(
+        if (EditorConstants.NEW_MEDIA_POST.equals(
                 action)) {
             // Post created from the media library
             normalizedSourceName = "media-library";

@@ -29,8 +29,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
 import org.wordpress.android.ui.posts.EditorConstants
+import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.uploads.UploadActionUseCase
@@ -353,7 +353,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                 )
                 val post = postStore.getPostByLocalPostId(localId)
 
-                if (checkToRestart(data)) {
+                if (EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data,
                         this@ReaderPostListActivity, site,
