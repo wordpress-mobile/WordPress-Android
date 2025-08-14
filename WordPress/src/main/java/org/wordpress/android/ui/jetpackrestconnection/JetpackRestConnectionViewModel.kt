@@ -267,13 +267,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
             ConnectionStep.Finalize -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Finalizing connection")
-                // TODO
+                finalize()
             }
         }
     }
 
     /**
-     * Starts the wp.com login flow if the user isn't logged into wp.com
+     * Step 1: Starts the wp.com login flow if the user isn't logged into wp.com
      */
     private fun loginWpCom() {
         if (accountStore.hasAccessToken()) {
@@ -314,7 +314,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Installs Jetpack to the current site if not already installed
+     * Step 2: Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
         val result = jetpackInstaller.installJetpack(getSite())
@@ -350,7 +350,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Connects the current site to Jetpack
+     * Step 3: Connects the current site to Jetpack
      */
     private suspend fun connectSite() {
         val result = jetpackConnector.connectSite(getSite())
@@ -372,7 +372,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Connects the user to the current site to Jetpack
+     * Step 4: Connects the user to the current site to Jetpack
      */
     private suspend fun connectUser() {
         if (!accountStore.hasAccessToken()) {
@@ -401,6 +401,18 @@ class JetpackRestConnectionViewModel @Inject constructor(
                     error = ErrorType.ConnectUserFailed
                 )
             }
+        )
+    }
+
+    /**
+     * Step 5: Finalize the connection
+     */
+    private suspend fun finalize() {
+        selectedSiteRepository.refresh()
+        delay(UI_DELAY_MS)
+        updateStepStatus(
+            step = ConnectionStep.Finalize,
+            status = ConnectionStatus.Completed
         )
     }
 
