@@ -25,7 +25,8 @@ class JetpackModuleHelper @Inject constructor(
         }
 
         // ignore the response, just reload sites and check if the module is activated now
-        siteStore.fetchSites(SiteStore.FetchSitesPayload()) // TODO filter?
+        // TODO filter? Or can we use the connected site ID to fetch the single site?
+        siteStore.fetchSites(SiteStore.FetchSitesPayload())
         return if (isModuleActivated(site, module)) {
             Result.success(Unit)
         } else {
