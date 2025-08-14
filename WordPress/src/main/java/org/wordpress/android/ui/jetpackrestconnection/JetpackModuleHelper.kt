@@ -14,7 +14,7 @@ class JetpackModuleHelper @Inject constructor(
         activateModule(site, Module.STATS)
 
     private suspend fun activateModule(site: SiteModel, module: Module): Result<Unit> {
-        if (isModuleActivated(site.siteId, module)) {
+        if (isModuleActivated(site, module)) {
             return Result.success(Unit)
         }
 
@@ -24,8 +24,9 @@ class JetpackModuleHelper @Inject constructor(
             }
         }
 
-        // ignore the response, just check if the module is activated now
-        return if (isModuleActivated(site.siteId, module)) {
+        // ignore the response, just reload sites and check if the module is activated now
+        siteStore.fetchSites(SiteStore.FetchSitesPayload()) // TODO filter?
+        return if (isModuleActivated(site, module)) {
             Result.success(Unit)
         } else {
             Result.failure(Exception("${module.moduleName} module not activated"))
@@ -36,9 +37,9 @@ class JetpackModuleHelper @Inject constructor(
      * Checks if the passed module is activated for the passed site. Note we always get the site from
      * the store because it may have been changed when the module was activated above.
      */
-    private fun isModuleActivated(siteId: Long, module: Module): Boolean {
-        val site = siteStore.getSiteBySiteId(siteId) ?: return false
-        return site.isActiveModuleEnabled(module.moduleName)
+    private fun isModuleActivated(site: SiteModel, module: Module): Boolean {
+        val freshSite = siteStore.getSiteByLocalId(site.id) ?: return false
+        return freshSite.isActiveModuleEnabled(module.moduleName)
     }
 
     private enum class Module(val moduleName: String) {
