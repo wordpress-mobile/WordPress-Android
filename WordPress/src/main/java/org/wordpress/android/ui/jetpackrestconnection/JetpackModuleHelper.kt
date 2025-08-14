@@ -38,7 +38,7 @@ class JetpackModuleHelper @Inject constructor(
      */
     private fun isModuleActivated(siteId: Long, module: Module): Boolean {
         val site = siteStore.getSiteBySiteId(siteId) ?: return false
-        return site.activeModules.contains(module.moduleName)
+        return site.isActiveModuleEnabled(module.moduleName)
     }
 
     private enum class Module(val moduleName: String) {
