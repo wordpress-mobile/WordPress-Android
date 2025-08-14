@@ -7,10 +7,30 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
+echo "--- 🧪 Create logs directory"
+mkdir -p build/logs
+
 echo "--- 🧪 Testing"
 set +e
 if [ "$1" == "wordpress" ]; then
     test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
+    test_results_dir="WordPress/build/test-results"
+    test_log_dir="${test_results_dir}/*/*.xml"
+    code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
+elif [ "$1" == "wordpress-plain" ]; then
+    test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease --console=plain"
+    test_results_dir="WordPress/build/test-results"
+    test_log_dir="${test_results_dir}/*/*.xml"
+    code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
+elif [ "$1" == "wordpress-tee" ]; then
+    test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease --console=plain"
+    use_tee=true
+    test_results_dir="WordPress/build/test-results"
+    test_log_dir="${test_results_dir}/*/*.xml"
+    code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
+elif [ "$1" == "wordpress-quiet" ]; then
+    test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease --console=plain --quiet"
+    use_quiet=true
     test_results_dir="WordPress/build/test-results"
     test_log_dir="${test_results_dir}/*/*.xml"
     code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
@@ -35,11 +55,17 @@ elif [ "$1" == "login" ]; then
     test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
     code_coverage_report="libs/login/build/reports/kover/reportRelease.xml"
 else
-    echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
+    echo "Invalid Test Suite! Expected 'wordpress', 'wordpress-plain', 'wordpress-tee', 'wordpress-quiet', 'processors', 'image-editor', 'fluxc', or 'login', received '$1' instead"
     exit 1
 fi
 
-./gradlew $test_suite
+if [ "${use_tee:-false}" == "true" ]; then
+    ./gradlew $test_suite 2>&1 | tee build/logs/gradle-full.log
+elif [ "${use_quiet:-false}" == "true" ]; then
+    ./gradlew $test_suite > build/logs/gradle-errors.log 2>&1 || true
+else
+    ./gradlew $test_suite
+fi
 TESTS_EXIT_STATUS=$?
 set -e
 
