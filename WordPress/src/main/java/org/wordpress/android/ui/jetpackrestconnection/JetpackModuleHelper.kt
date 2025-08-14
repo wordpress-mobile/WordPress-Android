@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModulePayload
 import javax.inject.Inject
 
-class JetpackStatsHelper @Inject constructor(
+class JetpackModuleHelper @Inject constructor(
     private val jetpackStore: JetpackStore,
 ){
     suspend fun activateStatsModule(site: SiteModel): Result<Unit> = runCatching {

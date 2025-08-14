@@ -29,7 +29,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
-    private val jetpackStatsHelper: JetpackStatsHelper,
+    private val jetpackStatsHelper: JetpackModuleHelper,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -426,7 +426,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun finalize() {
         // Refresh the site to pick up any changes made in the connection flow
         selectedSiteRepository.refresh()
-        delay(UI_DELAY_MS * 5)
+        delay(UI_DELAY_MS * 2)
 
         when (connectionSource) {
             ConnectionSource.STATS -> {
