@@ -41,6 +41,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.distinctUntilChanged
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
@@ -617,8 +618,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 )
             }
             siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
-                showIfNecessary(fragmentManager)
-                editPostAuthViewModel.fetchWpComCookies()
+                val currentAuthState = editPostAuthViewModel.wpComCookieAuthState.value
+                if (currentAuthState !is EditPostAuthViewModel.WpComCookieAuthState.Success) {
+                    showIfNecessary(fragmentManager)
+                    editPostAuthViewModel.fetchWpComCookies()
+                } else {
+                    handleSuccessfulWpComCookieAuthState()
+                }
             }
             else -> {
                 setupViewPager()
@@ -991,18 +997,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             updateUIForDestination(destination)
         }
 
-        editPostAuthViewModel.wpComCookieAuthState.observe(this) { authState ->
+        editPostAuthViewModel.wpComCookieAuthState.distinctUntilChanged().observe(this) { authState ->
             when (authState) {
                 is EditPostAuthViewModel.WpComCookieAuthState.Loading -> {
                     showIfNecessary(supportFragmentManager)
                 }
                 is EditPostAuthViewModel.WpComCookieAuthState.Success -> {
-                    if (isShowing(supportFragmentManager)) {
-                        setupViewPager()
-                        dismissIfNecessary(supportFragmentManager)
-                    } else {
-                        setupViewPager()
-                    }
+                    handleSuccessfulWpComCookieAuthState()
                 }
                 is EditPostAuthViewModel.WpComCookieAuthState.Error -> {
                     if (isShowing(supportFragmentManager)) {
@@ -1078,7 +1079,26 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         invalidateOptionsMenu()
     }
 
+    private fun handleSuccessfulWpComCookieAuthState() {
+        if (isShowing(supportFragmentManager)) {
+            setupViewPager()
+            dismissIfNecessary(supportFragmentManager)
+        } else {
+            setupViewPager()
+        }
+    }
+
     private fun setupViewPager() {
+        // Check if ViewPager is already configured
+        if (viewPager?.adapter != null) {
+            AppLog.e(
+                AppLog.T.EDITOR,
+                "EditPostActivity: setupViewPager() called but ViewPager already has adapter" +
+                        " - possible duplicate setup"
+            )
+            return
+        }
+
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
         viewPager?.adapter = sectionsPagerAdapter
