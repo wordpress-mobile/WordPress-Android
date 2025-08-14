@@ -1026,6 +1026,8 @@
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
     <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Failed to install Jetpack</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
