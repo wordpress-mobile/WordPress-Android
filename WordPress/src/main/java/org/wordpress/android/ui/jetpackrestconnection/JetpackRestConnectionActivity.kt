@@ -37,6 +37,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
                 stepStates = viewModel.stepStates.collectAsState(),
                 buttonType = viewModel.buttonType.collectAsState(),
                 onStartClick = viewModel::onStartClick,
+                onDoneClick = viewModel::onDoneClick,
                 onCloseClick = viewModel::onCloseClick,
                 onRetryClick = viewModel::onRetryClick
             )
@@ -48,6 +49,9 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
                     JetpackRestConnectionViewModel.UiEvent.StartWPComLogin ->
                         startWPComLogin()
 
+                    JetpackRestConnectionViewModel.UiEvent.Done -> {
+                        finish()
+                    }
                     JetpackRestConnectionViewModel.UiEvent.Close ->
                         finish()
 

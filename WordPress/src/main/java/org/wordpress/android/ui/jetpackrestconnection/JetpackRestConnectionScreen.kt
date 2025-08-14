@@ -65,6 +65,7 @@ fun JetpackRestConnectionScreen(
     stepStates: State<Map<ConnectionStep, StepState>>,
     buttonType: State<ButtonType?>,
     onStartClick: () -> Unit = {},
+    onDoneClick: () -> Unit = {},
     onCloseClick: () -> Unit = {},
     onRetryClick: () -> Unit = {}
 ) {
@@ -88,7 +89,7 @@ fun JetpackRestConnectionScreen(
                     JetpackConnectionButton(
                         buttonType = buttonType.value,
                         onStartClick = onStartClick,
-                        onDoneClick = onCloseClick,
+                        onDoneClick = onDoneClick,
                         onRetryClick = onRetryClick
                     )
                 }

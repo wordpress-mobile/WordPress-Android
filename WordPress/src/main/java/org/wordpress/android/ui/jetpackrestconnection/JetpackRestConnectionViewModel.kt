@@ -146,6 +146,14 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
+     * Connection flow completed successfully and user clicked the Done button
+     */
+    fun onDoneClick() {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Done clicked")
+        setUiEvent(UiEvent.Done)
+    }
+
+    /**
      * User clicked the close button, confirm closing if the connection is in progress, otherwise close immediately
      */
     fun onCloseClick() {
@@ -408,6 +416,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 5: Finalize the connection
      */
     private suspend fun finalize() {
+        // Refresh the site to pick up any changes made in the connection flow
         selectedSiteRepository.refresh()
         delay(UI_DELAY_MS)
         updateStepStatus(
@@ -439,6 +448,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object StartWPComLogin : UiEvent()
+        data object Done : UiEvent()
         data object Close : UiEvent()
         data object ShowCancelConfirmation : UiEvent()
     }
