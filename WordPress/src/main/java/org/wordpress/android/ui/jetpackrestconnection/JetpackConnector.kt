@@ -6,7 +6,7 @@ import uniffi.wp_api.WpComSiteId
 import javax.inject.Inject
 
 class JetpackConnector @Inject constructor(
-    private val jetpackConnectionHelper: JetpackConnectionHelper
+    private val jetpackConnectionHelper: JetpackConnectionHelper,
 ) {
     /**
      * Connects the Jetpack site to WordPress.com and returns the site ID
