@@ -434,7 +434,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
     private lateinit var editPostAuthViewModel: EditPostAuthViewModel
-    private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -653,7 +652,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editPostSettingsViewModel = ViewModelProvider(this, viewModelFactory)[EditPostSettingsViewModel::class.java]
         prepublishingViewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
         editPostAuthViewModel = ViewModelProvider(this, viewModelFactory)[EditPostAuthViewModel::class.java]
-        gutenbergKitViewModel = ViewModelProvider(this, viewModelFactory)[GutenbergKitViewModel::class.java]
     }
 
     private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {
@@ -2617,17 +2615,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
             val settings = createGutenbergKitSettings(isWpCom)
 
-            val fragment = GutenbergKitEditorFragment.newInstance(
+            return GutenbergKitEditorFragment.newInstance(
                 getContext(),
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings
             )
-
-            // Set settings in ViewModel for fragment to observe
-            gutenbergKitViewModel.updateEditorSettings(settings)
-
-            return fragment
         }
 
         private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
@@ -2647,7 +2641,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): GutenbergKitSettings {
+        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteURL = siteModel.url
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
@@ -2655,27 +2649,28 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             // Use the application password for self-hosted sites when available
             val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
             val siteApiNamespace = if (isWpCom)
-                listOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
-                else emptyList()
+                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else arrayOf()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            return GutenbergKitSettings(
-                postId = editPostRepository.getPost()?.remotePostId?.toInt(),
-                postType = postType,
-                postTitle = editPostRepository.getPost()?.title,
-                postContent = editPostRepository.getPost()?.content,
-                siteURL = siteURL,
-                siteApiRoot = siteApiRoot,
-                namespaceExcludedPaths = listOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-                authHeader = authHeader,
-                siteApiNamespace = siteApiNamespace,
-                themeStyles = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                plugins = gutenbergKitPluginsFeature.isEnabled() && site.isWPCom,
-                locale = wpcomLocaleSlug,
-                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                webViewGlobals = listOf(
+            return mutableMapOf(
+                "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
+                "postType" to postType,
+                "postTitle" to editPostRepository.getPost()?.title,
+                "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
+                "siteApiRoot" to siteApiRoot,
+                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
+                "authHeader" to authHeader,
+                "siteApiNamespace" to siteApiNamespace,
+                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
+                // Limited to Simple sites until application passwords are supported
+                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
+                "locale" to wpcomLocaleSlug,
+                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
+                "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
                         when {
