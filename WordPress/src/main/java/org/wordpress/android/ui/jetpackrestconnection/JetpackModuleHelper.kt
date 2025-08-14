@@ -18,14 +18,14 @@ class JetpackModuleHelper @Inject constructor(
             return Result.success(Unit)
         }
 
-        val result = when (module) {
+        when (module) {
             Module.STATS -> {
-                val response = jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
-                !response.isError
+                jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
             }
         }
 
-        return if (result && isModuleActivated(site.siteId, module)) {
+        // ignore the response, just check if the module is activated now
+        return if (isModuleActivated(site.siteId, module)) {
             Result.success(Unit)
         } else {
             Result.failure(Exception("${module.moduleName} module not activated"))
