@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.isActive
 import org.assertj.core.api.Assertions.assertThat
@@ -64,18 +63,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
 
     @Before
     fun setup() {
-        whenever(jpMigrationSuccessCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(jetpackInstallFullPluginCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(domainRegistrationCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(blazeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(cardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(personalizeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(bloggingPromptCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(quickStartCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(quickLinksItemViewModelSlice.uiState).thenReturn(MutableLiveData())
-        whenever(bloganuaryNudgeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(plansCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-
         dashboardCardsViewModelSlice = DashboardCardsViewModelSlice(
             testDispatcher(),
             jpMigrationSuccessCardViewModelSlice,
