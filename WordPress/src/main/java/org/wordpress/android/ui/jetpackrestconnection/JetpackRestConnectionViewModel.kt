@@ -46,6 +46,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var job: Job? = null
     private var isWaitingForWPComLogin = false
 
+    private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
+
+    fun setConnectionSource(source: ConnectionSource) {
+        connectionSource = source
+        appLogWrapper.d(AppLog.T.API, "$TAG: Connection source set to: $source")
+    }
+
     private fun startConnectionJob(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
@@ -477,11 +484,17 @@ class JetpackRestConnectionViewModel @Inject constructor(
         val errorType: ErrorType? = null,
     )
 
+    enum class ConnectionSource {
+        STATS,
+        NOTIFS
+    }
+
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
         private const val LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
+        val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
 
         /**
          * Requirements:

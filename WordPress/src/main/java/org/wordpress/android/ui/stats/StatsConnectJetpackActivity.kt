@@ -138,7 +138,10 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
         if (mExperimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)) {
             mSelectedSiteRepository.getSelectedSite()?.let { site ->
                 if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
-                    val intent = JetpackRestConnectionActivity.createIntent(this)
+                    val intent = JetpackRestConnectionActivity.createIntent(
+                        this,
+                        JetpackRestConnectionViewModel.ConnectionSource.STATS
+                    )
                     startActivity(intent)
                     finish()
                     return

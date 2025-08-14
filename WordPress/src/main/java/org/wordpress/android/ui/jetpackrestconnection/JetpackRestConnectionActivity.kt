@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpackrestconnection
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.Companion.DEFAULT_CONNECTION_SOURCE
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
@@ -31,6 +33,21 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Get the connection source from the intent and set it in the ViewModel
+        if (savedInstanceState == null) {
+            val source = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getSerializableExtra(
+                    KEY_CONNECTION_SOURCE,
+                    JetpackRestConnectionViewModel.ConnectionSource::class.java
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getSerializableExtra(KEY_CONNECTION_SOURCE) as? JetpackRestConnectionViewModel.ConnectionSource
+            } ?: DEFAULT_CONNECTION_SOURCE
+            viewModel.setConnectionSource(source)
+        }
+
         setContent {
             JetpackRestConnectionScreen(
                 currentStep = viewModel.currentStep.collectAsState(),
@@ -88,8 +105,16 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     }
 
     companion object {
+        private const val KEY_CONNECTION_SOURCE = "key_connection_source"
+
         @JvmStatic
-        fun createIntent(context: Context) =
-            Intent(context, JetpackRestConnectionActivity::class.java)
+        fun createIntent(
+            context: Context,
+            source: JetpackRestConnectionViewModel.ConnectionSource
+        ): Intent {
+            return Intent(context, JetpackRestConnectionActivity::class.java).apply {
+                putExtra(KEY_CONNECTION_SOURCE, source)
+            }
+        }
     }
 }
