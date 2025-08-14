@@ -9,23 +9,26 @@ import javax.inject.Inject
 class JetpackModuleHelper @Inject constructor(
     private val jetpackStore: JetpackStore,
     private val siteStore: SiteStore
-){
-    /**
-     * Activates the stats module for the passed site if not already activated.
-     */
-    suspend fun activateStatsModule(site: SiteModel): Result<Unit> {
-        if (isModuleActivated(site.siteId, STATS_MODULE_NAME)) {
+) {
+    suspend fun activateStatsModule(site: SiteModel): Result<Unit> =
+        activateModule(site, Module.STATS)
+
+    private suspend fun activateModule(site: SiteModel, module: Module): Result<Unit> {
+        if (isModuleActivated(site.siteId, module)) {
             return Result.success(Unit)
         }
 
-        val result = jetpackStore.activateStatsModule(
-            ActivateStatsModulePayload(site)
-        )
+        val result = when (module) {
+            Module.STATS -> {
+                val response = jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
+                !response.isError
+            }
+        }
 
-        return if (!result.isError && isModuleActivated(site.siteId, STATS_MODULE_NAME)) {
+        return if (result && isModuleActivated(site.siteId, module)) {
             Result.success(Unit)
         } else {
-            Result.failure(Exception("Stats module not activated"))
+            Result.failure(Exception("${module.moduleName} module not activated"))
         }
     }
 
@@ -33,14 +36,12 @@ class JetpackModuleHelper @Inject constructor(
      * Checks if the passed module is activated for the passed site. Note we always get the site from
      * the store because it may have been changed when the module was activated above.
      */
-    @Suppress("SameParameterValue")
-    private fun isModuleActivated(siteId: Long, moduleName: String): Boolean {
+    private fun isModuleActivated(siteId: Long, module: Module): Boolean {
         val site = siteStore.getSiteBySiteId(siteId) ?: return false
-        return site.activeModules.contains(moduleName)
+        return site.activeModules.contains(module.moduleName)
     }
 
-
-    companion object {
-        private const val STATS_MODULE_NAME = "stats"
+    private enum class Module(val moduleName: String) {
+        STATS("stats"),
     }
 }
