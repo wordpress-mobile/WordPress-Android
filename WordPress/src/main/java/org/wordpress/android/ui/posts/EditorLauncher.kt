@@ -96,45 +96,45 @@ class EditorLauncher @Inject constructor(
             )
 
             is EditorLauncherSiteSource.QuickPressSiteId -> putExtra(
-                EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID,
+                EditorConstants.EXTRA_QUICKPRESS_BLOG_ID,
                 params.siteSource.siteId
             )
         }
-        params.isPage?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, it) }
-        params.isPromo?.let { putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, it) }
+        params.isPage?.let { putExtra(EditorConstants.EXTRA_IS_PAGE, it) }
+        params.isPromo?.let { putExtra(EditorConstants.EXTRA_IS_PROMO, it) }
         putExtra(EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER, true)
     }
 
     private fun Intent.addPostExtras(params: EditorLauncherParams) {
-        params.postLocalId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, it) }
-        params.postRemoteId?.let { putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, it) }
-        params.loadAutoSaveRevision?.let { putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, it) }
-        params.isQuickPress?.let { putExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS, it) }
-        params.isLandingEditor?.let { putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, it) }
+        params.postLocalId?.let { putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, it) }
+        params.postRemoteId?.let { putExtra(EditorConstants.EXTRA_POST_REMOTE_ID, it) }
+        params.loadAutoSaveRevision?.let { putExtra(EditorConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, it) }
+        params.isQuickPress?.let { putExtra(EditorConstants.EXTRA_IS_QUICKPRESS, it) }
+        params.isLandingEditor?.let { putExtra(EditorConstants.EXTRA_IS_LANDING_EDITOR, it) }
         params.isLandingEditorOpenedForNewSite?.let {
-            putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, it)
+            putExtra(EditorConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, it)
         }
     }
 
     private fun Intent.addReblogExtras(params: EditorLauncherParams) {
-        params.reblogPostTitle?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, it) }
-        params.reblogPostQuote?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, it) }
-        params.reblogPostImage?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, it) }
-        params.reblogPostCitation?.let { putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, it) }
+        params.reblogPostTitle?.let { putExtra(EditorConstants.EXTRA_REBLOG_POST_TITLE, it) }
+        params.reblogPostQuote?.let { putExtra(EditorConstants.EXTRA_REBLOG_POST_QUOTE, it) }
+        params.reblogPostImage?.let { putExtra(EditorConstants.EXTRA_REBLOG_POST_IMAGE, it) }
+        params.reblogPostCitation?.let { putExtra(EditorConstants.EXTRA_REBLOG_POST_CITATION, it) }
         params.reblogAction?.let { action = it }
     }
 
     private fun Intent.addPageExtras(params: EditorLauncherParams) {
-        params.pageTitle?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, it) }
-        params.pageContent?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, it) }
-        params.pageTemplate?.let { putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, it) }
+        params.pageTitle?.let { putExtra(EditorConstants.EXTRA_PAGE_TITLE, it) }
+        params.pageContent?.let { putExtra(EditorConstants.EXTRA_PAGE_CONTENT, it) }
+        params.pageTemplate?.let { putExtra(EditorConstants.EXTRA_PAGE_TEMPLATE, it) }
     }
 
     private fun Intent.addMiscExtras(params: EditorLauncherParams) {
-        params.voiceContent?.let { putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, it) }
-        params.insertMedia?.let { putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, it) }
+        params.voiceContent?.let { putExtra(EditorConstants.EXTRA_VOICE_CONTENT, it) }
+        params.insertMedia?.let { putExtra(EditorConstants.EXTRA_INSERT_MEDIA, it) }
         params.source?.let { putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, it) }
-        params.promptId?.let { putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, it) }
-        params.entryPoint?.let { putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, it) }
+        params.promptId?.let { putExtra(EditorConstants.EXTRA_PROMPT_ID, it) }
+        params.entryPoint?.let { putExtra(EditorConstants.EXTRA_ENTRY_POINT, it) }
     }
 }

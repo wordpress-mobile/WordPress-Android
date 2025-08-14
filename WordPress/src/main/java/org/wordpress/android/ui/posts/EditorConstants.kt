@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-object EditPostActivityConstants{
+object EditorConstants{
     const val ACTION_REBLOG = "reblogAction"
     const val EXTRA_POST_LOCAL_ID = "postModelLocalId"
     const val EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision"

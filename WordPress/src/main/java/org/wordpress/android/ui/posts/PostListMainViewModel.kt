@@ -421,8 +421,8 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun switchToDraftTabIfNeeded(data: Intent?) {
-        if (data != null && data.getBooleanExtra(EditPostActivityConstants.EXTRA_IS_NEW_POST, false) &&
-            data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, false)
+        if (data != null && data.getBooleanExtra(EditorConstants.EXTRA_IS_NEW_POST, false) &&
+            data.getBooleanExtra(EditorConstants.EXTRA_HAS_CHANGES, false)
         ) {
             _selectTab.value = POST_LIST_PAGES.indexOf(DRAFTS)
         }

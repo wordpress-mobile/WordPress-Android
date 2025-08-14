@@ -87,7 +87,7 @@ import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorConstants;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
@@ -467,7 +467,7 @@ public class ActivityLauncher {
                 .reblogPostQuote(post.getExcerpt())
                 .reblogPostImage(post.getFeaturedImage())
                 .reblogPostCitation(post.getUrl())
-                .reblogAction(EditPostActivityConstants.ACTION_REBLOG)
+                .reblogAction(EditorConstants.ACTION_REBLOG)
                 .build();
 
         Intent editorIntent = EditorLauncher.getInstance().createEditorIntent(activity, params);
@@ -1033,11 +1033,11 @@ public class ActivityLauncher {
         }
 
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditorConstants.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditorConstants.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, promptId);
-        intent.putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, entryPoint);
+        intent.putExtra(EditorConstants.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditorConstants.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1086,8 +1086,8 @@ public class ActivityLauncher {
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
-        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, postLocalId);
-        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditorConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
 
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1126,8 +1126,8 @@ public class ActivityLauncher {
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision, int requestCode) {
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, pageLocalId);
-        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditorConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
         fragment.startActivityForResult(intent, requestCode);
     }
 

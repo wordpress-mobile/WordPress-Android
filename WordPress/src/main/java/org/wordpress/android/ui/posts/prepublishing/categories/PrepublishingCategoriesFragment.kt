@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditorDataProvider
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
@@ -164,20 +164,20 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+        val editorDataProvider = requireNotNull(getEditorDataProvider()) {
             "This is possibly null because it's " +
                     "called during config changes."
         }
 
-        return editPostActivityHook.editPostRepository
+        return editorDataProvider.editPostRepository
     }
 
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
+    private fun getEditorDataProvider(): EditorDataProvider? {
         val activity = activity ?: return null
-        return if (activity is EditPostActivityHook) {
+        return if (activity is EditorDataProvider) {
             activity
         } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
+            throw RuntimeException("$activity must implement EditorDataProvider")
         }
     }
 
