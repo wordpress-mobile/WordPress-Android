@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.posts.EditPostActivityConstants;
+import org.wordpress.android.ui.posts.EditorConstants;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.EditorLauncherParams;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -198,13 +198,13 @@ public class UploadUtils {
                                                           SnackbarSequencer sequencer,
                                                           View.OnClickListener publishPostListener,
                                                           @Nullable OnPublishingCallback onPublishingCallback) {
-        boolean hasChanges = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, false);
+        boolean hasChanges = data.getBooleanExtra(EditorConstants.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
             return;
         }
 
-        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivityConstants.EXTRA_UPLOAD_NOT_STARTED, false);
+        boolean uploadNotStarted = data.getBooleanExtra(EditorConstants.EXTRA_UPLOAD_NOT_STARTED, false);
         if (uploadNotStarted && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
@@ -218,7 +218,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_FAILED_MEDIA, false);
+        boolean hasFailedMedia = data.getBooleanExtra(EditorConstants.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, post.isPage() ? R.string.editor_page_saved_locally_failed_media
                             : R.string.editor_post_saved_locally_failed_media, R.string.button_edit,

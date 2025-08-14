@@ -157,8 +157,8 @@ import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onGotoCustom
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
+import org.wordpress.android.ui.posts.EditorConstants.RestartEditorOptions
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial
@@ -274,20 +274,21 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
 
+// ViewPager configuration constants
+private const val VIEW_PAGER_PAGE_CONTENT = 0
+private const val VIEW_PAGER_PAGE_SETTINGS = 1
+private const val VIEW_PAGER_PAGE_PUBLISH_SETTINGS = 2
+private const val VIEW_PAGER_PAGE_HISTORY = 3
+private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
+
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
-    EditorMediaListener, EditPostActivityHook, HistoryItemClickInterface,
+    EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
-
-    internal enum class RestartEditorOptions {
-        NO_RESTART,
-        RESTART_SUPPRESS_GUTENBERG,
-        RESTART_DONT_SUPPRESS_GUTENBERG
-    }
 
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
     private var showAztecEditor: Boolean = false
@@ -475,10 +476,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun newReblogPostSetup() {
-        val title = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE)
-        val quote = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE)
-        val citation = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION)
-        val image = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE)
+        val title = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_TITLE)
+        val quote = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_QUOTE)
+        val citation = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_CITATION)
+        val image = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_IMAGE)
         val content = reblogUtils.reblogContent(image, quote ?: "", title, citation)
         newPostSetup(title, content)
     }
@@ -554,7 +555,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return
         }
 
-        isLandingEditor = intent.extras?.getBoolean(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR) ?: false
+        isLandingEditor = intent.extras?.getBoolean(EditorConstants.EXTRA_IS_LANDING_EDITOR) ?: false
 
         refreshMobileEditorFromSiteSetting()
 
@@ -566,7 +567,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         setupToolbar()
 
         val fragmentManager: FragmentManager = supportFragmentManager
-        val isRestarting = checkToRestart(intent)
+        val isRestarting = EditorLauncher.checkToRestart(intent)
 
         if (savedInstanceState == null) {
             handleIntentExtras(intent.extras, isRestarting)
@@ -670,7 +671,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun isActionSendOrNewMedia(action: String?): Boolean {
-        return action == Intent.ACTION_SEND || action == Intent.ACTION_SEND_MULTIPLE || action == NEW_MEDIA_POST
+        return action == Intent.ACTION_SEND
+                || action == Intent.ACTION_SEND_MULTIPLE
+                || action == EditorConstants.NEW_MEDIA_POST
     }
 
     private fun refreshMobileEditorFromSiteSetting() {
@@ -683,17 +686,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
     private fun getSiteModelForExtraQuickPressBlogIdIfRequested(extras: Bundle?): SiteModel? {
-        if (extras == null || extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID)) {
+        if (extras == null || extras.containsKey(EditorConstants.EXTRA_POST_LOCAL_ID)) {
             return null
         }
 
         val isActionSendOrNewMedia = isActionSendOrNewMedia(intent.action)
-        val hasQuickPressFlag = extras.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)
-        val hasQuickPressBlogId = extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)
+        val hasQuickPressFlag = extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
+        val hasQuickPressBlogId = extras.containsKey(EditorConstants.EXTRA_QUICKPRESS_BLOG_ID)
 
         // QuickPress might want to use a different blog than the current blog
         return if ((isActionSendOrNewMedia || hasQuickPressFlag) && hasQuickPressBlogId) {
-            val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
+            val localSiteId = intent.getIntExtra(EditorConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
             siteStore.getSiteByLocalId(localSiteId)
         } else {
             null
@@ -705,28 +708,28 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         extras ?: return
         val action = intent.action
 
-        if (!extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
+        if (!extras.containsKey(EditorConstants.EXTRA_POST_LOCAL_ID) ||
             isActionSendOrNewMedia(intent.action) ||
-            extras.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)
+            extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
         ) {
-            isPage = extras.getBoolean(EditPostActivityConstants.EXTRA_IS_PAGE)
-            if (isPage && !TextUtils.isEmpty(extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE))) {
+            isPage = extras.getBoolean(EditorConstants.EXTRA_IS_PAGE)
+            if (isPage && !TextUtils.isEmpty(extras.getString(EditorConstants.EXTRA_PAGE_TITLE))) {
                 newPageFromLayoutPickerSetup(
-                    extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE),
-                    extras.getString(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE)
+                    extras.getString(EditorConstants.EXTRA_PAGE_TITLE),
+                    extras.getString(EditorConstants.EXTRA_PAGE_TEMPLATE)
                 )
             } else if ((Intent.ACTION_SEND == action)) {
                 newPostFromShareAction()
-            } else if ((EditPostActivityConstants.ACTION_REBLOG == action)) {
+            } else if ((EditorConstants.ACTION_REBLOG == action)) {
                 newReblogPostSetup()
             } else {
                 newPostSetup()
             }
         } else {
-            editPostRepository.loadPostByLocalPostId(extras.getInt(EditPostActivityConstants.EXTRA_POST_LOCAL_ID))
+            editPostRepository.loadPostByLocalPostId(extras.getInt(EditorConstants.EXTRA_POST_LOCAL_ID))
             // Load post from extra's
             if (editPostRepository.hasPost()) {
-                if (extras.getBoolean(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
+                if (extras.getBoolean(EditorConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                     editPostRepository.update { postModel: PostModel ->
                         val updateTitle = !TextUtils.isEmpty(postModel.autoSaveTitle)
                         if (updateTitle) {
@@ -750,61 +753,61 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             }
         }
 
-        if (isRestarting && extras.getBoolean(EditPostActivityConstants.EXTRA_IS_NEW_POST)) {
+        if (isRestarting && extras.getBoolean(EditorConstants.EXTRA_IS_NEW_POST)) {
             // editor was on a new post before the switch so, keep that signal.
             // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
             isNewPost = true
         }
 
         // retrieve Editor session data if switched editors
-        if (isRestarting && extras.containsKey(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
+        if (isRestarting && extras.containsKey(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
             postEditorAnalyticsSession = PostEditorAnalyticsSession
-                .fromBundle(extras, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
+                .fromBundle(extras, EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
         }
     }
 
     private fun retrieveSavedInstanceState(savedInstanceState: Bundle?) {
         savedInstanceState?.let { state ->
-            state.getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS)
+            state.getParcelableArrayList<Uri>(EditorConstants.STATE_KEY_DROPPED_MEDIA_URIS)
                 ?.let { parcelableArrayList ->
                     editorMedia.droppedMediaUris = parcelableArrayList
                 }
 
-            isNewPost = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
-            isGutenbergKitEditor = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_GUTENBERG_KIT, false)
-            isVoiceContentSet = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
+            isNewPost = state.getBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, false)
+            isGutenbergKitEditor = state.getBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, false)
+            isVoiceContentSet = state.getBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
-                    state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, 0)
+                    state.getInt(EditorConstants.STATE_KEY_POST_LOADING_STATE, 0)
                 )
             )
             dB?.let {
-                revision = it.getParcel(EditPostActivityConstants.STATE_KEY_REVISION, parcelableCreator())
+                revision = it.getParcel(EditorConstants.STATE_KEY_REVISION, parcelableCreator())
             }
             postEditorAnalyticsSession = PostEditorAnalyticsSession
                 .fromBundle(
                     state,
-                    EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA,
+                    EditorConstants.STATE_KEY_EDITOR_SESSION_DATA,
                     analyticsTrackerWrapper
                 )
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
-            if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID)) {
+            if (state.containsKey(EditorConstants.STATE_KEY_POST_REMOTE_ID)) {
                 editPostRepository.loadPostByRemotePostId(
-                    state.getLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID),
+                    state.getLong(EditorConstants.STATE_KEY_POST_REMOTE_ID),
                     siteModel
                 )
                 initializePostObject()
-            } else if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)) {
+            } else if (state.containsKey(EditorConstants.STATE_KEY_POST_LOCAL_ID)) {
                 editPostRepository.loadPostByLocalPostId(
-                    state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)
+                    state.getInt(EditorConstants.STATE_KEY_POST_LOCAL_ID)
                 )
                 initializePostObject()
             }
 
             (supportFragmentManager.getFragment(
                 state,
-                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
+                EditorConstants.STATE_KEY_EDITOR_FRAGMENT
             ) as EditorFragmentAbstract?)?.let { frag ->
                 editorFragment = frag
                 if (frag is EditorMediaUploadListener) {
@@ -816,14 +819,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun setShowGutenbergEditor(savedInstanceState: Bundle?) {
         showGutenbergEditor = if (savedInstanceState == null) {
-            val restartEditorOptionName = intent.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
+            val restartEditorOptionName = intent.getStringExtra(EditorConstants.EXTRA_RESTART_EDITOR)
             val restartEditorOption =  if (restartEditorOptionName == null)
                 RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
             else RestartEditorOptions.valueOf(restartEditorOptionName)
             (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
                     && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG)
         } else {
-            savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
+            savedInstanceState.getBoolean(EditorConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
         }
     }
 
@@ -874,7 +877,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun hideUpdatingPostArea() {
         val elapsedTime = System.currentTimeMillis() - updatingPostStartTime
-        val delay: Long = MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime
+        val delay: Long = EditorConstants.MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime
         if (delay > 0) {
             // Delay hiding the view if the elapsed time is less than the minimum display time
             hideUpdatingPostAreaWithDelay(delay)
@@ -1035,10 +1038,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      */
     private fun updateViewPagerPosition(destination: EditPostDestination) {
         val targetPage = when (destination) {
-            EditPostDestination.Editor -> PAGE_CONTENT
-            EditPostDestination.Settings -> PAGE_SETTINGS
-            EditPostDestination.PublishSettings -> PAGE_PUBLISH_SETTINGS
-            EditPostDestination.History -> PAGE_HISTORY
+            EditPostDestination.Editor -> VIEW_PAGER_PAGE_CONTENT
+            EditPostDestination.Settings -> VIEW_PAGER_PAGE_SETTINGS
+            EditPostDestination.PublishSettings -> VIEW_PAGER_PAGE_PUBLISH_SETTINGS
+            EditPostDestination.History -> VIEW_PAGER_PAGE_HISTORY
         }
 
         viewPager?.let { pager ->
@@ -1090,7 +1093,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
         viewPager?.adapter = sectionsPagerAdapter
-        viewPager?.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+        viewPager?.offscreenPageLimit = VIEW_PAGER_OFFSCREEN_PAGE_LIMIT
         viewPager?.setPagingEnabled(false)
 
         // UI updates are now handled by the navigation system in updateUIForDestination()
@@ -1335,49 +1338,49 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         super.onSaveInstanceState(outState)
         // Saves both post objects so we can restore them in onCreate()
         updateAndSavePostAsync()
-        outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
+        outState.putInt(EditorConstants.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
         if (!editPostRepository.isLocalDraft) {
-            outState.putLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID, editPostRepository.remotePostId)
+            outState.putLong(EditorConstants.STATE_KEY_POST_REMOTE_ID, editPostRepository.remotePostId)
         }
-        outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, isNewPost)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
+        outState.putInt(EditorConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
+        outState.putBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, isNewPost)
+        outState.putBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
+        outState.putBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         outState.putBoolean(
-            EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
+            EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
         )
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_HTML_MODE_ON, htmlModeMenuStateOn)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_UNDO, menuHasUndo)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_REDO, menuHasRedo)
+        outState.putBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON, htmlModeMenuStateOn)
+        outState.putBoolean(EditorConstants.STATE_KEY_UNDO, menuHasUndo)
+        outState.putBoolean(EditorConstants.STATE_KEY_REDO, menuHasRedo)
         outState.putSerializable(WordPress.SITE, siteModel)
-        dB?.addParcel(EditPostActivityConstants.STATE_KEY_REVISION, revision)
-        outState.putSerializable(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        dB?.addParcel(EditorConstants.STATE_KEY_REVISION, revision)
+        outState.putSerializable(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         isConfigChange = true // don't call sessionData.end() in onDestroy() if this is an Android config change
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN, showGutenbergEditor)
+        outState.putBoolean(EditorConstants.STATE_KEY_GUTENBERG_IS_SHOWN, showGutenbergEditor)
         outState.putParcelableArrayList(
-            EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
+            EditorConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
         )
 
         editorFragment?.let {
-            supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, it)
+            supportFragmentManager.putFragment(outState, EditorConstants.STATE_KEY_EDITOR_FRAGMENT, it)
         }
         // We must save the media capture path when the activity is destroyed to handle orientation changes during
         // photo capture (see: https://github.com/wordpress-mobile/WordPress-Android/issues/11296)
-        outState.putString(EditPostActivityConstants.STATE_KEY_MEDIA_CAPTURE_PATH, mediaCapturePath)
+        outState.putString(EditorConstants.STATE_KEY_MEDIA_CAPTURE_PATH, mediaCapturePath)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        htmlModeMenuStateOn = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_HTML_MODE_ON)
-        menuHasUndo = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_UNDO)
-        menuHasRedo = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_REDO)
-        if (savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
+        htmlModeMenuStateOn = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON)
+        menuHasUndo = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_UNDO)
+        menuHasRedo = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_REDO)
+        if (savedInstanceState.getBoolean(EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             editorPhotoPicker?.showPhotoPicker(siteModel)
         }
 
         // Restore media capture path for orientation changes during photo capture
-        mediaCapturePath = savedInstanceState.getString(EditPostActivityConstants.STATE_KEY_MEDIA_CAPTURE_PATH, "")
+        mediaCapturePath = savedInstanceState.getString(EditorConstants.STATE_KEY_MEDIA_CAPTURE_PATH, "")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -2335,7 +2338,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             if (result === Updated) {
                 refreshEditorContent()
                 viewPager?.let {
-                    make(it, getString(R.string.history_loaded_revision), SNACKBAR_DURATION)
+                    make(it, getString(R.string.history_loaded_revision), EditorConstants.SNACKBAR_DURATION)
                         .setAction(getString(R.string.undo)) { _: View? ->
                             AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE)
                             val payload = RemotePostPayload(editPostRepository.getPostForUndo(), siteModel)
@@ -2352,17 +2355,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun saveResult(saved: Boolean, uploadNotStarted: Boolean) {
         val i = intent
-        i.putExtra(EditPostActivityConstants.EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted)
-        i.putExtra(EditPostActivityConstants.EXTRA_HAS_FAILED_MEDIA, hasFailedMedia())
-        i.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, isPage)
-        i.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, isLandingEditor)
-        i.putExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, saved)
-        i.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, editPostRepository.id)
-        i.putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, editPostRepository.remotePostId)
-        i.putExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
-        i.putExtra(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
-        i.putExtra(EditPostActivityConstants.EXTRA_IS_NEW_POST, isNewPost)
-        i.putExtra(EditPostActivityConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
+        i.putExtra(EditorConstants.EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted)
+        i.putExtra(EditorConstants.EXTRA_HAS_FAILED_MEDIA, hasFailedMedia())
+        i.putExtra(EditorConstants.EXTRA_IS_PAGE, isPage)
+        i.putExtra(EditorConstants.EXTRA_IS_LANDING_EDITOR, isLandingEditor)
+        i.putExtra(EditorConstants.EXTRA_HAS_CHANGES, saved)
+        i.putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, editPostRepository.id)
+        i.putExtra(EditorConstants.EXTRA_POST_REMOTE_ID, editPostRepository.remotePostId)
+        i.putExtra(EditorConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
+        i.putExtra(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        i.putExtra(EditorConstants.EXTRA_IS_NEW_POST, isNewPost)
+        i.putExtra(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         setResult(RESULT_OK, i)
     }
 
@@ -2383,7 +2386,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun showPrepublishingNudgeBottomSheet() {
         editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
         ActivityUtils.hideKeyboard(this)
-        val delayMs = PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
+        val delayMs = EditorConstants.PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.postDelayed(it, delayMs)
         }
@@ -2585,7 +2588,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                PAGE_CONTENT -> {
+                VIEW_PAGER_PAGE_CONTENT -> {
                     if (isGutenbergKitEditor && showGutenbergEditor) {
                         createGutenbergKitEditorFragment()
                     } else if (showGutenbergEditor) {
@@ -2595,9 +2598,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded())
                     }
                 }
-                PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
-                PAGE_PUBLISH_SETTINGS -> newInstance()
-                PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
+                VIEW_PAGER_PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
+                VIEW_PAGER_PAGE_PUBLISH_SETTINGS -> newInstance()
+                VIEW_PAGER_PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
                 else -> throw IllegalArgumentException("Unexpected page type")
             }
         }
@@ -2722,7 +2725,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val fragment: Fragment = super.instantiateItem(container, position) as Fragment
             when (position) {
-                PAGE_CONTENT -> {
+                VIEW_PAGER_PAGE_CONTENT -> {
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment?.setImageLoader(imageLoader)
                     editorFragment?.titleOrContentChanged?.observe(this@EditPostActivity) { _: Editable? ->
@@ -2736,7 +2739,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         reattachUploadingMediaForAztec()
                     }
                 }
-                PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
+                VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }
             return fragment
         }
@@ -2884,9 +2887,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val group1 = matcher.group(GROUP_ONE)
-                val group2 = matcher.group(GROUP_TWO)
-                val group3 = matcher.group(GROUP_THREE)
+                val group1 = matcher.group(EditorConstants.GROUP_ONE)
+                val group2 = matcher.group(EditorConstants.GROUP_TWO)
+                val group3 = matcher.group(EditorConstants.GROUP_THREE)
                 if (group1 != null && group2 != null && group3 != null) {
                     val replacement = group1 + group2 + group3
                     matcher.appendReplacement(stringBuffer, replacement)
@@ -2911,8 +2914,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val action = intent.action
             if ((Intent.ACTION_SEND_MULTIPLE == action)) {
                 setPostContentFromShareAction()
-            } else if ((NEW_MEDIA_POST == action)) {
-                intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.let {
+            } else if ((EditorConstants.NEW_MEDIA_POST == action)) {
+                intent.getLongArrayExtra(EditorConstants.NEW_MEDIA_POST_EXTRA_IDS)?.let {
                     editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, it)
                 }
             }
@@ -2939,7 +2942,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 editorFragment?.setTitle(editPostRepository.title)
             } else if (editorFragment is GutenbergEditorFragment) {
                 // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
-                val title: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE)
+                val title: String? = intent.getStringExtra(EditorConstants.EXTRA_PAGE_TITLE)
                 if (title != null) {
                     editorFragment?.setTitle(title)
                 } else {
@@ -3083,7 +3086,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      */
     private fun setPageContent() {
         val intent: Intent = intent
-        val content: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT)
+        val content: String? = intent.getStringExtra(EditorConstants.EXTRA_PAGE_CONTENT)
         if (!content.isNullOrEmpty()) {
             hasSetPostContent = true
             editPostRepository.updateAsync({ postModel: PostModel ->
@@ -3752,10 +3755,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun onEditorFragmentInitialized() {
         // now that we have the Post object initialized,
         // check whether we have media items to insert from the WRITE POST with media functionality
-        if (intent.hasExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA)) {
+        if (intent.hasExtra(EditorConstants.EXTRA_INSERT_MEDIA)) {
             // Bump analytics
             AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST)
-            val serializableExtra = intent.getSerializableExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA)
+            val serializableExtra = intent.getSerializableExtra(EditorConstants.EXTRA_INSERT_MEDIA)
 
             val mediaList = if (serializableExtra is List<*> && serializableExtra.all { it is MediaModel } ) {
                 @Suppress("UNCHECKED_CAST")
@@ -3764,7 +3767,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 null
             }
             // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
-            intent.removeExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA)
+            intent.removeExtra(EditorConstants.EXTRA_INSERT_MEDIA)
             if (!mediaList.isNullOrEmpty()) {
                 editorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY)
             }
@@ -3811,7 +3814,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
         if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
-                intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
+                intent.getSerializableExtra(EditorConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
             postEditorAnalyticsSession?.start(null, entryPoint)
         }
     }
@@ -3821,7 +3824,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         replaceBlockActionWaiting: Boolean
     ) {
         val entryPoint: PostUtils.EntryPoint? =
-            intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
+            intent.getSerializableExtra(EditorConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
 
         // Note that this method is also used to track startup performance
         // It assumes this is being called when the editor has finished loading
@@ -3831,7 +3834,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         presentNewPageNoticeIfNeeded()
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
-        val promptId: Int = intent.getIntExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, -1)
+        val promptId: Int = intent.getIntExtra(EditorConstants.EXTRA_PROMPT_ID, -1)
         editorBloggingPromptsViewModel.start(siteModel, promptId)
 
         updateVoiceContentIfNeeded()
@@ -3842,7 +3845,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return
         }
         // Check if voice content exists and this is a new post for a Gutenberg editor fragment
-        val content = intent.getStringExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
+        val content = intent.getStringExtra(EditorConstants.EXTRA_VOICE_CONTENT)
         if (isNewPost && content != null && !isVoiceContentSet) {
             val gutenbergFragment = editorFragment as? GutenbergEditorFragment
             gutenbergFragment?.let {
@@ -3853,7 +3856,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun logTemplateSelection() {
-        val template = intent.getStringExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE) ?: return
+        val template = intent.getStringExtra(EditorConstants.EXTRA_PAGE_TEMPLATE) ?: return
         postEditorAnalyticsSession?.applyTemplate(template)
     }
 
@@ -4224,7 +4227,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
-    // EditPostActivityHook methods
+    // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
 
@@ -4318,31 +4321,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onSendJsException)
-    }
-
-    companion object {
-        private const val PAGE_CONTENT: Int = 0
-        private const val PAGE_SETTINGS: Int = 1
-        private const val PAGE_PUBLISH_SETTINGS: Int = 2
-        private const val PAGE_HISTORY: Int = 3
-        private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
-        private const val OFFSCREEN_PAGE_LIMIT = 4
-        private const val PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY = 100L
-        private const val SNACKBAR_DURATION = 4000
-
-        @JvmStatic fun checkToRestart(data: Intent): Boolean {
-            val extraRestartEditor = data.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
-            return extraRestartEditor != null &&
-                    RestartEditorOptions.valueOf(extraRestartEditor) != RestartEditorOptions.NO_RESTART
-        }
-
-        // Moved from EditPostContentFragment
-        const val NEW_MEDIA_POST: String = "NEW_MEDIA_POST"
-        const val NEW_MEDIA_POST_EXTRA_IDS: String = "NEW_MEDIA_POST_EXTRA_IDS"
-
-        const val GROUP_ONE = 1
-        const val GROUP_TWO = 2
-        const val GROUP_THREE = 3
     }
 }
 

@@ -24,7 +24,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditPostSettingsFragment
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditorDataProvider
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList
@@ -325,12 +326,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     @Suppress("TooGenericExceptionThrown")
-    private fun getEditorHook(): EditPostActivityHook {
+    private fun getEditorHook(): EditorDataProvider {
         val activity = activity
-        return if (activity is EditPostActivityHook) {
+        return if (activity is EditPostSettingsFragment.EditorDataProvider) {
             activity
         } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
+            throw RuntimeException("$activity must implement EditorDataProvider")
         }
     }
 

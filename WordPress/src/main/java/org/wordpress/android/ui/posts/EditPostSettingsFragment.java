@@ -171,7 +171,7 @@ public class EditPostSettingsFragment extends Fragment {
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
 
 
-    public interface EditPostActivityHook {
+    public interface EditorDataProvider {
         EditPostRepository getEditPostRepository();
 
         SiteModel getSite();
@@ -239,8 +239,8 @@ public class EditPostSettingsFragment extends Fragment {
 
                     @Override
                     public void onSettingsUpdated() {
-                        // mEditPostActivityHook will be null if the fragment is detached
-                        if (getEditPostActivityHook() != null) {
+                        // editorDataProvider will be null if the fragment is detached
+                        if (getEditorDataProvider() != null) {
                             updatePostFormat(
                                     mSiteSettings.getDefaultPostFormat());
                         }
@@ -665,7 +665,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent categoriesIntent = new Intent(requireActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
-        categoriesIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
+        categoriesIntent.putExtra(EditorConstants.EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
@@ -823,31 +823,31 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private EditPostRepository getEditPostRepository() {
-        if (getEditPostActivityHook() == null) {
+        if (getEditorDataProvider() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return getEditPostActivityHook().getEditPostRepository();
+        return getEditorDataProvider().getEditPostRepository();
     }
 
     private SiteModel getSite() {
-        if (getEditPostActivityHook() == null) {
+        if (getEditorDataProvider() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return getEditPostActivityHook().getSite();
+        return getEditorDataProvider().getSite();
     }
 
-    private EditPostActivityHook getEditPostActivityHook() {
+    private EditorDataProvider getEditorDataProvider() {
         Activity activity = getActivity();
         if (activity == null) {
             return null;
         }
 
-        if (activity instanceof EditPostActivityHook) {
-            return (EditPostActivityHook) activity;
+        if (activity instanceof EditorDataProvider) {
+            return (EditorDataProvider) activity;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement EditPostActivityHook");
+            throw new RuntimeException(activity.toString() + " must implement EditorDataProvider");
         }
     }
 
