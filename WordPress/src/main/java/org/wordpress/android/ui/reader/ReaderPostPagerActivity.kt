@@ -50,8 +50,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.EditorConstants
+import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderEvents.DoSignIn
 import org.wordpress.android.ui.reader.ReaderEvents.PostSlugsRequestCompleted
@@ -988,7 +988,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 if (resultCode != RESULT_OK || data == null || isFinishing) {
                     return
                 }
-                val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                val localId = data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                 val site = data.extras?.let {
                     BundleCompat.getSerializable(
                         it,
@@ -998,11 +998,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 }
                 val post = postStore.getPostByLocalPostId(localId)
 
-                if (checkToRestart(data)) {
+                if (EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data,
                         this@ReaderPostPagerActivity, site,
-                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
 
                     // a restart will happen so, no need to continue here

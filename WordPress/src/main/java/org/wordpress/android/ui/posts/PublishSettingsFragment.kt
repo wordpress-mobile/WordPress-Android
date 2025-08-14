@@ -23,7 +23,6 @@ import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils
@@ -245,16 +244,16 @@ abstract class PublishSettingsFragment : Fragment() {
     }
 
     private fun getPostRepository(): EditPostRepository? {
-        return getEditPostActivityHook()?.editPostRepository
+        return getEditorDataProvider()?.editPostRepository
     }
 
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
+    private fun getEditorDataProvider(): EditPostSettingsFragment.EditorDataProvider? {
         val activity = activity ?: return null
 
-        return if (activity is EditPostActivityHook) {
+        return if (activity is EditPostSettingsFragment.EditorDataProvider) {
             activity
         } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
+            throw RuntimeException("$activity must implement EditorDataProvider")
         }
     }
 }

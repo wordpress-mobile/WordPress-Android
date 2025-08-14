@@ -157,7 +157,7 @@ class PostActionHandler(
     }
 
     fun handleEditPostResult(data: Intent?) {
-        val localPostId = data?.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+        val localPostId = data?.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
         if (localPostId == null || localPostId == 0) {
             return
         }

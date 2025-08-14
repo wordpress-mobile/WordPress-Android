@@ -45,8 +45,8 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
-import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.EditorConstants
+import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
 import org.wordpress.android.ui.posts.PostResolutionOverlayFragment
@@ -174,12 +174,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            if (EditPostActivity.checkToRestart(data)) {
+            if (EditorLauncher.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(
                     data,
                     this@PagesFragment,
                     viewModel.site,
-                    data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0),
+                    data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0),
                     false
                 )
 
@@ -187,7 +187,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 return
             }
             // we need to work with local ids, since local drafts don't have remote ids
-            val localPageId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, -1)
+            val localPageId = data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, -1)
             if (localPageId != -1) {
                 viewModel.onPageEditFinished(localPageId, data)
             }

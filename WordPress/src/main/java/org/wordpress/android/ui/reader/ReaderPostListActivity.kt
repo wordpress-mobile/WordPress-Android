@@ -29,8 +29,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.EditPostActivity.Companion.checkToRestart
-import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.EditorConstants
+import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.uploads.UploadActionUseCase
@@ -345,7 +345,7 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
             }
 
             RequestCodes.EDIT_POST -> if (resultCode == RESULT_OK && data != null && !isFinishing) {
-                val localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                val localId = data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                 val site = BundleCompat.getSerializable(
                     data.extras!!,
                     WordPress.SITE,
@@ -353,11 +353,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
                 )
                 val post = postStore.getPostByLocalPostId(localId)
 
-                if (checkToRestart(data)) {
+                if (EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data,
                         this@ReaderPostListActivity, site,
-                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
                     // a restart will happen so no need to continue here
                     return

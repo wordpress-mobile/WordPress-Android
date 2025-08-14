@@ -44,7 +44,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditorDataProvider
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
@@ -71,7 +71,7 @@ const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
 class PostsListActivity : BaseAppCompatActivity(),
-    EditPostActivityHook,
+    EditorDataProvider,
     PrepublishingBottomSheetListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface,
@@ -436,10 +436,10 @@ class PostsListActivity : BaseAppCompatActivity(),
 
         when {
             requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
-                if (data != null && EditPostActivity.checkToRestart(data)) {
+                if (data != null && EditorLauncher.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data, this, site,
-                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditorConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
                     // a restart will happen so, no need to continue here
                     return

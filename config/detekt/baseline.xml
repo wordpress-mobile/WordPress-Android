@@ -202,10 +202,10 @@
     <ID>TooGenericExceptionThrown:PageSearchAdapter.kt$PageSearchAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PostSettingsTagsFragment.kt$PostSettingsTagsFragment$throw RuntimeException("$context must implement TagsSelectedListener")</ID>
     <ID>TooGenericExceptionThrown:PrepublishingBottomSheetFragment.kt$PrepublishingBottomSheetFragment$throw RuntimeException("$context must implement PrepublishingBottomSheetListener")</ID>
-    <ID>TooGenericExceptionThrown:PrepublishingCategoriesFragment.kt$PrepublishingCategoriesFragment$throw RuntimeException("$activity must implement EditPostActivityHook")</ID>
-    <ID>TooGenericExceptionThrown:PrepublishingHomeFragment.kt$PrepublishingHomeFragment$throw RuntimeException("$activity must implement EditPostActivityHook")</ID>
-    <ID>TooGenericExceptionThrown:PrepublishingTagsFragment.kt$PrepublishingTagsFragment$throw RuntimeException("$activity must implement EditPostActivityHook")</ID>
-    <ID>TooGenericExceptionThrown:PublishSettingsFragment.kt$PublishSettingsFragment$throw RuntimeException("$activity must implement EditPostActivityHook")</ID>
+    <ID>TooGenericExceptionThrown:PrepublishingCategoriesFragment.kt$PrepublishingCategoriesFragment$throw RuntimeException("$activity must implement EditorDataProvider")</ID>
+    <ID>TooGenericExceptionThrown:PrepublishingHomeFragment.kt$PrepublishingHomeFragment$throw RuntimeException("$activity must implement EditorDataProvider")</ID>
+    <ID>TooGenericExceptionThrown:PrepublishingTagsFragment.kt$PrepublishingTagsFragment$throw RuntimeException("$activity must implement EditorDataProvider")</ID>
+    <ID>TooGenericExceptionThrown:PublishSettingsFragment.kt$PublishSettingsFragment$throw RuntimeException("$activity must implement EditorDataProvider")</ID>
     <ID>TooGenericExceptionThrown:ReaderTracker.kt$ReaderTab.Companion$throw RuntimeException("Unexpected ReaderTab id")</ID>
     <ID>TooGenericExceptionThrown:RestoreFragment.kt$RestoreFragment$throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")</ID>
     <ID>TooGenericExceptionThrown:RestoreViewModel.kt$RestoreViewModel$throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")</ID>
