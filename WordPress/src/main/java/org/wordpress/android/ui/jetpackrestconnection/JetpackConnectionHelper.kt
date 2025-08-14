@@ -67,7 +67,6 @@ class JetpackConnectionHelper @Inject constructor(
     }
 
     companion object {
-        const val CONNECT_FROM = "jetpack-android-app"
         private const val TAG = "JetpackConnectionHelper"
     }
 }

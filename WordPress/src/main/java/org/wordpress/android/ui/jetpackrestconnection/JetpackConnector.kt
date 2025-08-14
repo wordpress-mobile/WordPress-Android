@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpackrestconnection
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackrestconnection.JetpackConnectionHelper.Companion.CONNECT_FROM
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpComSiteId
 import javax.inject.Inject
@@ -34,5 +33,9 @@ class JetpackConnector @Inject constructor(
     private fun requireValidSiteId(wpComSiteId: WpComSiteId): WpComSiteId {
         require(wpComSiteId > 0UL) { "Jetpack connection failed, no site ID returned" }
         return wpComSiteId
+    }
+
+    companion object {
+        const val CONNECT_FROM = "jetpack-android-app"
     }
 }

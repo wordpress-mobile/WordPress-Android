@@ -40,11 +40,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val _buttonType = MutableStateFlow<ButtonType?>(ButtonType.Start)
     val buttonType = _buttonType
 
-    data class StepState(
-        val status: ConnectionStatus = ConnectionStatus.NotStarted,
-        val errorType: ErrorType? = null,
-    )
-
     private val _stepStates = MutableStateFlow(initialStepStates)
     val stepStates = _stepStates
 
@@ -454,6 +449,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object Done : ButtonType()
         data object Retry : ButtonType()
     }
+
+    data class StepState(
+        val status: ConnectionStatus = ConnectionStatus.NotStarted,
+        val errorType: ErrorType? = null,
+    )
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
