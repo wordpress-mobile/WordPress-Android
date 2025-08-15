@@ -22,6 +22,9 @@ class JetpackModuleHelper @Inject constructor(
             Module.STATS -> {
                 jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
             }
+            Module.PREFS -> {
+                jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
+            }
         }
 
         // Ignore the above response as it's unreliable, instead just fetch Jetpack sites filtering for this site
@@ -47,15 +50,14 @@ class JetpackModuleHelper @Inject constructor(
      * Copy the REST passwords from one site to another and save the updated site
      */
     private fun copyRestPasswords(fromSite: SiteModel, toSite: SiteModel) {
-        val updatedSite = toSite.also {
-            it.apiRestUsernameEncrypted = fromSite.apiRestUsernameEncrypted
-            it.apiRestPasswordEncrypted = fromSite.apiRestPasswordEncrypted
-            it.apiRestUsernamePlain = fromSite.apiRestUsernamePlain
-            it.apiRestPasswordPlain = fromSite.apiRestPasswordPlain
-            it.apiRestUsernameIV = fromSite.apiRestUsernameIV
-            it.apiRestPasswordIV = fromSite.apiRestPasswordIV
-        }
-        siteStore.updateSite(updatedSite)
+        siteStore.updateSite(toSite.apply {
+            apiRestUsernameEncrypted = fromSite.apiRestUsernameEncrypted
+            apiRestPasswordEncrypted = fromSite.apiRestPasswordEncrypted
+            apiRestUsernamePlain = fromSite.apiRestUsernamePlain
+            apiRestPasswordPlain = fromSite.apiRestPasswordPlain
+            apiRestUsernameIV = fromSite.apiRestUsernameIV
+            apiRestPasswordIV = fromSite.apiRestPasswordIV
+        })
     }
 
     private fun isModuleActivated(site: SiteModel, module: Module): Boolean {
@@ -64,5 +66,6 @@ class JetpackModuleHelper @Inject constructor(
 
     private enum class Module(val moduleName: String) {
         STATS("stats"),
+        PREFS("prefs") // TODO remove after simplification
     }
 }
