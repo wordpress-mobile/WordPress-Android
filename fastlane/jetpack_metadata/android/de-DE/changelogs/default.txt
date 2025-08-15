@@ -1,0 +1,5 @@
+26.1:
+- Der Bildschirm „New Subscribers“ (Neue Abonnenten) zeigt alle deine E-Mail- und Reader-Abonnenten an. So weißt du, wer deine Inhalte liest.
+- Medien werden jetzt auf privaten Websites im experimentellen Editor richtig angezeigt.
+- Medien-Uploads weisen jetzt eine bessere Authentifizierung und Performance auf.
+- Verschiedene Upload-Fehler wurden behoben und die allgemeine Handhabung von Medien wurde verbessert.

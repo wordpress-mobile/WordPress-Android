@@ -1,0 +1,5 @@
+26.1:
+- Yeni Aboneler ekranı tüm e-posta ve Okuyucu abonelerinizi gösterir, artık içeriğinizi kimin okuduğunu bilirsiniz.
+- Ortam artık deneysel düzenleyicide özel sitelerde düzgün şekilde görüntüleniyor.
+- Daha iyi kimlik doğrulama ve gelişmiş performans ile gelişmiş ortam yüklemeleri.
+- Çeşitli yükleme hataları düzeltildi ve genel ortam kullanımı iyileştirildi.

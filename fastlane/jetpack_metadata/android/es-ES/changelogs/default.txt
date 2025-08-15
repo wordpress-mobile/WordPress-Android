@@ -1,2 +1,5 @@
-26.0:
-Hemos añadido la autenticación de contraseñas de aplicaciones. Todavía es experimental, pero una vez que esté completamente integrada, podremos mejorar las funciones con las que ya cuenta e introducir otras nuevas. ¡Por fin!
+26.1:
+- La pantalla de nuevos suscriptores muestra todos tus suscriptores por correo electrónico y del Lector. Ahora ya sabes quién está leyendo tu contenido.
+- Los medios ahora se muestran correctamente en sitios privados del editor experimental.
+- Subidas de medios mejoradas con una mejor autenticación y un rendimiento mejorado.
+- Se han corregido varios errores de subida y se ha mejorado el manejo general de los medios.

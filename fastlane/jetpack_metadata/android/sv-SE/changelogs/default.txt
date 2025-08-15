@@ -1,0 +1,5 @@
+26.1:
+– Ny prenumerantskärm visar alla dina e-post- och läsarprenumeranter – nu vet du vem som läser ditt innehåll.
+– Media visas nu korrekt på privata webbplatser i den experimentella redigeraren.
+– Förbättrad mediaöverföring med bättre autentisering och förbättrad prestanda.
+– Åtgärdade olika överföringsfel och förbättrade övergripande mediahantering.
