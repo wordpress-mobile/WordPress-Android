@@ -48,6 +48,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var isWaitingForWPComLogin = false
 
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
+    private var connectedSiteId: Long = 0L
 
     fun setConnectionSource(source: ConnectionSource) {
         connectionSource = source
@@ -372,6 +373,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         val result = jetpackConnector.connectSite(getSite())
         result.fold(
             onSuccess = {
+                connectedSiteId = it.toLong()
                 updateStepStatus(
                     step = ConnectionStep.ConnectSite,
                     status = ConnectionStatus.Completed
@@ -421,12 +423,18 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Step 5: Finalize the connection
+     * Step 5: Finalize the connection by activating the relevant module for the site
      */
     private suspend fun finalize() {
+        // the local site won't have a siteId since it's self-hosted and previously unconnected to Jetpack,
+        // so give it the connected siteId retrieved during the connectSite step
+        val connectedSite = getSite().also {
+            it.siteId = connectedSiteId
+        }
+
         when (connectionSource) {
             ConnectionSource.STATS -> {
-                val result = jetpackModuleHelper.activateStatsModule(getSite())
+                val result = jetpackModuleHelper.activateStatsModule(connectedSite)
                 if (result.isSuccess) {
                     updateStepStatus(
                         step = ConnectionStep.Finalize,
@@ -439,10 +447,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
                         error = ErrorType.ActivateStatsFailed
                     )
                 }
-            }
-
-            ConnectionSource.NOTIFS -> {
-                // TODO
             }
         }
     }
@@ -501,8 +505,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     )
 
     enum class ConnectionSource {
-        STATS,
-        NOTIFS
+        STATS
     }
 
     companion object {

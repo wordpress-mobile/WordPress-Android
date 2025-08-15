@@ -24,23 +24,27 @@ class JetpackModuleHelper @Inject constructor(
             }
         }
 
-        // ignore the response, just reload sites and check if the module is activated now
-        // TODO filter? Or can we use the connected site ID to fetch the single site?
-        siteStore.fetchSites(SiteStore.FetchSitesPayload())
-        return if (isModuleActivated(site, module)) {
-            Result.success(Unit)
-        } else {
-            Result.failure(Exception("${module.moduleName} module not activated"))
+        // ignore the response, just fetch Jetpack sites filtering for this site and check if the module is activated
+        val payload = SiteStore.FetchSitesPayload(
+            filters = listOf(SiteStore.SiteFilter.JETPACK)
+        )
+        val updatedSite = siteStore.fetchSites(payload).updatedSites.firstOrNull {
+            it.siteId == site.siteId
         }
+        return updatedSite?.let { updatedSite ->
+            if (isModuleActivated(updatedSite, module)) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("${module.moduleName} module not activated"))
+            }
+        } ?: Result.failure(Exception("Site not found"))
     }
 
     /**
-     * Checks if the passed module is activated for the passed site. Note we always get the site from
-     * the store because it may have been changed when the module was activated above.
+     * Checks if the passed module is activated for the passed site
      */
     private fun isModuleActivated(site: SiteModel, module: Module): Boolean {
-        val freshSite = siteStore.getSiteByLocalId(site.id) ?: return false
-        return freshSite.isActiveModuleEnabled(module.moduleName)
+        return site.isActiveModuleEnabled(module.moduleName)
     }
 
     private enum class Module(val moduleName: String) {
