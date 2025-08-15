@@ -1621,7 +1621,6 @@ Language: pt_BR
     <string name="reader_follow_comments_null_response">Nenhuma resposta recebida</string>
     <string name="activity_log_activity_type_filter_clear">Limpar</string>
     <string name="activity_log_activity_type_filter_apply">Aplicar</string>
-    <string name="cannot_retry_deleted_media_item_fatal">A mídia foi removida. Tente criar a story novamente.</string>
     <string name="label_done_button">Concluído</string>
     <string name="hpp_choose_error">Ocorreu um erro durante a seleção do tema.</string>
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
@@ -1708,7 +1707,6 @@ Language: pt_BR
     <string name="show_n_hidden_items_desc">Mais %1$s itens</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Selecionar um modelo</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Nota: O modelo da coluna pode variar entre os temas e tamanhos de tela</string>
-    <string name="create_post_story_fab_tooltip">Criar um post ou story</string>
     <string name="create_page_fab_tooltip">Criar uma página</string>
     <string name="create_post_fab_tooltip">Criar um post</string>
     <string name="reader_discover_interests_header">Você pode gostar</string>
@@ -1726,10 +1724,8 @@ Language: pt_BR
     <string name="mlp_create_blank_page">Criar uma página vazia</string>
     <string name="mlp_choose_layout_subtitle">Comece escolhendo entre uma grande variedade de modelos prontos ou crie uma página vazia.</string>
     <string name="mlp_choose_layout_title">Escolher um modelo</string>
-    <string name="prepublishing_nudges_story_title_hint">Adicione um título para seu story</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Toque em %1$s Criar. %2$s Então selecione  &lt;b&gt;Post do blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Escolher no dispositivo</string>
-    <string name="my_site_bottom_sheet_add_story">Story</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Para editar ícones de sites WordPress auto-hospedados, é necessário usar o plugin Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Não foi possível encontrar o salto de página</string>
     <string name="error_media_quota_exceeded_toast">Não foi possível enviar o arquivo.\nO limite de armazenamento foi ultrapassado.</string>

@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-08 13:54:09+0000
+Translation-Revision-Date: 2025-08-12 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">若停用應用程式密碼，系統將移除「%1$s」網站的登入資訊。</string>
+    <string name="application_password_last_used_sort">上次使用</string>
+    <string name="application_password_created_sort">已建立</string>
+    <string name="application_password_name_sort">名稱</string>
+    <string name="application_password_no_ip">沒有 IP 紀錄</string>
+    <string name="application_password_last_ip_label">上一個 IP：</string>
+    <string name="application_password_last_used_label">上次使用：</string>
+    <string name="application_password_created_label">建立時間：</string>
+    <string name="application_password_name_label">名稱：</string>
+    <string name="application_password_never_used">從未使用</string>
+    <string name="enable">啟用</string>
+    <string name="application_password_info_description_4">請注意，撤銷應用程式使用的應用程式密碼時，應用程式會停止存取你的網站。 撤銷應用程式建立的應用程式密碼前，請三思而行。</string>
+    <string name="application_password_info_description_3">你可在 WordPress 網站儀表板中的使用者個人檔案，檢視並管理這些密碼。</string>
+    <string name="application_password_info_description_2">新增應用程式至網站時，系統會視需要自動建立應用程式密碼。</string>
+    <string name="application_password_info_description_1">應用程式密碼是一種安全的方式，因為應用程式不必使用你的帳號密碼，即可存取你的網站。</string>
+    <string name="application_password_info_title">應用程式密碼</string>
+    <string name="application_password_disable_feature_description">若停用應用程式密碼，系統將移除 %1$s 網站的登入資訊。 受影響的網站可能需要重新加入，才能再次登入。</string>
+    <string name="application_password_invalid_description">應用程式密碼已不存在。 請重新登入，建立新的應用程式密碼。 </string>
+    <string name="subscribers_delete_failed">無法刪除訂閱者</string>
+    <string name="subscribers_delete_success_message">訂閱者已刪除，但刪除作業可能需要一分鐘才會生效</string>
+    <string name="subscribers_delete_success_title">訂閱者已刪除</string>
+    <string name="subscribers_delete_confirmation_message">你確定要刪除這個訂閱者？</string>
+    <string name="subscribers_delete_confirmation_title">刪除訂閱者</string>
+    <string name="subscribers_sort_name">名稱</string>
+    <string name="jetpack_rest_connection_error_wpcom">無法連結 WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">逾時</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack 已完成安裝</string>
+    <string name="jetpack_rest_connection_cancel_message">Jetpack 連線程序進行中。 你確定要取消嗎？</string>
+    <string name="jetpack_rest_connection_cancel_title">取消 Jetpack 設定？</string>
+    <string name="jetpack_rest_connection_status_failed">失敗</string>
+    <string name="jetpack_rest_connection_status_completed">已完成</string>
+    <string name="jetpack_rest_connection_status_in_progress">進行中……</string>
+    <string name="jetpack_rest_connection_status_not_started">未開始</string>
+    <string name="jetpack_rest_connection_step_finalize">完成設定</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">連結 WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">連結你的網站</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">安裝 Jetpack 外掛程式</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">登入 WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">設定 Jetpack (模擬)</string>
+    <string name="jetpack_rest_connection_title">Jetpack 連線</string>
+    <string name="experimental_jetpack_rest_connection_description">啟用測試版 Jetpack REST 連線流程</string>
+    <string name="experimental_jetpack_rest_connection">測試版 Jetpack REST 連線</string>
+    <string name="experimental_subscribers_feature_description">檢視及管理電子報訂閱者</string>
+    <string name="start">開始</string>
+    <string name="descending">遞減</string>
+    <string name="ascending">遞增</string>
     <string name="application_password_disable_feature_title">確定要停用應用程式密碼？</string>
     <string name="application_password_invalid">無效的應用程式密碼</string>
     <string name="application_password_credentials_storing_error">儲存「%1$s」的應用程式密碼憑證時發生錯誤</string>
@@ -41,10 +85,7 @@ Language: zh_TW
     <string name="subscribers_error_title">發生錯誤</string>
     <string name="subscribers_empty_search">找不到結果</string>
     <string name="subscribers_empty">沒有訂閱者</string>
-    <string name="subscribers_sort_plan">方案</string>
-    <string name="subscribers_sort_display_name">顯示名稱</string>
     <string name="subscribers_sort_date">訂閱日期</string>
-    <string name="subscribers_sort_email">電子郵件地址</string>
     <string name="subscribers_filter_reader_subscription">讀者訂閱</string>
     <string name="subscribers_filter_email_subscription">電子郵件訂閱</string>
     <string name="about_update_email_unverified">若想更新個人檔案，請先驗證電子郵件地址。</string>
@@ -56,9 +97,8 @@ Language: zh_TW
     <string name="qrcode_auth_flow_timeout_subtitle">驗證碼偵測時間過長。 請再試一次，或開啟相機掃瞄驗證碼。</string>
     <string name="qrcode_auth_flow_timeout_title">掃描逾時</string>
     <string name="invite_users">邀請使用者</string>
-    <string name="experimental_application_password_feature_description">啟用應用程式密碼以登入自助託管網站。</string>
+    <string name="experimental_application_password_feature_description">啟用應用程式密碼，並登入自助託管網站</string>
     <string name="experimental_application_password_feature">應用程式密碼登入</string>
-    <string name="experimental_subscribers_feature_description">檢視及管理電子報訂閱者 (進行中)</string>
     <string name="experimental_subscribers_feature">實驗性訂閱者</string>
     <string name="cant_share_no_blog">你無法在沒有網誌的情形下分享內容至 WordPress</string>
     <string name="coming_soon">即將推出！</string>
@@ -1685,7 +1725,6 @@ Language: zh_TW
     <string name="reader_follow_comments_null_response">未收到回應</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
     <string name="activity_log_activity_type_filter_apply">套用</string>
-    <string name="cannot_retry_deleted_media_item_fatal">已移除媒體。 請嘗試重新建立你的限時動態。</string>
     <string name="label_done_button">完成</string>
     <string name="hpp_choose_error">選取佈景主題時發生錯誤。</string>
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
@@ -1772,7 +1811,6 @@ Language: zh_TW
     <string name="show_n_hidden_items_desc">其他 %1$s 個項目</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">選取版面配置</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">請注意：內容欄版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
-    <string name="create_post_story_fab_tooltip">建立文章或故事</string>
     <string name="create_page_fab_tooltip">建立頁面</string>
     <string name="create_post_fab_tooltip">建立文章</string>
     <string name="reader_discover_interests_header">你可能會喜歡</string>
@@ -1790,10 +1828,8 @@ Language: zh_TW
     <string name="mlp_create_blank_page">建立空白頁面</string>
     <string name="mlp_choose_layout_subtitle">首先請從各種預先製作的頁面版面配置挑選。 或從空白頁面開始也可以。</string>
     <string name="mlp_choose_layout_title">選擇版面配置</string>
-    <string name="prepublishing_nudges_story_title_hint">新增故事標題</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">點選 %1$s「建立」。 %2$s 然後選取&lt;b&gt;「網誌文章」&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">從裝置中選擇</string>
-    <string name="my_site_bottom_sheet_add_story">故事文章</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">你需要 Jetpack 外掛程式才能在自助託管的 WordPress 網站上編輯網站圖示。</string>
     <string name="reader_toast_err_page_jump_not_found">找不到連結的頁面跳轉</string>
     <string name="error_media_quota_exceeded_toast">無法上傳檔案。\n已超過儲存空間配額。</string>

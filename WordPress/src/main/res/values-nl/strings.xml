@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-14 16:52:49+0000
+Translation-Revision-Date: 2025-08-09 07:09:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">Het uitschakelen van applicatie wachtwoord zal je login info verwijderen van %1$s sites.</string>
+    <string name="application_password_last_used_sort">Laatst gebruikt</string>
+    <string name="application_password_created_sort">Aangemaakt</string>
+    <string name="application_password_name_sort">Naam</string>
+    <string name="application_password_no_ip">Geen IP geregistreerd</string>
+    <string name="application_password_last_ip_label">Laatste IP:</string>
+    <string name="application_password_last_used_label">Laatst gebruikt:</string>
+    <string name="application_password_created_label">Aangemaakt:</string>
+    <string name="application_password_name_label">Naam:</string>
+    <string name="application_password_never_used">Nooit gebruikt</string>
+    <string name="enable">Inschakelen</string>
+    <string name="application_password_info_description_4">Houd er rekening mee dat het intrekken van applicatie wachtwoorden die door de app worden gebruikt, de toegang van de app tot je site zal beëindigen. Wees voorzichtig bij het intrekken van applicatie wachtwoorden die door de app zijn aangemaakt.</string>
+    <string name="application_password_info_description_3">Je kunt deze wachtwoorden bekijken en beheren in je gebruikersprofiel binnen het beheerpaneel van je WordPress site.</string>
+    <string name="application_password_info_description_2">Wanneer je sites toevoegt aan de app, worden applicatie wachtwoorden automatisch aangemaakt indien nodig.</string>
+    <string name="application_password_info_description_1">Applicatie wachtwoorden zijn een veilige manier voor apps om toegang te krijgen tot je site zonder je account wachtwoord te gebruiken.</string>
+    <string name="application_password_info_title">Applicatie wachtwoorden</string>
+    <string name="application_password_disable_feature_description">Het uitschakelen van Applicatie wachtwoord zal de login voor %1$s van je sites verwijderen. Mogelijk moet je de getroffen sites opnieuw toevoegen om weer in te loggen.</string>
+    <string name="application_password_invalid_description">Je applicatie wachtwoord bestaat niet meer. Meld je opnieuw aan om een nieuw applicatie wachtwoord aan te maken </string>
+    <string name="subscribers_delete_failed">Verwijderen van abonnee mislukt</string>
+    <string name="subscribers_delete_success_message">De abonnee is verwijderd, maar het kan een minuut duren voordat de verwijdering van kracht is</string>
+    <string name="subscribers_delete_success_title">Abonnee verwijderd</string>
+    <string name="subscribers_delete_confirmation_message">Weet je het zeker dat je deze abonnee wil verwijderen?</string>
+    <string name="subscribers_delete_confirmation_title">Abonnee verwijderen</string>
+    <string name="subscribers_sort_name">Naam</string>
+    <string name="jetpack_rest_connection_error_wpcom">Kan geen verbinding maken met WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">Timed-out</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is al geïnstalleerd</string>
+    <string name="jetpack_rest_connection_cancel_message">Het Jetpack verbindingsproces is bezig. Weet je het zeker dat je wil annuleren?</string>
+    <string name="jetpack_rest_connection_cancel_title">Jetpack setup annuleren?</string>
+    <string name="jetpack_rest_connection_status_failed">Mislukt</string>
+    <string name="jetpack_rest_connection_status_completed">Afgerond</string>
+    <string name="jetpack_rest_connection_status_in_progress">In voortgang…</string>
+    <string name="jetpack_rest_connection_status_not_started">Niet gestart</string>
+    <string name="jetpack_rest_connection_step_finalize">Setup voltooien</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Maak verbinding met WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Verbind je site</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack plugin installeren</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Login bij WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack instellen (Gesimuleerd)</string>
+    <string name="jetpack_rest_connection_title">Jetpack verbinding</string>
+    <string name="experimental_jetpack_rest_connection_description">Experimentele Jetpack REST verbinding flow inschakelen</string>
+    <string name="experimental_jetpack_rest_connection">Experimentele Jetpack REST verbinding</string>
+    <string name="experimental_subscribers_feature_description">Bekijk en beheer nieuwsbriefabonnees</string>
+    <string name="start">Starten</string>
+    <string name="descending">Aflopend</string>
+    <string name="ascending">Oplopend</string>
     <string name="application_password_disable_feature_title">Applicatie wachtwoord uitschakelen?</string>
     <string name="application_password_invalid">Ongeldig applicatie wachtwoord</string>
     <string name="application_password_credentials_storing_error">Er is een fout opgetreden bij het opslaan van wachtwoord referenties voor %1$s</string>
@@ -42,10 +86,7 @@ Language: nl
     <string name="subscribers_error_title">Er ging iets mis</string>
     <string name="subscribers_empty_search">Geen resultaten gevonden</string>
     <string name="subscribers_empty">Er zijn geen abonnees</string>
-    <string name="subscribers_sort_plan">Abonnement</string>
-    <string name="subscribers_sort_display_name">Weergavenaam</string>
     <string name="subscribers_sort_date">Datum van inschrijving</string>
-    <string name="subscribers_sort_email">E-mailadres</string>
     <string name="subscribers_filter_reader_subscription">Reader abonnement</string>
     <string name="subscribers_filter_email_subscription">E-mail inschrijving</string>
     <string name="about_update_email_unverified">Om je profiel te updaten, moet je eerst je e-mailadres verifiëren.</string>
@@ -59,7 +100,6 @@ Language: nl
     <string name="invite_users">Gebruikers uitnodigen</string>
     <string name="experimental_application_password_feature_description">Applicatie wachtwoord inschakelen om in te loggen op zelf-gehoste sites.</string>
     <string name="experimental_application_password_feature">Applicatie wachtwoord login</string>
-    <string name="experimental_subscribers_feature_description">Bekijk en beheer nieuwsbrief abonnees (werk in uitvoering)</string>
     <string name="experimental_subscribers_feature">Experimentele abonnees</string>
     <string name="cant_share_no_blog">Je kunt niet delen naar WordPress zonder een blog</string>
     <string name="coming_soon">Komt binnenkort!</string>
@@ -1696,7 +1736,6 @@ Language: nl
     <string name="reader_follow_comments_null_response">Geen antwoord ontvangen</string>
     <string name="activity_log_activity_type_filter_clear">Wissen</string>
     <string name="activity_log_activity_type_filter_apply">Toepassen</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal opnieuw te maken.</string>
     <string name="label_done_button">Klaar</string>
     <string name="hpp_choose_error">Er is een fout opgetreden bij het selecteren van het thema.</string>
     <string name="hpp_retry_error">Controleer je internetverbinding en probeer het opnieuw.</string>
@@ -1783,7 +1822,6 @@ Language: nl
     <string name="show_n_hidden_items_desc">%1$s meer items</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Selecteer een lay-out</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Opmerking:Kolom lay-out kan verschillen tussen thema\'s en scherm grootten</string>
-    <string name="create_post_story_fab_tooltip">Maak een bericht of verhaal</string>
     <string name="create_page_fab_tooltip">Maak een pagina</string>
     <string name="create_post_fab_tooltip">Maak een bericht</string>
     <string name="reader_discover_interests_header">Je zult ook leuk vinden</string>
@@ -1801,10 +1839,8 @@ Language: nl
     <string name="mlp_create_blank_page">Maak een lege pagina</string>
     <string name="mlp_choose_layout_subtitle">Ga aan de slag door te kiezen uit een breed scala aan vooraf gemaakte pagina lay-outs. Of begin gewoon met een lege pagina.</string>
     <string name="mlp_choose_layout_title">Kies een lay-out</string>
-    <string name="prepublishing_nudges_story_title_hint">Geef je verhaal een titel</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tik op %1$s Maken. %2$s Selecteer vervolgens &lt;b&gt;Blogbericht&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Kies van welk apparaat</string>
-    <string name="my_site_bottom_sheet_add_story">Verhaal plaatsen</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Voor het bewerken van site iconen op door jezelf gehoste WordPress sites is de Jetpack plugin vereist.</string>
     <string name="reader_toast_err_page_jump_not_found">Kan de gekoppelde pagina sprong niet vinden</string>
     <string name="error_media_quota_exceeded_toast">Kan bestand niet uploaden.\nOpslag quota was overschreden.</string>

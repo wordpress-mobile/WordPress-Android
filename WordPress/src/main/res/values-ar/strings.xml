@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-07 12:54:07+0000
+Translation-Revision-Date: 2025-08-13 12:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">سيؤدي تعطيل كلمة مرور التطبيق إلى إزالة معلومات تسجيل الدخول من ⁦%1$s⁩ المواقع.</string>
+    <string name="application_password_last_used_sort">مُستخدم حديثًا</string>
+    <string name="application_password_created_sort">تاريخ الإنشاء</string>
+    <string name="application_password_no_ip">لم يُسجَل أي عنوان IP</string>
+    <string name="application_password_last_ip_label">آخر عنوان IP:</string>
+    <string name="application_password_last_used_label">مُستخدم حديثًا:</string>
+    <string name="application_password_created_label">تاريخ الإنشاء:</string>
+    <string name="application_password_never_used">لم يُستخدم أبدا</string>
+    <string name="enable">تمكين</string>
+    <string name="application_password_info_description_4">يُرجى ملاحظة أن إلغاء كلمات مرور التطبيقات المُستخدمة في التطبيق سيؤدي إلى إنهاء وصول التطبيق إلى موقعك. احذر عند إلغاء كلمات مرور التطبيق المنشئة من خلال التطبيق.</string>
+    <string name="application_password_info_description_3">يمكنك عرض كلمات المرور هذه وإدارتها في ملف تعريف مستخدمك داخل لوحة مسؤول موقع WordPress.</string>
+    <string name="application_password_info_description_2">عندما تضيف مواقع إلى التطبيق، سيتم إنشاء كلمات مرور التطبيق تلقائيا حسب الحاجة.</string>
+    <string name="application_password_info_description_1">كلمات مرور التطبيقات هي طريقة آمنة للتطبيقات للوصول إلى موقعك بدون استخدام كلمة مرور حسابك.</string>
+    <string name="application_password_info_title">كلمات مرور التطبيقات</string>
+    <string name="application_password_disable_feature_description">سيؤدي تعطيل كلمة مرور التطبيق إلى إزالة معلومات تسجيل الدخول في ⁦%1$s⁩ من مواقعك. قد تحتاج إلى إعادة إضافة المواقع المتأثرة لإعادة تسجيل الدخول.</string>
+    <string name="application_password_invalid_description">لم تعد كلمة مرور تطبيقك موجودة. يُرجى تسجيل الدخول مرة أخرى لإنشاء كلمة مرور جديدة للتطبيق </string>
+    <string name="subscribers_delete_success_message">حُذِف المشترك، لكن قد يستغرق الأمر دقيقة حتى يصبح الحذف ساري المفعول</string>
+    <string name="subscribers_delete_success_title">حُذِف المشترك</string>
+    <string name="subscribers_delete_confirmation_message">هل أنت متأكد من رغبتك في حذف هذا المشترك؟</string>
+    <string name="jetpack_rest_connection_error_wpcom">تعذر الاتصال بـWordPress.com</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack مثبت بالفعل</string>
+    <string name="jetpack_rest_connection_cancel_message">عملية اتصال Jetpack قيد التقدم. هل أنت متأكد من رغبتك في الإلغاء؟</string>
+    <string name="jetpack_rest_connection_cancel_title">هل تريد إلغاء إعدادات Jetpack؟</string>
+    <string name="jetpack_rest_connection_status_completed">مكتمل</string>
+    <string name="jetpack_rest_connection_status_in_progress">قيد التنفيذ…</string>
+    <string name="jetpack_rest_connection_step_finalize">إنهاء الإعداد</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">الاتصال بـWordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">الاتصال بموقعك</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">تثبيت إضافة Jetpack.</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">تسجيل الدخول إلى WordPress.com</string>
+    <string name="experimental_jetpack_rest_connection_description">تمكين تدفق الاتصال التجريبي Jetpack REST</string>
+    <string name="experimental_jetpack_rest_connection">الاتصال التجريبي Jetpack REST</string>
+    <string name="experimental_subscribers_feature_description">عرض المشتركين في خدمة الرسائل الإخبارية وإدارتهم</string>
+    <string name="start">بداية</string>
     <string name="application_password_disable_feature_title">هل تريد تعطيل كلمة مرور التطبيق؟</string>
     <string name="application_password_invalid">كلمة مرور التطبيق غير صالحة</string>
     <string name="application_password_credentials_storing_error">حدث خطأ أثناء حفظ بيانات اعتماد كلمة مرور تطبيق ⁦%1$s⁩</string>
@@ -41,10 +73,7 @@ Language: ar
     <string name="subscribers_error_title">حدث خطأ ما</string>
     <string name="subscribers_empty_search">تعذر العثور على نتائج</string>
     <string name="subscribers_empty">لا يوجد مشتركون</string>
-    <string name="subscribers_sort_plan">الخطة</string>
-    <string name="subscribers_sort_display_name">الاسم المعروض</string>
     <string name="subscribers_sort_date">تاريخ الاشتراك</string>
-    <string name="subscribers_sort_email">عنوان البريد الإلكتروني</string>
     <string name="subscribers_filter_reader_subscription">اشتراك القارئ</string>
     <string name="subscribers_filter_email_subscription">اشتراك البريد الإلكتروني</string>
     <string name="about_update_email_unverified">يجب أولاً تأكيد عنوان بريدك الإلكتروني لتحديث ملفك الشخصي.</string>
@@ -56,9 +85,8 @@ Language: ar
     <string name="qrcode_auth_flow_timeout_subtitle">استغرق الأمر وقتًا طويلًا للغاية لرصد الكود. يُرجى المحاولة مرة أخرى أو استخدام تطبيق الكاميرا الخاص بك لفحص الكود.</string>
     <string name="qrcode_auth_flow_timeout_title">انتهت مهلة المسح</string>
     <string name="invite_users">دعوة مستخدمين</string>
-    <string name="experimental_application_password_feature_description">تمكين كلمة مرور التطبيق لتسجيل الدخول إلى المواقع المستضافة ذاتيًا.</string>
+    <string name="experimental_application_password_feature_description">تمكين كلمة مرور التطبيق لتسجيل الدخول إلى المواقع المستضافة ذاتيًا</string>
     <string name="experimental_application_password_feature">كلمات مرور التطبيقات</string>
-    <string name="experimental_subscribers_feature_description">عرض المشتركين في خدمة الرسائل الإخبارية وإدارتهم (العمل قيد التقدم)</string>
     <string name="experimental_subscribers_feature">المشتركون التجريبيون</string>
     <string name="cant_share_no_blog">لا تستطيع مشاركتها في ووردبريس دون مدونة</string>
     <string name="coming_soon">قريبًا!</string>
@@ -1692,7 +1720,6 @@ Language: ar
     <string name="reader_follow_comments_null_response">لم يتم تلقي أي ردّ</string>
     <string name="activity_log_activity_type_filter_clear">مسح</string>
     <string name="activity_log_activity_type_filter_apply">تطبيق</string>
-    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول إعادة إنشاء قصتك.</string>
     <string name="label_done_button">تمّ</string>
     <string name="hpp_choose_error">حدث خطأ في أثناء تحديد القالب.</string>
     <string name="hpp_retry_error">يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
@@ -1779,7 +1806,6 @@ Language: ar
     <string name="show_n_hidden_items_desc">⁦%1$s⁩ المزيد من العناصر</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">اختيار تخطيط</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">ملحوظة: قد يختلف تخطيط العمود بين القوالب وأحجام الشاشة</string>
-    <string name="create_post_story_fab_tooltip">إنشاء مقالة أو قصة</string>
     <string name="create_page_fab_tooltip">إنشاء صفحة</string>
     <string name="create_post_fab_tooltip">إنشاء مقالة</string>
     <string name="reader_discover_interests_header">قد ترغب في</string>
@@ -1797,10 +1823,8 @@ Language: ar
     <string name="mlp_create_blank_page">إنشاء صفحة فارغة</string>
     <string name="mlp_choose_layout_subtitle">ابدأ بالاختيار من بين مجموعة متنوعة من تخطيطات الصفحات المعدَّة سابقًا. أو ما عليك سوى البدء بصفحة فارغة.</string>
     <string name="mlp_choose_layout_title">اختيار تخطيط</string>
-    <string name="prepublishing_nudges_story_title_hint">امنح قصتك عنواناً</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">اضغط على إنشاء ⁦%1$s⁩. ⁦%2$s⁩ بعدها، حدِّد &lt;b&gt;مقالة&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">الاختيار من الجهاز</string>
-    <string name="my_site_bottom_sheet_add_story">مقالة قصة</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">يتطلب تحرير أيقونات الموقع على مواقع ووردبريس المستضافة ذاتيًا إضافة Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">يتعذر العثور على الانتقال السريع بين الصفحات ذات الصلة</string>
     <string name="error_media_quota_exceeded_toast">يتعذر رفع ملف.\nتم تجاوز المساحة المتوافرة للتخزين.</string>

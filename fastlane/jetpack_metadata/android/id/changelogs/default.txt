@@ -1,0 +1,5 @@
+26.1:
+- Layar Pelanggan baru menampilkan semua pelanggan email dan Pembaca, jadi Anda bisa tahu siapa saja yang mengikuti dan membaca konten Anda.
+- Media sekarang ditampilkan dengan baik pada situs pribadi dalam editor eksperimental.
+- Peningkatan unggahan media dengan autentikasi dan performa yang lebih baik.
+- Perbaikan berbagai masalah unggahan dan peningkatan penanganan media secara keseluruhan.

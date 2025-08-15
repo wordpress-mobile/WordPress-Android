@@ -1,2 +1,5 @@
-26.0:
-Adicionamos a autenticação por senhas de aplicativo. Ainda está em fase de testes, mas quando estiver totalmente integrada, poderemos melhorar as funcionalidades existentes e incluir novas. Aproveite!
+26.1:
+- Na tela Novos assinantes, você vê todos os seus assinantes por e-mail e no Leitor para saber quem está acompanhando seu conteúdo.
+- Agora, a mídia é exibida corretamente em sites privados no editor experimental.
+- Uploads de mídia agora contam com autenticação reforçada e desempenho otimizado.
+- Vários bugs de upload foram corrigidos, e o gerenciamento de mídia em geral foi aprimorado.

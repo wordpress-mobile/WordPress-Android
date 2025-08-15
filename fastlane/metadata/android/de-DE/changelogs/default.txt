@@ -1,0 +1,4 @@
+26.1:
+- Medien werden jetzt auf privaten Websites im experimentellen Editor richtig angezeigt.
+- Medien-Uploads weisen jetzt eine bessere Authentifizierung und Performance auf.
+- Verschiedene Upload-Fehler wurden behoben und die allgemeine Handhabung von Medien wurde verbessert.

@@ -1,0 +1,4 @@
+26.1:
+- Media sekarang ditampilkan dengan baik pada situs pribadi dalam editor eksperimental.
+- Peningkatan unggahan media dengan autentikasi dan performa yang lebih baik.
+- Perbaikan berbagai masalah unggahan dan peningkatan penanganan media secara keseluruhan.

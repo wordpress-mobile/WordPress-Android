@@ -82,7 +82,6 @@ Language: hr
     <string name="error_media_xmlrpc_not_allowed">Vaša radnja nije dopuštena</string>
     <string name="show_n_hidden_items_desc">Još %1$s stavki</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Odaberite raspored</string>
-    <string name="create_post_story_fab_tooltip">Napravite članak ili priču</string>
     <string name="create_page_fab_tooltip">Stvorite stranicu</string>
     <string name="create_post_fab_tooltip">Napravite članak</string>
     <string name="reader_discover_interests_header">Možda ti se sviđa</string>

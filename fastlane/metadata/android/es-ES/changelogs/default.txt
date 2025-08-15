@@ -1,2 +1,4 @@
-26.0:
-Hemos añadido la identificación mediante contraseñas de aplicación. Todavía es experimental, pero una vez esté totalmente integrada podemos mejorar las características actuales e introducir nuevas. Dale caña.
+26.1:
+- Los medios ahora se muestran correctamente en los sitios privados en el editor experimental.
+- Subidas de medios mejoradas, con mejor identificación y mejor rendimiento.
+- Corregidos varios fallos en las subidas y mejora general de la gestión de medios.

@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-05 08:15:55+0000
+Translation-Revision-Date: 2025-08-14 14:30:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">Dezactivarea parolelor pentru aplicații va înlătura informațiile despre autentificare din site-urile %1$s.</string>
+    <string name="application_password_last_used_sort">Ultima utilizare</string>
+    <string name="application_password_created_sort">Creată</string>
+    <string name="application_password_name_sort">Nume</string>
+    <string name="application_password_no_ip">Nu este înregistrat niciun IP</string>
+    <string name="application_password_last_ip_label">Ultimul IP:</string>
+    <string name="application_password_last_used_label">Ultima utilizare:</string>
+    <string name="application_password_created_label">Creată:</string>
+    <string name="application_password_name_label">Nume:</string>
+    <string name="application_password_never_used">Niciodată folosită</string>
+    <string name="enable">Activează</string>
+    <string name="application_password_info_description_4">Te rog să reții că revocarea parolelor pentru aplicații utilizate de aplicație va întrerupe accesul aplicației la site-ul tău. Fii precaut când revoci parolele pentru aplicații create de aplicație.</string>
+    <string name="application_password_info_description_3">Poți să vezi și să administrezi aceste parole în profilul tău de utilizator din panoul de administrare WordPress.</string>
+    <string name="application_password_info_description_2">Când adaugi site-uri în aplicație, parolele pentru aplicații vor fi create automat, în funcție de nevoie.</string>
+    <string name="application_password_info_description_1">Parolele pentru aplicații sunt o modalitate sigură prin care aplicațiile pot să îți acceseze site-ul fără să folosească parola contului.</string>
+    <string name="application_password_info_title">Parole pentru aplicații</string>
+    <string name="application_password_disable_feature_description">Dezactivarea parolelor pentru aplicații va înlătura autentificarea pentru %1$s pentru site-urile tale. S-ar putea să fie nevoie să adaugi din nou autentificarea pentru site-urile afectate.</string>
+    <string name="application_password_invalid_description">Parola pentru aplicație nu mai există. Te rog să te autentifici din nou pentru a crea o parolă nouă pentru aplicație </string>
+    <string name="subscribers_delete_failed">Ștergerea abonatului a eșuat</string>
+    <string name="subscribers_delete_success_message">Abonatul a fost șters, dar s-ar putea să dureze un minut până când ștergerea va avea efect</string>
+    <string name="subscribers_delete_success_title">Am șters abonatul</string>
+    <string name="subscribers_delete_confirmation_message">Sigur vrei să ștergi acest abonat?</string>
+    <string name="subscribers_delete_confirmation_title">Șterge abonatul</string>
+    <string name="subscribers_sort_name">Nume</string>
+    <string name="jetpack_rest_connection_error_wpcom">Nu mă pot conecta la WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">A expirat</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack este deja instalat</string>
+    <string name="jetpack_rest_connection_cancel_message">Procesul de conectare la Jetpack este în desfășurare. Sigur vrei să anulezi?</string>
+    <string name="jetpack_rest_connection_cancel_title">Anulezi inițializarea Jetpack?</string>
+    <string name="jetpack_rest_connection_status_failed">Eșuată</string>
+    <string name="jetpack_rest_connection_status_completed">Finalizată</string>
+    <string name="jetpack_rest_connection_status_in_progress">În desfășurare…</string>
+    <string name="jetpack_rest_connection_status_not_started">Nu a început</string>
+    <string name="jetpack_rest_connection_step_finalize">Finalizează inițializarea</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Conectează la WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Conectează-ți site-ul</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Instalează modulul Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Autentifică-te în WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">Configurare Jetpack (simulată)</string>
+    <string name="jetpack_rest_connection_title">Conexiune la Jetpack</string>
+    <string name="experimental_jetpack_rest_connection_description">Activează fluxul pentru conexiunea experimentală Jetpack REST</string>
+    <string name="experimental_jetpack_rest_connection">Conexiune experimentală Jetpack REST</string>
+    <string name="experimental_subscribers_feature_description">Vezi și administrezi abonații la buletine de știri</string>
+    <string name="start">Începe</string>
+    <string name="descending">Descrescător</string>
+    <string name="ascending">Crescător</string>
     <string name="application_password_disable_feature_title">Dezactivezi parolele pentru aplicații?</string>
     <string name="application_password_invalid">Parola pentru aplicația nu este validă</string>
     <string name="application_password_credentials_storing_error">A fost o eroare la stocarea datelor de conectare pentru parola aplicației pentru %1$s</string>
@@ -42,10 +86,7 @@ Language: ro
     <string name="subscribers_error_title">Ceva nu a mers bine</string>
     <string name="subscribers_empty_search">Nu am găsit niciun rezultat</string>
     <string name="subscribers_empty">Nu există abonați</string>
-    <string name="subscribers_sort_plan">Plan</string>
-    <string name="subscribers_sort_display_name">Nume de afișat</string>
     <string name="subscribers_sort_date">Data abonării</string>
-    <string name="subscribers_sort_email">Adresă email</string>
     <string name="subscribers_filter_reader_subscription">Abonament Cititor</string>
     <string name="subscribers_filter_email_subscription">Abonare prin email</string>
     <string name="about_update_email_unverified">Pentru a-ți actualiza profilul, mai întâi trebuie să-ți confirmi adresa de email.</string>
@@ -57,9 +98,8 @@ Language: ro
     <string name="qrcode_auth_flow_timeout_subtitle">A durat prea mult până la detectarea unui cod. Te rog să încerci din nou sau folosește camera pentru a scana codul.</string>
     <string name="qrcode_auth_flow_timeout_title">Scanarea a expirat</string>
     <string name="invite_users">Invită utilizatori</string>
-    <string name="experimental_application_password_feature_description">Activează parola aplicației pentru a te autentifica pe site-urile auto-găzduite.</string>
+    <string name="experimental_application_password_feature_description">Activează parola aplicației pentru a te autentifica pe site-urile auto-găzduite</string>
     <string name="experimental_application_password_feature">Autentificare cu parola aplicației</string>
-    <string name="experimental_subscribers_feature_description">Vizualizezi și administrezi abonații la buletine de știri (în desfășurare)</string>
     <string name="experimental_subscribers_feature">Abonați experimentali</string>
     <string name="cant_share_no_blog">Nu poți să partajezi pe WordPress fără un blog</string>
     <string name="coming_soon">În curând!</string>
@@ -1696,7 +1736,6 @@ Language: ro
     <string name="reader_follow_comments_null_response">Nu am primit niciun răspuns</string>
     <string name="activity_log_activity_type_filter_clear">Șterge</string>
     <string name="activity_log_activity_type_filter_apply">Aplică</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Elementul media a fost înlăturat. Încearcă să-ți recreezi narațiunea.</string>
     <string name="label_done_button">Gata</string>
     <string name="hpp_choose_error">A fost o eroare în timpul selectării temei.</string>
     <string name="hpp_retry_error">Te rog verifică-ți conexiunea la internet și încearcă din nou.</string>
@@ -1783,7 +1822,6 @@ Language: ro
     <string name="show_n_hidden_items_desc">și încă %1$s elemente</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Setează un aranjament</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Notă: aranjamentul pe coloane poate să varieze în funcție de temă și dimensiunile ecranelor</string>
-    <string name="create_post_story_fab_tooltip">Creează un articol sau o narațiune</string>
     <string name="create_page_fab_tooltip">Creează o pagină</string>
     <string name="create_post_fab_tooltip">Creează un articol</string>
     <string name="reader_discover_interests_header">S-ar putea să-ți placă</string>
@@ -1801,10 +1839,8 @@ Language: ro
     <string name="mlp_create_blank_page">Creează o pagină goală</string>
     <string name="mlp_choose_layout_subtitle">Începe și alege dintr-o mare varietate de aranjamente gata pregătite. Sau începe cu o pagină goală.</string>
     <string name="mlp_choose_layout_title">Alege un aranjament</string>
-    <string name="prepublishing_nudges_story_title_hint">Dă-i un titlu narațiunii tale</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Atinge Creează %1$s. %2$s Apoi selectează &lt;b&gt;Articol blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Alege de pe dispozitiv</string>
-    <string name="my_site_bottom_sheet_add_story">Articol narațiune</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Editarea iconurilor de site pe site-urile WordPress auto-găzduite necesită modulul Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Nu am putut găsi trecerea la pagina legată</string>
     <string name="error_media_quota_exceeded_toast">Nu pot încărca fișierul.\nA fost depășit spațiul de stocare.</string>
@@ -2337,7 +2373,7 @@ Language: ro
     <string name="domain_privacy_option_off_title">Înregistrează-l public</string>
     <string name="domain_privacy_option_on_title">Înregistrează-l privat cu protecție de confidențialitate</string>
     <string name="domain_registration_privacy_protection_description">Proprietarii de domenii trebuie să partajeze informațiile de contact într-o bază de date publică a tuturor domeniilor.\n        Cu protecția de confidențialitate, publicăm propriile informații în loc de ale tale și îți trimitem privat toate comunicările.</string>
-    <string name="domain_registration_privacy_protection_title">Protecție de confidențialitate</string>
+    <string name="domain_registration_privacy_protection_title">Protecție pentru confidențialitate</string>
     <string name="domain_registration_contact_form_input_error">Te rog introdu un %s valid</string>
     <string name="stats_management_new">Nou</string>
     <string name="stats_management_dismiss_insights_news_card">Refuză</string>
@@ -3133,7 +3169,7 @@ Language: ro
     <string name="now">Acum</string>
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
     <string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>
-    <string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlu articolului.</string>
+    <string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlul articolului.</string>
     <string name="post_settings_post_format">Format articol</string>
     <string name="post_settings_tags">Etichete</string>
     <string name="post_settings_slug">Descriptor</string>
