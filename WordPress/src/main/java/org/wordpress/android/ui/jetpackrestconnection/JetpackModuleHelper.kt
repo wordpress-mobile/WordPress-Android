@@ -10,31 +10,23 @@ class JetpackModuleHelper @Inject constructor(
     private val jetpackStore: JetpackStore,
     private val siteStore: SiteStore
 ) {
-    suspend fun activateStatsModule(site: SiteModel): Result<Unit> =
-        activateModule(site, Module.STATS)
-
-    private suspend fun activateModule(site: SiteModel, module: Module): Result<Unit> {
-        if (isModuleActivated(site, module)) {
+    suspend fun activateStatsModule(site: SiteModel): Result<Unit> {
+        if (isStatsModuleActivated(site)) {
             return Result.success(Unit)
         }
 
-        when (module) {
-            Module.STATS -> {
-                jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
-            }
-        }
+        jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
 
         // ignore the activation response as it's unreliable, instead just check if it's activated now
-        return verifyModuleActivation(site, module)
+        return verifyStatsModuleActivation(site)
     }
 
     /**
      * Fetch Jetpack sites filtering for this site and check if the module is now activated. Note that fetching
      * the single site fails because of changes to it during the connection flow.
      */
-    private suspend fun verifyModuleActivation(
+    private suspend fun verifyStatsModuleActivation(
         site: SiteModel,
-        module: Module
     ): Result<Unit> {
         val payload = SiteStore.FetchSitesPayload(
             filters = listOf(SiteStore.SiteFilter.JETPACK)
@@ -42,18 +34,18 @@ class JetpackModuleHelper @Inject constructor(
         return siteStore.fetchSites(payload).updatedSites.firstOrNull {
             it.siteId == site.siteId
         }?.let { updatedSite ->
-            if (isModuleActivated(updatedSite, module)) {
+            if (isStatsModuleActivated(updatedSite)) {
                 Result.success(Unit)
             } else {
-                Result.failure(Exception("${module.moduleName} module not activated"))
+                Result.failure(Exception("Stats module not activated"))
             }
         } ?: Result.failure(Exception("Site not found"))
     }
 
-    private fun isModuleActivated(site: SiteModel, module: Module) =
-        site.isActiveModuleEnabled(module.moduleName)
+    private fun isStatsModuleActivated(site: SiteModel) =
+        site.isActiveModuleEnabled(STATS_MODULE_NAME)
 
-    private enum class Module(val moduleName: String) {
-        STATS("stats"),
+    companion object {
+        private const val STATS_MODULE_NAME = "stats"
     }
 }

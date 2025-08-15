@@ -50,6 +50,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
 
+    /**
+     * This will be used for analytics tracking
+     */
     fun setConnectionSource(source: ConnectionSource) {
         connectionSource = source
         appLogWrapper.d(AppLog.T.API, "$TAG: Connection source set to: $source")
@@ -425,28 +428,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Step 5: Finalize the connection by activating the relevant module for the site
+     * Step 5: Finalize the connection by activating the stats module for the site
      */
     private suspend fun finalize() {
-        when (connectionSource) {
-            ConnectionSource.STATS -> {
-                val result = jetpackModuleHelper.activateStatsModule(site)
-                if (result.isSuccess) {
-                    updateStepStatus(
-                        step = ConnectionStep.Finalize,
-                        status = ConnectionStatus.Completed
-                    )
-                } else {
-                    updateStepStatus(
-                        step = ConnectionStep.Finalize,
-                        status = ConnectionStatus.Failed,
-                        error = ErrorType.ActivateStatsFailed
-                    )
-                }
-            }
-            ConnectionSource.NOTIFS -> {
-                // TODO
-            }
+        val result = jetpackModuleHelper.activateStatsModule(site)
+        if (result.isSuccess) {
+            updateStepStatus(
+                step = ConnectionStep.Finalize,
+                status = ConnectionStatus.Completed
+            )
+        } else {
+            updateStepStatus(
+                step = ConnectionStep.Finalize,
+                status = ConnectionStatus.Failed,
+                error = ErrorType.ActivateStatsFailed
+            )
         }
     }
 
