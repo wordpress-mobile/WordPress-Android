@@ -22,9 +22,6 @@ class JetpackModuleHelper @Inject constructor(
             Module.STATS -> {
                 jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
             }
-            Module.PREFS -> {
-                jetpackStore.activateStatsModule(ActivateStatsModulePayload(site))
-            }
         }
 
         // Ignore the above response as it's unreliable, instead just fetch Jetpack sites filtering for this site
@@ -66,6 +63,5 @@ class JetpackModuleHelper @Inject constructor(
 
     private enum class Module(val moduleName: String) {
         STATS("stats"),
-        PREFS("prefs") // TODO remove after simplification
     }
 }
