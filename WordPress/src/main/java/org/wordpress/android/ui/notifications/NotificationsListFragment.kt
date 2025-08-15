@@ -293,7 +293,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 JetpackRestConnectionViewModel.ConnectionSource.NOTIFS
             )
             return true
-            return true
         }
         return false
     }
