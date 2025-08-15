@@ -408,7 +408,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             accessToken = accountStore.accessToken!!
         )
         result.fold(
-            onSuccess = {
+            onSuccess = { wpComUserId ->
                 updateStepStatus(
                     step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Completed

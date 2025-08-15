@@ -24,8 +24,9 @@ class JetpackModuleHelper @Inject constructor(
             }
         }
 
-        // Ignore the above response, just fetch Jetpack sites filtering for this site and check if the module is now
-        // activated. Note that fetching the single site fails because of changes to it during the connection flow.
+        // Ignore the above response as it's unreliable, instead just fetch Jetpack sites filtering for this site
+        // and check if the module is now activated. Note that fetching the single site fails because of changes
+        // to it during the connection flow.
         val payload = SiteStore.FetchSitesPayload(
             filters = listOf(SiteStore.SiteFilter.JETPACK)
         )
