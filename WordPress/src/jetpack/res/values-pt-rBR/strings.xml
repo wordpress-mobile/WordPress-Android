@@ -12,8 +12,10 @@ Language: pt_BR
     <string name="login_prologue_revamped_jetpack_feature_text_15">Escreva de onde estiver</string>
     <string name="missing_splits_dialog_message">Estão faltando componentes obrigatórios no app Jetpack. É necessário fazer a reinstalação pela Google Play Store.</string>
     <string name="me_btn_share">Compartilhe o Jetpack com amigos</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Publique uma foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Publicar uma foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Corrigir um problema de segurança</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Compartilhe nas redes sociais</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Pesquisar plugins</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Restaurar um backup</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Responder a comentários</string>
@@ -23,15 +25,13 @@ Language: pt_BR
     <string name="login_prologue_revamped_jetpack_feature_text_2">Criar um site</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Atualizar um plugin</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Logotipo do Jetpack</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_14">Publique uma foto</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Compartilhe nas redes sociais</string>
     <string name="me_btn_about">Sobre o Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Fazer logout do Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">Fazer logout do Jetpack</string>
     <string name="support_ticket_subject">Suporte ao Jetpack para Android</string>
     <string name="login_magic_links_sent_label">Verifique seu e-mail neste dispositivo e toque no link que você recebeu por e-mail do Jetpack.com.</string>
+    <string name="continue_with_wpcom_no_signup">Continuar com o WordPress.com</string>
     <string name="app_tagline">Segurança e desempenho do site no seu bolso</string>
     <string name="post_signup_interstitial_title">Desejamos boas-vindas ao Jetpack</string>
     <string name="app_title">Jetpack para Android</string>
-    <string name="continue_with_wpcom_no_signup">Continuar com o WordPress.com</string>
 </resources>
