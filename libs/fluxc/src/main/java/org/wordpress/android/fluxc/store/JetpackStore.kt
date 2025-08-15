@@ -155,7 +155,7 @@ class JetpackStore
         if (payload.success) {
             reloadSite(requestPayload.site)
             val reloadedSite = siteStore.getSiteByLocalId(requestPayload.site.id)
-            val isStatsModuleActive = reloadedSite?.activeModules?.contains("stats") ?: false
+            val isStatsModuleActive = reloadedSite?.isActiveModuleEnabled("stats") ?: false
             return emitActivateStatsModuleResult(payload, isStatsModuleActive)
         }
         return emitActivateStatsModuleResult(payload, false)
