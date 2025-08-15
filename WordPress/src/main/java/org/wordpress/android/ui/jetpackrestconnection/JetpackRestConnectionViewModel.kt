@@ -444,6 +444,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
                     )
                 }
             }
+            ConnectionSource.NOTIFS -> {
+                // TODO
+            }
         }
     }
 
@@ -495,7 +498,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     )
 
     enum class ConnectionSource {
-        STATS
+        STATS,
+        NOTIFS
     }
 
     companion object {
