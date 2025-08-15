@@ -28,10 +28,9 @@ class JetpackModuleHelper @Inject constructor(
         val payload = SiteStore.FetchSitesPayload(
             filters = listOf(SiteStore.SiteFilter.JETPACK)
         )
-        val updatedSite = siteStore.fetchSites(payload).updatedSites.firstOrNull {
+        return siteStore.fetchSites(payload).updatedSites.firstOrNull {
             it.siteId == site.siteId
-        }
-        return updatedSite?.let { updatedSite ->
+        }?.let { updatedSite ->
             if (isModuleActivated(updatedSite, module)) {
                 Result.success(Unit)
             } else {
