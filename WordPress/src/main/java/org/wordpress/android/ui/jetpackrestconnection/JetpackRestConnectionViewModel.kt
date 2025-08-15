@@ -25,7 +25,7 @@ import javax.inject.Named
 class JetpackRestConnectionViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
@@ -48,7 +48,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var isWaitingForWPComLogin = false
 
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
-    private var connectedSiteId: Long = 0L
+    private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
 
     fun setConnectionSource(source: ConnectionSource) {
         connectionSource = source
@@ -334,7 +334,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 2: Installs Jetpack to the current site if not already installed
      */
     private suspend fun installJetpack() {
-        val result = jetpackInstaller.installJetpack(getSite())
+        val result = jetpackInstaller.installJetpack(site)
 
         result.fold(
             onSuccess = { status ->
@@ -370,10 +370,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 3: Connects the current site to Jetpack
      */
     private suspend fun connectSite() {
-        val result = jetpackConnector.connectSite(getSite())
+        val result = jetpackConnector.connectSite(site)
         result.fold(
-            onSuccess = {
-                connectedSiteId = it.toLong()
+            onSuccess = { wpComSiteId ->
+                // the local site won't have a siteId since it's self-hosted and previously unconnected to Jetpack,
+                // so assign it the siteId retrieved when connecting the site
+                site.siteId = wpComSiteId.toLong()
                 updateStepStatus(
                     step = ConnectionStep.ConnectSite,
                     status = ConnectionStatus.Completed
@@ -402,7 +404,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             return
         }
         val result = jetpackConnector.connectUser(
-            site = getSite(),
+            site = site,
             accessToken = accountStore.accessToken!!
         )
         result.fold(
@@ -426,15 +428,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 5: Finalize the connection by activating the relevant module for the site
      */
     private suspend fun finalize() {
-        // the local site won't have a siteId since it's self-hosted and previously unconnected to Jetpack,
-        // so give it the connected siteId retrieved during the connectSite step
-        val connectedSite = getSite().also {
-            it.siteId = connectedSiteId
-        }
-
         when (connectionSource) {
             ConnectionSource.STATS -> {
-                val result = jetpackModuleHelper.activateStatsModule(connectedSite)
+                val result = jetpackModuleHelper.activateStatsModule(site)
                 if (result.isSuccess) {
                     updateStepStatus(
                         step = ConnectionStep.Finalize,
@@ -450,12 +446,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
             }
         }
     }
-
-    /**
-     * Gets the current site from the store
-     */
-    private fun getSite() =
-        selectedSiteRepository.getSelectedSite() ?: error("No site is currently selected in SelectedSiteRepository")
 
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
