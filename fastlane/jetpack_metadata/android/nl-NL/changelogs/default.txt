@@ -1,0 +1,5 @@
+26.1:
+- Het nieuwe scherm Abonnees toont al je e-mail- en Reader-abonnees. Nu weet je wie je content leest.
+- Media worden nu correct weergegeven op privésites in de experimentele editor.
+- Verbeterde media-uploads met betere authenticatie en verbeterde prestaties.
+- Diverse uploadbugs zijn opgelost en de algehele mediaverwerking is verbeterd.
