@@ -117,10 +117,8 @@ class JetpackStoreTest {
     fun `given activate stats request, then rest client is triggered`() = test {
         val requestPayload = ActivateStatsModulePayload(site)
         val successPayload = ActivateStatsModuleResultPayload(true, site)
-        val enabled = "stats,other"
-
         whenever(jetpackRestClient.activateStatsModule(eq(requestPayload))).thenReturn(successPayload)
-        whenever(site.activeModules).thenReturn(enabled)
+        whenever(site.isActiveModuleEnabled("stats")).thenReturn(true)
 
         val action = JetpackActionBuilder.newActivateStatsModuleAction(requestPayload)
         jetpackStore.onAction(action)
@@ -131,9 +129,8 @@ class JetpackStoreTest {
     fun `given activate stats request, when rest client is triggered successfully, then success is returned`() = test {
         val requestPayload = ActivateStatsModulePayload(site)
         val successPayload = ActivateStatsModuleResultPayload(true, site)
-        val enabled = "stats,other"
         whenever(jetpackRestClient.activateStatsModule(eq(requestPayload))).thenReturn(successPayload)
-        whenever(site.activeModules).thenReturn(enabled)
+        whenever(site.isActiveModuleEnabled("stats")).thenReturn(true)
 
         val action = JetpackActionBuilder.newActivateStatsModuleAction(requestPayload)
         jetpackStore.onAction(action)

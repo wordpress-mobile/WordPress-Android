@@ -1496,7 +1496,7 @@ open class SiteStore @Inject constructor(
     }
 
     @Suppress("ForbiddenComment", "SwallowedException")
-    fun updateSite(siteModel: SiteModel): OnSiteChanged {
+    private fun updateSite(siteModel: SiteModel): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
