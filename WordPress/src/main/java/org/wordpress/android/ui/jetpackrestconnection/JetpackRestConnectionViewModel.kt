@@ -29,7 +29,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
-    private val jetpackModuleHelper: JetpackModuleHelper,
+    private val jetpackModuleHelper: JetpackStatsModuleHelper,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)

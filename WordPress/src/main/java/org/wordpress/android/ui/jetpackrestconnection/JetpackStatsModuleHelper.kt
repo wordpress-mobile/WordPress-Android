@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModulePayload
 import org.wordpress.android.fluxc.store.SiteStore
 import javax.inject.Inject
 
-class JetpackModuleHelper @Inject constructor(
+class JetpackStatsModuleHelper @Inject constructor(
     private val jetpackStore: JetpackStore,
     private val siteStore: SiteStore
 ) {
