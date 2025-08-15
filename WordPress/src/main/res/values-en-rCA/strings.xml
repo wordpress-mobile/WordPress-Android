@@ -1437,7 +1437,6 @@ Language: en_CA
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="label_done_button">Done</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
@@ -1526,7 +1525,6 @@ Language: en_CA
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="create_page_fab_tooltip">Create a page</string>
     <string name="create_post_fab_tooltip">Create a post</string>
-    <string name="create_post_story_fab_tooltip">Create a post or story</string>
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
@@ -1540,14 +1538,12 @@ Language: en_CA
     <string name="mlp_preview_page">Preview</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_create_blank_page">Create blank page</string>
-    <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
     <string name="mlp_choose_layout_title">Choose a layout</string>
     <string name="photo_picker_choose_file">Choose from device</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Editing site icons on self-hosted WordPress sites requires the Jetpack plugin.</string>
     <string name="reader_toast_err_page_jump_not_found">Unable to find the linked page jump</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
-    <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="pick_file">Add file</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>

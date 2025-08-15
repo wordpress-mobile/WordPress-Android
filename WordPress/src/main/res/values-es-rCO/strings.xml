@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-11 05:23:56+0000
+Translation-Revision-Date: 2025-08-09 04:19:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es_CO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">Desactivar la contraseña de aplicación eliminará tu información de acceso de los sitios %1$s.</string>
+    <string name="application_password_last_used_sort">Última utilizada</string>
+    <string name="application_password_created_sort">Creado</string>
+    <string name="application_password_name_sort">Nombre</string>
+    <string name="application_password_no_ip">No se registró ninguna IP</string>
+    <string name="application_password_last_ip_label">Última IP:</string>
+    <string name="application_password_last_used_label">Última utilizada:</string>
+    <string name="application_password_created_label">Creado:</string>
+    <string name="application_password_name_label">Nombre:</string>
+    <string name="application_password_never_used">Nunca usada</string>
+    <string name="enable">Activar</string>
+    <string name="application_password_info_description_4">Ten en cuenta que revocar las contraseñas utilizadas por la aplicación cancelará el acceso de esta a tu sitio. Ten cuidado al revocar las contraseñas creadas por la aplicación.</string>
+    <string name="application_password_info_description_3">Puedes ver y administrar estas contraseñas en tu perfil de usuario dentro del panel de Administrador de tu sitio de WordPress.</string>
+    <string name="application_password_info_description_2">Cuando agregas sitios a la aplicación, las contraseñas de la aplicación se crearán automáticamente según sea necesario.</string>
+    <string name="application_password_info_description_1">Las contraseñas de aplicaciones son una forma segura para que las aplicaciones accedan a tu sitio sin usar la contraseña de tu cuenta.</string>
+    <string name="application_password_info_title">Contraseñas de aplicación</string>
+    <string name="application_password_disable_feature_description">Deshabilitar la contraseña de la aplicación eliminará el inicio de sesión de %1$s de tus sitios. Es posible que debas volver a agregar los sitios afectados para iniciar sesión.</string>
+    <string name="application_password_invalid_description">Tu contraseña de la aplicación ya no existe. Inicia sesión de nuevo para crear una nueva </string>
+    <string name="subscribers_delete_failed">No se pudo eliminar el suscriptor</string>
+    <string name="subscribers_delete_success_message">El suscriptor ha sido eliminado, pero puede que la eliminación tarde un minuto en surtir efecto.</string>
+    <string name="subscribers_delete_success_title">Suscriptor eliminado</string>
+    <string name="subscribers_delete_confirmation_message">¿Estás seguro de que deseas eliminar este suscriptor?</string>
+    <string name="subscribers_delete_confirmation_title">Borrar suscriptor</string>
+    <string name="subscribers_sort_name">Nombre</string>
+    <string name="jetpack_rest_connection_error_wpcom">No ha sido posible conectar a WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">Tiempo superado</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack ya está instalado</string>
+    <string name="jetpack_rest_connection_cancel_message">El proceso de conexión de Jetpack está en curso. ¿Seguro que quieres cancelar?</string>
+    <string name="jetpack_rest_connection_cancel_title">¿Cancelar la configuración de Jetpack?</string>
+    <string name="jetpack_rest_connection_status_failed">Fallida</string>
+    <string name="jetpack_rest_connection_status_completed">Completadas</string>
+    <string name="jetpack_rest_connection_status_in_progress">En progreso…</string>
+    <string name="jetpack_rest_connection_status_not_started">Sin iniciar</string>
+    <string name="jetpack_rest_connection_step_finalize">Finalizar la configuración</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Conecta a WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Conectar tu sitio</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Instalar el plugin de Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Acceder a WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">Configuración de Jetpack (simulado)</string>
+    <string name="jetpack_rest_connection_title">Conexión Jetpack</string>
+    <string name="experimental_jetpack_rest_connection_description">Habilitar el flujo de conexión REST experimental de Jetpack</string>
+    <string name="experimental_jetpack_rest_connection">Conexión REST experimental de Jetpack</string>
+    <string name="experimental_subscribers_feature_description">Ver y administrar los suscriptores del boletín informativo</string>
+    <string name="start">Empezar</string>
+    <string name="descending">Descendente</string>
+    <string name="ascending">Ascendente</string>
     <string name="application_password_disable_feature_title">¿Desactivar contraseña de aplicación?</string>
     <string name="application_password_invalid">Contraseña de aplicación no válida</string>
     <string name="application_password_credentials_storing_error">Ha ocurrido un error al almacenar las credenciales de aplicación para %1$s</string>
@@ -42,10 +86,7 @@ Language: es_CO
     <string name="subscribers_error_title">Algo ha salido mal</string>
     <string name="subscribers_empty_search">No se han encontraron productos</string>
     <string name="subscribers_empty">No hay suscriptores</string>
-    <string name="subscribers_sort_plan">Plan</string>
-    <string name="subscribers_sort_display_name">Nombre para mostrar</string>
     <string name="subscribers_sort_date">Fecha de suscripción</string>
-    <string name="subscribers_sort_email">Dirección de correo electrónico</string>
     <string name="subscribers_filter_reader_subscription">Suscripciones del lector</string>
     <string name="subscribers_filter_email_subscription">Suscripción por correo electrónico</string>
     <string name="about_update_email_unverified">Para actualizar tu perfil primero tienes que verificar tu dirección de correo electrónico.</string>
@@ -57,9 +98,8 @@ Language: es_CO
     <string name="qrcode_auth_flow_timeout_subtitle">Se h tardado demasiado en detectar un código. Inténtalo de nuevo o usa tu aplicación de cámara para explorar el código.</string>
     <string name="qrcode_auth_flow_timeout_title">Tiempo de exploración agotado</string>
     <string name="invite_users">Invitar usuarios</string>
-    <string name="experimental_application_password_feature_description">Activa las contraseñas de aplicación para el acceso al sitios auto-alojados.</string>
+    <string name="experimental_application_password_feature_description">Habilitar la contraseña de la aplicación para iniciar sesión en sitios auto-alojados</string>
     <string name="experimental_application_password_feature">Acceso con contraseña de aplicación</string>
-    <string name="experimental_subscribers_feature_description">Ver y gestionar los suscritores del boletín (funcionando)</string>
     <string name="experimental_subscribers_feature">Suscriptores experimentales</string>
     <string name="cant_share_no_blog">No puedes compartir WordPress sin un blog</string>
     <string name="coming_soon">¡Próximamente!</string>
@@ -1696,7 +1736,6 @@ Language: es_CO
     <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
     <string name="activity_log_activity_type_filter_clear">Vaciar</string>
     <string name="activity_log_activity_type_filter_apply">Aplicar</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta volver a crear tu historia.</string>
     <string name="label_done_button">Hecho</string>
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
@@ -1783,7 +1822,6 @@ Language: es_CO
     <string name="show_n_hidden_items_desc">%1$s elementos más</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Seleccionar un diseño</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Nota: el diseño de la columna puede variar entre temas y tamaños de pantalla</string>
-    <string name="create_post_story_fab_tooltip">Crear una entrada o historia</string>
     <string name="create_page_fab_tooltip">Crear una página</string>
     <string name="create_post_fab_tooltip">Crear una entrada</string>
     <string name="reader_discover_interests_header">Puede que te guste</string>
@@ -1801,10 +1839,8 @@ Language: es_CO
     <string name="mlp_create_blank_page">Crear una página en blanco</string>
     <string name="mlp_choose_layout_subtitle">Empieza eligiendo entre una amplia variedad de diseños de página prefabricados. O simplemente empieza con una página en blanco.</string>
     <string name="mlp_choose_layout_title">Elegir un diseño</string>
-    <string name="prepublishing_nudges_story_title_hint">Pon un título a tu historia</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Toca crear %1$s. %2$s Después selecciona &lt;b&gt;Entrada del blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Elegir el dispositivo</string>
-    <string name="my_site_bottom_sheet_add_story">Entrada de la historia</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Para la edición de los iconos del sitio en sitios WordPress autoalojados se necesita el plugin Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">No se ha podido encontrar el salto de página enlazado</string>
     <string name="error_media_quota_exceeded_toast">No se puede subir el archivo.\nSe ha superado la cuota de almacenamiento.</string>

@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-08 10:54:08+0000
+Translation-Revision-Date: 2025-08-14 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">애플리케이션 비밀번호를 비활성화하면 %1$s 사이트에서 로그인 정보가 제거됩니다.</string>
+    <string name="application_password_last_used_sort">최근 사용</string>
+    <string name="application_password_created_sort">생성</string>
+    <string name="application_password_name_sort">이름</string>
+    <string name="application_password_no_ip">기록된 IP 없음</string>
+    <string name="application_password_last_ip_label">마지막 IP:</string>
+    <string name="application_password_last_used_label">최근 사용됨:</string>
+    <string name="application_password_created_label">생성됨:</string>
+    <string name="application_password_name_label">이름:</string>
+    <string name="application_password_never_used">사용 안 함</string>
+    <string name="enable">활성화</string>
+    <string name="application_password_info_description_4">앱에서 사용하는 애플리케이션 비밀번호를 해지하면 앱의 사이트 접근 권한이 종료됩니다. 앱에서 생성한 애플리케이션 비밀번호를 해지할 때 주의하세요.</string>
+    <string name="application_password_info_description_3">워드프레스 사이트의 관리자 패널 내 사용자 프로필에서 이러한 비밀번호를 확인 및 관리할 수 있습니다.</string>
+    <string name="application_password_info_description_2">앱에 사이트를 추가하면 애플리케이션 비밀번호가 필요에 맞게 자동으로 생성됩니다.</string>
+    <string name="application_password_info_description_1">애플리케이션 비밀번호는 앱이 계정 비밀번호 없이도 사이트에 접근하는 안전한 방법입니다.</string>
+    <string name="application_password_info_title">애플리케이션 비밀번호</string>
+    <string name="application_password_disable_feature_description">애플리케이션 비밀번호를 비활성화하면 %1$s 사이트에서 로그인 정보가 제거됩니다. 영향받은 사이트를 다시 추가하여 다시 로그인해야 할 수도 있습니다.</string>
+    <string name="application_password_invalid_description">애플리케이션 비밀번호가 더 이상 존재하지 않습니다. 다시 로그인하여 새 애플리케이션 비밀번호를 생성하세요. </string>
+    <string name="subscribers_delete_failed">구독자 삭제 실패</string>
+    <string name="subscribers_delete_success_message">구독자가 삭제되었지만, 삭제가 적용되기까지 1분 정도 걸릴 수 있습니다.</string>
+    <string name="subscribers_delete_success_title">구독자 삭제됨</string>
+    <string name="subscribers_delete_confirmation_message">이 구독자를 삭제하시겠습니까?</string>
+    <string name="subscribers_delete_confirmation_title">구독자 삭제</string>
+    <string name="subscribers_sort_name">이름</string>
+    <string name="jetpack_rest_connection_error_wpcom">스튜디오에서 워드프레스닷컴에 연결할 수 없습니다.</string>
+    <string name="jetpack_rest_connection_error_timeout">시간 초과됨</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">젯팩 설치됨</string>
+    <string name="jetpack_rest_connection_cancel_message">젯팩 연결 프로세스가 진행 중입니다. 취소하시겠어요?</string>
+    <string name="jetpack_rest_connection_cancel_title">젯팩 설정 취소 여부</string>
+    <string name="jetpack_rest_connection_status_failed">실패</string>
+    <string name="jetpack_rest_connection_status_completed">완료됨</string>
+    <string name="jetpack_rest_connection_status_in_progress">진행 중…</string>
+    <string name="jetpack_rest_connection_status_not_started">시작 전</string>
+    <string name="jetpack_rest_connection_step_finalize">설정 마무리 단계</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">워드프레스닷컴에 연결</string>
+    <string name="jetpack_rest_connection_step_connect_site">사이트 연결</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">젯팩 플러그인을 설치하세요</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">워드프레스닷컴에 로그인</string>
+    <string name="jetpack_rest_connection_setup_title">젯팩 설정(시뮬레이션됨)</string>
+    <string name="jetpack_rest_connection_title">젯팩 연결</string>
+    <string name="experimental_jetpack_rest_connection_description">실험적 젯팩 REST 연결 흐름 활성화</string>
+    <string name="experimental_jetpack_rest_connection">실험적인 젯팩 REST 연결</string>
+    <string name="experimental_subscribers_feature_description">뉴스레터 구독자 보기 및 관리</string>
+    <string name="start">시작</string>
+    <string name="descending">내림차순</string>
+    <string name="ascending">오름차순</string>
     <string name="application_password_disable_feature_title">애플리케이션 비밀번호 비활성화 여부</string>
     <string name="application_password_invalid">유효하지 않은 애플리케이션 비밀번호</string>
     <string name="application_password_credentials_storing_error">%1$s에 대한 애플리케이션 비밀번호 자격 증명 저장 중 오류가 발생했습니다.</string>
@@ -41,10 +85,7 @@ Language: ko_KR
     <string name="subscribers_error_title">문제가 발생했습니다</string>
     <string name="subscribers_empty_search">결과를 찾을 수 없음</string>
     <string name="subscribers_empty">구독자가 없습니다.</string>
-    <string name="subscribers_sort_plan">요금제</string>
-    <string name="subscribers_sort_display_name">대화명</string>
     <string name="subscribers_sort_date">구독한 날짜</string>
-    <string name="subscribers_sort_email">이메일 주소</string>
     <string name="subscribers_filter_reader_subscription">리더 구독</string>
     <string name="subscribers_filter_email_subscription">이메일 구독</string>
     <string name="about_update_email_unverified">프로필을 업데이트하려면 먼저 이메일 주소를 확인해야 합니다.</string>
@@ -56,9 +97,8 @@ Language: ko_KR
     <string name="qrcode_auth_flow_timeout_subtitle">코드를 감지하는 데 너무 오래 걸렸습니다. 다시 시도하거나 카메라 앱을 사용하여 코드를 스캔하세요.</string>
     <string name="qrcode_auth_flow_timeout_title">스캔 시간이 초과되었습니다</string>
     <string name="invite_users">사용자 초대</string>
-    <string name="experimental_application_password_feature_description">자체 호스팅 사이트에 로그인하기 위해 애플리케이션 비밀번호를 활성화하세요.</string>
+    <string name="experimental_application_password_feature_description">독립 호스트 사이트에 로그인하려면 애플리케이션 비밀번호 활성화</string>
     <string name="experimental_application_password_feature">애플리케이션 비밀번호 로그인</string>
-    <string name="experimental_subscribers_feature_description">뉴스레터 구독자 보기 및 관리 (작업 진행 중)</string>
     <string name="experimental_subscribers_feature">실험 구독자</string>
     <string name="cant_share_no_blog">블로그가 없으면 WordPress에 공유할 수 없습니다.</string>
     <string name="coming_soon">곧 출시됩니다!</string>
@@ -1695,7 +1735,6 @@ Language: ko_KR
     <string name="reader_follow_comments_null_response">받은 응답이 없습니다</string>
     <string name="activity_log_activity_type_filter_clear">지우기</string>
     <string name="activity_log_activity_type_filter_apply">적용하기</string>
-    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 다시 만들기를 시도하세요.</string>
     <string name="label_done_button">완료</string>
     <string name="hpp_choose_error">테마를 선택하는 동안 오류가 발생했습니다.</string>
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
@@ -1782,7 +1821,6 @@ Language: ko_KR
     <string name="show_n_hidden_items_desc">%1$s 추가 항목</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">레이아웃 선택하기</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">안내: 컬럼 레이아웃은 테마와 화면 크기에 따라 달라질 수도 있습니다</string>
-    <string name="create_post_story_fab_tooltip">글 또는 스토리 만들기</string>
     <string name="create_page_fab_tooltip">페이지 만들기</string>
     <string name="create_post_fab_tooltip">글 만들기</string>
     <string name="reader_discover_interests_header">좋아할 수도 있습니다</string>
@@ -1800,10 +1838,8 @@ Language: ko_KR
     <string name="mlp_create_blank_page">빈 페이지 만들기</string>
     <string name="mlp_choose_layout_subtitle">넓고 다양한 이전에 만들어진 페이지 레이아웃에서 선택하여 시작하세요. 또는 빈 페이지로 시작하세요.</string>
     <string name="mlp_choose_layout_title">레이아웃을 선택하기</string>
-    <string name="prepublishing_nudges_story_title_hint">스토리에 제목을 부여하기</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
     <string name="photo_picker_choose_file">장치에서 선택하기</string>
-    <string name="my_site_bottom_sheet_add_story">스토리 글</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">자체 호스팅 워드프레스 사이트의 사이트 아이콘 편집은 잿펙 플러그인이 필요합니다.</string>
     <string name="reader_toast_err_page_jump_not_found">연결한 페이지 점프를 찾을 수 없습니다</string>
     <string name="error_media_quota_exceeded_toast">파일을 업로드할 수 없습니다.\n저장소 한도를 초과했습니다.</string>
