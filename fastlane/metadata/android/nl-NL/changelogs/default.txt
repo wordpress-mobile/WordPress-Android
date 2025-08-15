@@ -1,2 +1,4 @@
-26.0:
-We hebben de authenticatie van applicatie wachtwoorden toegevoegd. Het is nog experimenteel, maar zodra het volledig geïntegreerd is, kunnen we bestaande functies verbeteren en nieuwe introduceren. Rock on.
+26.1:  
+- Media wordt nu correct weergegeven op privé sites in de experimentele editor.  
+- Verbeterde media uploads met betere authenticatie en verbeterde prestaties.  
+- Opgelost: verschillende upload bugs en verbeterde algehele media afhandeling.

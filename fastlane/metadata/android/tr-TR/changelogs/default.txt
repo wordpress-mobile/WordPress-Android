@@ -1,0 +1,4 @@
+26.1:
+- Ortam artık deneysel düzenleyicide özel sitelerde düzgün şekilde görüntüleniyor.
+- Daha iyi kimlik doğrulama ve gelişmiş performans ile gelişmiş ortam yüklemeleri.
+- Çeşitli yükleme hataları düzeltildi ve genel ortam kullanımı iyileştirildi.

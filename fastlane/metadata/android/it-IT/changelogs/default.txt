@@ -1,0 +1,4 @@
+26.1:
+- I contenuti multimediali ora vengono visualizzati correttamente sui siti privati nell'editor sperimentale.
+- Caricamento dei file multimediali potenziato con un'autenticazione migliorata e prestazioni ottimizzate.
+- Corretti diversi bug di caricamento e migliorata la gestione complessiva dei file multimediali.
