@@ -253,7 +253,6 @@ Language: sr_RS
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Изаберите распоред</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Сакрити</string>
     <string name="create_page_fab_tooltip">Направити страницу</string>
-    <string name="create_post_story_fab_tooltip">Направити чланак или причу</string>
     <string name="create_post_fab_tooltip">Направити чланак</string>
     <string name="reader_discover_interests_header">Можда Вам се свиди</string>
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Натпис видео записа. Празно</string>
@@ -268,9 +267,7 @@ Language: sr_RS
     <string name="label_close_button">Затвори</string>
     <string name="mlp_preview_page">Преглед</string>
     <string name="mlp_choose_layout_title">Одабери распоред</string>
-    <string name="prepublishing_nudges_story_title_hint">Доделите својој причи наслов</string>
     <string name="photo_picker_choose_file">Одабери са уређаја</string>
-    <string name="my_site_bottom_sheet_add_story">Чланак приче</string>
     <string name="error_media_quota_exceeded">Прекорачено ограничење складиштења</string>
     <string name="pick_file">Додај датотеку</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Замени видео запис</string>

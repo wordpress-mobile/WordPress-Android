@@ -367,7 +367,6 @@ Language: nb_NO
     <string name="permission_microphone">Mikrofon</string>
     <string name="reader_menu_report_post">Rapporter dette innlegget</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Velg et oppsett</string>
-    <string name="create_post_story_fab_tooltip">Lag et innlegg eller en fortelling</string>
     <string name="create_page_fab_tooltip">Lag en side</string>
     <string name="create_post_fab_tooltip">Lag et innlegg</string>
     <string name="reader_discover_interests_header">Du liker kanskje</string>
@@ -383,10 +382,8 @@ Language: nb_NO
     <string name="mlp_create_page">Lag side</string>
     <string name="mlp_create_blank_page">Lag tom side</string>
     <string name="mlp_choose_layout_title">Velg et oppsett</string>
-    <string name="prepublishing_nudges_story_title_hint">Gi din fortelling en tittel</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Trykk %1$s Lag. %2$s Velg så &lt;b&gt;blogginnlegg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Velg fra enheten</string>
-    <string name="my_site_bottom_sheet_add_story">Fortelling</string>
     <string name="pick_file">Legg til fil</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Erstatt video</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Erstatt bilde eller video</string>

@@ -1,18 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-09 10:54:09+0000
+Translation-Revision-Date: 2025-08-15 08:38:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">禁用应用程序密码会从 %1$s 个站点中删除您的登录信息。</string>
+    <string name="application_password_last_used_sort">上次使用时间</string>
+    <string name="application_password_created_sort">创建时间</string>
+    <string name="application_password_name_sort">名称</string>
+    <string name="application_password_no_ip">未记录 IP 地址</string>
+    <string name="application_password_last_ip_label">最后登录 IP 地址：</string>
+    <string name="application_password_last_used_label">上次使用时间：</string>
+    <string name="application_password_created_label">创建时间：</string>
+    <string name="application_password_name_label">名称：</string>
+    <string name="application_password_never_used">从未使用过</string>
+    <string name="enable">启用</string>
+    <string name="application_password_info_description_4">请注意，撤销应用程序使用的应用程序密码将导致该应用程序无法继续访问您的站点。 请谨慎撤销应用程序创建的应用程序密码。</string>
+    <string name="application_password_info_description_3">您可以在 WordPress 站点管理面板的用户个人资料中查看和管理这些密码。</string>
+    <string name="application_password_info_description_2">在您将站点添加到应用程序后，系统将根据需要自动创建应用程序密码。</string>
+    <string name="application_password_info_description_1">应用程序密码是一种安全验证方式，允许应用程序在不使用您账户密码的情况下访问您的站点。</string>
+    <string name="application_password_info_title">应用程序密码</string>
+    <string name="application_password_disable_feature_description">禁用应用程序密码将移除您 %1$s 个站点的登录信息。 您可能需要重新添加受影响的站点才能再次登录。</string>
+    <string name="application_password_invalid_description">您的应用程序密码已不存在。 请重新登录，以创建新的应用程序密码 </string>
+    <string name="subscribers_delete_failed">订阅者删除失败</string>
+    <string name="subscribers_delete_success_message">订阅者已被删除，但删除操作可能需要一分钟才能生效</string>
+    <string name="subscribers_delete_success_title">订阅者已删除</string>
+    <string name="subscribers_delete_confirmation_message">是否确定要删除此订阅者？</string>
+    <string name="subscribers_delete_confirmation_title">删除订阅者</string>
+    <string name="subscribers_sort_name">名称</string>
+    <string name="jetpack_rest_connection_error_wpcom">无法连接到 WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">超时</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack 已安装</string>
+    <string name="jetpack_rest_connection_cancel_message">正在连接 Jetpack。 是否确定要取消？</string>
+    <string name="jetpack_rest_connection_cancel_title">取消 Jetpack 设置？</string>
+    <string name="jetpack_rest_connection_status_failed">失败</string>
+    <string name="jetpack_rest_connection_status_completed">已完成</string>
+    <string name="jetpack_rest_connection_status_in_progress">进行中…</string>
+    <string name="jetpack_rest_connection_status_not_started">未开始</string>
+    <string name="jetpack_rest_connection_step_finalize">完成设置</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">连接到 WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">连接您的站点</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">安装 Jetpack 插件</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">登录 WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">设置 Jetpack（模拟）</string>
+    <string name="jetpack_rest_connection_title">Jetpack 连接</string>
+    <string name="experimental_jetpack_rest_connection_description">启用实验性 Jetpack REST 连接流程</string>
+    <string name="experimental_jetpack_rest_connection">实验性 Jetpack REST 连接</string>
+    <string name="experimental_subscribers_feature_description">查看和管理电子报订阅者</string>
+    <string name="start">开始</string>
+    <string name="descending">降序</string>
+    <string name="ascending">升序</string>
     <string name="application_password_disable_feature_title">禁用应用程序密码？</string>
     <string name="application_password_invalid">应用程序密码无效</string>
     <string name="application_password_credentials_storing_error">保存 %1$s 的应用程序密码凭据时出现错误</string>
     <string name="subscribers_add_failed">订阅者添加失败</string>
     <string name="subscribers_add_success">订阅者添加成功</string>
     <string name="subscribers_add_disclosure">\n        点击“发送”即表示您确认已获得向每个人发送电子邮件的适当同意。 若订阅者发起垃圾邮件投诉或出现高退信率，可能导致您的账户受到限制措施。\n    </string>
+    <string name="subscribers_add_email_hint">name@example.com</string>
     <string name="subscribers_add_subscribers">添加订阅者</string>
     <string name="subscribers_gift_content_description">礼品</string>
     <string name="subscribers_renewal_interval">续订间隔</string>
@@ -41,10 +86,7 @@ Language: zh_CN
     <string name="subscribers_error_title">出错了</string>
     <string name="subscribers_empty_search">未找到结果</string>
     <string name="subscribers_empty">无订阅者</string>
-    <string name="subscribers_sort_plan">套餐</string>
-    <string name="subscribers_sort_display_name">显示名称</string>
     <string name="subscribers_sort_date">订阅日期</string>
-    <string name="subscribers_sort_email">电子邮件地址</string>
     <string name="subscribers_filter_reader_subscription">阅读器订阅</string>
     <string name="subscribers_filter_email_subscription">电子邮件订阅</string>
     <string name="about_update_email_unverified">要更新您的个人资料，您需要先验证您的电子邮件地址。</string>
@@ -56,9 +98,8 @@ Language: zh_CN
     <string name="qrcode_auth_flow_timeout_subtitle">检测代码用时过长。 请重试或使用相机应用程序扫描代码。</string>
     <string name="qrcode_auth_flow_timeout_title">扫描超时</string>
     <string name="invite_users">邀请用户</string>
-    <string name="experimental_application_password_feature_description">启用应用程序密码，以登录自托管站点。</string>
+    <string name="experimental_application_password_feature_description">启用应用程序密码，以登录自托管站点</string>
     <string name="experimental_application_password_feature">应用程序密码登录</string>
-    <string name="experimental_subscribers_feature_description">查看和管理电子报订阅者（正在进行中）</string>
     <string name="experimental_subscribers_feature">实验性订阅者</string>
     <string name="cant_share_no_blog">没有博客，您就不能分享到 WordPress</string>
     <string name="coming_soon">即将推出！</string>
@@ -1695,7 +1736,6 @@ Language: zh_CN
     <string name="reader_follow_comments_null_response">未收到任何响应</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
     <string name="activity_log_activity_type_filter_apply">应用</string>
-    <string name="cannot_retry_deleted_media_item_fatal">媒体已被删除。请尝试重新编辑您的故事。</string>
     <string name="label_done_button">完成</string>
     <string name="hpp_choose_error">选择主题时发生错误。</string>
     <string name="hpp_retry_error">请检查您的互联网连接，然后重试。</string>
@@ -1782,7 +1822,6 @@ Language: zh_CN
     <string name="show_n_hidden_items_desc">%1$s 更多项目</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">选择布局</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">注意：主题和屏幕尺寸之间的分栏布局可能会有所不同</string>
-    <string name="create_post_story_fab_tooltip">创建文章或故事</string>
     <string name="create_page_fab_tooltip">创建页面</string>
     <string name="create_post_fab_tooltip">撰写文章</string>
     <string name="reader_discover_interests_header">您可能会喜欢</string>
@@ -1800,10 +1839,8 @@ Language: zh_CN
     <string name="mlp_create_blank_page">创建空白页面</string>
     <string name="mlp_choose_layout_subtitle">从种类繁多的预设页面布局中选择心仪的布局，开始打造自己的页面。 或者，您也可以从一个空白页面开始。</string>
     <string name="mlp_choose_layout_title">选择布局</string>
-    <string name="prepublishing_nudges_story_title_hint">为您的故事设定标题</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">轻点%1$s创建。 %2$s 然后选择&lt;b&gt;博文&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">从设备中选择</string>
-    <string name="my_site_bottom_sheet_add_story">故事文章</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">在自托管 WordPress 站点上编辑站点图标需要使用 Jetpack 插件。</string>
     <string name="reader_toast_err_page_jump_not_found">找不到链接页面跳转</string>
     <string name="error_media_quota_exceeded_toast">无法上传文件。\n已超出存储空间配额。</string>

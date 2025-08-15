@@ -155,7 +155,6 @@ Language: ku_TR
     <string name="error_media_xmlrpc_not_allowed">Destûr ji bo çalakiya te nayê dayîn</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Raxistinekê hilbijêre</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Not: Dibe ku raxistina stûnî di navbera tema û mezinahiyên ekranê de cuda bê xuyan</string>
-    <string name="create_post_story_fab_tooltip">Şandî an jî çîrokekê biafirîne</string>
     <string name="create_page_fab_tooltip">Rûpelekê biafirîne</string>
     <string name="create_post_fab_tooltip">Şandiyekê biafirîne</string>
     <string name="reader_discover_interests_header">Dibe ku tu biecibînî</string>
@@ -171,12 +170,10 @@ Language: ku_TR
     <string name="mlp_preview_page">Pêşdîtin</string>
     <string name="mlp_create_page">Rûpelekê biafirîne</string>
     <string name="mlp_create_blank_page">Rûpeleke vala biafirîne</string>
-    <string name="prepublishing_nudges_story_title_hint">Sernavekî bide çîroka xwe</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Li %1$s Biafirîne\'yê bitikîne. %2$s Piştre&lt;b&gt;Şandiya Blogê&lt;/b&gt; hilbijêre</string>
     <string name="mlp_choose_layout_subtitle">Ji nav raxistinên pirrengî yên berê çêkirî hilbijêre û dest pê bike. An jî bi rûpeleke vala re dest pê bike.</string>
     <string name="mlp_choose_layout_title">Raxistinekê hilbijêre</string>
     <string name="photo_picker_choose_file">Ji cîhazê hilbijêre</string>
-    <string name="my_site_bottom_sheet_add_story">Şandiya çîrokî</string>
     <string name="error_media_quota_exceeded">Bi ser kotaya Bîrgehê ket</string>
     <string name="reader_toast_err_page_jump_not_found">Pengizîna rûpela girêdayî nayê dîtin</string>
     <string name="error_media_quota_exceeded_toast">Dosye nayê barkirin.\nBi ser kotaya Bîrgehê ket.</string>

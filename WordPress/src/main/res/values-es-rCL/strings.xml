@@ -1621,7 +1621,6 @@ Language: es_CL
     <string name="activity_log_activity_type_filter_clear">Vaciar</string>
     <string name="reader_follow_comments_bad_format_response">Respuesta recibida no válida</string>
     <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta volver a crear tu historia.</string>
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
@@ -1710,7 +1709,6 @@ Language: es_CL
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Seleccionar un diseño</string>
     <string name="create_page_fab_tooltip">Crear una página</string>
     <string name="create_post_fab_tooltip">Crear una entrada</string>
-    <string name="create_post_story_fab_tooltip">Crear una entrada o historia</string>
     <string name="reader_discover_interests_header">Puede que te guste</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ocultar</string>
     <string name="camera_error" tools:ignore="UnusedResources">Este dispositivo no es compatible con la API de Camera2</string>
@@ -1726,11 +1724,9 @@ Language: es_CL
     <string name="mlp_create_blank_page">Crear una página en blanco</string>
     <string name="mlp_create_page">Crear una página</string>
     <string name="mlp_preview_page">Vista previa</string>
-    <string name="prepublishing_nudges_story_title_hint">Pon un título a tu historia</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Toca crear %1$s. %2$s Después selecciona &lt;b&gt;Entrada del blog&lt;/b&gt;</string>
     <string name="error_media_quota_exceeded">Cuota de almacenamiento superada</string>
     <string name="error_media_quota_exceeded_toast">No se puede subir el archivo.\nSe ha superado la cuota de almacenamiento.</string>
-    <string name="my_site_bottom_sheet_add_story">Entrada de la historia</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Para la edición de los íconos del sitio en sitios WordPress autoalojados se necesita el plugin Jetpack.</string>
     <string name="photo_picker_choose_file">Elegir el dispositivo</string>
     <string name="reader_toast_err_page_jump_not_found">No se pudo encontrar el salto de página enlazado</string>

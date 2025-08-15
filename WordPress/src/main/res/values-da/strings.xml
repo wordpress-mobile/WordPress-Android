@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-01 11:11:29+0000
+Translation-Revision-Date: 2025-08-15 13:06:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: da_DK
@@ -87,12 +87,15 @@ Language: da_DK
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
+    <string name="site_picker_add_a_site">Tilføj nyt websted</string>
     <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
     <string name="my_site_btn_view_admin">Vis administration</string>
     <string name="my_site_header_publish">Udgiv</string>
+    <string name="my_site_btn_blog_posts">Blogindlæg</string>
     <string name="my_site_header_look_and_feel">Udseende</string>
+    <string name="my_site_btn_site_settings">Webstedsindstillinger</string>
     <string name="my_site_header_configuration">Konfiguration</string>
     <string name="deselect_all">Fravælg alle</string>
     <string name="show">Vis</string>
@@ -114,6 +117,7 @@ Language: da_DK
     <string name="reader_label_new_posts">Nye indlæg</string>
     <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
+    <string name="reader_no_posts_in_blog">Dette websted er tomt</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_followers_a_minute_ago">et minut siden</string>
     <string name="stats_followers_a_day">En dag</string>
@@ -145,6 +149,7 @@ Language: da_DK
     <string name="error_refresh_unauthorized_posts">Du har ikke tilladelse til at vise eller redigere indlæg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tilladelse til at vise eller redigere sider</string>
     <string name="older_last_week">Ældre end en uge</string>
+    <string name="help_and_support">Hjælp og support</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar slettet</string>
     <string name="more">Mere</string>
@@ -157,6 +162,7 @@ Language: da_DK
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
+    <string name="reader_hint_add_tag_or_url_follow">Indtast en URL eller emne for at følge</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
@@ -216,8 +222,11 @@ Language: da_DK
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
     <string name="delete_page">Slet side?</string>
     <string name="delete_post">Slet indlæg?</string>
+    <string name="reader_toast_err_adding_tag">Kunne ikke tilføje dette emne</string>
+    <string name="reader_toast_err_removing_tag">Kunne ikke fjerne dette emne</string>
     <string name="share_link">Del link</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
+    <string name="comment_unapproved">Kommentar ikke godkendt</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
     <string name="comment_spammed">Kommentar markeret som spam</string>
     <string name="reader_likes_multi">%,d personer synes godt om dette</string>
@@ -238,6 +247,7 @@ Language: da_DK
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
+    <string name="reader_toast_err_tag_not_valid">Dette er ikke et gyldigt emne</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>
     <string name="share_action">Del</string>
@@ -295,9 +305,11 @@ Language: da_DK
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
     <string name="sdcard_title">SD-kort påkrævet</string>
     <string name="media">Medier</string>
+    <string name="updating_cat_success">Galleri opdateret uden problemer</string>
     <string name="delete">Slet</string>
     <string name="approve">Godkend</string>
     <string name="none">Ingen</string>
+    <string name="updating_cat_failed">Tilføjelse af kategori mislykkedes</string>
     <string name="error">Fejl</string>
     <string name="save">Gem</string>
     <string name="add">Tilføj</string>
