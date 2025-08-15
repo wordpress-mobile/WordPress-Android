@@ -69,6 +69,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
                     JetpackRestConnectionViewModel.UiEvent.Done -> {
                         finish()
                     }
+
                     JetpackRestConnectionViewModel.UiEvent.Close ->
                         finish()
 
@@ -107,14 +108,15 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
     companion object {
         private const val KEY_CONNECTION_SOURCE = "key_connection_source"
 
-        @JvmStatic
-        fun createIntent(
+        fun startJetpackRestConnectionFlow(
             context: Context,
             source: JetpackRestConnectionViewModel.ConnectionSource
-        ): Intent {
-            return Intent(context, JetpackRestConnectionActivity::class.java).apply {
-                putExtra(KEY_CONNECTION_SOURCE, source)
-            }
+        ) {
+            context.startActivity(
+                Intent(context, JetpackRestConnectionActivity::class.java).apply {
+                    putExtra(KEY_CONNECTION_SOURCE, source)
+                }
+            )
         }
     }
 }

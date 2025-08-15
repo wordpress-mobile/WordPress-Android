@@ -288,11 +288,11 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             && experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
             && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
         ) {
-            val intent = JetpackRestConnectionActivity.createIntent(
+            JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 requireActivity(),
                 JetpackRestConnectionViewModel.ConnectionSource.NOTIFS
             )
-            startActivity(intent)
+            return true
             return true
         }
         return false
