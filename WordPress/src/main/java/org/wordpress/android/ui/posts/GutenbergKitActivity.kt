@@ -19,7 +19,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.webkit.MimeTypeMap
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -290,7 +289,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     var aztecImageLoader: AztecImageLoader? = null
 
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
-    private var showAztecEditor: Boolean = false
     private var pendingVideoPressInfoRequests: MutableList<String>? = null
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
@@ -811,18 +809,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
-        showAztecEditor = AppPrefs.isAztecEditorEnabled()
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor)
-
-        // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
-        if (showAztecEditor) {
-            val overlay: View = findViewById(R.id.view_overlay)
-            val layoutParams: MarginLayoutParams = overlay.layoutParams as MarginLayoutParams
-            layoutParams.bottomMargin = resources.getDimensionPixelOffset(
-                org.wordpress.aztec.R.dimen.aztec_format_bar_height
-            )
-            overlay.layoutParams = layoutParams
-        }
+        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor = false)
     }
 
     private fun setupToolbar(){
@@ -3535,7 +3522,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onMediaDeleted(localMediaId: String) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            editorMedia.onMediaDeleted(showAztecEditor, showGutenbergEditor = true, localMediaId)
+            editorMedia.onMediaDeleted(showAztecEditor = false, showGutenbergEditor = true, localMediaId)
         }
     }
 
@@ -3637,20 +3624,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
 
         onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
-        onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
 
     private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
         if (editorFragment is GutenbergKitEditorFragment) {
             refreshEditorSettings()
-        }
-    }
-
-    private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
-        if (showAztecEditor && editorFragment is AztecEditorFragment) {
-            val entryPoint =
-                intent.getSerializableExtra(EditorConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
-            postEditorAnalyticsSession?.start(null, entryPoint)
         }
     }
 
