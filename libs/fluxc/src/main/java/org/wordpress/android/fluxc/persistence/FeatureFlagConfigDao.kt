@@ -8,9 +8,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlagValueSource.REMOTE
 
 @Dao
+@TypeConverters(FeatureFlagConfigDao.FeatureFlagValueSourceConverter::class)
 abstract class FeatureFlagConfigDao {
     @Transaction
     @Query("SELECT * from FeatureFlagConfigurations")
