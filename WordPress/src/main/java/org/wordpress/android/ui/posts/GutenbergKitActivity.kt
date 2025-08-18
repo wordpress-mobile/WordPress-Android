@@ -59,7 +59,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.editor.AztecEditorFragment
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener
@@ -70,7 +69,6 @@ import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
 import org.wordpress.android.editor.EditorMediaUploadListener
-import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
@@ -193,8 +191,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler
-import org.wordpress.android.ui.posts.services.AztecImageLoader
-import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -259,9 +255,6 @@ import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.aztec.AztecExceptionHandler
-import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
-import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.WebViewGlobal
@@ -285,8 +278,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
     EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
-    // External Access to the Image Loader
-    var aztecImageLoader: AztecImageLoader? = null
 
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
     private var pendingVideoPressInfoRequests: MutableList<String>? = null
@@ -595,7 +586,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, editPostRepository.getPost())
-            resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued()
         }
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
@@ -1221,47 +1211,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
-    private fun resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
-        val useAztec = AppPrefs.isAztecEditorEnabled()
-        if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(editPostRepository.getPost())) {
-            return
-        }
-        editPostRepository.updateAsync({ postModel: PostModel ->
-            val oldContent = postModel.content
-            if ((!AztecEditorFragment.hasMediaItemsMarkedUploading(this@GutenbergKitActivity, oldContent)
-               // we need to make sure items marked failed are still failed or not as well
-               && !AztecEditorFragment.hasMediaItemsMarkedFailed(this@GutenbergKitActivity, oldContent))
-            ) {
-                return@updateAsync false
-            }
-            val newContent = AztecEditorFragment.resetUploadingMediaToFailed(this@GutenbergKitActivity, oldContent)
-            if (!TextUtils.isEmpty(oldContent) && (newContent != null) && (oldContent.compareTo(newContent) != 0)) {
-                postModel.setContent(newContent)
-                return@updateAsync true
-            }
-            false
-        }, null)
-    }
-
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        reattachUploadingMediaForAztec()
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(editPostRepository.getPost(), siteModel)
         isConfigChange = false
-    }
-
-    private fun reattachUploadingMediaForAztec() {
-        editorMediaUploadListener?.let {
-            editorMedia.reattachUploadingMediaForAztec(
-                (editPostRepository),
-                editorFragment is AztecEditorFragment,
-                it
-            )
-        }
     }
 
     override fun onPause() {
@@ -1272,10 +1228,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onStop() {
         super.onStop()
-        if (aztecImageLoader != null && isFinishing) {
-            aztecImageLoader?.clearTargets()
-            aztecImageLoader = null
-        }
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.removeCallbacks(it)
         }
@@ -1292,9 +1244,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         dispatcher.unregister(this)
         editorMedia.cancelAddMediaToEditorActions()
         removePostOpenInEditorStickyEvent()
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).disableContentLogOnCrashes()
-        }
         reactNativeRequestHandler.destroy()
         super.onDestroy()
     }
@@ -1434,16 +1383,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     override fun onPhotoPickerShown() {
         // animate in the editor overlay
         showOverlay(true)
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).enableMediaMode(true)
-        }
     }
 
     override fun onPhotoPickerHidden() {
         hideOverlay()
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).enableMediaMode(false)
-        }
     }
 
     /*
@@ -1705,9 +1648,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 return performSecondaryAction()
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
-                if (editorFragment is AztecEditorFragment) {
-                    (editorFragment as AztecEditorFragment).onToolbarHtmlButtonClicked()
-                } else if (editorFragment is GutenbergEditorFragment) {
+                if (editorFragment is GutenbergEditorFragment) {
                     (editorFragment as GutenbergEditorFragment).onToggleHtmlMode()
                 } else if (editorFragment is GutenbergKitEditorFragment) {
                     (editorFragment as GutenbergKitEditorFragment).onToggleHtmlMode()
@@ -2128,83 +2069,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                     onLogJsException(jsException, callback)
                 }
             })
-        } else if (editorFragment is AztecEditorFragment) {
-            val aztecEditorFragment = editorFragment as AztecEditorFragment
-            aztecEditorFragment.setEditorImageSettingsListener(this@GutenbergKitActivity)
-            aztecEditorFragment.setMediaToolbarButtonClickListener(editorPhotoPicker)
-
-            // Here we should set the max width for media, but the default size is already OK. No need
-            // to customize it further
-            val loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                this,
-                org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                aztecEditorFragment.maxMediaSize
-            )
-            aztecImageLoader = AztecImageLoader(baseContext, (imageManager), loadingImagePlaceholder)
-            aztecEditorFragment.setAztecImageLoader(aztecImageLoader)
-            aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder)
-            val loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                this,
-                org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
-                aztecEditorFragment.maxMediaSize
-            )
-            aztecEditorFragment.setAztecVideoLoader(AztecVideoLoader(baseContext, loadingVideoPlaceholder))
-            aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder)
-            if (site.isWPCom && !site.isPrivate) {
-                // Add the content reporting for wpcom blogs that are not private
-                val exceptionHandler: AztecExceptionHandler.ExceptionHandlerHelper =
-                    object : AztecExceptionHandler.ExceptionHandlerHelper {
-                        override fun shouldLog(ex: Throwable): Boolean {
-                            return editPostRepository.shouldLog()
-                        }
-                    }
-                aztecEditorFragment.enableContentLogOnCrashes(exceptionHandler)
-            }
-            if (editPostRepository.hasPost() && AppPrefs
-                    .isPostWithHWAccelerationOff(editPostRepository.localSiteId, editPostRepository.id)
-            ) {
-                // We need to disable HW Acc. on this post
-                aztecEditorFragment.disableHWAcceleration()
-            }
-            aztecEditorFragment.setExternalLogger(object : AztecLog.ExternalLogger {
-                // This method handles the custom Exception thrown by Aztec to notify the parent app of the error #8828
-                // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
-                // prefs to disable HW acceleration for it.
-                private fun isError8828(throwable: Throwable): Boolean {
-                    return when {
-                        throwable !is DynamicLayoutGetBlockIndexOutOfBoundsException ||
-                                !editPostRepository.hasPost() -> {
-                            false
-                        }
-
-                        else -> {
-                            AppPrefs.addPostWithHWAccelerationOff(
-                                editPostRepository.localSiteId,
-                                editPostRepository.id
-                            )
-                            true
-                        }
-                    }
-                }
-
-                override fun log(message: String) {
-                    AppLog.e(AppLog.T.EDITOR, message)
-                }
-
-                override fun logException(tr: Throwable) {
-                    if (isError8828(tr)) {
-                        return
-                    }
-                    AppLog.e(AppLog.T.EDITOR, tr)
-                }
-
-                override fun logException(tr: Throwable, message: String) {
-                    if (isError8828(tr)) {
-                        return
-                    }
-                    AppLog.e(AppLog.T.EDITOR, message)
-                }
-            })
         }
     }
 
@@ -2618,7 +2482,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
                         // Set up custom headers for the visual editor's internal WebView
                         editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
-                        reattachUploadingMediaForAztec()
                     }
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
@@ -3019,7 +2882,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             RequestCodes.VIDEO_LIBRARY -> handleLibraries(data)
             RequestCodes.TAKE_PHOTO -> addLastTakenPicture()
             RequestCodes.TAKE_VIDEO -> handleTakeVideo(data)
-            RequestCodes.MEDIA_SETTINGS -> handleMediaSettings(data)
+            RequestCodes.MEDIA_SETTINGS -> {
+                // No-op because it was Aztec only
+            }
             RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
             RequestCodes.GIF_PICKER_SINGLE_SELECT,
             RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
@@ -3051,15 +2916,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun handleTakeVideo(data: Intent?){
         data?.data?.let {
             editorMedia.addNewMediaToEditorAsync(it, true)
-        }
-    }
-
-    private fun handleMediaSettings(data: Intent?) {
-        if (editorFragment is AztecEditorFragment) {
-            editorFragment?.onActivityResult(
-                AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                RESULT_OK, data
-            )
         }
     }
 
@@ -3527,29 +3383,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     override fun onUndoMediaCheck(undoedContent: String) {
-        // here we check which elements tagged UPLOADING are there in undoedContent,
-        // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
-        // These are the CANCELED ONES, so mark them FAILED now to retry.
-        val currentlyUploadingMedia: List<MediaModel> = UploadService.getPendingOrInProgressMediaUploadsForPost(
-            editPostRepository.getPost()
-        )
-
-        val mediaMarkedUploading: List<String?> =
-            AztecEditorFragment.getMediaMarkedUploadingInPostContent(this@GutenbergKitActivity, undoedContent)
-
-        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
-        // to see whether they're really being uploaded or not. If an item is not really being uploaded,
-        // mark that item failed
-        mediaMarkedUploading.forEach { mediaId ->
-            if (mediaId != null &&
-                currentlyUploadingMedia.none { media -> StringUtils.stringToInt(mediaId) == media.id }
-            ) {
-                if (editorFragment is AztecEditorFragment) {
-                    editorMedia.updateDeletedMediaItemIds(mediaId)
-                    (editorFragment as AztecEditorFragment).setMediaToFailed(mediaId)
-                }
-            }
-        }
+        // No-op because it was Aztec only
     }
 
     override fun onVideoPressInfoRequested(videoId: String) {
@@ -4035,10 +3869,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         val editorFragmentView: View? = editorFragment?.view
         editorFragmentView?.requestFocus()
 
-        // this fixes issue with Aztec editor
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).requestContentAreaFocus()
-        }
         return super.onMenuOpened(featureId, menu)
     }
 
