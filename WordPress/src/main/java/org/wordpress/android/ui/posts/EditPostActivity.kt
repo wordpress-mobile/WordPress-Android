@@ -41,6 +41,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.distinctUntilChanged
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
@@ -264,11 +265,9 @@ import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsExcep
 import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.MediaType
 import org.wordpress.gutenberg.WebViewGlobal
 import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
-import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -434,7 +433,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
     private lateinit var editPostAuthViewModel: EditPostAuthViewModel
-    private lateinit var gutenbergKitViewModel: GutenbergKitViewModel
 
     private lateinit var siteModel: SiteModel
 
@@ -464,13 +462,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun newPostFromShareAction() {
-        if (isMediaTypeIntent(intent, null)) {
+        if (EditorUnitFunctions.isMediaTypeIntent(intent, null)) {
             newPostSetup()
             setPostMediaFromShareAction()
         } else {
             val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
             val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text?:""))
+            val content = EditorUnitFunctions.migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text?:""))
             newPostSetup(title, content)
         }
     }
@@ -625,8 +623,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 )
             }
             siteModel.isWPCom && !siteModel.isWPComAtomic && siteModel.isPrivate -> {
-                showIfNecessary(fragmentManager)
-                editPostAuthViewModel.fetchWpComCookies()
+                val currentAuthState = editPostAuthViewModel.wpComCookieAuthState.value
+                if (currentAuthState !is EditPostAuthViewModel.WpComCookieAuthState.Success) {
+                    showIfNecessary(fragmentManager)
+                    editPostAuthViewModel.fetchWpComCookies()
+                } else {
+                    handleSuccessfulWpComCookieAuthState()
+                }
             }
             else -> {
                 setupViewPager()
@@ -653,7 +656,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editPostSettingsViewModel = ViewModelProvider(this, viewModelFactory)[EditPostSettingsViewModel::class.java]
         prepublishingViewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
         editPostAuthViewModel = ViewModelProvider(this, viewModelFactory)[EditPostAuthViewModel::class.java]
-        gutenbergKitViewModel = ViewModelProvider(this, viewModelFactory)[GutenbergKitViewModel::class.java]
     }
 
     private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {
@@ -670,12 +672,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         return true
     }
 
-    private fun isActionSendOrNewMedia(action: String?): Boolean {
-        return action == Intent.ACTION_SEND
-                || action == Intent.ACTION_SEND_MULTIPLE
-                || action == EditorConstants.NEW_MEDIA_POST
-    }
-
     private fun refreshMobileEditorFromSiteSetting() {
         // Make sure to use the latest fresh info about the site we've in the DB set only the editor setting for now
         siteStore.getSiteByLocalId(siteModel.id)?.let {
@@ -690,7 +686,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return null
         }
 
-        val isActionSendOrNewMedia = isActionSendOrNewMedia(intent.action)
+        val isActionSendOrNewMedia = EditorUnitFunctions.isActionSendOrNewMedia(intent.action)
         val hasQuickPressFlag = extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
         val hasQuickPressBlogId = extras.containsKey(EditorConstants.EXTRA_QUICKPRESS_BLOG_ID)
 
@@ -709,7 +705,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         val action = intent.action
 
         if (!extras.containsKey(EditorConstants.EXTRA_POST_LOCAL_ID) ||
-            isActionSendOrNewMedia(intent.action) ||
+            EditorUnitFunctions.isActionSendOrNewMedia(intent.action) ||
             extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
         ) {
             isPage = extras.getBoolean(EditorConstants.EXTRA_IS_PAGE)
@@ -1002,18 +998,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             updateUIForDestination(destination)
         }
 
-        editPostAuthViewModel.wpComCookieAuthState.observe(this) { authState ->
+        editPostAuthViewModel.wpComCookieAuthState.distinctUntilChanged().observe(this) { authState ->
             when (authState) {
                 is EditPostAuthViewModel.WpComCookieAuthState.Loading -> {
                     showIfNecessary(supportFragmentManager)
                 }
                 is EditPostAuthViewModel.WpComCookieAuthState.Success -> {
-                    if (isShowing(supportFragmentManager)) {
-                        setupViewPager()
-                        dismissIfNecessary(supportFragmentManager)
-                    } else {
-                        setupViewPager()
-                    }
+                    handleSuccessfulWpComCookieAuthState()
                 }
                 is EditPostAuthViewModel.WpComCookieAuthState.Error -> {
                     if (isShowing(supportFragmentManager)) {
@@ -1089,7 +1080,26 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         invalidateOptionsMenu()
     }
 
+    private fun handleSuccessfulWpComCookieAuthState() {
+        if (isShowing(supportFragmentManager)) {
+            setupViewPager()
+            dismissIfNecessary(supportFragmentManager)
+        } else {
+            setupViewPager()
+        }
+    }
+
     private fun setupViewPager() {
+        // Check if ViewPager is already configured
+        if (viewPager?.adapter != null) {
+            AppLog.e(
+                AppLog.T.EDITOR,
+                "EditPostActivity: setupViewPager() called but ViewPager already has adapter" +
+                        " - possible duplicate setup"
+            )
+            return
+        }
+
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
         viewPager?.adapter = sectionsPagerAdapter
@@ -2135,7 +2145,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
                 override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
                     editorPhotoPicker?.allowMultipleSelection = config.multiple
-                    val mediaType = mapAllowedTypesToMediaBrowserType(config.allowedTypes, config.multiple)
+                    val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
+                        config.allowedTypes,
+                        config.multiple
+                    )
                     val initialSelection = when (val value = config.value) {
                         is GutenbergView.Value.Single -> listOf(value.value)
                         is GutenbergView.Value.Multiple -> value.toList()
@@ -2201,9 +2214,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 val exceptionHandler: AztecExceptionHandler.ExceptionHandlerHelper =
                     object : AztecExceptionHandler.ExceptionHandlerHelper {
                         override fun shouldLog(ex: Throwable): Boolean {
-                            // Do not log private or password protected post
-                            return editPostRepository.hasPost() && editPostRepository.password.isEmpty()
-                                    && !editPostRepository.hasStatus(PostStatus.PRIVATE)
+                            return editPostRepository.shouldLog()
                         }
                     }
                 aztecEditorFragment.enableContentLogOnCrashes(exceptionHandler)
@@ -2298,7 +2309,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         ActivityLauncher.openImageEditor(this, inputData)
     }
 
-
     interface OnPostUpdatedFromUIListener {
         fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult)
     }
@@ -2309,18 +2319,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         val postId = editPostRepository.remotePostId
         this.revision?.let {
             ActivityLauncher.viewHistoryDetailForResult(
-                this, it, getRevisionsIds(revisions), postId, siteModel.siteId
+                this, it, EditorUnitFunctions.getRevisionsIds(revisions), postId, siteModel.siteId
             )
         }
-    }
-
-    private fun getRevisionsIds(revisions: List<Revision>): LongArray {
-        val idsArray = LongArray(revisions.size)
-        for (i in revisions.indices) {
-            val current: Revision = revisions[i]
-            idsArray[i] = current.revisionId
-        }
-        return idsArray
     }
 
     private fun loadRevision() {
@@ -2391,7 +2392,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             showPrepublishingBottomSheetHandler?.postDelayed(it, delayMs)
         }
     }
-
 
     private fun uploadPost(publishPost: Boolean) {
         updateAndSavePostAsyncOnEditorExit(object : OnPostUpdatedFromUIListener {
@@ -2549,11 +2549,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun shouldSavePost(): Boolean {
-        val hasChanges = editPostRepository.postWasChangedInCurrentSession()
-        val isPublishable = editPostRepository.isPostPublishable()
-        val existingPostWithChanges = editPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges
-        // if post was modified during this editing session, save it
-        return isPublishable && (existingPostWithChanges || isNewPost)
+        return editPostRepository.shouldSavePost(isNewPost)
     }
 
     private val isDiscardable: Boolean
@@ -2562,11 +2558,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
     private fun isFirstTimePublish(publishPost: Boolean): Boolean {
-        val originalStatus = editPostRepository.status
-        return (((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
-                || (originalStatus == PostStatus.SCHEDULED && publishPost)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.isLocalDraft)
-                || (originalStatus == PostStatus.PUBLISHED && editPostRepository.remotePostId == 0L))
+        return editPostRepository.isFirstTimePublish(publishPost)
     }
 
     /**
@@ -2617,17 +2609,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
             val settings = createGutenbergKitSettings(isWpCom)
 
-            val fragment = GutenbergKitEditorFragment.newInstance(
+            return GutenbergKitEditorFragment.newInstance(
                 getContext(),
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                settings
             )
-
-            // Set settings in ViewModel for fragment to observe
-            gutenbergKitViewModel.updateEditorSettings(settings)
-
-            return fragment
         }
 
         private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
@@ -2647,7 +2635,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): GutenbergKitSettings {
+        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteURL = siteModel.url
             val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
@@ -2655,27 +2643,28 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             // Use the application password for self-hosted sites when available
             val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
             val siteApiNamespace = if (isWpCom)
-                listOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
-                else emptyList()
+                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
+                else arrayOf()
 
             val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
             val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
 
-            return GutenbergKitSettings(
-                postId = editPostRepository.getPost()?.remotePostId?.toInt(),
-                postType = postType,
-                postTitle = editPostRepository.getPost()?.title,
-                postContent = editPostRepository.getPost()?.content,
-                siteURL = siteURL,
-                siteApiRoot = siteApiRoot,
-                namespaceExcludedPaths = listOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-                authHeader = authHeader,
-                siteApiNamespace = siteApiNamespace,
-                themeStyles = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                plugins = gutenbergKitPluginsFeature.isEnabled() && site.isWPCom,
-                locale = wpcomLocaleSlug,
-                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                webViewGlobals = listOf(
+            return mutableMapOf(
+                "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
+                "postType" to postType,
+                "postTitle" to editPostRepository.getPost()?.title,
+                "postContent" to editPostRepository.getPost()?.content,
+                "siteURL" to siteURL,
+                "siteApiRoot" to siteApiRoot,
+                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
+                "authHeader" to authHeader,
+                "siteApiNamespace" to siteApiNamespace,
+                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
+                // Limited to Simple sites until application passwords are supported
+                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
+                "locale" to wpcomLocaleSlug,
+                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
+                "webViewGlobals" to listOf(
                     WebViewGlobal(
                         "_currentSiteType",
                         when {
@@ -2848,16 +2837,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
     private var mediaCapturePath: String? = ""
-    private fun getUploadErrorHtml(mediaId: String, path: String): String {
-        return String.format(
-            Locale.US,
-            ("<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
-                    + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
-                    + "contenteditable=\"false\"></progress>"
-                    + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>"),
-            mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path
-        )
-    }
 
     private fun migrateLegacyDraft(inputContent: String): String {
         var content = inputContent
@@ -2874,7 +2853,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     editorMedia
                         .updateMediaUploadStateBlocking(stringUri.toUri(), MediaUploadState.FAILED)
                 )?.let { mediaFile ->
-                    val replacement = getUploadErrorHtml(mediaFile.id.toString(), mediaFile.filePath)
+                    val replacement = EditorUnitFunctions.getUploadErrorHtml(
+                        mediaFile.id.toString(),
+                        mediaFile.filePath,
+                        getString(R.string.tap_to_try_again)
+                    )
                     matcher.appendReplacement(stringBuffer, replacement)
                 }
             }
@@ -2899,10 +2882,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             content = stringBuffer.toString()
         }
         return content
-    }
-
-    private fun migrateToGutenbergEditor(content: String): String {
-        return "<!-- wp:paragraph --><p>$content</p><!-- /wp:paragraph -->"
     }
 
     private fun fillContentEditorFields() {
@@ -2992,7 +2971,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
                 // If editor is Gutenberg, add Gutenberg block around content
                 if (showGutenbergEditor) {
-                    updatedContent = migrateToGutenbergEditor(updatedContent)
+                    updatedContent = EditorUnitFunctions.migrateToGutenbergEditor(updatedContent)
                 }
 
                 // update PostModel
@@ -3021,13 +3000,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if ((Intent.ACTION_SEND_MULTIPLE == action)) {
             val potentialUris: ArrayList<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
             potentialUris?.forEach { uri ->
-                if (isMediaTypeIntent(intent, uri)) {
+                if (EditorUnitFunctions.isMediaTypeIntent(intent, uri)) {
                     sharedUris.add(uri)
                 }
             }
         } else {
             // For a single media share, we only allow images and video types
-            if (isMediaTypeIntent(intent, null)) {
+            if (EditorUnitFunctions.isMediaTypeIntent(intent, null)) {
                 intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let {
                     sharedUris.add(it)
                 }
@@ -3039,19 +3018,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             intent.removeExtra(Intent.EXTRA_STREAM)
             editorMedia.addNewMediaItemsToEditorAsync(sharedUris, false)
         }
-    }
-
-    private fun isMediaTypeIntent(intent: Intent, uri: Uri?): Boolean {
-        var type: String? = null
-        if (uri != null) {
-            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            if (extension != null) {
-                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            }
-        } else {
-            type = intent.type
-        }
-        return type != null && (type.startsWith("image") || type.startsWith("video"))
     }
 
     private fun setFeaturedImageId(mediaId: Long, imagePicked: Boolean, isGutenbergEditor: Boolean) {
@@ -3257,21 +3223,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun handleFileOrAudioLibrary(data: Intent?) {
         if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
             val uriResults: List<Uri> = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                ?.let { convertStringArrayIntoUrisList(it) }
+                ?.let { EditorUnitFunctions.convertStringArrayIntoUrisList(it) }
                 ?: emptyList()
 
             uriResults.forEach { uri ->
                 uri.let { editorMedia.addNewMediaToEditorAsync(it, false) }
             }
         }
-    }
-
-    private fun convertStringArrayIntoUrisList(stringArray: Array<String>?): List<Uri> {
-        val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
-        stringArray?.forEach { stringUri ->
-            uris.add(stringUri.toUri())
-        }
-        return uris
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -3302,7 +3260,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0L)
             setFeaturedImageId(mediaId, true, isGutenbergEditor = false)
         } else if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS) == true) {
-            val uris: List<Uri> = convertStringArrayIntoUrisList(
+            val uris: List<Uri> = EditorUnitFunctions.convertStringArrayIntoUrisList(
                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)
             )
             val postId: Int = getImmutablePost().id
@@ -3331,7 +3289,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             }
             editPostSettingsFragment?.refreshViews()
         } else if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
-            val uris: List<Uri> = convertStringArrayIntoUrisList(
+            val uris: List<Uri> = EditorUnitFunctions.convertStringArrayIntoUrisList(
                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             )
             editorMedia.addNewMediaItemsToEditorAsync(uris, false)
@@ -3784,6 +3742,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
         onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
+
     private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
         // probably here is best for Gutenberg to start interacting with
         if (!(showGutenbergEditor && editorFragment is GutenbergEditorFragment))
@@ -4276,21 +4235,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun getExceptionLogger(): Consumer<Exception> {
-        return Consumer { e: Exception? ->
-            AppLog.e(
-                AppLog.T.EDITOR,
-                e
-            )
-        }
+        return EditorUnitFunctions.getExceptionLogger()
     }
 
     override fun getBreadcrumbLogger(): Consumer<String> {
-        return Consumer { s: String? ->
-            AppLog.e(
-                AppLog.T.EDITOR,
-                s
-            )
-        }
+        return EditorUnitFunctions.getBreadcrumbLogger()
     }
 
     private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
@@ -4321,21 +4270,5 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onSendJsException)
-    }
-}
-
-fun mapAllowedTypesToMediaBrowserType(allowedTypes: Array<MediaType>, multiple: Boolean): MediaBrowserType {
-    return when {
-        allowedTypes.contains(MediaType.IMAGE) && allowedTypes.contains(MediaType.VIDEO) -> {
-            if (multiple) MediaBrowserType.GUTENBERG_MEDIA_PICKER else MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER
-        }
-        allowedTypes.contains(MediaType.IMAGE) -> {
-            if (multiple) MediaBrowserType.GUTENBERG_IMAGE_PICKER else MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
-        }
-        allowedTypes.contains(MediaType.VIDEO) -> {
-            if (multiple) MediaBrowserType.GUTENBERG_VIDEO_PICKER else MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
-        }
-        allowedTypes.contains(MediaType.AUDIO) -> MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER
-        else -> if (multiple) MediaBrowserType.GUTENBERG_MEDIA_PICKER else MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER
     }
 }

@@ -1094,7 +1094,6 @@ Language: cs_CZ
     <string name="activity_log_activity_type_filter_apply">Potvrdit</string>
     <string name="reader_follow_comments_null_response">Žádná odpověď přijata</string>
     <string name="reader_follow_comments_bad_format_response">Přijata neplatná odpověď</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Média byla odstraněna. Zkuste svůj příběh vytvořit znovu.</string>
     <string name="label_done_button">Hotovo</string>
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
@@ -1183,7 +1182,6 @@ Language: cs_CZ
     <string name="create_post_fab_tooltip">Vytvořit příspěvek</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Skrýt</string>
     <string name="reader_discover_interests_header">Možná se vám bude líbit</string>
-    <string name="create_post_story_fab_tooltip">Vytvořte příspěvek nebo příběh</string>
     <string name="camera_error" tools:ignore="UnusedResources">Toto zařízení nepodporuje API Camera2.</string>
     <string name="toast_error_playing_video" tools:ignore="UnusedResources">Při přehrávání videa došlo k chybě</string>
     <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Název stránky. Prázdný</string>
@@ -1195,7 +1193,6 @@ Language: cs_CZ
     <string name="mlp_create_page">Vytvořit stránku</string>
     <string name="mlp_create_blank_page">Vytvořit prázdnou stránku</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
-    <string name="prepublishing_nudges_story_title_hint">Dejte svému příběhu název</string>
     <string name="mlp_choose_layout_title">Vyberte rozložení</string>
     <string name="mlp_choose_layout_subtitle">Začněte výběrem z široké škály předem připravených rozvržení stránky. Nebo jen začněte s prázdnou stránkou.</string>
     <string name="label_close_button">Zavřít</string>
@@ -1203,7 +1200,6 @@ Language: cs_CZ
     <string name="error_media_quota_exceeded_toast">Soubor nelze nahrát.\nByla překročena kvóta úložiště.</string>
     <string name="reader_toast_err_page_jump_not_found">Nelze najít propojený odkaz na stránku</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Úpravy ikon webů na webech WordPress, které hostuje sám, vyžadují plugin Jetpack.</string>
-    <string name="my_site_bottom_sheet_add_story">Příběhový příspěvek</string>
     <string name="photo_picker_choose_file">Vyberte si ze zařízení</string>
     <string name="pick_file">Přidat soubor</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Vyměňte obrázek nebo video</string>

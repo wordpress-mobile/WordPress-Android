@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-08 13:54:09+0000
+Translation-Revision-Date: 2025-08-12 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">Uygulama şifresini devre dışı bırakırsanız oturum açma bilgileriniz %1$s siteden kaldırılır.</string>
+    <string name="application_password_last_used_sort">Son kullanılan</string>
+    <string name="application_password_created_sort">Oluşturuldu</string>
+    <string name="application_password_name_sort">Ad</string>
+    <string name="application_password_no_ip">IP kaydedilmedi</string>
+    <string name="application_password_last_ip_label">Son IP:</string>
+    <string name="application_password_last_used_label">Son kullanılan:</string>
+    <string name="application_password_created_label">Oluşturuldu:</string>
+    <string name="application_password_name_label">İsim:</string>
+    <string name="application_password_never_used">Hiç kullanılmamış</string>
+    <string name="enable">Etkinleştir</string>
+    <string name="application_password_info_description_4">Uygulama tarafından kullanılan uygulama şifrelerini iptal ettiğinizde uygulamanın sitenize erişiminin sonlandırılacağını lütfen unutmayın. Uygulama tarafından oluşturulan uygulama şifrelerini iptal ederken dikkatli olun.</string>
+    <string name="application_password_info_description_3">Bu şifreleri kullanıcı profilinizde WordPress sitenizin yönetim panelinden görüntüleyebilir ve yönetebilirsiniz.</string>
+    <string name="application_password_info_description_2">Uygulamaya site eklediğinizde, uygulama şifreleri gerektiğinde otomatik olarak oluşturulur.</string>
+    <string name="application_password_info_description_1">Uygulama şifreleri, uygulamaların hesap şifrenizi kullanmadan sitenize erişmesinin güvenli bir yoludur.</string>
+    <string name="application_password_info_title">Uygulama Şifreleri</string>
+    <string name="application_password_disable_feature_description">Uygulama Şifresini devre dışı bırakırsanız oturum açma bilgileri %1$s sitenizden kaldırılır. Tekrar oturum açmak için etkilenen siteleri yeniden eklemeniz gerekebilir.</string>
+    <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama şifresi oluşturmak için lütfen tekrar oturum açın. </string>
+    <string name="subscribers_delete_failed">Abone silinemedi</string>
+    <string name="subscribers_delete_success_message">Abone silindi, ancak silmenin geçerli olması bir dakika sürebilir</string>
+    <string name="subscribers_delete_success_title">Abone silindi</string>
+    <string name="subscribers_delete_confirmation_message">Bu aboneyi silmek istediğinizden emin misiniz?</string>
+    <string name="subscribers_delete_confirmation_title">Aboneyi sil</string>
+    <string name="subscribers_sort_name">Ad</string>
+    <string name="jetpack_rest_connection_error_wpcom">WordPress.com\'a bağlanılamadı</string>
+    <string name="jetpack_rest_connection_error_timeout">Zaman aşımına uğradı</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack zaten yüklendi</string>
+    <string name="jetpack_rest_connection_cancel_message">Jetpack bağlantı süreci devam ediyor. İptal etmek istediğinizden emin misiniz?</string>
+    <string name="jetpack_rest_connection_cancel_title">Jetpack Kurulumu iptal edilsin mi?</string>
+    <string name="jetpack_rest_connection_status_failed">Başarısız</string>
+    <string name="jetpack_rest_connection_status_completed">Tamamlandı</string>
+    <string name="jetpack_rest_connection_status_in_progress">Devam ediyor…</string>
+    <string name="jetpack_rest_connection_status_not_started">Başlamamış</string>
+    <string name="jetpack_rest_connection_step_finalize">Kurulumu sonlandır</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">WordPress.com\'a bağlan</string>
+    <string name="jetpack_rest_connection_step_connect_site">Sitenizi bağlayın</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack eklentisini yükleyin</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com’da oturum açın</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack Kurulumu (Simüle)</string>
+    <string name="jetpack_rest_connection_title">Jetpack Bağlantısı</string>
+    <string name="experimental_jetpack_rest_connection_description">Deneysel Jetpack REST Bağlantısı akışını etkinleştir</string>
+    <string name="experimental_jetpack_rest_connection">Deneysel Jetpack REST Bağlantısı</string>
+    <string name="experimental_subscribers_feature_description">Haber bülteni abonelerini görün ve yönetin</string>
+    <string name="start">Başlat</string>
+    <string name="descending">Azalan</string>
+    <string name="ascending">Artan</string>
     <string name="application_password_disable_feature_title">Uygulama Şifresini Devre Dışı Bırak</string>
     <string name="application_password_invalid">Geçersiz Uygulama Şifresi</string>
     <string name="application_password_credentials_storing_error">%1$s Uygulama şifresi kimlik bilgileri saklanırken bir hata oluştu</string>
@@ -41,10 +85,7 @@ Language: tr
     <string name="subscribers_error_title">Bir sorun oluştu</string>
     <string name="subscribers_empty_search">Hiçbir sonuç bulunamadı</string>
     <string name="subscribers_empty">Abone yok</string>
-    <string name="subscribers_sort_plan">Paket</string>
-    <string name="subscribers_sort_display_name">Görünen ad</string>
     <string name="subscribers_sort_date">Abone olunduğu tarih</string>
-    <string name="subscribers_sort_email">E-posta adresi</string>
     <string name="subscribers_filter_reader_subscription">Okuyucu abonelikleri</string>
     <string name="subscribers_filter_email_subscription">E-Posta aboneliği</string>
     <string name="about_update_email_unverified">Profilinizi güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
@@ -56,9 +97,8 @@ Language: tr
     <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Lütfen tekrar deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
     <string name="qrcode_auth_flow_timeout_title">Tarama zaman aşımına uğradı</string>
     <string name="invite_users">Kullanıcıları davet et</string>
-    <string name="experimental_application_password_feature_description">Kullanıcı tarafından barındırılan sitelerde oturum açmak için Uygulama Şifresini etkinleştirin.</string>
+    <string name="experimental_application_password_feature_description">Kullanıcı tarafından barındırılan sitelerde oturum açmak için Uygulama Şifresini etkinleştirin</string>
     <string name="experimental_application_password_feature">Uygulama Şifresiyle oturum açma</string>
-    <string name="experimental_subscribers_feature_description">Haber bülteni abonelerini görün ve yönetin (çalışma devam ediyor)</string>
     <string name="experimental_subscribers_feature">Deneysel aboneler</string>
     <string name="cant_share_no_blog">Blogunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="coming_soon">Çok yakında!</string>
@@ -1695,7 +1735,6 @@ Language: tr
     <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
     <string name="activity_log_activity_type_filter_clear">Temizle</string>
     <string name="activity_log_activity_type_filter_apply">Uygula</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Ortam kaldırıldı. Öykünüzü yeniden oluşturmayı deneyin.</string>
     <string name="label_done_button">Tamamlandı</string>
     <string name="hpp_choose_error">Tema seçilirken bir sorun çıktı.</string>
     <string name="hpp_retry_error">Lütfen İnternet bağlantınızı denetleyip yeniden deneyin.</string>
@@ -1782,7 +1821,6 @@ Language: tr
     <string name="show_n_hidden_items_desc">%1$s diğer öge</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Yerleşim seçin</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Not: Sütun yerleşimi, temalara ve ekran boyutlarına göre değişebilir</string>
-    <string name="create_post_story_fab_tooltip">Bir yazı veya öykü oluştur</string>
     <string name="create_page_fab_tooltip">Bir sayfa oluştur</string>
     <string name="create_post_fab_tooltip">Bir yazı oluştur</string>
     <string name="reader_discover_interests_header">Şunları beğenebilirsin</string>
@@ -1800,10 +1838,8 @@ Language: tr
     <string name="mlp_create_blank_page">Boş sayfa oluştur</string>
     <string name="mlp_choose_layout_subtitle">Önceden hazırlanmış çeşitli sayfa yerleşimleri arasından seçim yaparak ya da boş bir sayfayla başlayın.</string>
     <string name="mlp_choose_layout_title">Bir yerleşim seçin</string>
-    <string name="prepublishing_nudges_story_title_hint">Öykünüze bir başlık koyun</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">%1$s Oluştur üzerine dokunun. %2$s Ardından &lt;b&gt;Blog yazısı&lt;/b&gt; üzerine dokunun</string>
     <string name="photo_picker_choose_file">Aygıttan seçin</string>
-    <string name="my_site_bottom_sheet_add_story">Öykü yazısı</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Kendi kendine barındırılan WordPress sitelerinde site simgelerini düzenlemek için Jetpack eklentisi gerekir.</string>
     <string name="reader_toast_err_page_jump_not_found">Bağlantılı sayfa atlaması bulunamıyor</string>
     <string name="error_media_quota_exceeded_toast">Dosya yüklenemedi.\nDepolama kotası aşıldı.</string>

@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-08 11:54:08+0000
+Translation-Revision-Date: 2025-08-13 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion de %1$s sites.</string>
+    <string name="application_password_last_used_sort">Dernière utilisation</string>
+    <string name="application_password_created_sort">Créé</string>
+    <string name="application_password_name_sort">Nom</string>
+    <string name="application_password_no_ip">Aucune adresse IP enregistrée</string>
+    <string name="application_password_last_ip_label">Dernière adresse IP :</string>
+    <string name="application_password_last_used_label">Dernière utilisation :</string>
+    <string name="application_password_created_label">Créé :</string>
+    <string name="application_password_name_label">Nom :</string>
+    <string name="application_password_never_used">Jamais utilisé</string>
+    <string name="enable">Activer</string>
+    <string name="application_password_info_description_4">Veuillez noter que la révocation des mots de passe d’application utilisés par l’application mettra fin à l’accès de cette dernière à votre site. Faites preuve de prudence lors de la révocation de mots de passe d’application créés par l’application.</string>
+    <string name="application_password_info_description_3">Vous pouvez voir et gérer ces mots de passe dans votre profil utilisateur depuis le panneau d’administration de votre site WordPress.</string>
+    <string name="application_password_info_description_2">Lorsque vous ajoutez des sites à l’application, les mots de passe d’application sont créés automatiquement si nécessaire.</string>
+    <string name="application_password_info_description_1">Les mots de passe d’application sont un moyen sécurisé pour les applications d’accéder à votre site sans utiliser le mot de passe de votre compte.</string>
+    <string name="application_password_info_title">Mots de passe d’applications</string>
+    <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion pour %1$s de vos sites. Vous devrez peut-être rajouter les sites affectés pour vous connecter à nouveau.</string>
+    <string name="application_password_invalid_description">Votre mot de passe d’application n’existe plus. Veuillez vous connecter à nouveau pour créer un nouveau mot de passe d’application. </string>
+    <string name="subscribers_delete_failed">Échec de la suppression de l’abonné</string>
+    <string name="subscribers_delete_success_message">L’abonné a été supprimé, mais la suppression peut prendre une minute pour être effective</string>
+    <string name="subscribers_delete_success_title">Abonné supprimé</string>
+    <string name="subscribers_delete_confirmation_message">Voulez-vous vraiment supprimer cet abonné ?</string>
+    <string name="subscribers_delete_confirmation_title">Supprimer l’abonné</string>
+    <string name="subscribers_sort_name">Nom</string>
+    <string name="jetpack_rest_connection_error_wpcom">Impossible de se connecter à WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">Délai dépassé</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack est déjà installée</string>
+    <string name="jetpack_rest_connection_cancel_message">Le processus de connexion Jetpack est en cours. Voulez-vous vraiment annuler ?</string>
+    <string name="jetpack_rest_connection_cancel_title">Annuler la configuration de Jetpack ?</string>
+    <string name="jetpack_rest_connection_status_failed">Échec</string>
+    <string name="jetpack_rest_connection_status_completed">Terminée</string>
+    <string name="jetpack_rest_connection_status_in_progress">En cours…</string>
+    <string name="jetpack_rest_connection_status_not_started">Non démarrée</string>
+    <string name="jetpack_rest_connection_step_finalize">Finaliser la configuration</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">Connexion à WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connecter votre site</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Installer l’extension Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Connexion à WordPress.com</string>
+    <string name="jetpack_rest_connection_setup_title">Configuration de Jetpack (simulée)</string>
+    <string name="jetpack_rest_connection_title">Connexion à Jetpack</string>
+    <string name="experimental_jetpack_rest_connection_description">Activer le flux de connexion Jetpack REST expérimentale</string>
+    <string name="experimental_jetpack_rest_connection">Connexion REST expérimentale Jetpack</string>
+    <string name="experimental_subscribers_feature_description">Afficher et gérer les abonnés à la newsletter</string>
+    <string name="start">Démarrer</string>
+    <string name="descending">Décroissant</string>
+    <string name="ascending">Croissant</string>
     <string name="application_password_disable_feature_title">Désactiver le mot de passe d’application ?</string>
     <string name="application_password_invalid">Mot de passe d’application non valide</string>
     <string name="application_password_credentials_storing_error">Une erreur est survenue lors du stockage des identifiants de connexion du mot de passe d’application pour %1$s</string>
@@ -40,9 +84,7 @@ Language: fr
     <string name="subscribers_error_title">Un problème est survenu</string>
     <string name="subscribers_empty_search">Aucun résultat</string>
     <string name="subscribers_empty">Aucun abonné</string>
-    <string name="subscribers_sort_display_name">Nom affiché</string>
     <string name="subscribers_sort_date">Date d’abonnement</string>
-    <string name="subscribers_sort_email">Adresse e-mail</string>
     <string name="subscribers_filter_reader_subscription">Abonnement via le Lecteur</string>
     <string name="subscribers_filter_email_subscription">Abonnement par e-mail</string>
     <string name="about_update_email_unverified">Pour mettre à jour votre profil, vous devez d’abord vérifier votre adresse e-mail.</string>
@@ -54,9 +96,8 @@ Language: fr
     <string name="qrcode_auth_flow_timeout_subtitle">Détecter un code a pris trop de temps. Veuillez réessayer ou utiliser votre application Appareil photo pour scanner le code.</string>
     <string name="qrcode_auth_flow_timeout_title">L’analyse a expiré</string>
     <string name="invite_users">Inviter des utilisateurs</string>
-    <string name="experimental_application_password_feature_description">Activez le mot de passe d’application pour vous connecter aux sites auto-hébergés.</string>
+    <string name="experimental_application_password_feature_description">Activer le mot de passe d’application pour vous connecter aux sites auto-hébergés</string>
     <string name="experimental_application_password_feature">Connexion par mot de passe d’applications</string>
-    <string name="experimental_subscribers_feature_description">Afficher et gérer les abonnés à la newsletter (en cours)</string>
     <string name="experimental_subscribers_feature">Abonnés expérimentaux</string>
     <string name="cant_share_no_blog">Vous ne pouvez pas partager vers WordPress si vous n’avez pas au moins un blog</string>
     <string name="coming_soon">Prochainement !</string>
@@ -1687,7 +1728,6 @@ Language: fr
     <string name="reader_follow_comments_null_response">Aucune réponse reçue</string>
     <string name="activity_log_activity_type_filter_clear">Effacer</string>
     <string name="activity_log_activity_type_filter_apply">Appliquer</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de créer à nouveau votre story.</string>
     <string name="label_done_button">Terminé</string>
     <string name="hpp_choose_error">Une erreur est survenue lors de la sélection du thème.</string>
     <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
@@ -1774,7 +1814,6 @@ Language: fr
     <string name="show_n_hidden_items_desc">encore %1$s éléments</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Sélectionner une mise en page</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note : la mise en page des colonnes peut varier selon les thèmes et tailles d’écran</string>
-    <string name="create_post_story_fab_tooltip">Créer un article ou une story</string>
     <string name="create_page_fab_tooltip">Créer une page</string>
     <string name="create_post_fab_tooltip">Créer un article</string>
     <string name="reader_discover_interests_header">Vous pourriez aimer</string>
@@ -1792,10 +1831,8 @@ Language: fr
     <string name="mlp_create_blank_page">Créer une page vide</string>
     <string name="mlp_choose_layout_subtitle">Commencez en choisissant parmi une large variété de mises en page prédéfinies. Ou commencez simplement avec une page vide.</string>
     <string name="mlp_choose_layout_title">Choisissez une mise en page</string>
-    <string name="prepublishing_nudges_story_title_hint">Donnez un titre à votre story</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Appuyez sur %1$s Créer. %2$s Puis sélectionnez &lt;b&gt;Article de blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Choisir depuis l’appareil</string>
-    <string name="my_site_bottom_sheet_add_story">Publication de story</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">La modification d’icônes de site sur des sites WordPress auto-hébergés requiert l’extension Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Lien d’ancrage lié introuvable</string>
     <string name="error_media_quota_exceeded_toast">Impossible de charger le fichier.\nQuota de stockage dépassé.</string>

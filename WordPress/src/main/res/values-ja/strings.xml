@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-07-08 09:54:08+0000
+Translation-Revision-Date: 2025-08-12 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、%1$s件のサイトからログイン情報が削除されます。</string>
+    <string name="application_password_last_used_sort">最終使用日</string>
+    <string name="application_password_created_sort">作成日</string>
+    <string name="application_password_name_sort">名前</string>
+    <string name="application_password_no_ip">IP の記録なし</string>
+    <string name="application_password_last_ip_label">最終 IP:</string>
+    <string name="application_password_last_used_label">最終使用日:</string>
+    <string name="application_password_created_label">作成日:</string>
+    <string name="application_password_name_label">名前:</string>
+    <string name="application_password_never_used">未使用</string>
+    <string name="enable">有効化</string>
+    <string name="application_password_info_description_4">アプリで使用しているアプリケーションパスワードを取り消すと、そのアプリによるサイトへのアクセスが終了します。 アプリによって作成されたアプリケーションパスワードを取り消すときは注意してください。</string>
+    <string name="application_password_info_description_3">これらのパスワードは、WordPress サイトの管理パネルにあるユーザープロフィールで表示および管理できます。</string>
+    <string name="application_password_info_description_2">サイトをアプリに追加すると、必要に応じてアプリケーションパスワードが自動的に作成されます。</string>
+    <string name="application_password_info_description_1">アプリケーションパスワードは、アカウントパスワードを使用せずにアプリがサイトに安全にアクセスするための仕組みです。</string>
+    <string name="application_password_info_title">アプリケーションパスワード</string>
+    <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、サイトの %1$s のログインが削除されます。 再度ログインするには、影響を受けるサイトの再追加が必要になる場合があります。</string>
+    <string name="application_password_invalid_description">ご使用のアプリケーションパスワードは存在しません。 新しいアプリケーションパスワードを作成するには、もう一度ログインしてください。 </string>
+    <string name="subscribers_delete_failed">購読者の削除に失敗しました</string>
+    <string name="subscribers_delete_success_message">購読者は削除されましたが、削除が有効になるまでには数分かかる場合があります</string>
+    <string name="subscribers_delete_success_title">購読者が削除されました</string>
+    <string name="subscribers_delete_confirmation_message">この購読者を削除してもよいですか ?</string>
+    <string name="subscribers_delete_confirmation_title">購読者を削除</string>
+    <string name="subscribers_sort_name">名前</string>
+    <string name="jetpack_rest_connection_error_wpcom">WordPress.com に接続できません</string>
+    <string name="jetpack_rest_connection_error_timeout">タイムアウト</string>
+    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack がすでにインストールされています</string>
+    <string name="jetpack_rest_connection_cancel_message">Jetpack 接続プロセスが進行中です。 キャンセルしてもよいですか ?</string>
+    <string name="jetpack_rest_connection_cancel_title">Jetpack 設定をキャンセルしますか ?</string>
+    <string name="jetpack_rest_connection_status_failed">失敗</string>
+    <string name="jetpack_rest_connection_status_completed">完了</string>
+    <string name="jetpack_rest_connection_status_in_progress">進行中…</string>
+    <string name="jetpack_rest_connection_status_not_started">開始前</string>
+    <string name="jetpack_rest_connection_step_finalize">設定を完了</string>
+    <string name="jetpack_rest_connection_step_connect_wpcom">WordPress.com に接続</string>
+    <string name="jetpack_rest_connection_step_connect_site">サイトを接続</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack プラグインをインストール</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com にログイン</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack の設定中 (シミュレート)</string>
+    <string name="jetpack_rest_connection_title">Jetpack 接続</string>
+    <string name="experimental_jetpack_rest_connection_description">試験用の Jetpack REST 接続フローを有効化</string>
+    <string name="experimental_jetpack_rest_connection">試験用の Jetpack REST 接続</string>
+    <string name="experimental_subscribers_feature_description">ニュースレター購読者を表示および管理</string>
+    <string name="start">開始</string>
+    <string name="descending">降順</string>
+    <string name="ascending">昇順</string>
     <string name="application_password_disable_feature_title">アプリケーションパスワードを無効にしますか ?</string>
     <string name="application_password_invalid">アプリケーションパスワードが無効です</string>
     <string name="application_password_credentials_storing_error">%1$s のアプリケーションパスワードのログイン情報を保存する際にエラーが発生しました</string>
@@ -41,10 +85,7 @@ Language: ja_JP
     <string name="subscribers_error_title">エラーが発生しました</string>
     <string name="subscribers_empty_search">結果が見つかりませんでした</string>
     <string name="subscribers_empty">購読者がいません</string>
-    <string name="subscribers_sort_plan">プラン</string>
-    <string name="subscribers_sort_display_name">表示名</string>
     <string name="subscribers_sort_date">登録した日付</string>
-    <string name="subscribers_sort_email">メールアドレス</string>
     <string name="subscribers_filter_reader_subscription">Reader 購読</string>
     <string name="subscribers_filter_email_subscription">メール購読</string>
     <string name="about_update_email_unverified">プロフィールを更新するには、まずメールアドレスを確認する必要があります。</string>
@@ -56,9 +97,8 @@ Language: ja_JP
     <string name="qrcode_auth_flow_timeout_subtitle">コードの検出に時間がかかりすぎました。 もう一度お試しいただくか、カメラアプリを使用してコードをスキャンしてください。</string>
     <string name="qrcode_auth_flow_timeout_title">スキャンがタイムアウトしました</string>
     <string name="invite_users">ユーザーを招待</string>
-    <string name="experimental_application_password_feature_description">インストール型のサイトにログインするには、アプリケーションパスワードを有効にします。</string>
+    <string name="experimental_application_password_feature_description">インストール型のサイトにログインするには、アプリケーションパスワードを有効にします</string>
     <string name="experimental_application_password_feature">アプリケーションパスワードによるログイン</string>
-    <string name="experimental_subscribers_feature_description">ニュースレター購読者の表示と管理 (進行中)</string>
     <string name="experimental_subscribers_feature">テスト購読者</string>
     <string name="cant_share_no_blog">ブログがないため WordPress で共有できません</string>
     <string name="coming_soon">まもなく公開予定です。</string>
@@ -1682,7 +1722,6 @@ Language: ja_JP
     <string name="reader_follow_comments_null_response">応答がありませんでした</string>
     <string name="activity_log_activity_type_filter_clear">クリア</string>
     <string name="activity_log_activity_type_filter_apply">適用</string>
-    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーを再度作成してみてください。</string>
     <string name="label_done_button">終了</string>
     <string name="hpp_choose_error">テーマの選択中にエラーが発生しました。</string>
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
@@ -1769,7 +1808,6 @@ Language: ja_JP
     <string name="show_n_hidden_items_desc">%1$s 件のアイテムをさらに表示</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">レイアウトを選択</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">注: カラムのレイアウトはテーマ、画面サイズによって異なります</string>
-    <string name="create_post_story_fab_tooltip">投稿またはストーリーを作成</string>
     <string name="create_page_fab_tooltip">ページを作成</string>
     <string name="create_post_fab_tooltip">投稿を作成</string>
     <string name="reader_discover_interests_header">おすすめ</string>
@@ -1787,10 +1825,8 @@ Language: ja_JP
     <string name="mlp_create_blank_page">空白ページを作成</string>
     <string name="mlp_choose_layout_subtitle">事前に用意されたさまざまなページレイアウトを選ぶところから始めましょう。 空白ページから始めることもできます。</string>
     <string name="mlp_choose_layout_title">レイアウトを選択</string>
-    <string name="prepublishing_nudges_story_title_hint">ストーリーにタイトルを付ける</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
     <string name="photo_picker_choose_file">端末から選択</string>
-    <string name="my_site_bottom_sheet_add_story">ストーリー投稿</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">インストール型の WordPress サイトでサイトアイコンを編集するには Jetpack プラグインが必要です。</string>
     <string name="reader_toast_err_page_jump_not_found">リンクされたページジャンプが見つかりません</string>
     <string name="error_media_quota_exceeded_toast">ファイルをアップロードできません。\nストレージ割り当ての上限に達しました。</string>

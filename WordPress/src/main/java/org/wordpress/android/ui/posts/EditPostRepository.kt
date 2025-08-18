@@ -248,6 +248,25 @@ class EditPostRepository
         return parent?.title ?: EMPTY_STRING
     }
 
+    // Do not log private or password protected post
+    fun shouldLog(): Boolean = hasPost() && password.isEmpty() && !hasStatus(PostStatus.PRIVATE)
+
+    fun isFirstTimePublish(publishPost: Boolean): Boolean {
+        val originalStatus = status
+        return (((originalStatus == DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
+                || (originalStatus == PostStatus.SCHEDULED && publishPost)
+                || (originalStatus == PostStatus.PUBLISHED && isLocalDraft)
+                || (originalStatus == PostStatus.PUBLISHED && remotePostId == 0L))
+    }
+
+    fun shouldSavePost(isNewPost: Boolean): Boolean {
+        val hasChanges = postWasChangedInCurrentSession()
+        val isPublishable = isPostPublishable()
+        val existingPostWithChanges = hasPostSnapshotWhenEditorOpened() && hasChanges
+        // if post was modified during this editing session, save it
+        return isPublishable && (existingPostWithChanges || isNewPost)
+    }
+
     sealed class UpdatePostResult {
         object Updated : UpdatePostResult()
         object NoChanges : UpdatePostResult()

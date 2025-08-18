@@ -1,0 +1,4 @@
+26.1:
+– Media visas nu korrekt på privata webbplatser i den experimentella redigeraren.
+– Förbättrad mediaöverföring med bättre autentisering och förbättrad prestanda.
+– Åtgärdade olika överföringsfel och förbättrade övergripande mediahantering.

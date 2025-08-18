@@ -1,2 +1,0 @@
-26.0:
-Dodaliśmy uwierzytelnianie za pomocą haseł aplikacji. Wciąż jest to rozwiązanie eksperymentalne, ale gdy zostanie w pełni zintegrowane, będziemy mogli ulepszyć istniejące funkcje i wprowadzić nowe. Trzymaj rękę na pulsie.

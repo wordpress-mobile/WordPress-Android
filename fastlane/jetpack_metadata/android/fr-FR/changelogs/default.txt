@@ -1,0 +1,5 @@
+26.1 :
+- L’écran Nouveaux abonnés affiche tous vos abonnés par e-mail et dans le Lecteur. Vous savez désormais qui lit votre contenu.
+- Les médias s’affichent désormais correctement sur les sites privés dans l’éditeur expérimental.
+- Amélioration des chargements de médias avec une meilleure authentification et de meilleures performances.
+- Correction de divers bugs de chargement et amélioration du traitement global des médias.
