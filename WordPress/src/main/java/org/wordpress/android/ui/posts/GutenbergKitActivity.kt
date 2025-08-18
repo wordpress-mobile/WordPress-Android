@@ -325,7 +325,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private var isXPostsCapable: Boolean? = null
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
-    private var isGutenbergKitEditor = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -488,15 +487,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
-        showGutenbergEditor: Boolean, post: PostImmutableModel?,
-        site: SiteModel, isNewPost: Boolean
+        post: PostImmutableModel?,
+        site: SiteModel,
+        isNewPost: Boolean
     ) {
         if (postEditorAnalyticsSession == null) {
-            val editor = when {
-                showGutenbergEditor && isGutenbergKitEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
-                showGutenbergEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG
-                else -> PostEditorAnalyticsSession.Editor.CLASSIC
-            }
+            val editor = PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
             postEditorAnalyticsSession = PostEditorAnalyticsSession(
                 editor, post, site, isNewPost, analyticsTrackerWrapper
             )
@@ -540,10 +536,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        isGutenbergKitEditor = isGutenbergEnabled && !isGutenbergDisabled
 
         createEditShareMessageActivityResultLauncher()
 
@@ -590,8 +582,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(
-            showGutenbergEditor, editPostRepository.getPost(), siteModel,
-            isNewPost
+            post = editPostRepository.getPost(),
+            site = siteModel,
+            isNewPost = isNewPost
         )
         logTemplateSelection()
 
@@ -770,7 +763,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 }
 
             isNewPost = state.getBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, false)
-            isGutenbergKitEditor = state.getBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, false)
             isVoiceContentSet = state.getBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
@@ -1358,7 +1350,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         outState.putInt(EditorConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, isNewPost)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
-        outState.putBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         outState.putBoolean(
             EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
@@ -1613,25 +1604,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility)
         }
         val contentInfo = menu.findItem(R.id.menu_content_info)
-        (editorFragment as? GutenbergEditorFragment)?.let { gutenbergEditorFragment ->
-            if (isGutenbergKitEditor) {
-                contentInfo.isVisible = false
-            } else {
-                contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
-                    try {
-                        gutenbergEditorFragment.showContentInfo()
-                    } catch (e: EditorFragmentNotAddedException) {
-                        ToastUtils.showToast(
-                            getContext(),
-                            R.string.toast_content_info_failed
-                        )
-                    }
-                    true
-                }
-            }
-        } ?: run {
-            contentInfo.isVisible = false // only show the menu item for Gutenberg
-        }
+        // TODO: If we are always hiding it, that probably means we can remove it
+        contentInfo.isVisible = false
 
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
@@ -2368,7 +2342,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         i.putExtra(EditorConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
         i.putExtra(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         i.putExtra(EditorConstants.EXTRA_IS_NEW_POST, isNewPost)
-        i.putExtra(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         setResult(RESULT_OK, i)
     }
 
@@ -2582,16 +2555,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                VIEW_PAGER_PAGE_CONTENT -> {
-                    if (isGutenbergKitEditor && showGutenbergEditor) {
-                        createGutenbergKitEditorFragment()
-                    } else if (showGutenbergEditor) {
-                        createGutenbergEditorFragment()
-                    } else {
-                        // If gutenberg editor is not selected, default to Aztec.
-                        AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded())
-                    }
-                }
+                VIEW_PAGER_PAGE_CONTENT -> createGutenbergKitEditorFragment()
                 VIEW_PAGER_PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
                 VIEW_PAGER_PAGE_PUBLISH_SETTINGS -> newInstance()
                 VIEW_PAGER_PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
@@ -2679,6 +2643,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
+        // TODO: Remove since it's no longer used
         private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
             // Enable gutenberg on the site & show the informative popup upon opening
             // the GB editor the first time when the remote setting value is still null
@@ -3797,23 +3762,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         val promptId: Int = intent.getIntExtra(EditorConstants.EXTRA_PROMPT_ID, -1)
         editorBloggingPromptsViewModel.start(siteModel, promptId)
-
-        updateVoiceContentIfNeeded()
-    }
-
-    private fun updateVoiceContentIfNeeded() {
-        if (isGutenbergKitEditor) {
-            return
-        }
-        // Check if voice content exists and this is a new post for a Gutenberg editor fragment
-        val content = intent.getStringExtra(EditorConstants.EXTRA_VOICE_CONTENT)
-        if (isNewPost && content != null && !isVoiceContentSet) {
-            val gutenbergFragment = editorFragment as? GutenbergEditorFragment
-            gutenbergFragment?.let {
-                isVoiceContentSet = true
-                it.updateContent(content)
-            }
-        }
     }
 
     private fun logTemplateSelection() {
