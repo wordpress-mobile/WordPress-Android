@@ -1037,7 +1037,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
         viewPager?.let { pager ->
             if (pager.currentItem != targetPage) {
-                AppLog.d(AppLog.T.POSTS, "GutenbergKitActivity: Moving ViewPager from ${pager.currentItem} to $targetPage")
+                AppLog.d(
+                    AppLog.T.POSTS,
+                    "GutenbergKitActivity: Moving ViewPager from ${pager.currentItem} to $targetPage"
+                )
                 pager.currentItem = targetPage
             }
         }
@@ -4027,8 +4030,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             ) {
                 AppLog.e(
                     AppLog.T.POSTS, (
-                          "Ignoring REMOTE_AUTO_SAVE_POST in GutenbergKitActivity as mPost is null or id of the opened post"
-                                    + " doesn't match the event.")
+                          "Ignoring REMOTE_AUTO_SAVE_POST in GutenbergKitActivity as mPost is null or " +
+                                  "id of the opened post doesn't match the event.")
                 )
                 return
             }
