@@ -31,8 +31,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
-    private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val appLogWrapper: AppLogWrapper,
+    wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -453,16 +453,19 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, clear
-     * info so the flow restarts when the user clicks the Retry button
+     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the access
+     * token and set the failed step to WP login so that restarting the flow shows the login page
      */
     override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
-        clearValues()
-        updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Failed, ErrorType.InvalidAuthentication)
-        site.wpApiRestUrl = authenticationUrl
-        site.apiRestPasswordPlain = null
-        site.apiRestPasswordEncrypted = null
+
+        accountStore.resetAccessToken()
+        _currentStep.value = ConnectionStep.LoginWpCom
+        updateStepStatus(
+            step = ConnectionStep.LoginWpCom,
+            status = ConnectionStatus.Failed,
+            error = ErrorType.InvalidAuthentication
+        )
     }
 
     sealed class ConnectionStep {

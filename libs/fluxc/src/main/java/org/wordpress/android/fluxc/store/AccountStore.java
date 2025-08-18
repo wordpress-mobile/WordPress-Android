@@ -1339,6 +1339,11 @@ public class AccountStore extends Store {
         emitChange(new OnAuthenticationChanged());
     }
 
+    public void resetAccessToken() {
+        mAccessToken.set(null);
+        emitChange(new OnAuthenticationChanged());
+    }
+
     /**
      * Update access token for account store for social login or signup.
      *
