@@ -2643,41 +2643,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
-        // TODO: Remove since it's no longer used
-        private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
-            // Enable gutenberg on the site & show the informative popup upon opening
-            // the GB editor the first time when the remote setting value is still null
-            setGutenbergEnabledIfNeeded()
-            xPostsCapabilityChecker.retrieveCapability(siteModel) { isXpostsCapable ->
-                onXpostsSettingsCapability(isXpostsCapable)
-            }
-
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergPropsBuilder = gutenbergPropsBuilder
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
-                siteModel.url,
-                isWpCom,
-                accountStore.account.userId,
-                accountStore.account.userName,
-                accountStore.accessToken,
-                siteModel.selfHostedSiteId,
-                siteModel.username,
-                siteModel.password,
-                siteModel.isUsingWpComRestApi,
-                siteModel.webEditor,
-                userAgent.toString(),
-                isJetpackSsoEnabled
-            )
-
-            return GutenbergEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                gutenbergPropsBuilder,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
-            )
-        }
-
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val fragment: Fragment = super.instantiateItem(container, position) as Fragment
             when (position) {
