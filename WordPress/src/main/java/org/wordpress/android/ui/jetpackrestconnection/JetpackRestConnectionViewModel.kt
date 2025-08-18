@@ -446,6 +446,15 @@ class JetpackRestConnectionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Called by the activity when auth fails, clear info so the flow restarts when the user clicks Retry
+     */
+    fun onInvalidAuthentication(authenticationUrl: String) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
+        updateStepStatus(currentStep.value!!, ConnectionStatus.Failed, ErrorType.InvalidAuthentication)
+        clearValues()
+    }
+
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
         data object InstallJetpack : ConnectionStep()
@@ -479,6 +488,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
+        data object InvalidAuthentication : ErrorType()
         data class Unknown(override val message: String? = null) : ErrorType(message)
     }
 

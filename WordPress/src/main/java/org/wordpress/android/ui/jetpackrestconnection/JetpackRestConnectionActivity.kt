@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler.NotifierListener
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -22,7 +23,7 @@ import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class JetpackRestConnectionActivity : BaseAppCompatActivity() {
+class JetpackRestConnectionActivity : BaseAppCompatActivity(), NotifierListener {
     private val viewModel: JetpackRestConnectionViewModel by viewModels()
 
     @Inject
@@ -103,6 +104,10 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
             .setNegativeButton(R.string.no) { _, _ -> viewModel.onCancelDismissed() }
             .setCancelable(false)
             .show()
+    }
+
+    override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
+        viewModel.onInvalidAuthentication(authenticationUrl)
     }
 
     companion object {

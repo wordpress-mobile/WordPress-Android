@@ -278,6 +278,7 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.ActivateStatsFailed -> R.string.jetpack_rest_connection_error_activate_stats
         ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
+        ErrorType.InvalidAuthentication -> R.string.jetpack_rest_connection_error_invalid_auth
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
     }
     val baseMessage = context.getString(messageRes)
