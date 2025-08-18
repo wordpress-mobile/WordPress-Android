@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewM
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
@@ -133,23 +135,30 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
     }
 
     private fun startJetpackConnectionFlow(siteModel: SiteModel) {
-        // if the experimental Jetpack REST Connection feature is enabled and this site is able to use it, launch
-        // the experimental flow instead of the old web-based one
-        if (mExperimentalFeatures.isEnabled(ExperimentalFeatures.Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)) {
-            mSelectedSiteRepository.getSelectedSite()?.let { site ->
-                if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
-                    val intent = JetpackRestConnectionActivity.createIntent(this)
-                    startActivity(intent)
-                    finish()
-                    return
-                }
-            }
+        if (!startJetpackRestConnectionFlow(siteModel)) {
+            mIsJetpackConnectStarted = true
+            JetpackConnectionWebViewActivity
+                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
         }
-
-        mIsJetpackConnectStarted = true
-        JetpackConnectionWebViewActivity
-            .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
         finish()
+    }
+
+    /**
+     * If the Jetpack REST Connection flow is available and this site is able to use it, launch it and return true
+     * so we skip the old WebView-based flow
+     */
+    private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
+        if (BuildConfig.IS_JETPACK_APP
+            && mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
+            && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
+        ) {
+            JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
+                this,
+                JetpackRestConnectionViewModel.ConnectionSource.STATS
+            )
+            return true
+        }
+        return false
     }
 
     @Subscribe(threadMode = MAIN)

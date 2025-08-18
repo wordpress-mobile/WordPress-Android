@@ -46,9 +46,9 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     private fun shouldShowFeature(feature: Feature): Boolean {
-        // Only show Jetpack Connection feature in debug builds
+        // Only show Jetpack REST Connection in Jetpack debug builds (this is a Jetpack-only feature)
         return if (feature == Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION) {
-            BuildConfig.DEBUG
+            BuildConfig.DEBUG && BuildConfig.IS_JETPACK_APP
         } else if (gutenbergKitFeature.isEnabled()) {
             feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {

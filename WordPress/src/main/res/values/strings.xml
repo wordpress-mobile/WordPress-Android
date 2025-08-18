@@ -1009,7 +1009,7 @@
 
     <!-- Jetpack REST Connection Screen -->
     <string name="jetpack_rest_connection_title">Jetpack Connection</string>
-    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack (Simulated)</string>
+    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login to WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
     <string name="jetpack_rest_connection_step_connect_site">Connect site to WordPress.com</string>
@@ -1031,6 +1031,7 @@
     <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
     <string name="jetpack_rest_connection_error_connect_user">Failed to connect user to WordPress.com</string>
     <string name="jetpack_rest_connection_error_access_token">Access token missing</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Failed to activate stats</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>

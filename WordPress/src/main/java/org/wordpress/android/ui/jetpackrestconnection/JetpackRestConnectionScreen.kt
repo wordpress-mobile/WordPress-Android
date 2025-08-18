@@ -65,6 +65,7 @@ fun JetpackRestConnectionScreen(
     stepStates: State<Map<ConnectionStep, StepState>>,
     buttonType: State<ButtonType?>,
     onStartClick: () -> Unit = {},
+    onDoneClick: () -> Unit = {},
     onCloseClick: () -> Unit = {},
     onRetryClick: () -> Unit = {}
 ) {
@@ -88,7 +89,7 @@ fun JetpackRestConnectionScreen(
                     JetpackConnectionButton(
                         buttonType = buttonType.value,
                         onStartClick = onStartClick,
-                        onDoneClick = onCloseClick,
+                        onDoneClick = onDoneClick,
                         onRetryClick = onRetryClick
                     )
                 }
@@ -274,6 +275,7 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
         ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
         ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
+        ErrorType.ActivateStatsFailed -> R.string.jetpack_rest_connection_error_activate_stats
         ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
         ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown

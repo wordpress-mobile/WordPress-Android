@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -36,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
@@ -46,6 +48,8 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
@@ -56,6 +60,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Comp
 import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -82,6 +88,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -257,9 +266,35 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private fun NotificationsListFragmentBinding.showConnectJetpackView() {
         clearToolbarScrollFlags()
         jetpackSetup.setOnClickListener {
-            val selectedSite = (requireActivity() as? WPMainActivity)?.selectedSite
-            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, selectedSite, false)
+            (requireActivity() as? WPMainActivity)?.selectedSite?.let { selectedSite ->
+                if (!startJetpackRestConnectionFlow(selectedSite)) {
+                    JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
+                        activity,
+                        NOTIFICATIONS,
+                        selectedSite,
+                        false
+                    )
+                }
+            }
         }
+    }
+
+    /**
+     * If the Jetpack REST Connection flow is available and this site is able to use it, launch it and return true
+     * so we skip the old WebView-based flow
+     */
+    private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
+        if (BuildConfig.IS_JETPACK_APP
+            && experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
+            && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
+        ) {
+            JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
+                requireActivity(),
+                JetpackRestConnectionViewModel.ConnectionSource.NOTIFS
+            )
+            return true
+        }
+        return false
     }
 
     private class NotificationsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
