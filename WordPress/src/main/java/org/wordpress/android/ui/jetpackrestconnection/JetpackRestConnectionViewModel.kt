@@ -28,6 +28,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val jetpackInstaller: JetpackInstaller,
+    private val jetpackConnector: JetpackConnector,
     private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
@@ -38,11 +39,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private val _buttonType = MutableStateFlow<ButtonType?>(ButtonType.Start)
     val buttonType = _buttonType
-
-    data class StepState(
-        val status: ConnectionStatus = ConnectionStatus.NotStarted,
-        val errorType: ErrorType? = null,
-    )
 
     private val _stepStates = MutableStateFlow(initialStepStates)
     val stepStates = _stepStates
@@ -68,7 +64,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private fun onJobCompleted() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
-        job?.cancel()
         _buttonType.value = ButtonType.Done
         _currentStep.value = null
     }
@@ -77,8 +72,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         null -> ConnectionStep.LoginWpCom
         ConnectionStep.LoginWpCom -> ConnectionStep.InstallJetpack
         ConnectionStep.InstallJetpack -> ConnectionStep.ConnectSite
-        ConnectionStep.ConnectSite -> ConnectionStep.ConnectWpCom
-        ConnectionStep.ConnectWpCom -> ConnectionStep.Finalize
+        ConnectionStep.ConnectSite -> ConnectionStep.ConnectUser
+        ConnectionStep.ConnectUser -> ConnectionStep.Finalize
         ConnectionStep.Finalize -> null
     }
 
@@ -238,7 +233,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "$TAG: Error in step $step: ${e.message}")
             val errorType = when (e) {
-                is TimeoutCancellationException -> ErrorType.Timeout(e.message)
+                is TimeoutCancellationException -> ErrorType.Timeout
                 else -> ErrorType.Unknown(e.message)
             }
             updateStepStatus(
@@ -262,12 +257,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
             ConnectionStep.ConnectSite -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting site")
-                // TODO
+                connectSite()
             }
 
-            ConnectionStep.ConnectWpCom -> {
+            ConnectionStep.ConnectUser -> {
                 appLogWrapper.d(AppLog.T.API, "$TAG: Connecting WordPress.com user")
-                // TODO
+                connectUser()
             }
 
             ConnectionStep.Finalize -> {
@@ -334,6 +329,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                             status = ConnectionStatus.Completed
                         )
                     }
+
                     PluginStatus.INACTIVE -> {
                         updateStepStatus(
                             step = ConnectionStep.InstallJetpack,
@@ -354,6 +350,61 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
+     * Connects the current site to Jetpack
+     */
+    private suspend fun connectSite() {
+        val result = jetpackConnector.connectSite(getSite())
+        result.fold(
+            onSuccess = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectSite,
+                    status = ConnectionStatus.Completed
+                )
+            },
+            onFailure = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectSite,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.ConnectSiteFailed
+                )
+            }
+        )
+    }
+
+    /**
+     * Connects the user to the current site to Jetpack
+     */
+    private suspend fun connectUser() {
+        if (!accountStore.hasAccessToken()) {
+            updateStepStatus(
+                step = ConnectionStep.ConnectUser,
+                status = ConnectionStatus.Failed,
+                error = ErrorType.MissingAccessToken
+            )
+            return
+        }
+        val result = jetpackConnector.connectUser(
+            site = getSite(),
+            accessToken = accountStore.accessToken!!
+        )
+        result.fold(
+            onSuccess = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectUser,
+                    status = ConnectionStatus.Completed
+                )
+            },
+            onFailure = {
+                updateStepStatus(
+                    step = ConnectionStep.ConnectUser,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.ConnectUserFailed
+                )
+            }
+        )
+    }
+
+    /**
      * Gets the current site from the store
      */
     private fun getSite() =
@@ -363,7 +414,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object LoginWpCom : ConnectionStep()
         data object InstallJetpack : ConnectionStep()
         data object ConnectSite : ConnectionStep()
-        data object ConnectWpCom : ConnectionStep()
+        data object ConnectUser : ConnectionStep()
         data object Finalize : ConnectionStep()
     }
 
@@ -385,8 +436,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object InstallJetpackFailed : ErrorType()
         data object InstallJetpackInactive : ErrorType()
         data object ConnectWpComFailed : ErrorType()
-        data class Timeout(override val message: String? = null) : ErrorType(message)
-        data class Offline(override val message: String? = null) : ErrorType(message)
+        data object ConnectSiteFailed : ErrorType()
+        data object ConnectUserFailed : ErrorType()
+        data object MissingAccessToken : ErrorType()
+        data object Timeout : ErrorType()
+        data object Offline : ErrorType()
         data class Unknown(override val message: String? = null) : ErrorType(message)
     }
 
@@ -395,6 +449,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object Done : ButtonType()
         data object Retry : ButtonType()
     }
+
+    data class StepState(
+        val status: ConnectionStatus = ConnectionStatus.NotStarted,
+        val errorType: ErrorType? = null,
+    )
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
@@ -419,7 +478,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             ConnectionStep.LoginWpCom to StepState(),
             ConnectionStep.InstallJetpack to StepState(),
             ConnectionStep.ConnectSite to StepState(),
-            ConnectionStep.ConnectWpCom to StepState(),
+            ConnectionStep.ConnectUser to StepState(),
             ConnectionStep.Finalize to StepState()
         )
     }

@@ -26,7 +26,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -148,9 +148,9 @@ private val stepConfigs = listOf(
         icon = Icons.Default.Home
     ),
     StepConfig(
-        step = ConnectionStep.ConnectWpCom,
-        titleRes = R.string.jetpack_rest_connection_step_connect_wpcom,
-        icon = Icons.Default.Settings
+        step = ConnectionStep.ConnectUser,
+        titleRes = R.string.jetpack_rest_connection_step_connect_user,
+        icon = Icons.Default.Person
     ),
     StepConfig(
         step = ConnectionStep.Finalize,
@@ -270,9 +270,12 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.LoginWpComFailed -> R.string.jetpack_rest_connection_error_login_wpcom
         ErrorType.ConnectWpComFailed -> R.string.jetpack_rest_connection_error_connect_wpcom
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
-        is ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
-        is ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
-        is ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
+        ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
+        ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
+        ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
+        ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
+        ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
+        ErrorType.Offline -> R.string.jetpack_rest_connection_error_offline
         is ErrorType.Unknown -> R.string.jetpack_rest_connection_error_unknown
     }
     val baseMessage = context.getString(messageRes)
@@ -421,7 +424,7 @@ private fun JetpackRestConnectionScreenPreview() {
                 ConnectionStep.LoginWpCom to StepState(ConnectionStatus.Completed),
                 ConnectionStep.InstallJetpack to StepState(ConnectionStatus.Completed),
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
-                ConnectionStep.ConnectWpCom to StepState(
+                ConnectionStep.ConnectUser to StepState(
                     ConnectionStatus.Failed,
                     ErrorType.ConnectWpComFailed
                 ),
