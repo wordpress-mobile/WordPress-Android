@@ -17,7 +17,7 @@ class WpApiClientProvider @Inject constructor(
         uploadListener: WpRequestExecutor.UploadListener? = null
     ): WpApiClient {
         val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
+            username = site.apiRestUsernamePlain, password = site.apiRestUsernamePlain // TODO
         )
         val apiRootUrl = URL(site.buildUrl())
         val client = WpApiClient(

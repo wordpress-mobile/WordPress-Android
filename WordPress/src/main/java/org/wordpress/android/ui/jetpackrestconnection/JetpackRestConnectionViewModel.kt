@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -30,8 +31,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val appLogWrapper: AppLogWrapper,
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -49,6 +51,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
+
+    init {
+        wpAppNotifierHandler.addListener(this)
+    }
 
     /**
      * This will be used for analytics tracking
@@ -447,12 +453,16 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called by the activity when auth fails, clear info so the flow restarts when the user clicks Retry
+     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, clear
+     * info so the flow restarts when the user clicks the Retry button
      */
-    fun onInvalidAuthentication(authenticationUrl: String) {
+    override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
-        updateStepStatus(currentStep.value!!, ConnectionStatus.Failed, ErrorType.InvalidAuthentication)
         clearValues()
+        updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Failed, ErrorType.InvalidAuthentication)
+        site.wpApiRestUrl = authenticationUrl
+        site.apiRestPasswordPlain = null
+        site.apiRestPasswordEncrypted = null
     }
 
     sealed class ConnectionStep {
