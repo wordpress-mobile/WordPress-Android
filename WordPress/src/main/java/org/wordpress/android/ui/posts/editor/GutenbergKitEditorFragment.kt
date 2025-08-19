@@ -26,7 +26,6 @@ import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.LiveTextWatcher
-import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.util.AppLog
@@ -50,8 +49,7 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener,
-    GutenbergNetworkConnectionListener {
+class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -566,10 +564,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     override fun onRedoPressed() {
         gutenbergView?.redo()
-    }
-
-    override fun onConnectionStatusChange(isConnected: Boolean) {
-        // Unused, no-op retained for the shared interface with Gutenberg
     }
 
     companion object {
