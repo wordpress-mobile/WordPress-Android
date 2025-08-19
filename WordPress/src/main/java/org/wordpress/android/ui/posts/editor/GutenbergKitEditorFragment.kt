@@ -27,8 +27,6 @@ import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.LiveTextWatcher
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
@@ -38,7 +36,6 @@ import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
-import org.wordpress.aztec.IHistoryListener
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
@@ -54,9 +51,8 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
-    EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
-    GutenbergNetworkConnectionListener {
+class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener,
+    EditorThemeUpdateListener, GutenbergNetworkConnectionListener {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -282,22 +278,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return false
-    }
-
-    override fun onRedoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndo() {
-        // Analytics tracking is not available in GB mobile
-    }
-
-    override fun onRedo() {
-        // Analytics tracking is not available in GB mobile
     }
 
     override fun setTitle(title: CharSequence?) {
@@ -591,14 +571,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     override fun onRedoPressed() {
         gutenbergView?.redo()
-    }
-
-    override fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onGutenbergDialogNegativeClicked(instanceTag: String) {
-        // Unused, no-op retained for the shared interface with Gutenberg
     }
 
     override fun onConnectionStatusChange(isConnected: Boolean) {
