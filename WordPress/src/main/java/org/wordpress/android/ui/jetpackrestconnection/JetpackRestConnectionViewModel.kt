@@ -346,7 +346,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private var isFirstCall = true
     private suspend fun installJetpack() {
-        // TODO remove this - it's only here for test purposes
+        // TODO remove this block - it's only here for testing purposes
         if (isFirstCall) {
             isFirstCall = false
             onRequestedWithInvalidAuthentication(site.url)
@@ -464,10 +464,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     /**
      * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the
-     * access token and restart the connection so the user sees the login page
+     * access token and restart the connection flow so the user sees the login page
      */
     override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
+        wpAppNotifierHandler.removeListener(this)
         accountStore.resetAccessToken()
         clearValues()
         startConnectionJob()
