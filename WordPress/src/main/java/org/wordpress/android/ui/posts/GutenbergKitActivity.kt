@@ -1491,27 +1491,22 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 )
             }
         }
-        val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
+        // Note: This menu is shared with EditPostActivity. The following items are not needed
+        // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
+        // menu resources until a more comprehensive menu cleanup is undertaken.
 
-        // The following null checks should basically be redundant but were added to manage
-        // an odd behaviour recorded with Android 8.0.0
-        // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+        // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
+        val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
         if (switchToGutenbergMenuItem != null) {
-            // TODO: If this is always false in GutenbergKitActivity, we can simplify it
-            val switchToGutenbergVisibility = false
-            switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility)
+            switchToGutenbergMenuItem.setVisible(false)
         }
+
+        // Hide "Content Info" - not supported in GutenbergKit editor
         val contentInfo = menu.findItem(R.id.menu_content_info)
-        // TODO: If we are always hiding it, that probably means we can remove it
         contentInfo.isVisible = false
 
+        // Hide "Help" - not supported in GutenbergKit editor
         if (helpMenuItem != null) {
-            // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
-            // Therefore, we have to update the Help menu item accordingly.
-            val showHelpAndSupport = jetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor()
-            val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
-            helpMenuItem.setTitle(helpMenuTitle)
-            // TODO: If we are always hiding it, we can remove it
             helpMenuItem.setVisible(false)
         }
 
@@ -1948,7 +1943,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         updateAndSavePostAsync(listener, isFinishing)
     }
 
-    // TODO: Unreachable?
     private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
             return try {
@@ -3325,7 +3319,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     @Throws(IllegalArgumentException::class)
-    // TODO: This can possibly be cleaned up because we probably don't use most of these anymore
     override fun onTrackableEvent(event: EditorFragmentAbstract.TrackableEvent) {
         editorFragment?.let {
             editorTracker.trackEditorEvent(event, it.editorName)
