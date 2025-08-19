@@ -298,6 +298,17 @@
                 android:value=".ui.posts.PostsListActivity" />
         </activity>
         <activity
+            android:name=".ui.posts.GutenbergKitActivity"
+            android:configChanges="screenLayout|orientation|screenSize
+      |keyboard|keyboardHidden|smallestScreenSize"
+            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.posts.PostsListActivity" />
+        </activity>
+        <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"
