@@ -32,7 +32,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
     private val appLogWrapper: AppLogWrapper,
-    wpAppNotifierHandler: WpAppNotifierHandler,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -52,10 +52,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
 
-    init {
-        wpAppNotifierHandler.addListener(this)
-    }
-
     /**
      * This will be used for analytics tracking
      */
@@ -71,19 +67,27 @@ class JetpackRestConnectionViewModel @Inject constructor(
         _buttonType.value = null
         _uiEvent.value = null
 
+        wpAppNotifierHandler.addListener(this)
+
         job?.cancel()
         job = launch {
             startStep(fromStep ?: ConnectionStep.LoginWpCom)
         }
     }
 
-    /**
-     * Called when all steps have completed successfully
-     */
-    private fun onJobCompleted() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
-        _buttonType.value = ButtonType.Done
+    private fun onJobCompleted(wasSuccessful: Boolean) {
+        if (wasSuccessful) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed successfully")
+            _buttonType.value = ButtonType.Done
+        } else {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job failed")
+            _buttonType.value = ButtonType.Retry
+        }
+
+        wpAppNotifierHandler.removeListener(this)
+
         _currentStep.value = null
+        job?.cancel()
     }
 
     private fun getNextStep(): ConnectionStep? = when (currentStep.value) {
@@ -138,14 +142,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         when (status) {
             ConnectionStatus.Failed -> {
-                job?.cancel()
-                _currentStep.value = null
-                _buttonType.value = ButtonType.Retry
+                onJobCompleted(false)
             }
 
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
-                    onJobCompleted()
+                    onJobCompleted(true)
                 } else {
                     startNextStep()
                 }
