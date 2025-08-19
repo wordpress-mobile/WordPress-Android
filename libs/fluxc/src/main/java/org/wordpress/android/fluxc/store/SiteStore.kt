@@ -1568,7 +1568,7 @@ open class SiteStore @Inject constructor(
                 if (siteFromDB != null) {
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
-                    if (!site.apiRestUsernameEncrypted.isNullOrEmpty()) {
+                    if (!siteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
                         site.apiRestUsernameEncrypted = siteFromDB.apiRestUsernameEncrypted
                         site.apiRestPasswordEncrypted = siteFromDB.apiRestPasswordEncrypted
                         site.apiRestUsernameIV = siteFromDB.apiRestUsernameIV
