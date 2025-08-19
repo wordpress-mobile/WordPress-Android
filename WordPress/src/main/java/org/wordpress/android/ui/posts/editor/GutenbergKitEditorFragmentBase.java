@@ -1,4 +1,4 @@
-package org.wordpress.android.editor;
+package org.wordpress.android.ui.posts.editor;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -17,6 +17,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.automattic.android.tracks.crashlogging.JsException;
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 
+import org.wordpress.android.editor.EditorEditMediaListener;
+import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -30,18 +33,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class EditorFragmentAbstract extends Fragment {
-    public class EditorFragmentNotAddedException extends Exception {
-    }
-
+public abstract class GutenbergKitEditorFragmentBase extends Fragment {
     public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract void showNotice(String message);
-    public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
-    public abstract void showContentInfo() throws EditorFragmentNotAddedException;
+    public abstract CharSequence getContent(CharSequence originalContent)
+            throws EditorFragmentAbstract.EditorFragmentNotAddedException;
+    public abstract void showContentInfo() throws EditorFragmentAbstract.EditorFragmentNotAddedException;
     public abstract Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
-            EditorFragmentNotAddedException;
+            EditorFragmentAbstract.EditorFragmentNotAddedException;
     public abstract void onEditorHistoryChanged(HistoryChangeListener listener);
     public abstract void onFeaturedImageChanged(FeaturedImageChangeListener listener);
     public abstract void onOpenMediaLibrary(OpenMediaLibraryListener listener);
@@ -216,8 +217,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onUndoMediaCheck(String undoedContent);
         void onVideoPressInfoRequested(String videoId);
         Map<String, String> onAuthHeaderRequested(String url);
-        void onTrackableEvent(TrackableEvent event);
-        void onTrackableEvent(TrackableEvent event, Map<String, String> properties);
+        void onTrackableEvent(org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent event);
+        void onTrackableEvent(org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent event,
+                              Map<String, String> properties);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
         void onAddGifClicked(boolean allowMultipleSelection);
@@ -253,41 +255,5 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorDragAndDropListener {
         void onMediaDropped(ArrayList<Uri> mediaUri);
         void onRequestDragAndDropPermissions(DragEvent dragEvent);
-    }
-
-    public enum TrackableEvent {
-        BLOCKQUOTE_BUTTON_TAPPED,
-        BOLD_BUTTON_TAPPED,
-        ELLIPSIS_COLLAPSE_BUTTON_TAPPED,
-        ELLIPSIS_EXPAND_BUTTON_TAPPED,
-        HEADING_BUTTON_TAPPED,
-        HEADING_1_BUTTON_TAPPED,
-        HEADING_2_BUTTON_TAPPED,
-        HEADING_3_BUTTON_TAPPED,
-        HEADING_4_BUTTON_TAPPED,
-        HEADING_5_BUTTON_TAPPED,
-        HEADING_6_BUTTON_TAPPED,
-        HORIZONTAL_RULE_BUTTON_TAPPED,
-        FORMAT_ALIGN_LEFT_BUTTON_TAPPED,
-        FORMAT_ALIGN_CENTER_BUTTON_TAPPED,
-        FORMAT_ALIGN_RIGHT_BUTTON_TAPPED,
-        HTML_BUTTON_TAPPED,
-        IMAGE_EDITED,
-        ITALIC_BUTTON_TAPPED,
-        LINK_ADDED_BUTTON_TAPPED,
-        LIST_BUTTON_TAPPED,
-        LIST_ORDERED_BUTTON_TAPPED,
-        LIST_UNORDERED_BUTTON_TAPPED,
-        MEDIA_BUTTON_TAPPED,
-        NEXT_PAGE_BUTTON_TAPPED,
-        PARAGRAPH_BUTTON_TAPPED,
-        PREFORMAT_BUTTON_TAPPED,
-        READ_MORE_BUTTON_TAPPED,
-        STRIKETHROUGH_BUTTON_TAPPED,
-        UNDERLINE_BUTTON_TAPPED,
-        REDO_TAPPED,
-        UNDO_TAPPED,
-        EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
-        EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
     }
 }

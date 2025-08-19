@@ -60,9 +60,9 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentNotAddedException
+import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase
+import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorDragAndDropListener
+import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorFragmentListener
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
@@ -1297,7 +1297,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     @Suppress("SwallowedException")
     private fun shouldSwitchToGutenbergBeVisible(
-        editorFragment: EditorFragmentAbstract?,
+        editorFragment: GutenbergKitEditorFragmentBase?,
         site: SiteModel
     ): Boolean {
         // Some guard conditions
@@ -1319,7 +1319,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             val content = editorFragment?.getContent(editPostRepository.content) as String
             hasBlocks = PostUtils.contentContainsGutenbergBlocks(content)
             isEmpty = TextUtils.isEmpty(content)
-        } catch (e: EditorFragmentNotAddedException) {
+        } catch (e: EditorFragmentAbstract.EditorFragmentNotAddedException) {
             // legacy exception; just ignore.
         }
 
@@ -1925,7 +1925,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
-            } catch (e: EditorFragmentNotAddedException) {
+            } catch (e: EditorFragmentAbstract.EditorFragmentNotAddedException) {
                 AppLog.e(AppLog.T.EDITOR, "Impossible to save the post, we weren't able to update it.")
                 UpdateFromEditor.Failed(e)
             }
