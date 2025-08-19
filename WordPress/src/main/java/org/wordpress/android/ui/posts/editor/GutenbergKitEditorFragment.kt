@@ -48,7 +48,7 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract() {
+class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -303,7 +303,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract() {
 
     private fun toggleHtmlMode() {
         isHtmlModeEnabled = !isHtmlModeEnabled
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED)
+        mEditorFragmentListener.onTrackableEvent(EditorFragmentAbstract.TrackableEvent.HTML_BUTTON_TAPPED)
         mEditorFragmentListener.onHtmlModeToggledInToolbar()
         gutenbergView?.textEditorEnabled = isHtmlModeEnabled
     }
