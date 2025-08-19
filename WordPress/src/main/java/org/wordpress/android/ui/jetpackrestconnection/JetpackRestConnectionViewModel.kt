@@ -507,7 +507,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
-        data object InvalidAuthentication : ErrorType()
         data class Unknown(override val message: String? = null) : ErrorType(message)
     }
 
