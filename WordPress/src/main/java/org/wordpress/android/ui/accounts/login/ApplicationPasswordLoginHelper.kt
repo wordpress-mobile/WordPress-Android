@@ -222,7 +222,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     class DispatcherWrapper @Inject constructor(private val dispatcher: Dispatcher) {
         fun insertOrUpdateSite(site: SiteModel) {
             dispatcher.dispatch(
-                SiteActionBuilder.newUpdateSiteAction(site)
+                SiteActionBuilder.newUpdateSiteApplicationPasswordAction(site)
             )
         }
     }

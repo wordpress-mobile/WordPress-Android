@@ -68,6 +68,7 @@ import org.wordpress.android.fluxc.action.SiteAction.SUGGESTED_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
+import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.JetpackCapability
@@ -1347,6 +1348,14 @@ open class SiteStore @Inject constructor(
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
+            UPDATE_SITE_APPLICATION_PASSWORD -> {
+                emitChange(
+                    updateSite(
+                        siteModel = action.payload as SiteModel,
+                        forceApplicationPasswordOverride = true
+                    )
+                )
+            }
             UPDATE_SITES -> updateSites(action.payload as SitesModel)
             DELETE_SITE -> deleteSite(action.payload as SiteModel)
             DELETED_SITE -> handleDeletedSite(action.payload as DeleteSiteResponsePayload)
@@ -1496,19 +1505,27 @@ open class SiteStore @Inject constructor(
     }
 
     @Suppress("ForbiddenComment", "SwallowedException")
-    private fun updateSite(siteModel: SiteModel): OnSiteChanged {
+    private fun updateSite(siteModel: SiteModel, forceApplicationPasswordOverride: Boolean = false): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
             try {
-                // The REST API doesn't return info about the editor(s). Make sure to copy current values
-                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The REST API doesn't return info about the editor(s) not the Application Password.
+                // Make sure to copy current values available on the DB.
+                // Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
                 val freshSiteFromDB = getSiteByLocalId(siteModel.id)
                 if (freshSiteFromDB != null) {
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
+                    if (!forceApplicationPasswordOverride && !freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
+                        siteModel.apiRestUsernameEncrypted = freshSiteFromDB.apiRestUsernameEncrypted
+                        siteModel.apiRestPasswordEncrypted = freshSiteFromDB.apiRestPasswordEncrypted
+                        siteModel.apiRestUsernameIV = freshSiteFromDB.apiRestUsernameIV
+                        siteModel.apiRestPasswordIV = freshSiteFromDB.apiRestPasswordIV
+                        siteModel.wpApiRestUrl = freshSiteFromDB.wpApiRestUrl
+                    }
                 }
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
