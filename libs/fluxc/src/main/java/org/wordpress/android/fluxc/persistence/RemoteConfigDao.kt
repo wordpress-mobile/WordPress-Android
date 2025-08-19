@@ -8,9 +8,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfigValueSource.REMOTE
 
 @Dao
+@TypeConverters(RemoteConfigDao.RemoteConfigValueConverter::class)
 abstract class RemoteConfigDao {
     @Transaction
     @Query("SELECT * from RemoteConfigurations")
