@@ -344,7 +344,15 @@ class JetpackRestConnectionViewModel @Inject constructor(
     /**
      * Step 2: Installs Jetpack to the current site if not already installed
      */
+    private var isFirstCall = true
     private suspend fun installJetpack() {
+        // TODO remove this - it's only here for test purposes
+        if (isFirstCall) {
+            isFirstCall = false
+            onRequestedWithInvalidAuthentication(site.url)
+            return
+        }
+
         val result = jetpackInstaller.installJetpack(site)
 
         result.fold(
@@ -455,19 +463,14 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the access
-     * token and set the failed step to WP login so that restarting the flow shows the login page
+     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the
+     * access token and restart the connection so the user sees the login page
      */
     override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
-
         accountStore.resetAccessToken()
-        _currentStep.value = ConnectionStep.LoginWpCom
-        updateStepStatus(
-            step = ConnectionStep.LoginWpCom,
-            status = ConnectionStatus.Failed,
-            error = ErrorType.InvalidAuthentication
-        )
+        clearValues()
+        startConnectionJob()
     }
 
     sealed class ConnectionStep {
