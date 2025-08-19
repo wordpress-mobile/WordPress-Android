@@ -34,7 +34,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -293,7 +292,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
      */
     var viewPager: WPViewPager? = null
     private var revision: Revision? = null
-    private var editorFragment: EditorFragmentAbstract? = null
+    private var editorFragment: GutenbergKitEditorFragment? = null
     private var editPostSettingsFragment: EditPostSettingsFragment? = null
     private var editorMediaUploadListener: EditorMediaUploadListener? = null
     private var editorPhotoPicker: EditorPhotoPicker? = null
@@ -774,11 +773,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             (supportFragmentManager.getFragment(
                 state,
                 EditorConstants.STATE_KEY_EDITOR_FRAGMENT
-            ) as EditorFragmentAbstract?)?.let { frag ->
+            ) as GutenbergKitEditorFragment?)?.let { frag ->
                 editorFragment = frag
-                if (frag is EditorMediaUploadListener) {
-                    editorMediaUploadListener = frag
-                }
+                editorMediaUploadListener = frag
             }
         }
     }
@@ -1634,9 +1631,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 return performSecondaryAction()
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onToggleHtmlMode()
-                }
+                editorFragment?.onToggleHtmlMode()
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // The following boolean check should be always redundant but was added to manage
                 // an odd behaviour recorded with Android 8.0.0
@@ -1655,13 +1650,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             } else if (itemId == R.id.menu_editor_send_feedback) {
                 ActivityLauncher.viewFeedbackForm(this@GutenbergKitActivity, "Editor")
             } else if (itemId == R.id.menu_undo_action) {
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onUndoPressed()
-                }
+                editorFragment?.onUndoPressed()
             } else if (itemId == R.id.menu_redo_action) {
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onRedoPressed()
-                }
+                editorFragment?.onRedoPressed()
             }
         }
         return false
@@ -1812,13 +1803,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun trackPostSessionEditorModeSwitch() {
-        val isGutenbergKit: Boolean = editorFragment is GutenbergKitEditorFragment
         postEditorAnalyticsSession?.switchEditor(
-            when {
-                htmlModeMenuStateOn -> PostEditorAnalyticsSession.Editor.HTML
-                isGutenbergKit -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
-                else -> PostEditorAnalyticsSession.Editor.CLASSIC
-            }
+            if (htmlModeMenuStateOn) PostEditorAnalyticsSession.Editor.HTML
+            else PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
         )
     }
 
@@ -1961,15 +1948,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         updateAndSavePostAsync(listener, isFinishing)
     }
 
+    // TODO: Unreachable?
     private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
-                val titleAndContent: Pair<CharSequence, CharSequence> = if (it is GutenbergKitEditorFragment) {
-                    it.getTitleAndContent(oldContent, isFinishing)
-                } else {
-                    it.getTitleAndContent(oldContent)
-                }
+                val titleAndContent = it.getTitleAndContent(oldContent, isFinishing)
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
@@ -1981,64 +1965,62 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     override fun initializeEditorFragment() {
-        if (editorFragment is GutenbergKitEditorFragment) {
-            editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
-                override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
-                    onToggleUndo(!hasUndo)
-                    onToggleRedo(!hasRedo)
+        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
+            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                onToggleUndo(!hasUndo)
+                onToggleRedo(!hasRedo)
+            }
+        })
+        editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
+            override fun onFeaturedImageChanged(mediaID: Long) {
+                setFeaturedImageId(mediaID, false, true)
+            }
+        })
+        editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
+            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
+                editorPhotoPicker?.allowMultipleSelection = config.multiple
+                val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
+                    config.allowedTypes,
+                    config.multiple
+                )
+                val initialSelection = when (val value = config.value) {
+                    is GutenbergView.Value.Single -> listOf(value.value)
+                    is GutenbergView.Value.Multiple -> value.toList()
+                    else -> emptyList()
                 }
-            })
-            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
-                override fun onFeaturedImageChanged(mediaID: Long) {
-                    setFeaturedImageId(mediaID, false, true)
-                }
-            })
-            editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-                override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                    editorPhotoPicker?.allowMultipleSelection = config.multiple
-                    val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
-                        config.allowedTypes,
-                        config.multiple
+                openMediaLibrary(mediaType, initialSelection)
+            }
+        })
+        editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
+            override fun onLogJsException(exception: GutenbergJsException) {
+                val stackTraceElements = exception.stackTrace.map { stackTrace ->
+                    JsExceptionStackTraceElement(
+                        stackTrace.fileName,
+                        stackTrace.lineNumber,
+                        stackTrace.colNumber,
+                        stackTrace.function
                     )
-                    val initialSelection = when (val value = config.value) {
-                        is GutenbergView.Value.Single -> listOf(value.value)
-                        is GutenbergView.Value.Multiple -> value.toList()
-                        else -> emptyList()
-                    }
-                    openMediaLibrary(mediaType, initialSelection)
                 }
-            })
-            editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
-                override fun onLogJsException(exception: GutenbergJsException) {
-                    val stackTraceElements = exception.stackTrace.map { stackTrace ->
-                        JsExceptionStackTraceElement(
-                            stackTrace.fileName,
-                            stackTrace.lineNumber,
-                            stackTrace.colNumber,
-                            stackTrace.function
-                        )
+
+                val jsException = JsException(
+                    exception.type,
+                    exception.message,
+                    stackTraceElements,
+                    exception.context,
+                    exception.tags,
+                    exception.isHandled,
+                    exception.handledBy
+                )
+
+                val callback = object : JsExceptionCallback {
+                    override fun onReportSent(sent: Boolean) {
+                        // Do nothing
                     }
-
-                    val jsException = JsException(
-                        exception.type,
-                        exception.message,
-                        stackTraceElements,
-                        exception.context,
-                        exception.tags,
-                        exception.isHandled,
-                        exception.handledBy
-                    )
-
-                    val callback = object : JsExceptionCallback {
-                        override fun onReportSent(sent: Boolean) {
-                            // Do nothing
-                        }
-                    }
-
-                    onLogJsException(jsException, callback)
                 }
-            })
-        }
+
+                onLogJsException(jsException, callback)
+            }
+        })
     }
 
     override fun onImageSettingsRequested(editorImageMetaData: EditorImageMetaData) {
@@ -2330,14 +2312,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         return editPostRepository.isFirstTimePublish(publishPost)
     }
 
-    /**
-     * Can be dropped and replaced by mEditorFragment.hasFailedMediaUploads() when we drop the visual editor.
-     * mEditorFragment.isActionInProgress() was added to address a timing issue when adding media and immediately
-     * publishing or exiting the visual editor. It's not safe to upload the post in this state.
-     * See https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/294
-     */
     private fun hasFailedMedia(): Boolean {
-        return editorFragment?.hasFailedMediaUploads() == true || editorFragment?.isActionInProgress == true
+        return editorFragment?.hasFailedMediaUploads() == true
     }
 
     /**
@@ -2441,7 +2417,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             val fragment: Fragment = super.instantiateItem(container, position) as Fragment
             when (position) {
                 VIEW_PAGER_PAGE_CONTENT -> {
-                    editorFragment = fragment as EditorFragmentAbstract
+                    editorFragment = fragment as GutenbergKitEditorFragment
                     editorFragment?.setImageLoader(imageLoader)
                     editorFragment?.titleOrContentChanged?.observe(this@GutenbergKitActivity) { _: Editable? ->
                         storePostViewModel.savePostWithDelay()
@@ -2476,10 +2452,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     private fun onXpostsSettingsCapability(isXpostsCapable: Boolean) {
         isXPostsCapable = isXpostsCapable
-        if (editorFragment is GutenbergKitEditorFragment) {
-            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
-            (editorFragment as GutenbergKitEditorFragment).setXPostsEnabled(enableXPosts)
-        }
+        val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
+        editorFragment?.setXPostsEnabled(enableXPosts)
     }
 
     private var mediaCapturePath: String? = ""
@@ -3293,17 +3267,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
-        if (editorFragment !is GutenbergKitEditorFragment) {
-            refreshEditorContent()
-        }
-
+        refreshEditorContent()
         onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
     }
 
     private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
-        if (editorFragment is GutenbergKitEditorFragment) {
-            refreshEditorSettings()
-        }
+        refreshEditorSettings()
     }
 
     override fun onEditorFragmentContentReady(
@@ -3356,6 +3325,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     @Throws(IllegalArgumentException::class)
+    // TODO: This can possibly be cleaned up because we probably don't use most of these anymore
     override fun onTrackableEvent(event: EditorFragmentAbstract.TrackableEvent) {
         editorFragment?.let {
             editorTracker.trackEditorEvent(event, it.editorName)
@@ -3689,7 +3659,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
         val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
-        (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
+        editorFragment?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
     // EditorDataProvider methods
@@ -3709,7 +3679,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        editorFragment?.appendMediaFiles(mediaFiles)
+        editorFragment?.appendMediaFiles(mediaFiles.toMutableMap())
     }
 
     override fun getImmutablePost(): PostImmutableModel {
