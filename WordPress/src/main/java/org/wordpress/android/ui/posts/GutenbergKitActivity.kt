@@ -67,7 +67,6 @@ import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
-import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
@@ -97,7 +96,6 @@ import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettings
 import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched
@@ -191,9 +189,7 @@ import org.wordpress.android.ui.suggestion.SuggestionType
 import org.wordpress.android.ui.uploads.PostEvents.PostMediaCanceled
 import org.wordpress.android.ui.uploads.PostEvents.PostOpenedInEditor
 import org.wordpress.android.ui.uploads.PostEvents.PostPreviewingInEditor
-import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.UploadService.UploadMediaRetryEvent
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.AuthenticationUtils
@@ -288,7 +284,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private var revision: Revision? = null
     private var editorFragment: GutenbergKitEditorFragment? = null
     private var editPostSettingsFragment: EditPostSettingsFragment? = null
-    private var editorMediaUploadListener: EditorMediaUploadListener? = null
     private var editorPhotoPicker: EditorPhotoPicker? = null
     private var progressDialog: ProgressDialog? = null
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -769,7 +764,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 EditorConstants.STATE_KEY_EDITOR_FRAGMENT
             ) as GutenbergKitEditorFragment?)?.let { frag ->
                 editorFragment = frag
-                editorMediaUploadListener = frag
             }
         }
     }
@@ -1852,20 +1846,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun onUploadSuccess(media: MediaModel?) {
         if (media != null) {
             // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
-            if (!media.markedLocallyAsFeatured && editorMediaUploadListener != null) {
-                editorMediaUploadListener?.onMediaUploadSucceeded(
-                    media.id.toString(),
-                    FluxCUtils.mediaFileFromMediaModel(media)
-                )
+            if (!media.markedLocallyAsFeatured) {
+                // Note: media upload success handling removed as GutenbergKit editor
+                // does not use EditorMediaUploadListener interface
             } else if (media.markedLocallyAsFeatured && media.localPostId == editPostRepository.id) {
                 setFeaturedImageId(media.mediaId, imagePicked = false, isGutenbergEditor = false)
             }
         }
-    }
-
-    private fun onUploadProgress(media: MediaModel?, progress: Float) {
-        val localMediaId = media?.id.toString()
-        editorMediaUploadListener?.onMediaUploadProgress(localMediaId, progress)
     }
 
     private fun launchPictureLibrary() {
@@ -2403,12 +2390,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                     editorFragment?.titleOrContentChanged?.observe(this@GutenbergKitActivity) { _: Editable? ->
                         storePostViewModel.savePostWithDelay()
                     }
-                    if (editorFragment is EditorMediaUploadListener) {
-                        editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
 
-                        // Set up custom headers for the visual editor's internal WebView
-                        editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
-                    }
+                    // Set up custom headers for the visual editor's internal WebView
+                    editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }
@@ -3146,12 +3130,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             return false
         }
         if (!TextUtils.isEmpty(media.url) && (media.uploadState == MediaUploadState.UPLOADED.toString())) {
-            // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
-            // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
-                editorMediaUploadListener?.onMediaUploadSucceeded(
-                    media.id.toString(),
-                    FluxCUtils.mediaFileFromMediaModel(media)
-                )
+            // Note: media upload success handling removed as GutenbergKit editor
+            // does not use EditorMediaUploadListener interface
         } else {
             UploadService.cancelFinalNotification(this, editPostRepository.getPost())
             UploadService.cancelFinalNotificationForMedia(this, siteModel)
@@ -3406,11 +3386,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
 
         if (event.isError && !NetworkUtils.isNetworkAvailable(this)) {
-            editorMediaUploadListener?.let { listener ->
-                event.media?.let { media ->
-                    editorMedia.onMediaUploadPaused(listener, media, event.error)
-                }
-            }
+            // Note: media upload pause handling removed as GutenbergKit editor
+            // does not use EditorMediaUploadListener interface
             return
         }
 
@@ -3419,8 +3396,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 handleOnMediaUploadedError(event)
             } else if (event.completed) {
                 handleOnMediaUploadedCompleted(event)
-            } else {
-                onUploadProgress(event.media, event.progress)
             }
         } ?: run {
             // event for unknown media, ignoring
@@ -3438,28 +3413,14 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 )
             )
         }
-        editorMediaUploadListener?.let { listener ->
-            event.media?.let { media ->
-                editorMedia.onMediaUploadError(listener, media, event.error)
-            }
-        }
     }
 
     private fun handleOnMediaUploadedCompleted(event: OnMediaUploaded){
         // if the remote url on completed is null, we consider this upload wasn't successful
         val media = event.media ?: return
 
-        editorMediaUploadListener?.let { listener ->
-            if (TextUtils.isEmpty(media.url)) {
-                val error = MediaError(MediaErrorType.GENERIC_ERROR)
-                if (!NetworkUtils.isNetworkAvailable(this)) {
-                    editorMedia.onMediaUploadPaused(listener, media, error)
-                } else {
-                    editorMedia.onMediaUploadError(listener, media, error)
-                }
-            } else {
-                onUploadSuccess(media)
-            }
+        if (!TextUtils.isEmpty(media.url)) {
+            onUploadSuccess(media)
         }
     }
 
@@ -3582,34 +3543,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             } else {
                 editPostRepository.set { post }
                 handleRemotePreviewUploadResult(event.isError, RemotePreviewType.REMOTE_PREVIEW)
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ProgressEvent) {
-        if (!isFinishing) {
-            // use upload progress rather than optimizer progress since the former includes upload+optimization
-            val progress: Float = UploadService.getUploadProgressForMedia(event.media)
-            onUploadProgress(event.media, progress)
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: UploadMediaRetryEvent) {
-        if ((!isFinishing
-                    && (event.mediaModelList != null
-                    ) && (editorMediaUploadListener != null))
-        ) {
-            for (media: MediaModel in event.mediaModelList) {
-                val localMediaId = media.id.toString()
-                val mediaType: EditorFragmentAbstract.MediaType =
-                    if (media.isVideo)
-                        EditorFragmentAbstract.MediaType.VIDEO
-                    else EditorFragmentAbstract.MediaType.IMAGE
-                editorMediaUploadListener?.onMediaUploadRetry(localMediaId, mediaType)
             }
         }
     }

@@ -24,7 +24,6 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
-import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
@@ -49,7 +48,7 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener {
+class GutenbergKitEditorFragment : EditorFragmentAbstract() {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -468,36 +467,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     }
 
     override fun mediaSelectionCancelled() {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadReattached(localMediaId: String?, currentProgress: Float) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadRetry(localMediaId: String?, mediaType: MediaType?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadSucceeded(localMediaId: String?, mediaFile: MediaFile?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadProgress(localMediaId: String?, progress: Float) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadFailed(localMediaId: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadPaused(localMediaId: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onGalleryMediaUploadSucceeded(
-        galleryId: Long, remoteMediaId: Long, remaining: Int
-    ) {
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 
