@@ -1159,13 +1159,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             }
         }
 
-        // Featured image management
-        editPostSettingsViewModel.clearFeaturedImage.observe(this) { event ->
-            event?.getContentIfNotHandled()?.let {
-                // No-op because it was GutenbergEditor only
-            }
-        }
-
         // Observe prepublishing submit button events
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
