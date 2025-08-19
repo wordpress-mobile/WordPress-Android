@@ -25,7 +25,6 @@ import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorMediaUploadListener
-import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
@@ -52,7 +51,7 @@ import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
 class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener,
-    EditorThemeUpdateListener, GutenbergNetworkConnectionListener {
+    GutenbergNetworkConnectionListener {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -501,10 +500,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
     override fun onGalleryMediaUploadSucceeded(
         galleryId: Long, remoteMediaId: Long, remaining: Int
     ) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onEditorThemeUpdated(editorTheme: Bundle?) {
         // Unused, no-op retained for the shared interface with Gutenberg
     }
 

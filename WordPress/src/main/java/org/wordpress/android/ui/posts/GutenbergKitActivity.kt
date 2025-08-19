@@ -68,7 +68,6 @@ import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
 import org.wordpress.android.editor.EditorMediaUploadListener
-import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
@@ -85,8 +84,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.EditorSettings
-import org.wordpress.android.fluxc.model.EditorTheme
-import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -100,7 +97,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
 import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
-import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -3623,17 +3619,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ConnectionChangeEvent) {
         (editorFragment as? GutenbergNetworkConnectionListener)?.onConnectionStatusChange(event.isConnected)
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEditorThemeChanged(event: OnEditorThemeChanged) {
-        if (editorFragment !is EditorThemeUpdateListener || (siteModel.id != event.siteId)) return
-        val editorTheme: EditorTheme = event.editorTheme ?: return
-        val editorThemeSupport: EditorThemeSupport = editorTheme.themeSupport
-        (editorFragment as EditorThemeUpdateListener)
-            .onEditorThemeUpdated(editorThemeSupport.toBundle(siteModel))
-        postEditorAnalyticsSession?.editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
     }
 
     private fun refreshEditorSettings() {
