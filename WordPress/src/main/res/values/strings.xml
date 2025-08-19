@@ -1032,7 +1032,6 @@
     <string name="jetpack_rest_connection_error_connect_user">Failed to connect user to WordPress.com</string>
     <string name="jetpack_rest_connection_error_access_token">Access token missing</string>
     <string name="jetpack_rest_connection_error_activate_stats">Failed to activate stats</string>
-    <string name="jetpack_rest_connection_error_invalid_auth">Authentication failed</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
