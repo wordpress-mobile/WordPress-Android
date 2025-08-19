@@ -1339,6 +1339,13 @@ public class AccountStore extends Store {
         emitChange(new OnAuthenticationChanged());
     }
 
+    /**
+     * Clears the current access token and emits an authentication change event.
+     *
+     * This method should be used when the user's authentication state needs to be reset,
+     * such as during logout or when the access token is no longer valid. It ensures that
+     * the app no longer considers the user authenticated and notifies listeners of the change.
+     */
     public void resetAccessToken() {
         mAccessToken.set(null);
         emitChange(new OnAuthenticationChanged());
