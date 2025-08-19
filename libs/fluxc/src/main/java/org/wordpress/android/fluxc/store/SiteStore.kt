@@ -1560,13 +1560,21 @@ open class SiteStore @Inject constructor(
         val updatedSites = mutableListOf<SiteModel>()
         for (site in sites.sites) {
             try {
-                // The REST API doesn't return info about the editor(s). Make sure to copy current values
-                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The REST API doesn't return info about the editor(s) nor the Application Password.
+                // Make sure to copy current values available on the DB.
+                // Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
                 val siteFromDB = getSiteBySiteId(site.siteId)
                 if (siteFromDB != null) {
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
+                    if (!site.apiRestUsernameEncrypted.isNullOrEmpty()) {
+                        site.apiRestUsernameEncrypted = siteFromDB.apiRestUsernameEncrypted
+                        site.apiRestPasswordEncrypted = siteFromDB.apiRestPasswordEncrypted
+                        site.apiRestUsernameIV = siteFromDB.apiRestUsernameIV
+                        site.apiRestPasswordIV = siteFromDB.apiRestPasswordIV
+                        site.wpApiRestUrl = siteFromDB.wpApiRestUrl
+                    }
                 }
                 val isUpdated = (siteSqlUtils.insertOrUpdateSite(site) == 1)
                 if (isUpdated) {
