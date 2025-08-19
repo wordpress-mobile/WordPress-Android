@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.content.Intent
 import org.wordpress.android.WordPress.Companion.getContext
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
@@ -97,15 +99,62 @@ class EditorLauncher @Inject constructor(
         val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
 
         if (!isGutenbergFeatureEnabled) {
+            val reason = when {
+                isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
+                !isGutenbergEnabled -> "neither the experimental block editor feature nor GutenbergKit feature is enabled"
+                else -> "GutenbergKit feature checks failed"
+            }
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason" +
+                    " (experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
+                    "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()}, " +
+                    "disable_experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)})")
             return false
         }
 
-        val site = params.siteSource.getSite(siteStore) ?: return true
+        val site = params.siteSource.getSite(siteStore)
+        if (site == null) {
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information is available, " +
+                    "defaulting to GutenbergKit (experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
+                    "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()})")
+            return true
+        }
+
         val post = getPostFromParams(params)
         val isNewPost = post == null || post.isLocalDraft
         val postContent = post?.content ?: ""
+        val shouldUseGutenberg = PostUtils.shouldShowGutenbergEditor(isNewPost, postContent, site)
 
-        return PostUtils.shouldShowGutenbergEditor(isNewPost, postContent, site)
+        val postInfo = if (post != null) {
+            "post_id: ${post.id}, local_id: ${post.localId}, is_local_draft: ${post.isLocalDraft}, " +
+                    "content_length: ${postContent.length}, has_blocks: ${PostUtils.contentContainsGutenbergBlocks(postContent)}"
+        } else {
+            "new_post: true"
+        }
+
+        val siteInfo = "site_id: ${site.id}, site_url: ${site.url}, " +
+                "block_editor_default_for_new_posts: ${SiteUtils.isBlockEditorDefaultForNewPost(site)}"
+
+        if (shouldUseGutenberg) {
+            val reason = when {
+                isNewPost -> "this is a new post and the site has block editor enabled as default for new posts"
+                PostUtils.contentContainsGutenbergBlocks(postContent) -> "the existing post contains Gutenberg blocks"
+                else -> "PostUtils.shouldShowGutenbergEditor returned true"
+            }
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because $reason " +
+                    "($postInfo, $siteInfo)")
+        } else {
+            val reason = when {
+                !isNewPost && !PostUtils.contentContainsGutenbergBlocks(postContent) -> 
+                    "this is an existing post without Gutenberg blocks"
+                isNewPost && !SiteUtils.isBlockEditorDefaultForNewPost(site) -> 
+                    "this is a new post but the site doesn't have block editor as default for new posts"
+                else -> "PostUtils.shouldShowGutenbergEditor returned false"
+            }
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason " +
+                    "($postInfo, $siteInfo)")
+        }
+
+        return shouldUseGutenberg
     }
 
     private fun getPostFromParams(params: EditorLauncherParams): PostModel? {
