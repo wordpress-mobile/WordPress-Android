@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class GutenbergKitEditorFragmentBase extends Fragment {
+    public class EditorFragmentNotAddedException extends Exception {
+    }
+
     public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
