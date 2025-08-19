@@ -2,7 +2,6 @@
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
@@ -14,7 +13,6 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
-import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -61,7 +59,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase
-import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorDragAndDropListener
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorFragmentListener
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImageMetaData
@@ -137,8 +134,6 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
-import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onContactCustomerSupport
-import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onGotoCustomerSupportOptions
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
@@ -186,7 +181,6 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
-import org.wordpress.android.ui.uploads.PostEvents.PostMediaCanceled
 import org.wordpress.android.ui.uploads.PostEvents.PostOpenedInEditor
 import org.wordpress.android.ui.uploads.PostEvents.PostPreviewingInEditor
 import org.wordpress.android.ui.uploads.UploadService
@@ -205,7 +199,6 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PerAppLocaleManager
-import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
 import org.wordpress.android.util.SiteUtils
@@ -258,12 +251,11 @@ private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
 
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
-    EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
+    EditorImagePreviewListener, EditorEditMediaListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
     EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
-    private var pendingVideoPressInfoRequests: MutableList<String>? = null
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
 
@@ -849,17 +841,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 resources.getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius)
             )
         }
-    }
-
-    private fun presentNewPageNoticeIfNeeded() {
-        if (!isPage || !isNewPost) {
-            return
-        }
-        val message: String =
-            if (editPostRepository.content.isEmpty()) getString(R.string.mlp_notice_blank_page_created) else getString(
-                R.string.mlp_notice_page_created
-            )
-        editorFragment?.showNotice(message)
     }
 
     private fun fetchSiteSettings() {
@@ -1766,16 +1747,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         htmlModeMenuStateOn = !htmlModeMenuStateOn
         trackPostSessionEditorModeSwitch()
         invalidateOptionsMenu()
-        showEditorModeSwitchedNotice()
-    }
-
-    private fun showEditorModeSwitchedNotice() {
-        val message: String = getString(
-            if (htmlModeMenuStateOn)
-                R.string.menu_html_mode_switched_notice
-            else R.string.menu_visual_mode_switched_notice
-        )
-        editorFragment?.showNotice(message)
     }
 
     private fun trackPostSessionEditorModeSwitch() {
@@ -2077,7 +2048,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun saveResult(saved: Boolean, uploadNotStarted: Boolean) {
         val i = intent
         i.putExtra(EditorConstants.EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted)
-        i.putExtra(EditorConstants.EXTRA_HAS_FAILED_MEDIA, hasFailedMedia())
         i.putExtra(EditorConstants.EXTRA_IS_PAGE, isPage)
         i.putExtra(EditorConstants.EXTRA_IS_LANDING_EDITOR, isLandingEditor)
         i.putExtra(EditorConstants.EXTRA_HAS_CHANGES, saved)
@@ -2278,10 +2248,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     private fun isFirstTimePublish(publishPost: Boolean): Boolean {
         return editPostRepository.isFirstTimePublish(publishPost)
-    }
-
-    private fun hasFailedMedia(): Boolean {
-        return editorFragment?.hasFailedMediaUploads() == true
     }
 
     /**
@@ -2646,10 +2612,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             return
         }
 
-        if (resultCode != RESULT_OK) {
-            return handleNotOKRequest(resultCode)
-        }
-
         val shouldHandleRequest = (requestCode == RequestCodes.TAKE_PHOTO) ||
                 (requestCode == RequestCodes.TAKE_VIDEO) ||
                 (requestCode == RequestCodes.PHOTO_PICKER)
@@ -2662,27 +2624,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    private fun handleNotOKRequest(requestCode: Int) {
-        // for all media related intents, let editor fragment know about cancellation
-        when (requestCode) {
-            RequestCodes.MULTI_SELECT_MEDIA_PICKER,
-            RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
-            RequestCodes.PHOTO_PICKER,
-            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
-            RequestCodes.MEDIA_LIBRARY,
-            RequestCodes.PICTURE_LIBRARY,
-            RequestCodes.TAKE_PHOTO,
-            RequestCodes.VIDEO_LIBRARY,
-            RequestCodes.TAKE_VIDEO,
-            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
-            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
-                editorFragment?.mediaSelectionCancelled()
-                return
-            }
-            else ->                     // noop
-                return
-        }
-    }
     private fun handleRequest(requestCode: Int, data: Intent?) {
         when (requestCode) {
             RequestCodes.MULTI_SELECT_MEDIA_PICKER,
@@ -2927,88 +2868,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             if (!TextUtils.isEmpty(errorMessage)) {
                 ToastUtils.showToast(this@GutenbergKitActivity, errorMessage, ToastUtils.Duration.SHORT)
             }
-        } else {
-            if (pendingVideoPressInfoRequests?.isNotEmpty() == true) {
-                // If there are pending requests for video URLs from VideoPress ids, query the DB for
-                // them again and notify the editor
-                pendingVideoPressInfoRequests?.forEach { videoId ->
-                    val videoUrl = mediaStore.getUrlForSiteVideoWithVideoPressGuid(
-                        siteModel,
-                        videoId
-                    )
-                    val posterUrl = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl)
-                    editorFragment?.setUrlForVideoPressId(videoId, videoUrl, posterUrl)
-                }
-                pendingVideoPressInfoRequests?.clear()
-            }
-        }
-    }
-
-    override fun updateFeaturedImage(mediaId: Long, imagePicked: Boolean) {
-        setFeaturedImageId(mediaId, imagePicked, true)
-    }
-
-    override fun onAddMediaClicked() {
-        if (editorPhotoPicker?.isPhotoPickerShowing() == true) {
-            editorPhotoPicker?.hidePhotoPicker()
-        } else if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            editorPhotoPicker?.showPhotoPicker(siteModel)
-        } else {
-            // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            mediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.EDITOR_PICKER)
-        }
-    }
-
-    override fun onAddMediaImageClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-            this,
-            siteModel,
-            MediaBrowserType.GUTENBERG_IMAGE_PICKER
-        )
-    }
-
-    override fun onAddMediaVideoClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-            this,
-            siteModel,
-            MediaBrowserType.GUTENBERG_VIDEO_PICKER
-        )
-    }
-
-    override fun onAddLibraryMediaClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-        if (allowMultipleSelection) {
-            mediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.EDITOR_PICKER)
-        } else {
-            mediaPickerLauncher
-                .viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER)
-        }
-    }
-
-    override fun onAddLibraryFileClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-        mediaPickerLauncher
-            .viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER)
-    }
-
-    override fun onAddLibraryAudioFileClicked(allowMultipleSelection: Boolean) {
-        mediaPickerLauncher
-            .viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER)
-    }
-
-    override fun onAddPhotoClicked(allowMultipleSelection: Boolean) {
-        if (allowMultipleSelection) {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, siteModel,
-                editPostRepository.id
-            )
-        } else {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, siteModel,
-                editPostRepository.id
-            )
         }
     }
 
@@ -3016,176 +2875,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO, false)
     }
 
-    override fun onAddVideoClicked(allowMultipleSelection: Boolean) {
-        if (allowMultipleSelection) {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, siteModel,
-                editPostRepository.id
-            )
-        } else {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, siteModel,
-                editPostRepository.id
-            )
-        }
-    }
-
-    override fun onAddDeviceMediaClicked(allowMultipleSelection: Boolean) {
-        if (allowMultipleSelection) {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, siteModel,
-                editPostRepository.id
-            )
-        } else {
-            mediaPickerLauncher.showPhotoPickerForResult(
-                this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, siteModel,
-                editPostRepository.id
-            )
-        }
-    }
-
-    override fun onAddStockMediaClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection)
-    }
-
-    override fun onAddGifClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection)
-    }
-
-    override fun onAddFileClicked(allowMultipleSelection: Boolean) {
-        mediaPickerLauncher.showFilePicker(this, allowMultipleSelection, site)
-    }
-
-    override fun onAddAudioFileClicked(allowMultipleSelection: Boolean) {
-        mediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection, site)
-    }
-
-    override fun onPerformFetch(
-        path: String,
-        enableCaching: Boolean,
-        onResult: Consumer<String>,
-        onError: Consumer<Bundle>
-    ) {
-       reactNativeRequestHandler.performGetRequest(path, siteModel, enableCaching, onResult, onError)
-    }
-
-    override fun onPerformPost(
-        path: String,
-        body: Map<String, Any>,
-        onResult: Consumer<String>,
-        onError: Consumer<Bundle>
-    ) {
-       reactNativeRequestHandler.performPostRequest(path, body, siteModel, onResult, onError)
-    }
-
     override fun onCaptureVideoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false)
-    }
-
-    override fun onMediaDropped(mediaUris: ArrayList<Uri>) {
-        editorMedia.droppedMediaUris = mediaUris
-        val media: ArrayList<Uri> = ArrayList(mediaUris)
-        editorMedia.addNewMediaItemsToEditorAsync(media, false)
-        editorMedia.droppedMediaUris.clear()
-    }
-
-    override fun onRequestDragAndDropPermissions(dragEvent: DragEvent) {
-        requestDragAndDropPermissions(dragEvent)
-    }
-
-    override fun onMediaRetryAll(failedMediaIds: Set<String>) {
-        UploadService.cancelFinalNotification(this, editPostRepository.getPost())
-        UploadService.cancelFinalNotificationForMedia(this, siteModel)
-        val localMediaIds: ArrayList<Int> = ArrayList()
-        for (idString: String? in failedMediaIds) {
-            idString?.toIntOrNull()?.let {
-                localMediaIds.add(it)
-            }
-        }
-        editorMedia.retryFailedMediaAsync(localMediaIds)
-    }
-
-    @Suppress("ReturnCount")
-    override fun onMediaRetryClicked(mediaId: String): Boolean {
-        if (TextUtils.isEmpty(mediaId)) {
-            AppLog.e(AppLog.T.MEDIA, "Invalid media id passed to onMediaRetryClicked")
-            return false
-        }
-        val media: MediaModel? = mediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId))
-        if (media == null) {
-            AppLog.e(
-                AppLog.T.MEDIA,
-                "Can't find media with local id: $mediaId"
-            )
-            val builder: AlertDialog.Builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle(getString(R.string.cannot_retry_deleted_media_item))
-            builder.setPositiveButton(R.string.yes) { dialog, _ ->
-                runOnUiThread { editorFragment?.removeMedia(mediaId) }
-                dialog.dismiss()
-            }
-            builder.setNegativeButton(getString(R.string.no)
-            ) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-            return false
-        }
-        if (!TextUtils.isEmpty(media.url) && (media.uploadState == MediaUploadState.UPLOADED.toString())) {
-            // Note: media upload success handling removed as GutenbergKit editor
-            // does not use EditorMediaUploadListener interface
-        } else {
-            UploadService.cancelFinalNotification(this, editPostRepository.getPost())
-            UploadService.cancelFinalNotificationForMedia(this, siteModel)
-            editorMedia.retryFailedMediaAsync(listOf(media.id))
-        }
-        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_UPLOAD_MEDIA_RETRIED, siteModel)
-        return true
-    }
-
-    override fun onMediaUploadCancelClicked(localMediaId: String) {
-        if (!TextUtils.isEmpty(localMediaId)) {
-            editorMedia.cancelMediaUploadAsync(StringUtils.stringToInt(localMediaId), true)
-        } else {
-            // Passed mediaId is incorrect: cancel all uploads for this post
-            ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled))
-            EventBus.getDefault().post(PostMediaCanceled(editPostRepository.getEditablePost()))
-        }
-    }
-
-    override fun onMediaDeleted(localMediaId: String) {
-        if (!TextUtils.isEmpty(localMediaId)) {
-            editorMedia.onMediaDeleted(showAztecEditor = false, showGutenbergEditor = true, localMediaId)
-        }
-    }
-
-    override fun onUndoMediaCheck(undoedContent: String) {
-        // No-op because it was Aztec only
-    }
-
-    override fun onVideoPressInfoRequested(videoId: String) {
-        val videoUrl = mediaStore.getUrlForSiteVideoWithVideoPressGuid((siteModel), videoId)
-        if (videoUrl == null) {
-            AppLog.w(
-                AppLog.T.EDITOR, ("The editor wants more info about the following VideoPress code: " + videoId
-                        + " but it's not available in the current site " + siteModel.url
-                        + " Maybe it's from another site?")
-            )
-            return
-        }
-        if (videoUrl.isEmpty()) {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
-                    this, WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE
-                )
-            ) {
-                runOnUiThread {
-                    pendingVideoPressInfoRequests?.add(videoId) ?: run {
-                        pendingVideoPressInfoRequests = mutableListOf(videoId)
-                    }
-                    editorMedia.refreshBlogMedia()
-                }
-            }
-        }
-        val posterUrl: String = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl)
-        editorFragment?.setUrlForVideoPressId(videoId, videoUrl, posterUrl)
     }
 
     override fun onAuthHeaderRequested(url: String): Map<String, String> {
@@ -3248,7 +2939,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
         postEditorAnalyticsSession?.start(unsupportedBlocksList, entryPoint)
-        presentNewPageNoticeIfNeeded()
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         val promptId: Int = intent.getIntExtra(EditorConstants.EXTRA_PROMPT_ID, -1)
@@ -3271,14 +2961,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun showSuggestions(type: SuggestionType, onResult: Consumer<String?>?) {
         onGetSuggestionResult = onResult
         ActivityLauncher.viewSuggestionsForResult(this, siteModel, type)
-    }
-
-    override fun onGutenbergEditorSetFocalPointPickerTooltipShown(tooltipShown: Boolean) {
-        AppPrefs.setGutenbergFocalPointPickerTooltipShown(tooltipShown)
-    }
-
-    override fun onGutenbergEditorRequestFocalPointPickerTooltipShown(): Boolean {
-        return AppPrefs.getGutenbergFocalPointPickerTooltipShown()
     }
 
     override fun onHtmlModeToggledInToolbar() {
@@ -3306,12 +2988,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    override fun onTrackableEvent(event: EditorFragmentAbstract.TrackableEvent, properties: Map<String, String>) {
-        editorFragment?.let {
-            editorTracker.trackEditorEvent(event, it.editorName, properties)
-        }
-    }
-
     override fun showPreview(): Boolean {
         val post = editPostRepository.getPost() ?: return false
 
@@ -3336,31 +3012,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    override fun onRequestBlockTypeImpressions(): Map<String, Double> {
-        return AppPrefs.getGutenbergBlockTypeImpressions()
-    }
-
-    override fun onSetBlockTypeImpressions(impressions: Map<String, Double>) {
-        AppPrefs.setGutenbergBlockTypeImpressions(impressions)
-    }
-
-    override fun onContactCustomerSupport() {
-        onContactCustomerSupport(
-            (zendeskHelper),
-            this,
-            site,
-            contactSupportFeatureConfig.isEnabled()
-        )
-    }
-
-    override fun onGotoCustomerSupportOptions() {
-        onGotoCustomerSupportOptions(this, site)
-    }
-
-    override fun onSendEventToHost(eventName: String, properties: Map<String, Any>) {
-        AnalyticsUtils.trackBlockEditorEvent(eventName, siteModel, properties)
-    }
-
     override fun onToggleUndo(isDisabled: Boolean) {
         if (menuHasUndo == !isDisabled) return
         menuHasUndo = !isDisabled
@@ -3371,10 +3022,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         if (menuHasRedo == !isDisabled) return
         menuHasRedo = !isDisabled
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
-    }
-
-    override fun onBackHandlerButton() {
-        handleBackPressed()
     }
 
     // FluxC events
@@ -3614,18 +3261,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
             .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, (uiHelpers))
-    }
-
-    override fun getErrorMessageFromMedia(mediaId: Int): String {
-        val media: MediaModel? = mediaStore.getMediaWithLocalId(mediaId)
-        if (media != null) {
-            return UploadUtils.getErrorMessageFromMedia(this, media)
-        }
-        return ""
-    }
-
-    override fun showJetpackSettings() {
-        ActivityLauncher.viewJetpackSecuritySettingsForResult(this, siteModel)
     }
 
     override val savingInProgressDialogVisibility: LiveData<DialogVisibility>
