@@ -1740,6 +1740,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 // toggle HTML mode
                 if (editorFragment is AztecEditorFragment) {
                     (editorFragment as AztecEditorFragment).onToolbarHtmlButtonClicked()
+                } else if (editorFragment is GutenbergEditorFragment) {
+                    (editorFragment as GutenbergEditorFragment).onToggleHtmlMode()
                 }
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // The following boolean check should be always redundant but was added to manage
