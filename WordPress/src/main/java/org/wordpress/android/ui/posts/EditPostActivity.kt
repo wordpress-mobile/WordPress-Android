@@ -45,11 +45,9 @@ import androidx.lifecycle.distinctUntilChanged
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
-import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.JsonObject
 import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -76,7 +74,6 @@ import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
-import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
@@ -85,13 +82,11 @@ import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companio
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
-import org.wordpress.android.fluxc.generated.EditorSettingsActionBuilder
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.EditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.MediaModel
@@ -104,8 +99,6 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
-import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
-import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
@@ -125,8 +118,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
-import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
-import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
@@ -199,7 +190,6 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
@@ -242,8 +232,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitFeature
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
@@ -263,10 +251,6 @@ import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.aztec.AztecExceptionHandler
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
 import org.wordpress.aztec.util.AztecLog
-import org.wordpress.gutenberg.GutenbergJsException
-import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.WebViewGlobal
-import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -325,7 +309,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private var isXPostsCapable: Boolean? = null
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
-    private var isGutenbergKitEditor = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -420,8 +403,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
-    @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
     @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -493,7 +474,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     ) {
         if (postEditorAnalyticsSession == null) {
             val editor = when {
-                showGutenbergEditor && isGutenbergKitEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
                 showGutenbergEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG
                 else -> PostEditorAnalyticsSession.Editor.CLASSIC
             }
@@ -540,10 +520,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        isGutenbergKitEditor = isGutenbergEnabled && !isGutenbergDisabled
 
         createEditShareMessageActivityResultLauncher()
 
@@ -770,7 +746,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
 
             isNewPost = state.getBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, false)
-            isGutenbergKitEditor = state.getBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, false)
             isVoiceContentSet = state.getBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
@@ -1355,7 +1330,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         outState.putInt(EditorConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, isNewPost)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
-        outState.putBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         outState.putBoolean(
             EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
@@ -1611,20 +1585,16 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         val contentInfo = menu.findItem(R.id.menu_content_info)
         (editorFragment as? GutenbergEditorFragment)?.let { gutenbergEditorFragment ->
-            if (isGutenbergKitEditor) {
-                contentInfo.isVisible = false
-            } else {
-                contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
-                    try {
-                        gutenbergEditorFragment.showContentInfo()
-                    } catch (e: EditorFragmentNotAddedException) {
-                        ToastUtils.showToast(
-                            getContext(),
-                            R.string.toast_content_info_failed
-                        )
-                    }
-                    true
+            contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
+                try {
+                    gutenbergEditorFragment.showContentInfo()
+                } catch (e: EditorFragmentNotAddedException) {
+                    ToastUtils.showToast(
+                        getContext(),
+                        R.string.toast_content_info_failed
+                    )
                 }
+                true
             }
         } ?: run {
             contentInfo.isVisible = false // only show the menu item for Gutenberg
@@ -1644,7 +1614,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
         if (sendFeedbackItem != null) {
-            sendFeedbackItem.isVisible = editorFragment is GutenbergKitEditorFragment
+            // Only available for GutenbergKit which is now moved to GutenbergKitActivity
+            sendFeedbackItem.isVisible = false
         }
 
         return super.onPrepareOptionsMenu(menu)
@@ -1769,10 +1740,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 // toggle HTML mode
                 if (editorFragment is AztecEditorFragment) {
                     (editorFragment as AztecEditorFragment).onToolbarHtmlButtonClicked()
-                } else if (editorFragment is GutenbergEditorFragment) {
-                    (editorFragment as GutenbergEditorFragment).onToggleHtmlMode()
-                } else if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onToggleHtmlMode()
                 }
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // The following boolean check should be always redundant but was added to manage
@@ -1799,15 +1766,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 if (editorFragment is GutenbergEditorFragment) {
                     (editorFragment as GutenbergEditorFragment).onUndoPressed()
                 }
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onUndoPressed()
-                }
             } else if (itemId == R.id.menu_redo_action) {
                 if (editorFragment is GutenbergEditorFragment) {
                     (editorFragment as GutenbergEditorFragment).onRedoPressed()
-                }
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onRedoPressed()
                 }
             }
         }
@@ -1960,12 +1921,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun trackPostSessionEditorModeSwitch() {
         val isGutenberg: Boolean = editorFragment is GutenbergEditorFragment
-        val isGutenbergKit: Boolean = editorFragment is GutenbergKitEditorFragment
         postEditorAnalyticsSession?.switchEditor(
             when {
                 htmlModeMenuStateOn -> PostEditorAnalyticsSession.Editor.HTML
                 isGutenberg -> PostEditorAnalyticsSession.Editor.GUTENBERG
-                isGutenbergKit -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
                 else -> PostEditorAnalyticsSession.Editor.CLASSIC
             }
         )
@@ -2080,13 +2039,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         )
     }
 
-    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?, isFinishing: Boolean = false) {
+    private fun updateAndSavePostAsync(listener: OnPostUpdatedFromUIListener?) {
         if (editorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
         }
         storePostViewModel.updatePostObjectWithUIAsync(
-            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent, isFinishing) }
+            (editPostRepository), { oldContent: String -> updateFromEditor(oldContent) }
         ) { _: PostImmutableModel?, result: UpdatePostResult ->
             storePostViewModel.isSavingPostOnEditorExit = false
             // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
@@ -2100,25 +2059,20 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      * 2. Saves the post via [EditPostActivity.updateAndSavePostAsync];
      * 3. Invokes the listener method parameter
      */
-    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?,
-                                                   isFinishing: Boolean = false) {
+    private fun updateAndSavePostAsyncOnEditorExit(listener: OnPostUpdatedFromUIListener?) {
         if (editorFragment == null) {
             return
         }
         storePostViewModel.isSavingPostOnEditorExit = true
         storePostViewModel.showSavingProgressDialog()
-        updateAndSavePostAsync(listener, isFinishing)
+        updateAndSavePostAsync(listener)
     }
 
-    private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
+    private fun updateFromEditor(oldContent: String): UpdateFromEditor {
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
-                val titleAndContent: Pair<CharSequence, CharSequence> = if (it is GutenbergKitEditorFragment) {
-                    it.getTitleAndContent(oldContent, isFinishing)
-                } else {
-                    it.getTitleAndContent(oldContent)
-                }
+                val titleAndContent: Pair<CharSequence, CharSequence> = it.getTitleAndContent(oldContent)
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
@@ -2130,64 +2084,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun initializeEditorFragment() {
-        if (editorFragment is GutenbergKitEditorFragment) {
-            editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
-                override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
-                    onToggleUndo(!hasUndo)
-                    onToggleRedo(!hasRedo)
-                }
-            })
-            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
-                override fun onFeaturedImageChanged(mediaID: Long) {
-                    setFeaturedImageId(mediaID, false, true)
-                }
-            })
-            editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-                override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                    editorPhotoPicker?.allowMultipleSelection = config.multiple
-                    val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
-                        config.allowedTypes,
-                        config.multiple
-                    )
-                    val initialSelection = when (val value = config.value) {
-                        is GutenbergView.Value.Single -> listOf(value.value)
-                        is GutenbergView.Value.Multiple -> value.toList()
-                        else -> emptyList()
-                    }
-                    openMediaLibrary(mediaType, initialSelection)
-                }
-            })
-            editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
-                override fun onLogJsException(exception: GutenbergJsException) {
-                    val stackTraceElements = exception.stackTrace.map { stackTrace ->
-                        JsExceptionStackTraceElement(
-                            stackTrace.fileName,
-                            stackTrace.lineNumber,
-                            stackTrace.colNumber,
-                            stackTrace.function
-                        )
-                    }
-
-                    val jsException = JsException(
-                        exception.type,
-                        exception.message,
-                        stackTraceElements,
-                        exception.context,
-                        exception.tags,
-                        exception.isHandled,
-                        exception.handledBy
-                    )
-
-                    val callback = object : JsExceptionCallback {
-                        override fun onReportSent(sent: Boolean) {
-                            // Do nothing
-                        }
-                    }
-
-                    onLogJsException(jsException, callback)
-                }
-            })
-        } else if (editorFragment is AztecEditorFragment) {
+        if (editorFragment is AztecEditorFragment) {
             val aztecEditorFragment = editorFragment as AztecEditorFragment
             aztecEditorFragment.setEditorImageSettingsListener(this@EditPostActivity)
             aztecEditorFragment.setMediaToolbarButtonClickListener(editorPhotoPicker)
@@ -2366,7 +2263,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         i.putExtra(EditorConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
         i.putExtra(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         i.putExtra(EditorConstants.EXTRA_IS_NEW_POST, isNewPost)
-        i.putExtra(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         setResult(RESULT_OK, i)
     }
 
@@ -2536,7 +2432,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
 
         // Convert the lambda to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda), doFinish)
+        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda))
     }
 
     // Helper function to convert a lambda to OnPostUpdatedFromUIListener
@@ -2581,9 +2477,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 VIEW_PAGER_PAGE_CONTENT -> {
-                    if (isGutenbergKitEditor && showGutenbergEditor) {
-                        createGutenbergKitEditorFragment()
-                    } else if (showGutenbergEditor) {
+                    if (showGutenbergEditor) {
                         createGutenbergEditorFragment()
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
@@ -2595,86 +2489,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 VIEW_PAGER_PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
                 else -> throw IllegalArgumentException("Unexpected page type")
             }
-        }
-
-        private fun createGutenbergKitEditorFragment(): GutenbergKitEditorFragment {
-            // Enable gutenberg on the site & show the informative popup upon opening
-            // the GB editor the first time when the remote setting value is still null
-            setGutenbergEnabledIfNeeded()
-            xPostsCapabilityChecker.retrieveCapability(siteModel) { isXpostsCapable ->
-                onXpostsSettingsCapability(isXpostsCapable)
-            }
-
-            val isWpCom = site.isWPCom || siteModel.isWPComAtomic
-            val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
-            val settings = createGutenbergKitSettings(isWpCom)
-
-            return GutenbergKitEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                settings
-            )
-        }
-
-        private fun createGutenbergWebViewAuthorizationData(isWpCom: Boolean): GutenbergWebViewAuthorizationData {
-            return GutenbergWebViewAuthorizationData(
-                siteModel.url,
-                isWpCom,
-                accountStore.account.userId,
-                accountStore.account.userName,
-                accountStore.accessToken,
-                siteModel.selfHostedSiteId,
-                siteModel.getUserNameProcessed(),
-                siteModel.getPasswordProcessed(),
-                siteModel.isUsingWpComRestApi,
-                siteModel.webEditor,
-                userAgent.toString(),
-                isJetpackSsoEnabled
-            )
-        }
-
-        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
-            val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteURL = siteModel.url
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
-                else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
-            // Use the application password for self-hosted sites when available
-            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
-            val siteApiNamespace = if (isWpCom)
-                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
-                else arrayOf()
-
-            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
-            val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
-
-            return mutableMapOf(
-                "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
-                "postType" to postType,
-                "postTitle" to editPostRepository.getPost()?.title,
-                "postContent" to editPostRepository.getPost()?.content,
-                "siteURL" to siteURL,
-                "siteApiRoot" to siteApiRoot,
-                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-                "authHeader" to authHeader,
-                "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
-                "locale" to wpcomLocaleSlug,
-                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                "webViewGlobals" to listOf(
-                    WebViewGlobal(
-                        "_currentSiteType",
-                        when {
-                            siteModel.isWPComAtomic -> WebViewGlobalValue.StringValue("atomic")
-                            siteModel.isWPCom -> WebViewGlobalValue.StringValue("simple")
-                            else -> WebViewGlobalValue.NullValue
-                        }
-                    )
-                )
-            )
         }
 
         private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
@@ -2740,23 +2554,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         private val numPagesInEditor: Int = 4
     }
 
-    private fun openMediaLibrary(mediaType: MediaBrowserType, initialSelection: List<Int>) {
-        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-            activity = this,
-            site = siteModel,
-            browserType = mediaType,
-            initialSelection = initialSelection
-        )
-    }
-
     private fun onXpostsSettingsCapability(isXpostsCapable: Boolean) {
         isXPostsCapable = isXpostsCapable
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).updateCapabilities(gutenbergPropsBuilder)
-        }
-        if (editorFragment is GutenbergKitEditorFragment) {
-            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
-            (editorFragment as GutenbergKitEditorFragment).setXPostsEnabled(enableXPosts)
         }
     }
 
@@ -3734,12 +3535,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
-        if (editorFragment !is GutenbergKitEditorFragment) {
-            refreshEditorContent()
-        }
+        refreshEditorContent()
 
         onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
-        onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
         onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
 
@@ -3761,12 +3559,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
             }
             (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
-        }
-    }
-
-    private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
-        if (showGutenbergEditor && editorFragment is GutenbergKitEditorFragment) {
-            refreshEditorSettings()
         }
     }
 
@@ -3800,9 +3592,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun updateVoiceContentIfNeeded() {
-        if (isGutenbergKitEditor) {
-            return
-        }
         // Check if voice content exists and this is a new post for a Gutenberg editor fragment
         val content = intent.getStringExtra(EditorConstants.EXTRA_VOICE_CONTENT)
         if (isNewPost && content != null && !isVoiceContentSet) {
@@ -4172,18 +3961,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         (editorFragment as EditorThemeUpdateListener)
             .onEditorThemeUpdated(editorThemeSupport.toBundle(siteModel))
         postEditorAnalyticsSession?.editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
-    }
-
-    private fun refreshEditorSettings() {
-        val payload = FetchEditorSettingsPayload(siteModel)
-        dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
-        (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
     // EditorDataProvider methods
