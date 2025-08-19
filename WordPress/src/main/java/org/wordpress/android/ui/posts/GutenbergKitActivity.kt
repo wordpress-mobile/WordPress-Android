@@ -2612,10 +2612,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             return
         }
 
-        if (resultCode != RESULT_OK) {
-            return handleNotOKRequest(resultCode)
-        }
-
         val shouldHandleRequest = (requestCode == RequestCodes.TAKE_PHOTO) ||
                 (requestCode == RequestCodes.TAKE_VIDEO) ||
                 (requestCode == RequestCodes.PHOTO_PICKER)
@@ -2628,29 +2624,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    private fun handleNotOKRequest(requestCode: Int) {
-        // for all media related intents, let editor fragment know about cancellation
-        when (requestCode) {
-            RequestCodes.MULTI_SELECT_MEDIA_PICKER,
-            RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
-            RequestCodes.PHOTO_PICKER,
-            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
-            RequestCodes.MEDIA_LIBRARY,
-            RequestCodes.PICTURE_LIBRARY,
-            RequestCodes.TAKE_PHOTO,
-            RequestCodes.VIDEO_LIBRARY,
-            RequestCodes.TAKE_VIDEO,
-            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
-            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
-                // noop
-                return
-            }
-            else ->  {
-                // noop
-                return
-            }
-        }
-    }
     private fun handleRequest(requestCode: Int, data: Intent?) {
         when (requestCode) {
             RequestCodes.MULTI_SELECT_MEDIA_PICKER,
