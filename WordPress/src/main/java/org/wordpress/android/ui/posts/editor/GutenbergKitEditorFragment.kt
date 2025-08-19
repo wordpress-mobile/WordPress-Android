@@ -218,7 +218,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         super.onAttach(context)
         val activity = context as Activity
 
-        mEditorFragmentListener = requireActivityImplements<EditorFragmentListener>(activity)!!
         mEditorImagePreviewListener = requireActivityImplements<EditorImagePreviewListener>(activity)
         mEditorEditMediaListener = requireActivityImplements<EditorEditMediaListener>(activity)
     }
