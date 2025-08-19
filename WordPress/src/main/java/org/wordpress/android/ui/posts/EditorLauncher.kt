@@ -64,9 +64,11 @@ class EditorLauncher @Inject constructor(
     fun createEditorIntent(context: Context, params: EditorLauncherParams): Intent {
         val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
 
-        // For now, always route to EditPostActivity as scaffold
-        // Will route to EditPostGutenbergKitActivity when it exists
-        val targetActivity = EditPostActivity::class.java
+        val targetActivity = if (shouldUseGutenbergKit) {
+            GutenbergKitActivity::class.java
+        } else {
+            EditPostActivity::class.java
+        }
 
         val properties = mapOf(
             "will_use_gutenberg_kit" to shouldUseGutenbergKit

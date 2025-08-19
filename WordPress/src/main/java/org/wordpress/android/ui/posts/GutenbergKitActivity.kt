@@ -19,7 +19,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.webkit.MimeTypeMap
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -35,7 +34,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -60,7 +58,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.editor.AztecEditorFragment
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener
@@ -71,14 +68,11 @@ import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
 import org.wordpress.android.editor.EditorMediaUploadListener
-import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
 import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
-import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
@@ -86,7 +80,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.EditorSettingsActionBuilder
-import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
@@ -107,7 +100,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
 import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
-import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
@@ -166,8 +158,6 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.O
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult
 import org.wordpress.android.ui.posts.HistoryListFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.HistoryListFragment.HistoryItemClickInterface
-import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback
-import org.wordpress.android.ui.posts.InsertMediaDialog.InsertType
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
@@ -194,8 +184,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler
-import org.wordpress.android.ui.posts.services.AztecImageLoader
-import org.wordpress.android.ui.posts.services.AztecVideoLoader
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -247,7 +235,6 @@ import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.android.util.helpers.MediaGallery
 import org.wordpress.android.util.image.BlavatarShape
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -260,9 +247,6 @@ import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.aztec.AztecExceptionHandler
-import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException
-import org.wordpress.aztec.util.AztecLog
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.WebViewGlobal
@@ -280,18 +264,15 @@ private const val VIEW_PAGER_PAGE_PUBLISH_SETTINGS = 2
 private const val VIEW_PAGER_PAGE_HISTORY = 3
 private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 
+private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
+
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
     EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
     PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
-    // External Access to the Image Loader
-    var aztecImageLoader: AztecImageLoader? = null
-
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
-    private var showAztecEditor: Boolean = false
-    private var showGutenbergEditor: Boolean = false
     private var pendingVideoPressInfoRequests: MutableList<String>? = null
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
@@ -311,7 +292,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
      */
     var viewPager: WPViewPager? = null
     private var revision: Revision? = null
-    private var editorFragment: EditorFragmentAbstract? = null
+    private var editorFragment: GutenbergKitEditorFragment? = null
     private var editPostSettingsFragment: EditPostSettingsFragment? = null
     private var editorMediaUploadListener: EditorMediaUploadListener? = null
     private var editorPhotoPicker: EditorPhotoPicker? = null
@@ -325,7 +306,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private var isXPostsCapable: Boolean? = null
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
-    private var isGutenbergKitEditor = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -488,15 +468,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
-        showGutenbergEditor: Boolean, post: PostImmutableModel?,
-        site: SiteModel, isNewPost: Boolean
+        post: PostImmutableModel?,
+        site: SiteModel,
+        isNewPost: Boolean
     ) {
         if (postEditorAnalyticsSession == null) {
-            val editor = when {
-                showGutenbergEditor && isGutenbergKitEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
-                showGutenbergEditor -> PostEditorAnalyticsSession.Editor.GUTENBERG
-                else -> PostEditorAnalyticsSession.Editor.CLASSIC
-            }
+            val editor = PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
             postEditorAnalyticsSession = PostEditorAnalyticsSession(
                 editor, post, site, isNewPost, analyticsTrackerWrapper
             )
@@ -540,10 +517,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        isGutenbergKitEditor = isGutenbergEnabled && !isGutenbergDisabled
 
         createEditShareMessageActivityResultLauncher()
 
@@ -585,13 +558,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             it.setImageLoader(imageLoader)
         }
 
-        // Ensure that this check happens when post is set
-        setShowGutenbergEditor(savedInstanceState)
-
-        // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
+        // ok now we are sure to have both a valid Post, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(
-            showGutenbergEditor, editPostRepository.getPost(), siteModel,
-            isNewPost
+            post = editPostRepository.getPost(),
+            site = siteModel,
+            isNewPost = isNewPost
         )
         logTemplateSelection()
 
@@ -608,7 +579,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, editPostRepository.getPost())
-            resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued()
         }
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
@@ -770,7 +740,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 }
 
             isNewPost = state.getBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, false)
-            isGutenbergKitEditor = state.getBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, false)
             isVoiceContentSet = state.getBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
@@ -804,25 +773,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             (supportFragmentManager.getFragment(
                 state,
                 EditorConstants.STATE_KEY_EDITOR_FRAGMENT
-            ) as EditorFragmentAbstract?)?.let { frag ->
+            ) as GutenbergKitEditorFragment?)?.let { frag ->
                 editorFragment = frag
-                if (frag is EditorMediaUploadListener) {
-                    editorMediaUploadListener = frag
-                }
+                editorMediaUploadListener = frag
             }
-        }
-    }
-
-    private fun setShowGutenbergEditor(savedInstanceState: Bundle?) {
-        showGutenbergEditor = if (savedInstanceState == null) {
-            val restartEditorOptionName = intent.getStringExtra(EditorConstants.EXTRA_RESTART_EDITOR)
-            val restartEditorOption =  if (restartEditorOptionName == null)
-                RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
-            else RestartEditorOptions.valueOf(restartEditorOptionName)
-            (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
-                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG)
-        } else {
-            savedInstanceState.getBoolean(EditorConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
         }
     }
 
@@ -836,18 +790,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
-        showAztecEditor = AppPrefs.isAztecEditorEnabled()
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor)
-
-        // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
-        if (showAztecEditor) {
-            val overlay: View = findViewById(R.id.view_overlay)
-            val layoutParams: MarginLayoutParams = overlay.layoutParams as MarginLayoutParams
-            layoutParams.bottomMargin = resources.getDimensionPixelOffset(
-                org.wordpress.aztec.R.dimen.aztec_format_bar_height
-            )
-            overlay.layoutParams = layoutParams
-        }
+        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor = false)
     }
 
     private fun setupToolbar(){
@@ -967,11 +910,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         val isJetpackSsoEnabled = siteModel.isJetpackConnected && siteSettings?.isJetpackSsoEnabled == true
         if (this.isJetpackSsoEnabled != isJetpackSsoEnabled) {
             this.isJetpackSsoEnabled = isJetpackSsoEnabled
-            if (editorFragment is GutenbergEditorFragment) {
-                val gutenbergFragment = editorFragment as GutenbergEditorFragment
-                gutenbergFragment.setJetpackSsoEnabled(this.isJetpackSsoEnabled)
-                gutenbergFragment.updateCapabilities(gutenbergPropsBuilder)
-            }
         }
     }
 
@@ -1221,13 +1159,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             }
         }
 
-        // Featured image management
-        editPostSettingsViewModel.clearFeaturedImage.observe(this) { event ->
-            event?.getContentIfNotHandled()?.let {
-                clearFeaturedImage()
-            }
-        }
-
         // Observe prepublishing submit button events
         prepublishingViewModel.triggerOnSubmitButtonClickedListener.observe(this) { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
@@ -1259,47 +1190,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }
     }
 
-    // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
-    private fun resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
-        val useAztec = AppPrefs.isAztecEditorEnabled()
-        if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(editPostRepository.getPost())) {
-            return
-        }
-        editPostRepository.updateAsync({ postModel: PostModel ->
-            val oldContent = postModel.content
-            if ((!AztecEditorFragment.hasMediaItemsMarkedUploading(this@GutenbergKitActivity, oldContent)
-               // we need to make sure items marked failed are still failed or not as well
-               && !AztecEditorFragment.hasMediaItemsMarkedFailed(this@GutenbergKitActivity, oldContent))
-            ) {
-                return@updateAsync false
-            }
-            val newContent = AztecEditorFragment.resetUploadingMediaToFailed(this@GutenbergKitActivity, oldContent)
-            if (!TextUtils.isEmpty(oldContent) && (newContent != null) && (oldContent.compareTo(newContent) != 0)) {
-                postModel.setContent(newContent)
-                return@updateAsync true
-            }
-            false
-        }, null)
-    }
-
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        reattachUploadingMediaForAztec()
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(editPostRepository.getPost(), siteModel)
         isConfigChange = false
-    }
-
-    private fun reattachUploadingMediaForAztec() {
-        editorMediaUploadListener?.let {
-            editorMedia.reattachUploadingMediaForAztec(
-                (editPostRepository),
-                editorFragment is AztecEditorFragment,
-                it
-            )
-        }
     }
 
     override fun onPause() {
@@ -1310,10 +1207,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onStop() {
         super.onStop()
-        if (aztecImageLoader != null && isFinishing) {
-            aztecImageLoader?.clearTargets()
-            aztecImageLoader = null
-        }
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.removeCallbacks(it)
         }
@@ -1330,9 +1223,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         dispatcher.unregister(this)
         editorMedia.cancelAddMediaToEditorActions()
         removePostOpenInEditorStickyEvent()
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).disableContentLogOnCrashes()
-        }
         reactNativeRequestHandler.destroy()
         super.onDestroy()
     }
@@ -1358,7 +1248,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         outState.putInt(EditorConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_NEW_POST, isNewPost)
         outState.putBoolean(EditorConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
-        outState.putBoolean(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         outState.putBoolean(
             EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
@@ -1370,7 +1259,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         dB?.addParcel(EditorConstants.STATE_KEY_REVISION, revision)
         outState.putSerializable(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         isConfigChange = true // don't call sessionData.end() in onDestroy() if this is an Android config change
-        outState.putBoolean(EditorConstants.STATE_KEY_GUTENBERG_IS_SHOWN, showGutenbergEditor)
         outState.putParcelableArrayList(
             EditorConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
         )
@@ -1474,16 +1362,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     override fun onPhotoPickerShown() {
         // animate in the editor overlay
         showOverlay(true)
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).enableMediaMode(true)
-        }
     }
 
     override fun onPhotoPickerHidden() {
         hideOverlay()
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).enableMediaMode(false)
-        }
     }
 
     /*
@@ -1602,48 +1484,23 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 )
             }
         }
+        // Note: This menu is shared with EditPostActivity. The following items are not needed
+        // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
+        // menu resources until a more comprehensive menu cleanup is undertaken.
+
+        // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
         val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
-
-        // The following null checks should basically be redundant but were added to manage
-        // an odd behaviour recorded with Android 8.0.0
-        // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
         if (switchToGutenbergMenuItem != null) {
-            val switchToGutenbergVisibility =
-                if (showGutenbergEditor) false else shouldSwitchToGutenbergBeVisible(editorFragment, siteModel)
-            switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility)
-        }
-        val contentInfo = menu.findItem(R.id.menu_content_info)
-        (editorFragment as? GutenbergEditorFragment)?.let { gutenbergEditorFragment ->
-            if (isGutenbergKitEditor) {
-                contentInfo.isVisible = false
-            } else {
-                contentInfo.setOnMenuItemClickListener { _: MenuItem? ->
-                    try {
-                        gutenbergEditorFragment.showContentInfo()
-                    } catch (e: EditorFragmentNotAddedException) {
-                        ToastUtils.showToast(
-                            getContext(),
-                            R.string.toast_content_info_failed
-                        )
-                    }
-                    true
-                }
-            }
-        } ?: run {
-            contentInfo.isVisible = false // only show the menu item for Gutenberg
+            switchToGutenbergMenuItem.setVisible(false)
         }
 
+        // Hide "Content Info" - not supported in GutenbergKit editor
+        val contentInfo = menu.findItem(R.id.menu_content_info)
+        contentInfo.isVisible = false
+
+        // Hide "Help" - not supported in GutenbergKit editor
         if (helpMenuItem != null) {
-            // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
-            // Therefore, we have to update the Help menu item accordingly.
-            val showHelpAndSupport = jetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor()
-            val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
-            helpMenuItem.setTitle(helpMenuTitle)
-            if (editorFragment is GutenbergEditorFragment && showMenuItems) {
-                helpMenuItem.setVisible(true)
-            } else {
-                helpMenuItem.setVisible(false)
-            }
+            helpMenuItem.setVisible(false)
         }
 
         if (sendFeedbackItem != null) {
@@ -1746,14 +1603,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         if (itemId == R.id.menu_primary_action) {
             performPrimaryAction()
         } else {
-            // Disable other action bar buttons while a media upload is in progress
-            // (unnecessary for Aztec since it supports progress reattachment)
-            val isMediaOrActionInProgress =
-                editorFragment?.isUploadingMedia == true || editorFragment?.isActionInProgress == true
-            if ((!(showAztecEditor || showGutenbergEditor) && isMediaOrActionInProgress)) {
-                ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, ToastUtils.Duration.SHORT)
-                return false
-            }
             if (itemId == R.id.menu_history) {
                 AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED)
                 ActivityUtils.hideKeyboard(this)
@@ -1770,13 +1619,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 return performSecondaryAction()
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
-                if (editorFragment is AztecEditorFragment) {
-                    (editorFragment as AztecEditorFragment).onToolbarHtmlButtonClicked()
-                } else if (editorFragment is GutenbergEditorFragment) {
-                    (editorFragment as GutenbergEditorFragment).onToggleHtmlMode()
-                } else if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onToggleHtmlMode()
-                }
+                editorFragment?.onToggleHtmlMode()
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // The following boolean check should be always redundant but was added to manage
                 // an odd behaviour recorded with Android 8.0.0
@@ -1791,27 +1634,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.")
                 }
             } else if (itemId == R.id.menu_editor_help) {
-                // Display the editor help page -- option should only be available in the GutenbergEditor
-                if (editorFragment is GutenbergEditorFragment) {
-                    analyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, siteModel)
-                    (editorFragment as GutenbergEditorFragment).showEditorHelp()
-                }
+                // No-op because it was GutenbergEditor only
             } else if (itemId == R.id.menu_editor_send_feedback) {
                 ActivityLauncher.viewFeedbackForm(this@GutenbergKitActivity, "Editor")
             } else if (itemId == R.id.menu_undo_action) {
-                if (editorFragment is GutenbergEditorFragment) {
-                    (editorFragment as GutenbergEditorFragment).onUndoPressed()
-                }
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onUndoPressed()
-                }
+                editorFragment?.onUndoPressed()
             } else if (itemId == R.id.menu_redo_action) {
-                if (editorFragment is GutenbergEditorFragment) {
-                    (editorFragment as GutenbergEditorFragment).onRedoPressed()
-                }
-                if (editorFragment is GutenbergKitEditorFragment) {
-                    (editorFragment as GutenbergKitEditorFragment).onRedoPressed()
-                }
+                editorFragment?.onRedoPressed()
             }
         }
         return false
@@ -1962,15 +1791,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun trackPostSessionEditorModeSwitch() {
-        val isGutenberg: Boolean = editorFragment is GutenbergEditorFragment
-        val isGutenbergKit: Boolean = editorFragment is GutenbergKitEditorFragment
         postEditorAnalyticsSession?.switchEditor(
-            when {
-                htmlModeMenuStateOn -> PostEditorAnalyticsSession.Editor.HTML
-                isGutenberg -> PostEditorAnalyticsSession.Editor.GUTENBERG
-                isGutenbergKit -> PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
-                else -> PostEditorAnalyticsSession.Editor.CLASSIC
-            }
+            if (htmlModeMenuStateOn) PostEditorAnalyticsSession.Editor.HTML
+            else PostEditorAnalyticsSession.Editor.GUTENBERG_KIT
         )
     }
 
@@ -2029,9 +1852,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun savePostOnline(isFirstTimePublish: Boolean): ActivityFinishState {
-        if (editorFragment is GutenbergEditorFragment) {
-            (editorFragment as GutenbergEditorFragment).sendToJSPostSaveEvent()
-        }
         return storePostViewModel.savePostOnline(isFirstTimePublish, this, (editPostRepository), siteModel)
     }
 
@@ -2120,11 +1940,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
-                val titleAndContent: Pair<CharSequence, CharSequence> = if (it is GutenbergKitEditorFragment) {
-                    it.getTitleAndContent(oldContent, isFinishing)
-                } else {
-                    it.getTitleAndContent(oldContent)
-                }
+                val titleAndContent = it.getTitleAndContent(oldContent, isFinishing)
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
@@ -2136,141 +1952,62 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     override fun initializeEditorFragment() {
-        if (editorFragment is GutenbergKitEditorFragment) {
-            editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
-                override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
-                    onToggleUndo(!hasUndo)
-                    onToggleRedo(!hasRedo)
-                }
-            })
-            editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
-                override fun onFeaturedImageChanged(mediaID: Long) {
-                    setFeaturedImageId(mediaID, false, true)
-                }
-            })
-            editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-                override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                    editorPhotoPicker?.allowMultipleSelection = config.multiple
-                    val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
-                        config.allowedTypes,
-                        config.multiple
-                    )
-                    val initialSelection = when (val value = config.value) {
-                        is GutenbergView.Value.Single -> listOf(value.value)
-                        is GutenbergView.Value.Multiple -> value.toList()
-                        else -> emptyList()
-                    }
-                    openMediaLibrary(mediaType, initialSelection)
-                }
-            })
-            editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
-                override fun onLogJsException(exception: GutenbergJsException) {
-                    val stackTraceElements = exception.stackTrace.map { stackTrace ->
-                        JsExceptionStackTraceElement(
-                            stackTrace.fileName,
-                            stackTrace.lineNumber,
-                            stackTrace.colNumber,
-                            stackTrace.function
-                        )
-                    }
-
-                    val jsException = JsException(
-                        exception.type,
-                        exception.message,
-                        stackTraceElements,
-                        exception.context,
-                        exception.tags,
-                        exception.isHandled,
-                        exception.handledBy
-                    )
-
-                    val callback = object : JsExceptionCallback {
-                        override fun onReportSent(sent: Boolean) {
-                            // Do nothing
-                        }
-                    }
-
-                    onLogJsException(jsException, callback)
-                }
-            })
-        } else if (editorFragment is AztecEditorFragment) {
-            val aztecEditorFragment = editorFragment as AztecEditorFragment
-            aztecEditorFragment.setEditorImageSettingsListener(this@GutenbergKitActivity)
-            aztecEditorFragment.setMediaToolbarButtonClickListener(editorPhotoPicker)
-
-            // Here we should set the max width for media, but the default size is already OK. No need
-            // to customize it further
-            val loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                this,
-                org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                aztecEditorFragment.maxMediaSize
-            )
-            aztecImageLoader = AztecImageLoader(baseContext, (imageManager), loadingImagePlaceholder)
-            aztecEditorFragment.setAztecImageLoader(aztecImageLoader)
-            aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder)
-            val loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                this,
-                org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
-                aztecEditorFragment.maxMediaSize
-            )
-            aztecEditorFragment.setAztecVideoLoader(AztecVideoLoader(baseContext, loadingVideoPlaceholder))
-            aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder)
-            if (site.isWPCom && !site.isPrivate) {
-                // Add the content reporting for wpcom blogs that are not private
-                val exceptionHandler: AztecExceptionHandler.ExceptionHandlerHelper =
-                    object : AztecExceptionHandler.ExceptionHandlerHelper {
-                        override fun shouldLog(ex: Throwable): Boolean {
-                            return editPostRepository.shouldLog()
-                        }
-                    }
-                aztecEditorFragment.enableContentLogOnCrashes(exceptionHandler)
+        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
+            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                onToggleUndo(!hasUndo)
+                onToggleRedo(!hasRedo)
             }
-            if (editPostRepository.hasPost() && AppPrefs
-                    .isPostWithHWAccelerationOff(editPostRepository.localSiteId, editPostRepository.id)
-            ) {
-                // We need to disable HW Acc. on this post
-                aztecEditorFragment.disableHWAcceleration()
+        })
+        editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
+            override fun onFeaturedImageChanged(mediaID: Long) {
+                setFeaturedImageId(mediaID, false, true)
             }
-            aztecEditorFragment.setExternalLogger(object : AztecLog.ExternalLogger {
-                // This method handles the custom Exception thrown by Aztec to notify the parent app of the error #8828
-                // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
-                // prefs to disable HW acceleration for it.
-                private fun isError8828(throwable: Throwable): Boolean {
-                    return when {
-                        throwable !is DynamicLayoutGetBlockIndexOutOfBoundsException ||
-                                !editPostRepository.hasPost() -> {
-                            false
-                        }
+        })
+        editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
+            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
+                editorPhotoPicker?.allowMultipleSelection = config.multiple
+                val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
+                    config.allowedTypes,
+                    config.multiple
+                )
+                val initialSelection = when (val value = config.value) {
+                    is GutenbergView.Value.Single -> listOf(value.value)
+                    is GutenbergView.Value.Multiple -> value.toList()
+                    else -> emptyList()
+                }
+                openMediaLibrary(mediaType, initialSelection)
+            }
+        })
+        editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
+            override fun onLogJsException(exception: GutenbergJsException) {
+                val stackTraceElements = exception.stackTrace.map { stackTrace ->
+                    JsExceptionStackTraceElement(
+                        stackTrace.fileName,
+                        stackTrace.lineNumber,
+                        stackTrace.colNumber,
+                        stackTrace.function
+                    )
+                }
 
-                        else -> {
-                            AppPrefs.addPostWithHWAccelerationOff(
-                                editPostRepository.localSiteId,
-                                editPostRepository.id
-                            )
-                            true
-                        }
+                val jsException = JsException(
+                    exception.type,
+                    exception.message,
+                    stackTraceElements,
+                    exception.context,
+                    exception.tags,
+                    exception.isHandled,
+                    exception.handledBy
+                )
+
+                val callback = object : JsExceptionCallback {
+                    override fun onReportSent(sent: Boolean) {
+                        // Do nothing
                     }
                 }
 
-                override fun log(message: String) {
-                    AppLog.e(AppLog.T.EDITOR, message)
-                }
-
-                override fun logException(tr: Throwable) {
-                    if (isError8828(tr)) {
-                        return
-                    }
-                    AppLog.e(AppLog.T.EDITOR, tr)
-                }
-
-                override fun logException(tr: Throwable, message: String) {
-                    if (isError8828(tr)) {
-                        return
-                    }
-                    AppLog.e(AppLog.T.EDITOR, message)
-                }
-            })
-        }
+                onLogJsException(jsException, callback)
+            }
+        })
     }
 
     override fun onImageSettingsRequested(editorImageMetaData: EditorImageMetaData) {
@@ -2368,7 +2105,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         i.putExtra(EditorConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
         i.putExtra(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         i.putExtra(EditorConstants.EXTRA_IS_NEW_POST, isNewPost)
-        i.putExtra(EditorConstants.STATE_KEY_IS_GUTENBERG_KIT, isGutenbergKitEditor)
         setResult(RESULT_OK, i)
     }
 
@@ -2563,14 +2299,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         return editPostRepository.isFirstTimePublish(publishPost)
     }
 
-    /**
-     * Can be dropped and replaced by mEditorFragment.hasFailedMediaUploads() when we drop the visual editor.
-     * mEditorFragment.isActionInProgress() was added to address a timing issue when adding media and immediately
-     * publishing or exiting the visual editor. It's not safe to upload the post in this state.
-     * See https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/294
-     */
     private fun hasFailedMedia(): Boolean {
-        return editorFragment?.hasFailedMediaUploads() == true || editorFragment?.isActionInProgress == true
+        return editorFragment?.hasFailedMediaUploads() == true
     }
 
     /**
@@ -2582,16 +2312,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                VIEW_PAGER_PAGE_CONTENT -> {
-                    if (isGutenbergKitEditor && showGutenbergEditor) {
-                        createGutenbergKitEditorFragment()
-                    } else if (showGutenbergEditor) {
-                        createGutenbergEditorFragment()
-                    } else {
-                        // If gutenberg editor is not selected, default to Aztec.
-                        AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded())
-                    }
-                }
+                VIEW_PAGER_PAGE_CONTENT -> createGutenbergKitEditorFragment()
                 VIEW_PAGER_PAGE_SETTINGS -> EditPostSettingsFragment.newInstance()
                 VIEW_PAGER_PAGE_PUBLISH_SETTINGS -> newInstance()
                 VIEW_PAGER_PAGE_HISTORY -> newInstance(editPostRepository.id, siteModel)
@@ -2679,45 +2400,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
-        private fun createGutenbergEditorFragment(): GutenbergEditorFragment {
-            // Enable gutenberg on the site & show the informative popup upon opening
-            // the GB editor the first time when the remote setting value is still null
-            setGutenbergEnabledIfNeeded()
-            xPostsCapabilityChecker.retrieveCapability(siteModel) { isXpostsCapable ->
-                onXpostsSettingsCapability(isXpostsCapable)
-            }
-
-            val isWpCom = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
-            val gutenbergPropsBuilder = gutenbergPropsBuilder
-            val gutenbergWebViewAuthorizationData = GutenbergWebViewAuthorizationData(
-                siteModel.url,
-                isWpCom,
-                accountStore.account.userId,
-                accountStore.account.userName,
-                accountStore.accessToken,
-                siteModel.selfHostedSiteId,
-                siteModel.username,
-                siteModel.password,
-                siteModel.isUsingWpComRestApi,
-                siteModel.webEditor,
-                userAgent.toString(),
-                isJetpackSsoEnabled
-            )
-
-            return GutenbergEditorFragment.newInstance(
-                getContext(),
-                isNewPost,
-                gutenbergWebViewAuthorizationData,
-                gutenbergPropsBuilder,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
-            )
-        }
-
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val fragment: Fragment = super.instantiateItem(container, position) as Fragment
             when (position) {
                 VIEW_PAGER_PAGE_CONTENT -> {
-                    editorFragment = fragment as EditorFragmentAbstract
+                    editorFragment = fragment as GutenbergKitEditorFragment
                     editorFragment?.setImageLoader(imageLoader)
                     editorFragment?.titleOrContentChanged?.observe(this@GutenbergKitActivity) { _: Editable? ->
                         storePostViewModel.savePostWithDelay()
@@ -2727,7 +2414,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
                         // Set up custom headers for the visual editor's internal WebView
                         editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
-                        reattachUploadingMediaForAztec()
                     }
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
@@ -2753,90 +2439,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     private fun onXpostsSettingsCapability(isXpostsCapable: Boolean) {
         isXPostsCapable = isXpostsCapable
-        if (editorFragment is GutenbergEditorFragment) {
-            (editorFragment as GutenbergEditorFragment).updateCapabilities(gutenbergPropsBuilder)
-        }
-        if (editorFragment is GutenbergKitEditorFragment) {
-            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
-            (editorFragment as GutenbergKitEditorFragment).setXPostsEnabled(enableXPosts)
-        }
+        val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
+        editorFragment?.setXPostsEnabled(enableXPosts)
     }
-
-    private val gutenbergPropsBuilder: GutenbergPropsBuilder
-         get() {
-            val postType = if (isPage) "page" else "post"
-            val featuredImageId = editPostRepository.featuredImageId.toInt()
-            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
-            val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
-
-            // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based
-            // WP.com sites so, gate with `isUsingWpComRestApi()`
-            // If this.mIsXPostsCapable has not been set, default to allowing xPosts.
-            val enableXPosts = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable == true)
-            val editorTheme = editorThemeStore.getEditorThemeForSite((siteModel))
-            val themeBundle = if ((editorTheme != null)) editorTheme.themeSupport.toBundle((siteModel)) else null
-            val isUnsupportedBlockEditorEnabled = siteModel.isWPCom || isJetpackSsoEnabled
-            val unsupportedBlockEditorSwitch = siteModel.isJetpackConnected && !isJetpackSsoEnabled
-            val isFreeWPCom = siteModel.isWPCom && SiteUtils.onFreePlan((siteModel))
-            val isWPComSite = siteModel.isWPCom || siteModel.isWPComAtomic
-            val shouldUseFastImage = !siteModel.isPrivate && !siteModel.isPrivateWPComAtomic
-            val hostAppNamespace = if (buildConfigWrapper.isJetpackApp) "Jetpack" else "WordPress"
-
-            // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-            val jetpackFeaturesRemoved = !jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
-            if (jetpackFeaturesRemoved) {
-                return GutenbergPropsBuilder(
-                    enableContactInfoBlock = false,
-                    enableLayoutGridBlock = false,
-                    enableTiledGalleryBlock = false,
-                    enableVideoPressBlock = false,
-                    enableVideoPressV5Support = false,
-                    enableFacebookEmbed = false,
-                    enableInstagramEmbed = false,
-                    enableLoomEmbed = false,
-                    enableSmartframeEmbed = false,
-                    enableMentions = false,
-                    enableXPosts = false,
-                    enableUnsupportedBlockEditor = false,
-                    enableSupportSection = false,
-                    enableOnlyCoreBlocks = true,
-                    unsupportedBlockEditorSwitch = false,
-                    !isFreeWPCom,
-                    shouldUseFastImage,
-                    enableReusableBlock = false,
-                    wpcomLocaleSlug,
-                    postType,
-                    hostAppNamespace,
-                    featuredImageId,
-                    themeBundle
-                )
-            }
-            return GutenbergPropsBuilder(
-                SiteUtils.supportsContactInfoFeature(siteModel),
-                SiteUtils.supportsLayoutGridFeature(siteModel),
-                SiteUtils.supportsTiledGalleryFeature(siteModel),
-                SiteUtils.supportsVideoPressFeature(siteModel),
-                SiteUtils.supportsVideoPressV5Feature(siteModel, SiteUtils.WP_VIDEOPRESS_V5_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
-                siteModel.isUsingWpComRestApi,
-                enableXPosts,
-                isUnsupportedBlockEditorEnabled,
-                enableSupportSection = true,
-                enableOnlyCoreBlocks = false,
-                unsupportedBlockEditorSwitch,
-                !isFreeWPCom,
-                shouldUseFastImage,
-                isWPComSite,
-                wpcomLocaleSlug,
-                postType,
-                hostAppNamespace,
-                featuredImageId,
-                themeBundle
-            )
-        }
 
     private var mediaCapturePath: String? = ""
 
@@ -2907,11 +2512,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
         // Set post title and content
         if (editPostRepository.hasPost()) {
-            // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
-            if (((!TextUtils.isEmpty(editPostRepository.content)
-                        || editorFragment is GutenbergEditorFragment)
-                        && !hasSetPostContent)
-            ) {
+            if (!TextUtils.isEmpty(editPostRepository.content) && !hasSetPostContent)  {
                 hasSetPostContent = true
                 // NOTE: Might be able to drop .replaceAll() when legacy editor is removed
                 var content = editPostRepository.content.replace("\uFFFC".toRegex(), "")
@@ -2921,14 +2522,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             }
             if (!TextUtils.isEmpty(editPostRepository.title)) {
                 editorFragment?.setTitle(editPostRepository.title)
-            } else if (editorFragment is GutenbergEditorFragment) {
-                // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
-                val title: String? = intent.getStringExtra(EditorConstants.EXTRA_PAGE_TITLE)
-                if (title != null) {
-                    editorFragment?.setTitle(title)
-                } else {
-                    editorFragment?.setTitle("")
-                }
             }
 
             // TBD: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
@@ -2971,10 +2564,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 // Create an <a href> element around links
                 var updatedContent: String = AutolinkUtils.autoCreateLinks(text)
 
-                // If editor is Gutenberg, add Gutenberg block around content
-                if (showGutenbergEditor) {
-                    updatedContent = EditorUnitFunctions.migrateToGutenbergEditor(updatedContent)
-                }
+                // Add Gutenberg block around content
+                updatedContent = EditorUnitFunctions.migrateToGutenbergEditor(updatedContent)
 
                 // update PostModel
                 postModel.setContent(updatedContent)
@@ -3026,7 +2617,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         if (isGutenbergEditor) {
             val postRepository: EditPostRepository = editPostRepository
             val postId = editPostRepository.id
-            if (mediaId == GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET.toLong()) {
+            if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET.toLong()) {
                 featuredImageHelper.trackFeaturedImageEvent(
                     FeaturedImageHelper.TrackableEvent.IMAGE_REMOVED_GUTENBERG_EDITOR,
                     postId
@@ -3043,9 +2634,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
              }
         } else if (editPostSettingsFragment != null) {
             editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
-        }
-        if (editorFragment is GutenbergEditorFragment) {
-            (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())
         }
     }
 
@@ -3130,7 +2718,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             RequestCodes.VIDEO_LIBRARY -> handleLibraries(data)
             RequestCodes.TAKE_PHOTO -> addLastTakenPicture()
             RequestCodes.TAKE_VIDEO -> handleTakeVideo(data)
-            RequestCodes.MEDIA_SETTINGS -> handleMediaSettings(data)
+            RequestCodes.MEDIA_SETTINGS -> {
+                // No-op because it was Aztec only
+            }
             RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
             RequestCodes.GIF_PICKER_SINGLE_SELECT,
             RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
@@ -3162,15 +2752,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     private fun handleTakeVideo(data: Intent?){
         data?.data?.let {
             editorMedia.addNewMediaToEditorAsync(it, true)
-        }
-    }
-
-    private fun handleMediaSettings(data: Intent?) {
-        if (editorFragment is AztecEditorFragment) {
-            editorFragment?.onActivityResult(
-                AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                RESULT_OK, data
-            )
         }
     }
 
@@ -3330,46 +2911,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             }
         }
 
-        // if the user selected multiple items and they're all images, show the insert media
-        // dialog so the user can choose whether to insert them individually or as a gallery
-        if ((ids.size > 1) && allAreImages && !showGutenbergEditor) {
-            showInsertMediaDialog(ArrayList(ids))
-        } else {
-            // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-            editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
-            if (showGutenbergEditor && editorPhotoPicker?.allowMultipleSelection == true) {
-                editorPhotoPicker?.allowMultipleSelection = false
-            }
+        // if allowMultipleSelection, pass all ids to addExistingMediaToEditor at once
+        editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
+        if (editorPhotoPicker?.allowMultipleSelection == true) {
+            editorPhotoPicker?.allowMultipleSelection = false
         }
-    }
-
-    /*
-     * called after user selects multiple photos from WP media library
-     */
-    private fun showInsertMediaDialog(mediaIds: ArrayList<Long>) {
-        val callback = InsertMediaCallback {dialog: InsertMediaDialog ->
-                when (dialog.insertType) {
-                    InsertType.GALLERY -> {
-                        val gallery = MediaGallery().apply {
-                            type = dialog.galleryType.toString()
-                            numColumns = dialog.numColumns
-                            ids = mediaIds
-                        }
-                        editorFragment?.appendGallery(gallery)
-                    }
-                    InsertType.INDIVIDUALLY -> {
-                        editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds)
-                    }
-                    null -> {
-                        // Handle the case where dialog.insertType is null if needed
-                    }
-                }
-            }
-
-        val dialog = InsertMediaDialog.newInstance(callback, siteModel)
-        val ft = supportFragmentManager.beginTransaction()
-        ft.add(dialog, "insert_media")
-        ft.commitAllowingStateLoss()
     }
 
     @Suppress("unused")
@@ -3417,12 +2963,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 }
                 pendingVideoPressInfoRequests?.clear()
             }
-        }
-    }
-
-    private fun clearFeaturedImage() {
-        if (editorFragment is GutenbergEditorFragment) {
-            (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(0)
         }
     }
 
@@ -3639,34 +3179,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onMediaDeleted(localMediaId: String) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            editorMedia.onMediaDeleted(showAztecEditor, showGutenbergEditor, localMediaId)
+            editorMedia.onMediaDeleted(showAztecEditor = false, showGutenbergEditor = true, localMediaId)
         }
     }
 
     override fun onUndoMediaCheck(undoedContent: String) {
-        // here we check which elements tagged UPLOADING are there in undoedContent,
-        // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
-        // These are the CANCELED ONES, so mark them FAILED now to retry.
-        val currentlyUploadingMedia: List<MediaModel> = UploadService.getPendingOrInProgressMediaUploadsForPost(
-            editPostRepository.getPost()
-        )
-
-        val mediaMarkedUploading: List<String?> =
-            AztecEditorFragment.getMediaMarkedUploadingInPostContent(this@GutenbergKitActivity, undoedContent)
-
-        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
-        // to see whether they're really being uploaded or not. If an item is not really being uploaded,
-        // mark that item failed
-        mediaMarkedUploading.forEach { mediaId ->
-            if (mediaId != null &&
-                currentlyUploadingMedia.none { media -> StringUtils.stringToInt(mediaId) == media.id }
-            ) {
-                if (editorFragment is AztecEditorFragment) {
-                    editorMedia.updateDeletedMediaItemIds(mediaId)
-                    (editorFragment as AztecEditorFragment).setMediaToFailed(mediaId)
-                }
-            }
-        }
+        // No-op because it was Aztec only
     }
 
     override fun onVideoPressInfoRequested(videoId: String) {
@@ -3736,48 +3254,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
-        if (editorFragment !is GutenbergKitEditorFragment) {
-            refreshEditorContent()
-        }
-
-        onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
+        refreshEditorContent()
         onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded()
-        onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
-    }
-
-    private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
-        // probably here is best for Gutenberg to start interacting with
-        if (!(showGutenbergEditor && editorFragment is GutenbergEditorFragment))
-            return
-
-        refreshEditorTheme()
-
-        editPostRepository.getPost()?.let {  post ->
-            val failedMedia = mediaStore.getMediaForPostWithState(post, MediaUploadState.FAILED)
-            if (failedMedia.isEmpty()) return@let
-            val mediaIds: HashSet<Int> = HashSet()
-            failedMedia.forEach { media ->
-                // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
-                if (!media.markedLocallyAsFeatured) {
-                    mediaIds.add(media.id)
-                }
-            }
-            (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
-        }
     }
 
     private fun onEditorFinalTouchesBeforeShowingForGutenbergKitIfNeeded() {
-        if (showGutenbergEditor && editorFragment is GutenbergKitEditorFragment) {
-            refreshEditorSettings()
-        }
-    }
-
-    private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
-        if (showAztecEditor && editorFragment is AztecEditorFragment) {
-            val entryPoint =
-                intent.getSerializableExtra(EditorConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
-            postEditorAnalyticsSession?.start(null, entryPoint)
-        }
+        refreshEditorSettings()
     }
 
     override fun onEditorFragmentContentReady(
@@ -3797,23 +3279,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         val promptId: Int = intent.getIntExtra(EditorConstants.EXTRA_PROMPT_ID, -1)
         editorBloggingPromptsViewModel.start(siteModel, promptId)
-
-        updateVoiceContentIfNeeded()
-    }
-
-    private fun updateVoiceContentIfNeeded() {
-        if (isGutenbergKitEditor) {
-            return
-        }
-        // Check if voice content exists and this is a new post for a Gutenberg editor fragment
-        val content = intent.getStringExtra(EditorConstants.EXTRA_VOICE_CONTENT)
-        if (isNewPost && content != null && !isVoiceContentSet) {
-            val gutenbergFragment = editorFragment as? GutenbergEditorFragment
-            gutenbergFragment?.let {
-                isVoiceContentSet = true
-                it.updateContent(content)
-            }
-        }
     }
 
     private fun logTemplateSelection() {
@@ -4160,11 +3625,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         (editorFragment as? GutenbergNetworkConnectionListener)?.onConnectionStatusChange(event.isConnected)
     }
 
-    private fun refreshEditorTheme() {
-        val payload = FetchEditorThemePayload(siteModel, gssEnabled = true)
-        dispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload))
-    }
-
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorThemeChanged(event: OnEditorThemeChanged) {
@@ -4185,7 +3645,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
         val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
-        (editorFragment as? GutenbergKitEditorFragment)?.startWithEditorSettings(editorSettings.toJsonString())
+        editorFragment?.startWithEditorSettings(editorSettings.toJsonString())
     }
 
     // EditorDataProvider methods
@@ -4200,16 +3660,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         val editorFragmentView: View? = editorFragment?.view
         editorFragmentView?.requestFocus()
 
-        // this fixes issue with Aztec editor
-        if (editorFragment is AztecEditorFragment) {
-            (editorFragment as AztecEditorFragment).requestContentAreaFocus()
-        }
         return super.onMenuOpened(featureId, menu)
     }
 
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        editorFragment?.appendMediaFiles(mediaFiles)
+        editorFragment?.appendMediaFiles(mediaFiles.toMutableMap())
     }
 
     override fun getImmutablePost(): PostImmutableModel {
