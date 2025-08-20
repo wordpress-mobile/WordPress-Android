@@ -160,6 +160,11 @@ class MenuActivity : BaseAppCompatActivity() {
             )
 
             is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(this, action.site)
+
+            is SiteNavigationAction.OpenApplicationPasswordsList -> {
+                ActivityLauncher.viewApplicationPasswordList(this)
+            }
+
             else -> {}
         }
     }

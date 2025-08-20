@@ -138,7 +138,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         assertTrue(result)
         verify(siteStore).sites
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(siteModel))
+        verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
     }
 
     @Test
@@ -150,7 +150,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
             assertFalse(result)
             verify(siteStore).sites
-            verify(dispatcherWrapper, times(0)).insertOrUpdateSite(any())
+            verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
+            verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
         }
 
     @Test
@@ -231,7 +232,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
 
         verify(siteStore).sites
-        verify(dispatcherWrapper, times(0)).insertOrUpdateSite(any())
+        verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
+        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
     }
 
     @Test
@@ -251,7 +253,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
 
         verify(siteStore).sites
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(site))
+        verify(dispatcherWrapper).removeApplicationPassword(eq(site))
 
         // Verify all password fields are cleared
         assertEquals("", site.apiRestUsernamePlain)
@@ -294,9 +296,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
 
         verify(siteStore).sites
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(site1))
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(site2))
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(site3))
+        verify(dispatcherWrapper).removeApplicationPassword(eq(site1))
+        verify(dispatcherWrapper).removeApplicationPassword(eq(site2))
+        verify(dispatcherWrapper).removeApplicationPassword(eq(site3))
 
         // Verify all password fields are cleared for all sites
         listOf(site1, site2, site3).forEach { site ->
@@ -324,7 +326,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
 
-        verify(dispatcherWrapper).insertOrUpdateSite(eq(site))
+        verify(dispatcherWrapper).removeApplicationPassword(eq(site))
 
         // Verify non-password fields are preserved
         assertEquals(1, site.id)
