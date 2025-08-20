@@ -34,15 +34,24 @@ import uniffi.wp_api.PluginStatus
 
 @ExperimentalCoroutinesApi
 class JetpackRestConnectionViewModelTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var jetpackInstaller: JetpackInstaller
-    @Mock lateinit var jetpackConnector: JetpackConnector
-    @Mock lateinit var jetpackModuleHelper: JetpackStatsModuleHelper
-    @Mock lateinit var appLogWrapper: AppLogWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var wpAppNotifierHandler: WpAppNotifierHandler
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var jetpackInstaller: JetpackInstaller
+    @Mock
+    lateinit var jetpackConnector: JetpackConnector
+    @Mock
+    lateinit var jetpackModuleHelper: JetpackStatsModuleHelper
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
+    @Mock
+    lateinit var siteModel: SiteModel
 
     private lateinit var viewModel: JetpackRestConnectionViewModel
 
@@ -357,9 +366,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
     }
-
-
-
 
     @Test
     fun `successful flow completion sets Done button and removes listener`() = runTest {
