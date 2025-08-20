@@ -71,9 +71,9 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         private const val INVALID_JETPACK_VERSION = "14.0" // Below JETPACK_LIMIT_VERSION
 
         // Test timing constants
-        private const val TEST_UI_DELAY_MS = 10L        // Fast UI delay for tests
-        private const val TEST_ADVANCE_TIME_MS = 50L    // Time to advance for UI delay tests
-        private const val TEST_STEP_TIMEOUT_MS = 100L   // Fast timeout for tests
+        private const val TEST_UI_DELAY_MS = 10L         // Fast UI delay for tests
+        private const val TEST_ADVANCE_TIME_MS = 50L     // Time to advance for UI delay tests
+        private const val TEST_STEP_TIMEOUT_MS = 100L    // Fast timeout for tests
         private const val TEST_TIMEOUT_ADVANCE_MS = 150L // Time to advance for timeout tests
     }
 
