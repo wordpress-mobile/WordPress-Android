@@ -18,8 +18,8 @@ public final class AnalyticsTracker {
     public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
-    // These match iOS except for JETPACK_REST_CONNECT_SOURCE_KEY which isn't tracked on iOS
     public static final String JETPACK_REST_CONNECT_SOURCE_KEY = "source";
+    public static final String JETPACK_REST_CONNECT_STATE_STEP_KEY = "step";
     public static final String JETPACK_REST_CONNECT_STATE_KEY = "state";
     public static final String JETPACK_REST_CONNECT_STATE_STARTED = "started";
     public static final String JETPACK_REST_CONNECT_STATE_COMPLETED = "completed";

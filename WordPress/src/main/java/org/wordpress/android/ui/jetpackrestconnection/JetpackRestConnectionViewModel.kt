@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STA
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_FAILED
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_KEY
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STARTED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STEP_KEY
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -222,7 +223,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _stepStates.value = _stepStates.value.toMutableMap().apply {
                 this[step] = StepState()
             }
-            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED)
+            analyticsTrackerWrapper.track(
+                stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED,
+                properties = mapOf(
+                    JETPACK_REST_CONNECT_STATE_STEP_KEY to step.toString()
+                )
+            )
             startConnectionFlow(fromStep = step)
         } ?: run {
             // Fallback to original behavior if no failed step found
