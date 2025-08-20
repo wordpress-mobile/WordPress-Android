@@ -15,8 +15,8 @@ import org.wordpress.android.ui.posts.EditorConstants.RestartEditorOptions
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -98,35 +98,68 @@ class EditorLauncher @Inject constructor(
         val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
         val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
 
-        if (!isGutenbergFeatureEnabled) {
-            val reason = when {
-                isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
-                !isGutenbergEnabled -> "neither the experimental block editor feature nor GutenbergKit feature is enabled"
-                else -> "GutenbergKit feature checks failed"
+        return when {
+            !isGutenbergFeatureEnabled -> {
+                logFeatureDisabledReason(isGutenbergDisabled, isGutenbergEnabled)
+                false
             }
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason" +
-                    " (experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
-                    "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()}, " +
-                    "disable_experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)})")
-            return false
+            
+            params.siteSource.getSite(siteStore) == null -> {
+                logNoSiteInfoReason()
+                true
+            }
+            
+            else -> {
+                val site = params.siteSource.getSite(siteStore)!!
+                determineEditorForSite(params, site)
+            }
         }
+    }
 
-        val site = params.siteSource.getSite(siteStore)
-        if (site == null) {
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information is available, " +
-                    "defaulting to GutenbergKit (experimental_block_editor: ${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
-                    "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()})")
-            return true
+    private fun logFeatureDisabledReason(isGutenbergDisabled: Boolean, isGutenbergEnabled: Boolean) {
+        val reason = when {
+            isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
+            !isGutenbergEnabled -> "neither the experimental block editor feature nor " +
+                    "GutenbergKit feature is enabled"
+            else -> "GutenbergKit feature checks failed"
         }
+        val featureFlags = "(experimental_block_editor: " +
+                "${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
+                "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()}, " +
+                "disable_experimental_block_editor: " +
+                "${experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)})"
+        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason $featureFlags")
+    }
 
+    private fun logNoSiteInfoReason() {
+        val featureFlags = "(experimental_block_editor: " +
+                "${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
+                "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()})"
+        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information " +
+                "is available, defaulting to GutenbergKit $featureFlags")
+    }
+
+    private fun determineEditorForSite(params: EditorLauncherParams, site: SiteModel): Boolean {
         val post = getPostFromParams(params)
         val isNewPost = post == null || post.isLocalDraft
         val postContent = post?.content ?: ""
         val shouldUseGutenberg = PostUtils.shouldShowGutenbergEditor(isNewPost, postContent, site)
 
+        logEditorDecision(shouldUseGutenberg, isNewPost, postContent, post, site)
+        return shouldUseGutenberg
+    }
+
+    private fun logEditorDecision(
+        shouldUseGutenberg: Boolean,
+        isNewPost: Boolean,
+        postContent: String,
+        post: PostModel?,
+        site: SiteModel
+    ) {
         val postInfo = if (post != null) {
             "post_id: ${post.id}, local_id: ${post.localId}, is_local_draft: ${post.isLocalDraft}, " +
-                    "content_length: ${postContent.length}, has_blocks: ${PostUtils.contentContainsGutenbergBlocks(postContent)}"
+                    "content_length: ${postContent.length}, " +
+                    "has_blocks: ${PostUtils.contentContainsGutenbergBlocks(postContent)}"
         } else {
             "new_post: true"
         }
@@ -140,8 +173,7 @@ class EditorLauncher @Inject constructor(
                 PostUtils.contentContainsGutenbergBlocks(postContent) -> "the existing post contains Gutenberg blocks"
                 else -> "PostUtils.shouldShowGutenbergEditor returned true"
             }
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because $reason " +
-                    "($postInfo, $siteInfo)")
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because $reason ($postInfo, $siteInfo)")
         } else {
             val reason = when {
                 !isNewPost && !PostUtils.contentContainsGutenbergBlocks(postContent) -> 
@@ -150,11 +182,8 @@ class EditorLauncher @Inject constructor(
                     "this is a new post but the site doesn't have block editor as default for new posts"
                 else -> "PostUtils.shouldShowGutenbergEditor returned false"
             }
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason " +
-                    "($postInfo, $siteInfo)")
+            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason ($postInfo, $siteInfo)")
         }
-
-        return shouldUseGutenberg
     }
 
     private fun getPostFromParams(params: EditorLauncherParams): PostModel? {
