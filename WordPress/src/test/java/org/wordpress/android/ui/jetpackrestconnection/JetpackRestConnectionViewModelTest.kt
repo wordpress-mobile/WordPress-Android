@@ -98,11 +98,11 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.uiDelayMs = TEST_UI_DELAY_MS
         viewModel.stepTimeoutMs = TEST_STEP_TIMEOUT_MS
     }
-    
+
     // Helper to assert step status
     private fun assertStepStatus(step: ConnectionStep, expectedStatus: ConnectionStatus, expectedError: ErrorType? = null) {
         assertThat(viewModel.stepStates.value[step]?.status).isEqualTo(expectedStatus)
-        expectedError?.let { 
+        expectedError?.let {
             assertThat(viewModel.stepStates.value[step]?.errorType).isEqualTo(it)
         }
     }
@@ -313,7 +313,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `step timeout triggers timeout error`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackInstaller.installJetpack(any())).doSuspendableAnswer {
-            delay(200L) // Longer than TEST_STEP_TIMEOUT_MS to trigger timeout
+            delay(TEST_STEP_TIMEOUT_MS + 10L) // Longer than TEST_STEP_TIMEOUT_MS to trigger timeout
             Result.success(PluginStatus.ACTIVE)
         }
 
