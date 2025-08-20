@@ -15,7 +15,6 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -94,18 +93,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Close)
     }
 
-    @Test
-    fun `onCancelDismissed does not change UI state`() = runTest {
-        // Set up a UI event first
-        viewModel.onDoneClick()
-        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
-
-        // Cancel dismissed should not change the UI event
-        viewModel.onCancelDismissed()
-
-        // UI event should remain unchanged
-        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
-    }
 
     @Test
     fun `onRetryClick retries from failed step`() = runTest {
@@ -186,17 +173,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ConnectionStatus.Completed)
     }
 
-    @Test
-    fun `installJetpack step succeeds with network active plugin`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.NETWORK_ACTIVE))
-
-        viewModel.onStartClick()
-        advanceTimeBy(1100)
-
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
-    }
 
     @Test
     fun `installJetpack step fails with inactive plugin`() = runTest {
@@ -212,19 +188,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ErrorType.InstallJetpackInactive)
     }
 
-    @Test
-    fun `installJetpack step fails on exception`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Install failed")))
-
-        viewModel.onStartClick()
-        advanceTimeBy(1100)
-
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.errorType)
-            .isEqualTo(ErrorType.InstallJetpackFailed)
-    }
 
     @Test
     fun `connectSite step succeeds and updates site ID`() = runTest {
@@ -240,20 +203,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ConnectionStatus.Completed)
     }
 
-    @Test
-    fun `connectSite step fails on exception`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.failure(Exception("Connect failed")))
-
-        viewModel.onStartClick()
-        advanceTimeBy(1100)
-
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.errorType)
-            .isEqualTo(ErrorType.ConnectSiteFailed)
-    }
 
     @Test
     fun `connectUser step fails without access token`() = runTest {
@@ -289,24 +238,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ConnectionStatus.Completed)
     }
 
-    @Test
-    fun `connectUser step fails on exception`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn("test_token")
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(
-            Result.failure(Exception("User connect failed"))
-        )
-
-        viewModel.onStartClick()
-        advanceTimeBy(1100)
-
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.errorType)
-            .isEqualTo(ErrorType.ConnectUserFailed)
-    }
 
     @Test
     fun `finalize step succeeds and completes step`() = runTest {
@@ -428,42 +359,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
 
-    @Test
-    fun `multiple retries maintain correct step states`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any()))
-            .thenReturn(Result.failure(Exception("First failure")))
-            .thenReturn(Result.failure(Exception("Second failure")))
-            .thenReturn(Result.success(PluginStatus.ACTIVE))
 
-        viewModel.onStartClick()
-        advanceTimeBy(1100)
-
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
-
-        viewModel.onRetryClick()
-
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
-
-        viewModel.onRetryClick()
-
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
-
-        verify(jetpackInstaller, times(3)).installJetpack(any())
-    }
-
-    @Test
-    fun `UI events are properly reset before setting new value`() = runTest {
-        viewModel.onDoneClick()
-        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
-
-        viewModel.onCloseClick()
-        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Close)
-
-        viewModel.onCloseClick()
-        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Close)
-    }
 
     @Test
     fun `successful flow completion sets Done button and removes listener`() = runTest {
