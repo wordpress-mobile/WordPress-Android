@@ -344,15 +344,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     /**
      * Step 2: Installs Jetpack to the current site if not already installed
      */
-    private var isFirstCall = true
     private suspend fun installJetpack() {
-        // TODO remove this block - it's only here for testing purposes
-        if (isFirstCall) {
-            isFirstCall = false
-            onRequestedWithInvalidAuthentication(site.url)
-            return
-        }
-
         val result = jetpackInstaller.installJetpack(site)
 
         result.fold(
