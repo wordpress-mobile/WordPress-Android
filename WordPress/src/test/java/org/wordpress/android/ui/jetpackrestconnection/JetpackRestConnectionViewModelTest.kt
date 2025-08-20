@@ -98,6 +98,14 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.uiDelayMs = TEST_UI_DELAY_MS
         viewModel.stepTimeoutMs = TEST_STEP_TIMEOUT_MS
     }
+    
+    // Helper to assert step status
+    private fun assertStepStatus(step: ConnectionStep, expectedStatus: ConnectionStatus, expectedError: ErrorType? = null) {
+        assertThat(viewModel.stepStates.value[step]?.status).isEqualTo(expectedStatus)
+        expectedError?.let { 
+            assertThat(viewModel.stepStates.value[step]?.errorType).isEqualTo(it)
+        }
+    }
 
     @Test
     fun `onDoneClick sets Done UI event`() = runTest {
@@ -202,8 +210,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceUntilIdle()
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
+        assertStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Completed)
     }
 
 
@@ -215,10 +222,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.errorType)
-            .isEqualTo(ErrorType.InstallJetpackInactive)
+        assertStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Failed, ErrorType.InstallJetpackInactive)
     }
 
 
@@ -232,8 +236,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(siteModel).siteId = TEST_SITE_ID.toLong()
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
+        assertStepStatus(ConnectionStep.ConnectSite, ConnectionStatus.Completed)
     }
 
 
@@ -248,10 +251,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceUntilIdle()
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.errorType)
-            .isEqualTo(ErrorType.MissingAccessToken)
+        assertStepStatus(ConnectionStep.ConnectUser, ConnectionStatus.Failed, ErrorType.MissingAccessToken)
     }
 
     @Test
@@ -266,8 +266,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(jetpackConnector).connectUser(eq(siteModel), eq(TEST_ACCESS_TOKEN))
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
+        assertStepStatus(ConnectionStep.ConnectUser, ConnectionStatus.Completed)
     }
 
 
@@ -283,8 +282,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
+        assertStepStatus(ConnectionStep.Finalize, ConnectionStatus.Completed)
     }
 
     @Test
@@ -299,10 +297,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.errorType)
-            .isEqualTo(ErrorType.ActivateStatsFailed)
+        assertStepStatus(ConnectionStep.Finalize, ConnectionStatus.Failed, ErrorType.ActivateStatsFailed)
     }
 
     @Test
@@ -326,10 +321,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         advanceTimeBy(TEST_TIMEOUT_ADVANCE_MS)
         advanceUntilIdle()
 
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.errorType)
-            .isEqualTo(ErrorType.Timeout)
+        assertStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Failed, ErrorType.Timeout)
     }
 
     @Test
