@@ -1511,7 +1511,7 @@ open class SiteStore @Inject constructor(
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
             try {
-                // The REST API doesn't return info about the editor(s) not the Application Password.
+                // The REST API doesn't return info about the editor(s) nor the Application Password.
                 // Make sure to copy current values available on the DB.
                 // Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
