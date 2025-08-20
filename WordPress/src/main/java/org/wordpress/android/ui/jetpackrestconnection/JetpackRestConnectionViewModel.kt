@@ -458,7 +458,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the
      * access token and restart the connection flow so the user sees the login page
      */
-    override fun onRequestedWithInvalidAuthentication(authenticationUrl: String) {
+    override fun onRequestedWithInvalidAuthentication(siteUrl: String) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
         wpAppNotifierHandler.removeListener(this)
         accountStore.resetAccessToken()
