@@ -68,7 +68,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         _buttonType.value = null
         _uiEvent.value = null
 
-        trackEvent(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
         wpAppNotifierHandler.addListener(this)
 
         startStep(fromStep ?: ConnectionStep.LoginWpCom)
@@ -78,7 +78,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         if (wasSuccessful) {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow completed successfully")
             _buttonType.value = ButtonType.Done
-            trackEvent(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
         } else {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow failed")
             _buttonType.value = ButtonType.Retry
@@ -115,7 +115,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private fun startStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
-        trackStep(step)
+        trackStepStarted(step)
         updateStepStatus(step, ConnectionStatus.InProgress)
         if (step == ConnectionStep.LoginWpCom) {
             loginWpCom()
@@ -124,21 +124,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 executeStepWithErrorHandling(step)
             }
         }
-    }
-
-    private fun trackStep(step: ConnectionStep) {
-        val event = when (step) {
-            ConnectionStep.LoginWpCom -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN
-            ConnectionStep.InstallJetpack -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL
-            ConnectionStep.ConnectSite -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_SITE_CONNECTION
-            ConnectionStep.ConnectUser -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_USER_CONNECTION
-            ConnectionStep.Finalize -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_FINALIZE
-        }
-        trackEvent(event)
-    }
-
-    private fun trackEvent(event: AnalyticsTracker.Stat) {
-        analyticsTrackerWrapper.track(event)
     }
 
     /**
@@ -156,10 +141,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         when (status) {
             ConnectionStatus.Failed -> {
+                trackStepFailed(step)
                 onFlowCompleted(false)
             }
 
             ConnectionStatus.Completed -> {
+                trackStepCompleted(step)
                 if (step == ConnectionStep.Finalize) {
                     onFlowCompleted(true)
                 } else {
@@ -230,7 +217,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _stepStates.value = _stepStates.value.toMutableMap().apply {
                 this[step] = StepState()
             }
-            trackEvent(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED)
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED)
             startConnectionFlow(fromStep = step)
         } ?: run {
             // Fallback to original behavior if no failed step found
@@ -478,6 +465,37 @@ class JetpackRestConnectionViewModel @Inject constructor(
         accountStore.resetAccessToken()
         clearValues()
         startConnectionFlow()
+    }
+
+    private fun trackStepStarted(step: ConnectionStep) {
+        analyticsTrackerWrapper.track(
+            stat = getStatForStep(step),
+            properties = mapOf("state" to "started")
+        )
+    }
+
+    private fun trackStepCompleted(step: ConnectionStep) {
+        analyticsTrackerWrapper.track(
+            stat = getStatForStep(step),
+            properties = mapOf("state" to "completed")
+        )
+    }
+
+    private fun trackStepFailed(step: ConnectionStep) {
+        analyticsTrackerWrapper.track(
+            stat = getStatForStep(step),
+            properties = mapOf("state" to "failed")
+        )
+    }
+
+    private fun getStatForStep(step: ConnectionStep): AnalyticsTracker.Stat {
+        return when (step) {
+            ConnectionStep.LoginWpCom -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN
+            ConnectionStep.InstallJetpack -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL
+            ConnectionStep.ConnectSite -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_SITE_CONNECTION
+            ConnectionStep.ConnectUser -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_USER_CONNECTION
+            ConnectionStep.Finalize -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_FINALIZE
+        }
     }
 
     sealed class ConnectionStep {

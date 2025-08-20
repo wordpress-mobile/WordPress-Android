@@ -653,7 +653,7 @@ public final class AnalyticsTracker {
         SUPPORT_CHATBOT_TICKET_FAILURE,
         SUPPORT_CHATBOT_ENDED,
 
-        // Jetpack REST connection
+        // Jetpack REST connection - these match iOS
         JETPACK_REST_CONNECT_STARTED,
         JETPACK_REST_CONNECT_LOGIN,
         JETPACK_REST_CONNECT_INSTALL,
