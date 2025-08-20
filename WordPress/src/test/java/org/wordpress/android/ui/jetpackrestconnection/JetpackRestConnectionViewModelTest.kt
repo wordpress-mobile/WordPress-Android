@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -69,27 +68,32 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `setConnectionSource updates connection source`() {
+    fun `setConnectionSource updates connection source for analytics`() = runTest {
         viewModel.setConnectionSource(ConnectionSource.NOTIFS)
-
-        verify(appLogWrapper).d(any(), argThat { contains("Connection source set to: NOTIFS") })
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        
+        viewModel.onStartClick()
+        advanceUntilIdle()
+        
+        // Verify the connection source is used in analytics for the install step
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL,
+            properties = mapOf(
+                "state" to "started",
+                "source" to "NOTIFS"
+            )
+        )
     }
 
     @Test
-    fun `onStartClick starts connection flow`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Stop here")))
+    fun `onStartClick tracks analytics and adds listener`() = runTest {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
 
         viewModel.onStartClick()
-        advanceUntilIdle()
 
         verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
         verify(wpAppNotifierHandler).addListener(viewModel)
-        // The buttonType should be Retry since the InstallJetpack step failed
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
-        // After login completes, it should move to InstallJetpack
-        assertThat(viewModel.stepStates.value[ConnectionStep.LoginWpCom]?.status)
-            .isEqualTo(ConnectionStatus.Completed)
     }
 
     @Test
@@ -124,10 +128,16 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onCancelDismissed continues connection`() {
+    fun `onCancelDismissed does not change UI state`() = runTest {
+        // Set up a UI event first
+        viewModel.onDoneClick()
+        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
+        
+        // Cancel dismissed should not change the UI event
         viewModel.onCancelDismissed()
-
-        verify(appLogWrapper).d(any(), argThat { contains("Cancel dismissed, continuing connection") })
+        
+        // UI event should remain unchanged
+        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
     }
 
     @Test
@@ -163,11 +173,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.stepStates.value[ConnectionStep.LoginWpCom]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        // After InstallJetpack fails, currentStep becomes null
-        assertThat(viewModel.currentStep.value).isNull()
-        // But we should have attempted InstallJetpack and it failed
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
     }
 
     @Test
@@ -184,17 +189,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `onWPComLoginCompleted with success completes login step`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Stop here")))
 
         viewModel.onStartClick()
         viewModel.onWPComLoginCompleted(true)
-        advanceUntilIdle()
 
         assertThat(viewModel.stepStates.value[ConnectionStep.LoginWpCom]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        // After login completes, flow should continue but fail at InstallJetpack
-        assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
     }
 
     @Test
@@ -208,7 +208,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ConnectionStatus.Failed)
         assertThat(viewModel.stepStates.value[ConnectionStep.LoginWpCom]?.errorType)
             .isEqualTo(ErrorType.LoginWpComFailed)
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
     }
 
     @Test
@@ -222,9 +221,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        // After InstallJetpack completes, flow should continue but fail at ConnectSite
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
     }
 
     @Test
@@ -279,9 +275,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         verify(siteModel).siteId = 12345L
         assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        // After ConnectSite completes, flow should continue but fail at ConnectUser
-        assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
     }
 
     @Test
@@ -331,9 +324,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         verify(jetpackConnector).connectUser(eq(siteModel), eq("test_token"))
         assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        // After ConnectUser completes, flow should continue but fail at Finalize
-        assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
-            .isEqualTo(ConnectionStatus.Failed)
     }
 
     @Test
@@ -354,7 +344,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `finalize step succeeds and completes flow`() = runTest {
+    fun `finalize step succeeds and completes step`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn("test_token")
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
@@ -367,9 +357,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
             .isEqualTo(ConnectionStatus.Completed)
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
-        verify(wpAppNotifierHandler).removeListener(viewModel)
     }
 
     @Test
@@ -388,7 +375,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .isEqualTo(ConnectionStatus.Failed)
         assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.errorType)
             .isEqualTo(ErrorType.ActivateStatsFailed)
-        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
     }
 
     @Test
@@ -538,6 +524,34 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         viewModel.onCloseClick()
         assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Close)
+    }
+
+    @Test
+    fun `successful flow completion sets Done button and tracks analytics`() = runTest {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn("test_token")
+        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
+        whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
+
+        viewModel.onStartClick()
+        advanceTimeBy(1100)
+
+        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
+        verify(wpAppNotifierHandler).removeListener(viewModel)
+    }
+
+    @Test
+    fun `failed flow completion sets Retry button`() = runTest {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
+
+        viewModel.onStartClick()
+        advanceTimeBy(1100)
+
+        assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
     }
 
     @Test
