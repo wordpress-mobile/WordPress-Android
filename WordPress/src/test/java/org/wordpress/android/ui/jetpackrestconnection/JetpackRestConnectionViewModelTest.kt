@@ -19,13 +19,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ButtonType
-import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ConnectionSource
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ConnectionStatus
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ConnectionStep
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ErrorType
@@ -68,35 +66,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `setConnectionSource updates connection source for analytics`() = runTest {
-        viewModel.setConnectionSource(ConnectionSource.NOTIFS)
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        
-        viewModel.onStartClick()
-        advanceUntilIdle()
-        
-        // Verify the connection source is used in analytics for the install step
-        verify(analyticsTrackerWrapper).track(
-            stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL,
-            properties = mapOf(
-                "state" to "started",
-                "source" to "NOTIFS"
-            )
-        )
-    }
-
-    @Test
-    fun `onStartClick tracks analytics and adds listener`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        viewModel.onStartClick()
-
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
-        verify(wpAppNotifierHandler).addListener(viewModel)
-    }
-
-    @Test
     fun `onDoneClick sets Done UI event`() = runTest {
         viewModel.onDoneClick()
 
@@ -105,8 +74,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onCloseClick shows confirmation when connection is active`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
         viewModel.onStartClick()
         viewModel.onCloseClick()
 
@@ -132,10 +99,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         // Set up a UI event first
         viewModel.onDoneClick()
         assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
-        
+
         // Cancel dismissed should not change the UI event
         viewModel.onCancelDismissed()
-        
+
         // UI event should remain unchanged
         assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.Done)
     }
@@ -155,10 +122,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         viewModel.onRetryClick()
 
-        verify(analyticsTrackerWrapper).track(
-            stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED,
-            properties = mapOf("step" to "InstallJetpack")
-        )
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
             .isEqualTo(ConnectionStatus.Completed)
     }
@@ -332,7 +295,9 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(accountStore.accessToken).thenReturn("test_token")
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.failure(Exception("User connect failed")))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(
+            Result.failure(Exception("User connect failed"))
+        )
 
         viewModel.onStartClick()
         advanceTimeBy(1100)
@@ -383,7 +348,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         verify(wpAppNotifierHandler).removeListener(viewModel)
         verify(accountStore).resetAccessToken()
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
         assertThat(viewModel.currentStep.value).isEqualTo(ConnectionStep.LoginWpCom)
     }
 
@@ -463,31 +427,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
     }
 
-    @Test
-    fun `tracks analytics for each step state transition`() = runTest {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        viewModel.setConnectionSource(ConnectionSource.NOTIFS)
-        viewModel.onStartClick()
-
-        verify(analyticsTrackerWrapper).track(
-            stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN,
-            properties = mapOf(
-                "state" to "started",
-                "source" to "NOTIFS"
-            )
-        )
-
-        viewModel.onWPComLoginCompleted(true)
-
-        verify(analyticsTrackerWrapper).track(
-            stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN,
-            properties = mapOf(
-                "state" to "completed",
-                "source" to "NOTIFS"
-            )
-        )
-    }
 
     @Test
     fun `multiple retries maintain correct step states`() = runTest {
@@ -527,7 +466,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `successful flow completion sets Done button and tracks analytics`() = runTest {
+    fun `successful flow completion sets Done button and removes listener`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn("test_token")
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
@@ -539,7 +478,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         advanceTimeBy(1100)
 
         assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
         verify(wpAppNotifierHandler).removeListener(viewModel)
     }
 
