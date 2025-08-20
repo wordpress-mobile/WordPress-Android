@@ -653,6 +653,16 @@ public final class AnalyticsTracker {
         SUPPORT_CHATBOT_TICKET_FAILURE,
         SUPPORT_CHATBOT_ENDED,
 
+        // Jetpack REST connection
+        JETPACK_REST_CONNECT_STARTED,
+        JETPACK_REST_CONNECT_LOGIN,
+        JETPACK_REST_CONNECT_INSTALL,
+        JETPACK_REST_CONNECT_SITE_CONNECTION,
+        JETPACK_REST_CONNECT_USER_CONNECTION,
+        JETPACK_REST_CONNECT_FINALIZE,
+        JETPACK_REST_CONNECT_COMPLETED,
+        JETPACK_REST_CONNECT_STEP_RETRIED,
+
         // these events are for the feedback form, which on iOS was originally part of the
         // in-app review feature.
         APP_REVIEWS_FEEDBACK_SCREEN_OPENED,
