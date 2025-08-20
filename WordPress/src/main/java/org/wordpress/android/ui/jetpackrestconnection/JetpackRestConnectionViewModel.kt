@@ -549,7 +549,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
-        private const val LIMIT_VERSION = "14.2"
+        private const val JETPACK_LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
         val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
@@ -564,7 +564,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             return site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
                     && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(

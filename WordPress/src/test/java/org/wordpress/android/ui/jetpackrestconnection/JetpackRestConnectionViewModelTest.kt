@@ -59,6 +59,8 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 12345UL
         private const val TEST_USER_ID = 67890UL
         private const val TEST_ACCESS_TOKEN = "test_token"
+        private const val VALID_JETPACK_VERSION = "14.3" // Above JETPACK_LIMIT_VERSION
+        private const val INVALID_JETPACK_VERSION = "14.0" // Below JETPACK_LIMIT_VERSION
     }
 
     @Before
@@ -331,7 +333,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             on { wpApiRestUrl } doReturn "https://example.com/wp-json"
             on { isJetpackConnected } doReturn false
             on { isJetpackInstalled } doReturn true
-            on { jetpackVersion } doReturn "14.3"
+            on { jetpackVersion } doReturn VALID_JETPACK_VERSION
         }
 
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
@@ -364,7 +366,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             on { wpApiRestUrl } doReturn "https://example.com/wp-json"
             on { isJetpackConnected } doReturn false
             on { isJetpackInstalled } doReturn true
-            on { jetpackVersion } doReturn "14.0"
+            on { jetpackVersion } doReturn INVALID_JETPACK_VERSION
         }
 
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
