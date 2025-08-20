@@ -67,7 +67,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 12345UL
         private const val TEST_USER_ID = 67890UL
         private const val TEST_ACCESS_TOKEN = "test_token"
-        private const val VALID_JETPACK_VERSION = "14.3" // Above JETPACK_LIMIT_VERSION
+        private const val VALID_JETPACK_VERSION = "14.3"   // Above JETPACK_LIMIT_VERSION
         private const val INVALID_JETPACK_VERSION = "14.0" // Below JETPACK_LIMIT_VERSION
 
         // Test timing constants
@@ -100,7 +100,11 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     // Helper to assert step status
-    private fun assertStepStatus(step: ConnectionStep, expectedStatus: ConnectionStatus, expectedError: ErrorType? = null) {
+    private fun assertStepStatus(
+        step: ConnectionStep,
+        expectedStatus: ConnectionStatus,
+        expectedError: ErrorType? = null
+    ) {
         assertThat(viewModel.stepStates.value[step]?.status).isEqualTo(expectedStatus)
         expectedError?.let {
             assertThat(viewModel.stepStates.value[step]?.errorType).isEqualTo(it)
