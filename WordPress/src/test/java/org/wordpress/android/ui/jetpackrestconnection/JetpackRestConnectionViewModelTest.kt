@@ -125,7 +125,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `loginWpCom step completes immediately when already logged in`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Stop here")))
 
         viewModel.onStartClick()
         advanceUntilIdle()
@@ -173,7 +172,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `installJetpack step succeeds with active plugin`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.failure(Exception("Stop here")))
 
         viewModel.onStartClick()
         advanceUntilIdle()
@@ -237,7 +235,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
         whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
-        whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.failure(Exception("Stop here")))
 
         viewModel.onStartClick()
         advanceUntilIdle()
