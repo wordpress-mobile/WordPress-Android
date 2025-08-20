@@ -55,6 +55,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: JetpackRestConnectionViewModel
 
+    companion object {
+        private const val TEST_SITE_ID = 12345UL
+        private const val TEST_USER_ID = 67890UL
+        private const val TEST_ACCESS_TOKEN = "test_token"
+    }
+
     @Before
     fun setup() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
@@ -200,12 +206,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `connectSite step succeeds and updates site ID`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
 
         viewModel.onStartClick()
         advanceUntilIdle()
 
-        verify(siteModel).siteId = 12345L
+        verify(siteModel).siteId = TEST_SITE_ID.toLong()
         assertThat(viewModel.stepStates.value[ConnectionStep.ConnectSite]?.status)
             .isEqualTo(ConnectionStatus.Completed)
     }
@@ -217,7 +223,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             .thenReturn(true) // Initial check for LoginWpCom
             .thenReturn(false) // Check in ConnectUser step
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
 
         viewModel.onStartClick()
         advanceUntilIdle()
@@ -231,15 +237,15 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `connectUser step succeeds with access token`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn("test_token")
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
 
         viewModel.onStartClick()
         advanceUntilIdle()
 
-        verify(jetpackConnector).connectUser(eq(siteModel), eq("test_token"))
+        verify(jetpackConnector).connectUser(eq(siteModel), eq(TEST_ACCESS_TOKEN))
         assertThat(viewModel.stepStates.value[ConnectionStep.ConnectUser]?.status)
             .isEqualTo(ConnectionStatus.Completed)
     }
@@ -248,10 +254,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `finalize step succeeds and completes step`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn("test_token")
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
 
         viewModel.onStartClick()
@@ -264,10 +270,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `finalize step fails on exception`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn("test_token")
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.failure(Exception("Stats failed")))
 
         viewModel.onStartClick()
@@ -367,10 +373,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `successful flow completion sets Done button and removes listener`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn("test_token")
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
-        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(12345UL))
-        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(67890UL))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
 
         viewModel.onStartClick()
