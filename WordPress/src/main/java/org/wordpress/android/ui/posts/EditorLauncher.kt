@@ -103,12 +103,12 @@ class EditorLauncher @Inject constructor(
                 logFeatureDisabledReason(isGutenbergDisabled, isGutenbergEnabled)
                 false
             }
-            
+
             params.siteSource.getSite(siteStore) == null -> {
                 logNoSiteInfoReason()
                 true
             }
-            
+
             else -> {
                 val site = params.siteSource.getSite(siteStore)!!
                 determineEditorForSite(params, site)
@@ -121,6 +121,7 @@ class EditorLauncher @Inject constructor(
             isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
             !isGutenbergEnabled -> "neither the experimental block editor feature nor " +
                     "GutenbergKit feature is enabled"
+
             else -> "GutenbergKit feature checks failed"
         }
         val featureFlags = "(experimental_block_editor: " +
@@ -135,8 +136,10 @@ class EditorLauncher @Inject constructor(
         val featureFlags = "(experimental_block_editor: " +
                 "${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
                 "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()})"
-        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information " +
-                "is available, defaulting to GutenbergKit $featureFlags")
+        AppLog.d(
+            AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information " +
+                    "is available, defaulting to GutenbergKit $featureFlags"
+        )
     }
 
     private fun determineEditorForSite(params: EditorLauncherParams, site: SiteModel): Boolean {
@@ -156,34 +159,37 @@ class EditorLauncher @Inject constructor(
         post: PostModel?,
         site: SiteModel
     ) {
+        val hasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(postContent)
+        val isBlockEditorDefaultForNewPosts = SiteUtils.isBlockEditorDefaultForNewPost(site)
+
         val postInfo = if (post != null) {
             "post_id: ${post.id}, remote_id: ${post.remotePostId}, is_local_draft: ${post.isLocalDraft}, " +
-                    "content_length: ${postContent.length}, " +
-                    "has_blocks: ${PostUtils.contentContainsGutenbergBlocks(postContent)}"
+                    "content_length: ${postContent.length}, has_blocks: $hasGutenbergBlocks"
         } else {
             "new_post: true"
         }
 
         val siteInfo = "site_id: ${site.id}, site_url: ${site.url}, " +
-                "block_editor_default_for_new_posts: ${SiteUtils.isBlockEditorDefaultForNewPost(site)}"
+                "block_editor_default_for_new_posts: $isBlockEditorDefaultForNewPosts"
 
-        if (shouldUseGutenberg) {
-            val reason = when {
+        val reason = if (shouldUseGutenberg) {
+            when {
                 isNewPost -> "this is a new post and the site has block editor enabled as default for new posts"
-                PostUtils.contentContainsGutenbergBlocks(postContent) -> "the existing post contains Gutenberg blocks"
+                hasGutenbergBlocks -> "the existing post contains Gutenberg blocks"
                 else -> "PostUtils.shouldShowGutenbergEditor returned true"
             }
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is being used because $reason ($postInfo, $siteInfo)")
         } else {
-            val reason = when {
-                !isNewPost && !PostUtils.contentContainsGutenbergBlocks(postContent) -> 
-                    "this is an existing post without Gutenberg blocks"
-                isNewPost && !SiteUtils.isBlockEditorDefaultForNewPost(site) -> 
+            when {
+                !isNewPost && !hasGutenbergBlocks -> "this is an existing post without Gutenberg blocks"
+                isNewPost && !isBlockEditorDefaultForNewPosts ->
                     "this is a new post but the site doesn't have block editor as default for new posts"
+
                 else -> "PostUtils.shouldShowGutenbergEditor returned false"
             }
-            AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason ($postInfo, $siteInfo)")
         }
+
+        val action = if (shouldUseGutenberg) "is being used" else "is NOT being used"
+        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor $action because $reason ($postInfo, $siteInfo)")
     }
 
     private fun getPostFromParams(params: EditorLauncherParams): PostModel? {
