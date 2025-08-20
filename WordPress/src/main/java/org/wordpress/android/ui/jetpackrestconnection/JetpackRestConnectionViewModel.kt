@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_SOURCE_KEY
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_COMPLETED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_KEY
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STARTED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -115,7 +120,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private fun startStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
-        trackStepStarted(step)
+        trackStepWithState(step, JETPACK_REST_CONNECT_STATE_STARTED)
         updateStepStatus(step, ConnectionStatus.InProgress)
         if (step == ConnectionStep.LoginWpCom) {
             loginWpCom()
@@ -141,12 +146,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         when (status) {
             ConnectionStatus.Failed -> {
-                trackStepFailed(step)
+                trackStepWithState(step, JETPACK_REST_CONNECT_STATE_FAILED)
                 onFlowCompleted(false)
             }
 
             ConnectionStatus.Completed -> {
-                trackStepCompleted(step)
+                trackStepWithState(step, JETPACK_REST_CONNECT_STATE_COMPLETED)
                 if (step == ConnectionStep.Finalize) {
                     onFlowCompleted(true)
                 } else {
@@ -467,35 +472,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
         startConnectionFlow()
     }
 
-    private fun trackStepStarted(step: ConnectionStep) {
-        analyticsTrackerWrapper.track(
-            stat = getStatForStep(step),
-            properties = mapOf("state" to "started")
-        )
-    }
-
-    private fun trackStepCompleted(step: ConnectionStep) {
-        analyticsTrackerWrapper.track(
-            stat = getStatForStep(step),
-            properties = mapOf("state" to "completed")
-        )
-    }
-
-    private fun trackStepFailed(step: ConnectionStep) {
-        analyticsTrackerWrapper.track(
-            stat = getStatForStep(step),
-            properties = mapOf("state" to "failed")
-        )
-    }
-
-    private fun getStatForStep(step: ConnectionStep): AnalyticsTracker.Stat {
-        return when (step) {
+    private fun trackStepWithState(step: ConnectionStep, stateValue: String) {
+        val event = when (step) {
             ConnectionStep.LoginWpCom -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN
             ConnectionStep.InstallJetpack -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL
             ConnectionStep.ConnectSite -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_SITE_CONNECTION
             ConnectionStep.ConnectUser -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_USER_CONNECTION
             ConnectionStep.Finalize -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_FINALIZE
         }
+        analyticsTrackerWrapper.track(
+            stat = event,
+            properties = mapOf(
+                JETPACK_REST_CONNECT_STATE_KEY to stateValue,
+                JETPACK_REST_CONNECT_SOURCE_KEY to connectionSource.name
+            )
+        )
     }
 
     sealed class ConnectionStep {
