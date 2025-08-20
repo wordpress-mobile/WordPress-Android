@@ -10,6 +10,9 @@ common_params:
 agents:
   queue: "android"
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.console=plain"
+
 steps:
   #################
   # Gradle Wrapper Validation
