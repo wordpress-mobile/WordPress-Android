@@ -151,7 +151,9 @@ public enum SiteAction implements IAction {
     @Action(payloadType = SiteModel.class)
     UPDATE_SITE,
     @Action(payloadType = SiteModel.class)
-    UPDATE_SITE_APPLICATION_PASSWORD,
+    UPDATE_APPLICATION_PASSWORD,
+    @Action(payloadType = SiteModel.class)
+    REMOVE_APPLICATION_PASSWORD,
     @Action(payloadType = SitesModel.class)
     UPDATE_SITES,
     @Action(payloadType = SiteModel.class)

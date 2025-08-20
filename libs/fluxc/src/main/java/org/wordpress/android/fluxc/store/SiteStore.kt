@@ -68,7 +68,8 @@ import org.wordpress.android.fluxc.action.SiteAction.SUGGESTED_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
-import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE_APPLICATION_PASSWORD
+import org.wordpress.android.fluxc.action.SiteAction.UPDATE_APPLICATION_PASSWORD
+import org.wordpress.android.fluxc.action.SiteAction.REMOVE_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.JetpackCapability
@@ -1348,13 +1349,11 @@ open class SiteStore @Inject constructor(
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
-            UPDATE_SITE_APPLICATION_PASSWORD -> {
-                emitChange(
-                    updateSite(
-                        siteModel = action.payload as SiteModel,
-                        forceApplicationPasswordOverride = true
-                    )
-                )
+            UPDATE_APPLICATION_PASSWORD -> {
+                emitChange(updateApplicationPassword(action.payload as SiteModel))
+            }
+            REMOVE_APPLICATION_PASSWORD -> {
+                emitChange(removeApplicationPassword(action.payload as SiteModel))
             }
             UPDATE_SITES -> updateSites(action.payload as SitesModel)
             DELETE_SITE -> deleteSite(action.payload as SiteModel)
@@ -1505,7 +1504,7 @@ open class SiteStore @Inject constructor(
     }
 
     @Suppress("ForbiddenComment", "SwallowedException", "NestedBlockDepth")
-    private fun updateSite(siteModel: SiteModel, forceApplicationPasswordOverride: Boolean = false): OnSiteChanged {
+    private fun updateSite(siteModel: SiteModel): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
@@ -1519,8 +1518,7 @@ open class SiteStore @Inject constructor(
                 if (freshSiteFromDB != null) {
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
-                    if (!forceApplicationPasswordOverride &&
-                        !freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
+                    if (!freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
                         siteModel.apiRestUsernameEncrypted = freshSiteFromDB.apiRestUsernameEncrypted
                         siteModel.apiRestPasswordEncrypted = freshSiteFromDB.apiRestPasswordEncrypted
                         siteModel.apiRestUsernameIV = freshSiteFromDB.apiRestUsernameIV
@@ -1532,6 +1530,57 @@ open class SiteStore @Inject constructor(
             } catch (e: DuplicateSiteException) {
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
+        }
+    }
+
+    @Suppress("SwallowedException")
+    private fun updateApplicationPassword(siteModel: SiteModel): OnSiteChanged {
+        return try {
+            val siteFromDB = getSiteByLocalId(siteModel.id)
+            // If the site doesn't exists we rely on create a new one
+            val siteToStore = if (siteFromDB == null) {
+                siteModel
+            } else {
+                // Adding the plain credential will trigger an encruption before adding them into the DB
+                siteFromDB.apply {
+                    apiRestUsernamePlain = siteModel.apiRestUsernamePlain
+                    apiRestPasswordPlain = siteModel.apiRestPasswordPlain
+                    apiRestUsernameEncrypted = siteModel.apiRestUsernameEncrypted
+                    apiRestPasswordEncrypted = siteModel.apiRestPasswordEncrypted
+                    apiRestUsernameIV = siteModel.apiRestUsernameIV
+                    apiRestPasswordIV = siteModel.apiRestPasswordIV
+                    wpApiRestUrl = siteModel.wpApiRestUrl
+                }
+                siteFromDB
+            }
+            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteToStore))
+        } catch (e: DuplicateSiteException) {
+            OnSiteChanged(SiteError(DUPLICATE_SITE))
+        }
+    }
+
+    @Suppress("SwallowedException")
+    private fun removeApplicationPassword(siteModel: SiteModel): OnSiteChanged {
+        return try {
+            val siteFromDB = getSiteByLocalId(siteModel.id)
+            // If the site doesn't exist notify anyways
+            if (siteFromDB == null) {
+                OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
+            } else {
+                // Adding the plain credential will trigger an encruption before adding them into the DB
+                siteFromDB.apply {
+                    apiRestUsernamePlain = ""
+                    apiRestPasswordPlain = ""
+                    apiRestUsernameEncrypted = ""
+                    apiRestPasswordEncrypted = ""
+                    apiRestUsernameIV = ""
+                    apiRestPasswordIV = ""
+                    wpApiRestUrl = ""
+                }
+                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteFromDB))
+            }
+        } catch (e: DuplicateSiteException) {
+            OnSiteChanged(SiteError(DUPLICATE_SITE))
         }
     }
 
