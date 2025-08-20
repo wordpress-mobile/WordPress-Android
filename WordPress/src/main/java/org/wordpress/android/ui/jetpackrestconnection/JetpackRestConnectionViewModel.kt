@@ -42,6 +42,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
+    // Internal variable that can be overridden for testing
+    internal var uiDelayMs: Long = UI_DELAY_MS
+    
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -320,7 +323,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             // User is already logged in, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
-                delay(UI_DELAY_MS)
+                delay(uiDelayMs)
                 updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
             }
         } else {

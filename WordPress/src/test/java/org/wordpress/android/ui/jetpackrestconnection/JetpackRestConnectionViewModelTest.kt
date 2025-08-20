@@ -61,6 +61,11 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_token"
         private const val VALID_JETPACK_VERSION = "14.3" // Above JETPACK_LIMIT_VERSION
         private const val INVALID_JETPACK_VERSION = "14.0" // Below JETPACK_LIMIT_VERSION
+        
+        // Test timing constants
+        private const val TEST_UI_DELAY_MS = 10L // Fast UI delay for tests
+        private const val TEST_ADVANCE_TIME_MS = 50L // Time to advance for UI delay tests
+        private const val TEST_STEP_TIMEOUT_MS = 46000L // Near STEP_TIMEOUT_MS for timeout testing
     }
 
     @Before
@@ -79,6 +84,9 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             analyticsTrackerWrapper = analyticsTrackerWrapper,
             wpAppNotifierHandler = wpAppNotifierHandler,
         )
+        
+        // Override UI delay for faster tests
+        viewModel.uiDelayMs = TEST_UI_DELAY_MS
     }
 
     @Test
@@ -117,7 +125,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
             .isEqualTo(ConnectionStatus.Failed)
@@ -195,7 +203,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.INACTIVE))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
             .isEqualTo(ConnectionStatus.Failed)
@@ -263,7 +271,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
             .isEqualTo(ConnectionStatus.Completed)
@@ -279,7 +287,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.failure(Exception("Stats failed")))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.stepStates.value[ConnectionStep.Finalize]?.status)
             .isEqualTo(ConnectionStatus.Failed)
@@ -305,7 +313,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         }
 
         viewModel.onStartClick()
-        advanceTimeBy(46000)
+        advanceTimeBy(TEST_STEP_TIMEOUT_MS)
         advanceUntilIdle()
 
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
@@ -382,7 +390,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
         verify(wpAppNotifierHandler).removeListener(viewModel)
@@ -394,7 +402,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
 
         viewModel.onStartClick()
-        advanceTimeBy(1100)
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Retry)
     }
