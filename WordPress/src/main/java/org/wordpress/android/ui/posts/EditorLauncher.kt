@@ -124,22 +124,30 @@ class EditorLauncher @Inject constructor(
 
             else -> "GutenbergKit feature checks failed"
         }
-        val featureFlags = "(experimental_block_editor: " +
-                "${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
-                "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()}, " +
-                "disable_experimental_block_editor: " +
-                "${experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)})"
+        val featureFlags = getFeatureFlagsString(includeDisableExperimentalBlockEditor = true)
         AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason $featureFlags")
     }
 
     private fun logNoSiteInfoReason() {
-        val featureFlags = "(experimental_block_editor: " +
-                "${experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)}, " +
-                "gutenberg_kit_feature: ${gutenbergKitFeature.isEnabled()})"
+        val featureFlags = getFeatureFlagsString(includeDisableExperimentalBlockEditor = false)
         AppLog.d(
             AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information " +
                     "is available, defaulting to GutenbergKit $featureFlags"
         )
+    }
+
+    private fun getFeatureFlagsString(includeDisableExperimentalBlockEditor: Boolean): String {
+        val experimentalBlockEditor = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)
+        val gutenbergKitFeatureEnabled = gutenbergKitFeature.isEnabled()
+        val disableExperimentalBlockEditor = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+        return if (includeDisableExperimentalBlockEditor) {
+            "(experimental_block_editor: $experimentalBlockEditor, " +
+            "gutenberg_kit_feature: $gutenbergKitFeatureEnabled, " +
+            "disable_experimental_block_editor: $disableExperimentalBlockEditor)"
+        } else {
+            "(experimental_block_editor: $experimentalBlockEditor, " +
+            "gutenberg_kit_feature: $gutenbergKitFeatureEnabled)"
+        }
     }
 
     private fun determineEditorForSite(params: EditorLauncherParams, site: SiteModel): Boolean {
