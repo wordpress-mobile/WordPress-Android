@@ -157,7 +157,7 @@ class EditorLauncher @Inject constructor(
         site: SiteModel
     ) {
         val postInfo = if (post != null) {
-            "post_id: ${post.id}, local_id: ${post.localId}, is_local_draft: ${post.isLocalDraft}, " +
+            "post_id: ${post.id}, remote_id: ${post.remotePostId}, is_local_draft: ${post.isLocalDraft}, " +
                     "content_length: ${postContent.length}, " +
                     "has_blocks: ${PostUtils.contentContainsGutenbergBlocks(postContent)}"
         } else {
