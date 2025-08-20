@@ -1504,7 +1504,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    @Suppress("ForbiddenComment", "SwallowedException")
+    @Suppress("ForbiddenComment", "SwallowedException", "NestedBlockDepth")
     private fun updateSite(siteModel: SiteModel, forceApplicationPasswordOverride: Boolean = false): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1519,7 +1519,8 @@ open class SiteStore @Inject constructor(
                 if (freshSiteFromDB != null) {
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
-                    if (!forceApplicationPasswordOverride && !freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
+                    if (!forceApplicationPasswordOverride &&
+                        !freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
                         siteModel.apiRestUsernameEncrypted = freshSiteFromDB.apiRestUsernameEncrypted
                         siteModel.apiRestPasswordEncrypted = freshSiteFromDB.apiRestPasswordEncrypted
                         siteModel.apiRestUsernameIV = freshSiteFromDB.apiRestUsernameIV
@@ -1570,7 +1571,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("SwallowedException", "NestedBlockDepth")
     private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
         var rowsAffected = 0
         var duplicateSiteFound = false
