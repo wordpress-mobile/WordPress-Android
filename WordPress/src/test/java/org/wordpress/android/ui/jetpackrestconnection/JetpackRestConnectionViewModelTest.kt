@@ -448,9 +448,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `canInitiateJetpackRestConnection returns false for non-self-hosted site`() {
         val site = mock<SiteModel> {
             on { isUsingSelfHostedRestApi } doReturn false
-            on { wpApiRestUrl } doReturn "https://example.com/wp-json"
-            on { isJetpackConnected } doReturn false
-            on { isJetpackInstalled } doReturn false
         }
 
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
@@ -462,7 +459,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             on { isUsingSelfHostedRestApi } doReturn true
             on { wpApiRestUrl } doReturn "https://example.com/wp-json"
             on { isJetpackConnected } doReturn true
-            on { isJetpackInstalled } doReturn true
         }
 
         assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
