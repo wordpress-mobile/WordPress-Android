@@ -306,12 +306,12 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
-        showApplicationPasswordReauthenticateDialog(authenticationUrl);
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+        showApplicationPasswordReauthenticateDialog(siteUrl);
     }
 
-    private void showApplicationPasswordReauthenticateDialog(@NonNull String authenticationUrl) {
-        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, authenticationUrl);
+    private void showApplicationPasswordReauthenticateDialog(@NonNull String siteUrl) {
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, siteUrl);
     }
 
     public MediaDeleteService getMediaDeleteService() {
