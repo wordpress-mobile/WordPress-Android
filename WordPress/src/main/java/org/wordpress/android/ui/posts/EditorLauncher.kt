@@ -98,19 +98,19 @@ class EditorLauncher @Inject constructor(
         val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
         val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
 
+        val site = params.siteSource.getSite(siteStore)
         return when {
             !isGutenbergFeatureEnabled -> {
                 logFeatureDisabledReason(isGutenbergDisabled, isGutenbergEnabled)
                 false
             }
 
-            params.siteSource.getSite(siteStore) == null -> {
+            site == null -> {
                 logNoSiteInfoReason()
                 true
             }
 
             else -> {
-                val site = params.siteSource.getSite(siteStore)!!
                 determineEditorForSite(params, site)
             }
         }
