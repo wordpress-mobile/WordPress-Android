@@ -88,6 +88,7 @@ import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListFragment;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.GutenbergKitActivity;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
@@ -270,6 +271,8 @@ public interface AppComponent {
     void inject(PublicizeButtonPrefsFragment object);
 
     void inject(EditPostActivity object);
+
+    void inject(GutenbergKitActivity object);
 
     void inject(EditPostSettingsFragment object);
 

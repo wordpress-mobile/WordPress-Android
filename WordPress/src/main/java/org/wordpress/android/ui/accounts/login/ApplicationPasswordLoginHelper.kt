@@ -103,7 +103,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestPasswordPlain = urlLogin.password
                     wpApiRestUrl = urlLogin.apiRootUrl
                 }
-                dispatcherWrapper.insertOrUpdateSite(site)
+                dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
@@ -153,7 +153,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestUsernameIV = ""
                     apiRestPasswordIV = ""
                 }
-                dispatcherWrapper.insertOrUpdateSite(site)
+                dispatcherWrapper.removeApplicationPassword(site)
             }
             affectedSites
         }
@@ -220,9 +220,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     // We need to wrap the dispatcher because tests are failing due to the actions not having a proper equals method
     // so, every action is returning false when compared with the one we want to test
     class DispatcherWrapper @Inject constructor(private val dispatcher: Dispatcher) {
-        fun insertOrUpdateSite(site: SiteModel) {
+        fun updateApplicationPassword(site: SiteModel) {
             dispatcher.dispatch(
-                SiteActionBuilder.newUpdateSiteAction(site)
+                SiteActionBuilder.newUpdateApplicationPasswordAction(site)
+            )
+        }
+
+        fun removeApplicationPassword(site: SiteModel) {
+            dispatcher.dispatch(
+                SiteActionBuilder.newRemoveApplicationPasswordAction(site)
             )
         }
     }

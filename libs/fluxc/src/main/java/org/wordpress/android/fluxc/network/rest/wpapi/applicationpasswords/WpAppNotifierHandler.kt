@@ -37,6 +37,6 @@ class WpAppNotifierHandler @Inject constructor() {
     }
 
     interface NotifierListener {
-        fun onRequestedWithInvalidAuthentication(authenticationUrl: String)
+        fun onRequestedWithInvalidAuthentication(siteUrl: String)
     }
 }

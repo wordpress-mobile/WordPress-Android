@@ -2,13 +2,13 @@ package org.wordpress.android.ui.jetpackrestconnection
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -31,7 +31,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
     private val appLogWrapper: AppLogWrapper,
-) : ScopedViewModel(mainDispatcher) {
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
+) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -44,7 +45,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val _stepStates = MutableStateFlow(initialStepStates)
     val stepStates = _stepStates
 
-    private var job: Job? = null
     private var isWaitingForWPComLogin = false
 
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
@@ -58,25 +58,28 @@ class JetpackRestConnectionViewModel @Inject constructor(
         appLogWrapper.d(AppLog.T.API, "$TAG: Connection source set to: $source")
     }
 
-    private fun startConnectionJob(fromStep: ConnectionStep? = null) {
+    private fun startConnectionFlow(fromStep: ConnectionStep? = null) {
         val stepInfo = fromStep?.let { " from step: $it" } ?: ""
-        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection job$stepInfo")
+        appLogWrapper.d(AppLog.T.API, "$TAG: Starting Jetpack connection flow $stepInfo")
 
         _buttonType.value = null
         _uiEvent.value = null
 
-        job?.cancel()
-        job = launch {
-            startStep(fromStep ?: ConnectionStep.LoginWpCom)
-        }
+        wpAppNotifierHandler.addListener(this)
+
+        startStep(fromStep ?: ConnectionStep.LoginWpCom)
     }
 
-    /**
-     * Called when all steps have completed successfully
-     */
-    private fun onJobCompleted() {
-        appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection job completed")
-        _buttonType.value = ButtonType.Done
+    private fun onFlowCompleted(wasSuccessful: Boolean) {
+        if (wasSuccessful) {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow completed successfully")
+            _buttonType.value = ButtonType.Done
+        } else {
+            appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow failed")
+            _buttonType.value = ButtonType.Retry
+        }
+
+        wpAppNotifierHandler.removeListener(this)
         _currentStep.value = null
     }
 
@@ -132,14 +135,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         when (status) {
             ConnectionStatus.Failed -> {
-                job?.cancel()
-                _currentStep.value = null
-                _buttonType.value = ButtonType.Retry
+                onFlowCompleted(false)
             }
 
             ConnectionStatus.Completed -> {
                 if (step == ConnectionStep.Finalize) {
-                    onJobCompleted()
+                    onFlowCompleted(true)
                 } else {
                     startNextStep()
                 }
@@ -154,7 +155,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     fun onStartClick() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Start clicked")
-        startConnectionJob()
+        startConnectionFlow()
     }
 
     /**
@@ -183,7 +184,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     fun onCancelConfirmed() {
         appLogWrapper.d(AppLog.T.API, "$TAG: Cancel confirmed")
-        job?.cancel()
         setUiEvent(UiEvent.Close)
     }
 
@@ -209,11 +209,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _stepStates.value = _stepStates.value.toMutableMap().apply {
                 this[step] = StepState()
             }
-            startConnectionJob(fromStep = step)
+            startConnectionFlow(fromStep = step)
         } ?: run {
             // Fallback to original behavior if no failed step found
             clearValues()
-            startConnectionJob()
+            startConnectionFlow()
         }
     }
 
@@ -225,9 +225,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
     }
 
     /**
-     * Returns true if the connection job is active
+     * Returns true if the connection flow is active
      */
-    private fun isActive(): Boolean = job?.isActive == true || run {
+    private fun isActive(): Boolean = run {
         val step = currentStep.value
         step != null && _stepStates.value[step]?.status != ConnectionStatus.Failed
     }
@@ -444,6 +444,18 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 error = ErrorType.ActivateStatsFailed
             )
         }
+    }
+
+    /**
+     * Called when auth fails in the WpApiClient created in JetpackConnectionHelper.initWpApiClient, reset the
+     * access token and restart the connection flow so the user sees the login page
+     */
+    override fun onRequestedWithInvalidAuthentication(siteUrl: String) {
+        appLogWrapper.d(AppLog.T.API, "$TAG: Invalid authentication, restarting")
+        wpAppNotifierHandler.removeListener(this)
+        accountStore.resetAccessToken()
+        clearValues()
+        startConnectionFlow()
     }
 
     sealed class ConnectionStep {

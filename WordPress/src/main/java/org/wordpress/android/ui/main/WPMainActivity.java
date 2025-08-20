@@ -1984,8 +1984,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String authenticationUrl) {
-        showApplicationPasswordOffReauthenticateDialog(authenticationUrl);
+    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+        showApplicationPasswordOffReauthenticateDialog(siteUrl);
     }
 
     private void showApplicationPasswordOffReauthenticateDialog(@NonNull String authenticationUrl) {

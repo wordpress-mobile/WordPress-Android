@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.webkit.URLUtil
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
-import com.android.volley.toolbox.ImageLoader
 import com.google.gson.Gson
 import org.wordpress.android.R
 import org.wordpress.android.editor.BuildConfig
@@ -24,12 +23,7 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
-import org.wordpress.android.editor.EditorMediaUploadListener
-import org.wordpress.android.editor.EditorThemeUpdateListener
 import org.wordpress.android.editor.LiveTextWatcher
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface
-import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.util.AppLog
@@ -37,8 +31,6 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.android.util.helpers.MediaGallery
-import org.wordpress.aztec.IHistoryListener
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
@@ -54,9 +46,7 @@ import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
-class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadListener, IHistoryListener,
-    EditorThemeUpdateListener, GutenbergDialogPositiveClickInterface, GutenbergDialogNegativeClickInterface,
-    GutenbergNetworkConnectionListener {
+class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -228,7 +218,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         super.onAttach(context)
         val activity = context as Activity
 
-        mEditorDragAndDropListener = requireActivityImplements<EditorDragAndDropListener>(activity)
         mEditorImagePreviewListener = requireActivityImplements<EditorImagePreviewListener>(activity)
         mEditorEditMediaListener = requireActivityImplements<EditorEditMediaListener>(activity)
     }
@@ -284,22 +273,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         return false
     }
 
-    override fun onRedoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndoEnabled() {
-        // Currently unsupported
-    }
-
-    override fun onUndo() {
-        // Analytics tracking is not available in GB mobile
-    }
-
-    override fun onRedo() {
-        // Analytics tracking is not available in GB mobile
-    }
-
     override fun setTitle(title: CharSequence?) {
         // Unused, no-op retained for the shared interface with Gutenberg
     }
@@ -313,10 +286,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         gutenbergView?.setContent(text as String)
     }
 
-    override fun updateContent(text: CharSequence?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
     fun onToggleHtmlMode() {
         if (!isAdded) {
             return
@@ -327,7 +296,7 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     private fun toggleHtmlMode() {
         isHtmlModeEnabled = !isHtmlModeEnabled
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED)
+        mEditorFragmentListener.onTrackableEvent(EditorFragmentAbstract.TrackableEvent.HTML_BUTTON_TAPPED)
         mEditorFragmentListener.onHtmlModeToggledInToolbar()
         gutenbergView?.textEditorEnabled = isHtmlModeEnabled
     }
@@ -371,10 +340,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         return GUTENBERG_EDITOR_NAME
     }
 
-    override fun isActionInProgress(): Boolean {
-        return false
-    }
-
     /**
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
@@ -386,13 +351,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         }
 
         return ""
-    }
-
-    @Throws(EditorFragmentNotAddedException::class)
-    override fun showContentInfo() {
-        if (!isAdded) {
-            throw EditorFragmentNotAddedException()
-        }
     }
 
     override fun onEditorHistoryChanged(listener: HistoryChangeListener) {
@@ -413,12 +371,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
 
     override fun getTitleOrContentChanged(): LiveData<Editable> {
         return textWatcher.afterTextChanged
-    }
-
-    override fun appendMediaFile(
-        mediaFile: MediaFile?, mediaUrl: String?, imageLoader: ImageLoader?
-    ) {
-        // noop implementation for shared interface with Aztec
     }
 
     override fun appendMediaFiles(mediaList: MutableMap<String?, MediaFile?>) {
@@ -455,32 +407,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         gutenbergView?.setMediaUploadAttachment(mediaString)
     }
 
-    override fun appendGallery(mediaGallery: MediaGallery?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun setUrlForVideoPressId(videoId: String?, videoUrl: String?, posterUrl: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun isUploadingMedia(): Boolean {
-        // Unused, no-op retained for the shared interface with Gutenberg
-        return false
-    }
-
-    override fun hasFailedMediaUploads(): Boolean {
-        // Unused, no-op retained for the shared interface with Gutenberg
-        return false
-    }
-
-    override fun removeAllFailedMediaUploads() {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun removeMedia(mediaId: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
     override fun onDestroy() {
         gutenbergView?.let { gutenbergView ->
             recycleWebView(gutenbergView)
@@ -488,44 +414,6 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
             featuredImageChangeListener = null
         }
         super.onDestroy()
-    }
-
-    override fun mediaSelectionCancelled() {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadReattached(localMediaId: String?, currentProgress: Float) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadRetry(localMediaId: String?, mediaType: MediaType?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadSucceeded(localMediaId: String?, mediaFile: MediaFile?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadProgress(localMediaId: String?, progress: Float) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadFailed(localMediaId: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onMediaUploadPaused(localMediaId: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onGalleryMediaUploadSucceeded(
-        galleryId: Long, remoteMediaId: Long, remaining: Int
-    ) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onEditorThemeUpdated(editorTheme: Bundle?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
     }
 
     fun startWithEditorSettings(editorSettings: String) {
@@ -577,32 +465,12 @@ class GutenbergKitEditorFragment : EditorFragmentAbstract(), EditorMediaUploadLi
         }
     }
 
-    override fun showNotice(message: String?) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun showEditorHelp() {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
     override fun onUndoPressed() {
         gutenbergView?.undo()
     }
 
     override fun onRedoPressed() {
         gutenbergView?.redo()
-    }
-
-    override fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onGutenbergDialogNegativeClicked(instanceTag: String) {
-        // Unused, no-op retained for the shared interface with Gutenberg
-    }
-
-    override fun onConnectionStatusChange(isConnected: Boolean) {
-        // Unused, no-op retained for the shared interface with Gutenberg
     }
 
     companion object {
