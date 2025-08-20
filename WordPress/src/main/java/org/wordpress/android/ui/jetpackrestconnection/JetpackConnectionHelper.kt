@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackrestconnection
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
@@ -11,18 +12,15 @@ import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
-import java.net.URL
 import javax.inject.Inject
 
 class JetpackConnectionHelper @Inject constructor(
+    private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper
 ) {
     fun initWpApiClient(site: SiteModel): WpApiClient {
         requireRestCredentials(site)
-        return WpApiClient(
-            wpOrgSiteApiRootUrl = URL(resolveRestApiUrl(site)),
-            authProvider = createRestAuthProvider(site)
-        )
+        return wpApiClientProvider.getWpApiClient(site)
     }
 
     fun initJetpackConnectionClient(site: SiteModel): JetpackConnectionClient {
