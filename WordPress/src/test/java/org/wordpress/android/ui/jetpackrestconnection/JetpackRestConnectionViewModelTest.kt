@@ -36,20 +36,28 @@ import uniffi.wp_api.PluginStatus
 class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var jetpackInstaller: JetpackInstaller
+
     @Mock
     lateinit var jetpackConnector: JetpackConnector
+
     @Mock
     lateinit var jetpackModuleHelper: JetpackStatsModuleHelper
+
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var wpAppNotifierHandler: WpAppNotifierHandler
+
     @Mock
     lateinit var siteModel: SiteModel
 
@@ -61,11 +69,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_token"
         private const val VALID_JETPACK_VERSION = "14.3" // Above JETPACK_LIMIT_VERSION
         private const val INVALID_JETPACK_VERSION = "14.0" // Below JETPACK_LIMIT_VERSION
-        
+
         // Test timing constants
-        private const val TEST_UI_DELAY_MS = 10L // Fast UI delay for tests
-        private const val TEST_ADVANCE_TIME_MS = 50L // Time to advance for UI delay tests
-        private const val TEST_STEP_TIMEOUT_MS = 46000L // Near STEP_TIMEOUT_MS for timeout testing
+        private const val TEST_UI_DELAY_MS = 10L        // Fast UI delay for tests
+        private const val TEST_ADVANCE_TIME_MS = 50L    // Time to advance for UI delay tests
+        private const val TEST_STEP_TIMEOUT_MS = 100L   // Fast timeout for tests
+        private const val TEST_TIMEOUT_ADVANCE_MS = 150L // Time to advance for timeout tests
     }
 
     @Before
@@ -84,9 +93,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             analyticsTrackerWrapper = analyticsTrackerWrapper,
             wpAppNotifierHandler = wpAppNotifierHandler,
         )
-        
-        // Override UI delay for faster tests
+
+        // Override delays for faster tests
         viewModel.uiDelayMs = TEST_UI_DELAY_MS
+        viewModel.stepTimeoutMs = TEST_STEP_TIMEOUT_MS
     }
 
     @Test
@@ -308,12 +318,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `step timeout triggers timeout error`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackInstaller.installJetpack(any())).doSuspendableAnswer {
-            delay(50000)
+            delay(200L) // Longer than TEST_STEP_TIMEOUT_MS to trigger timeout
             Result.success(PluginStatus.ACTIVE)
         }
 
         viewModel.onStartClick()
-        advanceTimeBy(TEST_STEP_TIMEOUT_MS)
+        advanceTimeBy(TEST_TIMEOUT_ADVANCE_MS)
         advanceUntilIdle()
 
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)

@@ -42,8 +42,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
-    // Internal variable that can be overridden for testing
+    // Internal variables that can be overridden for testing
     internal var uiDelayMs: Long = UI_DELAY_MS
+    internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
     
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
@@ -269,7 +270,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
-                withTimeout(STEP_TIMEOUT_MS) {
+                withTimeout(stepTimeoutMs) {
                     executeStep(step)
                 }
             }
