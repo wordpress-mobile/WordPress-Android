@@ -1541,7 +1541,6 @@ open class SiteStore @Inject constructor(
             val siteToStore = if (siteFromDB == null) {
                 siteModel
             } else {
-                // Adding the plain credential will trigger an encruption before adding them into the DB
                 siteFromDB.apply {
                     apiRestUsernamePlain = siteModel.apiRestUsernamePlain
                     apiRestPasswordPlain = siteModel.apiRestPasswordPlain
@@ -1567,7 +1566,6 @@ open class SiteStore @Inject constructor(
             if (siteFromDB == null) {
                 OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
             } else {
-                // Adding the plain credential will trigger an encruption before adding them into the DB
                 siteFromDB.apply {
                     apiRestUsernamePlain = ""
                     apiRestPasswordPlain = ""
