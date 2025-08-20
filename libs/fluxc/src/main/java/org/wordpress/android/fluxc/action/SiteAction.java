@@ -150,6 +150,10 @@ public enum SiteAction implements IAction {
     // Local actions
     @Action(payloadType = SiteModel.class)
     UPDATE_SITE,
+    @Action(payloadType = SiteModel.class)
+    UPDATE_APPLICATION_PASSWORD,
+    @Action(payloadType = SiteModel.class)
+    REMOVE_APPLICATION_PASSWORD,
     @Action(payloadType = SitesModel.class)
     UPDATE_SITES,
     @Action(payloadType = SiteModel.class)
