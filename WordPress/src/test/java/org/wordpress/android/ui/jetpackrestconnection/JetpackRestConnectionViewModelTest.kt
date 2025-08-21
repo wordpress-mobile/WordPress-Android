@@ -337,9 +337,8 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     /**
-     * The canInitiateJetpackRestConnection tests only run for the Jetpack app since that function
-     * checks BuildConfig.IS_JETPACK_APP and as a companion method it can't easily be mocked. This
-     * is a problem when CI is running tests for the WordPress app variant.
+     * The canInitiateJetpackRestConnection tests only run for the Jetpack app since that companion function
+     * checks BuildConfig.IS_JETPACK_APP. This is a problem when CI runs tests for the WordPress app variant.
      */
 
     @Test
