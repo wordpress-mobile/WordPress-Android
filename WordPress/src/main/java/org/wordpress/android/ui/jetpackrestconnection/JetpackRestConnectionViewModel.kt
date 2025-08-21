@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STA
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -34,6 +35,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
     private val jetpackInstaller: JetpackInstaller,
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
@@ -319,8 +321,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 1: Starts the wp.com login flow if the user isn't logged into wp.com
      */
     private fun loginWpCom() {
-        if (accountStore.hasAccessToken()) {
-            // User is already logged in, add a short delay before marking the step completed
+        if (accountStore.hasAccessToken() && site.isUsingWpComRestApi) {
+            // User is already logged in with an app password, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
                 delay(uiDelayMs)
@@ -344,6 +346,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         isWaitingForWPComLogin = false
         if (success) {
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com login successful")
+            reloadSite()
             updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
         } else {
             // Login failed or was cancelled
@@ -466,6 +469,15 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 status = ConnectionStatus.Failed,
                 error = ErrorType.ActivateStatsFailed
             )
+        }
+    }
+
+    /**
+     * Reload the site from the store so we have the latest info (such as application password).
+     */
+    private fun reloadSite() {
+        siteStore.getSiteByLocalId(site.id)?.let {
+            site = it
         }
     }
 
