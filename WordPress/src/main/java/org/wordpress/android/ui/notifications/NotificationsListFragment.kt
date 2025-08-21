@@ -47,7 +47,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
-import org.wordpress.android.ui.jetpackrestconnection.JetpackConnectionHelper
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.WPMainActivity
@@ -86,9 +85,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Inject
-    lateinit var jetpackConnectionHelper: JetpackConnectionHelper
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -282,7 +278,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (jetpackConnectionHelper.canInitiateJetpackRestConnection(site)) {
+        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 requireActivity(),
                 JetpackRestConnectionViewModel.ConnectionSource.NOTIFS

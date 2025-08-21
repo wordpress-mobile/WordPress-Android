@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.jetpackrestconnection.JetpackConnectionHelper
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -42,9 +41,6 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
-
-    @Inject
-    lateinit var jetpackConnectionHelper: JetpackConnectionHelper
 
     @Inject
     lateinit var mSelectedSiteRepository: SelectedSiteRepository
@@ -146,7 +142,7 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (jetpackConnectionHelper.canInitiateJetpackRestConnection(site)) {
+        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 this,
                 JetpackRestConnectionViewModel.ConnectionSource.STATS

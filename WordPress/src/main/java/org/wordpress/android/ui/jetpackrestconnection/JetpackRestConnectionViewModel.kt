@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_SOURCE_KEY
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_COMPLETED
@@ -22,6 +23,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.PluginStatus
@@ -554,6 +556,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
         private const val TAG = "JetpackRestConnectionViewModel"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
+        private const val JETPACK_LIMIT_VERSION = "14.2"
+
         val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
 
         private val initialStepStates = mapOf(
@@ -563,5 +567,22 @@ class JetpackRestConnectionViewModel @Inject constructor(
             ConnectionStep.ConnectUser to StepState(),
             ConnectionStep.Finalize to StepState()
         )
+
+        /**
+         * Returns true if the Jetpack REST Connection flow is available and this site is able to use it.
+         * Requirements:
+         * - Jetpack app
+         * - Self-hosted site using REST API
+         * - Application password has been set
+         * - Site isn't already connected to Jetpack
+         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
+         */
+        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
+            return BuildConfig.IS_JETPACK_APP
+                    && site.isUsingSelfHostedRestApi
+                    && !site.wpApiRestUrl.isNullOrEmpty()
+                    && !site.isJetpackConnected
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
+        }
     }
 }

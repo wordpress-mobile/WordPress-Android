@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.jetpackrestconnection
 
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import uniffi.wp_api.JetpackConnectionClient
@@ -66,25 +64,7 @@ class JetpackConnectionHelper @Inject constructor(
         }
     }
 
-    /**
-     * Returns true if the Jetpack REST Connection flow is available and this site is able to use it.
-     * Requirements:
-     * - Jetpack app
-     * - Self-hosted site using REST API
-     * - Application password has been set
-     * - Site isn't already connected to Jetpack
-     * - Jetpack is not installed or the installed jetpack version is 14.2 or above
-     */
-    fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
-        return BuildConfig.IS_JETPACK_APP
-                && site.isUsingSelfHostedRestApi
-                && !site.wpApiRestUrl.isNullOrEmpty()
-                && !site.isJetpackConnected
-                && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
-    }
-
     companion object {
         private const val TAG = "JetpackConnectionHelper"
-        private const val JETPACK_LIMIT_VERSION = "14.2"
     }
 }
