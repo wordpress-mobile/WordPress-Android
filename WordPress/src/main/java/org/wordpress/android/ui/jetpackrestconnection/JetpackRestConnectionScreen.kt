@@ -271,9 +271,9 @@ private fun getErrorText(context: Context, errorType: ErrorType): String {
         ErrorType.LoginWpComFailed -> R.string.jetpack_rest_connection_error_login_wpcom
         ErrorType.ConnectWpComFailed -> R.string.jetpack_rest_connection_error_connect_wpcom
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
-        ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
+        is ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
         ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
-        ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
+        is ErrorType.ConnectSiteFailed -> R.string.jetpack_rest_connection_error_connect_site
         is ErrorType.InstallJetpackFailed -> R.string.jetpack_rest_connection_error_install_jetpack
         is ErrorType.ActivateStatsFailed -> R.string.jetpack_rest_connection_error_activate_stats
         ErrorType.Timeout -> R.string.jetpack_rest_connection_error_timeout
