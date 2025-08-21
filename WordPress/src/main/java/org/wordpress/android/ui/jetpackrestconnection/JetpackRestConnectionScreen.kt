@@ -269,7 +269,6 @@ private fun ConnectionStepContent(
 private fun getErrorText(context: Context, errorType: ErrorType): String {
     @StringRes val messageRes = when (errorType) {
         ErrorType.LoginWpComFailed -> R.string.jetpack_rest_connection_error_login_wpcom
-        ErrorType.ConnectWpComFailed -> R.string.jetpack_rest_connection_error_connect_wpcom
         ErrorType.InstallJetpackInactive -> R.string.jetpack_rest_connection_error_install_jetpack_inactive
         is ErrorType.ConnectUserFailed -> R.string.jetpack_rest_connection_error_connect_user
         ErrorType.MissingAccessToken -> R.string.jetpack_rest_connection_error_access_token
@@ -428,7 +427,7 @@ private fun JetpackRestConnectionScreenPreview() {
                 ConnectionStep.ConnectSite to StepState(ConnectionStatus.InProgress),
                 ConnectionStep.ConnectUser to StepState(
                     ConnectionStatus.Failed,
-                    ErrorType.ConnectWpComFailed
+                    ErrorType.ConnectUserFailed()
                 ),
                 ConnectionStep.Finalize to StepState(ConnectionStatus.NotStarted)
             )

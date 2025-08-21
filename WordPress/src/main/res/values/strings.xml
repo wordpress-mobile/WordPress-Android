@@ -1023,7 +1023,6 @@
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
     <string name="jetpack_rest_connection_error_install_jetpack">Install failed</string>
     <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
     <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
