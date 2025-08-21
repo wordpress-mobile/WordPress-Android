@@ -389,7 +389,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.InstallJetpackFailed
+                    error = ErrorType.InstallJetpackFailed(it.message)
                 )
             }
         )
@@ -534,7 +534,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class ErrorType(open val message: String? = null) {
         data object LoginWpComFailed : ErrorType()
-        data object InstallJetpackFailed : ErrorType()
+        data class InstallJetpackFailed(override val message: String? = null) : ErrorType(message)
         data object InstallJetpackInactive : ErrorType()
         data object ConnectWpComFailed : ErrorType()
         data object ConnectSiteFailed : ErrorType()
