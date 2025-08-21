@@ -304,7 +304,11 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
-        assertStepStatus(ConnectionStep.Finalize, ConnectionStatus.Failed, ErrorType.ActivateStatsFailed("Stats failed"))
+        assertStepStatus(
+            ConnectionStep.Finalize,
+            ConnectionStatus.Failed,
+            ErrorType.ActivateStatsFailed("Stats failed")
+        )
     }
 
     @Test
