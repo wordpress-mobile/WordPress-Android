@@ -468,7 +468,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.Finalize,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ActivateStatsFailed
+                    error = ErrorType.ActivateStatsFailed(it.message)
                 )
             }
         )
@@ -532,7 +532,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object ConnectWpComFailed : ErrorType()
         data object ConnectSiteFailed : ErrorType()
         data object ConnectUserFailed : ErrorType()
-        data object ActivateStatsFailed : ErrorType()
+        data class ActivateStatsFailed(override val message: String? = null) : ErrorType(message)
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
