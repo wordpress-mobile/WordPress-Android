@@ -42,6 +42,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
+    // Internal variables that can be overridden for testing
+    internal var uiDelayMs: Long = UI_DELAY_MS
+    internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
+    
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -266,7 +270,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
-                withTimeout(STEP_TIMEOUT_MS) {
+                withTimeout(stepTimeoutMs) {
                     executeStep(step)
                 }
             }
@@ -320,7 +324,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             // User is already logged in, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
-                delay(UI_DELAY_MS)
+                delay(uiDelayMs)
                 updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
             }
         } else {
@@ -549,7 +553,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
-        private const val LIMIT_VERSION = "14.2"
+        private const val JETPACK_LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
         val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
@@ -564,7 +568,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             return site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
                     && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(
