@@ -457,18 +457,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private suspend fun finalize() {
         val result = jetpackModuleHelper.activateStatsModule(site)
-        if (result.isSuccess) {
-            updateStepStatus(
-                step = ConnectionStep.Finalize,
-                status = ConnectionStatus.Completed
-            )
-        } else {
-            updateStepStatus(
-                step = ConnectionStep.Finalize,
-                status = ConnectionStatus.Failed,
-                error = ErrorType.ActivateStatsFailed
-            )
-        }
+        result.fold(
+            onSuccess = {
+                updateStepStatus(
+                    step = ConnectionStep.Finalize,
+                    status = ConnectionStatus.Completed
+                )
+            },
+            onFailure = {
+                updateStepStatus(
+                    step = ConnectionStep.Finalize,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.ActivateStatsFailed(it.message)
+                )
+            }
+        )
     }
 
     /**
@@ -529,7 +532,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         data object ConnectWpComFailed : ErrorType()
         data object ConnectSiteFailed : ErrorType()
         data object ConnectUserFailed : ErrorType()
-        data object ActivateStatsFailed : ErrorType()
+        data class ActivateStatsFailed(override val message: String? = null) : ErrorType()
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
