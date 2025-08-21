@@ -22,7 +22,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.VersionUtils.checkMinimalVersion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.PluginStatus
@@ -45,7 +44,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     // Internal variables that can be overridden for testing
     internal var uiDelayMs: Long = UI_DELAY_MS
     internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
-    
+
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -553,23 +552,9 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
-        private const val JETPACK_LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
         val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
-
-        /**
-         * Requirements:
-         * - Self-hosted site authenticated with application password, and
-         * - the site isn't already connected to Jetpack, and
-         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
-         */
-        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
-            return site.isUsingSelfHostedRestApi
-                    && !site.wpApiRestUrl.isNullOrEmpty()
-                    && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
-        }
 
         private val initialStepStates = mapOf(
             ConnectionStep.LoginWpCom to StepState(),

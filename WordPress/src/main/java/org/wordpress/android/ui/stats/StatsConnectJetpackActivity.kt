@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
@@ -19,12 +18,11 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.jetpackrestconnection.JetpackConnectionHelper
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
@@ -46,7 +44,7 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
     lateinit var mDispatcher: Dispatcher
 
     @Inject
-    lateinit var mExperimentalFeatures: ExperimentalFeatures
+    lateinit var jetpackConnectionHelper: JetpackConnectionHelper
 
     @Inject
     lateinit var mSelectedSiteRepository: SelectedSiteRepository
@@ -148,10 +146,7 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (BuildConfig.IS_JETPACK_APP
-            && mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
-            && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
-        ) {
+        if (jetpackConnectionHelper.canInitiateJetpackRestConnection(site)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 this,
                 JetpackRestConnectionViewModel.ConnectionSource.STATS
