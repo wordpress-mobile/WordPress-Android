@@ -308,7 +308,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertStepStatus(
             ConnectionStep.Finalize,
             ConnectionStatus.Failed,
-            ErrorType.ActivateStatsFailed()
+            ErrorType.ActivateStatsFailed("Stats failed")
         )
     }
 
