@@ -7,6 +7,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_SOURCE_KEY
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_COMPLETED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_KEY
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STARTED
+import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STEP_KEY
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -16,6 +23,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils.checkMinimalVersion
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import uniffi.wp_api.PluginStatus
 import javax.inject.Inject
@@ -31,8 +39,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val jetpackConnector: JetpackConnector,
     private val jetpackModuleHelper: JetpackStatsModuleHelper,
     private val appLogWrapper: AppLogWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
+    // Internal variables that can be overridden for testing
+    internal var uiDelayMs: Long = UI_DELAY_MS
+    internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
+    
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -65,6 +78,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         _buttonType.value = null
         _uiEvent.value = null
 
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STARTED)
         wpAppNotifierHandler.addListener(this)
 
         startStep(fromStep ?: ConnectionStep.LoginWpCom)
@@ -74,6 +88,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
         if (wasSuccessful) {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow completed successfully")
             _buttonType.value = ButtonType.Done
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
         } else {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow failed")
             _buttonType.value = ButtonType.Retry
@@ -110,6 +125,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private fun startStep(step: ConnectionStep) {
         appLogWrapper.d(AppLog.T.API, "$TAG: Starting step: $step")
         _currentStep.value = step
+        trackStepWithState(step, JETPACK_REST_CONNECT_STATE_STARTED)
         updateStepStatus(step, ConnectionStatus.InProgress)
         if (step == ConnectionStep.LoginWpCom) {
             loginWpCom()
@@ -135,10 +151,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         when (status) {
             ConnectionStatus.Failed -> {
+                trackStepWithState(step, JETPACK_REST_CONNECT_STATE_FAILED)
                 onFlowCompleted(false)
             }
 
             ConnectionStatus.Completed -> {
+                trackStepWithState(step, JETPACK_REST_CONNECT_STATE_COMPLETED)
                 if (step == ConnectionStep.Finalize) {
                     onFlowCompleted(true)
                 } else {
@@ -209,6 +227,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
             _stepStates.value = _stepStates.value.toMutableMap().apply {
                 this[step] = StepState()
             }
+            analyticsTrackerWrapper.track(
+                stat = AnalyticsTracker.Stat.JETPACK_REST_CONNECT_STEP_RETRIED,
+                properties = mapOf(
+                    JETPACK_REST_CONNECT_STATE_STEP_KEY to step.toString()
+                )
+            )
             startConnectionFlow(fromStep = step)
         } ?: run {
             // Fallback to original behavior if no failed step found
@@ -246,7 +270,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private suspend fun executeStepWithErrorHandling(step: ConnectionStep) {
         try {
             withContext(bgDispatcher) {
-                withTimeout(STEP_TIMEOUT_MS) {
+                withTimeout(stepTimeoutMs) {
                     executeStep(step)
                 }
             }
@@ -300,7 +324,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             // User is already logged in, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
-                delay(UI_DELAY_MS)
+                delay(uiDelayMs)
                 updateStepStatus(ConnectionStep.LoginWpCom, ConnectionStatus.Completed)
             }
         } else {
@@ -458,6 +482,23 @@ class JetpackRestConnectionViewModel @Inject constructor(
         startConnectionFlow()
     }
 
+    private fun trackStepWithState(step: ConnectionStep, stateValue: String) {
+        val event = when (step) {
+            ConnectionStep.LoginWpCom -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_LOGIN
+            ConnectionStep.InstallJetpack -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_INSTALL
+            ConnectionStep.ConnectSite -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_SITE_CONNECTION
+            ConnectionStep.ConnectUser -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_USER_CONNECTION
+            ConnectionStep.Finalize -> AnalyticsTracker.Stat.JETPACK_REST_CONNECT_FINALIZE
+        }
+        analyticsTrackerWrapper.track(
+            stat = event,
+            properties = mapOf(
+                JETPACK_REST_CONNECT_STATE_KEY to stateValue,
+                JETPACK_REST_CONNECT_SOURCE_KEY to connectionSource.name
+            )
+        )
+    }
+
     sealed class ConnectionStep {
         data object LoginWpCom : ConnectionStep()
         data object InstallJetpack : ConnectionStep()
@@ -512,7 +553,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
-        private const val LIMIT_VERSION = "14.2"
+        private const val JETPACK_LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
         val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
@@ -527,7 +568,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
             return site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
                     && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, LIMIT_VERSION))
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
         }
 
         private val initialStepStates = mapOf(

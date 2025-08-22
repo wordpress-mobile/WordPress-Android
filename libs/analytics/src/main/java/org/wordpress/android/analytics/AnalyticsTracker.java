@@ -18,6 +18,13 @@ public final class AnalyticsTracker {
     public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
+    public static final String JETPACK_REST_CONNECT_SOURCE_KEY = "source";
+    public static final String JETPACK_REST_CONNECT_STATE_STEP_KEY = "step";
+    public static final String JETPACK_REST_CONNECT_STATE_KEY = "state";
+    public static final String JETPACK_REST_CONNECT_STATE_STARTED = "started";
+    public static final String JETPACK_REST_CONNECT_STATE_COMPLETED = "completed";
+    public static final String JETPACK_REST_CONNECT_STATE_FAILED = "failed";
+
     @SuppressWarnings("LineLength")
     public enum Stat {
         // This stat is part of a funnel that provides critical information.  Before
@@ -652,6 +659,16 @@ public final class AnalyticsTracker {
         SUPPORT_CHATBOT_TICKET_SUCCESS,
         SUPPORT_CHATBOT_TICKET_FAILURE,
         SUPPORT_CHATBOT_ENDED,
+
+        // Jetpack REST connection - these match iOS
+        JETPACK_REST_CONNECT_STARTED,
+        JETPACK_REST_CONNECT_LOGIN,
+        JETPACK_REST_CONNECT_INSTALL,
+        JETPACK_REST_CONNECT_SITE_CONNECTION,
+        JETPACK_REST_CONNECT_USER_CONNECTION,
+        JETPACK_REST_CONNECT_FINALIZE,
+        JETPACK_REST_CONNECT_COMPLETED,
+        JETPACK_REST_CONNECT_STEP_RETRIED,
 
         // these events are for the feedback form, which on iOS was originally part of the
         // in-app review feature.
