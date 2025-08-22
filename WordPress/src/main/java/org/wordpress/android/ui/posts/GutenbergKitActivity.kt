@@ -2278,7 +2278,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
             val isWpCom = site.isWPCom || siteModel.isWPComAtomic
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
-            val settings = createGutenbergKitSettings(isWpCom)
+            val settings = createGutenbergKitSettings()
 
             return GutenbergKitEditorFragment.newInstance(
                 getContext(),
@@ -2306,7 +2306,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
+        private fun createGutenbergKitSettings(): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteURL = siteModel.url
             val applicationPassword = siteModel.apiRestPasswordPlain
