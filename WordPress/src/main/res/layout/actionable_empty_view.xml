@@ -23,7 +23,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_person_reading_device_notification"
+                android:contentDescription="@string/content_description_empty_view"
                 android:visibility="gone"
                 tool:src="@drawable/img_illustration_empty_results_216dp"
                 tool:visibility="visible" />

@@ -1023,6 +1023,7 @@
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
     <string name="jetpack_rest_connection_error_install_jetpack">Install failed</string>
     <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
     <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
@@ -1579,6 +1580,7 @@
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
+    <string name="content_description_empty_view">Image illustrating that the view is empty</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>

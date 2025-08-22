@@ -18,6 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -307,7 +308,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertStepStatus(
             ConnectionStep.Finalize,
             ConnectionStatus.Failed,
-            ErrorType.ActivateStatsFailed("Stats failed")
+            ErrorType.ActivateStatsFailed
         )
     }
 
@@ -335,62 +336,77 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertStepStatus(ConnectionStep.InstallJetpack, ConnectionStatus.Failed, ErrorType.Timeout)
     }
 
+    /**
+     * The canInitiateJetpackRestConnection tests only run for the Jetpack app since that companion function
+     * checks BuildConfig.IS_JETPACK_APP. This is a problem when CI runs tests for the WordPress app variant.
+     */
+
     @Test
     fun `canInitiateJetpackRestConnection returns true for valid self-hosted site`() {
-        val site = mock<SiteModel> {
-            on { isUsingSelfHostedRestApi } doReturn true
-            on { wpApiRestUrl } doReturn "https://example.com/wp-json"
-            on { isJetpackConnected } doReturn false
-            on { isJetpackInstalled } doReturn false
-        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn false
+                on { isJetpackInstalled } doReturn false
+            }
 
-        assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
+        }
     }
 
     @Test
     fun `canInitiateJetpackRestConnection returns true for site with valid Jetpack version`() {
-        val site = mock<SiteModel> {
-            on { isUsingSelfHostedRestApi } doReturn true
-            on { wpApiRestUrl } doReturn "https://example.com/wp-json"
-            on { isJetpackConnected } doReturn false
-            on { isJetpackInstalled } doReturn true
-            on { jetpackVersion } doReturn VALID_JETPACK_VERSION
-        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn false
+                on { isJetpackInstalled } doReturn true
+                on { jetpackVersion } doReturn VALID_JETPACK_VERSION
+            }
 
-        assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
+        }
     }
 
     @Test
     fun `canInitiateJetpackRestConnection returns false for non-self-hosted site`() {
-        val site = mock<SiteModel> {
-            on { isUsingSelfHostedRestApi } doReturn false
-        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn false
+            }
 
-        assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+        }
     }
 
     @Test
     fun `canInitiateJetpackRestConnection returns false for already connected site`() {
-        val site = mock<SiteModel> {
-            on { isUsingSelfHostedRestApi } doReturn true
-            on { wpApiRestUrl } doReturn "https://example.com/wp-json"
-            on { isJetpackConnected } doReturn true
-        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn true
+            }
 
-        assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+        }
     }
 
     @Test
     fun `canInitiateJetpackRestConnection returns false for old Jetpack version`() {
-        val site = mock<SiteModel> {
-            on { isUsingSelfHostedRestApi } doReturn true
-            on { wpApiRestUrl } doReturn "https://example.com/wp-json"
-            on { isJetpackConnected } doReturn false
-            on { isJetpackInstalled } doReturn true
-            on { jetpackVersion } doReturn INVALID_JETPACK_VERSION
-        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn false
+                on { isJetpackInstalled } doReturn true
+                on { jetpackVersion } doReturn INVALID_JETPACK_VERSION
+            }
 
-        assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isFalse
+        }
     }
 
     @Test
