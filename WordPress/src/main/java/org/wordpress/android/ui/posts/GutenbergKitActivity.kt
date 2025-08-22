@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
+import android.util.Base64
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -2277,7 +2278,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
             val isWpCom = site.isWPCom || siteModel.isWPComAtomic
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
-            val settings = createGutenbergKitSettings(isWpCom)
+            val settings = createGutenbergKitSettings()
 
             return GutenbergKitEditorFragment.newInstance(
                 getContext(),
@@ -2305,14 +2306,21 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
+        private fun createGutenbergKitSettings(): MutableMap<String, Any?> {
             val postType = if (editPostRepository.isPage) "page" else "post"
             val siteURL = siteModel.url
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
+            val applicationPassword = siteModel.apiRestPasswordPlain
+            val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteModel.isUsingWpComRestApi
+
+            val siteApiRoot = if (shouldUseWPComRestApi) "https://public-api.wordpress.com/"
                 else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
-            // Use the application password for self-hosted sites when available
-            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
-            val siteApiNamespace = if (isWpCom)
+            val authHeader = if
+                (shouldUseWPComRestApi) "Bearer ${accountStore.accessToken}"
+                else {
+                    val credentials = "${site.apiRestUsernamePlain}:${applicationPassword}"
+                    "Basic ${Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)}"
+                }
+            val siteApiNamespace = if (shouldUseWPComRestApi)
                 arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
                 else arrayOf()
 
@@ -2330,8 +2338,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
                 "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
+                "plugins" to shouldUsePlugins(applicationPassword),
                 "locale" to wpcomLocaleSlug,
                 "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
                 "webViewGlobals" to listOf(
@@ -2345,6 +2352,17 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                     )
                 )
             )
+        }
+
+        // Returns true if the plugins should be enabled for the given blog.
+        // This is used to determine if the editor should load third-party
+        // plugins providing blocks.
+        private fun shouldUsePlugins(applicationPassword: String?): Boolean {
+            // Requires a Jetpack until editor assets endpoint is available in WordPress core.
+            // Requires a WP.com Simple site or an application password to authenticate all REST
+            // API requests, including those originating from non-core blocks.
+            return gutenbergKitPluginsFeature.isEnabled() &&
+                (site.isWPCom || (site.isJetpackConnected && !applicationPassword.isNullOrEmpty()))
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
