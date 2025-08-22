@@ -2316,7 +2316,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
             val authHeader = if
                 (shouldUseWPComRestApi) "Bearer ${accountStore.accessToken}"
-                else "Basic ${Base64.encodeToString("${site.apiRestUsernamePlain}:${applicationPassword}".toByteArray(), Base64.NO_WRAP)}"
+                else {
+                    val credentials = "${site.apiRestUsernamePlain}:${applicationPassword}"
+                    "Basic ${Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)}"
+                }
             val siteApiNamespace = if (shouldUseWPComRestApi)
                 arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
                 else arrayOf()
