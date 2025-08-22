@@ -388,7 +388,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.InstallJetpackFailed
+                    error = ErrorType.InstallJetpackFailed(it.message)
                 )
             }
         )
@@ -413,7 +413,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.ConnectSite,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ConnectSiteFailed
+                    error = ErrorType.ConnectSiteFailed(it.message)
                 )
             }
         )
@@ -446,7 +446,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ConnectUserFailed
+                    error = ErrorType.ConnectUserFailed(it.message)
                 )
             }
         )
@@ -468,7 +468,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.Finalize,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ActivateStatsFailed
+                    error = ErrorType.ActivateStatsFailed(it.message)
                 )
             }
         )
@@ -527,12 +527,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class ErrorType(open val message: String? = null) {
         data object LoginWpComFailed : ErrorType()
-        data object InstallJetpackFailed : ErrorType()
+        data class InstallJetpackFailed(override val message: String? = null) : ErrorType(message)
         data object InstallJetpackInactive : ErrorType()
-        data object ConnectWpComFailed : ErrorType()
-        data object ConnectSiteFailed : ErrorType()
-        data object ConnectUserFailed : ErrorType()
-        data object ActivateStatsFailed : ErrorType()
+        data class ConnectSiteFailed(override val message: String? = null) : ErrorType(message)
+        data class ConnectUserFailed(override val message: String? = null) : ErrorType(message)
+        data class ActivateStatsFailed(override val message: String? = null) : ErrorType(message)
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
