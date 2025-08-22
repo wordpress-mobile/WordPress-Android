@@ -2335,9 +2335,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 "authHeader" to authHeader,
                 "siteApiNamespace" to siteApiNamespace,
                 "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                // Limited to Jetpack-connected sites until editor assets endpoint is available in WordPress core
-                "plugins" to (gutenbergKitPluginsFeature.isEnabled() &&
-                    (site.isWPCom || (site.isJetpackConnected && !applicationPassword.isNullOrEmpty()))),
+                "plugins" to shouldUsePlugins(applicationPassword),
                 "locale" to wpcomLocaleSlug,
                 "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
                 "webViewGlobals" to listOf(
@@ -2351,6 +2349,17 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                     )
                 )
             )
+        }
+
+        // Returns true if the plugins should be enabled for the given blog.
+        // This is used to determine if the editor should load third-party
+        // plugins providing blocks.
+        private fun shouldUsePlugins(applicationPassword: String?): Boolean {
+            // Requires a Jetpack until editor assets endpoint is available in WordPress core.
+            // Requires a WP.com Simple site or an application password to authenticate all REST
+            // API requests, including those originating from non-core blocks.
+            return gutenbergKitPluginsFeature.isEnabled() &&
+                (site.isWPCom || (site.isJetpackConnected && !applicationPassword.isNullOrEmpty()))
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
