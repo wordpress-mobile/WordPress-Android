@@ -42,7 +42,6 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.GutenbergWebViewPool.getPreloadedWebView
 import org.wordpress.gutenberg.GutenbergWebViewPool.recycleWebView
 import org.wordpress.gutenberg.Media
-import org.wordpress.gutenberg.WebViewGlobal
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
 
@@ -238,8 +237,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private fun Map<String, Any?>.getStringArray(key: String): Array<String> =
         getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
 
-    private fun Map<String, Any?>.getWebViewGlobals(key: String): List<WebViewGlobal> =
-        getSetting<List<WebViewGlobal>>(key) ?: emptyList()
 
     // View extension functions
     private fun View?.setVisibleOrGone(visible: Boolean) {
@@ -441,7 +438,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             val editorAssetsEndpoint = "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
             val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
             val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
-            val webViewGlobals = getWebViewGlobals("webViewGlobals")
 
             EditorConfiguration.Builder()
                 .setTitle(getSetting<String>("postTitle") ?: "")
@@ -454,7 +450,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                 .setSiteApiNamespace(siteApiNamespace)
                 .setNamespaceExcludedPaths(namespaceExcludedPaths)
                 .setAuthHeader(getSetting<String>("authHeader") ?: "")
-                .setWebViewGlobals(webViewGlobals)
                 .setEditorSettings(editorSettings)
                 .setLocale(getSetting<String>("locale"))
                 .setEditorAssetsEndpoint(editorAssetsEndpoint)
