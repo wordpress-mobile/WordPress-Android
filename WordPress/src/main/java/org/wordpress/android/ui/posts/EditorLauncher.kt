@@ -177,17 +177,17 @@ class EditorLauncher @Inject constructor(
 
         val reason = if (shouldUseGutenberg) {
             when {
-                isNewPost -> "this is a new post and the site has block editor enabled as default for new posts"
-                hasGutenbergBlocks -> "the existing post contains Gutenberg blocks"
-                else -> "PostUtils.shouldShowGutenbergEditor returned true"
+                isNewPost -> "GutenbergKit feature is enabled and this is a new post with block editor as site default"
+                hasGutenbergBlocks -> "GutenbergKit feature is enabled and the existing post contains Gutenberg blocks"
+                else -> "GutenbergKit feature is enabled and PostUtils.shouldShowGutenbergEditor returned true"
             }
         } else {
             when {
-                !isNewPost && !hasGutenbergBlocks -> "this is an existing post without Gutenberg blocks"
-                isNewPost && !isBlockEditorDefaultForNewPosts ->
-                    "this is a new post but the site doesn't have block editor as default for new posts"
-
-                else -> "PostUtils.shouldShowGutenbergEditor returned false"
+                !isNewPost && !hasGutenbergBlocks -> 
+                    "GutenbergKit feature is enabled but this existing post has no Gutenberg blocks"
+                isNewPost && !isBlockEditorDefaultForNewPosts -> 
+                    "GutenbergKit feature is enabled but site doesn't default to block editor for new posts"
+                else -> "GutenbergKit feature is enabled but PostUtils.shouldShowGutenbergEditor returned false"
             }
         }
 
