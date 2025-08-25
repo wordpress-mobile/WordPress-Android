@@ -233,8 +233,6 @@ import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.WebViewGlobal
-import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -2341,16 +2339,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
                 "plugins" to shouldUsePlugins(applicationPassword),
                 "locale" to wpcomLocaleSlug,
                 "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                "webViewGlobals" to listOf(
-                    WebViewGlobal(
-                        "_currentSiteType",
-                        when {
-                            siteModel.isWPComAtomic -> WebViewGlobalValue.StringValue("atomic")
-                            siteModel.isWPCom -> WebViewGlobalValue.StringValue("simple")
-                            else -> WebViewGlobalValue.NullValue
-                        }
-                    )
-                )
             )
         }
 
