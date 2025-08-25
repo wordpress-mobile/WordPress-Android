@@ -18,6 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -82,7 +86,9 @@ fun VoiceToContentScreen(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
-                .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)) // Only bottom insets
+                .imePadding() // Add IME (keyboard) padding if needed
+                .navigationBarsPadding() // Prevent overlap with system navigation bars
         ) {
             VoiceToContentView(state, recordingUpdate, isRecording)
         }
