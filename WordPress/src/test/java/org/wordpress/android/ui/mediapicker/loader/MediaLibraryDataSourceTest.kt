@@ -255,6 +255,73 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
         assertThat(result.image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
     }
 
+    @Test
+    fun `handles null date from dateFromIso8601 gracefully`() = test {
+        val mediaModel = MediaModel(siteModel.id, mediaIdCounter++)
+        mediaModel.url = "http://media.jpg"
+        mediaModel.title = "media"
+        mediaModel.uploadDate = "invalid-date-format"
+        mediaModel.mimeType = "image/jpg"
+
+        // Mock dateFromIso8601 to return null (simulating parse failure)
+        whenever(dateTimeUtilsWrapper.dateFromIso8601("invalid-date-format")).thenReturn(null)
+        whenever(mediaStore.getSiteImages(siteModel)).thenReturn(listOf(mediaModel))
+
+        val dataSource = setupDataSource(false, setOf(IMAGE))
+        val result = dataSource.load(forced = false, loadMore = false, filter = null) as Success
+
+        // Verify the media item was created with dataModified = 0L instead of crashing
+        assertThat(result.data).hasSize(1)
+        assertThat(result.data[0].dataModified).isEqualTo(0L)
+        assertThat(result.data[0].url).isEqualTo("http://media.jpg")
+    }
+
+    @Test
+    fun `handles malformed upload dates without crashing`() = test {
+        val malformedDates = listOf("", "not-a-date", "2023-13-32", "invalid")
+        val mediaModels = malformedDates.mapIndexed { index, malformedDate ->
+            val mediaModel = MediaModel(siteModel.id, mediaIdCounter++)
+            mediaModel.url = "http://media$index.jpg"
+            mediaModel.title = "media$index"
+            mediaModel.uploadDate = malformedDate
+            mediaModel.mimeType = "image/jpg"
+
+            // Mock all malformed dates to return null
+            whenever(dateTimeUtilsWrapper.dateFromIso8601(malformedDate)).thenReturn(null)
+            mediaModel
+        }
+
+        whenever(mediaStore.getSiteImages(siteModel)).thenReturn(mediaModels)
+
+        val dataSource = setupDataSource(false, setOf(IMAGE))
+        val result = dataSource.load(forced = false, loadMore = false, filter = null) as Success
+
+        // Verify all items were processed without crashing and have dataModified = 0L
+        assertThat(result.data).hasSize(malformedDates.size)
+        result.data.forEach { mediaItem ->
+            assertThat(mediaItem.dataModified).isEqualTo(0L)
+        }
+    }
+
+    @Test
+    fun `handles null upload date gracefully`() = test {
+        val mediaModel = MediaModel(siteModel.id, mediaIdCounter++)
+        mediaModel.url = "http://media.jpg"
+        mediaModel.title = "media"
+        mediaModel.uploadDate = null // Explicitly null uploadDate
+        mediaModel.mimeType = "image/jpg"
+
+        whenever(mediaStore.getSiteImages(siteModel)).thenReturn(listOf(mediaModel))
+
+        val dataSource = setupDataSource(false, setOf(IMAGE))
+        val result = dataSource.load(forced = false, loadMore = false, filter = null) as Success
+
+        // Verify null uploadDate defaults to 0L
+        assertThat(result.data).hasSize(1)
+        assertThat(result.data[0].dataModified).isEqualTo(0L)
+        assertThat(result.data[0].url).isEqualTo("http://media.jpg")
+    }
+
     private fun setupDataSource(
         hasMore: Boolean,
         allowedTypes: Set<MediaType>,
