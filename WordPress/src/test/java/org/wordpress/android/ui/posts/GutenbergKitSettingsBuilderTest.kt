@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.network.UserAgent
 
 @RunWith(MockitoJUnitRunner::class)
 @Suppress("LargeClass")
@@ -612,7 +613,7 @@ class GutenbergKitSettingsBuilderTest {
         cookies = cookies,
         accountUserId = 123L,
         accountUserName = "testuser",
-        userAgent = org.wordpress.android.fluxc.network.UserAgent("test"),
+        userAgent = UserAgent(appContext = null, appName = "foo"),
         isJetpackSsoEnabled = false
     )
 

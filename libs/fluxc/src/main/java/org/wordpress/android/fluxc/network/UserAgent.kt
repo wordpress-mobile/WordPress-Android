@@ -16,20 +16,25 @@ class UserAgent(appContext: Context?, appName: String) {
         // E.g.:
         //   "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
         //   AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile Safari/537.36"
-        val defaultUserAgent = try {
-            WebSettings.getDefaultUserAgent(appContext)
-        } catch (e: RuntimeException) {
-            // `getDefaultUserAgent()` can throw an Exception
-            // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
-            ""
-        }
+        val defaultUserAgent = appContext?.let {
+            try {
+                WebSettings.getDefaultUserAgent(appContext)
+            } catch (_: RuntimeException) {
+                // `getDefaultUserAgent()` can throw an Exception
+                // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
+                ""
+            }
+        } ?: ""
         // User-Agent string when making HTTP connections, for both API traffic and WebViews.
         // Appends "wp-android/version" to WebView's default User-Agent string for the webservers
         // to get the full feature list of the browser and serve content accordingly, e.g.:
         //    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
         //    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile Safari/537.36
         //    wp-android/4.7"
-        val appWithVersion = "$appName/${PackageUtils.getVersionName(appContext)}"
+        val versionName = appContext?.let {
+            PackageUtils.getVersionName(appContext)
+        } ?: "0" // PackageUtils.getVersionName will also return "0" if it can't find packageInfo
+        val appWithVersion = "$appName/$versionName"
         userAgent = if (defaultUserAgent.isNotEmpty()) "$defaultUserAgent $appWithVersion" else appWithVersion
     }
 
