@@ -2209,10 +2209,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(
-                siteModel,
-                site.siteId
-            )
+            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(siteModel)
 
             val postConfig = GutenbergKitSettingsBuilder.PostConfig.fromPostModel(
                 editPostRepository.getPost()

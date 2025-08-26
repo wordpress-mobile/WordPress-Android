@@ -2,9 +2,9 @@ package org.wordpress.android.ui.posts
 
 import android.util.Base64
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
+import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
-import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
@@ -24,20 +24,17 @@ object GutenbergKitSettingsBuilder {
         val apiRestPasswordPlain: String?
     ) {
         companion object {
-            fun fromSiteModel(
-                site: org.wordpress.android.fluxc.model.SiteModel,
-                siteId: Long
-            ): SiteConfig {
+            fun fromSiteModel(site: SiteModel): SiteConfig {
                 return SiteConfig(
                     url = site.url,
-                    siteId = siteId,
+                    siteId = site.siteId,
                     isWPCom = site.isWPCom,
                     isWPComAtomic = site.isWPComAtomic,
                     isJetpackConnected = site.isJetpackConnected,
                     isUsingWpComRestApi = site.isUsingWpComRestApi,
                     wpApiRestUrl = site.wpApiRestUrl,
-                    apiRestUsernamePlain = site.getUserNameProcessed(),
-                    apiRestPasswordPlain = site.getPasswordProcessed()
+                    apiRestUsernamePlain = site.apiRestUsernamePlain,
+                    apiRestPasswordPlain = site.apiRestPasswordPlain
                 )
             }
         }
@@ -50,7 +47,7 @@ object GutenbergKitSettingsBuilder {
         val content: String?
     ) {
         companion object {
-            fun fromPostModel(postModel: org.wordpress.android.fluxc.model.PostImmutableModel?): PostConfig {
+            fun fromPostModel(postModel: PostImmutableModel?): PostConfig {
                 return PostConfig(
                     remotePostId = postModel?.remotePostId,
                     isPage = postModel?.isPage ?: false,
