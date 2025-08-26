@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 
 /**
@@ -10,6 +11,13 @@ import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 sealed class EditorLauncherSiteSource {
     data class DirectSite(val siteModel: SiteModel) : EditorLauncherSiteSource()
     data class QuickPressSiteId(val siteId: Int) : EditorLauncherSiteSource()
+
+    fun getSite(siteStore: SiteStore): SiteModel? {
+        return when (this) {
+            is DirectSite -> siteModel
+            is QuickPressSiteId -> siteStore.getSiteByLocalId(siteId)
+        }
+    }
 }
 
 /**

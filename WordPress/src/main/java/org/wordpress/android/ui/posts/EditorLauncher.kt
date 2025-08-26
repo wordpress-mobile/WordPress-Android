@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.content.Intent
 import org.wordpress.android.WordPress.Companion.getContext
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
@@ -11,6 +13,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.posts.EditorConstants.RestartEditorOptions
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +30,9 @@ import javax.inject.Singleton
 class EditorLauncher @Inject constructor(
     private val gutenbergKitFeature: GutenbergKitFeature,
     private val experimentalFeatures: ExperimentalFeatures,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val siteStore: SiteStore,
+    private val postStore: PostStore
 ) {
     companion object {
         /**
@@ -32,6 +40,7 @@ class EditorLauncher @Inject constructor(
          * Used for analytics to distinguish between EditorLauncher and direct Intent creation.
          */
         const val EXTRA_LAUNCHED_VIA_EDITOR_LAUNCHER = "launched_via_editor_launcher"
+
         /**
          * Static accessor for use in static utility classes like ActivityLauncher.
          * Prefer constructor injection when possible.
@@ -62,7 +71,7 @@ class EditorLauncher @Inject constructor(
      * @return Intent configured for the appropriate editor activity
      */
     fun createEditorIntent(context: Context, params: EditorLauncherParams): Intent {
-        val shouldUseGutenbergKit = shouldUseGutenbergKitEditor()
+        val shouldUseGutenbergKit = shouldUseGutenbergKitEditor(params)
 
         val targetActivity = if (shouldUseGutenbergKit) {
             GutenbergKitActivity::class.java
@@ -81,13 +90,115 @@ class EditorLauncher @Inject constructor(
     }
 
     /**
-     * Determines if GutenbergKit editor should be used based on feature flags.
+     * Determines if GutenbergKit editor should be used based on feature flags and post content.
      */
-    private fun shouldUseGutenbergKitEditor(): Boolean {
+    private fun shouldUseGutenbergKitEditor(params: EditorLauncherParams): Boolean {
         val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
                 gutenbergKitFeature.isEnabled()
         val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        return isGutenbergEnabled && !isGutenbergDisabled
+        val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
+
+        val site = params.siteSource.getSite(siteStore)
+        return when {
+            !isGutenbergFeatureEnabled -> {
+                logFeatureDisabledReason(isGutenbergDisabled, isGutenbergEnabled)
+                false
+            }
+
+            site == null -> {
+                logNoSiteInfoReason()
+                true
+            }
+
+            else -> {
+                determineEditorForSite(params, site)
+            }
+        }
+    }
+
+    private fun determineEditorForSite(params: EditorLauncherParams, site: SiteModel): Boolean {
+        val post = getPostFromParams(params)
+        val isNewPost = post == null || post.isLocalDraft
+        val postContent = post?.content ?: ""
+        val shouldUseGutenberg = PostUtils.shouldShowGutenbergEditor(isNewPost, postContent, site)
+
+        logEditorDecision(shouldUseGutenberg, isNewPost, postContent, post, site)
+        return shouldUseGutenberg
+    }
+
+    private fun logFeatureDisabledReason(isGutenbergDisabled: Boolean, isGutenbergEnabled: Boolean) {
+        val reason = when {
+            isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
+            !isGutenbergEnabled -> "neither the experimental block editor feature nor " +
+                    "GutenbergKit feature is enabled"
+
+            else -> "GutenbergKit feature checks failed"
+        }
+        val featureFlags = getFeatureFlagsString()
+        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason $featureFlags")
+    }
+
+    private fun logNoSiteInfoReason() {
+        val featureFlags = getFeatureFlagsString()
+        AppLog.d(
+            AppLog.T.EDITOR, "GutenbergKit editor is being used because no site information " +
+                    "is available, defaulting to GutenbergKit $featureFlags"
+        )
+    }
+
+    private fun getFeatureFlagsString(): String {
+        val experimentalBlockEditor = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)
+        val gutenbergKitFeatureEnabled = gutenbergKitFeature.isEnabled()
+        val disableExperimentalBlockEditor = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+        return "(experimental_block_editor: $experimentalBlockEditor, " +
+                "gutenberg_kit_feature: $gutenbergKitFeatureEnabled, " +
+                "disable_experimental_block_editor: $disableExperimentalBlockEditor)"
+    }
+
+    private fun logEditorDecision(
+        shouldUseGutenberg: Boolean,
+        isNewPost: Boolean,
+        postContent: String,
+        post: PostModel?,
+        site: SiteModel
+    ) {
+        val hasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(postContent)
+        val isBlockEditorDefaultForNewPosts = SiteUtils.isBlockEditorDefaultForNewPost(site)
+
+        val postInfo = if (post != null) {
+            "post_id: ${post.id}, remote_id: ${post.remotePostId}, is_local_draft: ${post.isLocalDraft}, " +
+                    "content_length: ${postContent.length}, has_blocks: $hasGutenbergBlocks"
+        } else {
+            "new_post: true"
+        }
+
+        val siteInfo = "site_id: ${site.id}, site_url: ${site.url}, " +
+                "block_editor_default_for_new_posts: $isBlockEditorDefaultForNewPosts"
+
+        val reason = if (shouldUseGutenberg) {
+            when {
+                isNewPost -> "GutenbergKit feature is enabled and this is a new post with block editor as site default"
+                hasGutenbergBlocks -> "GutenbergKit feature is enabled and the existing post contains Gutenberg blocks"
+                else -> "GutenbergKit feature is enabled and PostUtils.shouldShowGutenbergEditor returned true"
+            }
+        } else {
+            when {
+                !isNewPost && !hasGutenbergBlocks -> 
+                    "GutenbergKit feature is enabled but this existing post has no Gutenberg blocks"
+                isNewPost && !isBlockEditorDefaultForNewPosts -> 
+                    "GutenbergKit feature is enabled but site doesn't default to block editor for new posts"
+                else -> "GutenbergKit feature is enabled but PostUtils.shouldShowGutenbergEditor returned false"
+            }
+        }
+
+        val action = if (shouldUseGutenberg) "is being used" else "is NOT being used"
+        AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor $action because $reason ($postInfo, $siteInfo)")
+    }
+
+    private fun getPostFromParams(params: EditorLauncherParams): PostModel? {
+        return params.postLocalId?.let { localId ->
+            postStore.getPostByLocalPostId(localId)
+        }
     }
 
     /**
