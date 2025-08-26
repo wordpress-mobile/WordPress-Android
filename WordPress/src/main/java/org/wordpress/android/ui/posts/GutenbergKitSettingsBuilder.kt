@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.posts
 
 import android.util.Base64
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
+import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
@@ -18,24 +22,62 @@ object GutenbergKitSettingsBuilder {
         val wpApiRestUrl: String?,
         val apiRestUsernamePlain: String?,
         val apiRestPasswordPlain: String?
-    )
+    ) {
+        companion object {
+            fun fromSiteModel(
+                site: org.wordpress.android.fluxc.model.SiteModel,
+                siteId: Long
+            ): SiteConfig {
+                return SiteConfig(
+                    url = site.url,
+                    siteId = siteId,
+                    isWPCom = site.isWPCom,
+                    isWPComAtomic = site.isWPComAtomic,
+                    isJetpackConnected = site.isJetpackConnected,
+                    isUsingWpComRestApi = site.isUsingWpComRestApi,
+                    wpApiRestUrl = site.wpApiRestUrl,
+                    apiRestUsernamePlain = site.getUserNameProcessed(),
+                    apiRestPasswordPlain = site.getPasswordProcessed()
+                )
+            }
+        }
+    }
 
     data class PostConfig(
         val remotePostId: Long?,
         val isPage: Boolean,
         val title: String?,
         val content: String?
-    )
+    ) {
+        companion object {
+            fun fromPostModel(postModel: org.wordpress.android.fluxc.model.PostImmutableModel?): PostConfig {
+                return PostConfig(
+                    remotePostId = postModel?.remotePostId,
+                    isPage = postModel?.isPage ?: false,
+                    title = postModel?.title,
+                    content = postModel?.content
+                )
+            }
+        }
+    }
 
-    data class FeatureConfig(
-        val isPluginsFeatureEnabled: Boolean,
-        val isThemeStylesFeatureEnabled: Boolean
-    )
 
     data class AppConfig(
         val accessToken: String?,
         val locale: String,
-        val cookies: Any?
+        val cookies: Any?,
+        val accountUserId: Long,
+        val accountUserName: String?,
+        val userAgent: UserAgent,
+        val isJetpackSsoEnabled: Boolean,
+        val isPluginsFeatureEnabled: Boolean,
+        val isThemeStylesFeatureEnabled: Boolean
+    )
+
+    data class GutenbergKitConfig(
+        val siteConfig: SiteConfig,
+        val postConfig: PostConfig,
+        val appConfig: AppConfig
     )
 
     /**
@@ -49,8 +91,7 @@ object GutenbergKitSettingsBuilder {
     fun buildSettings(
         siteConfig: SiteConfig,
         postConfig: PostConfig,
-        appConfig: AppConfig,
-        featureConfig: FeatureConfig
+        appConfig: AppConfig
     ): MutableMap<String, Any?> {
         val applicationPassword = siteConfig.apiRestPasswordPlain
         val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteConfig.isUsingWpComRestApi
@@ -81,9 +122,9 @@ object GutenbergKitSettingsBuilder {
             "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
             "authHeader" to authHeader,
             "siteApiNamespace" to siteApiNamespace,
-            "themeStyles" to featureConfig.isThemeStylesFeatureEnabled,
+            "themeStyles" to appConfig.isThemeStylesFeatureEnabled,
             "plugins" to shouldUsePlugins(
-                isFeatureEnabled = featureConfig.isPluginsFeatureEnabled,
+                isFeatureEnabled = appConfig.isPluginsFeatureEnabled,
                 isWPComSite = siteConfig.isWPCom,
                 isJetpackConnected = siteConfig.isJetpackConnected,
                 applicationPassword = applicationPassword
@@ -146,5 +187,28 @@ object GutenbergKitSettingsBuilder {
         // 2. Jetpack-connected sites with application passwords (when feature is enabled)
         return isFeatureEnabled &&
                 (isWPComSite || (isJetpackConnected && !applicationPassword.isNullOrEmpty()))
+    }
+
+    /**
+     * Builds Gutenberg WebView authorization data for the fragment.
+     */
+    fun buildAuthorizationData(
+        siteConfig: SiteConfig,
+        appConfig: AppConfig
+    ): GutenbergWebViewAuthorizationData {
+        return GutenbergWebViewAuthorizationData(
+            siteConfig.url,
+            siteConfig.isWPCom || siteConfig.isWPComAtomic,
+            appConfig.accountUserId,
+            appConfig.accountUserName,
+            appConfig.accessToken,
+            if (siteConfig.isWPCom) 0 else siteConfig.siteId,
+            siteConfig.apiRestUsernamePlain,
+            siteConfig.apiRestPasswordPlain,
+            siteConfig.isUsingWpComRestApi,
+            "", // webEditor - not used in current implementation
+            appConfig.userAgent.toString(),
+            appConfig.isJetpackSsoEnabled
+        )
     }
 }
