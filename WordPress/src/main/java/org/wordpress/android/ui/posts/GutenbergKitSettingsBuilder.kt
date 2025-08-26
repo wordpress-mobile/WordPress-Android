@@ -5,6 +5,8 @@ import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
@@ -23,7 +25,9 @@ object GutenbergKitSettingsBuilder {
         val apiRestUsernamePlain: String?,
         val apiRestPasswordPlain: String?,
         val selfHostedSiteId: Long,
-        val webEditor: String
+        val webEditor: String,
+        val apiRestUsernameProcessed: String?,
+        val apiRestPasswordProcessed: String?
     ) {
         companion object {
             fun fromSiteModel(site: SiteModel): SiteConfig {
@@ -38,7 +42,9 @@ object GutenbergKitSettingsBuilder {
                     apiRestUsernamePlain = site.apiRestUsernamePlain,
                     apiRestPasswordPlain = site.apiRestPasswordPlain,
                     selfHostedSiteId = site.selfHostedSiteId,
-                    webEditor = site.webEditor
+                    webEditor = site.webEditor,
+                    apiRestUsernameProcessed = site.getUserNameProcessed(),
+                    apiRestPasswordProcessed = site.getPasswordProcessed()
                 )
             }
         }
@@ -208,8 +214,8 @@ object GutenbergKitSettingsBuilder {
             appConfig.accountUserName,
             appConfig.accessToken,
             siteConfig.selfHostedSiteId,
-            siteConfig.apiRestUsernamePlain,
-            siteConfig.apiRestPasswordPlain,
+            siteConfig.apiRestUsernameProcessed,
+            siteConfig.apiRestPasswordProcessed,
             siteConfig.isUsingWpComRestApi,
             siteConfig.webEditor,
             appConfig.userAgent.toString(),
