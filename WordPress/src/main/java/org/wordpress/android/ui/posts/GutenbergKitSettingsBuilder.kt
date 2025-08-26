@@ -61,6 +61,10 @@ object GutenbergKitSettingsBuilder {
         }
     }
 
+    data class FeatureConfig(
+        val isPluginsFeatureEnabled: Boolean,
+        val isThemeStylesFeatureEnabled: Boolean
+    )
 
     data class AppConfig(
         val accessToken: String?,
@@ -70,8 +74,7 @@ object GutenbergKitSettingsBuilder {
         val accountUserName: String?,
         val userAgent: UserAgent,
         val isJetpackSsoEnabled: Boolean,
-        val isPluginsFeatureEnabled: Boolean,
-        val isThemeStylesFeatureEnabled: Boolean
+        val featureConfig: FeatureConfig
     )
 
     data class GutenbergKitConfig(
@@ -122,9 +125,9 @@ object GutenbergKitSettingsBuilder {
             "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
             "authHeader" to authHeader,
             "siteApiNamespace" to siteApiNamespace,
-            "themeStyles" to appConfig.isThemeStylesFeatureEnabled,
+            "themeStyles" to appConfig.featureConfig.isThemeStylesFeatureEnabled,
             "plugins" to shouldUsePlugins(
-                isFeatureEnabled = appConfig.isPluginsFeatureEnabled,
+                isFeatureEnabled = appConfig.featureConfig.isPluginsFeatureEnabled,
                 isWPComSite = siteConfig.isWPCom,
                 isJetpackConnected = siteConfig.isJetpackConnected,
                 applicationPassword = applicationPassword

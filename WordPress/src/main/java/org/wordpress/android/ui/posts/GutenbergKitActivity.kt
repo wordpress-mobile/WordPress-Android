@@ -2218,6 +2218,13 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 editPostRepository.getPost()
             )
 
+            val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
+                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
+                isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
+                    Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+                )
+            )
+
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(
                 accessToken = accountStore.accessToken,
                 locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
@@ -2226,10 +2233,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 accountUserName = accountStore.account.userName,
                 userAgent = userAgent,
                 isJetpackSsoEnabled = isJetpackSsoEnabled,
-                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
-                    Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
-                )
+                featureConfig = featureConfig
             )
 
             val config = GutenbergKitSettingsBuilder.GutenbergKitConfig(
