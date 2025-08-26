@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
+import android.util.Base64
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -232,8 +233,6 @@ import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.WebViewGlobal
-import org.wordpress.gutenberg.WebViewGlobalValue
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -248,6 +247,151 @@ private const val VIEW_PAGER_PAGE_HISTORY = 3
 private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 
 private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
+
+object GutenbergKitSettingsBuilder {
+    private const val AUTH_BEARER_PREFIX = "Bearer "
+    private const val AUTH_BASIC_PREFIX = "Basic "
+
+    data class SiteConfig(
+        val url: String,
+        val siteId: Long,
+        val isWPCom: Boolean,
+        val isWPComAtomic: Boolean,
+        val isJetpackConnected: Boolean,
+        val isUsingWpComRestApi: Boolean,
+        val wpApiRestUrl: String?,
+        val apiRestUsernamePlain: String?,
+        val apiRestPasswordPlain: String?
+    )
+
+    data class PostConfig(
+        val remotePostId: Long?,
+        val isPage: Boolean,
+        val title: String?,
+        val content: String?
+    )
+
+    data class FeatureConfig(
+        val isPluginsFeatureEnabled: Boolean,
+        val isThemeStylesFeatureEnabled: Boolean
+    )
+
+    data class AppConfig(
+        val accessToken: String?,
+        val locale: String,
+        val cookies: Any?
+    )
+
+    /**
+     * Builds the settings configuration for GutenbergKit editor.
+     *
+     * This method determines the appropriate authentication method based on site type:
+     * - WP.com sites use Bearer token authentication with the public API
+     * - Jetpack/self-hosted sites with application passwords use Basic authentication
+     * - Falls back to WP.com REST API when no application password is available
+     */
+    fun buildSettings(
+        siteConfig: SiteConfig,
+        postConfig: PostConfig,
+        appConfig: AppConfig,
+        featureConfig: FeatureConfig
+    ): MutableMap<String, Any?> {
+        val applicationPassword = siteConfig.apiRestPasswordPlain
+        val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteConfig.isUsingWpComRestApi
+
+        val siteApiRoot = if (shouldUseWPComRestApi) "https://public-api.wordpress.com/"
+            else siteConfig.wpApiRestUrl ?: "${siteConfig.url}/wp-json/"
+
+        val authHeader = buildAuthHeader(
+            shouldUseWPComRestApi = shouldUseWPComRestApi,
+            accessToken = appConfig.accessToken,
+            username = siteConfig.apiRestUsernamePlain,
+            password = applicationPassword
+        )
+
+        val siteApiNamespace = if (shouldUseWPComRestApi)
+            arrayOf("sites/${siteConfig.siteId}/", "sites/${UrlUtils.removeScheme(siteConfig.url)}/")
+            else arrayOf()
+
+        val wpcomLocaleSlug = appConfig.locale.replace("_", "-").lowercase()
+
+        return mutableMapOf(
+            "postId" to postConfig.remotePostId?.toInt(),
+            "postType" to if (postConfig.isPage) "page" else "post",
+            "postTitle" to postConfig.title,
+            "postContent" to postConfig.content,
+            "siteURL" to siteConfig.url,
+            "siteApiRoot" to siteApiRoot,
+            "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
+            "authHeader" to authHeader,
+            "siteApiNamespace" to siteApiNamespace,
+            "themeStyles" to featureConfig.isThemeStylesFeatureEnabled,
+            "plugins" to shouldUsePlugins(
+                isFeatureEnabled = featureConfig.isPluginsFeatureEnabled,
+                isWPComSite = siteConfig.isWPCom,
+                isJetpackConnected = siteConfig.isJetpackConnected,
+                applicationPassword = applicationPassword
+            ),
+            "locale" to wpcomLocaleSlug,
+            "cookies" to appConfig.cookies
+        )
+    }
+
+    /**
+     * Builds the authentication header based on the authentication method.
+     *
+     * @param shouldUseWPComRestApi True if using WP.com REST API (Bearer auth)
+     * @param accessToken The OAuth2 access token for WP.com authentication
+     * @param username The username for Basic auth (application passwords)
+     * @param password The password for Basic auth (application passwords)
+     * @return The formatted authentication header string, or null if credentials are invalid
+     */
+    private fun buildAuthHeader(
+        shouldUseWPComRestApi: Boolean,
+        accessToken: String?,
+        username: String?,
+        password: String?
+    ): String? {
+        return if (shouldUseWPComRestApi) {
+            if (!accessToken.isNullOrEmpty()) {
+                "$AUTH_BEARER_PREFIX$accessToken"
+            } else {
+                AppLog.w(AppLog.T.EDITOR, "Missing access token for WP.com REST API authentication")
+                null
+            }
+        } else {
+            if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+                try {
+                    val credentials = "$username:$password"
+                    val encodedCredentials = Base64.encodeToString(
+                        credentials.toByteArray(Charsets.UTF_8),
+                        Base64.NO_WRAP
+                    )
+                    "$AUTH_BASIC_PREFIX$encodedCredentials"
+                } catch (e: IllegalArgumentException) {
+                    AppLog.e(AppLog.T.EDITOR, "Failed to encode Basic auth credentials", e)
+                    null
+                }
+            } else {
+                AppLog.w(AppLog.T.EDITOR, "Incomplete credentials for Basic authentication")
+                null
+            }
+        }
+    }
+
+    private fun shouldUsePlugins(
+        isFeatureEnabled: Boolean,
+        isWPComSite: Boolean,
+        isJetpackConnected: Boolean,
+        applicationPassword: String?
+    ): Boolean {
+        // Enable plugins for:
+        // 1. WP.com Simple sites (when feature is enabled)
+        // 2. Jetpack-connected sites with application passwords (when feature is enabled)
+        return isFeatureEnabled &&
+            (isWPComSite || (isJetpackConnected && !applicationPassword.isNullOrEmpty()))
+    }
+}
 
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
@@ -2277,7 +2421,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
             val isWpCom = site.isWPCom || siteModel.isWPComAtomic
             val gutenbergWebViewAuthorizationData = createGutenbergWebViewAuthorizationData(isWpCom)
-            val settings = createGutenbergKitSettings(isWpCom)
+            val settings = createGutenbergKitSettings()
 
             return GutenbergKitEditorFragment.newInstance(
                 getContext(),
@@ -2305,45 +2449,44 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
             )
         }
 
-        private fun createGutenbergKitSettings(isWpCom: Boolean): MutableMap<String, Any?> {
-            val postType = if (editPostRepository.isPage) "page" else "post"
-            val siteURL = siteModel.url
-            val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/"
-                else siteModel.wpApiRestUrl ?: "$siteURL/wp-json/"
-            // Use the application password for self-hosted sites when available
-            val authHeader = if (isWpCom) "Bearer ${accountStore.accessToken}" else "Basic "
-            val siteApiNamespace = if (isWpCom)
-                arrayOf("sites/${site.siteId}/", "sites/${UrlUtils.removeScheme(siteURL)}/")
-                else arrayOf()
+        private fun createGutenbergKitSettings(): MutableMap<String, Any?> {
+            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig(
+                url = siteModel.url,
+                siteId = site.siteId,
+                isWPCom = site.isWPCom,
+                isWPComAtomic = siteModel.isWPComAtomic,
+                isJetpackConnected = site.isJetpackConnected,
+                isUsingWpComRestApi = siteModel.isUsingWpComRestApi,
+                wpApiRestUrl = siteModel.wpApiRestUrl,
+                apiRestUsernamePlain = site.apiRestUsernamePlain,
+                apiRestPasswordPlain = siteModel.apiRestPasswordPlain
+            )
 
-            val languageString = perAppLocaleManager.getCurrentLocaleLanguageCode()
-            val wpcomLocaleSlug = languageString.replace("_", "-").lowercase()
+            val postConfig = GutenbergKitSettingsBuilder.PostConfig(
+                remotePostId = editPostRepository.getPost()?.remotePostId,
+                isPage = editPostRepository.isPage,
+                title = editPostRepository.getPost()?.title,
+                content = editPostRepository.getPost()?.content
+            )
 
-            return mutableMapOf(
-                "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
-                "postType" to postType,
-                "postTitle" to editPostRepository.getPost()?.title,
-                "postContent" to editPostRepository.getPost()?.content,
-                "siteURL" to siteURL,
-                "siteApiRoot" to siteApiRoot,
-                "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-                "authHeader" to authHeader,
-                "siteApiNamespace" to siteApiNamespace,
-                "themeStyles" to experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES),
-                // Limited to Simple sites until application passwords are supported
-                "plugins" to (gutenbergKitPluginsFeature.isEnabled() && site.isWPCom),
-                "locale" to wpcomLocaleSlug,
-                "cookies" to editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                "webViewGlobals" to listOf(
-                    WebViewGlobal(
-                        "_currentSiteType",
-                        when {
-                            siteModel.isWPComAtomic -> WebViewGlobalValue.StringValue("atomic")
-                            siteModel.isWPCom -> WebViewGlobalValue.StringValue("simple")
-                            else -> WebViewGlobalValue.NullValue
-                        }
-                    )
+            val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
+                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
+                isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
+                    Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
                 )
+            )
+
+            val appConfig = GutenbergKitSettingsBuilder.AppConfig(
+                accessToken = accountStore.accessToken,
+                locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
+                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie)
+            )
+
+            return GutenbergKitSettingsBuilder.buildSettings(
+                siteConfig = siteConfig,
+                postConfig = postConfig,
+                appConfig = appConfig,
+                featureConfig = featureConfig
             )
         }
 

@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_SOURCE_KEY
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_COMPLETED
@@ -45,7 +46,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     // Internal variables that can be overridden for testing
     internal var uiDelayMs: Long = UI_DELAY_MS
     internal var stepTimeoutMs: Long = STEP_TIMEOUT_MS
-    
+
     private val _currentStep = MutableStateFlow<ConnectionStep?>(null)
     val currentStep = _currentStep
 
@@ -320,8 +321,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 1: Starts the wp.com login flow if the user isn't logged into wp.com
      */
     private fun loginWpCom() {
-        if (accountStore.hasAccessToken()) {
-            // User is already logged in, add a short delay before marking the step completed
+        if (accountStore.hasAccessToken() && site.isUsingWpComRestApi) {
+            // User is already logged in with an app password, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
                 delay(uiDelayMs)
@@ -387,7 +388,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.InstallJetpack,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.InstallJetpackFailed
+                    error = ErrorType.InstallJetpackFailed(it.message)
                 )
             }
         )
@@ -412,7 +413,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.ConnectSite,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ConnectSiteFailed
+                    error = ErrorType.ConnectSiteFailed(it.message)
                 )
             }
         )
@@ -445,7 +446,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
                 updateStepStatus(
                     step = ConnectionStep.ConnectUser,
                     status = ConnectionStatus.Failed,
-                    error = ErrorType.ConnectUserFailed
+                    error = ErrorType.ConnectUserFailed(it.message)
                 )
             }
         )
@@ -456,18 +457,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
      */
     private suspend fun finalize() {
         val result = jetpackModuleHelper.activateStatsModule(site)
-        if (result.isSuccess) {
-            updateStepStatus(
-                step = ConnectionStep.Finalize,
-                status = ConnectionStatus.Completed
-            )
-        } else {
-            updateStepStatus(
-                step = ConnectionStep.Finalize,
-                status = ConnectionStatus.Failed,
-                error = ErrorType.ActivateStatsFailed
-            )
-        }
+        result.fold(
+            onSuccess = {
+                updateStepStatus(
+                    step = ConnectionStep.Finalize,
+                    status = ConnectionStatus.Completed
+                )
+            },
+            onFailure = {
+                updateStepStatus(
+                    step = ConnectionStep.Finalize,
+                    status = ConnectionStatus.Failed,
+                    error = ErrorType.ActivateStatsFailed(it.message)
+                )
+            }
+        )
     }
 
     /**
@@ -523,12 +527,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     sealed class ErrorType(open val message: String? = null) {
         data object LoginWpComFailed : ErrorType()
-        data object InstallJetpackFailed : ErrorType()
+        data class InstallJetpackFailed(override val message: String? = null) : ErrorType(message)
         data object InstallJetpackInactive : ErrorType()
-        data object ConnectWpComFailed : ErrorType()
-        data object ConnectSiteFailed : ErrorType()
-        data object ConnectUserFailed : ErrorType()
-        data object ActivateStatsFailed : ErrorType()
+        data class ConnectSiteFailed(override val message: String? = null) : ErrorType(message)
+        data class ConnectUserFailed(override val message: String? = null) : ErrorType(message)
+        data class ActivateStatsFailed(override val message: String? = null) : ErrorType(message)
         data object MissingAccessToken : ErrorType()
         data object Timeout : ErrorType()
         data object Offline : ErrorType()
@@ -553,23 +556,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "JetpackRestConnectionViewModel"
-        private const val JETPACK_LIMIT_VERSION = "14.2"
         private const val STEP_TIMEOUT_MS = 45 * 1000L
         private const val UI_DELAY_MS = 1000L
-        val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
+        private const val JETPACK_LIMIT_VERSION = "14.2"
 
-        /**
-         * Requirements:
-         * - Self-hosted site authenticated with application password, and
-         * - the site isn't already connected to Jetpack, and
-         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
-         */
-        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
-            return site.isUsingSelfHostedRestApi
-                    && !site.wpApiRestUrl.isNullOrEmpty()
-                    && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
-        }
+        val DEFAULT_CONNECTION_SOURCE = ConnectionSource.STATS
 
         private val initialStepStates = mapOf(
             ConnectionStep.LoginWpCom to StepState(),
@@ -578,5 +569,22 @@ class JetpackRestConnectionViewModel @Inject constructor(
             ConnectionStep.ConnectUser to StepState(),
             ConnectionStep.Finalize to StepState()
         )
+
+        /**
+         * Returns true if the Jetpack REST Connection flow is available and this site is able to use it.
+         * Requirements:
+         * - Jetpack app
+         * - Self-hosted site using REST API
+         * - Application password has been set
+         * - Site isn't already connected to Jetpack
+         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
+         */
+        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
+            return BuildConfig.IS_JETPACK_APP
+                    && site.isUsingSelfHostedRestApi
+                    && !site.wpApiRestUrl.isNullOrEmpty()
+                    && !site.isJetpackConnected
+                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
+        }
     }
 }

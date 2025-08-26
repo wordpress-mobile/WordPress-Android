@@ -29,7 +29,6 @@ import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -60,8 +59,6 @@ import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Comp
 import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -88,9 +85,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -284,10 +278,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (BuildConfig.IS_JETPACK_APP
-            && experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
-            && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
-        ) {
+        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 requireActivity(),
                 JetpackRestConnectionViewModel.ConnectionSource.NOTIFS

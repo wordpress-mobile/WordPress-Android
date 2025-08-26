@@ -113,7 +113,12 @@ class MediaPickerViewModel @Inject constructor(
             buildSoftAskView(softAskRequest),
             FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
             buildActionModeUiModel(selectedIds, domainModel?.domainItems),
-            buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
+            buildSearchUiModel(
+                isContentToSearch = domainModel?.emptyState == null,
+                isVisible = softAskRequest?.let { !it.show } ?: true,
+                filter = domainModel?.filter,
+                searchExpanded = searchExpanded
+            ),
             !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
             buildBrowseMenuUiModel(softAskRequest, searchExpanded),
             progressDialogUiModel ?: Hidden,
@@ -121,8 +126,14 @@ class MediaPickerViewModel @Inject constructor(
         )
     }
 
-    private fun buildSearchUiModel(isVisible: Boolean, filter: String?, searchExpanded: Boolean?): SearchUiModel {
+    private fun buildSearchUiModel(
+        isContentToSearch: Boolean,
+        isVisible: Boolean,
+        filter: String?,
+        searchExpanded: Boolean?
+    ): SearchUiModel {
         return when {
+            !isContentToSearch -> SearchUiModel.Hidden
             searchExpanded == true -> SearchUiModel.Expanded(filter ?: "", !mediaPickerSetup.defaultSearchView)
             isVisible -> SearchUiModel.Collapsed
             else -> SearchUiModel.Hidden

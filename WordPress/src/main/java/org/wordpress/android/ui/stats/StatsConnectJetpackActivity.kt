@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
@@ -23,8 +22,6 @@ import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActiv
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
@@ -44,9 +41,6 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
-
-    @Inject
-    lateinit var mExperimentalFeatures: ExperimentalFeatures
 
     @Inject
     lateinit var mSelectedSiteRepository: SelectedSiteRepository
@@ -148,10 +142,7 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (BuildConfig.IS_JETPACK_APP
-            && mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_JETPACK_REST_CONNECTION)
-            && JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)
-        ) {
+        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 this,
                 JetpackRestConnectionViewModel.ConnectionSource.STATS
