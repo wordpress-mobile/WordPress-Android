@@ -73,14 +73,14 @@ object GutenbergKitSettingsBuilder {
         val accountUserId: Long,
         val accountUserName: String?,
         val userAgent: UserAgent,
-        val isJetpackSsoEnabled: Boolean,
-        val featureConfig: FeatureConfig
+        val isJetpackSsoEnabled: Boolean
     )
 
     data class GutenbergKitConfig(
         val siteConfig: SiteConfig,
         val postConfig: PostConfig,
-        val appConfig: AppConfig
+        val appConfig: AppConfig,
+        val featureConfig: FeatureConfig
     )
 
     /**
@@ -94,7 +94,8 @@ object GutenbergKitSettingsBuilder {
     fun buildSettings(
         siteConfig: SiteConfig,
         postConfig: PostConfig,
-        appConfig: AppConfig
+        appConfig: AppConfig,
+        featureConfig: FeatureConfig
     ): MutableMap<String, Any?> {
         val applicationPassword = siteConfig.apiRestPasswordPlain
         val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteConfig.isUsingWpComRestApi
@@ -125,9 +126,9 @@ object GutenbergKitSettingsBuilder {
             "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
             "authHeader" to authHeader,
             "siteApiNamespace" to siteApiNamespace,
-            "themeStyles" to appConfig.featureConfig.isThemeStylesFeatureEnabled,
+            "themeStyles" to featureConfig.isThemeStylesFeatureEnabled,
             "plugins" to shouldUsePlugins(
-                isFeatureEnabled = appConfig.featureConfig.isPluginsFeatureEnabled,
+                isFeatureEnabled = featureConfig.isPluginsFeatureEnabled,
                 isWPComSite = siteConfig.isWPCom,
                 isJetpackConnected = siteConfig.isJetpackConnected,
                 applicationPassword = applicationPassword

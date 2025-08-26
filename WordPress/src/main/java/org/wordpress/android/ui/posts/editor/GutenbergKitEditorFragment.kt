@@ -558,7 +558,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             val settings = GutenbergKitSettingsBuilder.buildSettings(
                 siteConfig = config.siteConfig,
                 postConfig = config.postConfig,
-                appConfig = config.appConfig
+                appConfig = config.appConfig,
+                featureConfig = config.featureConfig
             )
 
             return newInstance(

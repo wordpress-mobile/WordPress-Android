@@ -2232,14 +2232,14 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 accountUserId = accountStore.account.userId,
                 accountUserName = accountStore.account.userName,
                 userAgent = userAgent,
-                isJetpackSsoEnabled = isJetpackSsoEnabled,
-                featureConfig = featureConfig
+                isJetpackSsoEnabled = isJetpackSsoEnabled
             )
 
             val config = GutenbergKitSettingsBuilder.GutenbergKitConfig(
                 siteConfig = siteConfig,
                 postConfig = postConfig,
-                appConfig = appConfig
+                appConfig = appConfig,
+                featureConfig = featureConfig
             )
 
             return GutenbergKitEditorFragment.newInstanceWithBuilder(
