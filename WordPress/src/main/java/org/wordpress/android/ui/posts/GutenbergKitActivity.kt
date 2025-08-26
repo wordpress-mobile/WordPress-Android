@@ -41,7 +41,6 @@ import androidx.lifecycle.distinctUntilChanged
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
-import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -60,7 +59,6 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorFragmentListener
-import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
@@ -230,7 +228,6 @@ import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import java.io.File
 import java.util.regex.Matcher
@@ -248,7 +245,7 @@ private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
 
 @Suppress("LargeClass")
-class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
     EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
@@ -1901,64 +1898,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }?:run { return UpdateFromEditor.Failed(java.lang.Exception("Impossible to save post, editor frag is null.")) }
     }
 
-    override fun initializeEditorFragment() {
-        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
-            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
-                onToggleUndo(!hasUndo)
-                onToggleRedo(!hasRedo)
-            }
-        })
-        editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
-            override fun onFeaturedImageChanged(mediaID: Long) {
-                setFeaturedImageId(mediaID, false, true)
-            }
-        })
-        editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                editorPhotoPicker?.allowMultipleSelection = config.multiple
-                val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
-                    config.allowedTypes,
-                    config.multiple
-                )
-                val initialSelection = when (val value = config.value) {
-                    is GutenbergView.Value.Single -> listOf(value.value)
-                    is GutenbergView.Value.Multiple -> value.toList()
-                    else -> emptyList()
-                }
-                openMediaLibrary(mediaType, initialSelection)
-            }
-        })
-        editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
-            override fun onLogJsException(exception: GutenbergJsException) {
-                val stackTraceElements = exception.stackTrace.map { stackTrace ->
-                    JsExceptionStackTraceElement(
-                        stackTrace.fileName,
-                        stackTrace.lineNumber,
-                        stackTrace.colNumber,
-                        stackTrace.function
-                    )
-                }
-
-                val jsException = JsException(
-                    exception.type,
-                    exception.message,
-                    stackTraceElements,
-                    exception.context,
-                    exception.tags,
-                    exception.isHandled,
-                    exception.handledBy
-                )
-
-                val callback = object : JsExceptionCallback {
-                    override fun onReportSent(sent: Boolean) {
-                        // Do nothing
-                    }
-                }
-
-                onLogJsException(jsException, callback)
-            }
-        })
-    }
 
     override fun onImageSettingsRequested(editorImageMetaData: EditorImageMetaData) {
         MediaSettingsActivity.showForResult(this, siteModel, editorImageMetaData)
@@ -3271,5 +3210,23 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onSendJsException)
+    }
+
+    override fun onFeaturedImageIdChanged(mediaID: Long, isGutenbergEditor: Boolean) {
+        setFeaturedImageId(mediaID, false, isGutenbergEditor)
+    }
+
+    override fun onOpenMediaLibraryRequested(config: GutenbergView.OpenMediaLibraryConfig) {
+        editorPhotoPicker?.allowMultipleSelection = config.multiple
+        val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
+            config.allowedTypes,
+            config.multiple
+        )
+        val initialSelection = when (val value = config.value) {
+            is GutenbergView.Value.Single -> listOf(value.value)
+            is GutenbergView.Value.Multiple -> value.toList()
+            else -> emptyList()
+        }
+        openMediaLibrary(mediaType, initialSelection)
     }
 }

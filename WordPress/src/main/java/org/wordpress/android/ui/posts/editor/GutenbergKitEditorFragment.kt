@@ -21,7 +21,6 @@ import org.wordpress.android.R
 import org.wordpress.android.editor.BuildConfig
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
-import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
@@ -72,6 +71,62 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         }
     }
 
+    private fun initializeFragmentListeners() {
+        // Set up history change listener
+        historyChangeListener = object : HistoryChangeListener {
+            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
+                mEditorFragmentListener.onToggleUndo(!hasUndo)
+                mEditorFragmentListener.onToggleRedo(!hasRedo)
+            }
+        }
+
+        // Set up featured image change listener
+        featuredImageChangeListener = object : FeaturedImageChangeListener {
+            override fun onFeaturedImageChanged(mediaID: Long) {
+                mEditorFragmentListener.onFeaturedImageIdChanged(mediaID, true)
+            }
+        }
+
+        // Set up media library listener
+        openMediaLibraryListener = object : OpenMediaLibraryListener {
+            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
+                mEditorFragmentListener.onOpenMediaLibraryRequested(config)
+            }
+        }
+
+        // Set up JS exception listener
+        onLogJsExceptionListener = object : LogJsExceptionListener {
+            override fun onLogJsException(exception: org.wordpress.gutenberg.GutenbergJsException) {
+                val stackTraceElements = exception.stackTrace.map { stackTrace ->
+                    com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement(
+                        stackTrace.fileName,
+                        stackTrace.lineNumber,
+                        stackTrace.colNumber,
+                        stackTrace.function
+                    )
+                }
+
+                val jsException = com.automattic.android.tracks.crashlogging.JsException(
+                    exception.type,
+                    exception.message,
+                    stackTraceElements,
+                    exception.context,
+                    exception.tags,
+                    exception.isHandled,
+                    exception.handledBy
+                )
+
+                val callback = object : com.automattic.android.tracks.crashlogging.JsExceptionCallback {
+                    override fun onReportSent(sent: Boolean) {
+                        // Do nothing
+                    }
+                }
+
+                mEditorFragmentListener.onLogJsException(jsException, callback)
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -80,10 +135,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             settings = requireArguments().getSerializable(ARG_GUTENBERG_KIT_SETTINGS) as Map<String, Any?>?
         }
 
-        // request dependency injection. Do this after setting min/max dimensions
-        if (activity is EditorFragmentActivity) {
-            (activity as EditorFragmentActivity).initializeEditorFragment()
-        }
+        // Set up fragment's own listeners before initializing the editor
+        initializeFragmentListeners()
 
         mEditorFragmentListener.onEditorFragmentInitialized()
 
@@ -348,22 +401,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         }
 
         return ""
-    }
-
-    override fun onEditorHistoryChanged(listener: HistoryChangeListener) {
-        historyChangeListener = listener
-    }
-
-    override fun onFeaturedImageChanged(listener: FeaturedImageChangeListener) {
-        featuredImageChangeListener = listener
-    }
-
-    override fun onOpenMediaLibrary(listener: OpenMediaLibraryListener) {
-        openMediaLibraryListener = listener
-    }
-
-    override fun onLogJsException(listener: LogJsExceptionListener) {
-        onLogJsExceptionListener = listener
     }
 
     override fun getTitleOrContentChanged(): LiveData<Editable> {
