@@ -21,7 +21,9 @@ object GutenbergKitSettingsBuilder {
         val isUsingWpComRestApi: Boolean,
         val wpApiRestUrl: String?,
         val apiRestUsernamePlain: String?,
-        val apiRestPasswordPlain: String?
+        val apiRestPasswordPlain: String?,
+        val selfHostedSiteId: Long,
+        val webEditor: String
     ) {
         companion object {
             fun fromSiteModel(site: SiteModel): SiteConfig {
@@ -34,7 +36,9 @@ object GutenbergKitSettingsBuilder {
                     isUsingWpComRestApi = site.isUsingWpComRestApi,
                     wpApiRestUrl = site.wpApiRestUrl,
                     apiRestUsernamePlain = site.apiRestUsernamePlain,
-                    apiRestPasswordPlain = site.apiRestPasswordPlain
+                    apiRestPasswordPlain = site.apiRestPasswordPlain,
+                    selfHostedSiteId = site.selfHostedSiteId,
+                    webEditor = site.webEditor
                 )
             }
         }
@@ -203,11 +207,11 @@ object GutenbergKitSettingsBuilder {
             appConfig.accountUserId,
             appConfig.accountUserName,
             appConfig.accessToken,
-            if (siteConfig.isWPCom) 0 else siteConfig.siteId,
+            siteConfig.selfHostedSiteId,
             siteConfig.apiRestUsernamePlain,
             siteConfig.apiRestPasswordPlain,
             siteConfig.isUsingWpComRestApi,
-            "", // webEditor - not used in current implementation
+            siteConfig.webEditor,
             appConfig.userAgent.toString(),
             appConfig.isJetpackSsoEnabled
         )
