@@ -36,9 +36,4 @@ class UserAgent(
 
         "$systemUserAgent $appVersionName".trim()
     }
-
-    @Deprecated("Use apiUserAgent or webViewUserAgent instead")
-    override fun toString(): String {
-        error("Use apiUserAgent or webViewUserAgent instead") // TODO return to webViewUserAgent
-    }
 }
