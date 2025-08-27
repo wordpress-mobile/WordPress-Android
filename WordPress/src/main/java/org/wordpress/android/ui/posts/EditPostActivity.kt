@@ -2514,7 +2514,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 siteModel.password,
                 siteModel.isUsingWpComRestApi,
                 siteModel.webEditor,
-                userAgent.toString(),
+                userAgent.webViewUserAgent,
                 isJetpackSsoEnabled
             )
 
@@ -2540,7 +2540,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
 
                         // Set up custom headers for the visual editor's internal WebView
-                        editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
+                        editorFragment?.setCustomHttpHeader("User-Agent", userAgent.webViewUserAgent)
                         reattachUploadingMediaForAztec()
                     }
                 }

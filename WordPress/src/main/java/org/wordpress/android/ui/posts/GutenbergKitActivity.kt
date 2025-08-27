@@ -2258,7 +2258,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     }
 
                     // Set up custom headers for the visual editor's internal WebView
-                    editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
+                    editorFragment?.setCustomHttpHeader("User-Agent", userAgent.webViewUserAgent)
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }

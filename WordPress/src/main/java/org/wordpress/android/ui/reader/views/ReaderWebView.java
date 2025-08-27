@@ -107,7 +107,7 @@ public class ReaderWebView extends WPWebView {
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this, mUserAgent));
-            this.getSettings().setUserAgentString(mUserAgent.toString());
+            this.getSettings().setUserAgentString(mUserAgent.getWebViewUserAgent());
 
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images
@@ -314,7 +314,7 @@ public class ReaderWebView extends WPWebView {
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(TIMEOUT_MS);
                     conn.setConnectTimeout(TIMEOUT_MS);
-                    conn.setRequestProperty("User-Agent", mUserAgent.toString());
+                    conn.setRequestProperty("User-Agent", mUserAgent.getWebViewUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
                             conn.getContentEncoding(),

@@ -54,7 +54,7 @@ class EditPostAuthViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userName).thenReturn("testuser")
         whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(userAgent.toString()).thenReturn("WordPress/Test")
+        whenever(userAgent.webViewUserAgent).thenReturn("WordPress/Test")
 
         viewModel = EditPostAuthViewModel(
             testDispatcher(),
