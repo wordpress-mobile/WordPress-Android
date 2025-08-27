@@ -36,7 +36,7 @@ class EditPostAuthViewModel @Inject constructor(
         val authParams = WordPressCookieAuthenticator.AuthParams(
             username = accountStore.account.userName ?: "",
             bearerToken = accountStore.accessToken ?: "",
-            userAgent = userAgent.toString()
+            userAgent = userAgent.webViewUserAgent
         )
 
         launch {

@@ -109,7 +109,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.preloadPreview.observe(this) { url ->
             url?.let { urlString ->
                 webView.webViewClient = URLFilteredWebViewClient(urlString, this)
-                webView.settings.userAgentString = userAgent.toString()
+                webView.settings.userAgentString = userAgent.webViewUserAgent
                 webView.loadUrl(urlString)
             }
         }

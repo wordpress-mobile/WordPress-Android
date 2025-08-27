@@ -10,7 +10,7 @@ class SiteMonitorUtils @Inject constructor(
     private val userAgent: UserAgent,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    fun getUserAgent() = userAgent.toString()
+    fun getUserAgent() = userAgent.webViewUserAgent
 
     fun getAuthenticationPostData(authenticationUrl: String,
                                   urlToLoad: String,

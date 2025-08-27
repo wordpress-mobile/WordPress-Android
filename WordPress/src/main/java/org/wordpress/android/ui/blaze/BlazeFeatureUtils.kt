@@ -154,7 +154,7 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun getUserAgent() = userAgent.toString()
+    fun getUserAgent() = userAgent.apiUserAgent
 
     fun getAuthenticationPostData(authenticationUrl: String,
                                   urlToLoad: String,
