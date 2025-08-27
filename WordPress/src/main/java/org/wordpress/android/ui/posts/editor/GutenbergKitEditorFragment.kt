@@ -25,6 +25,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
+import org.wordpress.android.ui.posts.GutenbergKitSettingsBuilder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
@@ -537,6 +538,37 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             GutenbergKitEditorFragment.settings = settings
             db?.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData)
             return fragment
+        }
+
+        /**
+         * Simplified factory method that uses GutenbergKitSettingsBuilder for configuration.
+         * This reduces the activity's responsibility for detailed fragment setup.
+         */
+        fun newInstanceWithBuilder(
+            context: Context,
+            isNewPost: Boolean,
+            jetpackFeaturesEnabled: Boolean,
+            config: GutenbergKitSettingsBuilder.GutenbergKitConfig
+        ): GutenbergKitEditorFragment {
+            val authorizationData = GutenbergKitSettingsBuilder.buildAuthorizationData(
+                siteConfig = config.siteConfig,
+                appConfig = config.appConfig
+            )
+
+            val settings = GutenbergKitSettingsBuilder.buildSettings(
+                siteConfig = config.siteConfig,
+                postConfig = config.postConfig,
+                appConfig = config.appConfig,
+                featureConfig = config.featureConfig
+            )
+
+            return newInstance(
+                context,
+                isNewPost,
+                authorizationData,
+                jetpackFeaturesEnabled,
+                settings
+            )
         }
     }
 }
