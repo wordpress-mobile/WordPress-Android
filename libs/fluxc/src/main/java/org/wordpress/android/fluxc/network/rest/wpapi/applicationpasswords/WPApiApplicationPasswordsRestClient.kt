@@ -216,7 +216,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
             )
 
             request.addHeader("Authorization", Credentials.basic(credentials.userName, credentials.password))
-            request.setUserAgent(userAgent.userAgent)
+            request.setUserAgent(userAgent.apiUserAgent)
 
             noCookieRequestQueue.add(request)
         }

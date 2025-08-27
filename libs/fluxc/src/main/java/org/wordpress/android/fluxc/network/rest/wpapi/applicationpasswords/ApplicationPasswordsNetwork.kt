@@ -65,7 +65,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
             )
 
             request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
-            request.setUserAgent(userAgent.userAgent)
+            request.setUserAgent(userAgent.apiUserAgent)
 
             if (enableCaching) {
                 request.enableCaching(cacheTimeToLive)
