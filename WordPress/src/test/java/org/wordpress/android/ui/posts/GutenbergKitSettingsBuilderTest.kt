@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.network.UserAgent
 
@@ -10,6 +12,8 @@ import org.wordpress.android.fluxc.network.UserAgent
 @Suppress("LargeClass")
 class GutenbergKitSettingsBuilderTest {
     // ===== Plugin Logic Tests =====
+    @Mock
+    lateinit var appContext: Context
 
     @Test
     fun `plugins disabled when feature flag is off regardless of site configuration`() {
@@ -613,7 +617,7 @@ class GutenbergKitSettingsBuilderTest {
         cookies = cookies,
         accountUserId = 123L,
         accountUserName = "testuser",
-        userAgent = UserAgent(appContext = null, appName = "foo"),
+        userAgent = UserAgent(appContext = appContext, appName = "foo"),
         isJetpackSsoEnabled = false
     )
 
