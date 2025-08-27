@@ -380,8 +380,6 @@ class AppInitializer @Inject constructor(
             initAppOpsManager()
         }
 
-        AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgent")
-
         initialized = true
     }
 
