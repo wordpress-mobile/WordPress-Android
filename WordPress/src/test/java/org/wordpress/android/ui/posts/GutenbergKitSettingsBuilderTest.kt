@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.network.UserAgent
 
 @RunWith(MockitoJUnitRunner::class)
 @Suppress("LargeClass")
@@ -393,7 +394,11 @@ class GutenbergKitSettingsBuilderTest {
             isUsingWpComRestApi = true,
             wpApiRestUrl = null,
             apiRestUsernamePlain = null,
-            apiRestPasswordPlain = null
+            apiRestPasswordPlain = null,
+            selfHostedSiteId = 0,
+            webEditor = "gutenberg",
+            apiRestUsernameProcessed = null,
+            apiRestPasswordProcessed = null
         )
 
         val postConfig = GutenbergKitSettingsBuilder.PostConfig(
@@ -441,7 +446,11 @@ class GutenbergKitSettingsBuilderTest {
             isUsingWpComRestApi = false,
             wpApiRestUrl = "https://jetpack-site.com/wp-json/",
             apiRestUsernamePlain = "admin",
-            apiRestPasswordPlain = "securepass"
+            apiRestPasswordPlain = "securepass",
+            selfHostedSiteId = 999,
+            webEditor = "gutenberg",
+            apiRestUsernameProcessed = "admin",
+            apiRestPasswordProcessed = "securepass"
         )
 
         val postConfig = GutenbergKitSettingsBuilder.PostConfig(
@@ -601,7 +610,11 @@ class GutenbergKitSettingsBuilderTest {
     ) = GutenbergKitSettingsBuilder.AppConfig(
         accessToken = accessToken,
         locale = locale,
-        cookies = cookies
+        cookies = cookies,
+        accountUserId = 123L,
+        accountUserName = "testuser",
+        userAgent = UserAgent(appContext = null, appName = "foo"),
+        isJetpackSsoEnabled = false
     )
 
     private fun createSiteConfig(
@@ -623,7 +636,11 @@ class GutenbergKitSettingsBuilderTest {
         isUsingWpComRestApi = isUsingWpComRestApi,
         wpApiRestUrl = wpApiRestUrl,
         apiRestUsernamePlain = apiRestUsernamePlain,
-        apiRestPasswordPlain = apiRestPasswordPlain
+        apiRestPasswordPlain = apiRestPasswordPlain,
+        selfHostedSiteId = siteId,
+        webEditor = "gutenberg",
+        apiRestUsernameProcessed = apiRestUsernamePlain,
+        apiRestPasswordProcessed = apiRestPasswordPlain
     )
 
     private fun createPostConfig(

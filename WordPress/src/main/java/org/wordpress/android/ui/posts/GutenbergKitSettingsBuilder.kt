@@ -1,6 +1,12 @@
 package org.wordpress.android.ui.posts
 
 import android.util.Base64
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
+import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
+import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
@@ -17,15 +23,50 @@ object GutenbergKitSettingsBuilder {
         val isUsingWpComRestApi: Boolean,
         val wpApiRestUrl: String?,
         val apiRestUsernamePlain: String?,
-        val apiRestPasswordPlain: String?
-    )
+        val apiRestPasswordPlain: String?,
+        val selfHostedSiteId: Long,
+        val webEditor: String,
+        val apiRestUsernameProcessed: String?,
+        val apiRestPasswordProcessed: String?
+    ) {
+        companion object {
+            fun fromSiteModel(site: SiteModel): SiteConfig {
+                return SiteConfig(
+                    url = site.url,
+                    siteId = site.siteId,
+                    isWPCom = site.isWPCom,
+                    isWPComAtomic = site.isWPComAtomic,
+                    isJetpackConnected = site.isJetpackConnected,
+                    isUsingWpComRestApi = site.isUsingWpComRestApi,
+                    wpApiRestUrl = site.wpApiRestUrl,
+                    apiRestUsernamePlain = site.apiRestUsernamePlain,
+                    apiRestPasswordPlain = site.apiRestPasswordPlain,
+                    selfHostedSiteId = site.selfHostedSiteId,
+                    webEditor = site.webEditor,
+                    apiRestUsernameProcessed = site.getUserNameProcessed(),
+                    apiRestPasswordProcessed = site.getPasswordProcessed()
+                )
+            }
+        }
+    }
 
     data class PostConfig(
         val remotePostId: Long?,
         val isPage: Boolean,
         val title: String?,
         val content: String?
-    )
+    ) {
+        companion object {
+            fun fromPostModel(postModel: PostImmutableModel?): PostConfig {
+                return PostConfig(
+                    remotePostId = postModel?.remotePostId,
+                    isPage = postModel?.isPage ?: false,
+                    title = postModel?.title,
+                    content = postModel?.content
+                )
+            }
+        }
+    }
 
     data class FeatureConfig(
         val isPluginsFeatureEnabled: Boolean,
@@ -35,7 +76,18 @@ object GutenbergKitSettingsBuilder {
     data class AppConfig(
         val accessToken: String?,
         val locale: String,
-        val cookies: Any?
+        val cookies: Any?,
+        val accountUserId: Long,
+        val accountUserName: String?,
+        val userAgent: UserAgent,
+        val isJetpackSsoEnabled: Boolean
+    )
+
+    data class GutenbergKitConfig(
+        val siteConfig: SiteConfig,
+        val postConfig: PostConfig,
+        val appConfig: AppConfig,
+        val featureConfig: FeatureConfig
     )
 
     /**
@@ -146,5 +198,28 @@ object GutenbergKitSettingsBuilder {
         // 2. Jetpack-connected sites with application passwords (when feature is enabled)
         return isFeatureEnabled &&
                 (isWPComSite || (isJetpackConnected && !applicationPassword.isNullOrEmpty()))
+    }
+
+    /**
+     * Builds Gutenberg WebView authorization data for the fragment.
+     */
+    fun buildAuthorizationData(
+        siteConfig: SiteConfig,
+        appConfig: AppConfig
+    ): GutenbergWebViewAuthorizationData {
+        return GutenbergWebViewAuthorizationData(
+            siteConfig.url,
+            siteConfig.isWPCom || siteConfig.isWPComAtomic,
+            appConfig.accountUserId,
+            appConfig.accountUserName,
+            appConfig.accessToken,
+            siteConfig.selfHostedSiteId,
+            siteConfig.apiRestUsernameProcessed,
+            siteConfig.apiRestPasswordProcessed,
+            siteConfig.isUsingWpComRestApi,
+            siteConfig.webEditor,
+            appConfig.userAgent.toString(),
+            appConfig.isJetpackSsoEnabled
+        )
     }
 }
