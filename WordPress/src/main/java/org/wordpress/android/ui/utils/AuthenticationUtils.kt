@@ -20,7 +20,7 @@ class AuthenticationUtils
     @Suppress("ImplicitDefaultLocale")
     fun getAuthHeaders(url: String): Map<String, String> {
         val headers = mutableMapOf<String, String>()
-        headers["User-Agent"] = userAgent.apiUserAgent
+        headers["User-Agent"] = userAgent.webViewUserAgent
 
         // add cookie header to Aztec media requests on private Atomic sites
         if (privateAtomicCookie.exists() && WPUrlUtils.safeToAddPrivateAtCookie(url, privateAtomicCookie.getDomain())) {
