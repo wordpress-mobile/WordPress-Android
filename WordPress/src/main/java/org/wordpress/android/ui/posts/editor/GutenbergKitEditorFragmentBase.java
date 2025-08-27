@@ -20,10 +20,6 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.gutenberg.GutenbergView.FeaturedImageChangeListener;
-import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener;
-import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener;
-import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,10 +36,6 @@ public abstract class GutenbergKitEditorFragmentBase extends Fragment {
             throws EditorFragmentAbstract.EditorFragmentNotAddedException;
     public abstract Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentAbstract.EditorFragmentNotAddedException;
-    public abstract void onEditorHistoryChanged(HistoryChangeListener listener);
-    public abstract void onFeaturedImageChanged(FeaturedImageChangeListener listener);
-    public abstract void onOpenMediaLibrary(OpenMediaLibraryListener listener);
-    public abstract void onLogJsException(LogJsExceptionListener listener);
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
 
@@ -155,5 +147,7 @@ public abstract class GutenbergKitEditorFragmentBase extends Fragment {
         void onToggleUndo(boolean isDisabled);
         void onToggleRedo(boolean isDisabled);
         void onLogJsException(JsException jsException, JsExceptionCallback onSendJsException);
+        void onFeaturedImageIdChanged(long mediaID, boolean isGutenbergEditor);
+        void onOpenMediaLibraryRequested(org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryConfig config);
     }
 }

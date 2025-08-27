@@ -12,7 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
-import android.util.Base64
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -42,7 +41,6 @@ import androidx.lifecycle.distinctUntilChanged
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.JsException
 import com.automattic.android.tracks.crashlogging.JsExceptionCallback
-import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -61,7 +59,6 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragmentBase.EditorFragmentListener
-import org.wordpress.android.editor.EditorFragmentActivity
 import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.EditorImageSettingsListener
@@ -231,7 +228,6 @@ import org.wordpress.android.ui.posts.navigation.EditPostDestination
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
-import org.wordpress.gutenberg.GutenbergJsException
 import org.wordpress.gutenberg.GutenbergView
 import java.io.File
 import java.util.regex.Matcher
@@ -248,153 +244,8 @@ private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 
 private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
 
-object GutenbergKitSettingsBuilder {
-    private const val AUTH_BEARER_PREFIX = "Bearer "
-    private const val AUTH_BASIC_PREFIX = "Basic "
-
-    data class SiteConfig(
-        val url: String,
-        val siteId: Long,
-        val isWPCom: Boolean,
-        val isWPComAtomic: Boolean,
-        val isJetpackConnected: Boolean,
-        val isUsingWpComRestApi: Boolean,
-        val wpApiRestUrl: String?,
-        val apiRestUsernamePlain: String?,
-        val apiRestPasswordPlain: String?
-    )
-
-    data class PostConfig(
-        val remotePostId: Long?,
-        val isPage: Boolean,
-        val title: String?,
-        val content: String?
-    )
-
-    data class FeatureConfig(
-        val isPluginsFeatureEnabled: Boolean,
-        val isThemeStylesFeatureEnabled: Boolean
-    )
-
-    data class AppConfig(
-        val accessToken: String?,
-        val locale: String,
-        val cookies: Any?
-    )
-
-    /**
-     * Builds the settings configuration for GutenbergKit editor.
-     *
-     * This method determines the appropriate authentication method based on site type:
-     * - WP.com sites use Bearer token authentication with the public API
-     * - Jetpack/self-hosted sites with application passwords use Basic authentication
-     * - Falls back to WP.com REST API when no application password is available
-     */
-    fun buildSettings(
-        siteConfig: SiteConfig,
-        postConfig: PostConfig,
-        appConfig: AppConfig,
-        featureConfig: FeatureConfig
-    ): MutableMap<String, Any?> {
-        val applicationPassword = siteConfig.apiRestPasswordPlain
-        val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteConfig.isUsingWpComRestApi
-
-        val siteApiRoot = if (shouldUseWPComRestApi) "https://public-api.wordpress.com/"
-            else siteConfig.wpApiRestUrl ?: "${siteConfig.url}/wp-json/"
-
-        val authHeader = buildAuthHeader(
-            shouldUseWPComRestApi = shouldUseWPComRestApi,
-            accessToken = appConfig.accessToken,
-            username = siteConfig.apiRestUsernamePlain,
-            password = applicationPassword
-        )
-
-        val siteApiNamespace = if (shouldUseWPComRestApi)
-            arrayOf("sites/${siteConfig.siteId}/", "sites/${UrlUtils.removeScheme(siteConfig.url)}/")
-            else arrayOf()
-
-        val wpcomLocaleSlug = appConfig.locale.replace("_", "-").lowercase()
-
-        return mutableMapOf(
-            "postId" to postConfig.remotePostId?.toInt(),
-            "postType" to if (postConfig.isPage) "page" else "post",
-            "postTitle" to postConfig.title,
-            "postContent" to postConfig.content,
-            "siteURL" to siteConfig.url,
-            "siteApiRoot" to siteApiRoot,
-            "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-            "authHeader" to authHeader,
-            "siteApiNamespace" to siteApiNamespace,
-            "themeStyles" to featureConfig.isThemeStylesFeatureEnabled,
-            "plugins" to shouldUsePlugins(
-                isFeatureEnabled = featureConfig.isPluginsFeatureEnabled,
-                isWPComSite = siteConfig.isWPCom,
-                isJetpackConnected = siteConfig.isJetpackConnected,
-                applicationPassword = applicationPassword
-            ),
-            "locale" to wpcomLocaleSlug,
-            "cookies" to appConfig.cookies
-        )
-    }
-
-    /**
-     * Builds the authentication header based on the authentication method.
-     *
-     * @param shouldUseWPComRestApi True if using WP.com REST API (Bearer auth)
-     * @param accessToken The OAuth2 access token for WP.com authentication
-     * @param username The username for Basic auth (application passwords)
-     * @param password The password for Basic auth (application passwords)
-     * @return The formatted authentication header string, or null if credentials are invalid
-     */
-    private fun buildAuthHeader(
-        shouldUseWPComRestApi: Boolean,
-        accessToken: String?,
-        username: String?,
-        password: String?
-    ): String? {
-        return if (shouldUseWPComRestApi) {
-            if (!accessToken.isNullOrEmpty()) {
-                "$AUTH_BEARER_PREFIX$accessToken"
-            } else {
-                AppLog.w(AppLog.T.EDITOR, "Missing access token for WP.com REST API authentication")
-                null
-            }
-        } else {
-            if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                try {
-                    val credentials = "$username:$password"
-                    val encodedCredentials = Base64.encodeToString(
-                        credentials.toByteArray(Charsets.UTF_8),
-                        Base64.NO_WRAP
-                    )
-                    "$AUTH_BASIC_PREFIX$encodedCredentials"
-                } catch (e: IllegalArgumentException) {
-                    AppLog.e(AppLog.T.EDITOR, "Failed to encode Basic auth credentials", e)
-                    null
-                }
-            } else {
-                AppLog.w(AppLog.T.EDITOR, "Incomplete credentials for Basic authentication")
-                null
-            }
-        }
-    }
-
-    private fun shouldUsePlugins(
-        isFeatureEnabled: Boolean,
-        isWPComSite: Boolean,
-        isJetpackConnected: Boolean,
-        applicationPassword: String?
-    ): Boolean {
-        // Enable plugins for:
-        // 1. WP.com Simple sites (when feature is enabled)
-        // 2. Jetpack-connected sites with application passwords (when feature is enabled)
-        return isFeatureEnabled &&
-            (isWPComSite || (isJetpackConnected && !applicationPassword.isNullOrEmpty()))
-    }
-}
-
 @Suppress("LargeClass")
-class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
     EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
@@ -2047,64 +1898,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
         }?:run { return UpdateFromEditor.Failed(java.lang.Exception("Impossible to save post, editor frag is null.")) }
     }
 
-    override fun initializeEditorFragment() {
-        editorFragment?.onEditorHistoryChanged(object : GutenbergView.HistoryChangeListener {
-            override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
-                onToggleUndo(!hasUndo)
-                onToggleRedo(!hasRedo)
-            }
-        })
-        editorFragment?.onFeaturedImageChanged(object : GutenbergView.FeaturedImageChangeListener {
-            override fun onFeaturedImageChanged(mediaID: Long) {
-                setFeaturedImageId(mediaID, false, true)
-            }
-        })
-        editorFragment?.onOpenMediaLibrary(object: GutenbergView.OpenMediaLibraryListener {
-            override fun onOpenMediaLibrary(config: GutenbergView.OpenMediaLibraryConfig) {
-                editorPhotoPicker?.allowMultipleSelection = config.multiple
-                val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
-                    config.allowedTypes,
-                    config.multiple
-                )
-                val initialSelection = when (val value = config.value) {
-                    is GutenbergView.Value.Single -> listOf(value.value)
-                    is GutenbergView.Value.Multiple -> value.toList()
-                    else -> emptyList()
-                }
-                openMediaLibrary(mediaType, initialSelection)
-            }
-        })
-        editorFragment?.onLogJsException(object : GutenbergView.LogJsExceptionListener {
-            override fun onLogJsException(exception: GutenbergJsException) {
-                val stackTraceElements = exception.stackTrace.map { stackTrace ->
-                    JsExceptionStackTraceElement(
-                        stackTrace.fileName,
-                        stackTrace.lineNumber,
-                        stackTrace.colNumber,
-                        stackTrace.function
-                    )
-                }
-
-                val jsException = JsException(
-                    exception.type,
-                    exception.message,
-                    stackTraceElements,
-                    exception.context,
-                    exception.tags,
-                    exception.isHandled,
-                    exception.handledBy
-                )
-
-                val callback = object : JsExceptionCallback {
-                    override fun onReportSent(sent: Boolean) {
-                        // Do nothing
-                    }
-                }
-
-                onLogJsException(jsException, callback)
-            }
-        })
-    }
 
     override fun onImageSettingsRequested(editorImageMetaData: EditorImageMetaData) {
         MediaSettingsActivity.showForResult(this, siteModel, editorImageMetaData)
@@ -3417,5 +3210,23 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorFragmentActivity, Ed
 
     override fun onLogJsException(exception: JsException, onSendJsException: JsExceptionCallback) {
         crashLogging.sendJavaScriptReport(exception, onSendJsException)
+    }
+
+    override fun onFeaturedImageIdChanged(mediaID: Long, isGutenbergEditor: Boolean) {
+        setFeaturedImageId(mediaID, false, isGutenbergEditor)
+    }
+
+    override fun onOpenMediaLibraryRequested(config: GutenbergView.OpenMediaLibraryConfig) {
+        editorPhotoPicker?.allowMultipleSelection = config.multiple
+        val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
+            config.allowedTypes,
+            config.multiple
+        )
+        val initialSelection = when (val value = config.value) {
+            is GutenbergView.Value.Single -> listOf(value.value)
+            is GutenbergView.Value.Multiple -> value.toList()
+            else -> emptyList()
+        }
+        openMediaLibrary(mediaType, initialSelection)
     }
 }
