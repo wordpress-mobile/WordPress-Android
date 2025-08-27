@@ -39,6 +39,6 @@ class UserAgent(
 
     @Deprecated("Use apiUserAgent or webViewUserAgent instead")
     override fun toString(): String {
-        error("Use apiUserAgent or webViewUserAgent instead")
+        error("Use apiUserAgent or webViewUserAgent instead") // TODO return to webViewUserAgent
     }
 }
