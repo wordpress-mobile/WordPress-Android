@@ -15,7 +15,7 @@ class UserAgent(
 
     /**
      * User-Agent string when making API requests.
-     * See https://github.com/woocommerce/woocommerce-android/pull/14431/files
+     * See https://github.com/woocommerce/woocommerce-android/pull/14431/
      */
     val apiUserAgent: String by lazy {
         val systemUserAgent = System.getProperty("http.agent") ?: ""
@@ -35,5 +35,10 @@ class UserAgent(
         }.getOrNull().orEmpty()
 
         "$systemUserAgent $appVersionName".trim()
+    }
+
+    @Deprecated("Use apiUserAgent or webViewUserAgent instead")
+    override fun toString(): String {
+        error("Use apiUserAgent or webViewUserAgent instead") // TODO return to webViewUserAgent
     }
 }

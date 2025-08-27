@@ -23,7 +23,7 @@ class UserAgentTest {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenReturn(USER_AGENT)
             val result = UserAgent(context, APP_NAME)
-            assertEquals("$USER_AGENT $APP_NAME/$APP_VERSION", result.toString())
+            assertEquals("$USER_AGENT $APP_NAME/$APP_VERSION", result.webViewUserAgent)
         }
     }
 
@@ -32,7 +32,7 @@ class UserAgentTest {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenThrow(RuntimeException(""))
             val result = UserAgent(context, APP_NAME)
-            assertEquals("$APP_NAME/$APP_VERSION", result.toString())
+            assertEquals("$APP_NAME/$APP_VERSION", result.webViewUserAgent)
         }
     }
 
