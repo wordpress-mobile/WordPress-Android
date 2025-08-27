@@ -322,7 +322,7 @@ class AppInitializer @Inject constructor(
                 .installDefaultEventBus()
         }
 
-        RestClientUtils.setUserAgent(userAgent.toString())
+        RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
         if (!initialized) {
             zendeskHelper.setupZendesk(
