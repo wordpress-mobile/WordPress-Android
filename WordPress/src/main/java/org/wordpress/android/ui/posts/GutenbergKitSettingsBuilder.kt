@@ -25,7 +25,7 @@ object GutenbergKitSettingsBuilder {
         val apiRestUsernamePlain: String?,
         val apiRestPasswordPlain: String?,
         val selfHostedSiteId: Long,
-        val webEditor: String,
+        val webEditor: String?,
         val apiRestUsernameProcessed: String?,
         val apiRestPasswordProcessed: String?
     ) {
