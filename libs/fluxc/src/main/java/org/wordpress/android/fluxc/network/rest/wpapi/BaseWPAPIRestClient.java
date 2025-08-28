@@ -45,7 +45,7 @@ public abstract class BaseWPAPIRestClient {
 
     private BaseRequest setRequestAuthParams(BaseRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
-        request.setUserAgent(mUserAgent.getUserAgent());
+        request.setUserAgent(mUserAgent.getApiUserAgent());
         return request;
     }
 }

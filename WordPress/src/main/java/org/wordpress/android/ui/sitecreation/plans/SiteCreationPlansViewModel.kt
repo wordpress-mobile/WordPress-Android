@@ -80,7 +80,7 @@ class SiteCreationPlansViewModel @Inject constructor(
             SiteCreationPlansModel(
                 enableJavascript = true,
                 enableDomStorage = true,
-                userAgent = userAgent.toString(),
+                userAgent = userAgent.webViewUserAgent,
                 enableChromeClient = true,
                 url = url,
                 addressToLoad = addressToLoad

@@ -63,7 +63,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
                 url(it)
             } ?: url(url)
             addHeader("Authorization", "Bearer ${jwtToken.value}")
-            addHeader("User-Agent",  userAgent.toString())
+            addHeader("User-Agent",  userAgent.apiUserAgent)
             post(requestBody)
         }.build()
 

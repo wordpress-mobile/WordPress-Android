@@ -39,7 +39,7 @@ public class UserAgentTest {
 
     @Test
     public void testGetUserAgentAndGetDefaultUserAgent() {
-        String userAgent = mUserAgent.toString();
+        String userAgent = mUserAgent.getWebViewUserAgent();
         assertNotNull("User-Agent must be set", userAgent);
         assertTrue("User-Agent must not be an empty string", userAgent.length() > 0);
         assertTrue("User-Agent must contain app name substring", userAgent.contains(USER_AGENT_APPNAME));

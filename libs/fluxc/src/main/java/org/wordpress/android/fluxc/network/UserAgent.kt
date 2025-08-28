@@ -2,41 +2,38 @@ package org.wordpress.android.fluxc.network
 
 import android.content.Context
 import android.webkit.WebSettings
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
-import javax.inject.Singleton
 
-@Singleton
-@SuppressWarnings("SwallowedException", "TooGenericExceptionCaught", "MemberNameEqualsClassName")
-class UserAgent(appContext: Context?, appName: String) {
-    var userAgent: String
-        private set
-
-    init {
-        // Device's default User-Agent string.
-        // E.g.:
-        //   "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-        //   AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile Safari/537.36"
-        val defaultUserAgent = appContext?.let {
-            try {
-                WebSettings.getDefaultUserAgent(appContext)
-            } catch (_: RuntimeException) {
-                // `getDefaultUserAgent()` can throw an Exception
-                // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
-                ""
-            }
-        } ?: ""
-        // User-Agent string when making HTTP connections, for both API traffic and WebViews.
-        // Appends "wp-android/version" to WebView's default User-Agent string for the webservers
-        // to get the full feature list of the browser and serve content accordingly, e.g.:
-        //    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-        //    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile Safari/537.36
-        //    wp-android/4.7"
-        val versionName = appContext?.let {
-            PackageUtils.getVersionName(appContext)
-        } ?: "0" // PackageUtils.getVersionName will also return "0" if it can't find packageInfo
-        val appWithVersion = "$appName/$versionName"
-        userAgent = if (defaultUserAgent.isNotEmpty()) "$defaultUserAgent $appWithVersion" else appWithVersion
+class UserAgent(
+    private val appContext: Context,
+    private val appName: String
+) {
+    private val appVersionName by lazy {
+        "$appName/${PackageUtils.getVersionName(appContext)}"
     }
 
-    override fun toString(): String = userAgent
+    /**
+     * User-Agent string when making API requests.
+     * See https://github.com/woocommerce/woocommerce-android/pull/14431/
+     */
+    val apiUserAgent: String by lazy {
+        val systemUserAgent = System.getProperty("http.agent") ?: ""
+        "$systemUserAgent $appVersionName".trim()
+    }
+
+    /**
+     * User-Agent string to be used in WebView.
+     */
+    val webViewUserAgent: String by lazy {
+        val systemUserAgent = runCatching {
+            WebSettings.getDefaultUserAgent(appContext)
+        }.onFailure {
+            // `getDefaultUserAgent()` can throw an Exception
+            // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
+            AppLog.e(AppLog.T.UTILS, "Error getting default user agent", it)
+        }.getOrNull().orEmpty()
+
+        "$systemUserAgent $appVersionName".trim()
+    }
 }

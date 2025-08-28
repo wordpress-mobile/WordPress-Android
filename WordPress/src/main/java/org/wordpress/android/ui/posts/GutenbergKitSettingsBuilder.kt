@@ -218,7 +218,7 @@ object GutenbergKitSettingsBuilder {
             siteConfig.apiRestPasswordProcessed,
             siteConfig.isUsingWpComRestApi,
             siteConfig.webEditor,
-            appConfig.userAgent.toString(),
+            appConfig.userAgent.webViewUserAgent,
             appConfig.isJetpackSsoEnabled
         )
     }

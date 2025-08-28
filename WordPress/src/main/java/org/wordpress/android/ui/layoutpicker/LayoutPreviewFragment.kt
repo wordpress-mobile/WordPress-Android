@@ -129,7 +129,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         binding?.previewTypeSelectorButton?.setOnClickListener { viewModel.onPreviewModePressed() }
 
-        binding?.webView?.settings?.userAgentString = userAgent.toString()
+        binding?.webView?.settings?.userAgentString = userAgent.webViewUserAgent
         binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)

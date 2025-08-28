@@ -1041,7 +1041,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         }
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        request.addRequestHeader("User-Agent", mUserAgent.toString());
+        request.addRequestHeader("User-Agent", mUserAgent.getApiUserAgent());
 
         mDownloadId = dm.enqueue(request);
         invalidateOptionsMenu();

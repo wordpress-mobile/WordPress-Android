@@ -34,7 +34,7 @@ class ExoPlayerUtils @Inject constructor(
 
     fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSourceFactory {
         if (httpDataSourceFactory == null) {
-            httpDataSourceFactory = DefaultHttpDataSourceFactory(userAgent.toString())
+            httpDataSourceFactory = DefaultHttpDataSourceFactory(userAgent.webViewUserAgent)
         }
         httpDataSourceFactory?.defaultRequestProperties?.set(authenticationUtils.getAuthHeaders(url))
         return httpDataSourceFactory as DefaultHttpDataSourceFactory

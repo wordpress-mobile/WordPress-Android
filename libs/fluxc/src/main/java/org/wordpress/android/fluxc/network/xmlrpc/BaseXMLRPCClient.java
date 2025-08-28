@@ -62,7 +62,7 @@ public abstract class BaseXMLRPCClient {
     private BaseRequest setRequestAuthParams(BaseRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setOnParseErrorListener(mOnParseErrorListener);
-        request.setUserAgent(mUserAgent.getUserAgent());
+        request.setUserAgent(mUserAgent.getApiUserAgent());
         request.setHTTPAuthHeaderOnMatchingURL(mHTTPAuthManager);
         return request;
     }

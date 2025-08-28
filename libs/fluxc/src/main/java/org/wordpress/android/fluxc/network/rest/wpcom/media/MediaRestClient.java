@@ -199,7 +199,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         Request request = new Request.Builder()
                 .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
-                .addHeader("User-Agent", mUserAgent.toString())
+                .addHeader("User-Agent", mUserAgent.getApiUserAgent())
                 .url(url)
                 .post(body)
                 .build();

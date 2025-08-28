@@ -39,7 +39,7 @@ public class ReaderVideoViewerActivity extends BaseAppCompatActivity {
         mWebView.setBackgroundColor(Color.TRANSPARENT);
         mWebView.getSettings().setJavaScriptEnabled(true);
         if (mUserAgent != null) {
-            mWebView.getSettings().setUserAgentString(mUserAgent.toString());
+            mWebView.getSettings().setUserAgentString(mUserAgent.getWebViewUserAgent());
         }
 
         mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(
