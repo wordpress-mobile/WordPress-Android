@@ -1,0 +1,3 @@
+- Connect your self-hosted sites to Jetpack with our new streamlined flow—available right from Stats and Notifications.
+- We've added support for mentions in the editor—tag your friends and collaborators with ease.
+- Media selection just got more accessible for everyone.
