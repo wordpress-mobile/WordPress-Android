@@ -10,18 +10,19 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_262"
+msgid ""
+"26.2:\n"
+"- We've added support for mentions in the experimental editor—tag your friends and collaborators with ease.\n"
+"- Media selection just got more accessible for everyone.\n"
+msgstr ""
+
 msgctxt "release_note_261"
 msgid ""
 "26.1:\n"
 "- Media now displays properly on private sites in the experimental editor.\n"
 "- Enhanced media uploads with better authentication and improved performance.\n"
 "- Fixed various upload bugs and improved overall media handling.\n"
-msgstr ""
-
-msgctxt "release_note_260"
-msgid ""
-"26.0:\n"
-"We’ve added Application Passwords authentication. It’s still experimental, but once it’s fully integrated, we’ll be able to improve existing features and introduce new ones. Rock on.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

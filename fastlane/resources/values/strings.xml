@@ -978,8 +978,6 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
-    <string name="experimental_jetpack_rest_connection">Experimental Jetpack REST Connection</string>
-    <string name="experimental_jetpack_rest_connection_description">Enable experimental Jetpack REST Connection flow</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -1009,11 +1007,11 @@
 
     <!-- Jetpack REST Connection Screen -->
     <string name="jetpack_rest_connection_title">Jetpack Connection</string>
-    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack (Simulated)</string>
+    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login to WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
-    <string name="jetpack_rest_connection_step_connect_site">Connect your site</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connect site to WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_user">Connect user to WordPress.com</string>
     <string name="jetpack_rest_connection_step_finalize">Finalize setup</string>
     <string name="jetpack_rest_connection_status_not_started">Not started</string>
     <string name="jetpack_rest_connection_status_in_progress">In progress…</string>
@@ -1021,11 +1019,17 @@
     <string name="jetpack_rest_connection_status_failed">Failed</string>
     <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
     <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is already installed</string>
     <string name="jetpack_rest_connection_error_timeout">Timed out</string>
     <string name="jetpack_rest_connection_error_unknown" translatable="false">@string/error_generic</string>
     <string name="jetpack_rest_connection_error_offline" translatable="false">@string/no_network_title</string>
-    <string name="jetpack_rest_connection_error_wpcom">Unable to connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Install failed</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
+    <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
+    <string name="jetpack_rest_connection_error_connect_user">Failed to connect user to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_access_token">Access token missing</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Failed to activate stats</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
@@ -1576,6 +1580,7 @@
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
+    <string name="content_description_empty_view">Image illustrating that the view is empty</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
@@ -5071,4 +5076,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_name_sort">Name</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_last_used_sort">Last used</string>
+
+    <!-- DataView -->
+    <string name="dataview_default_empty_message">There\'s nothing here</string>
 </resources>
