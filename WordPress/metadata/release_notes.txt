@@ -1,3 +1,0 @@
-- Media now displays properly on private sites in the experimental editor.
-- Enhanced media uploads with better authentication and improved performance.
-- Fixed various upload bugs and improved overall media handling.
