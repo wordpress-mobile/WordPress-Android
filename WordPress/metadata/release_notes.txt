@@ -1,2 +1,2 @@
-- We've added support for mentions in the editor—tag your friends and collaborators with ease.
+- We've added support for mentions in the experimental editor—tag your friends and collaborators with ease.
 - Media selection just got more accessible for everyone.

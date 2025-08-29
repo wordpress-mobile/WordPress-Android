@@ -132,6 +132,7 @@ Focus on user-facing changes from squash commit messages. **Important**: When co
 
 #### 4. Compile Raw Release Notes
 Create factual summary including:
+- **Always check RELEASE-NOTES.txt file** (note: hyphen, not underscore) for developer-authored release notes under the version number section. These notes start with `[*]`, `[**]`, or `[***]` (stars indicate importance) and **must be included** in the raw release notes
 - Only user-facing changes (exclude CI, refactoring, technical debt)
 - Prioritize: New features → Improvements → Performance enhancements
 - Use positive language (avoid "bug fix", prefer "improved", "enhanced", "resolved")
