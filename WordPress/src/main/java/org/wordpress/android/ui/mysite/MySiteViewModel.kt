@@ -52,6 +52,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
+import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -79,6 +80,7 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
+    private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -285,6 +287,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
+        gutenbergKitWarmupHelper.clearWarmupState()
         super.onCleared()
     }
 
@@ -389,6 +392,8 @@ class MySiteViewModel @Inject constructor(
             dashboardItemsViewModelSlice.buildItems(site)
             dashboardCardsViewModelSlice.clearValue()
         }
+        // Trigger GutenbergView warmup for the selected site
+        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
     }
 
     private fun onSitePicked(site: SiteModel) {
@@ -397,6 +402,8 @@ class MySiteViewModel @Inject constructor(
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
+        // Trigger GutenbergView warmup for the newly selected site
+        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
         dashboardItemsViewModelSlice.resetShownTracker()
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
