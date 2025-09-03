@@ -19,66 +19,60 @@ object EditorConfigurationBuilder {
         settings: Map<String, Any?>,
         editorSettings: String? = null
     ): EditorConfiguration {
-        return settings.run {
-            // Extract key values
-            val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
-            val siteURL = getSetting<String>("siteURL") ?: ""
-            val siteApiRoot = getSetting<String>("siteApiRoot") ?: ""
-            val siteApiNamespace = getStringArray("siteApiNamespace")
-            val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
-            val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
-            val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
+        return EditorConfiguration.builder().apply {
+            val postId = settings.getSetting<Int>("postId")?.let { if (it == 0) -1 else it }
+            val siteURL = settings.getSetting<String>("siteURL") ?: ""
+            val siteApiNamespace = settings.getStringArray("siteApiNamespace")
 
-            // Construct editor assets endpoint
-            val editorAssetsEndpoint = if (firstNamespace.isNotEmpty() && siteApiRoot.isNotEmpty()) {
-                "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
-            } else {
-                null
-            }
+            // Post settings
+            setTitle(settings.getSetting<String>("postTitle") ?: "")
+            setContent(settings.getSetting<String>("postContent") ?: "")
+            setPostId(postId)
+            setPostType(settings.getSetting<String>("postType"))
 
-            // Build EditorConfiguration
-            EditorConfiguration.builder().apply {
-                // Post data
-                setTitle(getSetting<String>("postTitle") ?: "")
-                setContent(getSetting<String>("postContent") ?: "")
-                setPostId(postId)
-                setPostType(getSetting<String>("postType"))
+            // Site settings
+            setSiteURL(siteURL)
+            setSiteApiRoot(settings.getSetting<String>("siteApiRoot") ?: "")
+            setSiteApiNamespace(siteApiNamespace)
+            setNamespaceExcludedPaths(settings.getStringArray("namespaceExcludedPaths"))
+            setAuthHeader(settings.getSetting<String>("authHeader") ?: "")
 
-                // Site configuration
-                setSiteURL(siteURL)
-                setSiteApiRoot(siteApiRoot)
-                setSiteApiNamespace(siteApiNamespace)
-                setNamespaceExcludedPaths(namespaceExcludedPaths)
+            // Features
+            setThemeStyles(settings.getSettingOrDefault("themeStyles", false))
+            setPlugins(settings.getSettingOrDefault("plugins", false))
+            setHideTitle(false)
+            setLocale(settings.getSetting<String>("locale") ?: "en")
 
-                // Authentication
-                setAuthHeader(getSetting<String>("authHeader") ?: "")
+            // Editor asset caching configuration
+            configureEditorAssetCaching(settings, siteURL, siteApiNamespace)
 
-                // Features
-                setThemeStyles(getSettingOrDefault("themeStyles", false))
-                setPlugins(getSettingOrDefault("plugins", false))
-                setHideTitle(false)
+            // Cookies
+            setCookies(settings.getSetting<Map<String, String>>("cookies") ?: emptyMap())
 
-                // Localization
-                setLocale(getSetting<String>("locale") ?: "en")
+            // Editor settings (null for warmup scenarios)
+            setEditorSettings(editorSettings)
+        }.build()
+    }
 
-                // Assets and caching
-                setEnableAssetCaching(true)
-                val siteHost = UrlUtils.getHost(siteURL)
-                if (!siteHost.isNullOrEmpty()) {
-                    setCachedAssetHosts(setOf("s0.wp.com", siteHost))
-                } else {
-                    setCachedAssetHosts(setOf("s0.wp.com"))
-                }
-                if (editorAssetsEndpoint != null) {
-                    setEditorAssetsEndpoint(editorAssetsEndpoint)
-                }
+    private fun EditorConfiguration.Builder.configureEditorAssetCaching(
+        settings: Map<String, Any?>,
+        siteURL: String,
+        siteApiNamespace: Array<String>
+    ) {
+        setEnableAssetCaching(true)
 
-                // Cookies
-                setCookies(cookies)
+        val siteHost = UrlUtils.getHost(siteURL)
+        val cachedHosts = if (!siteHost.isNullOrEmpty()) {
+            setOf("s0.wp.com", siteHost)
+        } else {
+            setOf("s0.wp.com")
+        }
+        setCachedAssetHosts(cachedHosts)
 
-                // Editor settings (null for warmup scenarios)
-                setEditorSettings(editorSettings)
-            }.build()
+        val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
+        val siteApiRoot = settings.getSetting<String>("siteApiRoot") ?: ""
+        if (firstNamespace.isNotEmpty() && siteApiRoot.isNotEmpty()) {
+            setEditorAssetsEndpoint("${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets")
         }
     }
 
