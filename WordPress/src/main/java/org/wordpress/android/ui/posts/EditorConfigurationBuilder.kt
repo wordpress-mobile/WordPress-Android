@@ -40,7 +40,6 @@ object EditorConfigurationBuilder {
             // Features
             setThemeStyles(settings.getSettingOrDefault("themeStyles", false))
             setPlugins(settings.getSettingOrDefault("plugins", false))
-            setHideTitle(false)
             setLocale(settings.getSetting<String>("locale") ?: "en")
 
             // Editor asset caching configuration
