@@ -14,6 +14,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PerAppLocaleManager
+import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
@@ -33,6 +35,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val gutenbergKitFeature: GutenbergKitFeature,
     private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
     private val experimentalFeatures: ExperimentalFeatures,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -85,9 +88,23 @@ class GutenbergKitWarmupHelper @Inject constructor(
     }
 
     private fun shouldWarmupForSite(site: SiteModel): Boolean {
-        // Check if site supports block editor
-        // For now, we'll warmup for all sites except those explicitly using classic editor
-        return site.webEditor != "classic"
+        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
+                gutenbergKitFeature.isEnabled()
+        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+        val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
+
+        if (!isGutenbergFeatureEnabled) {
+            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - GutenbergKit features disabled")
+            return false
+        }
+
+        val shouldWarmup = SiteUtils.isBlockEditorDefaultForNewPost(site)
+
+        AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site ${site.siteId} warmup decision: $shouldWarmup " +
+                "(isBlockEditorDefault: ${SiteUtils.isBlockEditorDefaultForNewPost(site)}, " +
+                "webEditor: ${site.webEditor})")
+
+        return shouldWarmup
     }
 
     private suspend fun performWarmup(site: SiteModel) {
