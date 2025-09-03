@@ -8,10 +8,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PerAppLocaleManager
+import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import java.util.Locale
@@ -30,6 +33,8 @@ class GutenbergKitWarmupHelper @Inject constructor(
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
+    private val experimentalFeatures: ExperimentalFeatures,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private var lastWarmedUpSiteId: Long? = null
@@ -129,8 +134,10 @@ class GutenbergKitWarmupHelper @Inject constructor(
         )
 
         val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
-            isPluginsFeatureEnabled = true, // Enable plugins for warmup to cache more assets
-            isThemeStylesFeatureEnabled = true // Enable theme styles for warmup
+            isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
+            isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
+                Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
+            )
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
