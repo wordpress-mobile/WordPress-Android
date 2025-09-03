@@ -63,16 +63,12 @@ object EditorConfigurationBuilder {
 
                 // Assets and caching
                 setEnableAssetCaching(true)
-
-                // Set cached asset hosts
                 val siteHost = UrlUtils.getHost(siteURL)
                 if (!siteHost.isNullOrEmpty()) {
                     setCachedAssetHosts(setOf("s0.wp.com", siteHost))
                 } else {
                     setCachedAssetHosts(setOf("s0.wp.com"))
                 }
-
-                // Set editor assets endpoint if available
                 if (editorAssetsEndpoint != null) {
                     setEditorAssetsEndpoint(editorAssetsEndpoint)
                 }

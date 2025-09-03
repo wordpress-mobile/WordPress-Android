@@ -118,7 +118,6 @@ class GutenbergKitWarmupHelper @Inject constructor(
             content = ""
         )
 
-        // Get app configuration
         val appConfig = GutenbergKitSettingsBuilder.AppConfig(
             accessToken = accountStore.accessToken,
             locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
@@ -129,13 +128,11 @@ class GutenbergKitWarmupHelper @Inject constructor(
             isJetpackSsoEnabled = false // Default to false for warmup
         )
 
-        // Feature configuration
         val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
             isPluginsFeatureEnabled = true, // Enable plugins for warmup to cache more assets
             isThemeStylesFeatureEnabled = true // Enable theme styles for warmup
         )
 
-        // Build settings map
         val settings = GutenbergKitSettingsBuilder.buildSettings(
             siteConfig = siteConfig,
             postConfig = postConfig,
@@ -143,7 +140,6 @@ class GutenbergKitWarmupHelper @Inject constructor(
             featureConfig = featureConfig
         )
 
-        // Convert settings to EditorConfiguration using the common builder
         return EditorConfigurationBuilder.build(settings, editorSettings = null)
     }
 }
