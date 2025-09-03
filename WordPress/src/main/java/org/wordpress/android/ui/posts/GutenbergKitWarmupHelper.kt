@@ -12,6 +12,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PerAppLocaleManager
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import java.util.Locale
@@ -148,6 +149,10 @@ class GutenbergKitWarmupHelper @Inject constructor(
     }
 
     private fun buildEditorConfigurationFromSettings(settings: Map<String, Any?>): EditorConfiguration {
+        // Extract values needed for endpoint construction
+        val siteURL = settings["siteURL"] as? String ?: ""
+        val siteApiRoot = settings["siteApiRoot"] as? String ?: ""
+
         return EditorConfiguration.builder().apply {
             // Set post data (empty for warmup)
             setTitle(settings["postTitle"] as? String ?: "")
@@ -156,13 +161,20 @@ class GutenbergKitWarmupHelper @Inject constructor(
             setPostType(settings["postType"] as? String)
 
             // Set site configuration
-            setSiteURL(settings["siteURL"] as? String ?: "")
-            setSiteApiRoot(settings["siteApiRoot"] as? String ?: "")
+            setSiteURL(siteURL)
+            setSiteApiRoot(siteApiRoot)
 
             // Set API namespaces
             val siteApiNamespace = settings["siteApiNamespace"] as? Array<*>
-            if (siteApiNamespace != null) {
-                setSiteApiNamespace(siteApiNamespace.filterIsInstance<String>().toTypedArray())
+            val siteApiNamespaceArray = siteApiNamespace?.filterIsInstance<String>()?.toTypedArray() ?: emptyArray()
+            setSiteApiNamespace(siteApiNamespaceArray)
+
+            // Construct editor assets endpoint
+            val firstNamespace = siteApiNamespaceArray.firstOrNull() ?: ""
+            val editorAssetsEndpoint = if (firstNamespace.isNotEmpty() && siteApiRoot.isNotEmpty()) {
+                "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
+            } else {
+                null
             }
 
             val namespaceExcludedPaths = settings["namespaceExcludedPaths"] as? Array<*>
@@ -192,16 +204,16 @@ class GutenbergKitWarmupHelper @Inject constructor(
             setEnableAssetCaching(true)
 
             // Set cached asset hosts for performance
-            val siteUrl = settings["siteURL"] as? String ?: ""
-            if (siteUrl.isNotEmpty()) {
-                val siteHost = try {
-                    java.net.URL(siteUrl).host
-                } catch (e: Exception) {
-                    ""
-                }
-                if (siteHost.isNotEmpty()) {
-                    setCachedAssetHosts(setOf("s0.wp.com", siteHost))
-                }
+            val siteHost = UrlUtils.getHost(siteURL)
+            if (!siteHost.isNullOrEmpty()) {
+                setCachedAssetHosts(setOf("s0.wp.com", siteHost))
+            } else {
+                setCachedAssetHosts(setOf("s0.wp.com"))
+            }
+
+            // Set editor assets endpoint
+            if (editorAssetsEndpoint != null) {
+                setEditorAssetsEndpoint(editorAssetsEndpoint)
             }
 
             // No editor settings for warmup
