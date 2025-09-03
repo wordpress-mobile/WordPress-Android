@@ -19,7 +19,7 @@ object EditorConfigurationBuilder {
         settings: Map<String, Any?>,
         editorSettings: String? = null
     ): EditorConfiguration {
-        return EditorConfiguration.builder().apply {
+        return EditorConfiguration.Builder().apply {
             val postId = settings.getSetting<Int>("postId")?.let { if (it == 0) -1 else it }
             val siteURL = settings.getSetting<String>("siteURL") ?: ""
             val siteApiNamespace = settings.getStringArray("siteApiNamespace")
