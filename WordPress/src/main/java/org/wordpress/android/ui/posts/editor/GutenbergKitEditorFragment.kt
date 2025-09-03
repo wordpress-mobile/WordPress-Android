@@ -30,7 +30,6 @@ import org.wordpress.android.ui.posts.GutenbergKitSettingsBuilder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView

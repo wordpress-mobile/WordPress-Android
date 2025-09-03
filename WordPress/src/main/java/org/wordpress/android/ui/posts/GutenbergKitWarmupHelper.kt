@@ -12,14 +12,12 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -34,7 +32,6 @@ class GutenbergKitWarmupHelper @Inject constructor(
     private val accountStore: AccountStore,
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
-    private val buildConfigWrapper: BuildConfigWrapper,
     private val gutenbergKitFeature: GutenbergKitFeature,
     private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
     private val experimentalFeatures: ExperimentalFeatures,
