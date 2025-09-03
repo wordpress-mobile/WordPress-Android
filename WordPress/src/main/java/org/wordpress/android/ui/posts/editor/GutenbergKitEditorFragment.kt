@@ -441,6 +441,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             featuredImageChangeListener = null
         }
         editorStarted = false
+        isEditorDidMount = false
         super.onDestroy()
     }
 
