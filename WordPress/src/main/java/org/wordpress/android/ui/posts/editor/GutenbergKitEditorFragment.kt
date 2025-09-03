@@ -25,6 +25,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
+import org.wordpress.android.ui.posts.EditorConfigurationBuilder
 import org.wordpress.android.ui.posts.GutenbergKitSettingsBuilder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
@@ -283,15 +284,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         }
     }
 
-    // Type-safe settings accessors
-    private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
-    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T =
-        getSetting(key) ?: default
-
-    private fun Map<String, Any?>.getStringArray(key: String): Array<String> =
-        getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
-
-
     // View extension functions
     private fun View?.setVisibleOrGone(visible: Boolean) {
         this?.visibility = if (visible) View.VISIBLE else View.GONE
@@ -466,36 +458,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
         val settingsMap = settings!!
-
-        return settingsMap.run {
-            val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
-            val siteURL = getSetting<String>("siteURL")
-            val siteApiRoot = getSetting<String>("siteApiRoot")
-            val siteApiNamespace = getStringArray("siteApiNamespace")
-            val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
-            val editorAssetsEndpoint = "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
-            val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
-            val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
-
-            EditorConfiguration.Builder()
-                .setTitle(getSetting<String>("postTitle") ?: "")
-                .setContent(getSetting<String>("postContent") ?: "")
-                .setPostId(postId)
-                .setPostType(getSetting<String>("postType"))
-                .setThemeStyles(getSettingOrDefault("themeStyles", false))
-                .setPlugins(getSettingOrDefault("plugins", false))
-                .setSiteApiRoot(getSetting<String>("siteApiRoot") ?: "")
-                .setSiteApiNamespace(siteApiNamespace)
-                .setNamespaceExcludedPaths(namespaceExcludedPaths)
-                .setAuthHeader(getSetting<String>("authHeader") ?: "")
-                .setEditorSettings(editorSettings)
-                .setLocale(getSetting<String>("locale"))
-                .setEditorAssetsEndpoint(editorAssetsEndpoint)
-                .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
-                .setEnableAssetCaching(true)
-                .setCookies(cookies)
-                .build()
-        }
+        return EditorConfigurationBuilder.build(settingsMap, editorSettings)
     }
 
     override fun onUndoPressed() {

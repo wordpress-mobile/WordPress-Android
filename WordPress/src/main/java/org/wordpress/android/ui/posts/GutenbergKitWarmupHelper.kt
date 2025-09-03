@@ -12,7 +12,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.PerAppLocaleManager
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
 import java.util.Locale
@@ -144,80 +143,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
             featureConfig = featureConfig
         )
 
-        // Convert settings to EditorConfiguration
-        return buildEditorConfigurationFromSettings(settings)
-    }
-
-    private fun buildEditorConfigurationFromSettings(settings: Map<String, Any?>): EditorConfiguration {
-        // Extract values needed for endpoint construction
-        val siteURL = settings["siteURL"] as? String ?: ""
-        val siteApiRoot = settings["siteApiRoot"] as? String ?: ""
-
-        return EditorConfiguration.builder().apply {
-            // Set post data (empty for warmup)
-            setTitle(settings["postTitle"] as? String ?: "")
-            setContent(settings["postContent"] as? String ?: "")
-            setPostId(settings["postId"] as? Int)
-            setPostType(settings["postType"] as? String)
-
-            // Set site configuration
-            setSiteURL(siteURL)
-            setSiteApiRoot(siteApiRoot)
-
-            // Set API namespaces
-            val siteApiNamespace = settings["siteApiNamespace"] as? Array<*>
-            val siteApiNamespaceArray = siteApiNamespace?.filterIsInstance<String>()?.toTypedArray() ?: emptyArray()
-            setSiteApiNamespace(siteApiNamespaceArray)
-
-            // Construct editor assets endpoint
-            val firstNamespace = siteApiNamespaceArray.firstOrNull() ?: ""
-            val editorAssetsEndpoint = if (firstNamespace.isNotEmpty() && siteApiRoot.isNotEmpty()) {
-                "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
-            } else {
-                null
-            }
-
-            val namespaceExcludedPaths = settings["namespaceExcludedPaths"] as? Array<*>
-            if (namespaceExcludedPaths != null) {
-                setNamespaceExcludedPaths(namespaceExcludedPaths.filterIsInstance<String>().toTypedArray())
-            }
-
-            // Set authentication
-            setAuthHeader(settings["authHeader"] as? String ?: "")
-
-            // Set features
-            setThemeStyles(settings["themeStyles"] as? Boolean ?: false)
-            setPlugins(settings["plugins"] as? Boolean ?: false)
-            setHideTitle(false)
-
-            // Set locale
-            setLocale(settings["locale"] as? String ?: "en")
-
-            // Set cookies if available
-            @Suppress("UNCHECKED_CAST")
-            val cookies = settings["cookies"] as? Map<String, String>
-            if (cookies != null) {
-                setCookies(cookies)
-            }
-
-            // Enable asset caching for warmup
-            setEnableAssetCaching(true)
-
-            // Set cached asset hosts for performance
-            val siteHost = UrlUtils.getHost(siteURL)
-            if (!siteHost.isNullOrEmpty()) {
-                setCachedAssetHosts(setOf("s0.wp.com", siteHost))
-            } else {
-                setCachedAssetHosts(setOf("s0.wp.com"))
-            }
-
-            // Set editor assets endpoint
-            if (editorAssetsEndpoint != null) {
-                setEditorAssetsEndpoint(editorAssetsEndpoint)
-            }
-
-            // No editor settings for warmup
-            setEditorSettings(null)
-        }.build()
+        // Convert settings to EditorConfiguration using the common builder
+        return EditorConfigurationBuilder.build(settings, editorSettings = null)
     }
 }
