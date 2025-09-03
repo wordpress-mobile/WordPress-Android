@@ -39,8 +39,6 @@ import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
-import org.wordpress.gutenberg.GutenbergWebViewPool.getPreloadedWebView
-import org.wordpress.gutenberg.GutenbergWebViewPool.recycleWebView
 import org.wordpress.gutenberg.Media
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
@@ -144,7 +142,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         rootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
         val gutenbergViewContainer = rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        gutenbergView = getPreloadedWebView(requireContext()).also { gutenbergView ->
+        gutenbergView = GutenbergView.createForEditor(requireContext()).also { gutenbergView ->
             gutenbergView.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
@@ -435,7 +433,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onDestroy() {
         gutenbergView?.let { gutenbergView ->
-            recycleWebView(gutenbergView)
+            gutenbergView.destroy()
             historyChangeListener = null
             featuredImageChangeListener = null
         }
