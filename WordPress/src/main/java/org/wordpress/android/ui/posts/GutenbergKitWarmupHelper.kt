@@ -47,31 +47,24 @@ class GutenbergKitWarmupHelper @Inject constructor(
      * @param scope The coroutine scope to launch the warmup in
      */
     fun warmupIfNeeded(site: SiteModel?, scope: CoroutineScope) {
-        if (site == null) {
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - no site provided")
-            return
-        }
-
-        // Skip if already warmed up for this site
-        if (lastWarmedUpSiteId == site.siteId && !isWarmupInProgress) {
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Already warmed up for site ${site.siteId}")
-            return
-        }
-
-        // Skip if warmup is already in progress
-        if (isWarmupInProgress) {
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup already in progress")
-            return
-        }
-
-        // Skip for sites that don't support the block editor
-        if (!shouldWarmupForSite(site)) {
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site doesn't support block editor, skipping warmup")
-            return
-        }
-
-        scope.launch(bgDispatcher) {
-            performWarmup(site)
+        when {
+            site == null -> {
+                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - no site provided")
+            }
+            lastWarmedUpSiteId == site.siteId && !isWarmupInProgress -> {
+                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Already warmed up for site ${site.siteId}")
+            }
+            isWarmupInProgress -> {
+                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup already in progress")
+            }
+            !shouldWarmupForSite(site) -> {
+                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site doesn't support block editor, skipping warmup")
+            }
+            else -> {
+                scope.launch(bgDispatcher) {
+                    performWarmup(site)
+                }
+            }
         }
     }
 
