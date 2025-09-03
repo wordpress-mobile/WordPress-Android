@@ -111,8 +111,8 @@ class GutenbergKitWarmupHelper @Inject constructor(
 
             lastWarmedUpSiteId = site.siteId
             AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup completed for site ${site.siteId}")
-        } catch (e: Exception) {
-            AppLog.e(T.EDITOR, "GutenbergKitWarmupHelper: Warmup failed", e)
+        } catch (e: IllegalStateException) {
+            AppLog.e(T.EDITOR, "GutenbergKitWarmupHelper: Warmup failed - illegal state", e)
         } finally {
             isWarmupInProgress = false
         }
