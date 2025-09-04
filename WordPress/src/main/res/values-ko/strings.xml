@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-14 09:54:09+0000
+Translation-Revision-Date: 2025-09-02 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">워드프레스닷컴에 로그인할 수 없음</string>
+    <string name="jetpack_rest_connection_step_connect_site">워드프레스닷컴에 사이트 연결</string>
+    <string name="dataview_default_empty_message">여기에 아무것도 없음</string>
+    <string name="content_description_empty_view">보기가 비어 있음을 보여주는 이미지</string>
+    <string name="jetpack_rest_connection_error_activate_stats">통계 활성화 실패</string>
+    <string name="jetpack_rest_connection_error_access_token">액세스 토큰 없음</string>
+    <string name="jetpack_rest_connection_error_connect_user">워드프레스닷컴에 사용자 연결 실패</string>
+    <string name="jetpack_rest_connection_error_connect_site">사이트에 연결 실패</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">젯팩이 설치되었으나 비활성 상태</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">설치 실패</string>
+    <string name="jetpack_rest_connection_setup_title">젯팩 설정하기</string>
     <string name="application_password_last_used_sort">최근 사용</string>
     <string name="application_password_created_sort">생성</string>
     <string name="application_password_name_sort">이름</string>
@@ -29,9 +40,8 @@ Language: ko_KR
     <string name="subscribers_delete_confirmation_message">이 구독자를 삭제하시겠습니까?</string>
     <string name="subscribers_delete_confirmation_title">구독자 삭제</string>
     <string name="subscribers_sort_name">이름</string>
-    <string name="jetpack_rest_connection_error_wpcom">스튜디오에서 워드프레스닷컴에 연결할 수 없습니다.</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">워드프레스닷컴에 연결할 수 없음</string>
     <string name="jetpack_rest_connection_error_timeout">시간 초과됨</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">젯팩 설치됨</string>
     <string name="jetpack_rest_connection_cancel_message">젯팩 연결 프로세스가 진행 중입니다. 취소하시겠어요?</string>
     <string name="jetpack_rest_connection_cancel_title">젯팩 설정 취소 여부</string>
     <string name="jetpack_rest_connection_status_failed">실패</string>
@@ -39,14 +49,10 @@ Language: ko_KR
     <string name="jetpack_rest_connection_status_in_progress">진행 중…</string>
     <string name="jetpack_rest_connection_status_not_started">시작 전</string>
     <string name="jetpack_rest_connection_step_finalize">설정 마무리 단계</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">워드프레스닷컴에 연결</string>
-    <string name="jetpack_rest_connection_step_connect_site">사이트 연결</string>
+    <string name="jetpack_rest_connection_step_connect_user">워드프레스닷컴에 사용자 연결</string>
     <string name="jetpack_rest_connection_step_install_jetpack">젯팩 플러그인을 설치하세요</string>
     <string name="jetpack_rest_connection_step_login_wpcom">워드프레스닷컴에 로그인</string>
-    <string name="jetpack_rest_connection_setup_title">젯팩 설정(시뮬레이션됨)</string>
     <string name="jetpack_rest_connection_title">젯팩 연결</string>
-    <string name="experimental_jetpack_rest_connection_description">실험적 젯팩 REST 연결 흐름 활성화</string>
-    <string name="experimental_jetpack_rest_connection">실험적인 젯팩 REST 연결</string>
     <string name="experimental_subscribers_feature_description">뉴스레터 구독자 보기 및 관리</string>
     <string name="start">시작</string>
     <string name="descending">내림차순</string>

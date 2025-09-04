@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-12 11:54:08+0000
+Translation-Revision-Date: 2025-09-02 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com にログインできません</string>
+    <string name="jetpack_rest_connection_step_connect_site">サイトを WordPress.com に連携</string>
+    <string name="dataview_default_empty_message">ここには何もありません</string>
+    <string name="content_description_empty_view">表示が空であることを示す画像</string>
+    <string name="jetpack_rest_connection_error_activate_stats">統計の有効化に失敗しました</string>
+    <string name="jetpack_rest_connection_error_access_token">アクセストークンがありません</string>
+    <string name="jetpack_rest_connection_error_connect_user">ユーザーを WordPress.com に連携できませんでした</string>
+    <string name="jetpack_rest_connection_error_connect_site">サイトとの連携に失敗しました</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack はインストール済みですが無効です</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">インストールに失敗しました</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack をセットアップ</string>
     <string name="application_password_last_used_sort">最終使用日</string>
     <string name="application_password_created_sort">作成日</string>
     <string name="application_password_name_sort">名前</string>
@@ -29,9 +40,8 @@ Language: ja_JP
     <string name="subscribers_delete_confirmation_message">この購読者を削除してもよいですか ?</string>
     <string name="subscribers_delete_confirmation_title">購読者を削除</string>
     <string name="subscribers_sort_name">名前</string>
-    <string name="jetpack_rest_connection_error_wpcom">WordPress.com に接続できません</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">WordPress.com に連携できません</string>
     <string name="jetpack_rest_connection_error_timeout">タイムアウト</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack がすでにインストールされています</string>
     <string name="jetpack_rest_connection_cancel_message">Jetpack 接続プロセスが進行中です。 キャンセルしてもよいですか ?</string>
     <string name="jetpack_rest_connection_cancel_title">Jetpack 設定をキャンセルしますか ?</string>
     <string name="jetpack_rest_connection_status_failed">失敗</string>
@@ -39,14 +49,10 @@ Language: ja_JP
     <string name="jetpack_rest_connection_status_in_progress">進行中…</string>
     <string name="jetpack_rest_connection_status_not_started">開始前</string>
     <string name="jetpack_rest_connection_step_finalize">設定を完了</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">WordPress.com に接続</string>
-    <string name="jetpack_rest_connection_step_connect_site">サイトを接続</string>
+    <string name="jetpack_rest_connection_step_connect_user">ユーザーを WordPress.com に連携</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Jetpack プラグインをインストール</string>
     <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com にログイン</string>
-    <string name="jetpack_rest_connection_setup_title">Jetpack の設定中 (シミュレート)</string>
     <string name="jetpack_rest_connection_title">Jetpack 接続</string>
-    <string name="experimental_jetpack_rest_connection_description">試験用の Jetpack REST 接続フローを有効化</string>
-    <string name="experimental_jetpack_rest_connection">試験用の Jetpack REST 接続</string>
     <string name="experimental_subscribers_feature_description">ニュースレター購読者を表示および管理</string>
     <string name="start">開始</string>
     <string name="descending">降順</string>

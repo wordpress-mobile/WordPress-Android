@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-12 14:54:08+0000
+Translation-Revision-Date: 2025-09-02 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">אין אפשרות להתחבר אל WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">לחבר את האתר שלך ל-WordPress.com</string>
+    <string name="dataview_default_empty_message">אין פה שום דבר</string>
+    <string name="content_description_empty_view">תמונה שמראה שהתצוגה ריקה</string>
+    <string name="jetpack_rest_connection_error_activate_stats">הפעלת הנתונים הסטטיסטיים נכשלה</string>
+    <string name="jetpack_rest_connection_error_access_token">אסימון הגישה חסר</string>
+    <string name="jetpack_rest_connection_error_connect_user">חיבור המשתמש ל-WordPress.com נכשל</string>
+    <string name="jetpack_rest_connection_error_connect_site">החיבור לאתר נכשל</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack מותקן אך לא פעיל</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">ההתקנה נכשלה</string>
+    <string name="jetpack_rest_connection_setup_title">הגדרה של Jetpack</string>
     <string name="application_password_last_used_sort">השימוש האחרון</string>
     <string name="application_password_created_sort">נוצר</string>
     <string name="application_password_name_sort">שם</string>
@@ -29,9 +40,7 @@ Language: he_IL
     <string name="subscribers_delete_confirmation_message">האם ברצונך למחוק את המנוי הזה?</string>
     <string name="subscribers_delete_confirmation_title">למחוק את המנוי</string>
     <string name="subscribers_sort_name">שם</string>
-    <string name="jetpack_rest_connection_error_wpcom">לא הייתה אפשרות להתחבר ל-WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">הזמן הקצוב הסתיים</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack כבר מותקן</string>
     <string name="jetpack_rest_connection_cancel_message">תהליך החיבור ל-Jetpack החל. האם ברצונך לבטל?</string>
     <string name="jetpack_rest_connection_cancel_title">האם לבטל את ההגדרה של Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">נכשל</string>
@@ -39,14 +48,10 @@ Language: he_IL
     <string name="jetpack_rest_connection_status_in_progress">בתהליך…</string>
     <string name="jetpack_rest_connection_status_not_started">לא הותחל</string>
     <string name="jetpack_rest_connection_step_finalize">להשלים את ההגדרה</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">התחברות אל WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">לחבר את האתר שלך</string>
+    <string name="jetpack_rest_connection_step_connect_user">לחבר משתמש ל-WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">להתקין את התוסף של Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">להתחבר ל-WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">הגדרה של Jetpack (סימולציה)</string>
     <string name="jetpack_rest_connection_title">חיבור Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">להפעיל את התהליך לחיבור הניסיוני של Jetpack REST</string>
-    <string name="experimental_jetpack_rest_connection">חיבור ניסיוני של Jetpack REST</string>
     <string name="experimental_subscribers_feature_description">להציג ולנהל מנויים לניוזלטר</string>
     <string name="start">התחלה</string>
     <string name="descending">סדר יורד</string>
