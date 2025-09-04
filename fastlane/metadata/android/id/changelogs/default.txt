@@ -1,4 +1,3 @@
-26.1:
-- Media sekarang ditampilkan dengan baik pada situs pribadi dalam editor eksperimental.
-- Peningkatan unggahan media dengan autentikasi dan performa yang lebih baik.
-- Perbaikan berbagai masalah unggahan dan peningkatan penanganan media secara keseluruhan.
+26.2:
+- Kami telah menambahkan dukungan untuk penyebutan di editor eksperimental—tandai teman dan kolaborator Anda dengan mudah.
+- Pilihan media menjadi lebih mudah diakses oleh semua orang.

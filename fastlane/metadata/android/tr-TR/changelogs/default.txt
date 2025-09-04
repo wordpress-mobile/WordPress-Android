@@ -1,4 +1,3 @@
-26.1:
-- Ortam artık deneysel düzenleyicide özel sitelerde düzgün şekilde görüntüleniyor.
-- Daha iyi kimlik doğrulama ve gelişmiş performans ile gelişmiş ortam yüklemeleri.
-- Çeşitli yükleme hataları düzeltildi ve genel ortam kullanımı iyileştirildi.
+26.2:
+- Deneysel düzenleyiciye bahsedilme desteği ekledik, arkadaşlarınızı ve çalışma arkadaşlarınızı kolaylıkla etiketleyin.
+- Ortam seçimi herkes için daha erişilebilir hale geldi.
