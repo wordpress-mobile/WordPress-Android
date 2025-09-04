@@ -1,4 +1,3 @@
-26.1:
-– Media visas nu korrekt på privata webbplatser i den experimentella redigeraren.
-– Förbättrad mediaöverföring med bättre autentisering och förbättrad prestanda.
-– Åtgärdade olika överföringsfel och förbättrade övergripande mediahantering.
+26.2:
+- Vi har lagt till stöd för omnämnanden i den experimentella redigeraren – nämn enkelt dina vänner och samarbetspartners.
+- Val av media är nu mer tillgängligt för alla.

@@ -1,4 +1,3 @@
-26.1:
-- Los medios ahora se muestran correctamente en los sitios privados en el editor experimental.
-- Subidas de medios mejoradas, con mejor identificación y mejor rendimiento.
-- Corregidos varios fallos en las subidas y mejora general de la gestión de medios.
+26.2:
+- Hemos añadido compatibilidad con meciones en el editor experimental—etiqueta a tus amigos y colaboradores con facilidad.
+- La selección de medios es mucho más accesible para todos.

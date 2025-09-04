@@ -1,4 +1,3 @@
-26.1:  
-- Media wordt nu correct weergegeven op privé sites in de experimentele editor.  
-- Verbeterde media uploads met betere authenticatie en verbeterde prestaties.  
-- Opgelost: verschillende upload bugs en verbeterde algehele media afhandeling.
+26.2:
+- We hebben ondersteuning toegevoegd voor vermeldingen in de experimentele editor—tag je vrienden en medewerkers met gemak.
+- Mediaselectie is net toegankelijker geworden voor iedereen
