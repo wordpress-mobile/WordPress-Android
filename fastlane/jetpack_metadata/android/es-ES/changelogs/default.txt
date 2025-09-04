@@ -1,5 +1,4 @@
-26.1:
-- La pantalla de nuevos suscriptores muestra todos tus suscriptores por correo electrónico y del Lector. Ahora ya sabes quién está leyendo tu contenido.
-- Los medios ahora se muestran correctamente en sitios privados del editor experimental.
-- Subidas de medios mejoradas con una mejor autenticación y un rendimiento mejorado.
-- Se han corregido varios errores de subida y se ha mejorado el manejo general de los medios.
+26.2:
+- Conecta tus sitios autoalojados a Jetpack con nuestro nuevo flujo optimizado, disponible directamente desde Estadísticas y Notificaciones.
+- Ya se pueden añadir menciones en el editor experimental: etiqueta a tus amigos y colaboradores fácilmente.
+- La selección de medios ahora es más accesible para todos.

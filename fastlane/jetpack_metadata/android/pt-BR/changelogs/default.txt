@@ -1,5 +1,4 @@
-26.1:
-- Na tela Novos assinantes, você vê todos os seus assinantes por e-mail e no Leitor para saber quem está acompanhando seu conteúdo.
-- Agora, a mídia é exibida corretamente em sites privados no editor experimental.
-- Uploads de mídia agora contam com autenticação reforçada e desempenho otimizado.
-- Vários bugs de upload foram corrigidos, e o gerenciamento de mídia em geral foi aprimorado.
+26.2:
+- Conecte seus sites auto-hospedados ao Jetpack com nosso novo fluxo simplificado, disponível diretamente em Estatísticas e Notificações.
+- Adicionamos compatibilidade com menções ao editor experimental: marque seus amigos e colaboradores com facilidade.
+- A seleção de mídia está mais acessível para todos.
