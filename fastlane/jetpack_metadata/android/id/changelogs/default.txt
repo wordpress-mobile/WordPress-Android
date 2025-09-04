@@ -1,5 +1,4 @@
-26.1:
-- Layar Pelanggan baru menampilkan semua pelanggan email dan Pembaca, jadi Anda bisa tahu siapa saja yang mengikuti dan membaca konten Anda.
-- Media sekarang ditampilkan dengan baik pada situs pribadi dalam editor eksperimental.
-- Peningkatan unggahan media dengan autentikasi dan performa yang lebih baik.
-- Perbaikan berbagai masalah unggahan dan peningkatan penanganan media secara keseluruhan.
+26.2:
+- Hubungkan situs yang di-hosting sendiri ke Jetpack dengan alur baru yang lebih efisien—tersedia langsung di Statistik dan Pemberitahuan.
+- Kami telah menambahkan dukungan untuk penyebutan di editor eksperimental—tandai teman dan kolaborator Anda dengan mudah.
+- Pilihan media menjadi lebih mudah diakses oleh semua orang.

@@ -1,5 +1,4 @@
-26.1 :
-- L’écran Nouveaux abonnés affiche tous vos abonnés par e-mail et dans le Lecteur. Vous savez désormais qui lit votre contenu.
-- Les médias s’affichent désormais correctement sur les sites privés dans l’éditeur expérimental.
-- Amélioration des chargements de médias avec une meilleure authentification et de meilleures performances.
-- Correction de divers bugs de chargement et amélioration du traitement global des médias.
+26.2 :
+- Connectez vos sites auto-hébergés à Jetpack avec notre nouveau flux rationalisé, disponible directement depuis Stats and Notifications.
+- Nous avons ajouté la prise en charge des mentions dans l’éditeur expérimental : taguez facilement vos amis et collaborateurs.
+- La sélection des médias est devenue plus accessible à tous.

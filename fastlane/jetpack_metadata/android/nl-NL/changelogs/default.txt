@@ -1,5 +1,4 @@
-26.1:
-- Het nieuwe scherm Abonnees toont al je e-mail- en Reader-abonnees. Nu weet je wie je content leest.
-- Media worden nu correct weergegeven op privésites in de experimentele editor.
-- Verbeterde media-uploads met betere authenticatie en verbeterde prestaties.
-- Diverse uploadbugs zijn opgelost en de algehele mediaverwerking is verbeterd.
+26.2:
+- Koppel je zelfgehoste sites aan Jetpack met onze nieuwe gestroomlijnde flow, rechtstreeks beschikbaar via Statistieken en Meldingen.
+- We hebben ondersteuning toegevoegd voor vermeldingen in de experimentele editor: tag met gemak je vrienden en degenen met wie je samenwerkt.
+- Mediaselectie is voor iedereen toegankelijker geworden.
