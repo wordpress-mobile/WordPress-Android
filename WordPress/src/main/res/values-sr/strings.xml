@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-09-22 20:24:32+0000
+Translation-Revision-Date: 2025-09-04 15:07:33+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: sr_RS
@@ -586,11 +586,11 @@ Language: sr_RS
     <string name="stats_widget_color_light">Светло</string>
     <string name="stats_widget_color">Боја</string>
     <string name="stats_widget_site_caption">Одаберите свој сајт</string>
-    <string name="stats_widget_site">Сајт</string>
     <string name="stats_widget_views_title">Прегледи ове седмице</string>
     <string name="stats_widget_add">Додај виџет</string>
     <string name="stats_widget_error_no_network">Нема доступне мреже</string>
     <string name="stats_widget_error_no_data">Није могуће учитати податке</string>
+    <string name="stats_widget_site">Веб место</string>
     <string name="domain_contact_information_state_not_available_hint">Покрајина (није доступно)</string>
     <string name="site_settings_password_updated">Лозинка ажурирана</string>
     <string name="site_settings_password_dialog_title">Ажурирај лозинку</string>

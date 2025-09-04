@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-14 14:19:12+0000
+Translation-Revision-Date: 2025-09-02 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Impossibile accedere a WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connetti il sito a WordPress.com</string>
+    <string name="dataview_default_empty_message">Qui non c\'è nulla</string>
+    <string name="content_description_empty_view">Immagine che indica che la vista è vuota</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Impossibile attivare le statistiche</string>
+    <string name="jetpack_rest_connection_error_access_token">Token di accesso mancante</string>
+    <string name="jetpack_rest_connection_error_connect_user">Impossibile connettere l\'utente a WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Impossibile connettersi al sito</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installato ma non attivo</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Installazione non riuscita</string>
+    <string name="jetpack_rest_connection_setup_title">Configurazione di Jetpack</string>
     <string name="application_password_last_used_sort">Ultimo utilizzo</string>
     <string name="application_password_created_sort">Creato</string>
     <string name="application_password_name_sort">Nome</string>
@@ -29,9 +40,7 @@ Language: it
     <string name="subscribers_delete_confirmation_message">Desideri eliminare questo abbonato?</string>
     <string name="subscribers_delete_confirmation_title">Elimina abbonato</string>
     <string name="subscribers_sort_name">Nome</string>
-    <string name="jetpack_rest_connection_error_wpcom">Impossibile connettersi a WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Scaduto</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack è già installato</string>
     <string name="jetpack_rest_connection_cancel_message">Il processo di connessione di Jetpack è in corso. Desideri annullare?</string>
     <string name="jetpack_rest_connection_cancel_title">Annullare la configurazione di Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">Non riuscito</string>
@@ -39,14 +48,10 @@ Language: it
     <string name="jetpack_rest_connection_status_in_progress">In corso…</string>
     <string name="jetpack_rest_connection_status_not_started">Non iniziato</string>
     <string name="jetpack_rest_connection_step_finalize">Completa la configurazione</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Connetti a WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Connetti il tuo sito</string>
+    <string name="jetpack_rest_connection_step_connect_user">Connetti l\'utente a WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Installa il plugin Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Accedi a WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Configurazione di Jetpack (simulazione)</string>
     <string name="jetpack_rest_connection_title">Connessione a Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Abilita il flusso di connessione Jetpack REST sperimentale</string>
-    <string name="experimental_jetpack_rest_connection">Connessione sperimentale Jetpack REST</string>
     <string name="experimental_subscribers_feature_description">Visualizza e gestisci gli abbonati alla newsletter</string>
     <string name="start">Inizio</string>
     <string name="descending">Decrescente</string>

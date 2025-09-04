@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-09 04:19:22+0000
+Translation-Revision-Date: 2025-08-30 04:10:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es_CO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">No ha sido posible acceder a WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Conectar el sitio a WordPress.com</string>
+    <string name="dataview_default_empty_message">No hay nada aquí</string>
+    <string name="content_description_empty_view">Imagen que ilustra que la vista está vacía</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Error al activar las estadísticas</string>
+    <string name="jetpack_rest_connection_error_access_token">Falta el token de acceso</string>
+    <string name="jetpack_rest_connection_error_connect_user">Error al conectar a WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Error al conectar al sitio</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack está instalado pero inactivo</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Instalación fallida</string>
+    <string name="jetpack_rest_connection_setup_title">Configurando Jetpack</string>
     <string name="application_password_last_used_sort">Última utilizada</string>
     <string name="application_password_created_sort">Creado</string>
     <string name="application_password_name_sort">Nombre</string>
@@ -29,9 +40,8 @@ Language: es_CO
     <string name="subscribers_delete_confirmation_message">¿Estás seguro de que deseas eliminar este suscriptor?</string>
     <string name="subscribers_delete_confirmation_title">Borrar suscriptor</string>
     <string name="subscribers_sort_name">Nombre</string>
-    <string name="jetpack_rest_connection_error_wpcom">No ha sido posible conectar a WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">No ha sido posible conectar con WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Tiempo superado</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack ya está instalado</string>
     <string name="jetpack_rest_connection_cancel_message">El proceso de conexión de Jetpack está en curso. ¿Seguro que quieres cancelar?</string>
     <string name="jetpack_rest_connection_cancel_title">¿Cancelar la configuración de Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">Fallida</string>
@@ -39,14 +49,10 @@ Language: es_CO
     <string name="jetpack_rest_connection_status_in_progress">En progreso…</string>
     <string name="jetpack_rest_connection_status_not_started">Sin iniciar</string>
     <string name="jetpack_rest_connection_step_finalize">Finalizar la configuración</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Conecta a WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Conectar tu sitio</string>
+    <string name="jetpack_rest_connection_step_connect_user">Conectar usuario con WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Instalar el plugin de Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Acceder a WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Configuración de Jetpack (simulado)</string>
     <string name="jetpack_rest_connection_title">Conexión Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Habilitar el flujo de conexión REST experimental de Jetpack</string>
-    <string name="experimental_jetpack_rest_connection">Conexión REST experimental de Jetpack</string>
     <string name="experimental_subscribers_feature_description">Ver y administrar los suscriptores del boletín informativo</string>
     <string name="start">Empezar</string>
     <string name="descending">Descendente</string>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-12 11:54:09+0000
+Translation-Revision-Date: 2025-09-02 10:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com\'da oturum açılamıyor</string>
+    <string name="jetpack_rest_connection_step_connect_site">Siteyi WordPress.com\'a bağlayın</string>
+    <string name="dataview_default_empty_message">Burada bir şey yok</string>
+    <string name="content_description_empty_view">Görünümün boş olduğunu gösteren görsel</string>
+    <string name="jetpack_rest_connection_error_activate_stats">İstatistikler etkinleştirilemedi</string>
+    <string name="jetpack_rest_connection_error_access_token">Erişim belirteci eksik</string>
+    <string name="jetpack_rest_connection_error_connect_user">Kullanıcı WordPress.com ile bağlantı kuramadı</string>
+    <string name="jetpack_rest_connection_error_connect_site">Siteyle bağlantı kurulamadı</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack yüklendi ancak etkin değil</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Kurulum başarısız</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack\'i kurma</string>
     <string name="application_password_last_used_sort">Son kullanılan</string>
     <string name="application_password_created_sort">Oluşturuldu</string>
     <string name="application_password_name_sort">Ad</string>
@@ -29,9 +40,7 @@ Language: tr
     <string name="subscribers_delete_confirmation_message">Bu aboneyi silmek istediğinizden emin misiniz?</string>
     <string name="subscribers_delete_confirmation_title">Aboneyi sil</string>
     <string name="subscribers_sort_name">Ad</string>
-    <string name="jetpack_rest_connection_error_wpcom">WordPress.com\'a bağlanılamadı</string>
     <string name="jetpack_rest_connection_error_timeout">Zaman aşımına uğradı</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack zaten yüklendi</string>
     <string name="jetpack_rest_connection_cancel_message">Jetpack bağlantı süreci devam ediyor. İptal etmek istediğinizden emin misiniz?</string>
     <string name="jetpack_rest_connection_cancel_title">Jetpack Kurulumu iptal edilsin mi?</string>
     <string name="jetpack_rest_connection_status_failed">Başarısız</string>
@@ -39,14 +48,10 @@ Language: tr
     <string name="jetpack_rest_connection_status_in_progress">Devam ediyor…</string>
     <string name="jetpack_rest_connection_status_not_started">Başlamamış</string>
     <string name="jetpack_rest_connection_step_finalize">Kurulumu sonlandır</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">WordPress.com\'a bağlan</string>
-    <string name="jetpack_rest_connection_step_connect_site">Sitenizi bağlayın</string>
+    <string name="jetpack_rest_connection_step_connect_user">Kullanıcıyı WordPress.com\'a bağlayın</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Jetpack eklentisini yükleyin</string>
     <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com’da oturum açın</string>
-    <string name="jetpack_rest_connection_setup_title">Jetpack Kurulumu (Simüle)</string>
     <string name="jetpack_rest_connection_title">Jetpack Bağlantısı</string>
-    <string name="experimental_jetpack_rest_connection_description">Deneysel Jetpack REST Bağlantısı akışını etkinleştir</string>
-    <string name="experimental_jetpack_rest_connection">Deneysel Jetpack REST Bağlantısı</string>
     <string name="experimental_subscribers_feature_description">Haber bülteni abonelerini görün ve yönetin</string>
     <string name="start">Başlat</string>
     <string name="descending">Azalan</string>
