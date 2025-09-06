@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-12 12:54:09+0000
+Translation-Revision-Date: 2025-09-02 10:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Tidak dapat login ke WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Hubungkan situs ke WordPress.com</string>
+    <string name="dataview_default_empty_message">Tidak ada apa pun di sini</string>
+    <string name="content_description_empty_view">Gambar yang mengilustrasikan bahwa tampilannya kosong</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Gagal mengaktifkan statistik</string>
+    <string name="jetpack_rest_connection_error_access_token">Token akses hilang</string>
+    <string name="jetpack_rest_connection_error_connect_user">Gagal menghubungkan pengguna ke WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Gagal terhubung ke situs</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack terinstal tetapi tidak aktif</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Instalasi gagal</string>
+    <string name="jetpack_rest_connection_setup_title">Menyiapkan Jetpack</string>
     <string name="application_password_last_used_sort">Terakhir digunakan</string>
     <string name="application_password_created_sort">Dibuat</string>
     <string name="application_password_name_sort">Nama</string>
@@ -29,9 +40,7 @@ Language: id
     <string name="subscribers_delete_confirmation_message">Apakah Anda yakin ingin menghapus pelanggan ini?</string>
     <string name="subscribers_delete_confirmation_title">Hapus pelanggan</string>
     <string name="subscribers_sort_name">Nama</string>
-    <string name="jetpack_rest_connection_error_wpcom">Tidak dapat terhubung ke WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Waktu habis</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack sudah terinstal</string>
     <string name="jetpack_rest_connection_cancel_message">Proses koneksi Jetpack sedang berlangsung. Apakah Anda yakin ingin membatalkan?</string>
     <string name="jetpack_rest_connection_cancel_title">Batalkan Penyiapan Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">Gagal</string>
@@ -39,14 +48,10 @@ Language: id
     <string name="jetpack_rest_connection_status_in_progress">Sedang berlangsung…</string>
     <string name="jetpack_rest_connection_status_not_started">Belum dimulai</string>
     <string name="jetpack_rest_connection_step_finalize">Selesaikan penyiapan</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Hubungkan ke WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Hubungkan situs Anda</string>
+    <string name="jetpack_rest_connection_step_connect_user">Hubungkan pengguna ke WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Pasang plugin Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login ke WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Menyiapkan Jetpack (Simulasi)</string>
     <string name="jetpack_rest_connection_title">Koneksi Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Aktifkan alur Koneksi REST Jetpack eksperimental</string>
-    <string name="experimental_jetpack_rest_connection">Koneksi REST Jetpack Eksperimental</string>
     <string name="experimental_subscribers_feature_description">Melihat dan mengelola pelanggan buletin</string>
     <string name="start">Mulai</string>
     <string name="descending">Menurun</string>

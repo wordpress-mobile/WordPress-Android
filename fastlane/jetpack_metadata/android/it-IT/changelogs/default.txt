@@ -1,5 +1,4 @@
-26.1:
-- La nuova schermata Abbonati mostra tutti i tuoi iscritti via email e dal Reader: ora sai chi legge i tuoi contenuti.
-- I contenuti multimediali ora vengono visualizzati correttamente sui siti privati nell'editor sperimentale.
-- Caricamento dei file multimediali potenziato con un'autenticazione migliorata e prestazioni ottimizzate.
-- Corretti diversi bug di caricamento e migliorata la gestione complessiva dei file multimediali.
+26.2:
+- Connetti i tuoi siti ospitati personalmente a Jetpack con il nostro nuovo flusso semplificato, disponibile direttamente da Statistiche e Notifiche.
+- Abbiamo aggiunto il supporto per le menzioni nell'editor sperimentale: tagga amici e collaboratori in tutta facilità.
+- La selezione degli elementi multimediali è diventata più accessibile per tutti.

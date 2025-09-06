@@ -29,9 +29,7 @@ Language: fr
     <string name="subscribers_delete_confirmation_message">Voulez-vous vraiment supprimer cet abonné ?</string>
     <string name="subscribers_delete_confirmation_title">Supprimer l’abonné</string>
     <string name="subscribers_sort_name">Nom</string>
-    <string name="jetpack_rest_connection_error_wpcom">Impossible de se connecter à WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Délai dépassé</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack est déjà installée</string>
     <string name="jetpack_rest_connection_cancel_message">Le processus de connexion Jetpack est en cours. Voulez-vous vraiment annuler ?</string>
     <string name="jetpack_rest_connection_cancel_title">Annuler la configuration de Jetpack ?</string>
     <string name="jetpack_rest_connection_status_failed">Échec</string>
@@ -39,14 +37,9 @@ Language: fr
     <string name="jetpack_rest_connection_status_in_progress">En cours…</string>
     <string name="jetpack_rest_connection_status_not_started">Non démarrée</string>
     <string name="jetpack_rest_connection_step_finalize">Finaliser la configuration</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Connexion à WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Connecter votre site</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Installer l’extension Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Connexion à WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Configuration de Jetpack (simulée)</string>
     <string name="jetpack_rest_connection_title">Connexion à Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Activer le flux de connexion Jetpack REST expérimentale</string>
-    <string name="experimental_jetpack_rest_connection">Connexion REST expérimentale Jetpack</string>
     <string name="experimental_subscribers_feature_description">Afficher et gérer les abonnés à la newsletter</string>
     <string name="start">Démarrer</string>
     <string name="descending">Décroissant</string>

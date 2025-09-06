@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-13 14:54:08+0000
+Translation-Revision-Date: 2025-09-02 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Anmeldung bei WordPress.com nicht möglich</string>
+    <string name="jetpack_rest_connection_step_connect_site">Website mit WordPress.com verbinden</string>
+    <string name="dataview_default_empty_message">Keine Inhalte</string>
+    <string name="content_description_empty_view">Bild, das zeigt, dass die Ansicht leer ist</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Statistiken konnten nicht aktiviert werden</string>
+    <string name="jetpack_rest_connection_error_access_token">Zugriffstoken fehlt</string>
+    <string name="jetpack_rest_connection_error_connect_user">Benutzer konnte nicht mit WordPress.com verbunden werden</string>
+    <string name="jetpack_rest_connection_error_connect_site">Die Verbindung zur Website ist fehlgeschlagen</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack ist installiert, aber inaktiv</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Die Installation ist fehlgeschlagen</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack wird eingerichtet</string>
     <string name="application_password_last_used_sort">Zuletzt verwendet</string>
     <string name="application_password_created_sort">Erstellt</string>
     <string name="application_password_name_sort">Name</string>
@@ -29,9 +40,8 @@ Language: de
     <string name="subscribers_delete_confirmation_message">Bist du sicher, dass du diesen Abonnenten löschen möchtest?</string>
     <string name="subscribers_delete_confirmation_title">Abonnenten löschen</string>
     <string name="subscribers_sort_name">Name</string>
-    <string name="jetpack_rest_connection_error_wpcom">Es kann keine Verbindung zu WordPress.com hergestellt werden</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Es konnte keine Verbindung zu WordPress.com hergestellt werden</string>
     <string name="jetpack_rest_connection_error_timeout">Zeitüberschreitung</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack ist bereits installiert</string>
     <string name="jetpack_rest_connection_cancel_message">Die Verbindung zu Jetpack wird gerade aufgebaut. Bist du sicher, dass du abbrechen möchtest?</string>
     <string name="jetpack_rest_connection_cancel_title">Einrichtung von Jetpack abbrechen?</string>
     <string name="jetpack_rest_connection_status_failed">Fehlgeschlagen</string>
@@ -39,14 +49,10 @@ Language: de
     <string name="jetpack_rest_connection_status_in_progress">In Bearbeitung …</string>
     <string name="jetpack_rest_connection_status_not_started">Nicht gestartet</string>
     <string name="jetpack_rest_connection_step_finalize">Einrichtung abschließen</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Mit WordPress.com verbinden</string>
-    <string name="jetpack_rest_connection_step_connect_site">Verbinde deine Website</string>
+    <string name="jetpack_rest_connection_step_connect_user">Benutzer mit WordPress.com verbinden</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Jetpack-Plugin installieren</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Bei WordPress.com anmelden</string>
-    <string name="jetpack_rest_connection_setup_title">Einrichten von Jetpack (Simulation)</string>
     <string name="jetpack_rest_connection_title">Jetpack-Verbindung</string>
-    <string name="experimental_jetpack_rest_connection_description">Experimentellen Jetpack-REST-Verbindungsaufbau aktivieren</string>
-    <string name="experimental_jetpack_rest_connection">Experimentelle REST-Verbindung zu Jetpack</string>
     <string name="experimental_subscribers_feature_description">Newsletter-Abonnenten anzeigen und verwalten</string>
     <string name="start">Starten</string>
     <string name="descending">Absteigend</string>
@@ -708,7 +714,7 @@ Language: de
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Schließen</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Support kontaktieren</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Vollständiges Plugin installieren</string>
-    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Geschäftsbedingungen</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Allgemeine Geschäftsbedingungen</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Mit der Einrichtung von Jetpack erhalten wir deine Zustimmung zu unseren </string>
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">vollständige Jetpack-Plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuelle Jetpack-Plugins</string>
@@ -1326,7 +1332,7 @@ Language: de
     <string name="blogging_reminders_done">Fertig</string>
     <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>
-    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Als Beitragsbild festlegen </string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Als Beitragsbild festlegen</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Als Beitragsbild entfernen </string>
     <string name="fab_add_category_desc">Kategorie erstellen</string>
     <string name="support_ticket_subject">WordPress für Android-Support</string>
@@ -1851,7 +1857,7 @@ Language: de
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Als Link konvertieren</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Video auswählen</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Bild oder Video auswählen</string>
-    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Bild wählen</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Bild auswählen</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Block entfernt</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Registrierungsbestätigung</string>
@@ -2140,7 +2146,7 @@ Language: de
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
-    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000">%s Mio.</string>
     <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Wir können die Beiträge momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-14 15:54:08+0000
+Translation-Revision-Date: 2025-09-02 16:54:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Не удалось войти в WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Подключите сайт к WordPress.com</string>
+    <string name="dataview_default_empty_message">Здесь ничего нет</string>
+    <string name="content_description_empty_view">Изображение, иллюстрирующее пустое представление</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Не удалось активировать статистику</string>
+    <string name="jetpack_rest_connection_error_access_token">Отсутствует токен доступа</string>
+    <string name="jetpack_rest_connection_error_connect_user">Не удалось подключить пользователя к WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Не удалось подключиться к сайту</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack установлен, но неактивен</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Не удалось выполнить установку</string>
+    <string name="jetpack_rest_connection_setup_title">Настройка Jetpack</string>
     <string name="application_password_last_used_sort">Последний сеанс</string>
     <string name="application_password_created_sort">Создан</string>
     <string name="application_password_name_sort">Имя</string>
@@ -29,9 +40,7 @@ Language: ru
     <string name="subscribers_delete_confirmation_message">Вы уверены, что хотите удалить этого подписчика?</string>
     <string name="subscribers_delete_confirmation_title">Удалить подписчика</string>
     <string name="subscribers_sort_name">Имя</string>
-    <string name="jetpack_rest_connection_error_wpcom">Не удалось подключиться к WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Время ожидания истекло</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack уже установлен</string>
     <string name="jetpack_rest_connection_cancel_message">Выполняется процесс подключения Jetpack. Вы уверены, что хотите отменить действие?</string>
     <string name="jetpack_rest_connection_cancel_title">Отменить установку Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">Ошибка</string>
@@ -39,14 +48,10 @@ Language: ru
     <string name="jetpack_rest_connection_status_in_progress">Выполняется…</string>
     <string name="jetpack_rest_connection_status_not_started">Не начато</string>
     <string name="jetpack_rest_connection_step_finalize">Завершить настройку</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Подключиться к WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Подключить сайт</string>
+    <string name="jetpack_rest_connection_step_connect_user">Подключить пользователя к WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Установить плагин Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Вход на WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Настройка Jetpack (симуляция)</string>
     <string name="jetpack_rest_connection_title">Подключение Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Активировать экспериментальный процесс подключения Jetpack REST</string>
-    <string name="experimental_jetpack_rest_connection">Экспериментальное подключение Jetpack REST</string>
     <string name="experimental_subscribers_feature_description">Просмотр подписчиков рассылки и управление ими</string>
     <string name="start">Начало</string>
     <string name="descending">По убыванию</string>

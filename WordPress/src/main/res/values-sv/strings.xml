@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-11 16:54:11+0000
+Translation-Revision-Date: 2025-09-02 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Kan inte logga in på WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Anslut webbplats till WordPress.com</string>
+    <string name="dataview_default_empty_message">Det finns ingenting här</string>
+    <string name="content_description_empty_view">Bild som illustrerar att vyn är tom</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Det gick inte att aktivera statistiken</string>
+    <string name="jetpack_rest_connection_error_access_token">Åtkomsttoken saknas</string>
+    <string name="jetpack_rest_connection_error_connect_user">Det gick inte att ansluta användaren till WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Det gick inte att ansluta till webbplatsen</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack är installerat men inaktivt</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Installation misslyckades</string>
+    <string name="jetpack_rest_connection_setup_title">Ställer in Jetpack</string>
     <string name="application_password_last_used_sort">Senast använd</string>
     <string name="application_password_created_sort">Skapad</string>
     <string name="application_password_name_sort">Namn</string>
@@ -29,9 +40,8 @@ Language: sv_SE
     <string name="subscribers_delete_confirmation_message">Är du säker på att du vill ta bort denna prenumerant?</string>
     <string name="subscribers_delete_confirmation_title">Ta bort prenumerant</string>
     <string name="subscribers_sort_name">Namn</string>
-    <string name="jetpack_rest_connection_error_wpcom">Det gick inte att ansluta till WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Kan inte ansluta till WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Tidsgränsen uppnåddes</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack är redan installerat</string>
     <string name="jetpack_rest_connection_cancel_message">Jetpack-anslutningsprocessen pågår. Är du säker på att du vill avbryta?</string>
     <string name="jetpack_rest_connection_cancel_title">Avbryta Jetpack-installationen?</string>
     <string name="jetpack_rest_connection_status_failed">Misslyckades</string>
@@ -39,14 +49,10 @@ Language: sv_SE
     <string name="jetpack_rest_connection_status_in_progress">Pågår …</string>
     <string name="jetpack_rest_connection_status_not_started">Inte startad</string>
     <string name="jetpack_rest_connection_step_finalize">Slutför konfigurationen</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Anslut till WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Anslut din webbplats</string>
+    <string name="jetpack_rest_connection_step_connect_user">Anslut användare till WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Installera Jetpack-tillägg</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Logga in på WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Konfigurera Jetpack (simulering)</string>
     <string name="jetpack_rest_connection_title">Jetpack-anslutning</string>
-    <string name="experimental_jetpack_rest_connection_description">Aktivera flöde för experimentell Jetpack REST-anslutning</string>
-    <string name="experimental_jetpack_rest_connection">Experimentell Jetpack REST-anslutning</string>
     <string name="experimental_subscribers_feature_description">Visa och hantera nyhetsbrevsprenumeranter</string>
     <string name="start">Starta</string>
     <string name="descending">Fallande</string>
