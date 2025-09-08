@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-14 14:30:25+0000
+Translation-Revision-Date: 2025-08-30 05:58:53+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Nu mă pot înregistra la WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Conectează site-ul la WordPress.com</string>
+    <string name="dataview_default_empty_message">Nu există nimic aici</string>
+    <string name="content_description_empty_view">Imagine care arată că vizualizarea este goală</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Activarea statisticilor a eșuat</string>
+    <string name="jetpack_rest_connection_error_access_token">Lipsește tokenul de acces</string>
+    <string name="jetpack_rest_connection_error_connect_user">Conectarea utilizatorului la WordPress.com e eșuat</string>
+    <string name="jetpack_rest_connection_error_connect_site">Conectarea site-ului a eșuat</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack este instalat dar nu este activ</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Instalarea a eșuat</string>
+    <string name="jetpack_rest_connection_setup_title">Inițializez Jetpack</string>
     <string name="application_password_last_used_sort">Ultima utilizare</string>
     <string name="application_password_created_sort">Creată</string>
     <string name="application_password_name_sort">Nume</string>
@@ -29,9 +40,8 @@ Language: ro
     <string name="subscribers_delete_confirmation_message">Sigur vrei să ștergi acest abonat?</string>
     <string name="subscribers_delete_confirmation_title">Șterge abonatul</string>
     <string name="subscribers_sort_name">Nume</string>
-    <string name="jetpack_rest_connection_error_wpcom">Nu mă pot conecta la WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Nu mă pot conecta la WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">A expirat</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack este deja instalat</string>
     <string name="jetpack_rest_connection_cancel_message">Procesul de conectare la Jetpack este în desfășurare. Sigur vrei să anulezi?</string>
     <string name="jetpack_rest_connection_cancel_title">Anulezi inițializarea Jetpack?</string>
     <string name="jetpack_rest_connection_status_failed">Eșuată</string>
@@ -39,14 +49,10 @@ Language: ro
     <string name="jetpack_rest_connection_status_in_progress">În desfășurare…</string>
     <string name="jetpack_rest_connection_status_not_started">Nu a început</string>
     <string name="jetpack_rest_connection_step_finalize">Finalizează inițializarea</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Conectează la WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Conectează-ți site-ul</string>
+    <string name="jetpack_rest_connection_step_connect_user">Conectează utilizatorul la WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Instalează modulul Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Autentifică-te în WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Configurare Jetpack (simulată)</string>
     <string name="jetpack_rest_connection_title">Conexiune la Jetpack</string>
-    <string name="experimental_jetpack_rest_connection_description">Activează fluxul pentru conexiunea experimentală Jetpack REST</string>
-    <string name="experimental_jetpack_rest_connection">Conexiune experimentală Jetpack REST</string>
     <string name="experimental_subscribers_feature_description">Vezi și administrezi abonații la buletine de știri</string>
     <string name="start">Începe</string>
     <string name="descending">Descrescător</string>

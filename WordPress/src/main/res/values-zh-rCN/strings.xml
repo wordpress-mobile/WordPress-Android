@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-15 08:38:07+0000
+Translation-Revision-Date: 2025-09-02 10:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">无法登录 WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">将站点关联到 WordPress.com</string>
+    <string name="dataview_default_empty_message">暂无内容</string>
+    <string name="content_description_empty_view">表明视图为空的图片</string>
+    <string name="jetpack_rest_connection_error_activate_stats">无法启用统计信息</string>
+    <string name="jetpack_rest_connection_error_access_token">缺少访问令牌</string>
+    <string name="jetpack_rest_connection_error_connect_user">无法将用户关联到 WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">无法关联到站点</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack 已安装但未启用</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">安装失败</string>
+    <string name="jetpack_rest_connection_setup_title">正在设置 Jetpack</string>
     <string name="application_password_last_used_sort">上次使用时间</string>
     <string name="application_password_created_sort">创建时间</string>
     <string name="application_password_name_sort">名称</string>
@@ -29,9 +40,8 @@ Language: zh_CN
     <string name="subscribers_delete_confirmation_message">是否确定要删除此订阅者？</string>
     <string name="subscribers_delete_confirmation_title">删除订阅者</string>
     <string name="subscribers_sort_name">名称</string>
-    <string name="jetpack_rest_connection_error_wpcom">无法连接到 WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">无法关联到 WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">超时</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack 已安装</string>
     <string name="jetpack_rest_connection_cancel_message">正在连接 Jetpack。 是否确定要取消？</string>
     <string name="jetpack_rest_connection_cancel_title">取消 Jetpack 设置？</string>
     <string name="jetpack_rest_connection_status_failed">失败</string>
@@ -39,14 +49,10 @@ Language: zh_CN
     <string name="jetpack_rest_connection_status_in_progress">进行中…</string>
     <string name="jetpack_rest_connection_status_not_started">未开始</string>
     <string name="jetpack_rest_connection_step_finalize">完成设置</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">连接到 WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">连接您的站点</string>
+    <string name="jetpack_rest_connection_step_connect_user">将用户关联到 WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">安装 Jetpack 插件</string>
     <string name="jetpack_rest_connection_step_login_wpcom">登录 WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">设置 Jetpack（模拟）</string>
     <string name="jetpack_rest_connection_title">Jetpack 连接</string>
-    <string name="experimental_jetpack_rest_connection_description">启用实验性 Jetpack REST 连接流程</string>
-    <string name="experimental_jetpack_rest_connection">实验性 Jetpack REST 连接</string>
     <string name="experimental_subscribers_feature_description">查看和管理电子报订阅者</string>
     <string name="start">开始</string>
     <string name="descending">降序</string>

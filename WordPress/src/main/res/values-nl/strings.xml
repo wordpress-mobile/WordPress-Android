@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-09 07:09:38+0000
+Translation-Revision-Date: 2025-08-30 07:05:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">Kan niet inloggen op WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Verbind site met WordPress.com</string>
+    <string name="dataview_default_empty_message">Hier is niets te vinden</string>
+    <string name="content_description_empty_view">Afbeelding die laat zien dat de weergave leeg is</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Activeren van statistieken mislukt</string>
+    <string name="jetpack_rest_connection_error_access_token">Toegang token ontbreekt</string>
+    <string name="jetpack_rest_connection_error_connect_user">Gebruiker verbinden met WordPress.com mislukt</string>
+    <string name="jetpack_rest_connection_error_connect_site">Verbinding maken met site mislukt</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack geïnstalleerd maar niet actief</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Installatie mislukt</string>
+    <string name="jetpack_rest_connection_setup_title">Jetpack instellen</string>
     <string name="application_password_last_used_sort">Laatst gebruikt</string>
     <string name="application_password_created_sort">Aangemaakt</string>
     <string name="application_password_name_sort">Naam</string>
@@ -29,9 +40,8 @@ Language: nl
     <string name="subscribers_delete_confirmation_message">Weet je het zeker dat je deze abonnee wil verwijderen?</string>
     <string name="subscribers_delete_confirmation_title">Abonnee verwijderen</string>
     <string name="subscribers_sort_name">Naam</string>
-    <string name="jetpack_rest_connection_error_wpcom">Kan geen verbinding maken met WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Kan geen verbinding maken met WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Timed-out</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack is al geïnstalleerd</string>
     <string name="jetpack_rest_connection_cancel_message">Het Jetpack verbindingsproces is bezig. Weet je het zeker dat je wil annuleren?</string>
     <string name="jetpack_rest_connection_cancel_title">Jetpack setup annuleren?</string>
     <string name="jetpack_rest_connection_status_failed">Mislukt</string>
@@ -39,14 +49,10 @@ Language: nl
     <string name="jetpack_rest_connection_status_in_progress">In voortgang…</string>
     <string name="jetpack_rest_connection_status_not_started">Niet gestart</string>
     <string name="jetpack_rest_connection_step_finalize">Setup voltooien</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">Maak verbinding met WordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">Verbind je site</string>
+    <string name="jetpack_rest_connection_step_connect_user">Verbind gebruiker met WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Jetpack plugin installeren</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login bij WordPress.com</string>
-    <string name="jetpack_rest_connection_setup_title">Jetpack instellen (Gesimuleerd)</string>
     <string name="jetpack_rest_connection_title">Jetpack verbinding</string>
-    <string name="experimental_jetpack_rest_connection_description">Experimentele Jetpack REST verbinding flow inschakelen</string>
-    <string name="experimental_jetpack_rest_connection">Experimentele Jetpack REST verbinding</string>
     <string name="experimental_subscribers_feature_description">Bekijk en beheer nieuwsbriefabonnees</string>
     <string name="start">Starten</string>
     <string name="descending">Aflopend</string>

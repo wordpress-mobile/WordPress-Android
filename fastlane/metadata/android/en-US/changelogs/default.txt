@@ -1,3 +1,2 @@
-- Media now displays properly on private sites in the experimental editor.
-- Enhanced media uploads with better authentication and improved performance.
-- Fixed various upload bugs and improved overall media handling.
+- We've added support for mentions in the experimental editor—tag your friends and collaborators with ease.
+- Media selection just got more accessible for everyone.

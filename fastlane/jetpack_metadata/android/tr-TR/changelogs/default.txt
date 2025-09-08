@@ -1,5 +1,4 @@
-26.1:
-- Yeni Aboneler ekranı tüm e-posta ve Okuyucu abonelerinizi gösterir, artık içeriğinizi kimin okuduğunu bilirsiniz.
-- Ortam artık deneysel düzenleyicide özel sitelerde düzgün şekilde görüntüleniyor.
-- Daha iyi kimlik doğrulama ve gelişmiş performans ile gelişmiş ortam yüklemeleri.
-- Çeşitli yükleme hataları düzeltildi ve genel ortam kullanımı iyileştirildi.
+26.2:
+- Doğrudan İstatistikler ve Bildirimler'den alınabilen, kullanıcı tarafından barındırılan sitelerinizi yeni ve kolaylaştırılmış akışımızla Jetpack'e bağlayın.
+- Deneysel düzenleyiciye bahsedilme desteği ekledik, arkadaşlarınızı ve çalışma arkadaşlarınızı kolaylıkla etiketleyin.
+- Ortam seçimi herkes için daha erişilebilir hale geldi.

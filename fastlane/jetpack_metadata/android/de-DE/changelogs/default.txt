@@ -1,5 +1,4 @@
-26.1:
-- Der Bildschirm „New Subscribers“ (Neue Abonnenten) zeigt alle deine E-Mail- und Reader-Abonnenten an. So weißt du, wer deine Inhalte liest.
-- Medien werden jetzt auf privaten Websites im experimentellen Editor richtig angezeigt.
-- Medien-Uploads weisen jetzt eine bessere Authentifizierung und Performance auf.
-- Verschiedene Upload-Fehler wurden behoben und die allgemeine Handhabung von Medien wurde verbessert.
+26.2:
+- Verbinde deine selbst gehosteten Websites mit Jetpack mithilfe unseres neuen, optimierten Workflows, der über Statistiken und Benachrichtigungen verfügbar ist.
+- Wir haben Unterstützung für Erwähnungen im experimentellen Editor hinzugefügt, damit du deine Freunde und beteiligte Personen ganz einfach markieren kannst.
+- Die Medienauswahl ist jetzt für alle zugänglicher.

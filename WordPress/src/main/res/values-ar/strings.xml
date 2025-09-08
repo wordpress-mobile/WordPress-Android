@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-13 12:54:08+0000
+Translation-Revision-Date: 2025-09-01 13:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="jetpack_rest_connection_error_login_wpcom">يتعذّر تسجيل الدخول إلى ووردبريس.كوم</string>
+    <string name="jetpack_rest_connection_step_connect_site">ربط الموقع الإلكتروني بووردبريس.كوم</string>
+    <string name="dataview_default_empty_message">لا يوجد شيء هنا</string>
+    <string name="content_description_empty_view">صورة توضِّح أن العرض فارغ</string>
+    <string name="jetpack_rest_connection_error_activate_stats">فشل في تفعيل الإحصائيات</string>
+    <string name="jetpack_rest_connection_error_access_token">رمز الوصول مفقود</string>
+    <string name="jetpack_rest_connection_error_connect_user">فشل ربط المستخدم بووردبريس.كوم</string>
+    <string name="jetpack_rest_connection_error_connect_site">فشل الربط بالموقع</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack مُثبَّت ولكنه غير نشط</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">فشل التثبيت</string>
+    <string name="jetpack_rest_connection_setup_title">جارٍ إعداد Jetpack</string>
     <string name="application_password_last_used_sort">مُستخدم حديثًا</string>
     <string name="application_password_created_sort">تاريخ الإنشاء</string>
     <string name="application_password_no_ip">لم يُسجَل أي عنوان IP</string>
@@ -24,19 +35,15 @@ Language: ar
     <string name="subscribers_delete_success_message">حُذِف المشترك، لكن قد يستغرق الأمر دقيقة حتى يصبح الحذف ساري المفعول</string>
     <string name="subscribers_delete_success_title">حُذِف المشترك</string>
     <string name="subscribers_delete_confirmation_message">هل أنت متأكد من رغبتك في حذف هذا المشترك؟</string>
-    <string name="jetpack_rest_connection_error_wpcom">تعذر الاتصال بـWordPress.com</string>
-    <string name="jetpack_rest_connection_error_jetpack_already_installed">Jetpack مثبت بالفعل</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">تعذر الاتصال بووردبريس.كوم</string>
     <string name="jetpack_rest_connection_cancel_message">عملية اتصال Jetpack قيد التقدم. هل أنت متأكد من رغبتك في الإلغاء؟</string>
     <string name="jetpack_rest_connection_cancel_title">هل تريد إلغاء إعدادات Jetpack؟</string>
     <string name="jetpack_rest_connection_status_completed">مكتمل</string>
     <string name="jetpack_rest_connection_status_in_progress">قيد التنفيذ…</string>
     <string name="jetpack_rest_connection_step_finalize">إنهاء الإعداد</string>
-    <string name="jetpack_rest_connection_step_connect_wpcom">الاتصال بـWordPress.com</string>
-    <string name="jetpack_rest_connection_step_connect_site">الاتصال بموقعك</string>
+    <string name="jetpack_rest_connection_step_connect_user">ربط المستخدم بووردبريس.كوم</string>
     <string name="jetpack_rest_connection_step_install_jetpack">تثبيت إضافة Jetpack.</string>
     <string name="jetpack_rest_connection_step_login_wpcom">تسجيل الدخول إلى WordPress.com</string>
-    <string name="experimental_jetpack_rest_connection_description">تمكين تدفق الاتصال التجريبي Jetpack REST</string>
-    <string name="experimental_jetpack_rest_connection">الاتصال التجريبي Jetpack REST</string>
     <string name="experimental_subscribers_feature_description">عرض المشتركين في خدمة الرسائل الإخبارية وإدارتهم</string>
     <string name="start">بداية</string>
     <string name="application_password_disable_feature_title">هل تريد تعطيل كلمة مرور التطبيق؟</string>
