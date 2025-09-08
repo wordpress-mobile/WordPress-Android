@@ -58,10 +58,10 @@ object AvatarHelper {
                     }
 
                     override fun onResourceReady(
-                        drawable: Drawable,
-                        model: Any,
-                        target: Target<Drawable?>,
-                        dataSource: DataSource,
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable?>?,
+                        dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
                         listener.onRequestFinished()
