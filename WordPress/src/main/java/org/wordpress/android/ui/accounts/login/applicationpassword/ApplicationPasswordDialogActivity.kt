@@ -82,6 +82,10 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
         }
     }
 
+    protected abstract fun getTitleResource(): Int
+    protected abstract fun getDescriptionResource(): Int
+    protected abstract fun getButtonTextResource(): Int
+
     @Composable
     fun ApplicationPasswordReauthenticateDialog(
         viewModel: ApplicationPasswordDialogViewModel,
@@ -97,12 +101,12 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
                     contentDescription = null
                 )
             },
-            title = { Text(text = stringResource(R.string.application_password_invalid)) },
+            title = { Text(text = stringResource(getTitleResource())) },
             text = {
                 Column(
                     modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
                 ) {
-                    Text(text = stringResource(R.string.application_password_invalid_description))
+                    Text(text = stringResource(getDescriptionResource()))
                 }
             },
             confirmButton = {
@@ -118,7 +122,7 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text(text = stringResource(R.string.log_in))
+                        Text(text = stringResource(getButtonTextResource()))
                     }
                 }
             }
