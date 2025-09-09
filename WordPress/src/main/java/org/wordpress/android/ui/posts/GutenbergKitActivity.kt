@@ -109,6 +109,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.isShowing
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary
@@ -377,6 +378,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
     @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
+    @Inject lateinit var activityNavigator: ActivityNavigator
+
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -499,6 +502,16 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             return
         }
 
+        if (shouldRequireApplicationPassword()) {
+            activityNavigator.navigateToApplicationPasswordRequired(
+                this,
+               siteModel.url,
+               resources.getString(R.string.application_password_required_block_editor)
+            )
+            finish()
+            return
+        }
+
         isLandingEditor = intent.extras?.getBoolean(EditorConstants.EXTRA_IS_LANDING_EDITOR) ?: false
 
         refreshMobileEditorFromSiteSetting()
@@ -613,6 +626,14 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         tempSiteModel?.let { siteModel = it }?: return false
 
         return true
+    }
+
+    private fun shouldRequireApplicationPassword(): Boolean {
+        return site.apiRestPasswordPlain.isNullOrEmpty() &&
+                !siteModel.isWPCom &&
+                !siteModel.isJetpackConnected &&
+                experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) &&
+                !experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
     }
 
     private fun refreshMobileEditorFromSiteSetting() {
