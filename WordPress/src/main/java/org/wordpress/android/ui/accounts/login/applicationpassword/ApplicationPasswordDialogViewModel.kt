@@ -16,7 +16,7 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @HiltViewModel
-class ApplicationPasswordReauthenticateViewModel @Inject constructor(
+class ApplicationPasswordDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
@@ -32,7 +32,7 @@ class ApplicationPasswordReauthenticateViewModel @Inject constructor(
             _isLoading.value = true
 
             if (authenticationUrl.isEmpty()) {
-                appLogWrapper.w(AppLog.T.MAIN, "Authentication URL is empty, cannot proceed with reauthentication")
+                appLogWrapper.w(AppLog.T.MAIN, "Authentication URL is empty, cannot proceed with authentication")
                 _navigationEvent.emit(NavigationEvent.ShowError)
                 return@launch
             }

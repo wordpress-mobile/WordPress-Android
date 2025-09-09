@@ -33,11 +33,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
+abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
-    private val viewModel: ApplicationPasswordReauthenticateViewModel by viewModels()
+    private val viewModel: ApplicationPasswordDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +49,16 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
         lifecycleScope.launch {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
-                    is ApplicationPasswordReauthenticateViewModel.NavigationEvent.NavigateToLogin -> {
+                    is ApplicationPasswordDialogViewModel.NavigationEvent.NavigateToLogin -> {
                         activityNavigator.openApplicationPasswordLogin(
-                            this@ApplicationPasswordReauthenticateActivity,
+                            this@ApplicationPasswordDialogActivity,
                             event.authenticationUrl
                         )
                         finish()
                     }
-                    is ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError -> {
+                    is ApplicationPasswordDialogViewModel.NavigationEvent.ShowError -> {
                         ToastUtils.showToast(
-                            this@ApplicationPasswordReauthenticateActivity,
+                            this@ApplicationPasswordDialogActivity,
                             getString(R.string.error_generic)
                         )
                         finish()
@@ -84,7 +84,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
 
     @Composable
     fun ApplicationPasswordReauthenticateDialog(
-        viewModel: ApplicationPasswordReauthenticateViewModel,
+        viewModel: ApplicationPasswordDialogViewModel,
         onDismiss: () -> Unit,
         onConfirm: () -> Unit,
     ) {
@@ -133,11 +133,11 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
             ApplicationPasswordReauthenticateDialogPreviewContent()
         }
     }
-    
+
     @Composable
     private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
         val isLoading = remember { mutableStateOf(false) }
-        
+
         AlertDialog(
             onDismissRequest = {},
             icon = {

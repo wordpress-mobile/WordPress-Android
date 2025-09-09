@@ -144,7 +144,7 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity"
+            android:name=".ui.accounts.login.applicationpassword.ApplicationPasswordDialogActivity"
             android:theme="@style/WordPress.TransparentDialog"
             android:exported="false" />
 
