@@ -28,7 +28,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class GutenbergKitWarmupHelper @Inject constructor(
-    private val context: Context,
+    private val appContext: Context,
     private val accountStore: AccountStore,
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
@@ -106,7 +106,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
 
             // Perform the warmup on the main thread as it involves WebView
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                GutenbergView.warmup(context, configuration)
+                GutenbergView.warmup(appContext, configuration)
             }
 
             lastWarmedUpSiteId = site.siteId
