@@ -288,8 +288,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="screenLayout|orientation|screenSize
-      |keyboard|keyboardHidden|smallestScreenSize"
+            android:configChanges="locale|orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
@@ -299,8 +298,7 @@
         </activity>
         <activity
             android:name=".ui.posts.GutenbergKitActivity"
-            android:configChanges="screenLayout|orientation|screenSize
-      |keyboard|keyboardHidden|smallestScreenSize"
+            android:configChanges="locale|screenLayout|orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize|uiMode"
             android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
