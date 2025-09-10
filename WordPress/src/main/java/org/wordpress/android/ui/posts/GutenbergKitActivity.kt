@@ -473,7 +473,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
     }
 
-    @Suppress("LongMethod", "ComplexMethod")
+    @Suppress("LongMethod", "ComplexMethod", "ReturnCount")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
