@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -28,6 +29,9 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var viewModel: ApplicationPasswordDialogViewModel
 
     private val testAuthUrl = "https://example.com/wp-admin/authorize-application.php"
@@ -39,7 +43,8 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
         MockitoAnnotations.openMocks(this)
         viewModel = ApplicationPasswordDialogViewModel(
             applicationPasswordLoginHelper,
-            appLogWrapper
+            appLogWrapper,
+            experimentalFeatures
         )
     }
 
