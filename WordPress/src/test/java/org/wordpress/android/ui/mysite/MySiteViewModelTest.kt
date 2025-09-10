@@ -47,6 +47,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTracker
@@ -140,6 +141,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice
 
+    @Mock
+    lateinit var gutenbergKitWarmupHelper: GutenbergKitWarmupHelper
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -209,6 +213,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardCardsViewModelSlice,
             dashboardItemsViewModelSlice,
             applicationPasswordViewModelSlice,
+            gutenbergKitWarmupHelper,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

@@ -25,11 +25,11 @@ import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
+import org.wordpress.android.ui.posts.EditorConfigurationBuilder
 import org.wordpress.android.ui.posts.GutenbergKitSettingsBuilder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
@@ -39,8 +39,6 @@ import org.wordpress.gutenberg.GutenbergView.HistoryChangeListener
 import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
-import org.wordpress.gutenberg.GutenbergWebViewPool.getPreloadedWebView
-import org.wordpress.gutenberg.GutenbergWebViewPool.recycleWebView
 import org.wordpress.gutenberg.Media
 import java.io.Serializable
 import java.util.concurrent.CountDownLatch
@@ -55,6 +53,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var openMediaLibraryListener: OpenMediaLibraryListener? = null
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
 
+    private var editorStarted = false
     private var isEditorDidMount = false
     private var rootView: View? = null
     private var isXPostsEnabled: Boolean = false
@@ -67,6 +66,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
         if (savedInstanceState != null) {
             isHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED)
+            editorStarted = savedInstanceState.getBoolean(KEY_EDITOR_STARTED)
             isEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT)
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID)
         }
@@ -144,7 +144,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         rootView = inflater.inflate(R.layout.fragment_gutenberg_kit_editor, container, false)
         val gutenbergViewContainer = rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
-        gutenbergView = getPreloadedWebView(requireContext()).also { gutenbergView ->
+        gutenbergView = GutenbergView.createForEditor(requireContext()).also { gutenbergView ->
             gutenbergView.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
@@ -283,15 +283,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         }
     }
 
-    // Type-safe settings accessors
-    private inline fun <reified T> Map<String, Any?>.getSetting(key: String): T? = this[key] as? T
-    private inline fun <reified T> Map<String, Any?>.getSettingOrDefault(key: String, default: T): T =
-        getSetting(key) ?: default
-
-    private fun Map<String, Any?>.getStringArray(key: String): Array<String> =
-        getSetting<Array<String?>>(key)?.asSequence()?.filterNotNull()?.toList()?.toTypedArray() ?: emptyArray()
-
-
     // View extension functions
     private fun View?.setVisibleOrGone(visible: Boolean) {
         this?.visibility = if (visible) View.VISIBLE else View.GONE
@@ -299,6 +290,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, isHtmlModeEnabled)
+        outState.putBoolean(KEY_EDITOR_STARTED, editorStarted)
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, isEditorDidMount)
         outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId)
     }
@@ -444,19 +436,22 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onDestroy() {
         gutenbergView?.let { gutenbergView ->
-            recycleWebView(gutenbergView)
+            gutenbergView.destroy()
             historyChangeListener = null
             featuredImageChangeListener = null
         }
+        editorStarted = false
+        isEditorDidMount = false
         super.onDestroy()
     }
 
     fun startWithEditorSettings(editorSettings: String) {
-        if (gutenbergView == null) {
+        if (gutenbergView == null || editorStarted) {
             return
         }
 
         val config = buildEditorConfiguration(editorSettings)
+        editorStarted = true
         gutenbergView?.start(config)
     }
 
@@ -466,36 +461,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {
         val settingsMap = settings!!
-
-        return settingsMap.run {
-            val postId = getSetting<Int>("postId").let { if (it == 0) -1 else it }
-            val siteURL = getSetting<String>("siteURL")
-            val siteApiRoot = getSetting<String>("siteApiRoot")
-            val siteApiNamespace = getStringArray("siteApiNamespace")
-            val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
-            val editorAssetsEndpoint = "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
-            val cookies = getSetting<Map<String, String>>("cookies") ?: emptyMap()
-            val namespaceExcludedPaths = getStringArray("namespaceExcludedPaths")
-
-            EditorConfiguration.Builder()
-                .setTitle(getSetting<String>("postTitle") ?: "")
-                .setContent(getSetting<String>("postContent") ?: "")
-                .setPostId(postId)
-                .setPostType(getSetting<String>("postType"))
-                .setThemeStyles(getSettingOrDefault("themeStyles", false))
-                .setPlugins(getSettingOrDefault("plugins", false))
-                .setSiteApiRoot(getSetting<String>("siteApiRoot") ?: "")
-                .setSiteApiNamespace(siteApiNamespace)
-                .setNamespaceExcludedPaths(namespaceExcludedPaths)
-                .setAuthHeader(getSetting<String>("authHeader") ?: "")
-                .setEditorSettings(editorSettings)
-                .setLocale(getSetting<String>("locale"))
-                .setEditorAssetsEndpoint(editorAssetsEndpoint)
-                .setCachedAssetHosts(setOf("s0.wp.com", UrlUtils.getHost(siteURL)))
-                .setEnableAssetCaching(true)
-                .setCookies(cookies)
-                .build()
-        }
+        return EditorConfigurationBuilder.build(settingsMap, editorSettings)
     }
 
     override fun onUndoPressed() {
@@ -509,6 +475,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     companion object {
         private const val GUTENBERG_EDITOR_NAME = "gutenberg"
         private const val KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED"
+        private const val KEY_EDITOR_STARTED = "KEY_EDITOR_STARTED"
         private const val KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT"
         private const val ARG_IS_NEW_POST = "param_is_new_post"
         private const val ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data"
