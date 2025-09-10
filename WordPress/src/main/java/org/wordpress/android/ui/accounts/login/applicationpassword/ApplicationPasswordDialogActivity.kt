@@ -129,57 +129,57 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
         )
     }
 
-    @Preview
-    @Preview(uiMode = UI_MODE_NIGHT_YES)
-    @Composable
-    fun ApplicationPasswordReauthenticateDialogPreview() {
-        AppThemeM3 {
-            ApplicationPasswordReauthenticateDialogPreviewContent()
-        }
-    }
-
-    @Composable
-    private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
-        val isLoading = remember { mutableStateOf(false) }
-
-        AlertDialog(
-            onDismissRequest = {},
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Lock,
-                    contentDescription = null
-                )
-            },
-            title = { Text(text = stringResource(R.string.application_password_invalid)) },
-            text = {
-                Column(
-                    modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
-                ) {
-                    Text(text = stringResource(R.string.application_password_invalid_description))
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        isLoading.value = !isLoading.value
-                    },
-                    enabled = !isLoading.value
-                ) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator(
-                            modifier = androidx.compose.ui.Modifier.size(16.dp),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Text(text = stringResource(R.string.log_in))
-                    }
-                }
-            }
-        )
-    }
-
     companion object {
         const val EXTRA_SITE_URL = "site_url_arg"
     }
+}
+
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun ApplicationPasswordReauthenticateDialogPreview() {
+    AppThemeM3 {
+        ApplicationPasswordReauthenticateDialogPreviewContent()
+    }
+}
+
+@Composable
+private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
+    val isLoading = remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = {},
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Lock,
+                contentDescription = null
+            )
+        },
+        title = { Text(text = stringResource(R.string.application_password_invalid)) },
+        text = {
+            Column(
+                modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(text = stringResource(R.string.application_password_invalid_description))
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    isLoading.value = !isLoading.value
+                },
+                enabled = !isLoading.value
+            ) {
+                if (isLoading.value) {
+                    CircularProgressIndicator(
+                        modifier = androidx.compose.ui.Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(text = stringResource(R.string.log_in))
+                }
+            }
+        }
+    )
 }
 
