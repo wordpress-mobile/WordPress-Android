@@ -83,7 +83,7 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
     }
 
     protected abstract fun getTitleResource(): Int
-    protected abstract fun getDescriptionResource(): Int
+    protected abstract fun getDescriptionString(): String
     protected abstract fun getButtonTextResource(): Int
 
     @Composable
@@ -106,7 +106,7 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
                 Column(
                     modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
                 ) {
-                    Text(text = stringResource(getDescriptionResource()))
+                    Text(text = getDescriptionString())
                 }
             },
             confirmButton = {

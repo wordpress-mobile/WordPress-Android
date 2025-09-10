@@ -6,6 +6,6 @@ import org.wordpress.android.R
 @AndroidEntryPoint
 class ApplicationPasswordReauthenticateDialogActivity : ApplicationPasswordDialogActivity() {
     override fun getTitleResource(): Int = R.string.application_password_invalid
-    override fun getDescriptionResource(): Int = R.string.application_password_invalid_description
+    override fun getDescriptionString(): String = resources.getString(R.string.application_password_invalid_description)
     override fun getButtonTextResource(): Int = R.string.log_in
 }

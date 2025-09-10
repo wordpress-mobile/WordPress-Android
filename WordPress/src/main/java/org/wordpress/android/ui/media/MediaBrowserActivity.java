@@ -311,8 +311,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     }
 
     private void showApplicationPasswordReauthenticateDialog(@NonNull String siteUrl) {
-        // TODO: undo before merge
-        mActivityNavigator.navigateToApplicationPasswordRequired(this, siteUrl);
+        mActivityNavigator.navigateToApplicationPasswordReauthentication(this, siteUrl);
     }
 
     public MediaDeleteService getMediaDeleteService() {
