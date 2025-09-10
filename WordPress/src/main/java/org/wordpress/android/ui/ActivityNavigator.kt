@@ -11,7 +11,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateActivity
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordDialogActivity
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordReauthenticateDialogActivity
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordRequiredDialogActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignPage
@@ -260,8 +262,15 @@ class ActivityNavigator @Inject constructor() {
     }
 
     fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
-        val intent = Intent(activity, ApplicationPasswordReauthenticateActivity::class.java)
-        intent.putExtra(ApplicationPasswordReauthenticateActivity.EXTRA_SITE_URL, authenticationUrl)
+        val intent = Intent(activity, ApplicationPasswordReauthenticateDialogActivity::class.java)
+        intent.putExtra(ApplicationPasswordDialogActivity.EXTRA_SITE_URL, authenticationUrl)
+        activity.startActivity(intent)
+    }
+
+    fun navigateToApplicationPasswordRequired(activity: Activity, authenticationUrl: String, featureName: String) {
+        val intent = Intent(activity, ApplicationPasswordRequiredDialogActivity::class.java)
+        intent.putExtra(ApplicationPasswordDialogActivity.EXTRA_SITE_URL, authenticationUrl)
+        intent.putExtra(ApplicationPasswordRequiredDialogActivity.EXTRA_FEATURE_NAME, featureName)
         activity.startActivity(intent)
     }
 }

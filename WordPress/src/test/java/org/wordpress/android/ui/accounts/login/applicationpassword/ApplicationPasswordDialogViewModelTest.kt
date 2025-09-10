@@ -21,14 +21,14 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
+class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
 
-    private lateinit var viewModel: ApplicationPasswordReauthenticateViewModel
+    private lateinit var viewModel: ApplicationPasswordDialogViewModel
 
     private val testAuthUrl = "https://example.com/wp-admin/authorize-application.php"
     private val testCompleteAuthUrl = "https://example.com/wp-admin/authorize-application.php?" +
@@ -37,7 +37,7 @@ class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModel = ApplicationPasswordReauthenticateViewModel(
+        viewModel = ApplicationPasswordDialogViewModel(
             applicationPasswordLoginHelper,
             appLogWrapper
         )
@@ -69,7 +69,7 @@ class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
             // Should emit navigation event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordReauthenticateViewModel.NavigationEvent.NavigateToLogin(testCompleteAuthUrl),
+                ApplicationPasswordDialogViewModel.NavigationEvent.NavigateToLogin(testCompleteAuthUrl),
                 navigationEvent
             )
 
@@ -87,7 +87,7 @@ class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
             // Should emit error event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError,
+                ApplicationPasswordDialogViewModel.NavigationEvent.ShowError,
                 navigationEvent
             )
 
@@ -125,7 +125,7 @@ class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
             // Should emit error event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError,
+                ApplicationPasswordDialogViewModel.NavigationEvent.ShowError,
                 navigationEvent
             )
 
@@ -162,7 +162,7 @@ class ApplicationPasswordReauthenticateViewModelTest : BaseUnitTest() {
             // Should emit error event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError,
+                ApplicationPasswordDialogViewModel.NavigationEvent.ShowError,
                 navigationEvent
             )
 

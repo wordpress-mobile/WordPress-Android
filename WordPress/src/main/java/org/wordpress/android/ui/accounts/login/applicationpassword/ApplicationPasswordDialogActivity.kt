@@ -33,11 +33,11 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
+abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
-    private val viewModel: ApplicationPasswordReauthenticateViewModel by viewModels()
+    private val viewModel: ApplicationPasswordDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +49,16 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
         lifecycleScope.launch {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
-                    is ApplicationPasswordReauthenticateViewModel.NavigationEvent.NavigateToLogin -> {
+                    is ApplicationPasswordDialogViewModel.NavigationEvent.NavigateToLogin -> {
                         activityNavigator.openApplicationPasswordLogin(
-                            this@ApplicationPasswordReauthenticateActivity,
+                            this@ApplicationPasswordDialogActivity,
                             event.authenticationUrl
                         )
                         finish()
                     }
-                    is ApplicationPasswordReauthenticateViewModel.NavigationEvent.ShowError -> {
+                    is ApplicationPasswordDialogViewModel.NavigationEvent.ShowError -> {
                         ToastUtils.showToast(
-                            this@ApplicationPasswordReauthenticateActivity,
+                            this@ApplicationPasswordDialogActivity,
                             getString(R.string.error_generic)
                         )
                         finish()
@@ -82,9 +82,13 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
         }
     }
 
+    protected abstract fun getTitleResource(): Int
+    protected abstract fun getDescriptionString(): String
+    protected abstract fun getButtonTextResource(): Int
+
     @Composable
     fun ApplicationPasswordReauthenticateDialog(
-        viewModel: ApplicationPasswordReauthenticateViewModel,
+        viewModel: ApplicationPasswordDialogViewModel,
         onDismiss: () -> Unit,
         onConfirm: () -> Unit,
     ) {
@@ -97,12 +101,12 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
                     contentDescription = null
                 )
             },
-            title = { Text(text = stringResource(R.string.application_password_invalid)) },
+            title = { Text(text = stringResource(getTitleResource())) },
             text = {
                 Column(
                     modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
                 ) {
-                    Text(text = stringResource(R.string.application_password_invalid_description))
+                    Text(text = getDescriptionString())
                 }
             },
             confirmButton = {
@@ -118,7 +122,7 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text(text = stringResource(R.string.log_in))
+                        Text(text = stringResource(getButtonTextResource()))
                     }
                 }
             }
@@ -133,11 +137,11 @@ class ApplicationPasswordReauthenticateActivity : ComponentActivity() {
             ApplicationPasswordReauthenticateDialogPreviewContent()
         }
     }
-    
+
     @Composable
     private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
         val isLoading = remember { mutableStateOf(false) }
-        
+
         AlertDialog(
             onDismissRequest = {},
             icon = {
