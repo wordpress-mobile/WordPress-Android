@@ -3123,8 +3123,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
-        editorFragment?.startWithEditorSettings(editorSettings.toJsonString())
+        val editorSettingsString = event.editorSettings?.toJsonString() ?: "undefined"
+        editorFragment?.startWithEditorSettings(editorSettingsString)
     }
 
     // EditorDataProvider methods
