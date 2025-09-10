@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -116,6 +117,14 @@ fun ApplicationPasswordDialog(
                 modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
             ) {
                 Text(text = description)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !isLoading
+            ) {
+                Text(text = stringResource(R.string.cancel))
             }
         },
         confirmButton = {
