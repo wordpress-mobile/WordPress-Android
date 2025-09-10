@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class ApplicationPasswordDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val appLogWrapper: AppLogWrapper,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
@@ -38,6 +41,8 @@ class ApplicationPasswordDialogViewModel @Inject constructor(
             }
 
             try {
+                // Assume that the Application Password experimental feature can be enabled
+                enableApplicationPasswordIfNecessary()
                 val completeAuthUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(authenticationUrl)
 
                 if (completeAuthUrl.isNotEmpty()) {
@@ -52,6 +57,12 @@ class ApplicationPasswordDialogViewModel @Inject constructor(
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    private fun enableApplicationPasswordIfNecessary() {
+        if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
+            experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
         }
     }
 

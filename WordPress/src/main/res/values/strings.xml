@@ -5062,7 +5062,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_required">Application Password Required</string>
     <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
     <string name="application_password_required_block_editor">Block Editor</string>
-    <string name="application_password_required_description_default">Application passwords are a more secure way to connect to your self-hosted site, and enable new features support.</string>
+    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
     <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
