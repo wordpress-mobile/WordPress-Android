@@ -55,6 +55,7 @@ class SubscribersViewModel @Inject constructor(
     private val _subscriberStats = MutableStateFlow<IndividualSubscriberStats?>(null)
     val subscriberStats = _subscriberStats.asStateFlow()
 
+    private var selectedSubscriber: Subscriber? = null
     private var statsJob: Job? = null
 
     override val emptyView = DataViewEmptyView(
@@ -212,6 +213,20 @@ class SubscribersViewModel @Inject constructor(
     fun getSubscriber(userId: Long): Subscriber? {
         val item = uiState.value.items.firstOrNull { it.id == userId }
         return item?.data as? Subscriber
+    }
+
+    /**
+     * Sets the currently selected subscriber for detail view navigation
+     */
+    fun setSelectedSubscriber(subscriber: Subscriber) {
+        selectedSubscriber = subscriber
+    }
+
+    /**
+     * Returns the currently selected subscriber
+     */
+    fun getSelectedSubscriber(): Subscriber? {
+        return selectedSubscriber
     }
 
     private suspend fun fetchSubscriberStats(subscriptionId: ULong): IndividualSubscriberStats? =
