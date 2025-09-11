@@ -142,28 +142,23 @@ class SubscribersActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = SubscriberScreen.Detail.name) {
-                        navController.previousBackStackEntry?.savedStateHandle?.let { handle ->
-                            val userId = handle.get<Long>(KEY_USER_ID)
-                            if (userId != null) {
-                                viewModel.getSubscriber(userId)?.let { subscriber ->
-                                    titleState.value = subscriber.displayNameOrEmail()
-                                    showAddSubscribersButtonState.value = false
-                                    ShowSubscriberDetailScreen(
-                                        subscriber = subscriber,
-                                        navController = navController,
-                                        modifier = Modifier.padding(contentPadding)
-                                    )
-                                }
-                            }
+                        // Use the selected subscriber directly instead of looking it up by ID
+                        viewModel.getSelectedSubscriber()?.let { subscriber ->
+                            titleState.value = subscriber.displayNameOrEmail()
+                            showAddSubscribersButtonState.value = false
+                            ShowSubscriberDetailScreen(
+                                subscriber = subscriber,
+                                navController = navController,
+                                modifier = Modifier.padding(contentPadding)
+                            )
                         }
                     }
 
                     composable(route = SubscriberScreen.Plan.name) {
                         navController.previousBackStackEntry?.savedStateHandle?.let { handle ->
-                            val userId = handle.get<Long>(KEY_USER_ID)
                             val planIndex = handle.get<Int>(KEY_PLAN_INDEX)
-                            if (userId != null && planIndex != null) {
-                                viewModel.getSubscriber(userId)?.let { subscriber ->
+                            if (planIndex != null) {
+                                viewModel.getSelectedSubscriber()?.let { subscriber ->
                                     subscriber.plans?.let { plans ->
                                         if (planIndex in plans.indices) {
                                             titleState.value = plans[planIndex].title
@@ -213,6 +208,8 @@ class SubscribersActivity : BaseAppCompatActivity() {
             onItemClick = { item ->
                 viewModel.onItemClick(item)
                 (item.data as? Subscriber)?.let { subscriber ->
+                    // Store the entire subscriber object to avoid lookup issues
+                    viewModel.setSelectedSubscriber(subscriber)
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         key = KEY_USER_ID,
                         value = subscriber.userId
@@ -249,10 +246,6 @@ class SubscribersActivity : BaseAppCompatActivity() {
                 onUrlClick(url)
             },
             onPlanClick = { planIndex ->
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    key = KEY_USER_ID,
-                    value = subscriber.userId
-                )
                 // plans don't have a unique id, so we use the index to identify them
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     key = KEY_PLAN_INDEX,
