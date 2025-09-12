@@ -10,7 +10,7 @@ import org.wordpress.android.util.helpers.MediaFile
  * @param siteUrl The site url - used to generate the attachmentPage url
  * @return The factory instance - useful for chaining this method upon instantiation
  */
-internal class BlockProcessorFactory(
+class BlockProcessorFactory(
     mediaUploadCompletionProcessor: MediaUploadCompletionProcessor,
     localId: String,
     mediaFile: MediaFile,

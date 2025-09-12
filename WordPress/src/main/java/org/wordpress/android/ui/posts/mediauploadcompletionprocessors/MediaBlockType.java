@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_PREFIX;
 
-enum MediaBlockType {
+public enum MediaBlockType {
     IMAGE("image"),
     VIDEOPRESS("videopress/video"),
     VIDEO("video"),
