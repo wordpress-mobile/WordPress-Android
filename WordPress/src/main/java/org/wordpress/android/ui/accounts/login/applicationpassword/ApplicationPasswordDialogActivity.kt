@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -17,8 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,8 +68,12 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
 
         setContent {
             AppThemeM3 {
-                ApplicationPasswordReauthenticateDialog(
-                    viewModel = viewModel,
+                val isLoading = viewModel.isLoading.collectAsState()
+                ApplicationPasswordDialog(
+                    title = stringResource(getTitleResource()),
+                    description = getDescriptionString(),
+                    buttonText = getButtonTextResource(),
+                    isLoading = isLoading.value,
                     onDismiss = {
                         finish()
                     },
@@ -86,100 +89,93 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
     protected abstract fun getDescriptionString(): String
     protected abstract fun getButtonTextResource(): Int
 
-    @Composable
-    fun ApplicationPasswordReauthenticateDialog(
-        viewModel: ApplicationPasswordDialogViewModel,
-        onDismiss: () -> Unit,
-        onConfirm: () -> Unit,
-    ) {
-        val isLoading = viewModel.isLoading.collectAsState()
-        AlertDialog(
-            onDismissRequest = onDismiss,
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Lock,
-                    contentDescription = null
-                )
-            },
-            title = { Text(text = stringResource(getTitleResource())) },
-            text = {
-                Column(
-                    modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
-                ) {
-                    Text(text = getDescriptionString())
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        onConfirm()
-                    },
-                    enabled = !isLoading.value
-                ) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator(
-                            modifier = androidx.compose.ui.Modifier.size(16.dp),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Text(text = stringResource(getButtonTextResource()))
-                    }
-                }
-            }
-        )
-    }
-
-    @Preview
-    @Preview(uiMode = UI_MODE_NIGHT_YES)
-    @Composable
-    fun ApplicationPasswordReauthenticateDialogPreview() {
-        AppThemeM3 {
-            ApplicationPasswordReauthenticateDialogPreviewContent()
-        }
-    }
-
-    @Composable
-    private fun ApplicationPasswordReauthenticateDialogPreviewContent() {
-        val isLoading = remember { mutableStateOf(false) }
-
-        AlertDialog(
-            onDismissRequest = {},
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Lock,
-                    contentDescription = null
-                )
-            },
-            title = { Text(text = stringResource(R.string.application_password_invalid)) },
-            text = {
-                Column(
-                    modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
-                ) {
-                    Text(text = stringResource(R.string.application_password_invalid_description))
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        isLoading.value = !isLoading.value
-                    },
-                    enabled = !isLoading.value
-                ) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator(
-                            modifier = androidx.compose.ui.Modifier.size(16.dp),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Text(text = stringResource(R.string.log_in))
-                    }
-                }
-            }
-        )
-    }
-
     companion object {
         const val EXTRA_SITE_URL = "site_url_arg"
     }
 }
 
+@Composable
+fun ApplicationPasswordDialog(
+    title: String,
+    description: String,
+    buttonText: Int,
+    isLoading: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Lock,
+                contentDescription = null
+            )
+        },
+        title = { Text(text = title) },
+        text = {
+            Column(
+                modifier = androidx.compose.ui.Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(text = description)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !isLoading
+            ) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm()
+                },
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = androidx.compose.ui.Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(text = stringResource(buttonText))
+                }
+            }
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun ApplicationPasswordDialogPreview() {
+    AppThemeM3 {
+        ApplicationPasswordDialog(
+            title = "Application Password Required",
+            description = "To use this feature, you need to create an application password. " +
+                    "This is a secure way to authenticate without using your main password.",
+            buttonText = R.string.get_started,
+            isLoading = false,
+            onDismiss = {},
+            onConfirm = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ApplicationPasswordDialogLoadingPreview() {
+    AppThemeM3 {
+        ApplicationPasswordDialog(
+            title = "Application Password Required",
+            description = "To use this feature, you need to create an application password. " +
+                    "This is a secure way to authenticate without using your main password.",
+            buttonText = R.string.get_started,
+            isLoading = true,
+            onDismiss = {},
+            onConfirm = {}
+        )
+    }
+}
