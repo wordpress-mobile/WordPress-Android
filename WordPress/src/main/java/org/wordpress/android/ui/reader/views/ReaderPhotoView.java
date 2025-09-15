@@ -29,6 +29,8 @@ import org.wordpress.android.util.image.ImageType;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
+    public static final double FALLBACK_RESOLUTION_MULTIPLIER = 0.5;
+
     public interface PhotoViewListener {
         void onTapPhotoView();
     }
@@ -166,7 +168,8 @@ public class ReaderPhotoView extends RelativeLayout {
         if (!hasLayout()) {
             return;
         }
-        String resImageUrl = ReaderUtils.getResizedImageUrl(mImageUrl, (int) (mHiResWidth * 0.5), 0, mIsPrivate,
+        String resImageUrl = ReaderUtils.getResizedImageUrl(mImageUrl,
+                (int) (mHiResWidth * FALLBACK_RESOLUTION_MULTIPLIER), 0, mIsPrivate,
                 mIsPrivateAtSite, PhotonUtils.Quality.MEDIUM);
 
         mImageManager
