@@ -131,11 +131,6 @@ public class ReaderPhotoView extends RelativeLayout {
                                     () -> loadFallbackImage()
                             );
                         }
-                        boolean lowResNotLoadedYet = isLoading();
-                        if (lowResNotLoadedYet) {
-                            hideProgress();
-                            showError();
-                        }
                     }
 
                     @Override
