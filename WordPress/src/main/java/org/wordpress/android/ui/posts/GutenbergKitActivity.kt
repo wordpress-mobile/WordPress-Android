@@ -44,7 +44,6 @@ import com.automattic.android.tracks.crashlogging.JsExceptionCallback
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.JsonObject
 import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -75,7 +74,6 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.EditorSettings
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -3123,8 +3121,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettings = event.editorSettings ?: EditorSettings(JsonObject())
-        editorFragment?.startWithEditorSettings(editorSettings.toJsonString())
+        val editorSettingsString = event.editorSettings?.toJsonString() ?: "undefined"
+        editorFragment?.startWithEditorSettings(editorSettingsString)
     }
 
     // EditorDataProvider methods
