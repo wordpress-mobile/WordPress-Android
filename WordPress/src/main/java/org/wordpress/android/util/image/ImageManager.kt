@@ -41,6 +41,7 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.time.withTimeout
 import org.wordpress.android.WordPress
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.media.VideoLoader
@@ -294,6 +295,7 @@ class ImageManager @Inject constructor(
         if (!context.isAvailable()) return
         Glide.with(context)
             .load(imgUrl.toUri())
+            .timeout(5000)
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .addThumbnail(context, thumbnailUrl, requestListener)
