@@ -88,7 +88,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         if (isAdded() && !TextUtils.isEmpty(mImageUrl)) {
             // use max of width/height so image is cached the same regardless of orientation
             Rect pt = DisplayUtils.getWindowSize(requireActivity());
-            int hiResWidth = Math.max(pt.height(), pt.width());
+            int hiResWidth = (int) (Math.max(pt.height(), pt.width()) * 0.8);
             // don't use AT media proxy here
             mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, false, mPhotoViewListener);
         }
