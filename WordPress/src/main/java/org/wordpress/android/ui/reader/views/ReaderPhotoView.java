@@ -33,6 +33,11 @@ public class ReaderPhotoView extends RelativeLayout {
         void onTapPhotoView();
     }
 
+    private String mImageUrl;
+    private int mHiResWidth;
+    private boolean mIsPrivate;
+    private boolean mIsPrivateAtSite;
+
     private PhotoViewListener mPhotoViewListener;
     private String mLoResImageUrl;
     private String mHiResImageUrl;
@@ -75,6 +80,11 @@ public class ReaderPhotoView extends RelativeLayout {
                             boolean isPrivate,
                             boolean isPrivateAtSite,
                             PhotoViewListener listener) {
+        mImageUrl = imageUrl;
+        mHiResWidth = hiResWidth;
+        mIsPrivate = isPrivate;
+        mIsPrivateAtSite = isPrivateAtSite;
+
         int loResWidth = (int) (hiResWidth * 0.10f);
         mLoResImageUrl = ReaderUtils
                 .getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, isPrivateAtSite, PhotonUtils.Quality.LOW);
@@ -110,11 +120,16 @@ public class ReaderPhotoView extends RelativeLayout {
 
         mImageManager
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
-                new RequestListener<Drawable>() {
+                new RequestListener<>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
+                            // A timeout could happen but there's no way to know it because the exception here is
+                            // always a GlideException. So let's try to reload the image with a lower res
+                            mImageView.post(
+                                    () -> loadFallbackImage()
+                            );
                         }
                         boolean lowResNotLoadedYet = isLoading();
                         if (lowResNotLoadedYet) {
@@ -128,6 +143,35 @@ public class ReaderPhotoView extends RelativeLayout {
                         handleResponse();
                     }
                 });
+    }
+
+    private void loadFallbackImage() {
+        if (!hasLayout()) {
+            return;
+        }
+        String resImageUrl = ReaderUtils.getResizedImageUrl(mImageUrl, (int) (mHiResWidth * 0.5), 0, mIsPrivate,
+                mIsPrivateAtSite, PhotonUtils.Quality.MEDIUM);
+
+        mImageManager
+                .loadWithResultListener(mImageView, ImageType.IMAGE, resImageUrl, ScaleType.CENTER, mLoResImageUrl,
+                        new RequestListener<>() {
+                            @Override
+                            public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                                if (e != null) {
+                                    AppLog.e(AppLog.T.READER, e);
+                                }
+                                boolean lowResNotLoadedYet = isLoading();
+                                if (lowResNotLoadedYet) {
+                                    hideProgress();
+                                    showError();
+                                }
+                            }
+
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                                handleResponse();
+                            }
+                        });
     }
 
     private void handleResponse() {
