@@ -41,7 +41,6 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.time.withTimeout
 import org.wordpress.android.WordPress
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.media.VideoLoader
