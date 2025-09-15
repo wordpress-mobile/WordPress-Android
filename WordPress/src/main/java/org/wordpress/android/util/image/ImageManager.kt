@@ -295,7 +295,6 @@ class ImageManager @Inject constructor(
         if (!context.isAvailable()) return
         Glide.with(context)
             .load(imgUrl.toUri())
-            .timeout(5000)
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .addThumbnail(context, thumbnailUrl, requestListener)
