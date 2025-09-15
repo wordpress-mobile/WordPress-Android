@@ -125,11 +125,19 @@ public class ReaderPhotoView extends RelativeLayout {
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
-                            // A timeout could happen but there's no way to know it because the exception here is
-                            // always a GlideException. So let's try to reload the image with a lower res
-                            mImageView.post(
-                                    () -> loadFallbackImage()
-                            );
+                            // Check if the stack trace contains TimeoutError before trying fallback
+                            if (containsTimeoutInStackTrace(e)) {
+                                AppLog.d(AppLog.T.READER, "Timeout detected in stack trace, loading fallback image");
+                                mImageView.post(
+                                        () -> loadFallbackImage()
+                                );
+                            } else {
+                                boolean lowResNotLoadedYet = isLoading();
+                                if (lowResNotLoadedYet) {
+                                    hideProgress();
+                                    showError();
+                                }
+                            }
                         }
                     }
 
@@ -138,6 +146,20 @@ public class ReaderPhotoView extends RelativeLayout {
                         handleResponse();
                     }
                 });
+    }
+
+    private boolean containsTimeoutInStackTrace(@Nullable Exception e) {
+        if (e == null) {
+            return false;
+        }
+
+        // Convert stack trace to string and check for TimeoutError
+        java.io.StringWriter sw = new java.io.StringWriter();
+        java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+        e.printStackTrace(pw);
+        String stackTrace = sw.toString();
+
+        return stackTrace.contains("TimeoutError");
     }
 
     private void loadFallbackImage() {
