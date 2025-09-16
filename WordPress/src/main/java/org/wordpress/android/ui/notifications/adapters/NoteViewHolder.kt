@@ -283,9 +283,9 @@ private const val MILLISECOND = 1000
  */
 private fun timeGroupHeaderDate(date: Date): String {
     val calendar = Calendar.getInstance()
-    val currentYear = calendar.get(Calendar.YEAR)
+    val currentYear = calendar[Calendar.YEAR]
     calendar.time = date
-    val noteYear = calendar.get(Calendar.YEAR)
+    val noteYear = calendar[Calendar.YEAR]
 
     val text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
     return when (noteYear) {
