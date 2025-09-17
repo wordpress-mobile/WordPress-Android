@@ -658,8 +658,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             };
             String formattedSize = FormatUtils.formatFileSize(mMedia.getFileSize(), units);
             mFileSizeView.setText(formattedSize);
-            mFileSizeView.setVisibility(View.VISIBLE);
-            mFileSizeLabelView.setVisibility(View.VISIBLE);
             findViewById(R.id.layout_file_size).setVisibility(View.VISIBLE);
             findViewById(R.id.divider_file_size).setVisibility(View.VISIBLE);
         } else {
