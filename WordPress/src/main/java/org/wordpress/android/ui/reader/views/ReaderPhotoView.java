@@ -29,16 +29,11 @@ import org.wordpress.android.util.image.ImageType;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
-    public static final double FALLBACK_RESOLUTION_MULTIPLIER = 0.5;
-
     public interface PhotoViewListener {
         void onTapPhotoView();
     }
 
     private String mImageUrl;
-    private int mHiResWidth;
-    private boolean mIsPrivate;
-    private boolean mIsPrivateAtSite;
 
     private PhotoViewListener mPhotoViewListener;
     private String mLoResImageUrl;
@@ -83,9 +78,6 @@ public class ReaderPhotoView extends RelativeLayout {
                             boolean isPrivateAtSite,
                             PhotoViewListener listener) {
         mImageUrl = imageUrl;
-        mHiResWidth = hiResWidth;
-        mIsPrivate = isPrivate;
-        mIsPrivateAtSite = isPrivateAtSite;
 
         int loResWidth = (int) (hiResWidth * 0.10f);
         mLoResImageUrl = ReaderUtils
@@ -168,12 +160,9 @@ public class ReaderPhotoView extends RelativeLayout {
         if (!hasLayout()) {
             return;
         }
-        String resImageUrl = ReaderUtils.getResizedImageUrl(mImageUrl,
-                (int) (mHiResWidth * FALLBACK_RESOLUTION_MULTIPLIER), 0, mIsPrivate,
-                mIsPrivateAtSite, PhotonUtils.Quality.MEDIUM);
-
+        // Load the original image URL
         mImageManager
-                .loadWithResultListener(mImageView, ImageType.IMAGE, resImageUrl, ScaleType.CENTER, mLoResImageUrl,
+                .loadWithResultListener(mImageView, ImageType.IMAGE, mImageUrl, ScaleType.CENTER, mLoResImageUrl,
                         new RequestListener<>() {
                             @Override
                             public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
