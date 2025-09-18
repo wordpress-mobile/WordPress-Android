@@ -575,8 +575,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 metadataMap != null ? getFileUrlForSize(link, metadataMap, "medium") : null,
                 metadataMap != null ? getFileUrlForSize(link, metadataMap, "medium_large") : null,
                 metadataMap != null ? getFileUrlForSize(link, metadataMap, "large") : null,
-                false,
-                null
+                false
         );
     }
 

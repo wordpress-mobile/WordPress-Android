@@ -5,6 +5,7 @@ import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse
+import org.wordpress.android.util.MapUtils
 import javax.inject.Inject
 
 class MediaResponseUtils
@@ -60,6 +61,7 @@ class MediaResponseUtils
         null,
         from.thumbnails?.let { if (!TextUtils.isEmpty(it.large)) it.large else null },
         MediaWPComRestResponse.DELETED_STATUS == from.status,
+    ).apply {
         from.size
-    )
+    }
 }

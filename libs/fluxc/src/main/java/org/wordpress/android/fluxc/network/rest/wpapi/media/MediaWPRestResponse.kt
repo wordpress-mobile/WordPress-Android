@@ -91,5 +91,4 @@ fun MediaWPRESTResponse.toMediaModel(localSiteId: Int) = MediaModel(
     null,
     null,
     MediaWPComRestResponse.DELETED_STATUS == status,
-    null
 )

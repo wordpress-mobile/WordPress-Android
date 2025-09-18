@@ -294,8 +294,8 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
             @Nullable String fileUrlMediumSize,
             @Nullable String fileUrlMediumLargeSize,
             @Nullable String fileUrlLargeSize,
-            boolean deleted,
-            @Nullable String fileSizeFormatted) {
+            boolean deleted
+    ) {
         this.mLocalSiteId = localSiteId;
         this.mMediaId = mediaId;
         this.mPostId = postId;
@@ -321,7 +321,6 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         this.mFileUrlMediumLargeSize = fileUrlMediumLargeSize;
         this.mFileUrlLargeSize = fileUrlLargeSize;
         this.mDeleted = deleted;
-        this.mFileSizeFromatted = fileSizeFormatted;
     }
 
     @Override
