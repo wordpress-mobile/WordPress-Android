@@ -95,6 +95,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -144,6 +145,8 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private SeekBar mImageSizeSeekBarView;
     private Spinner mAlignmentSpinnerView;
     private FloatingActionButton mFabView;
+    private TextView mFileSizeView;
+    private TextView mFileSizeLabelView;
 
     private AlertDialog mDeleteMediaConfirmationDialog;
 
@@ -256,6 +259,8 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         mImageSizeSeekBarView = findViewById(R.id.image_size_seekbar);
         mAlignmentSpinnerView = findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFabView = findViewById(R.id.fab_button);
+        mFileSizeView = findViewById(R.id.text_file_size);
+        mFileSizeLabelView = findViewById(R.id.text_file_size_label);
 
         int mediaId;
         if (savedInstanceState != null) {
@@ -641,6 +646,24 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
 
         TextView txtFileType = findViewById(R.id.text_filetype);
         txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
+
+        // Display file size if available
+        if (mMedia.getFileSize() > 0) {
+            final String[] units = new String[] {
+                    getString(R.string.file_size_in_bytes),
+                    getString(R.string.file_size_in_kilobytes),
+                    getString(R.string.file_size_in_megabytes),
+                    getString(R.string.file_size_in_gigabytes),
+                    getString(R.string.file_size_in_terabytes)
+            };
+            String formattedSize = FormatUtils.formatFileSize(mMedia.getFileSize(), units);
+            mFileSizeView.setText(formattedSize);
+            findViewById(R.id.layout_file_size).setVisibility(View.VISIBLE);
+            findViewById(R.id.divider_file_size).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.layout_file_size).setVisibility(View.GONE);
+            findViewById(R.id.divider_file_size).setVisibility(View.GONE);
+        }
 
         showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
 

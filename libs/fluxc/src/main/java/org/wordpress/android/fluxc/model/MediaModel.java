@@ -58,6 +58,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Nullable @Column private String mFilePath;
     @Nullable @Column private String mFileExtension;
     @Nullable @Column private String mMimeType;
+    @Column private long mFileSize;
 
     // Descriptive strings
     @Nullable @Column private String mTitle;
@@ -141,6 +142,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         this.mFilePath = null;
         this.mFileExtension = null;
         this.mMimeType = null;
+        this.mFileSize = 0;
         this.mTitle = null;
         this.mCaption = "";
         this.mDescription = "";
@@ -331,6 +333,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
                 && getMediaId() == otherMedia.getMediaId() && getPostId() == otherMedia.getPostId()
                 && getAuthorId() == otherMedia.getAuthorId() && getWidth() == otherMedia.getWidth()
                 && getHeight() == otherMedia.getHeight() && getLength() == otherMedia.getLength()
+                && getFileSize() == otherMedia.getFileSize()
                 && getHorizontalAlignment() == otherMedia.getHorizontalAlignment()
                 && getVerticalAlignment() == otherMedia.getVerticalAlignment()
                 && getVideoPressProcessingDone() == otherMedia.getVideoPressProcessingDone()
@@ -476,6 +479,14 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Nullable
     public String getMimeType() {
         return mMimeType;
+    }
+
+    public void setFileSize(long fileSize) {
+        mFileSize = fileSize;
+    }
+
+    public long getFileSize() {
+        return mFileSize;
     }
 
     public void setTitle(@Nullable String title) {
