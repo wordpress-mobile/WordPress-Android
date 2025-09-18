@@ -61,6 +61,6 @@ class MediaResponseUtils
         from.thumbnails?.let { if (!TextUtils.isEmpty(it.large)) it.large else null },
         MediaWPComRestResponse.DELETED_STATUS == from.status,
     ).apply {
-        fileSizeFromatted = from.size
+        fileSizeFormatted = from.size
     }
 }
