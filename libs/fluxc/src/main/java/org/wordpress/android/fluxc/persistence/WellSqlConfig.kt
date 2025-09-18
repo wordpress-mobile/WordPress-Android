@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 210
+        return 211
     }
 
     override fun getDbName(): String {
@@ -2083,6 +2083,10 @@ open class WellSqlConfig : DefaultWellConfig {
 
                 209 -> {
                     db.execSQL("ALTER TABLE MediaModel ADD FILE_SIZE INTEGER")
+                }
+
+                210 -> {
+                    db.execSQL("ALTER TABLE MediaModel ADD FILE_SIZE_FORMATTED TEXT")
                 }
             }
         }

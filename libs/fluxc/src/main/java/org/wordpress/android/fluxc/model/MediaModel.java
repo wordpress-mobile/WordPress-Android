@@ -59,6 +59,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Nullable @Column private String mFileExtension;
     @Nullable @Column private String mMimeType;
     @Column private long mFileSize;
+    @Nullable @Column private String mFileSizeFromatted;
 
     // Descriptive strings
     @Nullable @Column private String mTitle;
@@ -143,6 +144,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         this.mFileExtension = null;
         this.mMimeType = null;
         this.mFileSize = 0;
+        this.mFileSizeFromatted = null;
         this.mTitle = null;
         this.mCaption = "";
         this.mDescription = "";
@@ -292,7 +294,8 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
             @Nullable String fileUrlMediumSize,
             @Nullable String fileUrlMediumLargeSize,
             @Nullable String fileUrlLargeSize,
-            boolean deleted) {
+            boolean deleted,
+            @Nullable String fileSizeFormatted) {
         this.mLocalSiteId = localSiteId;
         this.mMediaId = mediaId;
         this.mPostId = postId;
@@ -318,6 +321,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         this.mFileUrlMediumLargeSize = fileUrlMediumLargeSize;
         this.mFileUrlLargeSize = fileUrlLargeSize;
         this.mDeleted = deleted;
+        this.mFileSizeFromatted = fileSizeFormatted;
     }
 
     @Override
@@ -487,6 +491,14 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     public long getFileSize() {
         return mFileSize;
+    }
+
+    public void setFileSizeFromatted(String fileSizeFormatted) {
+        mFileSizeFromatted = fileSizeFormatted;
+    }
+
+    public String getFileSizeFromatted() {
+        return mFileSizeFromatted;
     }
 
     public void setTitle(@Nullable String title) {
