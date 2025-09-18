@@ -17,6 +17,8 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
@@ -24,11 +26,16 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * used by ReaderPhotoViewerActivity to show full-width images - based on Volley's ImageView
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
+    private static final String FAILED_IMAGE = "failed_image";
+
     public interface PhotoViewListener {
         void onTapPhotoView();
     }
@@ -125,6 +132,10 @@ public class ReaderPhotoView extends RelativeLayout {
                                 mImageView.post(
                                         () -> loadFallbackImage()
                                 );
+                                // Track the error to better understand the root of the issue
+                                Map<String, String> properties = new HashMap<>();
+                                properties.put(FAILED_IMAGE, mHiResImageUrl);
+                                AnalyticsTracker.track(Stat.IMAGE_LOADING_TIMEOUT, properties);
                             } else {
                                 boolean lowResNotLoadedYet = isLoading();
                                 if (lowResNotLoadedYet) {
