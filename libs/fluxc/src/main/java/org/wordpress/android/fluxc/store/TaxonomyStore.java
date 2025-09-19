@@ -332,8 +332,8 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        if (site.isUsingSelfHostedRestApi()) {
-            mTaxonomyRsApiRestClientClient.fetchTerms(site, taxonomyName);
+        if (site.isUsingSelfHostedRestApi() && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
+            mTaxonomyRsApiRestClientClient.fetchPostTags(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
