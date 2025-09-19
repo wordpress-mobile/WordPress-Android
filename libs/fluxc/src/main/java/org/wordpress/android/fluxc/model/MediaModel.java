@@ -59,6 +59,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Nullable @Column private String mFileExtension;
     @Nullable @Column private String mMimeType;
     @Column private long mFileSize;
+    @Nullable @Column private String mFileSizeFormatted;
 
     // Descriptive strings
     @Nullable @Column private String mTitle;
@@ -143,6 +144,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         this.mFileExtension = null;
         this.mMimeType = null;
         this.mFileSize = 0;
+        this.mFileSizeFormatted = null;
         this.mTitle = null;
         this.mCaption = "";
         this.mDescription = "";
@@ -487,6 +489,15 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     public long getFileSize() {
         return mFileSize;
+    }
+
+    public void setFileSizeFormatted(@Nullable String fileSizeFormatted) {
+        mFileSizeFormatted = fileSizeFormatted;
+    }
+
+    @Nullable
+    public String getFileSizeFormatted() {
+        return mFileSizeFormatted;
     }
 
     public void setTitle(@Nullable String title) {

@@ -2083,6 +2083,7 @@ open class WellSqlConfig : DefaultWellConfig {
 
                 209 -> {
                     db.execSQL("ALTER TABLE MediaModel ADD FILE_SIZE INTEGER")
+                    db.execSQL("ALTER TABLE MediaModel ADD FILE_SIZE_FORMATTED TEXT")
                 }
             }
         }
