@@ -3,14 +3,12 @@ package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
