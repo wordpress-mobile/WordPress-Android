@@ -729,7 +729,7 @@
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_terabytes">%s TB</string>
