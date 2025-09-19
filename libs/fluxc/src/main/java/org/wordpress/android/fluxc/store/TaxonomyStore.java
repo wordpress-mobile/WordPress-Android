@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,6 +18,7 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClientClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
@@ -153,12 +156,15 @@ public class TaxonomyStore extends Store {
 
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
+    private final TaxonomyRsApiRestClientClient mTaxonomyRsApiRestClientClient;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
-                         TaxonomyXMLRPCClient taxonomyXMLRPCClient) {
+                         TaxonomyXMLRPCClient taxonomyXMLRPCClient,
+                                 TaxonomyRsApiRestClientClient taxonomyRsApiRestClientClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
+        mTaxonomyRsApiRestClientClient = taxonomyRsApiRestClientClient;
     }
 
     @Override
@@ -274,6 +280,8 @@ public class TaxonomyStore extends Store {
             return;
         }
 
+        Log.d("TAGS_TAG", "Taxonomy onAction: " + actionType);
+
         switch ((TaxonomyAction) actionType) {
             case FETCH_CATEGORIES:
                 fetchTerms(((SiteModel) action.getPayload()), DEFAULT_TAXONOMY_CATEGORY);
@@ -324,12 +332,12 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
-        if (site.isUsingWpComRestApi()) {
+        if (site.isUsingSelfHostedRestApi()) {
+            mTaxonomyRsApiRestClientClient.fetchTerms(site, taxonomyName);
+        } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
-            // TODO: check for WP-REST-API plugin and use it here
-             mTaxonomyXMLRPCClient.fetchTerms(site, taxonomyName);
+            mTaxonomyXMLRPCClient.fetchTerms(site, taxonomyName);
         }
     }
 
