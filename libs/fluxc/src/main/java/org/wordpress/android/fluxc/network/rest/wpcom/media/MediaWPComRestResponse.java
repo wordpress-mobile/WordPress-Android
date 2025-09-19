@@ -47,4 +47,5 @@ public class MediaWPComRestResponse implements Response {
     @Nullable public String videopress_guid;
     public boolean videopress_processing_done;
     @Nullable public String status;
+    @Nullable public String size;
 }
