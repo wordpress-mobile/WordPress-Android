@@ -328,8 +328,11 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        if (site.isUsingSelfHostedRestApi() && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClient.fetchPostTags(site, taxonomyName);
+        boolean isUsingApplicationPassword = site.isUsingSelfHostedRestApi();
+        if (isUsingApplicationPassword && DEFAULT_TAXONOMY_CATEGORY.equals(taxonomyName)) {
+            mTaxonomyRsApiRestClient.fetchPostCategories(site);
+        } else if (isUsingApplicationPassword && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
+            mTaxonomyRsApiRestClient.fetchPostTags(site);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
