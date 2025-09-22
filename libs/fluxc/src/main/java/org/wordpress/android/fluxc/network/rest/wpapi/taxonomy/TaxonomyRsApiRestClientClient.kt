@@ -9,12 +9,14 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.TagListParams
 import uniffi.wp_api.TagWithEditContext
 import javax.inject.Inject
@@ -28,7 +30,35 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
-    fun fetchPostTags(site: SiteModel, taxonomyName: String) {
+    fun fetchPostCategories(site: SiteModel) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val mediaResponse = client.request { requestBuilder ->
+                requestBuilder.categories().listWithEditContext(
+                    CategoryListParams()
+                )
+            }
+
+            val termsResponsePayload = when (mediaResponse) {
+                is WpRequestResult.Success -> {
+                    appLogWrapper.d(AppLog.T.POSTS, "Fetched categories list: ${mediaResponse.response.data.size}")
+                    mediaResponse.response.data.toFetchTermsResponsePayload(site)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Fetch categories list failed: $mediaResponse")
+                    FetchTermsResponsePayload(
+                        TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
+                        TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
+                    )
+                }
+            }
+            notifyTagsFetched(termsResponsePayload)
+        }
+    }
+
+    fun fetchPostTags(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -41,14 +71,14 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
             val termsResponsePayload = when (mediaResponse) {
                 is WpRequestResult.Success -> {
                     appLogWrapper.d(AppLog.T.POSTS, "Fetched tags list: ${mediaResponse.response.data.size}")
-                    mediaResponse.response.data.toFetchTermsResponsePayload(site, taxonomyName)
+                    mediaResponse.response.data.toFetchTermsResponsePayload(site)
                 }
 
                 else -> {
                     appLogWrapper.e(AppLog.T.POSTS, "Fetch media list failed: $mediaResponse")
                     FetchTermsResponsePayload(
                         TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                        taxonomyName
+                        TaxonomyStore.DEFAULT_TAXONOMY_TAG
                     )
                 }
             }
@@ -63,8 +93,7 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
     }
 
     private fun List<TagWithEditContext>.toFetchTermsResponsePayload(
-        site: SiteModel,
-        taxonomyName: String
+        site: SiteModel
     ): FetchTermsResponsePayload = FetchTermsResponsePayload(
         TermsModel(
             this.map {
@@ -72,7 +101,7 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
                     it.id.toInt(),
                     site.id,
                     it.id,
-                    taxonomyName,
+                    TaxonomyStore.DEFAULT_TAXONOMY_TAG,
                     it.name,
                     it.slug,
                     it.description,
@@ -82,6 +111,6 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
             }
         ),
         site,
-        taxonomyName
+        TaxonomyStore.DEFAULT_TAXONOMY_TAG
     )
 }
