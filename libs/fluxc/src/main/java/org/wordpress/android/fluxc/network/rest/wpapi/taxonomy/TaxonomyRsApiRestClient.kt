@@ -24,7 +24,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class TaxonomyRsApiRestClientClient @Inject constructor(
+class TaxonomyRsApiRestClient @Inject constructor(
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,

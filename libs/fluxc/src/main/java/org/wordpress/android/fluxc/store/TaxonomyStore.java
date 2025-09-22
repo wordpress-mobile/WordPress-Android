@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClientClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
@@ -154,15 +154,15 @@ public class TaxonomyStore extends Store {
 
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
-    private final TaxonomyRsApiRestClientClient mTaxonomyRsApiRestClientClient;
+    private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
-                         TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClientClient taxonomyRsApiRestClientClient) {
+                                 TaxonomyXMLRPCClient taxonomyXMLRPCClient,
+                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
-        mTaxonomyRsApiRestClientClient = taxonomyRsApiRestClientClient;
+        mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
     }
 
     @Override
@@ -330,9 +330,9 @@ public class TaxonomyStore extends Store {
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
         boolean isUsingApplicationPassword = site.isUsingSelfHostedRestApi();
         if (isUsingApplicationPassword && DEFAULT_TAXONOMY_CATEGORY.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClientClient.fetchPostCategories(site);
+            mTaxonomyRsApiRestClient.fetchPostCategories(site);
         } else if (isUsingApplicationPassword && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClientClient.fetchPostTags(site);
+            mTaxonomyRsApiRestClient.fetchPostTags(site);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
