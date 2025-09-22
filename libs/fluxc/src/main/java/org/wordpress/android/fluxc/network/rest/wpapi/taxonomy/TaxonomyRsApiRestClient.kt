@@ -19,6 +19,7 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.TagListParams
+import uniffi.wp_api.TagWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
