@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.TaxonomyStore
+import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
@@ -18,7 +19,6 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.TagListParams
-import uniffi.wp_api.TagWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -43,7 +43,23 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
             val termsResponsePayload = when (mediaResponse) {
                 is WpRequestResult.Success -> {
                     appLogWrapper.d(AppLog.T.POSTS, "Fetched categories list: ${mediaResponse.response.data.size}")
-                    mediaResponse.response.data.toFetchTermsResponsePayload(site)
+                    createTermsResponsePayload(
+                        mediaResponse.response.data.map { category ->
+                            TermModel(
+                                category.id.toInt(),
+                                site.id,
+                                category.id,
+                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                                category.name,
+                                category.slug,
+                                category.description,
+                                0,
+                                category.count.toInt()
+                            )
+                        },
+                        site,
+                        TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
+                    )
                 }
 
                 else -> {
@@ -54,7 +70,7 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
                     )
                 }
             }
-            notifyTagsFetched(termsResponsePayload)
+            notifyTermsFetched(termsResponsePayload)
         }
     }
 
@@ -71,46 +87,50 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
             val termsResponsePayload = when (mediaResponse) {
                 is WpRequestResult.Success -> {
                     appLogWrapper.d(AppLog.T.POSTS, "Fetched tags list: ${mediaResponse.response.data.size}")
-                    mediaResponse.response.data.toFetchTermsResponsePayload(site)
+                    createTermsResponsePayload(
+                        mediaResponse.response.data.map { tag ->
+                            TermModel(
+                                tag.id.toInt(),
+                                site.id,
+                                tag.id,
+                                DEFAULT_TAXONOMY_TAG,
+                                tag.name,
+                                tag.slug,
+                                tag.description,
+                                0,
+                                tag.count.toInt()
+                            )
+                        },
+                        site,
+                        DEFAULT_TAXONOMY_TAG
+                    )
                 }
 
                 else -> {
                     appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $mediaResponse")
                     FetchTermsResponsePayload(
                         TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                        TaxonomyStore.DEFAULT_TAXONOMY_TAG
+                        DEFAULT_TAXONOMY_TAG
                     )
                 }
             }
-            notifyTagsFetched(termsResponsePayload)
+            notifyTermsFetched(termsResponsePayload)
         }
     }
 
-    private fun notifyTagsFetched(
+    private fun notifyTermsFetched(
         payload: FetchTermsResponsePayload,
     ) {
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload))
     }
 
-    private fun List<TagWithEditContext>.toFetchTermsResponsePayload(
-        site: SiteModel
+    private fun createTermsResponsePayload(
+        terms: List<TermModel>,
+        site: SiteModel,
+        taxonomyName: String
     ): FetchTermsResponsePayload = FetchTermsResponsePayload(
-        TermsModel(
-            this.map {
-                TermModel(
-                    it.id.toInt(),
-                    site.id,
-                    it.id,
-                    TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                    it.name,
-                    it.slug,
-                    it.description,
-                    0,
-                    it.count.toInt()
-                )
-            }
-        ),
+        TermsModel(terms),
         site,
-        TaxonomyStore.DEFAULT_TAXONOMY_TAG
+        taxonomyName
     )
 }
