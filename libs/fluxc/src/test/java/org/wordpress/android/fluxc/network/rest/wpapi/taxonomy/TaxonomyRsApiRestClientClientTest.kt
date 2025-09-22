@@ -29,6 +29,8 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CategoryWithEditContext
+import uniffi.wp_api.CategoriesRequestListWithEditContextResponse
 import uniffi.wp_api.TagWithEditContext
 import uniffi.wp_api.TagsRequestListWithEditContextResponse
 import uniffi.wp_api.TaxonomyType
@@ -54,7 +56,8 @@ class TaxonomyRsApiRestClientClientTest {
         url = "https://test.wordpress.com"
     }
 
-    private val testTaxonomyName = "post_tag"
+    private val testTagTaxonomyName = "post_tag"
+    private val testCategoryTaxonomyName = "category"
 
     @Before
     fun setUp() {
@@ -84,7 +87,7 @@ class TaxonomyRsApiRestClientClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.fetchPostTags(testSite, testTaxonomyName)
+        taxonomyClient.fetchPostTags(testSite)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -93,7 +96,7 @@ class TaxonomyRsApiRestClientClientTest {
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as FetchTermsResponsePayload
         assertEquals(capturedAction.type, TaxonomyAction.FETCHED_TERMS)
-        assertEquals(testTaxonomyName, payload.taxonomy)
+        assertEquals(testTagTaxonomyName, payload.taxonomy)
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
@@ -119,7 +122,7 @@ class TaxonomyRsApiRestClientClientTest {
 
         whenever(wpApiClient.request<TagsRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.fetchPostTags(testSite, testTaxonomyName)
+        taxonomyClient.fetchPostTags(testSite)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -128,11 +131,85 @@ class TaxonomyRsApiRestClientClientTest {
         val capturedAction = actionCaptor.value
         val payload = capturedAction.payload as FetchTermsResponsePayload
         assertEquals(capturedAction.type, TaxonomyAction.FETCHED_TERMS)
-        assertEquals(testTaxonomyName, payload.taxonomy)
+        assertEquals(testTagTaxonomyName, payload.taxonomy)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.terms)
         assertEquals(2, payload.terms.terms.size)
         assertNull(payload.error)
+    }
+
+    @Test
+    fun `fetchPostCategories with error response dispatches error action`() = runTest {
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.fetchPostCategories(testSite)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as FetchTermsResponsePayload
+        assertEquals(capturedAction.type, TaxonomyAction.FETCHED_TERMS)
+        assertEquals(testCategoryTaxonomyName, payload.taxonomy)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `fetchPostCategories with success response dispatches success action`() = runTest {
+        val categoryWithEditContext = listOf(
+            createTestCategoryWithEditContext(),
+            createTestCategoryWithEditContext()
+        )
+
+        // Create the correct response structure following the MediaRSApiRestClientTest pattern
+        val categoryResponse = CategoriesRequestListWithEditContextResponse(
+            categoryWithEditContext,
+            mock<WpNetworkHeaderMap>(),
+            null,
+            null
+        )
+
+        val successResponse: WpRequestResult<CategoriesRequestListWithEditContextResponse> = WpRequestResult.Success(
+            response = categoryResponse
+        )
+
+        whenever(wpApiClient.request<CategoriesRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.fetchPostCategories(testSite)
+
+        // Verify dispatcher was called with success action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as FetchTermsResponsePayload
+        assertEquals(capturedAction.type, TaxonomyAction.FETCHED_TERMS)
+        assertEquals(testCategoryTaxonomyName, payload.taxonomy)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.terms)
+        assertEquals(2, payload.terms.terms.size)
+        assertNull(payload.error)
+    }
+
+    private fun createTestCategoryWithEditContext(): CategoryWithEditContext {
+        return CategoryWithEditContext(
+            id = 2L,
+            count = 3L,
+            description = "Test category description",
+            link = "https://example.com/category/test",
+            name = "Test Category",
+            slug = "test-category",
+            taxonomy = TaxonomyType.Category,
+            parent = 0L
+        )
     }
 
     private fun createTestTagWithEditContext(): TagWithEditContext {
