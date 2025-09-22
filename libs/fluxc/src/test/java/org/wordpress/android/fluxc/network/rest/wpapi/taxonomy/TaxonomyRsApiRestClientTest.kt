@@ -36,7 +36,7 @@ import uniffi.wp_api.WpNetworkHeaderMap
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class TaxonomyRsApiRestClientClientTest {
+class TaxonomyRsApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
     @Mock
@@ -47,7 +47,7 @@ class TaxonomyRsApiRestClientClientTest {
     private lateinit var wpApiClient: WpApiClient
 
     private lateinit var testScope: CoroutineScope
-    private lateinit var taxonomyClient: TaxonomyRsApiRestClientClient
+    private lateinit var taxonomyClient: TaxonomyRsApiRestClient
 
     private val testSite = SiteModel().apply {
         id = 123
@@ -66,7 +66,7 @@ class TaxonomyRsApiRestClientClientTest {
 
         whenever(wpApiClientProvider.getWpApiClient(testSite)).thenReturn(wpApiClient)
 
-        taxonomyClient = TaxonomyRsApiRestClientClient(
+        taxonomyClient = TaxonomyRsApiRestClient(
             testScope,
             dispatcher,
             appLogWrapper,
