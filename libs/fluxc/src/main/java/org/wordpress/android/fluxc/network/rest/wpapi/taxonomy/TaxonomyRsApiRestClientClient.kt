@@ -45,7 +45,7 @@ class TaxonomyRsApiRestClientClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Fetch media list failed: $mediaResponse")
+                    appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $mediaResponse")
                     FetchTermsResponsePayload(
                         TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
                         taxonomyName
