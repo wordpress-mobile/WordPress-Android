@@ -19,7 +19,6 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.TagListParams
-import uniffi.wp_api.TagWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -35,17 +34,17 @@ class TaxonomyRsApiRestClient @Inject constructor(
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val mediaResponse = client.request { requestBuilder ->
+            val categoriesResponse = client.request { requestBuilder ->
                 requestBuilder.categories().listWithEditContext(
                     CategoryListParams()
                 )
             }
 
-            val termsResponsePayload = when (mediaResponse) {
+            val termsResponsePayload = when (categoriesResponse) {
                 is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.POSTS, "Fetched categories list: ${mediaResponse.response.data.size}")
+                    appLogWrapper.d(AppLog.T.POSTS, "Fetched categories list: ${categoriesResponse.response.data.size}")
                     createTermsResponsePayload(
-                        mediaResponse.response.data.map { category ->
+                        categoriesResponse.response.data.map { category ->
                             TermModel(
                                 category.id.toInt(),
                                 site.id,
@@ -64,7 +63,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Fetch categories list failed: $mediaResponse")
+                    appLogWrapper.e(AppLog.T.POSTS, "Fetch categories list failed: $categoriesResponse")
                     FetchTermsResponsePayload(
                         TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
                         TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
@@ -79,17 +78,17 @@ class TaxonomyRsApiRestClient @Inject constructor(
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val mediaResponse = client.request { requestBuilder ->
+            val tagsResponse = client.request { requestBuilder ->
                 requestBuilder.tags().listWithEditContext(
                     TagListParams()
                 )
             }
 
-            val termsResponsePayload = when (mediaResponse) {
+            val termsResponsePayload = when (tagsResponse) {
                 is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.POSTS, "Fetched tags list: ${mediaResponse.response.data.size}")
+                    appLogWrapper.d(AppLog.T.POSTS, "Fetched tags list: ${tagsResponse.response.data.size}")
                     createTermsResponsePayload(
-                        mediaResponse.response.data.map { tag ->
+                        tagsResponse.response.data.map { tag ->
                             TermModel(
                                 tag.id.toInt(),
                                 site.id,
@@ -108,7 +107,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $mediaResponse")
+                    appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $tagsResponse")
                     FetchTermsResponsePayload(
                         TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
                         DEFAULT_TAXONOMY_TAG
