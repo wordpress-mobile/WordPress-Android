@@ -413,6 +413,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp" />
 
+                <!-- file size -->
+                <LinearLayout
+                    android:id="@+id/layout_file_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_file_size_label"
+                        style="@style/MediaSettings.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/media_edit_file_size_caption" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_file_size"
+                        style="@style/MediaSettings.Value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="2.5 MB" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider_file_size"
+                    style="@style/MediaSettings.Divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
                 <!-- dimensions -->
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -208,6 +208,7 @@
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
+    <string name="media_edit_file_size_caption">File Size</string>
     <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
     <string name="media_edit_video_dimensions_caption">Video Dimensions</string>
     <string name="media_edit_duration_caption">Duration</string>
@@ -728,7 +729,7 @@
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_terabytes">%s TB</string>
