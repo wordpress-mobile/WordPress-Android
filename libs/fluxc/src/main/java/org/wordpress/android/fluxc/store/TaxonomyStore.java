@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -278,6 +280,8 @@ public class TaxonomyStore extends Store {
             return;
         }
 
+        Log.d("TAX_TAG", "New action: " + actionType);
+
         switch ((TaxonomyAction) actionType) {
             case FETCH_CATEGORIES:
                 fetchTerms(((SiteModel) action.getPayload()), DEFAULT_TAXONOMY_CATEGORY);
@@ -426,10 +430,11 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi() && DEFAULT_TAXONOMY_CATEGORY.equals(payload.term.getTaxonomy())) {
+            mTaxonomyRsApiRestClient.createPostCategory(payload.site, payload.term);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
-            // TODO: check for WP-REST-API plugin and use it here
             mTaxonomyXMLRPCClient.pushTerm(payload.term, payload.site);
         }
     }
