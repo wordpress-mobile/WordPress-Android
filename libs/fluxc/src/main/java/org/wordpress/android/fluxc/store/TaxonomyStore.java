@@ -430,7 +430,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingWpComRestApi() && DEFAULT_TAXONOMY_CATEGORY.equals(payload.term.getTaxonomy())) {
+        if (payload.site.isUsingSelfHostedRestApi() && DEFAULT_TAXONOMY_CATEGORY.equals(payload.term.getTaxonomy())) {
             mTaxonomyRsApiRestClient.createPostCategory(payload.site, payload.term);
         } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
