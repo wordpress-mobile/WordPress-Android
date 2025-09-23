@@ -47,11 +47,11 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 )
             }
 
-            val termResponsePayload = when (categoriesResponse) {
+            when (categoriesResponse) {
                 is WpRequestResult.Success -> {
                     val category = categoriesResponse.response.data
                     appLogWrapper.d(AppLog.T.POSTS, "Created category: ${category.name}")
-                    RemoteTermPayload(
+                    val payload = RemoteTermPayload(
                         TermModel(
                             category.id.toInt(),
                             site.id,
@@ -65,17 +65,16 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         ),
                         site
                     )
+                    notifyTermCreated(payload)
                 }
 
                 else -> {
                     appLogWrapper.e(AppLog.T.POSTS, "Failed creating taxonomy: $categoriesResponse")
-                    FetchTermsResponsePayload(
-                        TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                        TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
-                    )
+                    val payload = RemoteTermPayload(term, site)
+                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                    notifyTermCreated(payload)
                 }
             }
-            notifyTermCreated(termResponsePayload)
         }
     }
 
