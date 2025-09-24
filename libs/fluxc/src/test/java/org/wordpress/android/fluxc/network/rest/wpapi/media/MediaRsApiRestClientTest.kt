@@ -65,7 +65,7 @@ private const val SUFFIX_SEPARATOR = "?"
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class MediaRSApiRestClientTest {
+class MediaRsApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
     @Mock

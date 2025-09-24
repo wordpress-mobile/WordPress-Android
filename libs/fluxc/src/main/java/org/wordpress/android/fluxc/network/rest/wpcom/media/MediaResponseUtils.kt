@@ -59,6 +59,8 @@ class MediaResponseUtils
         from.thumbnails?.let { if (!TextUtils.isEmpty(it.medium)) it.medium else null },
         null,
         from.thumbnails?.let { if (!TextUtils.isEmpty(it.large)) it.large else null },
-        MediaWPComRestResponse.DELETED_STATUS == from.status
-    )
+        MediaWPComRestResponse.DELETED_STATUS == from.status,
+    ).apply {
+        fileSizeFormatted = from.size
+    }
 }
