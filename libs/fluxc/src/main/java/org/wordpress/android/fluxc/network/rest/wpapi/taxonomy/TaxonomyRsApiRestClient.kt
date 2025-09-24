@@ -34,6 +34,111 @@ class TaxonomyRsApiRestClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
+    fun deleteTerm(site: SiteModel, term: TermModel) {
+        when (term.taxonomy) {
+            DEFAULT_TAXONOMY_CATEGORY -> deleteCategory(site, term)
+            DEFAULT_TAXONOMY_TAG -> createTag(site, term)
+            else -> {} // TODO
+        }
+    }
+
+    private fun deleteCategory(site: SiteModel, term: TermModel) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val categoriesResponse = client.request { requestBuilder ->
+                requestBuilder.categories().delete(
+                    categoryId = term.id.toLong()
+                )
+            }
+
+            when (categoriesResponse) {
+                is WpRequestResult.Success -> {
+                    val category = categoriesResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Deleted category: ${term.name} - ${category.deleted}")
+                    if (category.deleted) {
+                        val payload = RemoteTermPayload(
+                            TermModel(
+                                term.id,
+                                site.id,
+                                term.id.toLong(),
+                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                                term.name,
+                                term.slug,
+                                term.description,
+                                term.parentRemoteId,
+                                term.postCount
+                            ),
+                            site
+                        )
+                        notifyTermDeleted(payload)
+                    } else {
+                        notifyFailedDeletingCategory(site, term)
+                    }
+                }
+
+                else -> {
+                    notifyFailedDeletingCategory(site, term)
+                }
+            }
+        }
+    }
+
+    private fun notifyFailedDeletingCategory(site: SiteModel, term: TermModel) {
+        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting category")
+        val payload = RemoteTermPayload(term, site)
+        payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+        notifyTermDeleted(payload)
+    }
+
+    private fun deleteTag(site: SiteModel, term: TermModel) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val tagsResponse = client.request { requestBuilder ->
+                requestBuilder.tags().delete(
+                    tagId = term.id.toLong()
+                )
+            }
+
+            when (tagsResponse) {
+                is WpRequestResult.Success -> {
+                    val category = tagsResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Deleted tag: ${term.name} - ${category.deleted}")
+                    if (category.deleted) {
+                        val payload = RemoteTermPayload(
+                            TermModel(
+                                term.id,
+                                site.id,
+                                term.id.toLong(),
+                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
+                                term.name,
+                                term.slug,
+                                term.description,
+                                term.parentRemoteId,
+                                term.postCount
+                            ),
+                            site
+                        )
+                        notifyTermDeleted(payload)
+                    } else {
+                        notifyFailedDeletingTag(site, term)
+                    }
+                }
+
+                else -> {
+                    notifyFailedDeletingTag(site, term)
+                }
+            }
+        }
+    }
+
+    private fun notifyFailedDeletingTag(site: SiteModel, term: TermModel) {
+        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting category")
+        val payload = RemoteTermPayload(term, site)
+        payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+        notifyTermDeleted(payload)
+    }
 
     fun createTerm(site: SiteModel, term: TermModel) {
         when (term.taxonomy) {
@@ -240,6 +345,12 @@ class TaxonomyRsApiRestClient @Inject constructor(
         payload: RemoteTermPayload,
     ) {
         dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
+    }
+
+    private fun notifyTermDeleted(
+        payload: RemoteTermPayload,
+    ) {
+        dispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload))
     }
 
     private fun createTermsResponsePayload(
