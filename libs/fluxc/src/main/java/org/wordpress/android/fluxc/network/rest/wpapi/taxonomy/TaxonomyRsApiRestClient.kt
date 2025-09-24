@@ -69,7 +69,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating taxonomy: $categoriesResponse")
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating category: $categoriesResponse")
                     val payload = RemoteTermPayload(term, site)
                     payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
                     notifyTermCreated(payload)
