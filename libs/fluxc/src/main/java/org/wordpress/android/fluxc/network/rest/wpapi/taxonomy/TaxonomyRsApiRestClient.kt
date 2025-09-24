@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.TaxonomyStore
+import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
@@ -30,7 +31,15 @@ class TaxonomyRsApiRestClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
-    fun fetchPostCategories(site: SiteModel) {
+    fun fetchTerms(site: SiteModel, taxonomyName: String) {
+        when (taxonomyName) {
+            DEFAULT_TAXONOMY_CATEGORY -> fetchPostCategories(site)
+            DEFAULT_TAXONOMY_TAG -> fetchPostTags(site)
+            else -> {} // TODO
+        }
+    }
+
+    private fun fetchPostCategories(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -74,7 +83,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
     }
 
-    fun fetchPostTags(site: SiteModel) {
+    private fun fetchPostTags(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 

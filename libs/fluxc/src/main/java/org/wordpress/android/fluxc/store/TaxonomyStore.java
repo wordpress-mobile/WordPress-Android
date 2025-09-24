@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -278,6 +280,8 @@ public class TaxonomyStore extends Store {
             return;
         }
 
+        Log.d("TAX_TAG", "Action: " + actionType);
+
         switch ((TaxonomyAction) actionType) {
             case FETCH_CATEGORIES:
                 fetchTerms(((SiteModel) action.getPayload()), DEFAULT_TAXONOMY_CATEGORY);
@@ -328,11 +332,8 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        boolean isUsingApplicationPassword = site.isUsingSelfHostedRestApi();
-        if (isUsingApplicationPassword && DEFAULT_TAXONOMY_CATEGORY.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClient.fetchPostCategories(site);
-        } else if (isUsingApplicationPassword && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClient.fetchPostTags(site);
+        if (site.isUsingSelfHostedRestApi()) {
+            mTaxonomyRsApiRestClient.fetchTerms(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
