@@ -134,7 +134,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
     }
 
     private fun notifyFailedDeletingTag(site: SiteModel, term: TermModel) {
-        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting category")
+        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting tag")
         val payload = RemoteTermPayload(term, site)
         payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
         notifyTermDeleted(payload)
