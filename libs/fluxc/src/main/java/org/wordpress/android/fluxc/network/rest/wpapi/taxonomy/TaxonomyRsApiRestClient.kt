@@ -13,11 +13,13 @@ import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CategoryCreateParams
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.TagListParams
 import javax.inject.Inject
@@ -36,6 +38,52 @@ class TaxonomyRsApiRestClient @Inject constructor(
             DEFAULT_TAXONOMY_CATEGORY -> fetchPostCategories(site)
             DEFAULT_TAXONOMY_TAG -> fetchPostTags(site)
             else -> {} // TODO
+        }
+    }
+
+    fun createPostCategory(site: SiteModel, term: TermModel) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val categoriesResponse = client.request { requestBuilder ->
+                requestBuilder.categories().create(
+                    CategoryCreateParams(
+                        name = term.name,
+                        description = term.description,
+                        slug = term.slug,
+                        parent = term.parentRemoteId
+                    )
+                )
+            }
+
+            when (categoriesResponse) {
+                is WpRequestResult.Success -> {
+                    val category = categoriesResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Created category: ${category.name}")
+                    val payload = RemoteTermPayload(
+                        TermModel(
+                            category.id.toInt(),
+                            site.id,
+                            category.id,
+                            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                            category.name,
+                            category.slug,
+                            category.description,
+                            category.parent,
+                            category.count.toInt()
+                        ),
+                        site
+                    )
+                    notifyTermCreated(payload)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating category: $categoriesResponse")
+                    val payload = RemoteTermPayload(term, site)
+                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                    notifyTermCreated(payload)
+                }
+            }
         }
     }
 
@@ -131,6 +179,12 @@ class TaxonomyRsApiRestClient @Inject constructor(
         payload: FetchTermsResponsePayload,
     ) {
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload))
+    }
+
+    private fun notifyTermCreated(
+        payload: RemoteTermPayload,
+    ) {
+        dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
     }
 
     private fun createTermsResponsePayload(

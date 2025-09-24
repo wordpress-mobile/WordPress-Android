@@ -24,12 +24,15 @@ import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryWithEditContext
+import uniffi.wp_api.CategoriesRequestCreateResponse
 import uniffi.wp_api.CategoriesRequestListWithEditContextResponse
 import uniffi.wp_api.TagWithEditContext
 import uniffi.wp_api.TagsRequestListWithEditContextResponse
@@ -55,6 +58,18 @@ class TaxonomyRsApiRestClientTest {
         id = 123
         url = "https://test.wordpress.com"
     }
+
+    private val testTermModel = TermModel(
+        1, // id
+        123, // localSiteId
+        2L, // remoteTermId
+        "category", // taxonomy
+        "Test Category", // name
+        "test-category", // slug
+        "Test category description", // description
+        0L, // parentRemoteId
+        0 // postCount
+    )
 
     private val testTagTaxonomyName = "post_tag"
     private val testCategoryTaxonomyName = "category"
@@ -196,6 +211,70 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.terms)
         assertEquals(2, payload.terms.terms.size)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `createPostCategory with error response dispatches error action`() = runTest {
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.createPostCategory(testSite, testTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `createPostCategory with success response dispatches success action`() = runTest {
+        val categoryWithEditContext = createTestCategoryWithEditContext()
+
+        // Create the correct response structure following the MediaRSApiRestClientTest pattern
+        val categoryResponse = CategoriesRequestCreateResponse(
+            categoryWithEditContext,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<CategoriesRequestCreateResponse> = WpRequestResult.Success(
+            response = categoryResponse
+        )
+
+        whenever(wpApiClient.request<CategoriesRequestCreateResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.createPostCategory(testSite, testTermModel)
+
+        // Verify dispatcher was called with success action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        // Verify the created term has the correct properties
+        assertEquals(categoryWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(categoryWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
+        assertEquals(categoryWithEditContext.name, payload.term.name)
+        assertEquals(categoryWithEditContext.slug, payload.term.slug)
+        assertEquals(categoryWithEditContext.description, payload.term.description)
+        assertEquals(categoryWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
