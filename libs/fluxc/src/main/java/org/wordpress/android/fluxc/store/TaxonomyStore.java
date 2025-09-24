@@ -426,10 +426,11 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingSelfHostedRestApi() && DEFAULT_TAXONOMY_CATEGORY.equals(payload.term.getTaxonomy())) {
+            mTaxonomyRsApiRestClient.createPostCategory(payload.site, payload.term);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
-            // TODO: check for WP-REST-API plugin and use it here
             mTaxonomyXMLRPCClient.pushTerm(payload.term, payload.site);
         }
     }
