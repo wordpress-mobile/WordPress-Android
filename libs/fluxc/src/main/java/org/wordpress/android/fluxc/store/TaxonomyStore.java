@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -279,8 +277,6 @@ public class TaxonomyStore extends Store {
         if (!(actionType instanceof TaxonomyAction)) {
             return;
         }
-
-        Log.d("TAX_TAG", "New action: " + actionType);
 
         switch ((TaxonomyAction) actionType) {
             case FETCH_CATEGORIES:

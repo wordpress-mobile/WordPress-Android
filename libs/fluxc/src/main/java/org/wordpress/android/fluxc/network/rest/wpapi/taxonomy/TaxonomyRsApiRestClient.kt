@@ -60,7 +60,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             category.name,
                             category.slug,
                             category.description,
-                            0,
+                            category.parent,
                             category.count.toInt()
                         ),
                         site
