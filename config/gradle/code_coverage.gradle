@@ -8,53 +8,54 @@ static String resolveProjectVariantForCodeCoverage(Project project) {
 
 allprojects {
     pluginManager.withPlugin("org.jetbrains.kotlinx.kover") {
-        if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
-            koverReport {
-                defaults {
-                    mergeWith(resolveProjectVariantForCodeCoverage(project))
+        kover {
+            if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
+                currentProject {
+                    createVariant("custom") {
+                        addWithDependencies([resolveProjectVariantForCodeCoverage(project)] as String[], false)
+                    }
                 }
             }
-        }
 
-        koverReport {
-            filters {
-                excludes {
-                    packages(
-                            'com.bumptech.glide',
-                            'dagger.*',
-                            '*.compose*',
-                            '*.debug*',
-                            'hilt_aggregated_deps',
-                            '*.databinding',
-                            'org.wordpress.android.modules',
-                            'org.wordpress.android.widgets',
-                    )
-
-                    classes(
-                            '*_Factory*',
-                            '*Activity',
-                            '*Activity$*',
-                            '*Adapter',
-                            '*Adapter$*',
-                            '*BuildConfig',
-                            '*DiffCallback*',
-                            '*Dialog',
-                            '*Dialog$*',
-                            '*Fragment',
-                            '*Fragment$*',
-                            '*FragmentDirections*',
-                            '*FragmentKt*',
-                            '*Module',
-                            '*Module_*',
-                            '*View',
-                            '*View$*',
-                            '*ViewHolder',
-                            '*ViewHolder$*',
-                            '*ViewHolderKt*',
-                            '*.Hilt_*',
-                            '*HiltModules*',
-                            '*_MembersInjector',
-                    )
+            reports {
+                filters {
+                    excludes {
+                        classes(
+                                // Package exclusions - converted to class patterns
+                                'com.bumptech.glide.*',
+                                'dagger.*',
+                                '*.compose*',
+                                '*.debug*',
+                                'hilt_aggregated_deps.*',
+                                '*.databinding.*',
+                                'org.wordpress.android.modules.*',
+                                'org.wordpress.android.widgets.*',
+                                // Class pattern exclusions
+                                '*_Factory*',
+                                '*Activity',
+                                '*Activity$*',
+                                '*Adapter',
+                                '*Adapter$*',
+                                '*BuildConfig',
+                                '*DiffCallback*',
+                                '*Dialog',
+                                '*Dialog$*',
+                                '*Fragment',
+                                '*Fragment$*',
+                                '*FragmentDirections*',
+                                '*FragmentKt*',
+                                '*Module',
+                                '*Module_*',
+                                '*View',
+                                '*View$*',
+                                '*ViewHolder',
+                                '*ViewHolder$*',
+                                '*ViewHolderKt*',
+                                '*.Hilt_*',
+                                '*HiltModules*',
+                                '*_MembersInjector',
+                        )
+                    }
                 }
             }
         }
