@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryCreateParams
 import uniffi.wp_api.CategoryListParams
+import uniffi.wp_api.TagCreateParams
 import uniffi.wp_api.TagListParams
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,15 +34,16 @@ class TaxonomyRsApiRestClient @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
-    fun fetchTerms(site: SiteModel, taxonomyName: String) {
-        when (taxonomyName) {
-            DEFAULT_TAXONOMY_CATEGORY -> fetchPostCategories(site)
-            DEFAULT_TAXONOMY_TAG -> fetchPostTags(site)
+
+    fun createTerm(site: SiteModel, term: TermModel) {
+        when (term.taxonomy) {
+            DEFAULT_TAXONOMY_CATEGORY -> createCategory(site, term)
+            DEFAULT_TAXONOMY_TAG -> createTag(site, term)
             else -> {} // TODO
         }
     }
 
-    fun createPostCategory(site: SiteModel, term: TermModel) {
+    private fun createCategory(site: SiteModel, term: TermModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -87,7 +89,60 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
     }
 
-    private fun fetchPostCategories(site: SiteModel) {
+    private fun createTag(site: SiteModel, term: TermModel) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val tagResponse = client.request { requestBuilder ->
+                requestBuilder.tags().create(
+                    TagCreateParams(
+                        name = term.name,
+                        description = term.description,
+                        slug = term.slug,
+                    )
+                )
+            }
+
+            when (tagResponse) {
+                is WpRequestResult.Success -> {
+                    val tag = tagResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Created tag: ${tag.name}")
+                    val payload = RemoteTermPayload(
+                        TermModel(
+                            tag.id.toInt(),
+                            site.id,
+                            tag.id,
+                            DEFAULT_TAXONOMY_TAG,
+                            tag.name,
+                            tag.slug,
+                            tag.description,
+                            0,
+                            tag.count.toInt()
+                        ),
+                        site
+                    )
+                    notifyTermCreated(payload)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating tag: $tagResponse")
+                    val payload = RemoteTermPayload(term, site)
+                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                    notifyTermCreated(payload)
+                }
+            }
+        }
+    }
+
+    fun fetchTerms(site: SiteModel, taxonomyName: String) {
+        when (taxonomyName) {
+            DEFAULT_TAXONOMY_CATEGORY -> fetchCategories(site)
+            DEFAULT_TAXONOMY_TAG -> fetchTags(site)
+            else -> {} // TODO
+        }
+    }
+
+    private fun fetchCategories(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -131,7 +186,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
     }
 
-    private fun fetchPostTags(site: SiteModel) {
+    private fun fetchTags(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
