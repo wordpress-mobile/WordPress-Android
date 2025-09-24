@@ -37,8 +37,8 @@ class TaxonomyRsApiRestClient @Inject constructor(
     fun deleteTerm(site: SiteModel, term: TermModel) {
         when (term.taxonomy) {
             DEFAULT_TAXONOMY_CATEGORY -> deleteCategory(site, term)
-            DEFAULT_TAXONOMY_TAG -> createTag(site, term)
-            else -> {} // TODO
+            DEFAULT_TAXONOMY_TAG -> deleteTag(site, term)
+            else -> {} // TODO We are not supporting any other taxonomy yet
         }
     }
 
@@ -144,7 +144,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         when (term.taxonomy) {
             DEFAULT_TAXONOMY_CATEGORY -> createCategory(site, term)
             DEFAULT_TAXONOMY_TAG -> createTag(site, term)
-            else -> {} // TODO
+            else -> {} // TODO We are not supporting any other taxonomy yet
         }
     }
 
@@ -243,7 +243,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         when (taxonomyName) {
             DEFAULT_TAXONOMY_CATEGORY -> fetchCategories(site)
             DEFAULT_TAXONOMY_TAG -> fetchTags(site)
-            else -> {} // TODO
+            else -> {} // TODO We are not supporting any other taxonomy yet
         }
     }
 
