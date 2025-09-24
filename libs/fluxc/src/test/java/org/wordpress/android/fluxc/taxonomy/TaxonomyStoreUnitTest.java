@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -32,7 +33,8 @@ public class TaxonomyStoreUnitTest {
     private final TaxonomyStore mTaxonomyStore = new TaxonomyStore(
             new Dispatcher(),
             Mockito.mock(TaxonomyRestClient.class),
-            Mockito.mock(TaxonomyXMLRPCClient.class)
+            Mockito.mock(TaxonomyXMLRPCClient.class),
+            Mockito.mock(TaxonomyRsApiRestClient.class)
     );
 
     @Before
