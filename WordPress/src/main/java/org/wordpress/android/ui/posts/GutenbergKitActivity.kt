@@ -629,14 +629,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     private fun shouldRequireApplicationPassword(): Boolean {
         val isExperimentalEditorEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) &&
                 !experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        val isWPComSimpleSite = siteModel.isWPCom && !siteModel.isWPComAtomic
-        val isPrivateAtomicSite = siteModel.isWPComAtomic && siteModel.isPrivateWPComAtomic
-        val hasApplicationPassword = !site.apiRestPasswordPlain.isNullOrEmpty()
 
         return isExperimentalEditorEnabled &&
-                !isWPComSimpleSite && // Use bearer tokens
-                !isPrivateAtomicSite && // App passwords don't support private Atomic sites
-                !hasApplicationPassword
+                !siteModel.isWPCom && // WPCOM Simple sites use bearer tokens
+                !siteModel.isPrivateWPComAtomic && // App passwords don't support private Atomic sites
+                site.apiRestPasswordPlain.isNullOrEmpty()
     }
 
     private fun refreshMobileEditorFromSiteSetting() {
