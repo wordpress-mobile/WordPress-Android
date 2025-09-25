@@ -428,7 +428,12 @@ public class TaxonomyStore extends Store {
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingSelfHostedRestApi()) {
-            mTaxonomyRsApiRestClient.createTerm(payload.site, payload.term);
+            // FluxC pushTerm to update terms, so we need to mae the distinction here
+            if (payload.term.getRemoteTermId() > 0) {
+                mTaxonomyRsApiRestClient.updateTerm(payload.site, payload.term);
+            } else {
+                mTaxonomyRsApiRestClient.createTerm(payload.site, payload.term);
+            }
         } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {

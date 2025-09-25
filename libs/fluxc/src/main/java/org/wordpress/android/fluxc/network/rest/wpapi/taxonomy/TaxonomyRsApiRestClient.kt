@@ -21,8 +21,10 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryCreateParams
 import uniffi.wp_api.CategoryListParams
+import uniffi.wp_api.CategoryUpdateParams
 import uniffi.wp_api.TagCreateParams
 import uniffi.wp_api.TagListParams
+import uniffi.wp_api.TagUpdateParams
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -234,6 +236,121 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     val payload = RemoteTermPayload(term, site)
                     payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
                     notifyTermCreated(payload)
+                }
+            }
+        }
+    }
+
+    fun updateTerm(site: SiteModel, term: TermModel) {
+        when (term.taxonomy) {
+            DEFAULT_TAXONOMY_CATEGORY -> updateCategory(site, term)
+            DEFAULT_TAXONOMY_TAG -> updateTag(site, term)
+            else -> {} // TODO We are not supporting any other taxonomy yet
+        }
+    }
+
+    private fun updateCategory(site: SiteModel, term: TermModel) {
+        scope.launch {
+            if (term.remoteTermId < 0) {
+                appLogWrapper.e(AppLog.T.POSTS, "Failed updating category: $term - id <= 0")
+                val payload = RemoteTermPayload(term, site)
+                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+            }
+
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val categoriesResponse = client.request { requestBuilder ->
+                requestBuilder.categories().update(
+                    categoryId = term.remoteTermId,
+                    params = CategoryUpdateParams(
+                        name = term.name,
+                        description = term.description,
+                        slug = term.slug,
+                        parent = term.parentRemoteId
+                    )
+                )
+            }
+
+            when (categoriesResponse) {
+                is WpRequestResult.Success -> {
+                    val category = categoriesResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Category updated: ${category.name}")
+                    val payload = RemoteTermPayload(
+                        TermModel(
+                            category.id.toInt(),
+                            site.id,
+                            category.id,
+                            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                            category.name,
+                            category.slug,
+                            category.description,
+                            category.parent,
+                            category.count.toInt()
+                        ),
+                        site
+                    )
+                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed updating category: $categoriesResponse")
+                    val payload = RemoteTermPayload(term, site)
+                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                }
+            }
+        }
+    }
+
+    private fun updateTag(site: SiteModel, term: TermModel) {
+        scope.launch {
+            if (term.remoteTermId < 0) {
+                appLogWrapper.e(AppLog.T.POSTS, "Failed updating tag: $term - id <= 0")
+                val payload = RemoteTermPayload(term, site)
+                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+            }
+
+            val client = wpApiClientProvider.getWpApiClient(site)
+
+            val tagResponse = client.request { requestBuilder ->
+                requestBuilder.tags().update(
+                    tagId = term.remoteTermId,
+                    params = TagUpdateParams(
+                        name = term.name,
+                        description = term.description,
+                        slug = term.slug,
+                    )
+                )
+            }
+
+            when (tagResponse) {
+                is WpRequestResult.Success -> {
+                    val tag = tagResponse.response.data
+                    appLogWrapper.d(AppLog.T.POSTS, "Tag updated: ${tag.name}")
+                    val payload = RemoteTermPayload(
+                        TermModel(
+                            tag.id.toInt(),
+                            site.id,
+                            tag.id,
+                            DEFAULT_TAXONOMY_TAG,
+                            tag.name,
+                            tag.slug,
+                            tag.description,
+                            0,
+                            tag.count.toInt()
+                        ),
+                        site
+                    )
+                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Failed updating tag: $tagResponse")
+                    val payload = RemoteTermPayload(term, site)
+                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
                 }
             }
         }
