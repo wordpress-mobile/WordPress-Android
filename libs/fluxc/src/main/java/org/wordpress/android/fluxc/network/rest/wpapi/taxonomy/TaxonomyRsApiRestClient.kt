@@ -104,108 +104,111 @@ class TaxonomyRsApiRestClient @Inject constructor(
     }
 
     fun createTerm(site: SiteModel, term: TermModel) {
-        when (term.taxonomy) {
-            DEFAULT_TAXONOMY_CATEGORY -> createCategory(site, term)
-            DEFAULT_TAXONOMY_TAG -> createTag(site, term)
-            else -> {} // TODO We are not supporting any other taxonomy yet
-        }
-    }
-
-    private fun createCategory(site: SiteModel, term: TermModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val categoriesResponse = client.request { requestBuilder ->
-                requestBuilder.categories().create(
-                    CategoryCreateParams(
-                        name = term.name,
-                        description = term.description,
-                        slug = term.slug,
-                        parent = term.parentRemoteId
-                    )
-                )
-            }
+            when (term.taxonomy) {
+                DEFAULT_TAXONOMY_CATEGORY -> {
+                    val categoriesResponse = client.request { requestBuilder ->
+                        requestBuilder.categories().create(
+                            CategoryCreateParams(
+                                name = term.name,
+                                description = term.description,
+                                slug = term.slug,
+                                parent = term.parentRemoteId
+                            )
+                        )
+                    }
 
-            when (categoriesResponse) {
-                is WpRequestResult.Success -> {
-                    val category = categoriesResponse.response.data
-                    appLogWrapper.d(AppLog.T.POSTS, "Created category: ${category.name}")
-                    val payload = RemoteTermPayload(
-                        TermModel(
-                            category.id.toInt(),
-                            site.id,
-                            category.id,
-                            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                            category.name,
-                            category.slug,
-                            category.description,
-                            category.parent,
-                            category.count.toInt()
-                        ),
-                        site
-                    )
-                    notifyTermCreated(payload)
-                }
-
-                else -> {
-                    notifyFailedOperation(
-                        operation = "creating",
+                    handleCreateResponse(
+                        response = categoriesResponse,
                         termType = "category",
                         term = term,
                         site = site,
-                        errorDetails = categoriesResponse.toString(),
-                        notifier = ::notifyTermCreated
+                        extractData = { it.response.data },
+                        createTermModel = { data ->
+                            val category = data as uniffi.wp_api.CategoryWithEditContext
+                            TermModel(
+                                category.id.toInt(),
+                                site.id,
+                                category.id,
+                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                                category.name,
+                                category.slug,
+                                category.description,
+                                category.parent,
+                                category.count.toInt()
+                            )
+                        }
                     )
                 }
+                DEFAULT_TAXONOMY_TAG -> {
+                    val tagResponse = client.request { requestBuilder ->
+                        requestBuilder.tags().create(
+                            TagCreateParams(
+                                name = term.name,
+                                description = term.description,
+                                slug = term.slug,
+                            )
+                        )
+                    }
+
+                    handleCreateResponse(
+                        response = tagResponse,
+                        termType = "tag",
+                        term = term,
+                        site = site,
+                        extractData = { it.response.data },
+                        createTermModel = { data ->
+                            val tag = data as uniffi.wp_api.TagWithEditContext
+                            TermModel(
+                                tag.id.toInt(),
+                                site.id,
+                                tag.id,
+                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
+                                tag.name,
+                                tag.slug,
+                                tag.description,
+                                0,
+                                tag.count.toInt()
+                            )
+                        }
+                    )
+                }
+                else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
-    private fun createTag(site: SiteModel, term: TermModel) {
-        scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
-
-            val tagResponse = client.request { requestBuilder ->
-                requestBuilder.tags().create(
-                    TagCreateParams(
-                        name = term.name,
-                        description = term.description,
-                        slug = term.slug,
-                    )
-                )
+    private inline fun <T> handleCreateResponse(
+        response: WpRequestResult<T>,
+        termType: String,
+        term: TermModel,
+        site: SiteModel,
+        extractData: (WpRequestResult.Success<T>) -> Any,
+        createTermModel: (Any) -> TermModel
+    ) {
+        when (response) {
+            is WpRequestResult.Success -> {
+                val data = extractData(response)
+                val name = when (data) {
+                    is uniffi.wp_api.CategoryWithEditContext -> data.name
+                    is uniffi.wp_api.TagWithEditContext -> data.name
+                    else -> "unknown"
+                }
+                appLogWrapper.d(AppLog.T.POSTS, "Created $termType: $name")
+                val payload = RemoteTermPayload(createTermModel(data), site)
+                notifyTermCreated(payload)
             }
-
-            when (tagResponse) {
-                is WpRequestResult.Success -> {
-                    val tag = tagResponse.response.data
-                    appLogWrapper.d(AppLog.T.POSTS, "Created tag: ${tag.name}")
-                    val payload = RemoteTermPayload(
-                        TermModel(
-                            tag.id.toInt(),
-                            site.id,
-                            tag.id,
-                            TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                            tag.name,
-                            tag.slug,
-                            tag.description,
-                            0,
-                            tag.count.toInt()
-                        ),
-                        site
-                    )
-                    notifyTermCreated(payload)
-                }
-
-                else -> {
-                    notifyFailedOperation(
-                        operation = "creating",
-                        termType = "tag",
-                        term = term,
-                        site = site,
-                        errorDetails = tagResponse.toString(),
-                        notifier = ::notifyTermCreated
-                    )
-                }
+            else -> {
+                notifyFailedOperation(
+                    operation = "creating",
+                    termType = termType,
+                    term = term,
+                    site = site,
+                    errorDetails = response.toString(),
+                    notifier = ::notifyTermCreated
+                )
             }
         }
     }
