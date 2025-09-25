@@ -43,53 +43,65 @@ class TaxonomyRsApiRestClient @Inject constructor(
             val client = wpApiClientProvider.getWpApiClient(site)
 
             when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> {
-                    val categoriesResponse = client.request { requestBuilder ->
-                        requestBuilder.categories().delete(categoryId = term.id.toLong())
-                    }
-                    when (categoriesResponse) {
-                        is WpRequestResult.Success -> {
-                            val category = categoriesResponse.response.data
-                            appLogWrapper.d(
-                                AppLog.T.POSTS,
-                                "Deleted category: ${term.name} - ${category.deleted}"
-                            )
-                            if (category.deleted) {
-                                val termModel =
-                                    createTermModelForDelete(term, site, DEFAULT_TAXONOMY_CATEGORY)
-                                notifyTermDeleted(RemoteTermPayload(termModel, site))
-                            } else {
-                                notifyFailedDeleting("category", site, term)
-                            }
-                        }
-                        else -> {
-                            notifyFailedDeleting("category", site, term)
-                        }
-                    }
-                }
-
-                DEFAULT_TAXONOMY_TAG -> {
-                    val tagsResponse = client.request { requestBuilder ->
-                        requestBuilder.tags().delete(tagId = term.id.toLong())
-                    }
-                    when (tagsResponse) {
-                        is WpRequestResult.Success -> {
-                            val tag = tagsResponse.response.data
-                            appLogWrapper.d(AppLog.T.POSTS, "Deleted tag: ${term.name} - ${tag.deleted}")
-                            if (tag.deleted) {
-                                val termModel = createTermModelForDelete(term, site, DEFAULT_TAXONOMY_TAG)
-                                notifyTermDeleted(RemoteTermPayload(termModel, site))
-                            } else {
-                                notifyFailedDeleting("tag", site, term)
-                            }
-                        }
-                        else -> {
-                            notifyFailedDeleting("tag", site, term)
-                        }
-                    }
-                }
-
+                DEFAULT_TAXONOMY_CATEGORY -> deleteCategory(client, term, site)
+                DEFAULT_TAXONOMY_TAG -> deleteTag(client, term, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
+            }
+        }
+    }
+
+    private suspend fun deleteCategory(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val categoriesResponse = client.request { requestBuilder ->
+            requestBuilder.categories().delete(categoryId = term.id.toLong())
+        }
+        when (categoriesResponse) {
+            is WpRequestResult.Success -> {
+                val category = categoriesResponse.response.data
+                appLogWrapper.d(
+                    AppLog.T.POSTS,
+                    "Deleted category: ${term.name} - ${category.deleted}"
+                )
+                if (category.deleted) {
+                    val termModel =
+                        createTermModelForDelete(term, site, DEFAULT_TAXONOMY_CATEGORY)
+                    notifyTermDeleted(RemoteTermPayload(termModel, site))
+                } else {
+                    notifyFailedDeleting("category", site, term)
+                }
+            }
+
+            else -> {
+                notifyFailedDeleting("category", site, term)
+            }
+        }
+    }
+
+    private suspend fun deleteTag(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val tagsResponse = client.request { requestBuilder ->
+            requestBuilder.tags().delete(tagId = term.id.toLong())
+        }
+        when (tagsResponse) {
+            is WpRequestResult.Success -> {
+                val tag = tagsResponse.response.data
+                appLogWrapper.d(AppLog.T.POSTS, "Deleted tag: ${term.name} - ${tag.deleted}")
+                if (tag.deleted) {
+                    val termModel = createTermModelForDelete(term, site, DEFAULT_TAXONOMY_TAG)
+                    notifyTermDeleted(RemoteTermPayload(termModel, site))
+                } else {
+                    notifyFailedDeleting("tag", site, term)
+                }
+            }
+
+            else -> {
+                notifyFailedDeleting("tag", site, term)
             }
         }
     }
@@ -202,8 +214,8 @@ class TaxonomyRsApiRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val data = extractData(response)
                 val name = when (data) {
-                    is uniffi.wp_api.CategoryWithEditContext -> data.name
-                    is uniffi.wp_api.TagWithEditContext -> data.name
+                    is CategoryWithEditContext -> data.name
+                    is TagWithEditContext -> data.name
                     else -> "unknown"
                 }
                 appLogWrapper.d(AppLog.T.POSTS, "Created $termType: $name")
