@@ -13,6 +13,7 @@ import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Timeout in milliseconds for loading complex images at server side (private, heavy...)
 private const val TIMEOUT = 15_000
 
 /**
