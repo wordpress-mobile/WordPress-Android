@@ -142,6 +142,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         }
                     )
                 }
+
                 DEFAULT_TAXONOMY_TAG -> {
                     val tagResponse = client.request { requestBuilder ->
                         requestBuilder.tags().create(
@@ -152,7 +153,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             )
                         )
                     }
-
                     handleCreateResponse(
                         response = tagResponse,
                         termType = "tag",
@@ -175,6 +175,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         }
                     )
                 }
+
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
@@ -214,107 +215,121 @@ class TaxonomyRsApiRestClient @Inject constructor(
     }
 
     fun updateTerm(site: SiteModel, term: TermModel) {
-        when (term.taxonomy) {
-            DEFAULT_TAXONOMY_CATEGORY -> updateCategory(site, term)
-            DEFAULT_TAXONOMY_TAG -> updateTag(site, term)
-            else -> {} // TODO We are not supporting any other taxonomy yet
-        }
-    }
-
-    private fun updateCategory(site: SiteModel, term: TermModel) {
         scope.launch {
-            if (!validateTermId(term, site, "category")) return@launch
+            if (term.remoteTermId < 0) {
+                appLogWrapper.e(AppLog.T.POSTS, "Failed updating term: $term - id <= 0")
+                val payload = RemoteTermPayload(term, site)
+                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                return@launch
+            }
 
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val categoriesResponse = client.request { requestBuilder ->
-                requestBuilder.categories().update(
-                    categoryId = term.remoteTermId,
-                    params = CategoryUpdateParams(
-                        name = term.name,
-                        description = term.description,
-                        slug = term.slug,
-                        parent = term.parentRemoteId
-                    )
-                )
-            }
-
-            when (categoriesResponse) {
-                is WpRequestResult.Success -> {
-                    val category = categoriesResponse.response.data
-                    appLogWrapper.d(AppLog.T.POSTS, "Category updated: ${category.name}")
-                    val payload = RemoteTermPayload(
-                        TermModel(
-                            category.id.toInt(),
-                            site.id,
-                            category.id,
-                            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                            category.name,
-                            category.slug,
-                            category.description,
-                            category.parent,
-                            category.count.toInt()
-                        ),
-                        site
-                    )
-                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-                }
-
-                else -> {
-                    notifyFailedOperation(
-                        operation = "updating",
-                        termType ="category",
+            when (term.taxonomy) {
+                DEFAULT_TAXONOMY_CATEGORY -> {
+                    val categoriesResponse = client.request { requestBuilder ->
+                        requestBuilder.categories().update(
+                            categoryId = term.remoteTermId,
+                            params = CategoryUpdateParams(
+                                name = term.name,
+                                description = term.description,
+                                slug = term.slug,
+                                parent = term.parentRemoteId
+                            )
+                        )
+                    }
+                    handleUpdateResponse(
+                        response = categoriesResponse,
+                        termType = "category",
                         term = term,
                         site = site,
-                        errorDetails = categoriesResponse.toString(),
-                        notifier = ::notifyTermCreated
+                        extractData = { it.response.data },
+                        createTermModel = { data ->
+                            val category = data as uniffi.wp_api.CategoryWithEditContext
+                            TermModel(
+                                category.id.toInt(),
+                                site.id,
+                                category.id,
+                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                                category.name,
+                                category.slug,
+                                category.description,
+                                category.parent,
+                                category.count.toInt()
+                            )
+                        }
                     )
                 }
+
+                DEFAULT_TAXONOMY_TAG -> {
+                    val tagResponse = client.request { requestBuilder ->
+                        requestBuilder.tags().update(
+                            tagId = term.remoteTermId,
+                            params = TagUpdateParams(
+                                name = term.name,
+                                description = term.description,
+                                slug = term.slug,
+                            )
+                        )
+                    }
+                    handleUpdateResponse(
+                        response = tagResponse,
+                        termType = "tag",
+                        term = term,
+                        site = site,
+                        extractData = { it.response.data },
+                        createTermModel = { data ->
+                            val tag = data as uniffi.wp_api.TagWithEditContext
+                            TermModel(
+                                tag.id.toInt(),
+                                site.id,
+                                tag.id,
+                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
+                                tag.name,
+                                tag.slug,
+                                tag.description,
+                                0,
+                                tag.count.toInt()
+                            )
+                        }
+                    )
+                }
+
+                else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
-    private fun updateTag(site: SiteModel, term: TermModel) {
-        scope.launch {
-            if (!validateTermId(term, site, "tag")) return@launch
-
-            val client = wpApiClientProvider.getWpApiClient(site)
-
-            val tagResponse = client.request { requestBuilder ->
-                requestBuilder.tags().update(
-                    tagId = term.remoteTermId,
-                    params = TagUpdateParams(
-                        name = term.name,
-                        description = term.description,
-                        slug = term.slug,
-                    )
-                )
+    private inline fun <T> handleUpdateResponse(
+        response: WpRequestResult<T>,
+        termType: String,
+        term: TermModel,
+        site: SiteModel,
+        extractData: (WpRequestResult.Success<T>) -> Any,
+        createTermModel: (Any) -> TermModel
+    ) {
+        when (response) {
+            is WpRequestResult.Success -> {
+                val data = extractData(response)
+                val name = when (data) {
+                    is uniffi.wp_api.CategoryWithEditContext -> data.name
+                    is uniffi.wp_api.TagWithEditContext -> data.name
+                    else -> "unknown"
+                }
+                appLogWrapper.d(AppLog.T.POSTS, "${termType.replaceFirstChar { it.uppercase() }} updated: $name")
+                val payload = RemoteTermPayload(createTermModel(data), site)
+                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
             }
-
-            when (tagResponse) {
-                is WpRequestResult.Success -> {
-                    val tag = tagResponse.response.data
-                    appLogWrapper.d(AppLog.T.POSTS, "Tag updated: ${tag.name}")
-                    val payload = RemoteTermPayload(
-                        TermModel(
-                            tag.id.toInt(),
-                            site.id,
-                            tag.id,
-                            TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                            tag.name,
-                            tag.slug,
-                            tag.description,
-                            0,
-                            tag.count.toInt()
-                        ),
-                        site
-                    )
-                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-                }
-
-                else -> {
-                    notifyFailedOperation("updating", "tag", term, site, tagResponse.toString(), ::notifyTermCreated)
-                }
+            else -> {
+                notifyFailedOperation(
+                    operation = "updating",
+                    termType = termType,
+                    term = term,
+                    site = site,
+                    errorDetails = response.toString(),
+                    notifier = ::notifyTermCreated
+                )
             }
         }
     }
@@ -427,18 +442,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
         dispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload))
     }
 
-    private fun validateTermId(term: TermModel, site: SiteModel, termType: String): Boolean {
-        return if (term.remoteTermId < 0) {
-            appLogWrapper.e(AppLog.T.POSTS, "Failed updating $termType: $term - id <= 0")
-            val payload = RemoteTermPayload(term, site)
-            payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-            notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-            false
-        } else {
-            true
-        }
-    }
-
     @Suppress("LongParameterList")
     private fun notifyFailedOperation(
         operation: String,
@@ -472,34 +475,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
             term.description,
             term.parentRemoteId,
             term.postCount
-        )
-    }
-
-    private fun createCategoryTermModel(category: uniffi.wp_api.CategoryWithEditContext, site: SiteModel): TermModel {
-        return TermModel(
-            category.id.toInt(),
-            site.id,
-            category.id,
-            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-            category.name,
-            category.slug,
-            category.description,
-            category.parent,
-            category.count.toInt()
-        )
-    }
-
-    private fun createTagTermModel(tag: uniffi.wp_api.TagWithEditContext, site: SiteModel): TermModel {
-        return TermModel(
-            tag.id.toInt(),
-            site.id,
-            tag.id,
-            TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-            tag.name,
-            tag.slug,
-            tag.description,
-            0,
-            tag.count.toInt()
         )
     }
 
