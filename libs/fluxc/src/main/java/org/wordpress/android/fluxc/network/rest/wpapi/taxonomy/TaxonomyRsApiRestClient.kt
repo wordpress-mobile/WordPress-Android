@@ -404,7 +404,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         cat.name,
                         cat.slug,
                         cat.description,
-                        0,
+                        cat.parent,
                         cat.count.toInt()
                     )
                 }
