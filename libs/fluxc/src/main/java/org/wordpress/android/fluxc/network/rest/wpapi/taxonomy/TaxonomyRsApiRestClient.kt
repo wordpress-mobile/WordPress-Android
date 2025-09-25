@@ -335,93 +335,102 @@ class TaxonomyRsApiRestClient @Inject constructor(
     }
 
     fun fetchTerms(site: SiteModel, taxonomyName: String) {
-        when (taxonomyName) {
-            DEFAULT_TAXONOMY_CATEGORY -> fetchCategories(site)
-            DEFAULT_TAXONOMY_TAG -> fetchTags(site)
-            else -> {} // TODO We are not supporting any other taxonomy yet
-        }
-    }
-
-    private fun fetchCategories(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
-            val categoriesResponse = client.request { requestBuilder ->
-                requestBuilder.categories().listWithEditContext(
-                    CategoryListParams()
-                )
-            }
-
-            val termsResponsePayload = when (categoriesResponse) {
-                is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.POSTS, "Fetched categories list: ${categoriesResponse.response.data.size}")
-                    createTermsResponsePayload(
-                        categoriesResponse.response.data.map { category ->
-                            TermModel(
-                                category.id.toInt(),
-                                site.id,
-                                category.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                                category.name,
-                                category.slug,
-                                category.description,
-                                0,
-                                category.count.toInt()
-                            )
-                        },
-                        site,
-                        TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
+            when (taxonomyName) {
+                DEFAULT_TAXONOMY_CATEGORY -> {
+                    val categoriesResponse = client.request { requestBuilder ->
+                        requestBuilder.categories().listWithEditContext(
+                            CategoryListParams()
+                        )
+                    }
+                    handleFetchResponse(
+                        response = categoriesResponse,
+                        termType = "categories",
+                        taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                        site = site,
+                        extractData = { it.response.data },
+                        createTermModels = { data ->
+                            (data as List<*>).map { category ->
+                                val cat = category as uniffi.wp_api.CategoryWithEditContext
+                                TermModel(
+                                    cat.id.toInt(),
+                                    site.id,
+                                    cat.id,
+                                    TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                                    cat.name,
+                                    cat.slug,
+                                    cat.description,
+                                    0,
+                                    cat.count.toInt()
+                                )
+                            }
+                        }
                     )
                 }
 
-                else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Fetch categories list failed: $categoriesResponse")
-                    createErrorResponsePayload(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY)
+                DEFAULT_TAXONOMY_TAG -> {
+                    val tagsResponse = client.request { requestBuilder ->
+                        requestBuilder.tags().listWithEditContext(
+                            TagListParams()
+                        )
+                    }
+                    handleFetchResponse(
+                        response = tagsResponse,
+                        termType = "tags",
+                        taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_TAG,
+                        site = site,
+                        extractData = { it.response.data },
+                        createTermModels = { data ->
+                            (data as List<*>).map { tag ->
+                                val t = tag as uniffi.wp_api.TagWithEditContext
+                                TermModel(
+                                    t.id.toInt(),
+                                    site.id,
+                                    t.id,
+                                    TaxonomyStore.DEFAULT_TAXONOMY_TAG,
+                                    t.name,
+                                    t.slug,
+                                    t.description,
+                                    0,
+                                    t.count.toInt()
+                                )
+                            }
+                        }
+                    )
                 }
+                
+                else -> {} // TODO We are not supporting any other taxonomy yet
             }
-            notifyTermsFetched(termsResponsePayload)
         }
     }
 
-    private fun fetchTags(site: SiteModel) {
-        scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
-
-            val tagsResponse = client.request { requestBuilder ->
-                requestBuilder.tags().listWithEditContext(
-                    TagListParams()
+    private inline fun <T> handleFetchResponse(
+        response: WpRequestResult<T>,
+        termType: String,
+        taxonomy: String,
+        site: SiteModel,
+        extractData: (WpRequestResult.Success<T>) -> Any,
+        createTermModels: (Any) -> List<TermModel>
+    ) {
+        val termsResponsePayload = when (response) {
+            is WpRequestResult.Success -> {
+                val data = extractData(response)
+                val dataList = data as List<*>
+                appLogWrapper.d(AppLog.T.POSTS, "Fetched $termType list: ${dataList.size}")
+                createTermsResponsePayload(
+                    createTermModels(data),
+                    site,
+                    taxonomy
                 )
             }
-
-            val termsResponsePayload = when (tagsResponse) {
-                is WpRequestResult.Success -> {
-                    appLogWrapper.d(AppLog.T.POSTS, "Fetched tags list: ${tagsResponse.response.data.size}")
-                    createTermsResponsePayload(
-                        tagsResponse.response.data.map { tag ->
-                            TermModel(
-                                tag.id.toInt(),
-                                site.id,
-                                tag.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                                tag.name,
-                                tag.slug,
-                                tag.description,
-                                0,
-                                tag.count.toInt()
-                            )
-                        },
-                        site,
-                        TaxonomyStore.DEFAULT_TAXONOMY_TAG
-                    )
-                }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $tagsResponse")
-                    createErrorResponsePayload(TaxonomyStore.DEFAULT_TAXONOMY_TAG)
-                }
+            else -> {
+                appLogWrapper.e(AppLog.T.POSTS, "Fetch $termType list failed: $response")
+                createErrorResponsePayload(taxonomy)
             }
-            notifyTermsFetched(termsResponsePayload)
         }
+        notifyTermsFetched(termsResponsePayload)
     }
 
     private fun notifyTermsFetched(
