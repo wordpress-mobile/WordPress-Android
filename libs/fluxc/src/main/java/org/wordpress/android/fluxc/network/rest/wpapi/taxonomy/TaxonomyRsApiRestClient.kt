@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
@@ -18,15 +17,16 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.CategoriesRequestDeleteResponse
 import uniffi.wp_api.CategoryCreateParams
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.CategoryUpdateParams
+import uniffi.wp_api.CategoryWithEditContext
 import uniffi.wp_api.TagCreateParams
 import uniffi.wp_api.TagListParams
 import uniffi.wp_api.TagUpdateParams
-import uniffi.wp_api.TagsRequestDeleteResponse
+import uniffi.wp_api.TagWithEditContext
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -50,9 +50,13 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     when (categoriesResponse) {
                         is WpRequestResult.Success -> {
                             val category = categoriesResponse.response.data
-                            appLogWrapper.d(AppLog.T.POSTS, "Deleted category: ${term.name} - ${category.deleted}")
+                            appLogWrapper.d(
+                                AppLog.T.POSTS,
+                                "Deleted category: ${term.name} - ${category.deleted}"
+                            )
                             if (category.deleted) {
-                                val termModel = createTermModelForDelete(term, site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY)
+                                val termModel =
+                                    createTermModelForDelete(term, site, DEFAULT_TAXONOMY_CATEGORY)
                                 notifyTermDeleted(RemoteTermPayload(termModel, site))
                             } else {
                                 notifyFailedDeleting("category", site, term)
@@ -73,7 +77,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             val tag = tagsResponse.response.data
                             appLogWrapper.d(AppLog.T.POSTS, "Deleted tag: ${term.name} - ${tag.deleted}")
                             if (tag.deleted) {
-                                val termModel = createTermModelForDelete(term, site, TaxonomyStore.DEFAULT_TAXONOMY_TAG)
+                                val termModel = createTermModelForDelete(term, site, DEFAULT_TAXONOMY_TAG)
                                 notifyTermDeleted(RemoteTermPayload(termModel, site))
                             } else {
                                 notifyFailedDeleting("tag", site, term)
@@ -102,79 +106,90 @@ class TaxonomyRsApiRestClient @Inject constructor(
             val client = wpApiClientProvider.getWpApiClient(site)
 
             when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> {
-                    val categoriesResponse = client.request { requestBuilder ->
-                        requestBuilder.categories().create(
-                            CategoryCreateParams(
-                                name = term.name,
-                                description = term.description,
-                                slug = term.slug,
-                                parent = term.parentRemoteId
-                            )
-                        )
-                    }
-
-                    handleCreateResponse(
-                        response = categoriesResponse,
-                        termType = "category",
-                        term = term,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModel = { data ->
-                            val category = data as uniffi.wp_api.CategoryWithEditContext
-                            TermModel(
-                                category.id.toInt(),
-                                site.id,
-                                category.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                                category.name,
-                                category.slug,
-                                category.description,
-                                category.parent,
-                                category.count.toInt()
-                            )
-                        }
-                    )
-                }
-
-                DEFAULT_TAXONOMY_TAG -> {
-                    val tagResponse = client.request { requestBuilder ->
-                        requestBuilder.tags().create(
-                            TagCreateParams(
-                                name = term.name,
-                                description = term.description,
-                                slug = term.slug,
-                            )
-                        )
-                    }
-                    handleCreateResponse(
-                        response = tagResponse,
-                        termType = "tag",
-                        term = term,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModel = { data ->
-                            val tag = data as uniffi.wp_api.TagWithEditContext
-                            TermModel(
-                                tag.id.toInt(),
-                                site.id,
-                                tag.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                                tag.name,
-                                tag.slug,
-                                tag.description,
-                                0,
-                                tag.count.toInt()
-                            )
-                        }
-                    )
-                }
-
+                DEFAULT_TAXONOMY_CATEGORY -> createCategory(client, term, site)
+                DEFAULT_TAXONOMY_TAG -> createTag(client, term, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
+    private suspend fun createCategory(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val categoriesResponse = client.request { requestBuilder ->
+            requestBuilder.categories().create(
+                CategoryCreateParams(
+                    name = term.name,
+                    description = term.description,
+                    slug = term.slug,
+                    parent = term.parentRemoteId
+                )
+            )
+        }
+
+        handleCreateResponse(
+            response = categoriesResponse,
+            termType = "category",
+            term = term,
+            site = site,
+            extractData = { it.response.data },
+            createTermModel = { data ->
+                val category = data as CategoryWithEditContext
+                TermModel(
+                    category.id.toInt(),
+                    site.id,
+                    category.id,
+                    DEFAULT_TAXONOMY_CATEGORY,
+                    category.name,
+                    category.slug,
+                    category.description,
+                    category.parent,
+                    category.count.toInt()
+                )
+            }
+        )
+    }
+
+    private suspend fun createTag(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val tagResponse = client.request { requestBuilder ->
+            requestBuilder.tags().create(
+                TagCreateParams(
+                    name = term.name,
+                    description = term.description,
+                    slug = term.slug,
+                )
+            )
+        }
+        handleCreateResponse(
+            response = tagResponse,
+            termType = "tag",
+            term = term,
+            site = site,
+            extractData = { it.response.data },
+            createTermModel = { data ->
+                val tag = data as TagWithEditContext
+                TermModel(
+                    tag.id.toInt(),
+                    site.id,
+                    tag.id,
+                    DEFAULT_TAXONOMY_TAG,
+                    tag.name,
+                    tag.slug,
+                    tag.description,
+                    0,
+                    tag.count.toInt()
+                )
+            }
+        )
+    }
+
+    @Suppress("LongParameterList")
     private inline fun <T> handleCreateResponse(
         response: WpRequestResult<T>,
         termType: String,
@@ -221,80 +236,91 @@ class TaxonomyRsApiRestClient @Inject constructor(
             val client = wpApiClientProvider.getWpApiClient(site)
 
             when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> {
-                    val categoriesResponse = client.request { requestBuilder ->
-                        requestBuilder.categories().update(
-                            categoryId = term.remoteTermId,
-                            params = CategoryUpdateParams(
-                                name = term.name,
-                                description = term.description,
-                                slug = term.slug,
-                                parent = term.parentRemoteId
-                            )
-                        )
-                    }
-                    handleUpdateResponse(
-                        response = categoriesResponse,
-                        termType = "category",
-                        term = term,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModel = { data ->
-                            val category = data as uniffi.wp_api.CategoryWithEditContext
-                            TermModel(
-                                category.id.toInt(),
-                                site.id,
-                                category.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                                category.name,
-                                category.slug,
-                                category.description,
-                                category.parent,
-                                category.count.toInt()
-                            )
-                        }
-                    )
-                }
-
-                DEFAULT_TAXONOMY_TAG -> {
-                    val tagResponse = client.request { requestBuilder ->
-                        requestBuilder.tags().update(
-                            tagId = term.remoteTermId,
-                            params = TagUpdateParams(
-                                name = term.name,
-                                description = term.description,
-                                slug = term.slug,
-                            )
-                        )
-                    }
-                    handleUpdateResponse(
-                        response = tagResponse,
-                        termType = "tag",
-                        term = term,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModel = { data ->
-                            val tag = data as uniffi.wp_api.TagWithEditContext
-                            TermModel(
-                                tag.id.toInt(),
-                                site.id,
-                                tag.id,
-                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                                tag.name,
-                                tag.slug,
-                                tag.description,
-                                0,
-                                tag.count.toInt()
-                            )
-                        }
-                    )
-                }
-
+                DEFAULT_TAXONOMY_CATEGORY -> updateCategory(client, term, site)
+                DEFAULT_TAXONOMY_TAG -> updateTag(client, term, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
+    private suspend fun updateCategory(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val categoriesResponse = client.request { requestBuilder ->
+            requestBuilder.categories().update(
+                categoryId = term.remoteTermId,
+                params = CategoryUpdateParams(
+                    name = term.name,
+                    description = term.description,
+                    slug = term.slug,
+                    parent = term.parentRemoteId
+                )
+            )
+        }
+        handleUpdateResponse(
+            response = categoriesResponse,
+            termType = "category",
+            term = term,
+            site = site,
+            extractData = { it.response.data },
+            createTermModel = { data ->
+                val category = data as CategoryWithEditContext
+                TermModel(
+                    category.id.toInt(),
+                    site.id,
+                    category.id,
+                    DEFAULT_TAXONOMY_CATEGORY,
+                    category.name,
+                    category.slug,
+                    category.description,
+                    category.parent,
+                    category.count.toInt()
+                )
+            }
+        )
+    }
+
+    private suspend fun updateTag(
+        client: WpApiClient,
+        term: TermModel,
+        site: SiteModel
+    ) {
+        val tagResponse = client.request { requestBuilder ->
+            requestBuilder.tags().update(
+                tagId = term.remoteTermId,
+                params = TagUpdateParams(
+                    name = term.name,
+                    description = term.description,
+                    slug = term.slug,
+                )
+            )
+        }
+        handleUpdateResponse(
+            response = tagResponse,
+            termType = "tag",
+            term = term,
+            site = site,
+            extractData = { it.response.data },
+            createTermModel = { data ->
+                val tag = data as TagWithEditContext
+                TermModel(
+                    tag.id.toInt(),
+                    site.id,
+                    tag.id,
+                    DEFAULT_TAXONOMY_TAG,
+                    tag.name,
+                    tag.slug,
+                    tag.description,
+                    0,
+                    tag.count.toInt()
+                )
+            }
+        )
+    }
+
+    @Suppress("LongParameterList")
     private inline fun <T> handleUpdateResponse(
         response: WpRequestResult<T>,
         termType: String,
@@ -307,8 +333,8 @@ class TaxonomyRsApiRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val data = extractData(response)
                 val name = when (data) {
-                    is uniffi.wp_api.CategoryWithEditContext -> data.name
-                    is uniffi.wp_api.TagWithEditContext -> data.name
+                    is CategoryWithEditContext -> data.name
+                    is TagWithEditContext -> data.name
                     else -> "unknown"
                 }
                 appLogWrapper.d(AppLog.T.POSTS, "${termType.replaceFirstChar { it.uppercase() }} updated: $name")
@@ -333,73 +359,82 @@ class TaxonomyRsApiRestClient @Inject constructor(
             val client = wpApiClientProvider.getWpApiClient(site)
 
             when (taxonomyName) {
-                DEFAULT_TAXONOMY_CATEGORY -> {
-                    val categoriesResponse = client.request { requestBuilder ->
-                        requestBuilder.categories().listWithEditContext(
-                            CategoryListParams()
-                        )
-                    }
-                    handleFetchResponse(
-                        response = categoriesResponse,
-                        termType = "categories",
-                        taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModels = { data ->
-                            (data as List<*>).map { category ->
-                                val cat = category as uniffi.wp_api.CategoryWithEditContext
-                                TermModel(
-                                    cat.id.toInt(),
-                                    site.id,
-                                    cat.id,
-                                    TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                                    cat.name,
-                                    cat.slug,
-                                    cat.description,
-                                    0,
-                                    cat.count.toInt()
-                                )
-                            }
-                        }
-                    )
-                }
-
-                DEFAULT_TAXONOMY_TAG -> {
-                    val tagsResponse = client.request { requestBuilder ->
-                        requestBuilder.tags().listWithEditContext(
-                            TagListParams()
-                        )
-                    }
-                    handleFetchResponse(
-                        response = tagsResponse,
-                        termType = "tags",
-                        taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                        site = site,
-                        extractData = { it.response.data },
-                        createTermModels = { data ->
-                            (data as List<*>).map { tag ->
-                                val t = tag as uniffi.wp_api.TagWithEditContext
-                                TermModel(
-                                    t.id.toInt(),
-                                    site.id,
-                                    t.id,
-                                    TaxonomyStore.DEFAULT_TAXONOMY_TAG,
-                                    t.name,
-                                    t.slug,
-                                    t.description,
-                                    0,
-                                    t.count.toInt()
-                                )
-                            }
-                        }
-                    )
-                }
-
+                DEFAULT_TAXONOMY_CATEGORY -> fetchCategories(client, site)
+                DEFAULT_TAXONOMY_TAG -> fetchTags(client, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
+    private suspend fun fetchCategories(
+        client: WpApiClient,
+        site: SiteModel
+    ) {
+        val categoriesResponse = client.request { requestBuilder ->
+            requestBuilder.categories().listWithEditContext(
+                CategoryListParams()
+            )
+        }
+        handleFetchResponse(
+            response = categoriesResponse,
+            termType = "categories",
+            taxonomy = DEFAULT_TAXONOMY_CATEGORY,
+            site = site,
+            extractData = { it.response.data },
+            createTermModels = { data ->
+                (data as List<*>).map { category ->
+                    val cat = category as CategoryWithEditContext
+                    TermModel(
+                        cat.id.toInt(),
+                        site.id,
+                        cat.id,
+                        DEFAULT_TAXONOMY_CATEGORY,
+                        cat.name,
+                        cat.slug,
+                        cat.description,
+                        0,
+                        cat.count.toInt()
+                    )
+                }
+            }
+        )
+    }
+
+    private suspend fun fetchTags(
+        client: WpApiClient,
+        site: SiteModel
+    ) {
+        val tagsResponse = client.request { requestBuilder ->
+            requestBuilder.tags().listWithEditContext(
+                TagListParams()
+            )
+        }
+        handleFetchResponse(
+            response = tagsResponse,
+            termType = "tags",
+            taxonomy = DEFAULT_TAXONOMY_TAG,
+            site = site,
+            extractData = { it.response.data },
+            createTermModels = { data ->
+                (data as List<*>).map { tag ->
+                    val t = tag as TagWithEditContext
+                    TermModel(
+                        t.id.toInt(),
+                        site.id,
+                        t.id,
+                        DEFAULT_TAXONOMY_TAG,
+                        t.name,
+                        t.slug,
+                        t.description,
+                        0,
+                        t.count.toInt()
+                    )
+                }
+            }
+        )
+    }
+
+    @Suppress("LongParameterList")
     private inline fun <T> handleFetchResponse(
         response: WpRequestResult<T>,
         termType: String,
