@@ -256,6 +256,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 val payload = RemoteTermPayload(term, site)
                 payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
                 notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                return@launch
             }
 
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -310,6 +311,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 val payload = RemoteTermPayload(term, site)
                 payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
                 notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                return@launch
             }
 
             val client = wpApiClientProvider.getWpApiClient(site)
