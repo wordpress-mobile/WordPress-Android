@@ -75,22 +75,15 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         )
                         notifyTermDeleted(payload)
                     } else {
-                        notifyFailedDeletingCategory(site, term)
+                        notifyFailedDeleting("category", site, term)
                     }
                 }
 
                 else -> {
-                    notifyFailedDeletingCategory(site, term)
+                    notifyFailedDeleting("category", site, term)
                 }
             }
         }
-    }
-
-    private fun notifyFailedDeletingCategory(site: SiteModel, term: TermModel) {
-        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting category")
-        val payload = RemoteTermPayload(term, site)
-        payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-        notifyTermDeleted(payload)
     }
 
     private fun deleteTag(site: SiteModel, term: TermModel) {
@@ -124,19 +117,19 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         )
                         notifyTermDeleted(payload)
                     } else {
-                        notifyFailedDeletingTag(site, term)
+                        notifyFailedDeleting("tag", site, term)
                     }
                 }
 
                 else -> {
-                    notifyFailedDeletingTag(site, term)
+                    notifyFailedDeleting("tag", site, term)
                 }
             }
         }
     }
 
-    private fun notifyFailedDeletingTag(site: SiteModel, term: TermModel) {
-        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting tag")
+    private fun notifyFailedDeleting(termType: String, site: SiteModel, term: TermModel) {
+        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $termType")
         val payload = RemoteTermPayload(term, site)
         payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
         notifyTermDeleted(payload)
@@ -187,10 +180,14 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating category: $categoriesResponse")
-                    val payload = RemoteTermPayload(term, site)
-                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                    notifyTermCreated(payload)
+                    notifyFailedOperation(
+                        operation = "creating",
+                        termType = "category",
+                        term = term,
+                        site = site,
+                        errorDetails = categoriesResponse.toString(),
+                        notifier = ::notifyTermCreated
+                    )
                 }
             }
         }
@@ -219,7 +216,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             tag.id.toInt(),
                             site.id,
                             tag.id,
-                            DEFAULT_TAXONOMY_TAG,
+                            TaxonomyStore.DEFAULT_TAXONOMY_TAG,
                             tag.name,
                             tag.slug,
                             tag.description,
@@ -232,10 +229,14 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Failed creating tag: $tagResponse")
-                    val payload = RemoteTermPayload(term, site)
-                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                    notifyTermCreated(payload)
+                    notifyFailedOperation(
+                        operation = "creating",
+                        termType = "tag",
+                        term = term,
+                        site = site,
+                        errorDetails = tagResponse.toString(),
+                        notifier = ::notifyTermCreated
+                    )
                 }
             }
         }
@@ -251,13 +252,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
 
     private fun updateCategory(site: SiteModel, term: TermModel) {
         scope.launch {
-            if (term.remoteTermId < 0) {
-                appLogWrapper.e(AppLog.T.POSTS, "Failed updating category: $term - id <= 0")
-                val payload = RemoteTermPayload(term, site)
-                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-                return@launch
-            }
+            if (!validateTermId(term, site, "category")) return@launch
 
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -295,10 +290,14 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Failed updating category: $categoriesResponse")
-                    val payload = RemoteTermPayload(term, site)
-                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                    notifyFailedOperation(
+                        operation = "updating",
+                        termType ="category",
+                        term = term,
+                        site = site,
+                        errorDetails = categoriesResponse.toString(),
+                        notifier = ::notifyTermCreated
+                    )
                 }
             }
         }
@@ -306,13 +305,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
 
     private fun updateTag(site: SiteModel, term: TermModel) {
         scope.launch {
-            if (term.remoteTermId < 0) {
-                appLogWrapper.e(AppLog.T.POSTS, "Failed updating tag: $term - id <= 0")
-                val payload = RemoteTermPayload(term, site)
-                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-                return@launch
-            }
+            if (!validateTermId(term, site, "tag")) return@launch
 
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -336,7 +329,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             tag.id.toInt(),
                             site.id,
                             tag.id,
-                            DEFAULT_TAXONOMY_TAG,
+                            TaxonomyStore.DEFAULT_TAXONOMY_TAG,
                             tag.name,
                             tag.slug,
                             tag.description,
@@ -349,10 +342,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 }
 
                 else -> {
-                    appLogWrapper.e(AppLog.T.POSTS, "Failed updating tag: $tagResponse")
-                    val payload = RemoteTermPayload(term, site)
-                    payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                    notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+                    notifyFailedOperation("updating", "tag", term, site, tagResponse.toString(), ::notifyTermCreated)
                 }
             }
         }
@@ -400,10 +390,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
 
                 else -> {
                     appLogWrapper.e(AppLog.T.POSTS, "Fetch categories list failed: $categoriesResponse")
-                    FetchTermsResponsePayload(
-                        TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                        TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
-                    )
+                    createErrorResponsePayload(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY)
                 }
             }
             notifyTermsFetched(termsResponsePayload)
@@ -429,7 +416,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                                 tag.id.toInt(),
                                 site.id,
                                 tag.id,
-                                DEFAULT_TAXONOMY_TAG,
+                                TaxonomyStore.DEFAULT_TAXONOMY_TAG,
                                 tag.name,
                                 tag.slug,
                                 tag.description,
@@ -438,16 +425,13 @@ class TaxonomyRsApiRestClient @Inject constructor(
                             )
                         },
                         site,
-                        DEFAULT_TAXONOMY_TAG
+                        TaxonomyStore.DEFAULT_TAXONOMY_TAG
                     )
                 }
 
                 else -> {
                     appLogWrapper.e(AppLog.T.POSTS, "Fetch tags list failed: $tagsResponse")
-                    FetchTermsResponsePayload(
-                        TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                        DEFAULT_TAXONOMY_TAG
-                    )
+                    createErrorResponsePayload(TaxonomyStore.DEFAULT_TAXONOMY_TAG)
                 }
             }
             notifyTermsFetched(termsResponsePayload)
@@ -471,6 +455,39 @@ class TaxonomyRsApiRestClient @Inject constructor(
     ) {
         dispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload))
     }
+
+    private fun validateTermId(term: TermModel, site: SiteModel, termType: String): Boolean {
+        return if (term.remoteTermId < 0) {
+            appLogWrapper.e(AppLog.T.POSTS, "Failed updating $termType: $term - id <= 0")
+            val payload = RemoteTermPayload(term, site)
+            payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+            notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+            false
+        } else {
+            true
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private fun notifyFailedOperation(
+        operation: String,
+        termType: String,
+        term: TermModel,
+        site: SiteModel,
+        errorDetails: String,
+        notifier: (RemoteTermPayload) -> Unit
+    ) {
+        appLogWrapper.e(AppLog.T.POSTS, "Failed $operation $termType: $errorDetails")
+        val payload = RemoteTermPayload(term, site)
+        payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+        notifier(payload)
+    }
+
+    private fun createErrorResponsePayload(taxonomyName: String): FetchTermsResponsePayload =
+        FetchTermsResponsePayload(
+            TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
+            taxonomyName
+        )
 
     private fun createTermsResponsePayload(
         terms: List<TermModel>,

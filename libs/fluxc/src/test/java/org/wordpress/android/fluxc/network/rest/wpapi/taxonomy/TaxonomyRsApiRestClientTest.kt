@@ -624,27 +624,18 @@ class TaxonomyRsApiRestClientTest {
             testTermModel.postCount
         )
 
-        val errorResponse = WpRequestResult.UnknownError<Any>(
-            statusCode = 500u,
-            response = "Internal Server Error"
-        )
-
-        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
-
         taxonomyClient.updateTerm(testSite, invalidTermModel)
 
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, org.mockito.kotlin.times(2)).dispatch(actionCaptor.capture())
+        verify(dispatcher).dispatch(actionCaptor.capture())
 
-        val capturedActions = actionCaptor.allValues
-        assertEquals(2, capturedActions.size)
-        capturedActions.forEach { action ->
-            val payload = action.payload as RemoteTermPayload
-            assertEquals(action.type, TaxonomyAction.PUSHED_TERM)
-            assertEquals(testSite, payload.site)
-            assertNotNull(payload.error)
-            assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
-        }
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(invalidTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
     @Test
@@ -720,27 +711,18 @@ class TaxonomyRsApiRestClientTest {
             testTagTermModel.postCount
         )
 
-        val errorResponse = WpRequestResult.UnknownError<Any>(
-            statusCode = 500u,
-            response = "Internal Server Error"
-        )
-
-        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
-
         taxonomyClient.updateTerm(testSite, invalidTagTermModel)
 
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, org.mockito.kotlin.times(2)).dispatch(actionCaptor.capture())
+        verify(dispatcher).dispatch(actionCaptor.capture())
 
-        val capturedActions = actionCaptor.allValues
-        assertEquals(2, capturedActions.size)
-        capturedActions.forEach { action ->
-            val payload = action.payload as RemoteTermPayload
-            assertEquals(action.type, TaxonomyAction.PUSHED_TERM)
-            assertEquals(testSite, payload.site)
-            assertNotNull(payload.error)
-            assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
-        }
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(invalidTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
     private fun createTestCategoryDeleteData(deleted: Boolean): CategoryDeleteResponse {
