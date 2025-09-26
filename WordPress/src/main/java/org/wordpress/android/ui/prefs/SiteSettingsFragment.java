@@ -2033,7 +2033,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (group != null) {
             group.removeAll();
         }
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        if (mSite.isUsingSelfHostedRestApi()) {
+            // Remove everything inside "Writing" preference but "Categories" and "Tags" which are now supported
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_category);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_format);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_date_format);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_time_format);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_week_start);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_posts_per_page);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+        } else {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        }
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);

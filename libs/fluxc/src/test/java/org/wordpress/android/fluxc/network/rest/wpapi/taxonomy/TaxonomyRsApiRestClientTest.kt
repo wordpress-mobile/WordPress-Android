@@ -31,11 +31,18 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CategoryDeleteResponse
 import uniffi.wp_api.CategoryWithEditContext
 import uniffi.wp_api.CategoriesRequestCreateResponse
+import uniffi.wp_api.CategoriesRequestDeleteResponse
 import uniffi.wp_api.CategoriesRequestListWithEditContextResponse
+import uniffi.wp_api.CategoriesRequestUpdateResponse
+import uniffi.wp_api.TagDeleteResponse
 import uniffi.wp_api.TagWithEditContext
+import uniffi.wp_api.TagsRequestCreateResponse
+import uniffi.wp_api.TagsRequestDeleteResponse
 import uniffi.wp_api.TagsRequestListWithEditContextResponse
+import uniffi.wp_api.TagsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.WpNetworkHeaderMap
 
@@ -71,6 +78,18 @@ class TaxonomyRsApiRestClientTest {
         0 // postCount
     )
 
+    private val testTagTermModel = TermModel(
+        2, // id
+        123, // localSiteId
+        3L, // remoteTermId
+        "post_tag", // taxonomy
+        "Test Tag", // name
+        "test-tag", // slug
+        "Test tag description", // description
+        0L, // parentRemoteId
+        0 // postCount
+    )
+
     private val testTagTaxonomyName = "post_tag"
     private val testCategoryTaxonomyName = "category"
 
@@ -93,7 +112,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `fetchPostTags with error response dispatches error action`() = runTest {
+    fun `fetchTerms tags with error response dispatches error action`() = runTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
@@ -102,7 +121,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.fetchPostTags(testSite)
+        taxonomyClient.fetchTerms(testSite, testTagTaxonomyName)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -117,7 +136,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `fetchPostTags with success response dispatches success action`() = runTest {
+    fun `fetchTerms tags with success response dispatches success action`() = runTest {
         val tagWithEditContext = listOf(
             createTestTagWithEditContext(),
             createTestTagWithEditContext()
@@ -137,7 +156,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<TagsRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.fetchPostTags(testSite)
+        taxonomyClient.fetchTerms(testSite, testTagTaxonomyName)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -154,7 +173,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `fetchPostCategories with error response dispatches error action`() = runTest {
+    fun `fetchTerms categories with error response dispatches error action`() = runTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
@@ -163,7 +182,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.fetchPostCategories(testSite)
+        taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -178,7 +197,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `fetchPostCategories with success response dispatches success action`() = runTest {
+    fun `fetchTerms categories with success response dispatches success action`() = runTest {
         val categoryWithEditContext = listOf(
             createTestCategoryWithEditContext(),
             createTestCategoryWithEditContext()
@@ -198,7 +217,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<CategoriesRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.fetchPostCategories(testSite)
+        taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -215,7 +234,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `createPostCategory with error response dispatches error action`() = runTest {
+    fun `createTerm category with error response dispatches error action`() = runTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
@@ -224,7 +243,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.createPostCategory(testSite, testTermModel)
+        taxonomyClient.createTerm(testSite, testTermModel)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -240,7 +259,7 @@ class TaxonomyRsApiRestClientTest {
     }
 
     @Test
-    fun `createPostCategory with success response dispatches success action`() = runTest {
+    fun `createTerm category with success response dispatches success action`() = runTest {
         val categoryWithEditContext = createTestCategoryWithEditContext()
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
@@ -255,7 +274,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<CategoriesRequestCreateResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.createPostCategory(testSite, testTermModel)
+        taxonomyClient.createTerm(testSite, testTermModel)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -276,6 +295,442 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(categoryWithEditContext.description, payload.term.description)
         assertEquals(categoryWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
+    }
+
+    @Test
+    fun `createTerm tag with error response dispatches error action`() = runTest {
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.createTerm(testSite, testTagTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `createTerm tag with success response dispatches success action`() = runTest {
+        val tagWithEditContext = createTestTagWithEditContext()
+
+        // Create the correct response structure following the MediaRSApiRestClientTest pattern
+        val tagResponse = TagsRequestCreateResponse(
+            tagWithEditContext,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<TagsRequestCreateResponse> = WpRequestResult.Success(
+            response = tagResponse
+        )
+
+        whenever(wpApiClient.request<TagsRequestCreateResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.createTerm(testSite, testTagTermModel)
+
+        // Verify dispatcher was called with success action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        // Verify the created term has the correct properties
+        assertEquals(tagWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(tagWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(testTagTaxonomyName, payload.term.taxonomy)
+        assertEquals(tagWithEditContext.name, payload.term.name)
+        assertEquals(tagWithEditContext.slug, payload.term.slug)
+        assertEquals(tagWithEditContext.description, payload.term.description)
+        assertEquals(tagWithEditContext.count.toInt(), payload.term.postCount)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `deleteTerm category with error response dispatches error action`() = runTest {
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `deleteTerm category with success response dispatches success action`() = runTest {
+        val categoryDeleteData = createTestCategoryDeleteData(deleted = true)
+
+        // Create the correct response structure following the MediaRsApiRestClientTest pattern
+        val categoryResponse = CategoriesRequestDeleteResponse(
+            categoryDeleteData,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<CategoriesRequestDeleteResponse> = WpRequestResult.Success(
+            response = categoryResponse
+        )
+
+        whenever(wpApiClient.request<CategoriesRequestDeleteResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTermModel)
+
+        // Verify dispatcher was called with success action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        // Verify the deleted term has the correct properties
+        assertEquals(testTermModel.id, payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(testTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
+        assertEquals(testTermModel.name, payload.term.name)
+        assertEquals(testTermModel.slug, payload.term.slug)
+        assertEquals(testTermModel.description, payload.term.description)
+        assertEquals(testTermModel.postCount, payload.term.postCount)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `deleteTerm category with failed deletion response dispatches error action`() = runTest {
+        val categoryDeleteData = createTestCategoryDeleteData(deleted = false)
+
+        // Create the correct response structure with deleted = false
+        val categoryResponse = CategoriesRequestDeleteResponse(
+            categoryDeleteData,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<CategoriesRequestDeleteResponse> = WpRequestResult.Success(
+            response = categoryResponse
+        )
+
+        whenever(wpApiClient.request<CategoriesRequestDeleteResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `deleteTerm tag with error response dispatches error action`() = runTest {
+        // Use a concrete error type that we can create - UnknownError requires statusCode and response
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTagTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `deleteTerm tag with success response dispatches success action`() = runTest {
+        val tagDeleteData = createTestTagDeleteData(deleted = true)
+
+        // Create the correct response structure following the MediaRsApiRestClientTest pattern
+        val tagResponse = TagsRequestDeleteResponse(
+            tagDeleteData,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<TagsRequestDeleteResponse> = WpRequestResult.Success(
+            response = tagResponse
+        )
+
+        whenever(wpApiClient.request<TagsRequestDeleteResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTagTermModel)
+
+        // Verify dispatcher was called with success action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        // Verify the deleted term has the correct properties
+        assertEquals(testTagTermModel.id, payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(testTagTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testTagTaxonomyName, payload.term.taxonomy)
+        assertEquals(testTagTermModel.name, payload.term.name)
+        assertEquals(testTagTermModel.slug, payload.term.slug)
+        assertEquals(testTagTermModel.description, payload.term.description)
+        assertEquals(testTagTermModel.postCount, payload.term.postCount)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `deleteTerm tag with failed deletion response dispatches error action`() = runTest {
+        val tagDeleteData = createTestTagDeleteData(deleted = false)
+
+        // Create the correct response structure with deleted = false
+        val tagResponse = TagsRequestDeleteResponse(
+            tagDeleteData,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<TagsRequestDeleteResponse> = WpRequestResult.Success(
+            response = tagResponse
+        )
+
+        whenever(wpApiClient.request<TagsRequestDeleteResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.deleteTerm(testSite, testTagTermModel)
+
+        // Verify dispatcher was called with error action
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `updateTerm category with error response dispatches error action`() = runTest {
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.updateTerm(testSite, testTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `updateTerm category with success response dispatches success action`() = runTest {
+        val categoryWithEditContext = createTestCategoryWithEditContext()
+
+        val categoryResponse = CategoriesRequestUpdateResponse(
+            categoryWithEditContext,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<CategoriesRequestUpdateResponse> = WpRequestResult.Success(
+            response = categoryResponse
+        )
+
+        whenever(wpApiClient.request<CategoriesRequestUpdateResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.updateTerm(testSite, testTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        assertEquals(categoryWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(categoryWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
+        assertEquals(categoryWithEditContext.name, payload.term.name)
+        assertEquals(categoryWithEditContext.slug, payload.term.slug)
+        assertEquals(categoryWithEditContext.description, payload.term.description)
+        assertEquals(categoryWithEditContext.count.toInt(), payload.term.postCount)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `updateTerm category with invalid id dispatches error action`() = runTest {
+        val invalidTermModel = TermModel(
+            testTermModel.id,
+            testTermModel.localSiteId,
+            -1L, // invalid remoteTermId
+            testTermModel.taxonomy,
+            testTermModel.name,
+            testTermModel.slug,
+            testTermModel.description,
+            testTermModel.parentRemoteId,
+            testTermModel.postCount
+        )
+
+        taxonomyClient.updateTerm(testSite, invalidTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(invalidTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `updateTerm tag with error response dispatches error action`() = runTest {
+        val errorResponse = WpRequestResult.UnknownError<Any>(
+            statusCode = 500u,
+            response = "Internal Server Error"
+        )
+
+        whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
+
+        taxonomyClient.updateTerm(testSite, testTagTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(testTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    @Test
+    fun `updateTerm tag with success response dispatches success action`() = runTest {
+        val tagWithEditContext = createTestTagWithEditContext()
+
+        val tagResponse = TagsRequestUpdateResponse(
+            tagWithEditContext,
+            mock<WpNetworkHeaderMap>()
+        )
+
+        val successResponse: WpRequestResult<TagsRequestUpdateResponse> = WpRequestResult.Success(
+            response = tagResponse
+        )
+
+        whenever(wpApiClient.request<TagsRequestUpdateResponse>(any())).thenReturn(successResponse)
+
+        taxonomyClient.updateTerm(testSite, testTagTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertNotNull(payload.term)
+        assertEquals(tagWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(testSite.id, payload.term.localSiteId)
+        assertEquals(tagWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(testTagTaxonomyName, payload.term.taxonomy)
+        assertEquals(tagWithEditContext.name, payload.term.name)
+        assertEquals(tagWithEditContext.slug, payload.term.slug)
+        assertEquals(tagWithEditContext.description, payload.term.description)
+        assertEquals(tagWithEditContext.count.toInt(), payload.term.postCount)
+        assertNull(payload.error)
+    }
+
+    @Test
+    fun `updateTerm tag with invalid id dispatches error action`() = runTest {
+        val invalidTagTermModel = TermModel(
+            testTagTermModel.id,
+            testTagTermModel.localSiteId,
+            -1L, // invalid remoteTermId
+            testTagTermModel.taxonomy,
+            testTagTermModel.name,
+            testTagTermModel.slug,
+            testTagTermModel.description,
+            testTagTermModel.parentRemoteId,
+            testTagTermModel.postCount
+        )
+
+        taxonomyClient.updateTerm(testSite, invalidTagTermModel)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as RemoteTermPayload
+        assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
+        assertEquals(testSite, payload.site)
+        assertEquals(invalidTagTermModel, payload.term)
+        assertNotNull(payload.error)
+        assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
+    }
+
+    private fun createTestCategoryDeleteData(deleted: Boolean): CategoryDeleteResponse {
+        return CategoryDeleteResponse(deleted, createTestCategoryWithEditContext())
+    }
+
+    private fun createTestTagDeleteData(deleted: Boolean): TagDeleteResponse {
+        return TagDeleteResponse(deleted, createTestTagWithEditContext())
     }
 
     private fun createTestCategoryWithEditContext(): CategoryWithEditContext {
