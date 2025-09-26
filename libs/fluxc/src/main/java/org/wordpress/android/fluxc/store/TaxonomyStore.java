@@ -328,11 +328,8 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        boolean isUsingApplicationPassword = site.isUsingSelfHostedRestApi();
-        if (isUsingApplicationPassword && DEFAULT_TAXONOMY_CATEGORY.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClient.fetchPostCategories(site);
-        } else if (isUsingApplicationPassword && DEFAULT_TAXONOMY_TAG.equals(taxonomyName)) {
-            mTaxonomyRsApiRestClient.fetchPostTags(site);
+        if (site.isUsingSelfHostedRestApi()) {
+            mTaxonomyRsApiRestClient.fetchTerms(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
@@ -426,8 +423,13 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingSelfHostedRestApi() && DEFAULT_TAXONOMY_CATEGORY.equals(payload.term.getTaxonomy())) {
-            mTaxonomyRsApiRestClient.createPostCategory(payload.site, payload.term);
+        if (payload.site.isUsingSelfHostedRestApi()) {
+            // FluxC pushTerm to update terms, so we need to make the distinction here
+            if (payload.term.getRemoteTermId() > 0) {
+                mTaxonomyRsApiRestClient.updateTerm(payload.site, payload.term);
+            } else {
+                mTaxonomyRsApiRestClient.createTerm(payload.site, payload.term);
+            }
         } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
