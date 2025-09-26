@@ -42,6 +42,7 @@ public class ReaderPhotoView extends RelativeLayout {
     private final TextView mTxtError;
     private boolean mIsInitialLayout = true;
     private final ImageManager mImageManager;
+    private long mLoadStartTime;
 
     public ReaderPhotoView(Context context) {
         this(context, null);
@@ -107,12 +108,15 @@ public class ReaderPhotoView extends RelativeLayout {
         }
 
         showProgress();
+        mLoadStartTime = System.currentTimeMillis();
 
         mImageManager
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        long loadDuration = System.currentTimeMillis() - mLoadStartTime;
+                        AppLog.d(AppLog.T.READER, "ReaderPhotoView image load failed after " + loadDuration + "ms " + mHiResImageUrl);
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
                         }
@@ -125,6 +129,9 @@ public class ReaderPhotoView extends RelativeLayout {
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        long loadDuration = System.currentTimeMillis() - mLoadStartTime;
+                        AppLog.d(AppLog.T.READER,
+                                "ReaderPhotoView image loaded successfully after " + loadDuration + "ms " + mHiResImageUrl);
                         handleResponse();
                     }
                 });
