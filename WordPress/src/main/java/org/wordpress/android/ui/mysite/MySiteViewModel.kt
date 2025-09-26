@@ -402,8 +402,6 @@ class MySiteViewModel @Inject constructor(
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
-        // Trigger GutenbergView warmup for the newly selected site
-        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
         dashboardItemsViewModelSlice.resetShownTracker()
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
