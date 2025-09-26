@@ -262,7 +262,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should fetch EditorSettings when GutenbergKit is enabled`() {
+    fun `Should fetch EditorSettings when GutenbergKit feature is enabled`() {
         whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(true)
         initializeSiteAndSiteSettings()
 
@@ -271,15 +271,6 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         assertThat(actions.last().type).isEqualTo(EditorSettingsAction.FETCH_EDITOR_SETTINGS)
     }
 
-    @Test
-    fun `Should fetch EditorSettings when ExperimentalBlockEditor is enabled`() {
-        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(true)
-        initializeSiteAndSiteSettings()
-
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-
-        assertThat(actions.last().type).isEqualTo(EditorSettingsAction.FETCH_EDITOR_SETTINGS)
-    }
 
     private fun initializeSiteAndSiteSettings() {
         selectedSiteRepository.updateSite(siteModel)
