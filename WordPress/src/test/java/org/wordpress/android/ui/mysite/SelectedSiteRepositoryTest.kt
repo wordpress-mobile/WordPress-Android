@@ -25,6 +25,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.AppInitializer
 import org.wordpress.android.fluxc.action.EditorSettingsAction
+import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 
@@ -47,6 +48,9 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Mock
     lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Mock
+    lateinit var gutenbergKitFeatureChecker: GutenbergKitFeatureChecker
 
     @Mock
     lateinit var context: Context
@@ -72,16 +76,13 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         // Mock AppPrefsWrapper
         whenever(appPrefsWrapper.setSelectedSite(any())).then { }
 
-        // Mock GutenbergKitFeature
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
-
         selectedSiteRepository = SelectedSiteRepository(
             dispatcher,
             siteSettingsInterfaceFactory,
             appPrefsWrapper,
             experimentalFeatures,
+            gutenbergKitFeatureChecker
         )
-        selectedSiteRepository.gutenbergKitFeature = gutenbergKitFeature
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
         selectedSiteRepository.selectedSiteChange.observeForever { selectedSite = it }
         siteModel = SiteModel()
@@ -254,7 +255,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `Should fetch EditorTheme when GutenbergKit and ExperimentalBlockEditor are disabled`() {
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
         initializeSiteAndSiteSettings()
 
         selectedSiteRepository.updateSiteSettingsIfNecessary()
@@ -264,7 +265,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `Should fetch EditorSettings when GutenbergKit is enabled`() {
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(true)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(true)
         initializeSiteAndSiteSettings()
 
         selectedSiteRepository.updateSiteSettingsIfNecessary()
@@ -274,9 +275,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `Should fetch EditorSettings when ExperimentalBlockEditor is enabled`() {
-        whenever(
-            experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)
-        ).thenReturn(true)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(true)
         initializeSiteAndSiteSettings()
 
         selectedSiteRepository.updateSiteSettingsIfNecessary()
