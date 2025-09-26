@@ -32,9 +32,11 @@ class GutenbergKitFeatureCheckerTest {
         gutenbergKitEnabled: Boolean = false,
         disableExperimentalBlockEditor: Boolean = false
     ) {
-        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)).thenReturn(experimentalBlockEditor)
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR))
+            .thenReturn(experimentalBlockEditor)
         whenever(gutenbergKitFeature.isEnabled()).thenReturn(gutenbergKitEnabled)
-        whenever(experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)).thenReturn(disableExperimentalBlockEditor)
+        whenever(experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR))
+            .thenReturn(disableExperimentalBlockEditor)
     }
 
     // ===== Feature State Tests =====
@@ -194,7 +196,10 @@ class GutenbergKitFeatureCheckerTest {
             val stateResult = featureChecker.getFeatureState().isGutenbergKitEnabled
 
             assertThat(directResult)
-                .withFailMessage("Results should match for flags: experimental=$experimental, gutenbergKit=$gutenbergKit, disable=$disable")
+                .withFailMessage(
+                    "Results should match for flags: experimental=$experimental, " +
+                            "gutenbergKit=$gutenbergKit, disable=$disable"
+                )
                 .isEqualTo(stateResult)
         }
     }
@@ -218,7 +223,10 @@ class GutenbergKitFeatureCheckerTest {
             val result = featureChecker.isGutenbergKitEnabled()
 
             assertThat(result)
-                .withFailMessage("Should be false when disable flag is true (experimental=$experimental, gutenbergKit=$gutenbergKit)")
+                .withFailMessage(
+                    "Should be false when disable flag is true " +
+                            "(experimental=$experimental, gutenbergKit=$gutenbergKit)"
+                )
                 .isFalse()
         }
     }
@@ -241,7 +249,10 @@ class GutenbergKitFeatureCheckerTest {
             val result = featureChecker.isGutenbergKitEnabled()
 
             assertThat(result)
-                .withFailMessage("Should be true when at least one enabling flag is true (experimental=$experimental, gutenbergKit=$gutenbergKit)")
+                .withFailMessage(
+                    "Should be true when at least one enabling flag is true " +
+                            "(experimental=$experimental, gutenbergKit=$gutenbergKit)"
+                )
                 .isTrue()
         }
     }

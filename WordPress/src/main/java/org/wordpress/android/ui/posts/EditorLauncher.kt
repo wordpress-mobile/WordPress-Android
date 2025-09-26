@@ -5,7 +5,6 @@ import android.content.Intent
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -27,7 +26,6 @@ import javax.inject.Singleton
 @Singleton
 class EditorLauncher @Inject constructor(
     private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteStore: SiteStore,
     private val postStore: PostStore
@@ -124,7 +122,8 @@ class EditorLauncher @Inject constructor(
 
     private fun logFeatureDisabledReason(featureState: GutenbergKitFeatureChecker.FeatureState) {
         val reason = when {
-            featureState.isDisableExperimentalBlockEditorEnabled -> "the experimental block editor is explicitly disabled"
+            featureState.isDisableExperimentalBlockEditorEnabled ->
+                "the experimental block editor is explicitly disabled"
             !featureState.isExperimentalBlockEditorEnabled && !featureState.isGutenbergKitFeatureEnabled ->
                 "neither the experimental block editor feature nor GutenbergKit feature is enabled"
             else -> "GutenbergKit feature checks failed"

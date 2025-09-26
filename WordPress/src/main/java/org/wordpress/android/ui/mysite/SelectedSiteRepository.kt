@@ -14,7 +14,6 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +23,6 @@ class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null

@@ -40,7 +40,9 @@ class GutenbergKitFeatureChecker @Inject constructor(
         return FeatureState(
             isExperimentalBlockEditorEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR),
             isGutenbergKitFeatureEnabled = gutenbergKitFeature.isEnabled(),
-            isDisableExperimentalBlockEditorEnabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
+            isDisableExperimentalBlockEditorEnabled = experimentalFeatures.isEnabled(
+                Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+            )
         )
     }
 

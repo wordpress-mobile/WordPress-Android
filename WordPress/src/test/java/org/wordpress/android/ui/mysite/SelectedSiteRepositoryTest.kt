@@ -27,7 +27,6 @@ import org.wordpress.android.AppInitializer
 import org.wordpress.android.fluxc.action.EditorSettingsAction
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -80,7 +79,6 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
             dispatcher,
             siteSettingsInterfaceFactory,
             appPrefsWrapper,
-            experimentalFeatures,
             gutenbergKitFeatureChecker
         )
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
