@@ -6,8 +6,6 @@ import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
-import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -28,7 +26,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class EditorLauncher @Inject constructor(
-    private val gutenbergKitFeature: GutenbergKitFeature,
+    private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker,
     private val experimentalFeatures: ExperimentalFeatures,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteStore: SiteStore,
@@ -93,15 +91,12 @@ class EditorLauncher @Inject constructor(
      * Determines if GutenbergKit editor should be used based on feature flags and post content.
      */
     private fun shouldUseGutenbergKitEditor(params: EditorLauncherParams): Boolean {
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
+        val isGutenbergFeatureEnabled = gutenbergKitFeatureChecker.isGutenbergKitEnabled()
 
         val site = params.siteSource.getSite(siteStore)
         return when {
             !isGutenbergFeatureEnabled -> {
-                logFeatureDisabledReason(isGutenbergDisabled, isGutenbergEnabled)
+                logFeatureDisabledReason()
                 false
             }
 
@@ -126,14 +121,8 @@ class EditorLauncher @Inject constructor(
         return shouldUseGutenberg
     }
 
-    private fun logFeatureDisabledReason(isGutenbergDisabled: Boolean, isGutenbergEnabled: Boolean) {
-        val reason = when {
-            isGutenbergDisabled -> "the experimental block editor is explicitly disabled"
-            !isGutenbergEnabled -> "neither the experimental block editor feature nor " +
-                    "GutenbergKit feature is enabled"
-
-            else -> "GutenbergKit feature checks failed"
-        }
+    private fun logFeatureDisabledReason() {
+        val reason = "the GutenbergKit feature is disabled"
         val featureFlags = getFeatureFlagsString()
         AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason $featureFlags")
     }
@@ -147,12 +136,8 @@ class EditorLauncher @Inject constructor(
     }
 
     private fun getFeatureFlagsString(): String {
-        val experimentalBlockEditor = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)
-        val gutenbergKitFeatureEnabled = gutenbergKitFeature.isEnabled()
-        val disableExperimentalBlockEditor = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        return "(experimental_block_editor: $experimentalBlockEditor, " +
-                "gutenberg_kit_feature: $gutenbergKitFeatureEnabled, " +
-                "disable_experimental_block_editor: $disableExperimentalBlockEditor)"
+        val gutenbergKitEnabled = gutenbergKitFeatureChecker.isGutenbergKitEnabled()
+        return "(gutenberg_kit_enabled: $gutenbergKitEnabled)"
     }
 
     private fun logEditorDecision(

@@ -14,7 +14,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
@@ -32,7 +31,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
     private val accountStore: AccountStore,
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
-    private val gutenbergKitFeature: GutenbergKitFeature,
+    private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker,
     private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
     private val experimentalFeatures: ExperimentalFeatures,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -78,12 +77,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
     }
 
     private fun shouldWarmupForSite(site: SiteModel): Boolean {
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
-
-        if (!isGutenbergFeatureEnabled) {
+        if (!gutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
             AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - GutenbergKit features disabled")
             return false
         }
