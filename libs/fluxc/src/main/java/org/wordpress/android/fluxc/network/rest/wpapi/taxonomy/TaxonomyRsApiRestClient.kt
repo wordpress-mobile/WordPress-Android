@@ -20,10 +20,12 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CategoryCreateParams
+import uniffi.wp_api.CategoryDeleteResponse
 import uniffi.wp_api.CategoryListParams
 import uniffi.wp_api.CategoryUpdateParams
 import uniffi.wp_api.CategoryWithEditContext
 import uniffi.wp_api.TagCreateParams
+import uniffi.wp_api.TagDeleteResponse
 import uniffi.wp_api.TagListParams
 import uniffi.wp_api.TagUpdateParams
 import uniffi.wp_api.TagWithEditContext
@@ -58,26 +60,15 @@ class TaxonomyRsApiRestClient @Inject constructor(
         val categoriesResponse = client.request { requestBuilder ->
             requestBuilder.categories().delete(categoryId = term.id.toLong())
         }
-        when (categoriesResponse) {
-            is WpRequestResult.Success -> {
-                val category = categoriesResponse.response.data
-                appLogWrapper.d(
-                    AppLog.T.POSTS,
-                    "Deleted category: ${term.name} - ${category.deleted}"
-                )
-                if (category.deleted) {
-                    val termModel =
-                        createTermModelForDelete(term, site, DEFAULT_TAXONOMY_CATEGORY)
-                    notifyTermDeleted(RemoteTermPayload(termModel, site))
-                } else {
-                    notifyFailedDeleting("category", site, term)
-                }
-            }
-
-            else -> {
-                notifyFailedDeleting("category", site, term)
-            }
-        }
+        handleDeleteResponse(
+            response = categoriesResponse,
+            termType = "category",
+            term = term,
+            site = site,
+            taxonomy = DEFAULT_TAXONOMY_CATEGORY,
+            extractData = { it.response.data },
+            checkDeleted = { data -> (data as CategoryDeleteResponse).deleted }
+        )
     }
 
     private suspend fun deleteTag(
@@ -88,20 +79,40 @@ class TaxonomyRsApiRestClient @Inject constructor(
         val tagsResponse = client.request { requestBuilder ->
             requestBuilder.tags().delete(tagId = term.id.toLong())
         }
-        when (tagsResponse) {
+        handleDeleteResponse(
+            response = tagsResponse,
+            termType = "tag",
+            term = term,
+            site = site,
+            taxonomy = DEFAULT_TAXONOMY_TAG,
+            extractData = { it.response.data },
+            checkDeleted = { data -> (data as TagDeleteResponse).deleted }
+        )
+    }
+
+    @Suppress("LongParameterList")
+    private inline fun <T> handleDeleteResponse(
+        response: WpRequestResult<T>,
+        termType: String,
+        term: TermModel,
+        site: SiteModel,
+        taxonomy: String,
+        extractData: (WpRequestResult.Success<T>) -> Any,
+        checkDeleted: (Any) -> Boolean
+    ) {
+        when (response) {
             is WpRequestResult.Success -> {
-                val tag = tagsResponse.response.data
-                appLogWrapper.d(AppLog.T.POSTS, "Deleted tag: ${term.name} - ${tag.deleted}")
-                if (tag.deleted) {
-                    val termModel = createTermModelForDelete(term, site, DEFAULT_TAXONOMY_TAG)
+                val data = extractData(response)
+                appLogWrapper.d(AppLog.T.POSTS, "Deleted $termType: ${term.name} - ${checkDeleted(data)}")
+                if (checkDeleted(data)) {
+                    val termModel = createTermModelForDelete(term, site, taxonomy)
                     notifyTermDeleted(RemoteTermPayload(termModel, site))
                 } else {
-                    notifyFailedDeleting("tag", site, term)
+                    notifyFailedDeleting(termType, site, term)
                 }
             }
-
             else -> {
-                notifyFailedDeleting("tag", site, term)
+                notifyFailedDeleting(termType, site, term)
             }
         }
     }
