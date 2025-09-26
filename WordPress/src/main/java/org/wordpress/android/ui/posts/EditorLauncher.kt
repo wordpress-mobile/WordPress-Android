@@ -91,12 +91,13 @@ class EditorLauncher @Inject constructor(
      * Determines if GutenbergKit editor should be used based on feature flags and post content.
      */
     private fun shouldUseGutenbergKitEditor(params: EditorLauncherParams): Boolean {
-        val isGutenbergFeatureEnabled = gutenbergKitFeatureChecker.isGutenbergKitEnabled()
+        val featureState = gutenbergKitFeatureChecker.getFeatureState()
+        val isGutenbergFeatureEnabled = featureState.isGutenbergKitEnabled
 
         val site = params.siteSource.getSite(siteStore)
         return when {
             !isGutenbergFeatureEnabled -> {
-                logFeatureDisabledReason()
+                logFeatureDisabledReason(featureState)
                 false
             }
 
@@ -121,9 +122,14 @@ class EditorLauncher @Inject constructor(
         return shouldUseGutenberg
     }
 
-    private fun logFeatureDisabledReason() {
-        val reason = "the GutenbergKit feature is disabled"
-        val featureFlags = getFeatureFlagsString()
+    private fun logFeatureDisabledReason(featureState: GutenbergKitFeatureChecker.FeatureState) {
+        val reason = when {
+            featureState.isDisableExperimentalBlockEditorEnabled -> "the experimental block editor is explicitly disabled"
+            !featureState.isExperimentalBlockEditorEnabled && !featureState.isGutenbergKitFeatureEnabled ->
+                "neither the experimental block editor feature nor GutenbergKit feature is enabled"
+            else -> "GutenbergKit feature checks failed"
+        }
+        val featureFlags = getFeatureFlagsString(featureState)
         AppLog.d(AppLog.T.EDITOR, "GutenbergKit editor is NOT being used because $reason $featureFlags")
     }
 
@@ -135,9 +141,14 @@ class EditorLauncher @Inject constructor(
         )
     }
 
+    private fun getFeatureFlagsString(featureState: GutenbergKitFeatureChecker.FeatureState): String {
+        return "(experimental_block_editor: ${featureState.isExperimentalBlockEditorEnabled}, " +
+                "gutenberg_kit_feature: ${featureState.isGutenbergKitFeatureEnabled}, " +
+                "disable_experimental_block_editor: ${featureState.isDisableExperimentalBlockEditorEnabled})"
+    }
+
     private fun getFeatureFlagsString(): String {
-        val gutenbergKitEnabled = gutenbergKitFeatureChecker.isGutenbergKitEnabled()
-        return "(gutenberg_kit_enabled: $gutenbergKitEnabled)"
+        return getFeatureFlagsString(gutenbergKitFeatureChecker.getFeatureState())
     }
 
     private fun logEditorDecision(
