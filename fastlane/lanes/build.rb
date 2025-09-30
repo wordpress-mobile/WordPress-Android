@@ -301,6 +301,8 @@ platform :android do
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
+      annotate_sentry_mapping_uuid(app: app, aab_file: bundle_path)
+
       sh("cp -v #{bundle_path} #{build_dir}#{name} | tee -a #{logfile_path}")
       UI.message("Bundle ready: #{name}")
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
@@ -394,5 +396,24 @@ platform :android do
       strip_common_prefix: true,
       sourcemap: bundle_source_map_path
     )
+  end
+
+  def annotate_sentry_mapping_uuid(app:, aab_file:)
+    sentry_props = sh('unzip', '-p', aab_file, 'base/assets/sentry-debug-meta.properties', step_name: 'Extract sentry-debug-meta.properties') do |status, result, _|
+      status.success? ? result : nil
+    end
+    if sentry_props.nil?
+      UI.important("Unable to extract Sentry properties file from #{aab_file}. Skipping annotating the build with the mapping UUID.")
+      return
+    end
+
+    line = sentry_props.split("\n").find { |l| l.start_with?('io.sentry.ProguardUuids=') }
+    if line.nil?
+      UI.error("`io.sentry.ProguardUuids` line not found in #{aab_file}'s `sentry-debug-meta.properties` file")
+      return
+    end
+
+    uuid = line.split('=', 2).last.strip
+    buildkite_annotate(style: 'info', context: "sentry-mapping-uuid-#{app}", message: "Sentry mapping UUID for #{app}: #{uuid}")
   end
 end
