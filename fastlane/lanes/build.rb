@@ -258,8 +258,8 @@ platform :android do
   desc 'Builds an app bundle'
   lane :build_bundle do |options|
     # Create the file names
-    version_name = options[:version_name]
-    build_code = options[:build_code]
+    version_name = options[:version_name] || current_version_name
+    build_code = options[:build_code] || current_build_code
     app = get_app_name_option!(options)
 
     if version_name.nil?
