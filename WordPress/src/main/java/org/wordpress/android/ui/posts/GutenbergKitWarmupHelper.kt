@@ -89,7 +89,8 @@ class GutenbergKitWarmupHelper @Inject constructor(
                     "(isBlockEditorDefault: true, webEditor: ${site.webEditor})")
         } else {
             AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - site ${site.siteId} doesn't " +
-                    "default to the block editor for new posts (isBlockEditorDefault: true, webEditor: ${site.webEditor})")
+                    "default to the block editor for new posts " +
+                    "(isBlockEditorDefault: false, webEditor: ${site.webEditor})")
         }
 
         return shouldWarmup
