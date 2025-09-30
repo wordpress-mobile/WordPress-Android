@@ -140,14 +140,12 @@ class EditorLauncher @Inject constructor(
         )
     }
 
-    private fun getFeatureFlagsString(featureState: GutenbergKitFeatureChecker.FeatureState): String {
+    private fun getFeatureFlagsString(
+        featureState: GutenbergKitFeatureChecker.FeatureState = gutenbergKitFeatureChecker.getFeatureState()
+    ): String {
         return "(experimental_block_editor: ${featureState.isExperimentalBlockEditorEnabled}, " +
                 "gutenberg_kit_feature: ${featureState.isGutenbergKitFeatureEnabled}, " +
                 "disable_experimental_block_editor: ${featureState.isDisableExperimentalBlockEditorEnabled})"
-    }
-
-    private fun getFeatureFlagsString(): String {
-        return getFeatureFlagsString(gutenbergKitFeatureChecker.getFeatureState())
     }
 
     private fun logEditorDecision(
