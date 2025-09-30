@@ -22,21 +22,6 @@ steps:
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
 
-  - label: ":android: Build {{matrix}} Bundle"
-    command: |
-      echo "--- :rubygems: Setting up Gems"
-      install_gems
-
-      echo "--- :closed_lock_with_key: Installing Secrets"
-      bundle exec fastlane run configure_apply
-
-      echo "--- :hammer_and_wrench: Building"
-      bundle exec fastlane build_bundle app:"{{matrix}}" flavor:Vanilla buildType:Release skip_confirm:true skip_prechecks:true
-    plugins: [$CI_TOOLKIT]
-    matrix:
-      - wordpress
-      - jetpack
-
   #################
   # Linters
   #################
