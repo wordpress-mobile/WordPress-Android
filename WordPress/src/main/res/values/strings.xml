@@ -1946,10 +1946,10 @@
     <string name="menu_publish_now" translatable="false">@string/publish_now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
-    <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
-    <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
+    <string name="menu_html_mode">Code Editor</string>
+    <string name="menu_html_mode_switched_notice">Switched to Code Editor</string>
+    <string name="menu_visual_mode">Visual Editor</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual Editor</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
