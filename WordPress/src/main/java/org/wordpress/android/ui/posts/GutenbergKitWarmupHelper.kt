@@ -57,7 +57,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
                 AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup already in progress")
             }
             !shouldWarmupForSite(site) -> {
-                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site doesn't support block editor, skipping warmup")
+                // Logging handled within shouldWarmupForSite()
             }
             else -> {
                 scope.launch(bgDispatcher) {
@@ -84,9 +84,14 @@ class GutenbergKitWarmupHelper @Inject constructor(
 
         val shouldWarmup = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
-        AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site ${site.siteId} warmup decision: $shouldWarmup " +
-                "(isBlockEditorDefault: ${SiteUtils.isBlockEditorDefaultForNewPost(site)}, " +
-                "webEditor: ${site.webEditor})")
+        if (shouldWarmup) {
+            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warming site ${site.siteId} " +
+                    "(isBlockEditorDefault: true, webEditor: ${site.webEditor})")
+        } else {
+            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - site ${site.siteId} doesn't " +
+                    "default to the block editor for new posts " +
+                    "(isBlockEditorDefault: false, webEditor: ${site.webEditor})")
+        }
 
         return shouldWarmup
     }
