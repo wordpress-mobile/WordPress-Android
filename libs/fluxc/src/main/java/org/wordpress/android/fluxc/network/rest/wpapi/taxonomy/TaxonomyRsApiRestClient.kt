@@ -35,86 +35,55 @@ class TaxonomyRsApiRestClient @Inject constructor(
 ) {
     fun deleteTerm(site: SiteModel, term: TermModel) {
         scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
-
             when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> deleteCategory(client, term, site)
-                DEFAULT_TAXONOMY_TAG -> deleteTag(client, term, site)
+                DEFAULT_TAXONOMY_CATEGORY -> deleteTerm(TermEndpointType.Categories, term, site)
+                DEFAULT_TAXONOMY_TAG -> deleteTerm(TermEndpointType.Tags, term, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
-    private suspend fun deleteCategory(
-        client: WpApiClient,
+    private suspend fun deleteTerm(
+        termEndpointType: TermEndpointType,
         term: TermModel,
         site: SiteModel
     ) {
-//        val categoriesResponse = client.request { requestBuilder ->
-//            requestBuilder.terms().delete(
-//                termEndpointType = TermEndpointType.Tags,
-//                termId = term.id.toLong()
-//            )
-//        }
-//        handleDeleteResponse(
-//            response = categoriesResponse,
-//            termType = "category",
-//            term = term,
-//            site = site,
-//            taxonomy = DEFAULT_TAXONOMY_CATEGORY,
-//            extractData = { it.response.data },
-//            checkDeleted = { data -> (data as CategoryDeleteResponse).deleted }
-//        )
-    }
-
-    private suspend fun deleteTag(
-        client: WpApiClient,
-        term: TermModel,
-        site: SiteModel
-    ) {
-//        val tagsResponse = client.request { requestBuilder ->
-//            requestBuilder.tags().delete(tagId = term.id.toLong())
-//        }
-//        handleDeleteResponse(
-//            response = tagsResponse,
-//            termType = "tag",
-//            term = term,
-//            site = site,
-//            taxonomy = DEFAULT_TAXONOMY_TAG,
-//            extractData = { it.response.data },
-//            checkDeleted = { data -> (data as TagDeleteResponse).deleted }
-//        )
-    }
-
-    @Suppress("LongParameterList")
-    private inline fun <T> handleDeleteResponse(
-        response: WpRequestResult<T>,
-        termType: String,
-        term: TermModel,
-        site: SiteModel,
-        taxonomy: String,
-        extractData: (WpRequestResult.Success<T>) -> Any,
-        checkDeleted: (Any) -> Boolean
-    ) {
-        when (response) {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val taxonomyName = termEndpointType.toTaxonomyName()
+        val termResponse = client.request { requestBuilder ->
+            requestBuilder.terms().delete(
+                termEndpointType = TermEndpointType.Tags,
+                termId = term.id.toLong()
+            )
+        }
+        when (termResponse) {
             is WpRequestResult.Success -> {
-                val data = extractData(response)
-                appLogWrapper.d(AppLog.T.POSTS, "Deleted $termType: ${term.name} - ${checkDeleted(data)}")
-                if (checkDeleted(data)) {
-                    val termModel = createTermModelForDelete(term, site, taxonomy)
+                appLogWrapper.d(AppLog.T.POSTS, "Deleting $taxonomyName: ${term.name} - ${termResponse.response.data.deleted}")
+                if (termResponse.response.data.deleted) {
+                    val termModel = TermModel(
+                        term.id,
+                        site.id,
+                        term.id.toLong(),
+                        taxonomyName,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parentRemoteId,
+                        term.postCount
+                    )
                     notifyTermDeleted(RemoteTermPayload(termModel, site))
                 } else {
-                    notifyFailedDeleting(termType, site, term)
+                    notifyFailedDeleting(taxonomyName, site, term)
                 }
             }
             else -> {
-                notifyFailedDeleting(termType, site, term)
+                notifyFailedDeleting(taxonomyName, site, term)
             }
         }
     }
 
-    private fun notifyFailedDeleting(termType: String, site: SiteModel, term: TermModel) {
-        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $termType")
+    private fun notifyFailedDeleting(taxonomyName: String, site: SiteModel, term: TermModel) {
+        appLogWrapper.e(AppLog.T.POSTS, "Failed deleting $taxonomyName")
         val payload = RemoteTermPayload(term, site)
         payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
         notifyTermDeleted(payload)
@@ -393,20 +362,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
             taxonomyName
         )
 
-
-    private fun createTermModelForDelete(term: TermModel, site: SiteModel, taxonomy: String): TermModel {
-        return TermModel(
-            term.id,
-            site.id,
-            term.id.toLong(),
-            taxonomy,
-            term.name,
-            term.slug,
-            term.description,
-            term.parentRemoteId,
-            term.postCount
-        )
-    }
 
     private fun createTermsResponsePayload(
         terms: List<TermModel>,
