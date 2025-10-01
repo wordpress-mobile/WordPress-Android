@@ -120,7 +120,8 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     name = term.name,
                     description = term.description,
                     slug = term.slug,
-                    parent = if (term.isHierarchical) term.parentRemoteId else null
+                    // Right now, this is the only way we have to know if it's hierarchical
+                    parent = if (termEndpointType == TermEndpointType.Categories) term.parentRemoteId else null
                 )
             )
         }
