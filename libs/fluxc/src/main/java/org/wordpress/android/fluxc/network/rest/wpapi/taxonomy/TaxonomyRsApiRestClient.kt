@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import javax.inject.Inject
@@ -121,144 +122,80 @@ class TaxonomyRsApiRestClient @Inject constructor(
 
     fun createTerm(site: SiteModel, term: TermModel) {
         scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
-
             when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> createCategory(client, term, site)
-                DEFAULT_TAXONOMY_TAG -> createTag(client, term, site)
+                DEFAULT_TAXONOMY_CATEGORY -> createTerm(TermEndpointType.Categories, term, site)
+                DEFAULT_TAXONOMY_TAG -> createTerm(TermEndpointType.Tags, term, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
-    private suspend fun createCategory(
-        client: WpApiClient,
+    private suspend fun createTerm(
+        termEndpointType: TermEndpointType,
         term: TermModel,
         site: SiteModel
     ) {
-//        val categoriesResponse = client.request { requestBuilder ->
-//            requestBuilder.categories().create(
-//                CategoryCreateParams(
-//                    name = term.name,
-//                    description = term.description,
-//                    slug = term.slug,
-//                    parent = term.parentRemoteId
-//                )
-//            )
-//        }
-//
-//        handleCreateResponse(
-//            response = categoriesResponse,
-//            termType = "category",
-//            term = term,
-//            site = site,
-//            extractData = { it.response.data },
-//            createTermModel = { data ->
-//                val category = data as CategoryWithEditContext
-//                TermModel(
-//                    category.id.toInt(),
-//                    site.id,
-//                    category.id,
-//                    DEFAULT_TAXONOMY_CATEGORY,
-//                    category.name,
-//                    category.slug,
-//                    category.description,
-//                    category.parent,
-//                    category.count.toInt()
-//                )
-//            }
-//        )
-    }
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val taxonomyName = termEndpointType.toTaxonomyName()
+        val termResponse = client.request { requestBuilder ->
+            requestBuilder.terms().create(
+                termEndpointType = termEndpointType,
+                TermCreateParams(
+                    name = term.name,
+                    description = term.description,
+                    slug = term.slug,
+                    parent = if (term.parentRemoteId > 0) term.parentRemoteId else null
+                )
+            )
+        }
 
-    private suspend fun createTag(
-        client: WpApiClient,
-        term: TermModel,
-        site: SiteModel
-    ) {
-//        val tagResponse = client.request { requestBuilder ->
-//            requestBuilder.tags().create(
-//                TagCreateParams(
-//                    name = term.name,
-//                    description = term.description,
-//                    slug = term.slug,
-//                )
-//            )
-//        }
-//        handleCreateResponse(
-//            response = tagResponse,
-//            termType = "tag",
-//            term = term,
-//            site = site,
-//            extractData = { it.response.data },
-//            createTermModel = { data ->
-//                val tag = data as TagWithEditContext
-//                TermModel(
-//                    tag.id.toInt(),
-//                    site.id,
-//                    tag.id,
-//                    DEFAULT_TAXONOMY_TAG,
-//                    tag.name,
-//                    tag.slug,
-//                    tag.description,
-//                    0,
-//                    tag.count.toInt()
-//                )
-//            }
-//        )
-    }
-
-    @Suppress("LongParameterList")
-    private inline fun <T> handleCreateResponse(
-        response: WpRequestResult<T>,
-        termType: String,
-        term: TermModel,
-        site: SiteModel,
-        extractData: (WpRequestResult.Success<T>) -> Any,
-        createTermModel: (Any) -> TermModel
-    ) {
-//        when (response) {
-//            is WpRequestResult.Success -> {
-//                val data = extractData(response)
-//                val name = when (data) {
-//                    is CategoryWithEditContext -> data.name
-//                    is TagWithEditContext -> data.name
-//                    else -> "unknown"
-//                }
-//                appLogWrapper.d(AppLog.T.POSTS, "Created $termType: $name")
-//                val payload = RemoteTermPayload(createTermModel(data), site)
-//                notifyTermCreated(payload)
-//            }
-//            else -> {
-//                notifyFailedOperation(
-//                    operation = "creating",
-//                    termType = termType,
-//                    term = term,
-//                    site = site,
-//                    errorDetails = response.toString(),
-//                    notifier = ::notifyTermCreated
-//                )
-//            }
-//        }
+        when (termResponse) {
+            is WpRequestResult.Success -> {
+                val term = termResponse.response.data
+                appLogWrapper.d(AppLog.T.POSTS, "Created $taxonomyName: ${term.name}")
+                val payload = RemoteTermPayload(
+                    TermModel(
+                        term.id.toInt(),
+                        site.id,
+                        term.id,
+                        taxonomyName,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parent ?: 0,
+                        term.count.toInt()
+                    ),
+                    site
+                )
+                dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
+            }
+            else -> {
+                appLogWrapper.e(AppLog.T.POSTS, "Failed creating $taxonomyName: ${term.name} - $termResponse")
+                val payload = RemoteTermPayload(term, site)
+                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+                dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
+            }
+        }
     }
 
     fun updateTerm(site: SiteModel, term: TermModel) {
-        scope.launch {
-            if (term.remoteTermId < 0) {
-                appLogWrapper.e(AppLog.T.POSTS, "Failed updating term: $term - id <= 0")
-                val payload = RemoteTermPayload(term, site)
-                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
-                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
-                return@launch
-            }
-
-            val client = wpApiClientProvider.getWpApiClient(site)
-
-            when (term.taxonomy) {
-                DEFAULT_TAXONOMY_CATEGORY -> updateCategory(client, term, site)
-                DEFAULT_TAXONOMY_TAG -> updateTag(client, term, site)
-                else -> {} // TODO We are not supporting any other taxonomy yet
-            }
-        }
+//        scope.launch {
+//            if (term.remoteTermId < 0) {
+//                appLogWrapper.e(AppLog.T.POSTS, "Failed updating term: $term - id <= 0")
+//                val payload = RemoteTermPayload(term, site)
+//                payload.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, "")
+//                notifyTermCreated(payload) // FluxC uses notifyTermCreated for updates
+//                return@launch
+//            }
+//
+//            val client = wpApiClientProvider.getWpApiClient(site)
+//
+//            when (term.taxonomy) {
+//                DEFAULT_TAXONOMY_CATEGORY -> updateCategory(client, term, site)
+//                DEFAULT_TAXONOMY_TAG -> updateTag(client, term, site)
+//                else -> {} // TODO We are not supporting any other taxonomy yet
+//            }
+//        }
     }
 
     private suspend fun updateCategory(
@@ -374,22 +311,20 @@ class TaxonomyRsApiRestClient @Inject constructor(
 
     fun fetchTerms(site: SiteModel, taxonomyName: String) {
         scope.launch {
-            val client = wpApiClientProvider.getWpApiClient(site)
-
             when (taxonomyName) {
-                DEFAULT_TAXONOMY_CATEGORY -> fetchTerms(client, TermEndpointType.Categories, DEFAULT_TAXONOMY_CATEGORY, site)
-                DEFAULT_TAXONOMY_TAG -> fetchTerms(client, TermEndpointType.Tags, DEFAULT_TAXONOMY_TAG, site)
+                DEFAULT_TAXONOMY_CATEGORY -> fetchTerms(TermEndpointType.Categories, site)
+                DEFAULT_TAXONOMY_TAG -> fetchTerms(TermEndpointType.Tags, site)
                 else -> {} // TODO We are not supporting any other taxonomy yet
             }
         }
     }
 
     private suspend fun fetchTerms(
-        client: WpApiClient,
         termEndpointType: TermEndpointType,
-        taxonomy: String,
         site: SiteModel
     ) {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val taxonomyName = termEndpointType.toTaxonomyName()
         val termsResponse = client.request { requestBuilder ->
             requestBuilder.terms().listWithEditContext(
                 termEndpointType = termEndpointType,
@@ -398,14 +333,14 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
         val termsResponsePayload = when (termsResponse) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.POSTS, "Fetched $termEndpointType list: ${termsResponse.response.data.size}")
+                appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${termsResponse.response.data.size}")
                 createTermsResponsePayload(
                     terms = termsResponse.response.data.map { term ->
                         TermModel(
                             term.id.toInt(),
                             site.id,
                             term.id,
-                            taxonomy,
+                            taxonomyName,
                             term.name,
                             term.slug,
                             term.description,
@@ -414,12 +349,12 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         )
                     },
                     site,
-                    taxonomy
+                    taxonomyName
                 )
             }
             else -> {
                 appLogWrapper.e(AppLog.T.POSTS, "Fetch $termEndpointType list failed: $termsResponse")
-                createErrorResponsePayload(taxonomy)
+                createErrorResponsePayload(taxonomyName)
             }
         }
         notifyTermsFetched(termsResponsePayload)
@@ -429,12 +364,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
         payload: FetchTermsResponsePayload,
     ) {
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload))
-    }
-
-    private fun notifyTermCreated(
-        payload: RemoteTermPayload,
-    ) {
-        dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
     }
 
     private fun notifyTermDeleted(
@@ -488,4 +417,10 @@ class TaxonomyRsApiRestClient @Inject constructor(
         site,
         taxonomyName
     )
+
+    private fun TermEndpointType.toTaxonomyName(): String = when (this) {
+        TermEndpointType.Categories -> DEFAULT_TAXONOMY_CATEGORY
+        TermEndpointType.Tags -> DEFAULT_TAXONOMY_TAG
+        is TermEndpointType.Custom -> this.v1
+    }
 }
