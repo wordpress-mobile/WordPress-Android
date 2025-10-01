@@ -239,6 +239,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                 MapUtils.getMapStr(termMap, "slug"),
                 StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")),
                 MapUtils.getMapLong(termMap, "parent"),
+                true, // this is only applicable for the new Rest API
                 MapUtils.getMapInt(termMap, "count", 0)
         );
     }

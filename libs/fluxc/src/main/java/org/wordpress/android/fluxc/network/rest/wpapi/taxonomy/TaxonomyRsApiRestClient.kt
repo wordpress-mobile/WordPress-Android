@@ -69,6 +69,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         term.slug,
                         term.description,
                         term.parentRemoteId,
+                        term.isHierarchical,
                         term.postCount
                     )
                     notifyTermDeleted(RemoteTermPayload(termModel, site))
@@ -119,7 +120,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     name = term.name,
                     description = term.description,
                     slug = term.slug,
-                    parent = if (term.parentRemoteId > 0) term.parentRemoteId else null
+                    parent = if (term.isHierarchical) term.parentRemoteId else null
                 )
             )
         }
@@ -138,6 +139,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         term.slug,
                         term.description,
                         term.parent ?: 0,
+                        term.parent != null,
                         term.count.toInt()
                     ),
                     site
@@ -186,7 +188,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     name = term.name,
                     description = term.description,
                     slug = term.slug,
-                    parent = if (term.parentRemoteId > 0) term.parentRemoteId else null
+                    parent = if (term.isHierarchical) term.parentRemoteId else null
                 )
             )
         }
@@ -204,6 +206,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                         term.slug,
                         term.description,
                         term.parent ?: 0,
+                        term.parent != null,
                         term.count.toInt()
                     ),
                     site
@@ -263,6 +266,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
                                 term.slug,
                                 term.description,
                                 term.parent ?: 0,
+                                term.parent != null,
                                 term.count.toInt()
                             )
                         },
