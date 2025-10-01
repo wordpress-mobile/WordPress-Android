@@ -52,7 +52,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         val taxonomyName = termEndpointType.toTaxonomyName()
         val termResponse = client.request { requestBuilder ->
             requestBuilder.terms().delete(
-                termEndpointType = TermEndpointType.Tags,
+                termEndpointType = termEndpointType,
                 termId = term.id.toLong()
             )
         }
