@@ -133,14 +133,14 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms tags with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = listOf(
+        val anyTermWithEditContext = listOf(
             createTestAnyTermWithEditContext(),
             createTestAnyTermWithEditContext()
         )
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val tagResponse = TermsRequestListWithEditContextResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
             null,
             null
@@ -194,14 +194,14 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms categories with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = listOf(
+        val anyTermWithEditContext = listOf(
             createTestAnyTermWithEditContext(),
             createTestAnyTermWithEditContext()
         )
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val categoryResponse = TermsRequestListWithEditContextResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
             null,
             null
@@ -256,11 +256,11 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `createTerm category with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = createTestAnyTermWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val categoryResponse = TermsRequestCreateResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
@@ -282,14 +282,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(AnyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(AnyTermWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
-        assertEquals(AnyTermWithEditContext.name, payload.term.name)
-        assertEquals(AnyTermWithEditContext.slug, payload.term.slug)
-        assertEquals(AnyTermWithEditContext.description, payload.term.description)
-        assertEquals(AnyTermWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -320,11 +320,11 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `createTerm tag with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = createTestAnyTermWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val tagResponse = TermsRequestCreateResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
@@ -346,14 +346,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(AnyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(AnyTermWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
-        assertEquals(AnyTermWithEditContext.name, payload.term.name)
-        assertEquals(AnyTermWithEditContext.slug, payload.term.slug)
-        assertEquals(AnyTermWithEditContext.description, payload.term.description)
-        assertEquals(AnyTermWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -572,10 +572,10 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `updateTerm category with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = createTestAnyTermWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         val categoryResponse = TermsRequestUpdateResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
@@ -595,14 +595,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(AnyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(AnyTermWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
-        assertEquals(AnyTermWithEditContext.name, payload.term.name)
-        assertEquals(AnyTermWithEditContext.slug, payload.term.slug)
-        assertEquals(AnyTermWithEditContext.description, payload.term.description)
-        assertEquals(AnyTermWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -660,10 +660,10 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `updateTerm tag with success response dispatches success action`() = runTest {
-        val AnyTermWithEditContext = createTestAnyTermWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         val tagResponse = TermsRequestUpdateResponse(
-            AnyTermWithEditContext,
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
@@ -683,14 +683,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(AnyTermWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(AnyTermWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
-        assertEquals(AnyTermWithEditContext.name, payload.term.name)
-        assertEquals(AnyTermWithEditContext.slug, payload.term.slug)
-        assertEquals(AnyTermWithEditContext.description, payload.term.description)
-        assertEquals(AnyTermWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 

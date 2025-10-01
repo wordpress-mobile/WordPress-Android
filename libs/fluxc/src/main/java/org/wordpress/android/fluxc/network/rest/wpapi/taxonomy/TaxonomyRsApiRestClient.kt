@@ -58,7 +58,10 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
         when (termResponse) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.POSTS, "Deleting $taxonomyName: ${term.name} - ${termResponse.response.data.deleted}")
+                appLogWrapper.d(
+                    AppLog.T.POSTS,
+                    "Deleting $taxonomyName: ${term.name} - ${termResponse.response.data.deleted}"
+                )
                 if (termResponse.response.data.deleted) {
                     val termModel = TermModel(
                         term.id,
