@@ -25,7 +25,7 @@ class WpApiClientProvider @Inject constructor(
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(uploadListener = uploadListener),
             appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication() {
+                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                 }
             }
