@@ -8,6 +8,7 @@ import org.wordpress.gutenberg.EditorConfiguration
  * Eliminates duplication between GutenbergKitEditorFragment and GutenbergKitWarmupHelper.
  */
 object EditorConfigurationBuilder {
+    private const val JETPACK_ASSET_LOADER_DOMAIN = "android-app-assets.jetpack.com"
     /**
      * Builds an EditorConfiguration from the provided settings map.
      *
@@ -44,6 +45,9 @@ object EditorConfigurationBuilder {
 
             // Editor asset caching configuration
             configureEditorAssetCaching(settings, siteURL, siteApiNamespace)
+
+            // Custom asset loader domain for CORS requests
+            setAssetLoaderDomain(JETPACK_ASSET_LOADER_DOMAIN)
 
             // Cookies
             setCookies(settings.getSetting<Map<String, String>>("cookies") ?: emptyMap())
