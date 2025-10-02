@@ -590,6 +590,8 @@
     <string name="top_level_category_name">Top level</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
 
+    <string name="taxonomies_title">Taxonomies</string>
+
 
     <!-- action from share intents -->
     <string name="share_action_post">Add to new post</string>

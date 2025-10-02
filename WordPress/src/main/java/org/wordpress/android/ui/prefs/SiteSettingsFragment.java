@@ -115,6 +115,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import kotlin.Triple;
+import kotlin.Unit;
+import uniffi.wp_api.TaxonomyTypeDetailsWithEditContext;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
 
@@ -1116,7 +1118,34 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void initTaxonomies() {
         mTaxonomiesNavMenuViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                 .get(TaxonomiesNavMenuViewModel.class);
-        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite);
+        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite, this::showTaxonomies);
+    }
+
+    private Unit showTaxonomies(List<TaxonomyTypeDetailsWithEditContext> taxonomies) {
+        if (taxonomies.size() < 1) {
+            return Unit.INSTANCE;
+        }
+        PreferenceGroup siteScreen = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_screen));
+        if (siteScreen != null) {
+            // Create taxonomies preference group
+            final String taxonomiesPrefKey = getString(R.string.pref_key_taxonomies);
+            PreferenceGroup taxonomiesPreference = (PreferenceGroup) findPreference(taxonomiesPrefKey);
+            if (taxonomiesPreference != null) {
+                WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_taxonomies);
+            }
+            taxonomiesPreference = new PreferenceCategory(getActivity());
+            taxonomiesPreference.setTitle(getString(R.string.taxonomies_title));
+            taxonomiesPreference.setKey(taxonomiesPrefKey);
+            siteScreen.addPreference(taxonomiesPreference);
+
+            for (TaxonomyTypeDetailsWithEditContext taxonomy : taxonomies) {
+                Preference categoriesPref = new Preference(getActivity());
+                categoriesPref.setTitle(taxonomy.getName());
+                categoriesPref.setKey(taxonomy.getSlug());
+                taxonomiesPreference.addPreference(categoriesPref);
+            }
+        }
+        return Unit.INSTANCE;
     }
 
     private void updateHomepageSummary() {
@@ -2043,18 +2072,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (group != null) {
             group.removeAll();
         }
-        if (mSite.isUsingSelfHostedRestApi()) {
-            // Remove everything inside "Writing" preference but "Categories" and "Tags" which are now supported
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_category);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_format);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_date_format);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_time_format);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_week_start);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_posts_per_page);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-        } else {
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
-        }
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);

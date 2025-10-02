@@ -10,13 +10,14 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TaxonomyListParams
 import uniffi.wp_api.TaxonomyType
+import uniffi.wp_api.TaxonomyTypeDetailsWithEditContext
 import javax.inject.Inject
 
 class TaxonomiesNavMenuViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
-    fun fetchTaxonomies(site: SiteModel) {
+    fun fetchTaxonomies(site: SiteModel, foo: (List<TaxonomyTypeDetailsWithEditContext>) -> Unit) {
         if (!site.isUsingSelfHostedRestApi) {
             appLogWrapper.d(AppLog.T.API, "Taxonomies - Taxonomies cannot be fetched: Application Password not available")
             return
@@ -30,14 +31,14 @@ class TaxonomiesNavMenuViewModel @Inject constructor(
                 is WpRequestResult.Success -> {
                     val list = response.response.data
                     appLogWrapper.d(AppLog.T.API, "Taxonomies - Fetched taxonomies ${list.taxonomyTypes.size}")
+                    val taxonomies = mutableListOf<TaxonomyTypeDetailsWithEditContext>()
                     list.taxonomyTypes.forEach { type ->
                         appLogWrapper.d(AppLog.T.API, "Taxonomies - Taxonomy ${type.value.name}")
-                        if (type.key == TaxonomyType.Category && type.value.visibility.showInNavMenus) {
-                            appLogWrapper.d(AppLog.T.API, "Taxonomies - SHOW CATEGORIES")
-                        } else if (type.key == TaxonomyType.PostTag && type.value.visibility.showInNavMenus) {
-                                appLogWrapper.d(AppLog.T.API, "Taxonomies - SHOW TAGS")
+                        if (type.value.visibility.showInNavMenus) {
+                            taxonomies.add(type.value)
                         }
                     }
+                    foo.invoke(taxonomies)
                 }
 
                 else -> {
