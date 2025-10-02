@@ -24,7 +24,10 @@ class TaxonomiesNavMenuViewModel @Inject constructor(
 
     fun fetchTaxonomies(site: SiteModel) {
         if (!site.isUsingSelfHostedRestApi) {
-            appLogWrapper.d(AppLog.T.API, "Taxonomies - Taxonomies cannot be fetched: Application Password not available")
+            appLogWrapper.d(
+                AppLog.T.API,
+                "Taxonomies - Taxonomies cannot be fetched: Application Password not available"
+            )
             return
         }
         viewModelScope.launch {

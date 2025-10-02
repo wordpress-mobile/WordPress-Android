@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
@@ -116,7 +115,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import kotlin.Triple;
-import kotlin.Unit;
 import uniffi.wp_api.TaxonomyTypeDetailsWithEditContext;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
@@ -1123,9 +1121,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite);
     }
 
-    private Unit showTaxonomies(List<TaxonomyTypeDetailsWithEditContext> taxonomies) {
-        if (taxonomies.size() < 1) {
-            return Unit.INSTANCE;
+    private void showTaxonomies(List<TaxonomyTypeDetailsWithEditContext> taxonomies) {
+        if (taxonomies.isEmpty()) {
+            return;
         }
         PreferenceGroup siteScreen = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_screen));
         if (siteScreen != null) {
@@ -1159,7 +1157,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 taxonomiesPreference.addPreference(pref);
             }
         }
-        return Unit.INSTANCE;
     }
 
     private void updateHomepageSummary() {
