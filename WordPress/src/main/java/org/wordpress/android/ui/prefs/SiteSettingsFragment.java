@@ -84,6 +84,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.taxonomies.TaxonomiesNavMenuViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -193,6 +194,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
+
+    private TaxonomiesNavMenuViewModel mTaxonomiesNavMenuViewModel;
 
     public SiteModel mSite;
 
@@ -1107,6 +1110,13 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         initBloggingSection();
         removeEmptyCategories();
+        initTaxonomies();
+    }
+
+    private void initTaxonomies() {
+        mTaxonomiesNavMenuViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
+                .get(TaxonomiesNavMenuViewModel.class);
+        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite);
     }
 
     private void updateHomepageSummary() {
