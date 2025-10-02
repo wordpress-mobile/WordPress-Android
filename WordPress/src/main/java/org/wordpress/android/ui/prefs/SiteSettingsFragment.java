@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
@@ -1143,6 +1144,18 @@ public class SiteSettingsFragment extends PreferenceFragment
                 Preference pref = new Preference(getActivity());
                 pref.setTitle(taxonomy.getName());
                 pref.setKey(taxonomy.getSlug());
+                pref.setOnPreferenceClickListener(preference -> {
+                    // TODO: Create generic taxonomies DataView and call it from here
+                    // We are not accepting the taxonomy name as a parameter yet
+                    // So Categories and Tags are still hardcoded
+                    if ("category".equals(taxonomy.getSlug())) {
+                        ActivityLauncher.showCategoriesList(getActivity(), mSite);
+                    } else if ("post_tag".equals(taxonomy.getSlug())) {
+                        SiteSettingsTagListActivity.showTagList(getActivity(), mSite);
+                    }
+                    return false;
+                }
+                );
                 taxonomiesPreference.addPreference(pref);
             }
         }
