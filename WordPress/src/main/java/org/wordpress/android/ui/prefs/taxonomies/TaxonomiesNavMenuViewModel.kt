@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.prefs.taxonomies
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -9,7 +11,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TaxonomyListParams
-import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.TaxonomyTypeDetailsWithEditContext
 import javax.inject.Inject
 
@@ -17,7 +18,11 @@ class TaxonomiesNavMenuViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
-    fun fetchTaxonomies(site: SiteModel, foo: (List<TaxonomyTypeDetailsWithEditContext>) -> Unit) {
+    // LiveData because this is observed from Java
+    private val _taxonomies = MutableLiveData<List<TaxonomyTypeDetailsWithEditContext>>()
+    val taxonomies: LiveData<List<TaxonomyTypeDetailsWithEditContext>> = _taxonomies
+
+    fun fetchTaxonomies(site: SiteModel) {
         if (!site.isUsingSelfHostedRestApi) {
             appLogWrapper.d(AppLog.T.API, "Taxonomies - Taxonomies cannot be fetched: Application Password not available")
             return
@@ -38,7 +43,7 @@ class TaxonomiesNavMenuViewModel @Inject constructor(
                             taxonomies.add(type.value)
                         }
                     }
-                    foo.invoke(taxonomies)
+                    _taxonomies.value = taxonomies
                 }
 
                 else -> {

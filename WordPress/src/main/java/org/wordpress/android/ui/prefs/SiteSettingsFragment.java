@@ -1118,7 +1118,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void initTaxonomies() {
         mTaxonomiesNavMenuViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                 .get(TaxonomiesNavMenuViewModel.class);
-        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite, this::showTaxonomies);
+        mTaxonomiesNavMenuViewModel.getTaxonomies().observe(getAppCompatActivity(), this::showTaxonomies);
+        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite);
     }
 
     private Unit showTaxonomies(List<TaxonomyTypeDetailsWithEditContext> taxonomies) {
@@ -1139,10 +1140,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             siteScreen.addPreference(taxonomiesPreference);
 
             for (TaxonomyTypeDetailsWithEditContext taxonomy : taxonomies) {
-                Preference categoriesPref = new Preference(getActivity());
-                categoriesPref.setTitle(taxonomy.getName());
-                categoriesPref.setKey(taxonomy.getSlug());
-                taxonomiesPreference.addPreference(categoriesPref);
+                Preference pref = new Preference(getActivity());
+                pref.setTitle(taxonomy.getName());
+                pref.setKey(taxonomy.getSlug());
+                taxonomiesPreference.addPreference(pref);
             }
         }
         return Unit.INSTANCE;
