@@ -59,11 +59,16 @@ class TermsViewModel @Inject constructor(
         initialize()
     }
 
-    override fun getSupportedSorts(): List<DataViewDropdownItem> = listOf(
-        DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.term_sort_by_name),
-        DataViewDropdownItem(id = SORT_BY_COUNT_ID, titleRes = R.string.term_sort_by_count),
-        DataViewDropdownItem(id = SORT_BY_ID_ID, titleRes = R.string.term_sort_by_id)
-    )
+    override fun getSupportedSorts(): List<DataViewDropdownItem> = if (true) {
+        // TODO
+        // Don't support sorting in hierarchical taxonomies
+        listOf()
+    } else {
+        listOf(
+            DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.term_sort_by_name),
+            DataViewDropdownItem(id = SORT_BY_COUNT_ID, titleRes = R.string.term_sort_by_count),
+        )
+    }
 
     override suspend fun performNetworkRequest(
         page: Int,
@@ -139,21 +144,9 @@ class TermsViewModel @Inject constructor(
             title = term.name,
             fields = listOf(
                 DataViewItemField(
-                    value = context.resources.getString(R.string.term_slug_label),
+                    value = context.resources.getString(R.string.term_count, term.count),
                     valueType = DataViewFieldType.TEXT,
-                ),
-                DataViewItemField(
-                    value = term.slug,
-                    valueType = DataViewFieldType.TEXT,
-                ),
-                DataViewItemField(
-                    value = context.resources.getString(R.string.term_count_label),
-                    valueType = DataViewFieldType.TEXT,
-                ),
-                DataViewItemField(
-                    value = term.count.toString(),
-                    valueType = DataViewFieldType.TEXT,
-                ),
+                )
             ),
             skipEndPositioning = true,
             data = term
