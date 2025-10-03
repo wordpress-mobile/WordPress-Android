@@ -356,6 +356,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
             "cars",
             null,
             0,
+            true,
             0
         )
     }

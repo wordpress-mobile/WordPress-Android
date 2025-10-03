@@ -58,7 +58,7 @@ class JetpackConnectionHelper @Inject constructor(
         site.wpApiRestUrl ?: "${site.url}/wp-json"
 
     private inner class InvalidAuthNotifier : WpAppNotifier {
-        override suspend fun requestedWithInvalidAuthentication() {
+        override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
             appLogWrapper.d(AppLog.T.API, "$TAG: requestedWithInvalidAuthentication")
             throw IllegalArgumentException("Invalid credentials")
         }

@@ -31,18 +31,12 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.CategoryDeleteResponse
-import uniffi.wp_api.CategoryWithEditContext
-import uniffi.wp_api.CategoriesRequestCreateResponse
-import uniffi.wp_api.CategoriesRequestDeleteResponse
-import uniffi.wp_api.CategoriesRequestListWithEditContextResponse
-import uniffi.wp_api.CategoriesRequestUpdateResponse
-import uniffi.wp_api.TagDeleteResponse
-import uniffi.wp_api.TagWithEditContext
-import uniffi.wp_api.TagsRequestCreateResponse
-import uniffi.wp_api.TagsRequestDeleteResponse
-import uniffi.wp_api.TagsRequestListWithEditContextResponse
-import uniffi.wp_api.TagsRequestUpdateResponse
+import uniffi.wp_api.AnyTermWithEditContext
+import uniffi.wp_api.TermDeleteResponse
+import uniffi.wp_api.TermsRequestCreateResponse
+import uniffi.wp_api.TermsRequestDeleteResponse
+import uniffi.wp_api.TermsRequestListWithEditContextResponse
+import uniffi.wp_api.TermsRequestUpdateResponse
 import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.WpNetworkHeaderMap
 
@@ -66,7 +60,7 @@ class TaxonomyRsApiRestClientTest {
         url = "https://test.wordpress.com"
     }
 
-    private val testTermModel = TermModel(
+    private val testCategoryTermModel = TermModel(
         1, // id
         123, // localSiteId
         2L, // remoteTermId
@@ -75,6 +69,7 @@ class TaxonomyRsApiRestClientTest {
         "test-category", // slug
         "Test category description", // description
         0L, // parentRemoteId
+        true, // isHierarchical
         0 // postCount
     )
 
@@ -87,6 +82,7 @@ class TaxonomyRsApiRestClientTest {
         "test-tag", // slug
         "Test tag description", // description
         0L, // parentRemoteId
+        false, // isHierarchical
         0 // postCount
     )
 
@@ -137,24 +133,24 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms tags with success response dispatches success action`() = runTest {
-        val tagWithEditContext = listOf(
-            createTestTagWithEditContext(),
-            createTestTagWithEditContext()
+        val anyTermWithEditContext = listOf(
+            createTestAnyTermWithEditContext(),
+            createTestAnyTermWithEditContext()
         )
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
-        val tagResponse = TagsRequestListWithEditContextResponse(
-            tagWithEditContext,
+        val tagResponse = TermsRequestListWithEditContextResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
             null,
             null
         )
 
-        val successResponse: WpRequestResult<TagsRequestListWithEditContextResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestListWithEditContextResponse> = WpRequestResult.Success(
             response = tagResponse
         )
 
-        whenever(wpApiClient.request<TagsRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.fetchTerms(testSite, testTagTaxonomyName)
 
@@ -198,24 +194,24 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms categories with success response dispatches success action`() = runTest {
-        val categoryWithEditContext = listOf(
-            createTestCategoryWithEditContext(),
-            createTestCategoryWithEditContext()
+        val anyTermWithEditContext = listOf(
+            createTestAnyTermWithEditContext(),
+            createTestAnyTermWithEditContext()
         )
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
-        val categoryResponse = CategoriesRequestListWithEditContextResponse(
-            categoryWithEditContext,
+        val categoryResponse = TermsRequestListWithEditContextResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
             null,
             null
         )
 
-        val successResponse: WpRequestResult<CategoriesRequestListWithEditContextResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestListWithEditContextResponse> = WpRequestResult.Success(
             response = categoryResponse
         )
 
-        whenever(wpApiClient.request<CategoriesRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
@@ -243,7 +239,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.createTerm(testSite, testTermModel)
+        taxonomyClient.createTerm(testSite, testCategoryTermModel)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -253,28 +249,28 @@ class TaxonomyRsApiRestClientTest {
         val payload = capturedAction.payload as RemoteTermPayload
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
-        assertEquals(testTermModel, payload.term)
+        assertEquals(testCategoryTermModel, payload.term)
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
     @Test
     fun `createTerm category with success response dispatches success action`() = runTest {
-        val categoryWithEditContext = createTestCategoryWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
-        val categoryResponse = CategoriesRequestCreateResponse(
-            categoryWithEditContext,
+        val categoryResponse = TermsRequestCreateResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<CategoriesRequestCreateResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestCreateResponse> = WpRequestResult.Success(
             response = categoryResponse
         )
 
-        whenever(wpApiClient.request<CategoriesRequestCreateResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestCreateResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.createTerm(testSite, testTermModel)
+        taxonomyClient.createTerm(testSite, testCategoryTermModel)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -286,14 +282,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(categoryWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(categoryWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
-        assertEquals(categoryWithEditContext.name, payload.term.name)
-        assertEquals(categoryWithEditContext.slug, payload.term.slug)
-        assertEquals(categoryWithEditContext.description, payload.term.description)
-        assertEquals(categoryWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -324,19 +320,19 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `createTerm tag with success response dispatches success action`() = runTest {
-        val tagWithEditContext = createTestTagWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
         // Create the correct response structure following the MediaRSApiRestClientTest pattern
-        val tagResponse = TagsRequestCreateResponse(
-            tagWithEditContext,
+        val tagResponse = TermsRequestCreateResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<TagsRequestCreateResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestCreateResponse> = WpRequestResult.Success(
             response = tagResponse
         )
 
-        whenever(wpApiClient.request<TagsRequestCreateResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestCreateResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.createTerm(testSite, testTagTermModel)
 
@@ -350,14 +346,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the created term has the correct properties
-        assertEquals(tagWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(tagWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
-        assertEquals(tagWithEditContext.name, payload.term.name)
-        assertEquals(tagWithEditContext.slug, payload.term.slug)
-        assertEquals(tagWithEditContext.description, payload.term.description)
-        assertEquals(tagWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -371,7 +367,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.deleteTerm(testSite, testTermModel)
+        taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -381,7 +377,7 @@ class TaxonomyRsApiRestClientTest {
         val payload = capturedAction.payload as RemoteTermPayload
         assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
         assertEquals(testSite, payload.site)
-        assertEquals(testTermModel, payload.term)
+        assertEquals(testCategoryTermModel, payload.term)
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
@@ -391,18 +387,18 @@ class TaxonomyRsApiRestClientTest {
         val categoryDeleteData = createTestCategoryDeleteData(deleted = true)
 
         // Create the correct response structure following the MediaRsApiRestClientTest pattern
-        val categoryResponse = CategoriesRequestDeleteResponse(
+        val categoryResponse = TermsRequestDeleteResponse(
             categoryDeleteData,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<CategoriesRequestDeleteResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
             response = categoryResponse
         )
 
-        whenever(wpApiClient.request<CategoriesRequestDeleteResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.deleteTerm(testSite, testTermModel)
+        taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
         // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -414,14 +410,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
         // Verify the deleted term has the correct properties
-        assertEquals(testTermModel.id, payload.term.id)
+        assertEquals(testCategoryTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(testTermModel.id.toLong(), payload.term.remoteTermId)
+        assertEquals(testCategoryTermModel.id.toLong(), payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
-        assertEquals(testTermModel.name, payload.term.name)
-        assertEquals(testTermModel.slug, payload.term.slug)
-        assertEquals(testTermModel.description, payload.term.description)
-        assertEquals(testTermModel.postCount, payload.term.postCount)
+        assertEquals(testCategoryTermModel.name, payload.term.name)
+        assertEquals(testCategoryTermModel.slug, payload.term.slug)
+        assertEquals(testCategoryTermModel.description, payload.term.description)
+        assertEquals(testCategoryTermModel.postCount, payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -430,18 +426,18 @@ class TaxonomyRsApiRestClientTest {
         val categoryDeleteData = createTestCategoryDeleteData(deleted = false)
 
         // Create the correct response structure with deleted = false
-        val categoryResponse = CategoriesRequestDeleteResponse(
+        val categoryResponse = TermsRequestDeleteResponse(
             categoryDeleteData,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<CategoriesRequestDeleteResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
             response = categoryResponse
         )
 
-        whenever(wpApiClient.request<CategoriesRequestDeleteResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.deleteTerm(testSite, testTermModel)
+        taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
         // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
@@ -451,7 +447,7 @@ class TaxonomyRsApiRestClientTest {
         val payload = capturedAction.payload as RemoteTermPayload
         assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
         assertEquals(testSite, payload.site)
-        assertEquals(testTermModel, payload.term)
+        assertEquals(testCategoryTermModel, payload.term)
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
@@ -486,16 +482,16 @@ class TaxonomyRsApiRestClientTest {
         val tagDeleteData = createTestTagDeleteData(deleted = true)
 
         // Create the correct response structure following the MediaRsApiRestClientTest pattern
-        val tagResponse = TagsRequestDeleteResponse(
+        val tagResponse = TermsRequestDeleteResponse(
             tagDeleteData,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<TagsRequestDeleteResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
             response = tagResponse
         )
 
-        whenever(wpApiClient.request<TagsRequestDeleteResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.deleteTerm(testSite, testTagTermModel)
 
@@ -525,16 +521,16 @@ class TaxonomyRsApiRestClientTest {
         val tagDeleteData = createTestTagDeleteData(deleted = false)
 
         // Create the correct response structure with deleted = false
-        val tagResponse = TagsRequestDeleteResponse(
+        val tagResponse = TermsRequestDeleteResponse(
             tagDeleteData,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<TagsRequestDeleteResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestDeleteResponse> = WpRequestResult.Success(
             response = tagResponse
         )
 
-        whenever(wpApiClient.request<TagsRequestDeleteResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestDeleteResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.deleteTerm(testSite, testTagTermModel)
 
@@ -560,7 +556,7 @@ class TaxonomyRsApiRestClientTest {
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
 
-        taxonomyClient.updateTerm(testSite, testTermModel)
+        taxonomyClient.updateTerm(testSite, testCategoryTermModel)
 
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
@@ -569,27 +565,27 @@ class TaxonomyRsApiRestClientTest {
         val payload = capturedAction.payload as RemoteTermPayload
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
-        assertEquals(testTermModel, payload.term)
+        assertEquals(testCategoryTermModel, payload.term)
         assertNotNull(payload.error)
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
     @Test
     fun `updateTerm category with success response dispatches success action`() = runTest {
-        val categoryWithEditContext = createTestCategoryWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
-        val categoryResponse = CategoriesRequestUpdateResponse(
-            categoryWithEditContext,
+        val categoryResponse = TermsRequestUpdateResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<CategoriesRequestUpdateResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestUpdateResponse> = WpRequestResult.Success(
             response = categoryResponse
         )
 
-        whenever(wpApiClient.request<CategoriesRequestUpdateResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestUpdateResponse>(any())).thenReturn(successResponse)
 
-        taxonomyClient.updateTerm(testSite, testTermModel)
+        taxonomyClient.updateTerm(testSite, testCategoryTermModel)
 
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
@@ -599,29 +595,30 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(categoryWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(categoryWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testCategoryTaxonomyName, payload.term.taxonomy)
-        assertEquals(categoryWithEditContext.name, payload.term.name)
-        assertEquals(categoryWithEditContext.slug, payload.term.slug)
-        assertEquals(categoryWithEditContext.description, payload.term.description)
-        assertEquals(categoryWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
     @Test
     fun `updateTerm category with invalid id dispatches error action`() = runTest {
         val invalidTermModel = TermModel(
-            testTermModel.id,
-            testTermModel.localSiteId,
+            testCategoryTermModel.id,
+            testCategoryTermModel.localSiteId,
             -1L, // invalid remoteTermId
-            testTermModel.taxonomy,
-            testTermModel.name,
-            testTermModel.slug,
-            testTermModel.description,
-            testTermModel.parentRemoteId,
-            testTermModel.postCount
+            testCategoryTermModel.taxonomy,
+            testCategoryTermModel.name,
+            testCategoryTermModel.slug,
+            testCategoryTermModel.description,
+            testCategoryTermModel.parentRemoteId,
+            testCategoryTermModel.isHierarchical,
+            testCategoryTermModel.postCount
         )
 
         taxonomyClient.updateTerm(testSite, invalidTermModel)
@@ -663,18 +660,18 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `updateTerm tag with success response dispatches success action`() = runTest {
-        val tagWithEditContext = createTestTagWithEditContext()
+        val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
-        val tagResponse = TagsRequestUpdateResponse(
-            tagWithEditContext,
+        val tagResponse = TermsRequestUpdateResponse(
+            anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
         )
 
-        val successResponse: WpRequestResult<TagsRequestUpdateResponse> = WpRequestResult.Success(
+        val successResponse: WpRequestResult<TermsRequestUpdateResponse> = WpRequestResult.Success(
             response = tagResponse
         )
 
-        whenever(wpApiClient.request<TagsRequestUpdateResponse>(any())).thenReturn(successResponse)
+        whenever(wpApiClient.request<TermsRequestUpdateResponse>(any())).thenReturn(successResponse)
 
         taxonomyClient.updateTerm(testSite, testTagTermModel)
 
@@ -686,14 +683,14 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        assertEquals(tagWithEditContext.id.toInt(), payload.term.id)
+        assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
-        assertEquals(tagWithEditContext.id, payload.term.remoteTermId)
+        assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
         assertEquals(testTagTaxonomyName, payload.term.taxonomy)
-        assertEquals(tagWithEditContext.name, payload.term.name)
-        assertEquals(tagWithEditContext.slug, payload.term.slug)
-        assertEquals(tagWithEditContext.description, payload.term.description)
-        assertEquals(tagWithEditContext.count.toInt(), payload.term.postCount)
+        assertEquals(anyTermWithEditContext.name, payload.term.name)
+        assertEquals(anyTermWithEditContext.slug, payload.term.slug)
+        assertEquals(anyTermWithEditContext.description, payload.term.description)
+        assertEquals(anyTermWithEditContext.count.toInt(), payload.term.postCount)
         assertNull(payload.error)
     }
 
@@ -708,6 +705,7 @@ class TaxonomyRsApiRestClientTest {
             testTagTermModel.slug,
             testTagTermModel.description,
             testTagTermModel.parentRemoteId,
+            testTagTermModel.isHierarchical,
             testTagTermModel.postCount
         )
 
@@ -725,16 +723,16 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(TaxonomyErrorType.GENERIC_ERROR, payload.error?.type)
     }
 
-    private fun createTestCategoryDeleteData(deleted: Boolean): CategoryDeleteResponse {
-        return CategoryDeleteResponse(deleted, createTestCategoryWithEditContext())
+    private fun createTestCategoryDeleteData(deleted: Boolean): TermDeleteResponse {
+        return TermDeleteResponse(deleted, createTestAnyTermWithEditContext())
     }
 
-    private fun createTestTagDeleteData(deleted: Boolean): TagDeleteResponse {
-        return TagDeleteResponse(deleted, createTestTagWithEditContext())
+    private fun createTestTagDeleteData(deleted: Boolean): TermDeleteResponse {
+        return TermDeleteResponse(deleted, createTestAnyTermWithEditContext())
     }
 
-    private fun createTestCategoryWithEditContext(): CategoryWithEditContext {
-        return CategoryWithEditContext(
+    private fun createTestAnyTermWithEditContext(): AnyTermWithEditContext {
+        return AnyTermWithEditContext(
             id = 2L,
             count = 3L,
             description = "Test category description",
@@ -743,18 +741,6 @@ class TaxonomyRsApiRestClientTest {
             slug = "test-category",
             taxonomy = TaxonomyType.Category,
             parent = 0L
-        )
-    }
-
-    private fun createTestTagWithEditContext(): TagWithEditContext {
-        return TagWithEditContext(
-            id = 1L,
-            count = 5L,
-            description = "Test tag description",
-            link = "https://example.com/tag/test",
-            name = "Test Tag",
-            slug = "test-tag",
-            taxonomy = TaxonomyType.PostTag
         )
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import uniffi.wp_api.UserRole
 import uniffi.wp_api.UserWithEditContext
 
 /**
@@ -24,7 +25,7 @@ object SampleUsers {
         name = "Sample User",
         nickname = "User nickname",
         registeredDate = "2023-01-01",
-        roles = listOf("admin"),
+        roles = listOf(UserRole.Administrator),
         slug = "sample-user",
         url = "example.com",
         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non quam viverra, viverra est vel, interdum felis. Pellentesque interdum libero quis metus pharetra ullamcorper. Morbi nec libero ligula. Quisque consectetur, purus sit amet lobortis porttitor, ligula ex imperdiet massa, in ullamcorper augue odio sit amet metus. In sollicitudin mauris et risus mollis commodo. Aliquam vel vehicula ante, nec blandit erat. Aenean non turpis porttitor orci fringilla fringilla nec ac nunc. Nulla ultrices urna ut ipsum posuere blandit. Phasellus mauris nulla, tincidunt at leo at, auctor interdum felis. Sed pharetra risus a ullamcorper dictum. Suspendisse pharetra justo molestie risus lobortis facilisis.",
@@ -45,7 +46,7 @@ object SampleUsers {
         name = "Sample User",
         nickname = "User nickname",
         registeredDate = "2023-01-01",
-        roles = listOf("contributor"),
+        roles = listOf(UserRole.Contributor),
         slug = "sample-user",
         url = "example.com",
     )
@@ -65,7 +66,7 @@ object SampleUsers {
         name = "Sample User",
         nickname = "User nickname",
         registeredDate = "2023-01-01",
-        roles = listOf("contributor", "editor", "subscriber"),
+        roles = listOf(UserRole.Contributor, UserRole.Editor, UserRole.Subscriber),
         slug = "sample-user",
         url = "example.com",
     )

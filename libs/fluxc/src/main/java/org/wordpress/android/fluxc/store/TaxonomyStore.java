@@ -408,8 +408,8 @@ public class TaxonomyStore extends Store {
             onTermUploaded.error = payload.error;
             emitChange(onTermUploaded);
         } else {
-            if (payload.site.isUsingWpComRestApi()) {
-                // The WP.COM REST API response contains the modified term, so we're already in sync with the server
+            if (payload.site.isUsingWpComRestApi() || payload.site.isUsingSelfHostedRestApi()) {
+                // The WP.COM and REST API response contains the modified term, so we're already in sync with the server
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
                 emitChange(new OnTermUploaded(payload.term));

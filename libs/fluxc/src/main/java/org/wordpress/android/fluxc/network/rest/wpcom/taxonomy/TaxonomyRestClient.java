@@ -174,6 +174,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                 from.slug,
                 StringEscapeUtils.unescapeHtml4(from.description),
                 from.parent,
+                true, // this is only applicable for the new Rest API
                 from.post_count
         );
     }
