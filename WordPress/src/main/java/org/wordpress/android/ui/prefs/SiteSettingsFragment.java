@@ -1143,14 +1143,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 pref.setTitle(taxonomy.getName());
                 pref.setKey(taxonomy.getSlug());
                 pref.setOnPreferenceClickListener(preference -> {
-                    // TODO: Create generic taxonomies DataView and call it from here
-                    // We are not accepting the taxonomy name as a parameter yet
-                    // So Categories and Tags are still hardcoded
-                    if ("category".equals(taxonomy.getSlug())) {
-                        ActivityLauncher.showCategoriesList(getActivity(), mSite);
-                    } else if ("post_tag".equals(taxonomy.getSlug())) {
-                        SiteSettingsTagListActivity.showTagList(getActivity(), mSite);
-                    }
+                    ActivityLauncher.showTermsList(getActivity(), taxonomy.getSlug());
                     return false;
                 }
                 );
