@@ -28,6 +28,7 @@ import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -88,14 +89,14 @@ class TermsViewModel @Inject constructor(
             return@withContext emptyList()
         }
 
-        val allTerms = getTermsList(selectedSite, page, searchQuery)
+        val allTerms = getTermsList(selectedSite, page, searchQuery, sortOrder, sortBy)
         currentTerms = allTerms
 
-        // Sort the results
+        // Sort the results hierarchically if necessary
         val sortedTerms = if (isHierarchical) {
             sortByHierarchy(terms = allTerms)
         } else {
-            sortBySelection(terms = allTerms, sortOrder = sortOrder, sortBy = sortBy)
+            allTerms
         }
 
         // Convert to DataViewItems and return
@@ -103,28 +104,6 @@ class TermsViewModel @Inject constructor(
             // Do not use hierarchical indentation when the user is searching terms
             convertToDataViewItem(allTerms, term, isHierarchical && searchQuery.isEmpty())
         }
-    }
-
-    private fun sortBySelection(
-        terms: List<AnyTermWithEditContext>,
-        sortOrder: WpApiParamOrder,
-        sortBy: DataViewDropdownItem?,
-    ): List<AnyTermWithEditContext> = when (sortBy?.id) {
-            SORT_BY_NAME_ID -> {
-        if (sortOrder == WpApiParamOrder.ASC) {
-            terms.sortedBy { it.name }
-        } else {
-            terms.sortedByDescending { it.name }
-        }
-    }
-        SORT_BY_COUNT_ID -> {
-            if (sortOrder == WpApiParamOrder.ASC) {
-                terms.sortedBy { it.count }
-            } else {
-                terms.sortedByDescending { it.count }
-            }
-        }
-        else -> terms
     }
 
     private fun sortByHierarchy(terms: List<AnyTermWithEditContext>): List<AnyTermWithEditContext> {
@@ -209,6 +188,8 @@ class TermsViewModel @Inject constructor(
         site: SiteModel,
         page: Int,
         searchQuery: String,
+        sortOrder: WpApiParamOrder,
+        sortBy: DataViewDropdownItem?
     ): List<AnyTermWithEditContext> {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
 
@@ -223,7 +204,20 @@ class TermsViewModel @Inject constructor(
                 termEndpointType = termEndpointType,
                 params = TermListParams(
                     page = page.toUInt(),
-                    search = searchQuery
+                    search = searchQuery,
+                    order = when (sortOrder) {
+                        WpApiParamOrder.ASC -> WpApiParamOrder.ASC
+                        WpApiParamOrder.DESC -> WpApiParamOrder.DESC
+                    },
+                    orderby = if (sortBy == null) {
+                        null
+                    } else {
+                        if (sortBy.id == SORT_BY_COUNT_ID) {
+                            WpApiParamTermsOrderBy.COUNT
+                        } else {
+                            WpApiParamTermsOrderBy.NAME // default
+                        }
+                    }
                 )
             )
         }
