@@ -23,7 +23,6 @@ import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
@@ -64,9 +63,7 @@ class TermsViewModel @Inject constructor(
         initialize()
     }
 
-    override fun getSupportedSorts(): List<DataViewDropdownItem> = if (true) {
-        // TODO
-        // Don't support sorting in hierarchical taxonomies
+    override fun getSupportedSorts(): List<DataViewDropdownItem> = if (isHierarchical) {
         listOf()
     } else {
         listOf(
@@ -105,22 +102,10 @@ class TermsViewModel @Inject constructor(
         }
 
         // Sort the results
-        val sortedTerms = when (sortBy?.id) {
-            SORT_BY_NAME_ID -> {
-                if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredTerms.sortedBy { it.name }
-                } else {
-                    filteredTerms.sortedByDescending { it.name }
-                }
-            }
-            SORT_BY_COUNT_ID -> {
-                if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredTerms.sortedBy { it.count }
-                } else {
-                    filteredTerms.sortedByDescending { it.count }
-                }
-            }
-            else -> filteredTerms
+        val sortedTerms = if (isHierarchical) {
+            sortByHierarchy(terms = filteredTerms)
+        } else {
+            sortBySelection(terms = filteredTerms, sortOrder = sortOrder, sortBy = sortBy)
         }
 
         // Convert to DataViewItems and return
@@ -128,6 +113,56 @@ class TermsViewModel @Inject constructor(
             // Do not use hierarchical indentation when the user is searching terms
             convertToDataViewItem(allTerms, term, isHierarchical && searchQuery.isEmpty())
         }
+    }
+
+    private fun sortBySelection(
+        terms: List<AnyTermWithEditContext>,
+        sortOrder: WpApiParamOrder,
+        sortBy: DataViewDropdownItem?,
+    ): List<AnyTermWithEditContext> = when (sortBy?.id) {
+            SORT_BY_NAME_ID -> {
+        if (sortOrder == WpApiParamOrder.ASC) {
+            terms.sortedBy { it.name }
+        } else {
+            terms.sortedByDescending { it.name }
+        }
+    }
+        SORT_BY_COUNT_ID -> {
+            if (sortOrder == WpApiParamOrder.ASC) {
+                terms.sortedBy { it.count }
+            } else {
+                terms.sortedByDescending { it.count }
+            }
+        }
+        else -> terms
+    }
+
+    private fun sortByHierarchy(terms: List<AnyTermWithEditContext>): List<AnyTermWithEditContext> {
+        val result = mutableListOf<AnyTermWithEditContext>()
+        val termsById = terms.associateBy { it.id }
+        val visited = mutableSetOf<Long>()
+
+        fun addTermWithChildren(term: AnyTermWithEditContext) {
+            if (term.id in visited) return
+            visited.add(term.id)
+            result.add(term)
+
+            // Find and add all direct children
+            terms.filter { it.parent == term.id }
+                .sortedBy { it.name }
+                .forEach { child ->
+                    addTermWithChildren(child)
+                }
+        }
+
+        // First, add all root terms (those with parent == 0 or no parent in the list)
+        terms.filter { it.parent == 0L || termsById[it.parent] == null }
+            .sortedBy { it.name }
+            .forEach { rootTerm ->
+                addTermWithChildren(rootTerm)
+            }
+
+        return result
     }
 
     fun getTerm(termId: Long): AnyTermWithEditContext? {
