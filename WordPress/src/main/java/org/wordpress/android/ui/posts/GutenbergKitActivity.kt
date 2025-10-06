@@ -239,6 +239,7 @@ private const val VIEW_PAGER_PAGE_HISTORY = 3
 private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 
 private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
+private const val DISABLED_ALPHA = 0.5f
 
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListener,
@@ -860,31 +861,36 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     private fun setOverflowMenuEnabled(enabled: Boolean) {
-        toolbar?.let { toolbar ->
-            // Try multiple ways to find the overflow menu button
-            val overflowButton = toolbar.findViewById<View?>(
-                resources.getIdentifier("action_overflow_menu_button", "id", "android")
-            ) ?: toolbar.findViewById<View?>(
-                resources.getIdentifier("overflow_button", "id", packageName)
-            ) ?: run {
-                // Find it by iterating through toolbar children
-                for (i in 0 until toolbar.childCount) {
-                    val child = toolbar.getChildAt(i)
-                    if (child.javaClass.simpleName == "ActionMenuView") {
-                        val actionMenuView = child as? android.view.ViewGroup
-                        // The overflow button is typically the last child of ActionMenuView
-                        if (actionMenuView != null && actionMenuView.childCount > 0) {
-                            return@run actionMenuView.getChildAt(actionMenuView.childCount - 1)
-                        }
-                    }
+        val currentToolbar = toolbar ?: return
+        val overflowButton = findOverflowButton(currentToolbar)
+        overflowButton?.let {
+            it.isEnabled = enabled
+            it.alpha = if (enabled) 1.0f else DISABLED_ALPHA
+        }
+    }
+
+    private fun findOverflowButton(toolbar: Toolbar): View? {
+        // Try multiple ways to find the overflow menu button
+        return toolbar.findViewById<View?>(
+            resources.getIdentifier("action_overflow_menu_button", "id", "android")
+        ) ?: toolbar.findViewById<View?>(
+            resources.getIdentifier("overflow_button", "id", packageName)
+        ) ?: findOverflowButtonInChildren(toolbar)
+    }
+
+    private fun findOverflowButtonInChildren(toolbar: Toolbar): View? {
+        // Find it by iterating through toolbar children
+        for (i in 0 until toolbar.childCount) {
+            val child = toolbar.getChildAt(i)
+            if (child.javaClass.simpleName == "ActionMenuView") {
+                val actionMenuView = child as? android.view.ViewGroup
+                // The overflow button is typically the last child of ActionMenuView
+                if (actionMenuView != null && actionMenuView.childCount > 0) {
+                    return actionMenuView.getChildAt(actionMenuView.childCount - 1)
                 }
-                null
-            }
-            overflowButton?.let {
-                it.isEnabled = enabled
-                it.alpha = if (enabled) 1.0f else 0.5f // Visual disabled state
             }
         }
+        return null
     }
 
     private fun fetchSiteSettings() {
@@ -2981,6 +2987,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         isModalDialogOpen = true
         closeButton?.let {
             it.isEnabled = false
+        }
         setOverflowMenuEnabled(false)
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
