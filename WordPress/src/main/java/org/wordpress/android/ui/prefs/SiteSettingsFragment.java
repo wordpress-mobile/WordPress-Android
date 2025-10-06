@@ -1143,7 +1143,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 pref.setTitle(taxonomy.getName());
                 pref.setKey(taxonomy.getSlug());
                 pref.setOnPreferenceClickListener(preference -> {
-                    ActivityLauncher.showTermsList(getActivity(), taxonomy.getSlug(), taxonomy.getHierarchical());
+                    ActivityLauncher.showTermsList(getActivity(), taxonomy.getSlug(), taxonomy.getName(),
+                            taxonomy.getHierarchical());
                     return false;
                 }
                 );

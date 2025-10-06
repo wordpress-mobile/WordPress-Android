@@ -64,6 +64,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
         val taxonomySlug = intent.getStringExtra(TAXONOMY_SLUG)
         val isHierarchical = intent.getBooleanExtra(IS_HIERARCHICAL, false)
+        val taxonomyName = intent.getStringExtra(TAXONOMY_NAME) ?: ""
         if (taxonomySlug == null) {
             appLogWrapper.e(AppLog.T.API, "Error: No taxonomy selected")
             finish()
@@ -80,7 +81,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 }
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    NavigableContent()
+                    NavigableContent(taxonomyName)
                 }
             }
         )
@@ -93,9 +94,9 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun NavigableContent() {
+    private fun NavigableContent(taxonomyName: String) {
         navController = rememberNavController()
-        val listTitle = stringResource(R.string.terms_title)
+        val listTitle = taxonomyName
         val titleState = remember { mutableStateOf(listTitle) }
 
         AppThemeM3 {
@@ -285,11 +286,13 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
     companion object {
         private const val TAXONOMY_SLUG = "taxonomy_slug"
         private const val IS_HIERARCHICAL = "is_hierarchical"
+        private const val TAXONOMY_NAME = "taxonomy_name"
         private const val KEY_TERM_ID = "termId"
 
-        fun getIntent(context: Context, taxonomySlug: String, isHierarchical: Boolean): Intent =
+        fun getIntent(context: Context, taxonomySlug: String, taxonomyName: String, isHierarchical: Boolean): Intent =
             Intent(context, TermsDataViewActivity::class.java).apply {
                 putExtra(TAXONOMY_SLUG, taxonomySlug)
+                putExtra(TAXONOMY_NAME, taxonomyName)
                 putExtra(IS_HIERARCHICAL, isHierarchical)
             }
     }

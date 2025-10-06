@@ -5088,7 +5088,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>
 
     <!-- Terms -->
-    <string name="terms_title">Terms</string>
     <string name="term_name_label">Name:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_description_label">Description:</string>
