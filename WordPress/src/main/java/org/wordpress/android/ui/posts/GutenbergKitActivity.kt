@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.res.Configuration
@@ -230,6 +231,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
+import androidx.core.view.isNotEmpty
 
 // ViewPager configuration constants
 private const val VIEW_PAGER_PAGE_CONTENT = 0
@@ -871,6 +873,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     private fun findOverflowButton(toolbar: Toolbar): View? {
         // Try multiple ways to find the overflow menu button
+        @SuppressLint("DiscouragedApi")
         return toolbar.findViewById<View?>(
             resources.getIdentifier("action_overflow_menu_button", "id", "android")
         ) ?: toolbar.findViewById<View?>(
@@ -885,7 +888,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             if (child.javaClass.simpleName == "ActionMenuView") {
                 val actionMenuView = child as? android.view.ViewGroup
                 // The overflow button is typically the last child of ActionMenuView
-                if (actionMenuView != null && actionMenuView.childCount > 0) {
+                if (actionMenuView != null && actionMenuView.isNotEmpty()) {
                     return actionMenuView.getChildAt(actionMenuView.childCount - 1)
                 }
             }
