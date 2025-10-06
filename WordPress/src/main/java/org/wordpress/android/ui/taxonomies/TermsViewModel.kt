@@ -88,24 +88,14 @@ class TermsViewModel @Inject constructor(
             return@withContext emptyList()
         }
 
-        val allTerms = getTermsList(selectedSite)
+        val allTerms = getTermsList(selectedSite, page, searchQuery)
         currentTerms = allTerms
-
-        // Filter by search query
-        val filteredTerms = if (searchQuery.isBlank()) {
-            allTerms
-        } else {
-            allTerms.filter { term ->
-                term.name.contains(searchQuery, ignoreCase = true) ||
-                term.slug.contains(searchQuery, ignoreCase = true)
-            }
-        }
 
         // Sort the results
         val sortedTerms = if (isHierarchical) {
-            sortByHierarchy(terms = filteredTerms)
+            sortByHierarchy(terms = allTerms)
         } else {
-            sortBySelection(terms = filteredTerms, sortOrder = sortOrder, sortBy = sortBy)
+            sortBySelection(terms = allTerms, sortOrder = sortOrder, sortBy = sortBy)
         }
 
         // Convert to DataViewItems and return
@@ -215,7 +205,11 @@ class TermsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getTermsList(site: SiteModel): List<AnyTermWithEditContext> {
+    private suspend fun getTermsList(
+        site: SiteModel,
+        page: Int,
+        searchQuery: String,
+    ): List<AnyTermWithEditContext> {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
 
         val termEndpointType = when (taxonomySlug) {
@@ -227,7 +221,10 @@ class TermsViewModel @Inject constructor(
         val termsResponse = wpApiClient.request { requestBuilder ->
             requestBuilder.terms().listWithEditContext(
                 termEndpointType = termEndpointType,
-                params = TermListParams()
+                params = TermListParams(
+                    page = page.toUInt(),
+                    search = searchQuery
+                )
             )
         }
 
