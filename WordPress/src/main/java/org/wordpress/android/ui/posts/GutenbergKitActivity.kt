@@ -285,6 +285,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     private var toolbar: Toolbar? = null
     private var menuHasUndo: Boolean = false
     private var menuHasRedo: Boolean = false
+    private var isModalDialogOpen: Boolean = false
+    private var backPressedCallback: OnBackPressedCallback? = null
+    private var closeButton: View? = null
     private var showPrepublishingBottomSheetHandler: Handler? = null
     private var showPrepublishingBottomSheetRunnable: Runnable? = null
     private var htmlModeMenuStateOn: Boolean = false
@@ -484,12 +487,16 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
 
         setContentView(R.layout.new_edit_post_activity)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                handleBackPressed()
+                if (isModalDialogOpen) {
+                    editorFragment?.dismissTopModal()
+                } else {
+                    handleBackPressed()
+                }
             }
         }
-        onBackPressedDispatcher.addCallback(this, callback)
+        onBackPressedDispatcher.addCallback(this, backPressedCallback!!)
         dispatcher.register(this)
 
         createEditShareMessageActivityResultLauncher()
@@ -833,8 +840,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             it.overflowIcon = overflowIcon
 
             // Custom close button
-            val closeHeader: View = it.findViewById(R.id.edit_post_header)
-            closeHeader.setOnClickListener { handleBackPressed() }
+            closeButton = it.findViewById(R.id.edit_post_header)
+            closeButton?.setOnClickListener { handleBackPressed() }
             // Update site icon if mSite is available, if not it will use the placeholder.
             val siteIconUrl = SiteUtils.getSiteIconUrl(
                 siteModel,
@@ -849,6 +856,34 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 siteIcon, blavatarType, siteIconUrl,
                 resources.getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius)
             )
+        }
+    }
+
+    private fun setOverflowMenuEnabled(enabled: Boolean) {
+        toolbar?.let { toolbar ->
+            // Try multiple ways to find the overflow menu button
+            val overflowButton = toolbar.findViewById<View?>(
+                resources.getIdentifier("action_overflow_menu_button", "id", "android")
+            ) ?: toolbar.findViewById<View?>(
+                resources.getIdentifier("overflow_button", "id", packageName)
+            ) ?: run {
+                // Find it by iterating through toolbar children
+                for (i in 0 until toolbar.childCount) {
+                    val child = toolbar.getChildAt(i)
+                    if (child.javaClass.simpleName == "ActionMenuView") {
+                        val actionMenuView = child as? android.view.ViewGroup
+                        // The overflow button is typically the last child of ActionMenuView
+                        if (actionMenuView != null && actionMenuView.childCount > 0) {
+                            return@run actionMenuView.getChildAt(actionMenuView.childCount - 1)
+                        }
+                    }
+                }
+                null
+            }
+            overflowButton?.let {
+                it.isEnabled = enabled
+                it.alpha = if (enabled) 1.0f else 0.5f // Visual disabled state
+            }
         }
     }
 
@@ -1425,11 +1460,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
 
         if (undoItem != null) {
-            undoItem.setEnabled(menuHasUndo)
+            undoItem.setEnabled(menuHasUndo && !isModalDialogOpen)
             undoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (redoItem != null) {
-            redoItem.setEnabled(menuHasRedo)
+            redoItem.setEnabled(menuHasRedo && !isModalDialogOpen)
             redoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
@@ -1460,6 +1495,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     currentDestination != EditPostDestination.History &&
                     currentDestination != EditPostDestination.PublishSettings
                 )
+                primaryAction.setEnabled(!isModalDialogOpen)
             }
         }
         // Note: This menu is shared with EditPostActivity. The following items are not needed
@@ -2938,6 +2974,24 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun onToggleRedo(isDisabled: Boolean) {
         if (menuHasRedo == !isDisabled) return
         menuHasRedo = !isDisabled
+        Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
+    }
+
+    override fun onModalDialogOpened(dialogType: String) {
+        isModalDialogOpen = true
+        closeButton?.let {
+            it.isEnabled = false
+        setOverflowMenuEnabled(false)
+        Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
+    }
+
+    override fun onModalDialogClosed(dialogType: String) {
+        isModalDialogOpen = false
+        closeButton?.let {
+            it.isEnabled = true
+            it.alpha = 1.0f
+        }
+        setOverflowMenuEnabled(true)
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
 
