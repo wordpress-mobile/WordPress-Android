@@ -1901,8 +1901,8 @@ public class ActivityLauncher {
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 
-    public static void showTermsList(@NonNull Context context, @NonNull String taxonomySlug) {
-        Intent intent = TermsDataViewActivity.Companion.getIntent(context, taxonomySlug);
+    public static void showTermsList(@NonNull Context context, @NonNull String taxonomySlug, Boolean isHierarchical) {
+        Intent intent = TermsDataViewActivity.Companion.getIntent(context, taxonomySlug, isHierarchical);
         context.startActivity(intent);
     }
 }

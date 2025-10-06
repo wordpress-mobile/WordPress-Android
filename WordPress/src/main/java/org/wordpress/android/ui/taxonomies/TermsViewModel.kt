@@ -53,8 +53,9 @@ class TermsViewModel @Inject constructor(
     ioDispatcher = ioDispatcher
 ) {
     private var taxonomySlug: String = ""
+    private var isHierarchical: Boolean = false
 
-    fun initialize(slug: String) {
+    fun initialize(slug: String, isHierarchical: Boolean) {
         taxonomySlug = slug
         initialize()
     }
@@ -114,13 +115,6 @@ class TermsViewModel @Inject constructor(
                     filteredTerms.sortedByDescending { it.count }
                 }
             }
-            SORT_BY_ID_ID -> {
-                if (sortOrder == WpApiParamOrder.ASC) {
-                    filteredTerms.sortedBy { it.id }
-                } else {
-                    filteredTerms.sortedByDescending { it.id }
-                }
-            }
             else -> filteredTerms
         }
 
@@ -138,10 +132,16 @@ class TermsViewModel @Inject constructor(
     }
 
     private fun convertToDataViewItem(term: AnyTermWithEditContext): DataViewItem {
+        val parent = term.parent ?: 0
+        val indentation = if (isHierarchical && parent > 0) {
+            " - "
+        } else {
+            ""
+        }
         return DataViewItem(
             id = term.id,
             image = null,
-            title = term.name,
+            title = "${indentation}${term.name}",
             fields = listOf(
                 DataViewItemField(
                     value = context.resources.getString(R.string.term_count, term.count),
@@ -187,6 +187,5 @@ class TermsViewModel @Inject constructor(
     companion object {
         private const val SORT_BY_NAME_ID = 1L
         private const val SORT_BY_COUNT_ID = 2L
-        private const val SORT_BY_ID_ID = 3L
     }
 }

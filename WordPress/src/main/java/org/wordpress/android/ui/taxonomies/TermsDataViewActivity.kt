@@ -64,13 +64,14 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val taxonomySlug = intent.getStringExtra(TAXONOMY_SLUG)
+        val isHierarchical = intent.getBooleanExtra(IS_HIERARCHICAL, false)
         if (taxonomySlug == null) {
             appLogWrapper.e(AppLog.T.API, "Error: No taxonomy selected")
             finish()
             return
         }
 
-        viewModel.initialize(taxonomySlug)
+        viewModel.initialize(taxonomySlug, isHierarchical)
 
         composeView = ComposeView(this)
         setContentView(
@@ -278,12 +279,14 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        const val TAXONOMY_SLUG = "taxonomy_slug"
+        private const val TAXONOMY_SLUG = "taxonomy_slug"
+        private const val IS_HIERARCHICAL = "is_hierarchical"
         private const val KEY_TERM_ID = "termId"
 
-        fun getIntent(context: Context, taxonomySlug: String): Intent =
+        fun getIntent(context: Context, taxonomySlug: String, isHierarchical: Boolean): Intent =
             Intent(context, TermsDataViewActivity::class.java).apply {
                 putExtra(TAXONOMY_SLUG, taxonomySlug)
+                putExtra(IS_HIERARCHICAL, isHierarchical)
             }
     }
 }
