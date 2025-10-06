@@ -64,7 +64,7 @@ for module in "${MODULES[@]}"; do
         continue
     fi
 
-    results_file="${merge_dir}/../merged-test-results.xml"
+    results_file="${merge_dir}/merged-test-results.xml"
     # Merge JUnit results into a single file (for performance reasons with reporting)
     merge_junit_reports -d "$merge_dir" -o "$results_file"
 
