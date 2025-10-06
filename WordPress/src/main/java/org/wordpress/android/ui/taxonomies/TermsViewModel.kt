@@ -56,6 +56,7 @@ class TermsViewModel @Inject constructor(
 ) {
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
+    private var currentTerms = listOf<AnyTermWithEditContext>()
 
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
@@ -91,6 +92,7 @@ class TermsViewModel @Inject constructor(
         }
 
         val allTerms = getTermsList(selectedSite)
+        currentTerms = allTerms
 
         // Filter by search query
         val filteredTerms = if (searchQuery.isBlank()) {
@@ -134,6 +136,8 @@ class TermsViewModel @Inject constructor(
         }
         return item?.data as? AnyTermWithEditContext
     }
+
+    fun getAllTerms(): List<AnyTermWithEditContext> = currentTerms
 
     private fun convertToDataViewItem(
         allTerms: List<AnyTermWithEditContext>,

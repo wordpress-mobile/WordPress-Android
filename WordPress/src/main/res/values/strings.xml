@@ -5094,8 +5094,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="term_description_label">Description:</string>
     <string name="term_count_label">Count:</string>
     <string name="term_count">Count: %1$d</string>
-    <string name="term_parent_label">Parent ID:</string>
-    <string name="term_no_description">No description</string>
+    <string name="term_parent_label">Parent:</string>
     <string name="term_sort_by_name">Name</string>
     <string name="term_sort_by_count">Count</string>
     <string name="term_sort_by_id">ID</string>

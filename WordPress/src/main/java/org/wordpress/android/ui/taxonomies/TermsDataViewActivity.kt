@@ -137,6 +137,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                                 viewModel.getTerm(termId)?.let { term ->
                                     titleState.value = term.name
                                     ShowTermDetailScreen(
+                                        allTerms = viewModel.getAllTerms(),
                                         term = term,
                                         modifier = Modifier.padding(contentPadding)
                                     )
@@ -193,6 +194,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
     @Composable
     private fun ShowTermDetailScreen(
+        allTerms: List<AnyTermWithEditContext>,
         term: AnyTermWithEditContext,
         modifier: Modifier
     ) {
@@ -203,12 +205,12 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TermDetailsCard(term)
+            TermDetailsCard(allTerms, term)
         }
     }
 
     @Composable
-    private fun TermDetailsCard(term: AnyTermWithEditContext) {
+    private fun TermDetailsCard(allTerms: List<AnyTermWithEditContext>, term: AnyTermWithEditContext) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -234,7 +236,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
                 DetailRow(
                     label = stringResource(R.string.term_description_label),
-                    value = term.description.ifEmpty { stringResource(R.string.term_no_description) }
+                    value = term.description
                 )
 
                 DetailRow(
@@ -243,10 +245,13 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 )
 
                 term.parent?.let { parentId ->
-                    DetailRow(
-                        label = stringResource(R.string.term_parent_label),
-                        value = parentId.toString()
-                    )
+                    val parentName = allTerms.firstOrNull {  it.id == parentId }?.name
+                    parentName?.let {
+                        DetailRow(
+                            label = stringResource(R.string.term_parent_label),
+                            value = parentName
+                        )
+                    }
                 }
             }
         }
