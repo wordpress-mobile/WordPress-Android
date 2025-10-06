@@ -32,6 +32,8 @@ import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val HIERARCHICAL_INDENTATION = "    "
+
 @HiltViewModel
 class TermsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -55,8 +57,9 @@ class TermsViewModel @Inject constructor(
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
 
-    fun initialize(slug: String, isHierarchical: Boolean) {
-        taxonomySlug = slug
+    fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
+        this.taxonomySlug = taxonomySlug
+        this.isHierarchical = isHierarchical
         initialize()
     }
 
@@ -120,7 +123,8 @@ class TermsViewModel @Inject constructor(
 
         // Convert to DataViewItems and return
         sortedTerms.map { term ->
-            convertToDataViewItem(term)
+            // Do not use hierarchical indentation when the user is searching terms
+            convertToDataViewItem(allTerms, term, isHierarchical && searchQuery.isEmpty())
         }
     }
 
@@ -131,26 +135,45 @@ class TermsViewModel @Inject constructor(
         return item?.data as? AnyTermWithEditContext
     }
 
-    private fun convertToDataViewItem(term: AnyTermWithEditContext): DataViewItem {
-        val parent = term.parent ?: 0
-        val indentation = if (isHierarchical && parent > 0) {
-            " - "
+    private fun convertToDataViewItem(
+        allTerms: List<AnyTermWithEditContext>,
+        term: AnyTermWithEditContext,
+        useHierarchicalIndentation: Boolean
+    ): DataViewItem {
+        val indentation = if (useHierarchicalIndentation) {
+            getHierarchicalIndentation(allTerms, term)
         } else {
             ""
         }
         return DataViewItem(
             id = term.id,
             image = null,
-            title = "${indentation}${term.name}",
+            title = context.resources.getString(R.string.hierarchical_indentation_term, indentation, term.name),
             fields = listOf(
                 DataViewItemField(
-                    value = context.resources.getString(R.string.term_count, term.count),
+                    value = context.resources.getString(
+                        R.string.hierarchical_indentation_term,
+                        indentation,
+                        context.resources.getString(R.string.term_count, term.count))
+                    ,
                     valueType = DataViewFieldType.TEXT,
                 )
             ),
             skipEndPositioning = true,
             data = term
         )
+    }
+
+    private fun getHierarchicalIndentation(
+        allTerms: List<AnyTermWithEditContext>,
+        term: AnyTermWithEditContext?
+    ): String {
+        val parentId = term?.parent ?: 0
+        return if (term == null || parentId <= 0) {
+            ""
+        } else {
+            HIERARCHICAL_INDENTATION + getHierarchicalIndentation(allTerms, allTerms.firstOrNull { it.id == parentId})
+        }
     }
 
     private suspend fun getTermsList(site: SiteModel): List<AnyTermWithEditContext> {
