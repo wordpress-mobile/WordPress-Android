@@ -47,7 +47,6 @@ import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.AppLog
 import uniffi.wp_api.AnyTermWithEditContext
-import uniffi.wp_api.TermEndpointType
 import javax.inject.Inject
 
 @AndroidEntryPoint
