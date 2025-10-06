@@ -101,57 +101,16 @@ steps:
   #################
   # Unit Tests
   #################
-  - group: "🔬 Unit Tests"
-    steps:
-      - label: "🔬 Unit Test WordPress"
-        command: ".buildkite/commands/run-unit-tests.sh wordpress"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
-        artifact_paths:
-          - "**/build/test-results/merged-test-results.xml"
-
-      - label: "🔬 Unit Test Processors"
-        command: ".buildkite/commands/run-unit-tests.sh processors"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
-        artifact_paths:
-          - "**/build/test-results/merged-test-results.xml"
-
-      - label: "🔬 Unit Test Image Editor"
-        command: ".buildkite/commands/run-unit-tests.sh image-editor"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
-        artifact_paths:
-          - "**/build/test-results/merged-test-results.xml"
-
-      - label: "🔬 Unit Test FluxC"
-        command: ".buildkite/commands/run-unit-tests.sh fluxc"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR:
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_FLUXC"
-        artifact_paths:
-          - "**/build/test-results/merged-test-results.xml"
-
-      - label: "🔬 Unit Test Login"
-        command: ".buildkite/commands/run-unit-tests.sh login"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR:
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_LOGIN"
-        artifact_paths:
-          - "**/build/test-results/merged-test-results.xml"
+  - label: "🔬 Unit Tests"
+    command: ".buildkite/commands/run-unit-tests.sh"
+    plugins:
+      - $CI_TOOLKIT
+      - $TEST_COLLECTOR :
+          <<: *test_collector_common_params
+          api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS"
+    artifact_paths:
+      - "**/build/test-results/merged-test-results.xml"
+      - "**/build/reports/kover/*.xml"
 
   #################
   # Instrumented (aka UI) Tests
