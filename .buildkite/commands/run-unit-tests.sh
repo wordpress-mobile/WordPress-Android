@@ -10,14 +10,12 @@ fi
 echo "+++ 🧪 Testing"
 set +e
 ./gradlew \
-  testJetpackJalapenoDebugUnitTest \
-  testWordpressJalapenoDebugUnitTest \
+  testWordpressWasabiDebugUnitTest \
   :libs:processors:test \
   :libs:image-editor:testDebugUnitTest \
   :libs:fluxc:testDebugUnitTest \
   :libs:login:testDebugUnitTest \
-  koverXmlReportJetpackJalapenoDebug \
-  koverXmlReportWordpressJalapenoDebug \
+  koverXmlReportWordpressWasabiDebug \
   :libs:processors:koverXmlReportJvm \
   :libs:image-editor:koverXmlReportDebug \
   :libs:fluxc:koverXmlReportDebug \
@@ -43,8 +41,7 @@ temp_test_results_dir=$(mktemp -d)
 
 # Define test result directories for each module
 declare -A TEST_RESULT_DIRS=(
-  ["WordPress:jetpack"]="WordPress/build/test-results/testJetpackJalapenoDebugUnitTest"
-  ["WordPress:wordpress"]="WordPress/build/test-results/testWordpressJalapenoDebugUnitTest"
+  ["WordPress:wordpress"]="WordPress/build/test-results/testWordpressWasabiDebugUnitTest"
   ["processors"]="libs/processors/build/test-results/test"
   ["image-editor"]="libs/image-editor/build/test-results/testDebugUnitTest"
   ["fluxc"]="libs/fluxc/build/test-results/testDebugUnitTest"
