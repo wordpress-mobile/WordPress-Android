@@ -52,6 +52,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var featuredImageChangeListener: FeaturedImageChangeListener? = null
     private var openMediaLibraryListener: OpenMediaLibraryListener? = null
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
+    private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
 
     private var editorStarted = false
     private var isEditorDidMount = false
@@ -126,6 +127,17 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                 mEditorFragmentListener.onLogJsException(jsException, callback)
             }
         }
+
+        // Set up modal dialog state listener
+        modalDialogStateListener = object : GutenbergView.ModalDialogStateListener {
+            override fun onModalDialogOpened(dialogType: String) {
+                mEditorFragmentListener.onModalDialogOpened(dialogType)
+            }
+
+            override fun onModalDialogClosed(dialogType: String) {
+                mEditorFragmentListener.onModalDialogClosed(dialogType)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -163,6 +175,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             featuredImageChangeListener?.let(gutenbergView::setFeaturedImageChangeListener)
             openMediaLibraryListener?.let(gutenbergView::setOpenMediaLibraryListener)
             onLogJsExceptionListener?.let(gutenbergView::setLogJsExceptionListener)
+            modalDialogStateListener?.let(gutenbergView::setModalDialogStateListener)
 
             // Set up autocomplete listener for user mentions and cross-post suggestions
             gutenbergView.setAutocompleterTriggeredListener(object : GutenbergView.AutocompleterTriggeredListener {
@@ -470,6 +483,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onRedoPressed() {
         gutenbergView?.redo()
+    }
+
+    fun dismissTopModal() {
+        gutenbergView?.dismissTopModal()
     }
 
     companion object {

@@ -149,5 +149,7 @@ public abstract class GutenbergKitEditorFragmentBase extends Fragment {
         void onLogJsException(JsException jsException, JsExceptionCallback onSendJsException);
         void onFeaturedImageIdChanged(long mediaID, boolean isGutenbergEditor);
         void onOpenMediaLibraryRequested(org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryConfig config);
+        void onModalDialogOpened(String dialogType);
+        void onModalDialogClosed(String dialogType);
     }
 }
