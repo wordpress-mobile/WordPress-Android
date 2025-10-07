@@ -32,10 +32,6 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `returns response from stats utils`() {
-        whenever(statsSqlUtils.select(site, ALL_TIME_INSIGHTS, INSIGHTS, AllTimeResponse::class.java)).thenReturn(
-                ALL_TIME_RESPONSE
-        )
-
         val result = insightsSqlUtils.select(site)
 
         assertEquals(result, ALL_TIME_RESPONSE)
