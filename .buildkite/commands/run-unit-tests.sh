@@ -32,7 +32,13 @@ fi
 
 if [[ "$TESTS_EXIT_STATUS" -eq 0 ]]; then
   echo "--- ⚒️ Uploading code coverage"
-  .buildkite/commands/upload-code-coverage.sh
+  # Find all kover XML reports and upload them
+  coverage_files=$(find . -path "*/build/reports/kover/*.xml" -type f)
+  if [ -n "$coverage_files" ]; then
+    .buildkite/commands/upload-code-coverage.sh $coverage_files
+  else
+    echo "No coverage files found matching pattern */build/reports/kover/*.xml"
+  fi
 fi
 
 echo "--- 🚦 Collecting Test Results"
