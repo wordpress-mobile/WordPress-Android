@@ -2,6 +2,7 @@ package org.wordpress.android.ui.taxonomies
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,7 +33,7 @@ import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val HIERARCHICAL_INDENTATION = "    "
+private const val INDENTATION_IN_DP = 10
 
 @HiltViewModel
 class TermsViewModel @Inject constructor(
@@ -151,37 +152,46 @@ class TermsViewModel @Inject constructor(
         val indentation = if (useHierarchicalIndentation) {
             getHierarchicalIndentation(allTerms, term)
         } else {
-            ""
+            0
         }
         return DataViewItem(
             id = term.id,
             image = null,
-            title = context.resources.getString(R.string.hierarchical_indentation_term, indentation, term.name),
+            title = term.name,
             fields = listOf(
                 DataViewItemField(
-                    value = context.resources.getString(
-                        R.string.hierarchical_indentation_term,
-                        indentation,
-                        context.resources.getString(R.string.term_count, term.count))
-                    ,
+                    value = context.resources.getString(R.string.term_count, term.count),
                     valueType = DataViewFieldType.TEXT,
                 )
             ),
             skipEndPositioning = true,
-            data = term
+            data = term,
+            indentation = (indentation * INDENTATION_IN_DP).dp
         )
     }
 
+
+    /**
+     * Returns an integer representation of the hierarchical indentation for the given term.
+     */
     private fun getHierarchicalIndentation(
         allTerms: List<AnyTermWithEditContext>,
         term: AnyTermWithEditContext?
-    ): String {
-        val parentId = term?.parent ?: 0
-        return if (term == null || parentId <= 0) {
-            ""
-        } else {
-            HIERARCHICAL_INDENTATION + getHierarchicalIndentation(allTerms, allTerms.firstOrNull { it.id == parentId})
+    ): Int {
+        if (term == null) return 0
+
+        val termsById = allTerms.associateBy { it.id }
+        var indentation = 0
+        var currentParentId = term.parent
+
+        while (currentParentId != null && currentParentId > 0) {
+            val parent = termsById[currentParentId]
+            if (parent == null) break
+            indentation++
+            currentParentId = parent.parent
         }
+
+        return indentation
     }
 
     private suspend fun getTermsList(

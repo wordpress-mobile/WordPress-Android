@@ -5096,6 +5096,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="term_parent_label">Parent:</string>
     <string name="term_sort_by_name">Name</string>
     <string name="term_sort_by_count">Count</string>
-    <!-- Used to show indented terms: "Term", "[  ]Term", "[    ]Term" ...-->
-    <string name="hierarchical_indentation_term" translatable="false">%1$s %2$s</string>
 </resources>

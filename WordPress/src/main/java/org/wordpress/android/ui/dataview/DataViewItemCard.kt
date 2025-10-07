@@ -49,7 +49,7 @@ fun DataViewItemCard(
 ) {
     Row(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(start = 16.dp + item.indentation, end = 16.dp, top = 16.dp , bottom = 16.dp)
             .fillMaxWidth(),
     ) {
         item.image?.let { image ->
