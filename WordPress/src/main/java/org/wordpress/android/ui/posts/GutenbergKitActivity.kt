@@ -2990,6 +2990,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         isModalDialogOpen = true
         closeButton?.let {
             it.isEnabled = false
+            it.alpha = DISABLED_ALPHA
         }
         setOverflowMenuEnabled(false)
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
