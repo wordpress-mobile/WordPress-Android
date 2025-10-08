@@ -113,6 +113,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                         ToastUtils.Duration.LONG
                     )
                 }
+                viewModel.consumeUIEvent()
             }
         }
     }

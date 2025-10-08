@@ -103,7 +103,7 @@ class TermsViewModel @Inject constructor(
     val isDeleting: StateFlow<Boolean> = _isDeleting.asStateFlow()
 
     private val _uiEvent = MutableStateFlow<UiEvent?>(null)
-    val uiEvent = _uiEvent
+    val uiEvent = _uiEvent.asStateFlow()
 
     fun setNavController(navController: NavHostController) {
         this.navController = navController
@@ -289,7 +289,7 @@ class TermsViewModel @Inject constructor(
                             name = currentTerm.name,
                             description = currentTerm.description,
                             slug = currentTerm.slug,
-                            parent = if (currentTerm.parentId == 0L) null else currentTerm.parentId
+                            parent = if (isHierarchical) currentTerm.parentId else null
                         )
                     )
                 }
@@ -470,6 +470,10 @@ class TermsViewModel @Inject constructor(
         DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
         DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
         else -> TermEndpointType.Custom(taxonomySlug)
+    }
+
+    fun consumeUIEvent() {
+        _uiEvent.value = null
     }
 
     companion object {
