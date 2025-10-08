@@ -216,10 +216,11 @@ class TermsViewModel @Inject constructor(
         return result
     }
 
-    fun saveTerm(termId: Long, termName: String, termDescription: String, termSlug: String, termParentId: Long?) {
+    fun saveTerm() {
         viewModelScope.launch {
             val selectedSite = selectedSiteRepository.getSelectedSite()
-            if (selectedSite == null) {
+            val currentTerm = _termDetailState.value
+            if (selectedSite == null || currentTerm == null) {
                 // TODO: error
                 return@launch
             }
@@ -229,19 +230,20 @@ class TermsViewModel @Inject constructor(
             val termsResponse = wpApiClient.request { requestBuilder ->
                 requestBuilder.terms().update(
                     termEndpointType = getTermEndpointType(),
-                    termId = termId,
+                    termId = currentTerm.termId,
                     params = TermUpdateParams(
-                        name = termName,
-                        description = termDescription,
-                        slug = termSlug,
-                        parent = termParentId
+                        name = currentTerm.name,
+                        description = currentTerm.description,
+                        slug = currentTerm.slug,
+                        parent = currentTerm.parentId
                     )
                 )
             }
 
             when (termsResponse) {
                 is WpRequestResult.Success -> {
-                    // TODO: navigate to list again
+                    // Go back to the list and load the data again
+                    initialize()
                 }
 
                 else -> {
