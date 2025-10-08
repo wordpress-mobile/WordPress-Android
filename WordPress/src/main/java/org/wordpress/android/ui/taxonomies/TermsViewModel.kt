@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,6 +34,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermUpdateParams
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamTermsOrderBy
@@ -111,6 +113,24 @@ class TermsViewModel @Inject constructor(
             description = term.description,
             count = term.count,
             parentId = term.parent,
+            availableParents = availableParents,
+        )
+    }
+
+    fun navigateToCreateTerm() {
+        val availableParents = if (isHierarchical) {
+            currentTerms.map { ParentOption(id = it.id, name = it.name) }
+        } else {
+            null
+        }
+
+        _termDetailState.value = TermDetailUiState(
+            termId = 0L, // 0 indicates a new term
+            name = "",
+            slug = "",
+            description = "",
+            count = 0L,
+            parentId = 0L,
             availableParents = availableParents,
         )
     }
@@ -232,17 +252,33 @@ class TermsViewModel @Inject constructor(
 
             val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
 
-            val termsResponse = wpApiClient.request { requestBuilder ->
-                requestBuilder.terms().update(
-                    termEndpointType = getTermEndpointType(),
-                    termId = currentTerm.termId,
-                    params = TermUpdateParams(
-                        name = currentTerm.name,
-                        description = currentTerm.description,
-                        slug = currentTerm.slug,
-                        parent = currentTerm.parentId
+            val termsResponse = if (currentTerm.termId == 0L) {
+                // Create new term
+                wpApiClient.request { requestBuilder ->
+                    requestBuilder.terms().create(
+                        termEndpointType = getTermEndpointType(),
+                        params = TermCreateParams(
+                            name = currentTerm.name,
+                            description = currentTerm.description,
+                            slug = currentTerm.slug,
+                            parent = if (currentTerm.parentId == 0L) null else currentTerm.parentId
+                        )
                     )
-                )
+                }
+            } else {
+                // Update existing term
+                wpApiClient.request { requestBuilder ->
+                    requestBuilder.terms().update(
+                        termEndpointType = getTermEndpointType(),
+                        termId = currentTerm.termId,
+                        params = TermUpdateParams(
+                            name = currentTerm.name,
+                            description = currentTerm.description,
+                            slug = currentTerm.slug,
+                            parent = currentTerm.parentId
+                        )
+                    )
+                }
             }
 
             when (termsResponse) {

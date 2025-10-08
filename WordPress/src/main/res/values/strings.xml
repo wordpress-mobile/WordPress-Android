@@ -5097,4 +5097,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="term_parent_none">None</string>
     <string name="term_sort_by_name">Name</string>
     <string name="term_sort_by_count">Count</string>
+    <string name="add_term">Add term</string>
 </resources>

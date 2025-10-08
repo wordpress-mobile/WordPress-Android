@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -54,6 +56,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.subscribers.SubscribersActivity.SubscriberScreen
 import org.wordpress.android.util.AppLog
 import uniffi.wp_api.AnyTermWithEditContext
 import javax.inject.Inject
@@ -98,7 +101,8 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
     private enum class TermScreen {
         List,
-        Detail
+        Detail,
+        Create
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -109,7 +113,8 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         val title = termDetailState?.name ?: taxonomyName
 
         LaunchedEffect(termDetailState) {
-            if (termDetailState == null && navController.currentDestination?.route == TermScreen.Detail.name) {
+            val currentRoute = navController.currentDestination?.route
+            if (termDetailState == null && (currentRoute == TermScreen.Detail.name || currentRoute == TermScreen.Create.name)) {
                 navController.navigateUp()
             }
         }
@@ -130,6 +135,21 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                             }) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                             }
+                        },
+                        actions = {
+                            Log.d("TAG_TAG", "NavigableContent: ${navController.currentDestination}")
+                            if (navController.currentDestination == null ||
+                                navController.currentDestination?.route == TermScreen.List.name) {
+                                IconButton(onClick = {
+                                    viewModel.navigateToCreateTerm()
+                                    navController.navigate(TermScreen.Create.name)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = stringResource(R.string.add_term)
+                                    )
+                                }
+                            }
                         }
                     )
                 },
@@ -146,6 +166,15 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = TermScreen.Detail.name) {
+                        termDetailState?.let { state ->
+                            ShowTermDetailScreen(
+                                state = state,
+                                modifier = Modifier.padding(contentPadding)
+                            )
+                        }
+                    }
+
+                    composable(route = TermScreen.Create.name) {
                         termDetailState?.let { state ->
                             ShowTermDetailScreen(
                                 state = state,
