@@ -28,6 +28,7 @@ import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.subscribers.SubscribersViewModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -64,6 +65,10 @@ data class ParentOption(
     val name: String
 )
 
+sealed class UiEvent {
+    data class ShowError(val messageRes: Int) : UiEvent()
+}
+
 @HiltViewModel
 class TermsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -97,6 +102,9 @@ class TermsViewModel @Inject constructor(
 
     private val _isDeleting = MutableStateFlow(false)
     val isDeleting: StateFlow<Boolean> = _isDeleting.asStateFlow()
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent
 
     fun setNavController(navController: NavHostController) {
         this.navController = navController
@@ -265,7 +273,7 @@ class TermsViewModel @Inject constructor(
             val selectedSite = selectedSiteRepository.getSelectedSite()
             val currentTerm = _termDetailState.value
             if (selectedSite == null || currentTerm == null) {
-                // TODO: error
+                _uiEvent.value = UiEvent.ShowError(R.string.error_saving_term)
                 return@launch
             }
 
@@ -313,7 +321,7 @@ class TermsViewModel @Inject constructor(
 
                 else -> {
                     _isSaving.value = false
-                    // TODO error
+                    _uiEvent.value = UiEvent.ShowError(R.string.error_saving_term)
                     appLogWrapper.e(AppLog.T.API, "Error saving term: $taxonomySlug")
                 }
             }
@@ -324,7 +332,7 @@ class TermsViewModel @Inject constructor(
         viewModelScope.launch {
             val selectedSite = selectedSiteRepository.getSelectedSite()
             if (selectedSite == null) {
-                // TODO: error
+                _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
                 return@launch
             }
 
@@ -348,14 +356,14 @@ class TermsViewModel @Inject constructor(
                         // Reload the list
                         initialize()
                     } else {
-                        // TODO: error - term not deleted
+                        _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
                         appLogWrapper.e(AppLog.T.API, "Term was not deleted: $taxonomySlug")
                     }
                 }
 
                 else -> {
                     _isDeleting.value = false
-                    // TODO error
+                    _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
                     appLogWrapper.e(AppLog.T.API, "Error deleting term: $taxonomySlug")
                 }
             }

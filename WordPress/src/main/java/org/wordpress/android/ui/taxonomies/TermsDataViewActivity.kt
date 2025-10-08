@@ -50,18 +50,22 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ToastUtils
 import uniffi.wp_api.AnyTermWithEditContext
 import javax.inject.Inject
 
@@ -101,6 +105,18 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 }
             }
         )
+
+        lifecycleScope.launch {
+            viewModel.uiEvent.filterNotNull().collect { event ->
+                when (event) {
+                    is UiEvent.ShowError -> ToastUtils.showToast(
+                        this@TermsDataViewActivity,
+                        event.messageRes,
+                        ToastUtils.Duration.LONG
+                    )
+                }
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

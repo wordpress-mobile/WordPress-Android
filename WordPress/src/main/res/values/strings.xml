@@ -5100,4 +5100,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="term_delete_confirmation_title">Delete term</string>
     <string name="term_delete_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="add_term">Add term</string>
+    <string name="error_saving_term">There was an error saving the term</string>
+    <string name="error_deleting_term">There was an error deleting the term</string>
 </resources>
