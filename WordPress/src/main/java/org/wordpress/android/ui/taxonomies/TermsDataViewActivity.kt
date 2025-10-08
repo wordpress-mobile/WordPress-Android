@@ -89,8 +89,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
             return
         }
 
-        viewModel.initialize(taxonomySlug, isHierarchical)
-
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -104,6 +102,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
             }
         )
 
+        viewModel.initialize(taxonomySlug, isHierarchical)
         lifecycleScope.launch {
             viewModel.uiEvent.filterNotNull().collect { event ->
                 when (event) {
@@ -128,7 +127,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         }
 
         val termDetailState by viewModel.termDetailState.collectAsState()
-        val title = termDetailState?.name ?: taxonomyName
 
         // Observe navigation changes to trigger recomposition
         val currentBackStackEntry by navController.currentBackStackEntryFlow
@@ -145,7 +143,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(title) },
+                        title = { Text(taxonomyName) },
                         navigationIcon = {
                             IconButton(onClick = {
                                 if (navController.previousBackStackEntry != null) {
