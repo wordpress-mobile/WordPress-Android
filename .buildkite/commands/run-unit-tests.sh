@@ -7,41 +7,22 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
-echo "--- 🧪 Testing"
+echo "+++ 🧪 Testing"
 set +e
-if [ "$1" == "wordpress" ]; then
-    test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
-    test_results_dir="WordPress/build/test-results"
-    test_log_dir="${test_results_dir}/*/*.xml"
-    code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
-elif [ "$1" == "processors" ]; then
-    test_suite=":libs:processors:test :libs:processors:koverXmlReport"
-    test_results_dir="libs/processors/build/test-results"
-    test_log_dir="${test_results_dir}/test/*.xml"
-    code_coverage_report="libs/processors/build/reports/kover/report.xml"
-elif [ "$1" == "image-editor" ]; then
-    test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
-    test_results_dir="libs/image-editor/build/test-results"
-    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
-    code_coverage_report="libs/image-editor/build/reports/kover/reportRelease.xml"
-elif [ "$1" == "fluxc" ]; then
-    test_suite=":libs:fluxc:testReleaseUnitTest :libs:fluxc:koverXmlReportRelease"
-    test_results_dir="libs/fluxc/build/test-results"
-    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
-    code_coverage_report="libs/fluxc/build/reports/kover/reportRelease.xml"
-elif [ "$1" == "login" ]; then
-    test_suite=":libs:login:testReleaseUnitTest :libs:login:koverXmlReportRelease"
-    test_results_dir="libs/login/build/test-results"
-    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
-    code_coverage_report="libs/login/build/reports/kover/reportRelease.xml"
-else
-    echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
-    exit 1
-fi
-
-./gradlew $test_suite
+./gradlew \
+  testWordpressWasabiDebugUnitTest \
+  :libs:processors:test \
+  :libs:image-editor:testDebugUnitTest \
+  :libs:fluxc:testDebugUnitTest \
+  :libs:login:testDebugUnitTest \
+  koverXmlReportWordpressWasabiDebug \
+  :libs:processors:koverXmlReportJvm \
+  :libs:image-editor:koverXmlReportDebug \
+  :libs:fluxc:koverXmlReportDebug \
+  :libs:login:koverXmlReportDebug
 TESTS_EXIT_STATUS=$?
 set -e
+echo ""
 
 if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
   # Keep the (otherwise collapsed) current "Testing" section open in Buildkite logs on error. See https://buildkite.com/docs/pipelines/managing-log-output#collapsing-output
@@ -49,23 +30,61 @@ if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
   echo "Unit Tests failed!"
 fi
 
-echo "--- 🚦 Report Tests Status"
-results_file="$test_results_dir/merged-test-results.xml"
-
-# Merge JUnit results into a single file (for performance reasons with reporting)
-merge_junit_reports -d ${test_log_dir%/*} -o $results_file
-
-if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
-  annotate_test_failures "$results_file" --slack "build-and-ship"
-else
-  annotate_test_failures "$results_file"
+if [[ "$TESTS_EXIT_STATUS" -eq 0 ]]; then
+  echo "--- ⚒️ Uploading code coverage"
+  # Find all kover XML reports and upload them
+  coverage_files=$(find . -path "*/build/reports/kover/*.xml" -type f)
+  if [ -n "$coverage_files" ]; then
+    .buildkite/commands/upload-code-coverage.sh $coverage_files
+  else
+    echo "No coverage files found matching pattern */build/reports/kover/*.xml"
+  fi
 fi
 
-echo "--- 🧪 Copying test logs for test collector"
-mkdir buildkite-test-analytics
-cp $results_file buildkite-test-analytics
+echo "--- 🚦 Collecting Test Results"
 
-echo "--- ⚒️ Uploading code coverage"
-.buildkite/commands/upload-code-coverage.sh $code_coverage_report
+# Define test result directories for each module
+declare -A TEST_RESULT_DIRS=(
+  ["WordPress:wordpress"]="WordPress/build/test-results/testWordpressWasabiDebugUnitTest"
+  ["processors"]="libs/processors/build/test-results/test"
+  ["image-editor"]="libs/image-editor/build/test-results/testDebugUnitTest"
+  ["fluxc"]="libs/fluxc/build/test-results/testDebugUnitTest"
+  ["login"]="libs/login/build/test-results/testDebugUnitTest"
+)
 
+# Create temporary directory for collecting all test results
+temp_test_results_dir=$(mktemp -d)
+
+# Copy all XML test results to temporary directory
+for module in "${!TEST_RESULT_DIRS[@]}"; do
+    test_results_dir="${TEST_RESULT_DIRS[$module]}"
+
+    if [ -d "$test_results_dir" ]; then
+        echo "Collecting test results from ${module}..."
+        cp "$test_results_dir"/*.xml "$temp_test_results_dir/" 2>/dev/null || true
+    else
+        echo "Test results directory $test_results_dir does not exist for module $module. Skipping..."
+    fi
+done
+
+echo "--- 🚦 Report Tests Status"
+results_file="WordPress/build/test-results/merged-test-results.xml"
+# Merge JUnit results into a single file (for performance reasons with reporting)
+# See https://github.com/Automattic/a8c-ci-toolkit-buildkite-plugin/pull/103
+merge_junit_reports -d "$temp_test_results_dir" -o "$results_file"
+
+# Clean up temporary directory
+rm -rf "$temp_test_results_dir"
+
+if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
+    annotate_test_failures "$results_file" --slack "build-and-ship"
+else
+    annotate_test_failures "$results_file"
+fi
+
+echo "--- 🧪 Copying Test Logs for Test Collector"
+mkdir -p buildkite-test-analytics
+cp "$results_file" "buildkite-test-analytics/merged-test-results.xml"
+
+echo "--- 📊 Tests Status"
 exit $TESTS_EXIT_STATUS
