@@ -131,8 +131,11 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         val termDetailState by viewModel.termDetailState.collectAsState()
         val title = termDetailState?.name ?: taxonomyName
 
+        // Observe navigation changes to trigger recomposition
+        val currentBackStackEntry by navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
+        val currentRoute = currentBackStackEntry?.destination?.route
+
         LaunchedEffect(termDetailState) {
-            val currentRoute = navController.currentDestination?.route
             if (termDetailState == null && (currentRoute == TermScreen.Detail.name || currentRoute == TermScreen.Create.name)) {
                 navController.navigateUp()
             }
@@ -155,8 +158,8 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                             }
                         },
                         actions = {
-                            if (navController.currentDestination == null ||
-                                navController.currentDestination?.route == TermScreen.List.name) {
+                            // Show the add button only on the List screen
+                            if (currentRoute == TermScreen.List.name) {
                                 IconButton(onClick = {
                                     viewModel.navigateToCreateTerm()
                                 }) {
