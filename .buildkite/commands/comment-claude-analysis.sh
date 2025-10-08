@@ -6,7 +6,7 @@ if buildkite-agent step get outcome --step unit-tests | grep -q "failed"; then
 
 ## 🤖 Test Failure Analysis
 
-Your tests failed. Claude has analyzed the failures - <a href=\"${BUILDKITE_BUILD_URL}/annotations#annotation-claude-analysis-${BUILDKITE_BUILD_ID}\" target=\"_blank\">check the annotation</a> for details.
+Your tests failed. Claude has analyzed the failures - <a href="${BUILDKITE_BUILD_URL}/annotations#annotation-claude-analysis-${BUILDKITE_BUILD_ID}" target="_blank">check the annotation</a> for details.
 EOF
 )"
 
