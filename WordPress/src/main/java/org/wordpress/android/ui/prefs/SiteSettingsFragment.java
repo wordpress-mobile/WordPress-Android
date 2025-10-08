@@ -84,6 +84,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.taxonomies.TaxonomiesNavMenuViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -114,6 +115,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import kotlin.Triple;
+import uniffi.wp_api.TaxonomyTypeDetailsWithEditContext;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
 
@@ -193,6 +195,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
+
+    private TaxonomiesNavMenuViewModel mTaxonomiesNavMenuViewModel;
 
     public SiteModel mSite;
 
@@ -1107,6 +1111,46 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         initBloggingSection();
         removeEmptyCategories();
+        initTaxonomies();
+    }
+
+    private void initTaxonomies() {
+        mTaxonomiesNavMenuViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
+                .get(TaxonomiesNavMenuViewModel.class);
+        mTaxonomiesNavMenuViewModel.getTaxonomies().observe(getAppCompatActivity(), this::showTaxonomies);
+        mTaxonomiesNavMenuViewModel.fetchTaxonomies(mSite);
+    }
+
+    private void showTaxonomies(List<TaxonomyTypeDetailsWithEditContext> taxonomies) {
+        if (taxonomies.isEmpty()) {
+            return;
+        }
+        PreferenceGroup siteScreen = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_screen));
+        if (siteScreen != null) {
+            // Create taxonomies preference group
+            final String taxonomiesPrefKey = getString(R.string.pref_key_taxonomies);
+            PreferenceGroup taxonomiesPreference = (PreferenceGroup) findPreference(taxonomiesPrefKey);
+            if (taxonomiesPreference != null) {
+                WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_taxonomies);
+            }
+            taxonomiesPreference = new PreferenceCategory(getActivity());
+            taxonomiesPreference.setTitle(getString(R.string.taxonomies_title));
+            taxonomiesPreference.setKey(taxonomiesPrefKey);
+            siteScreen.addPreference(taxonomiesPreference);
+
+            for (TaxonomyTypeDetailsWithEditContext taxonomy : taxonomies) {
+                Preference pref = new Preference(getActivity());
+                pref.setTitle(taxonomy.getName());
+                pref.setKey(taxonomy.getSlug());
+                pref.setOnPreferenceClickListener(preference -> {
+                    ActivityLauncher.showTermsList(getActivity(), taxonomy.getSlug(), taxonomy.getName(),
+                            taxonomy.getHierarchical());
+                    return false;
+                }
+                );
+                taxonomiesPreference.addPreference(pref);
+            }
+        }
     }
 
     private void updateHomepageSummary() {

@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewMo
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
+import org.wordpress.android.ui.prefs.taxonomies.TaxonomiesNavMenuViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -494,6 +495,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BloggingRemindersViewModel.class)
     abstract ViewModel bloggingRemindersViewModel(BloggingRemindersViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TaxonomiesNavMenuViewModel.class)
+    abstract ViewModel taxonomiesNavMenuViewModel(TaxonomiesNavMenuViewModel viewModel);
+
 
     @Binds
     @IntoMap

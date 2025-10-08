@@ -14,7 +14,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.gutenberg.EditorConfiguration
 import org.wordpress.gutenberg.GutenbergView
@@ -32,7 +31,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
     private val accountStore: AccountStore,
     private val userAgent: UserAgent,
     private val perAppLocaleManager: PerAppLocaleManager,
-    private val gutenbergKitFeature: GutenbergKitFeature,
+    private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker,
     private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
     private val experimentalFeatures: ExperimentalFeatures,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -58,7 +57,7 @@ class GutenbergKitWarmupHelper @Inject constructor(
                 AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup already in progress")
             }
             !shouldWarmupForSite(site) -> {
-                AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site doesn't support block editor, skipping warmup")
+                // Logging handled within shouldWarmupForSite()
             }
             else -> {
                 scope.launch(bgDispatcher) {
@@ -78,21 +77,21 @@ class GutenbergKitWarmupHelper @Inject constructor(
     }
 
     private fun shouldWarmupForSite(site: SiteModel): Boolean {
-        val isGutenbergEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR) ||
-                gutenbergKitFeature.isEnabled()
-        val isGutenbergDisabled = experimentalFeatures.isEnabled(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        val isGutenbergFeatureEnabled = isGutenbergEnabled && !isGutenbergDisabled
-
-        if (!isGutenbergFeatureEnabled) {
+        if (!gutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
             AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - GutenbergKit features disabled")
             return false
         }
 
         val shouldWarmup = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
-        AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Site ${site.siteId} warmup decision: $shouldWarmup " +
-                "(isBlockEditorDefault: ${SiteUtils.isBlockEditorDefaultForNewPost(site)}, " +
-                "webEditor: ${site.webEditor})")
+        if (shouldWarmup) {
+            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warming site ${site.siteId} " +
+                    "(isBlockEditorDefault: true, webEditor: ${site.webEditor})")
+        } else {
+            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Skipping warmup - site ${site.siteId} doesn't " +
+                    "default to the block editor for new posts " +
+                    "(isBlockEditorDefault: false, webEditor: ${site.webEditor})")
+        }
 
         return shouldWarmup
     }

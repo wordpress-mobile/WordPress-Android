@@ -27,6 +27,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
     @Nullable @Column private String mSlug;
     @Nullable @Column private String mDescription;
     @Column private long mParentRemoteId;
+    @Column private boolean mIsHierarchical;
     @Column private int mPostCount;
 
     @Deprecated
@@ -86,6 +87,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
             @Nullable String slug,
             @Nullable String description,
             long parentRemoteId,
+            boolean isHierarchical,
             int postCount) {
         this.mId = id;
         this.mLocalSiteId = localSiteId;
@@ -95,6 +97,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
         this.mSlug = slug;
         this.mDescription = description;
         this.mParentRemoteId = parentRemoteId;
+        this.mIsHierarchical = isHierarchical;
         this.mPostCount = postCount;
     }
 
@@ -166,6 +169,14 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setParentRemoteId(long parentRemoteId) {
         mParentRemoteId = parentRemoteId;
+    }
+
+    public boolean isHierarchical() {
+        return mIsHierarchical;
+    }
+
+    public void setIsHierarchical(boolean hierarchical) {
+        mIsHierarchical = hierarchical;
     }
 
     public int getPostCount() {

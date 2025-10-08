@@ -253,6 +253,10 @@
             android:label="@string/application_password_info_title"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
+            android:name=".ui.taxonomies.TermsDataViewActivity"
+            android:label="@string/taxonomies_title"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"

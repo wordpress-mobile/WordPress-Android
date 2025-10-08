@@ -590,6 +590,8 @@
     <string name="top_level_category_name">Top level</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
 
+    <string name="taxonomies_title">Taxonomies</string>
+
 
     <!-- action from share intents -->
     <string name="share_action_post">Add to new post</string>
@@ -1946,10 +1948,10 @@
     <string name="menu_publish_now" translatable="false">@string/publish_now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
-    <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
-    <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
+    <string name="menu_html_mode">Code Editor</string>
+    <string name="menu_html_mode_switched_notice">Switched to Code Editor</string>
+    <string name="menu_visual_mode">Visual Editor</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual Editor</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -5084,4 +5086,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>
+
+    <!-- Terms -->
+    <string name="term_name_label">Name:</string>
+    <string name="term_slug_label">Slug:</string>
+    <string name="term_description_label">Description:</string>
+    <string name="term_count_label">Count:</string>
+    <string name="term_count">Count: %1$d</string>
+    <string name="term_parent_label">Parent:</string>
+    <string name="term_sort_by_name">Name</string>
+    <string name="term_sort_by_count">Count</string>
 </resources>

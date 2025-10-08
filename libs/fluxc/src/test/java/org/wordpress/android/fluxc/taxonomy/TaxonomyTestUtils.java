@@ -21,6 +21,7 @@ class TaxonomyTestUtils {
                 "travel",
                 "Post about travelling",
                 0,
+                false,
                 0
         );
     }

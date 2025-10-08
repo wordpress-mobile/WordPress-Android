@@ -29,6 +29,7 @@ class EditCategoryUseCase @Inject constructor(
             existingCategory.slug,
             existingCategory.description,
             parentCategoryId,
+            existingCategory.isHierarchical,
             existingCategory.postCount
         )
         val payload = RemoteTermPayload(editedCategory, siteModel)

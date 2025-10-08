@@ -339,6 +339,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
             "animals",
             null,
             0,
+            true,
             0
         )
     }
@@ -353,6 +354,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
             "dog",
             null,
             1,
+            true,
             0
         )
     }
