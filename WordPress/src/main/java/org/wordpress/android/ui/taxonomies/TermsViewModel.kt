@@ -6,6 +6,9 @@ import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,6 +38,22 @@ import javax.inject.Named
 
 private const val INDENTATION_IN_DP = 10
 
+data class TermDetailUiState(
+    val termId: Long = 0L,
+    val name: String = "",
+    val slug: String = "",
+    val description: String = "",
+    val count: Long = 0L,
+    val parentId: Long = 0L,
+    val availableParents: List<ParentOption> = emptyList(),
+    val isLoading: Boolean = false
+)
+
+data class ParentOption(
+    val id: Long,
+    val name: String
+)
+
 @HiltViewModel
 class TermsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -59,10 +78,52 @@ class TermsViewModel @Inject constructor(
     private var isHierarchical: Boolean = false
     private var currentTerms = listOf<AnyTermWithEditContext>()
 
+    private val _termDetailState = MutableStateFlow<TermDetailUiState?>(null)
+    val termDetailState: StateFlow<TermDetailUiState?> = _termDetailState.asStateFlow()
+
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
         this.isHierarchical = isHierarchical
         initialize()
+    }
+
+    fun navigateToTermDetail(termId: Long) {
+        val term = currentTerms.firstOrNull { it.id == termId } ?: return
+
+        val availableParents = currentTerms
+            .filter { it.id != termId }
+            .map { ParentOption(id = it.id, name = it.name) }
+
+        _termDetailState.value = TermDetailUiState(
+            termId = term.id,
+            name = term.name,
+            slug = term.slug,
+            description = term.description,
+            count = term.count,
+            parentId = term.parent ?: 0L,
+            availableParents = availableParents,
+            isLoading = false
+        )
+    }
+
+    fun updateTermName(name: String) {
+        _termDetailState.value = _termDetailState.value?.copy(name = name)
+    }
+
+    fun updateTermSlug(slug: String) {
+        _termDetailState.value = _termDetailState.value?.copy(slug = slug)
+    }
+
+    fun updateTermDescription(description: String) {
+        _termDetailState.value = _termDetailState.value?.copy(description = description)
+    }
+
+    fun updateTermParent(parentId: Long) {
+        _termDetailState.value = _termDetailState.value?.copy(parentId = parentId)
+    }
+
+    fun clearTermDetail() {
+        _termDetailState.value = null
     }
 
     override fun getSupportedSorts(): List<DataViewDropdownItem> = if (isHierarchical) {
@@ -135,14 +196,17 @@ class TermsViewModel @Inject constructor(
         return result
     }
 
-    fun getTerm(termId: Long): AnyTermWithEditContext? {
-        val item = uiState.value.items.firstOrNull {
-            (it.data as? AnyTermWithEditContext)?.id == termId
-        }
-        return item?.data as? AnyTermWithEditContext
-    }
+    fun saveTerm() {
+        val state = _termDetailState.value ?: return
 
-    fun getAllTerms(): List<AnyTermWithEditContext> = currentTerms
+        // TODO: Implement term update logic here
+        // This should:
+        // 1. Validate the input fields (state.name, state.slug, state.description, state.parentId)
+        // 2. Make an API call to update the term on the server using state.termId
+        // 3. Update the local cache/state if successful
+        // 4. Show success/error message to the user
+        // 5. Navigate back or show confirmation
+    }
 
     private fun convertToDataViewItem(
         allTerms: List<AnyTermWithEditContext>,

@@ -15,19 +15,27 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -96,17 +104,24 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
     @Composable
     private fun NavigableContent(taxonomyName: String) {
         navController = rememberNavController()
-        val listTitle = taxonomyName
-        val titleState = remember { mutableStateOf(listTitle) }
+        val termDetailState by viewModel.termDetailState.collectAsState()
+        val title = termDetailState?.name ?: taxonomyName
+
+        LaunchedEffect(termDetailState) {
+            if (termDetailState == null && navController.currentDestination?.route == TermScreen.Detail.name) {
+                navController.navigateUp()
+            }
+        }
 
         AppThemeM3 {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(titleState.value) },
+                        title = { Text(title) },
                         navigationIcon = {
                             IconButton(onClick = {
                                 if (navController.previousBackStackEntry != null) {
+                                    viewModel.clearTermDetail()
                                     navController.navigateUp()
                                 } else {
                                     finish()
@@ -123,7 +138,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     startDestination = TermScreen.List.name
                 ) {
                     composable(route = TermScreen.List.name) {
-                        titleState.value = listTitle
                         ShowListScreen(
                             navController,
                             modifier = Modifier.padding(contentPadding)
@@ -131,18 +145,11 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     }
 
                     composable(route = TermScreen.Detail.name) {
-                        navController.previousBackStackEntry?.savedStateHandle?.let { handle ->
-                            val termId = handle.get<Long>(KEY_TERM_ID)
-                            if (termId != null) {
-                                viewModel.getTerm(termId)?.let { term ->
-                                    titleState.value = term.name
-                                    ShowTermDetailScreen(
-                                        allTerms = viewModel.getAllTerms(),
-                                        term = term,
-                                        modifier = Modifier.padding(contentPadding)
-                                    )
-                                }
-                            }
+                        termDetailState?.let { state ->
+                            ShowTermDetailScreen(
+                                state = state,
+                                modifier = Modifier.padding(contentPadding)
+                            )
                         }
                     }
                 }
@@ -171,10 +178,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
             onItemClick = { item ->
                 viewModel.onItemClick(item)
                 (item.data as? AnyTermWithEditContext)?.let { term ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = KEY_TERM_ID,
-                        value = term.id
-                    )
+                    viewModel.navigateToTermDetail(term.id)
                     navController.navigate(route = TermScreen.Detail.name)
                 }
             },
@@ -194,8 +198,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
     @Composable
     private fun ShowTermDetailScreen(
-        allTerms: List<AnyTermWithEditContext>,
-        term: AnyTermWithEditContext,
+        state: TermDetailUiState,
         modifier: Modifier
     ) {
         Column(
@@ -205,12 +208,19 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TermDetailsCard(allTerms, term)
+            TermDetailsCard(state = state)
+
+            Button(
+                onClick = { viewModel.saveTerm() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.save))
+            }
         }
     }
 
     @Composable
-    private fun TermDetailsCard(allTerms: List<AnyTermWithEditContext>, term: AnyTermWithEditContext) {
+    private fun TermDetailsCard(state: TermDetailUiState) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -380,7 +390,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         private const val TAXONOMY_SLUG = "taxonomy_slug"
         private const val IS_HIERARCHICAL = "is_hierarchical"
         private const val TAXONOMY_NAME = "taxonomy_name"
-        private const val KEY_TERM_ID = "termId"
 
         fun getIntent(context: Context, taxonomySlug: String, taxonomyName: String, isHierarchical: Boolean): Intent =
             Intent(context, TermsDataViewActivity::class.java).apply {
