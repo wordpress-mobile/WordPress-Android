@@ -124,16 +124,16 @@ public class ReaderPhotoView extends RelativeLayout {
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
-                        handleResponse();
+                        // Do not hide progress if this is the placeholder loader
+                        boolean isLoResImageUrlLoaded = model instanceof String && model.equals(mLoResImageUrl);
+                        if (!isLoResImageUrlLoaded) {
+                            hideProgress();
+                            hideError();
+                        }
+                        // attach the pinch/zoom handler
+                        setupOnTapListeners();
                     }
                 });
-    }
-
-    private void handleResponse() {
-        hideProgress();
-        hideError();
-        // attach the pinch/zoom handler
-        setupOnTapListeners();
     }
 
     private void setupOnTapListeners() {
