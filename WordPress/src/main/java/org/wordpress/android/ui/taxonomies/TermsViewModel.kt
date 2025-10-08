@@ -44,9 +44,8 @@ data class TermDetailUiState(
     val slug: String = "",
     val description: String = "",
     val count: Long = 0L,
-    val parentId: Long = 0L,
-    val availableParents: List<ParentOption> = emptyList(),
-    val isLoading: Boolean = false
+    val parentId: Long? = null,
+    val availableParents: List<ParentOption>? = null,
 )
 
 data class ParentOption(
@@ -90,9 +89,13 @@ class TermsViewModel @Inject constructor(
     fun navigateToTermDetail(termId: Long) {
         val term = currentTerms.firstOrNull { it.id == termId } ?: return
 
-        val availableParents = currentTerms
-            .filter { it.id != termId }
-            .map { ParentOption(id = it.id, name = it.name) }
+        val availableParents = if (isHierarchical) {
+            currentTerms
+                .filter { it.id != termId }
+                .map { ParentOption(id = it.id, name = it.name) }
+        } else {
+            null
+        }
 
         _termDetailState.value = TermDetailUiState(
             termId = term.id,
@@ -100,9 +103,8 @@ class TermsViewModel @Inject constructor(
             slug = term.slug,
             description = term.description,
             count = term.count,
-            parentId = term.parent ?: 0L,
+            parentId = term.parent,
             availableParents = availableParents,
-            isLoading = false
         )
     }
 

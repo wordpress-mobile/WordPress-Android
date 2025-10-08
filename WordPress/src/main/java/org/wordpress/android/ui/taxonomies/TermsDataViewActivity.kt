@@ -253,17 +253,14 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     singleLine = false
                 )
 
-                DetailRow(
-                    label = stringResource(R.string.term_count_label),
-                    value = state.count.toString()
-                )
-
-                ParentDropdownField(
-                    label = stringResource(R.string.term_parent_label),
-                    availableParents = state.availableParents,
-                    selectedParentId = state.parentId,
-                    onParentIdChange = { viewModel.updateTermParent(it) }
-                )
+                if (!state.availableParents.isNullOrEmpty() && state.parentId != null) {
+                    ParentDropdownField(
+                        label = stringResource(R.string.term_parent_label),
+                        availableParents = state.availableParents,
+                        selectedParentId = state.parentId,
+                        onParentIdChange = { viewModel.updateTermParent(it) }
+                    )
+                }
             }
         }
     }
