@@ -83,6 +83,9 @@ class TermsViewModel @Inject constructor(
     private val _termDetailState = MutableStateFlow<TermDetailUiState?>(null)
     val termDetailState: StateFlow<TermDetailUiState?> = _termDetailState.asStateFlow()
 
+    private val _isSaving = MutableStateFlow(false)
+    val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
+
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
         this.isHierarchical = isHierarchical
@@ -225,6 +228,8 @@ class TermsViewModel @Inject constructor(
                 return@launch
             }
 
+            _isSaving.value = true
+
             val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
 
             val termsResponse = wpApiClient.request { requestBuilder ->
@@ -242,11 +247,15 @@ class TermsViewModel @Inject constructor(
 
             when (termsResponse) {
                 is WpRequestResult.Success -> {
-                    // Go back to the list and load the data again
+                    _isSaving.value = false
+                    // Clear term detail to navigate back
+                    clearTermDetail()
+                    // Reload the list
                     initialize()
                 }
 
                 else -> {
+                    _isSaving.value = false
                     // TODO error
                     appLogWrapper.e(AppLog.T.API, "Error saving term: $taxonomySlug")
                 }

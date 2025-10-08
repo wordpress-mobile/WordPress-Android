@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -201,6 +202,8 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         state: TermDetailUiState,
         modifier: Modifier
     ) {
+        val isSaving by viewModel.isSaving.collectAsState()
+
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -212,9 +215,17 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
             Button(
                 onClick = { viewModel.saveTerm() },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isSaving
             ) {
-                Text(stringResource(R.string.save))
+                if (isSaving) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(end = 8.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text(stringResource(R.string.save))
+                }
             }
         }
     }
