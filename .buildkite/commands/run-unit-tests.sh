@@ -42,8 +42,6 @@ if [[ "$TESTS_EXIT_STATUS" -eq 0 ]]; then
 fi
 
 echo "--- 🚦 Collecting Test Results"
-# Create temporary directory for collecting all test results
-temp_test_results_dir=$(mktemp -d)
 
 # Define test result directories for each module
 declare -A TEST_RESULT_DIRS=(
@@ -53,6 +51,9 @@ declare -A TEST_RESULT_DIRS=(
   ["fluxc"]="libs/fluxc/build/test-results/testDebugUnitTest"
   ["login"]="libs/login/build/test-results/testDebugUnitTest"
 )
+
+# Create temporary directory for collecting all test results
+temp_test_results_dir=$(mktemp -d)
 
 # Copy all XML test results to temporary directory
 for module in "${!TEST_RESULT_DIRS[@]}"; do
