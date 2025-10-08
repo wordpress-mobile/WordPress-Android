@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,7 +55,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.DataViewScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.subscribers.SubscribersActivity.SubscriberScreen
 import org.wordpress.android.util.AppLog
 import uniffi.wp_api.AnyTermWithEditContext
 import javax.inject.Inject
@@ -99,16 +97,15 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         )
     }
 
-    private enum class TermScreen {
-        List,
-        Detail,
-        Create
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun NavigableContent(taxonomyName: String) {
         navController = rememberNavController()
+
+        LaunchedEffect(navController) {
+            viewModel.setNavController(navController)
+        }
+
         val termDetailState by viewModel.termDetailState.collectAsState()
         val title = termDetailState?.name ?: taxonomyName
 
@@ -127,8 +124,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                         navigationIcon = {
                             IconButton(onClick = {
                                 if (navController.previousBackStackEntry != null) {
-                                    viewModel.clearTermDetail()
-                                    navController.navigateUp()
+                                    viewModel.navigateBack()
                                 } else {
                                     finish()
                                 }
@@ -137,12 +133,10 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                             }
                         },
                         actions = {
-                            Log.d("TAG_TAG", "NavigableContent: ${navController.currentDestination}")
                             if (navController.currentDestination == null ||
                                 navController.currentDestination?.route == TermScreen.List.name) {
                                 IconButton(onClick = {
                                     viewModel.navigateToCreateTerm()
-                                    navController.navigate(TermScreen.Create.name)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Add,
@@ -160,7 +154,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 ) {
                     composable(route = TermScreen.List.name) {
                         ShowListScreen(
-                            navController,
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -189,7 +182,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
 
     @Composable
     private fun ShowListScreen(
-        navController: NavHostController,
         modifier: Modifier
     ) {
         DataViewScreen(
@@ -209,7 +201,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 viewModel.onItemClick(item)
                 (item.data as? AnyTermWithEditContext)?.let { term ->
                     viewModel.navigateToTermDetail(term.id)
-                    navController.navigate(route = TermScreen.Detail.name)
                 }
             },
             onFilterClick = { filter ->

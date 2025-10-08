@@ -43,6 +43,12 @@ import javax.inject.Named
 
 private const val INDENTATION_IN_DP = 10
 
+enum class TermScreen {
+    List,
+    Detail,
+    Create
+}
+
 data class TermDetailUiState(
     val termId: Long = 0L,
     val name: String = "",
@@ -81,12 +87,17 @@ class TermsViewModel @Inject constructor(
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
     private var currentTerms = listOf<AnyTermWithEditContext>()
+    private var navController: NavHostController? = null
 
     private val _termDetailState = MutableStateFlow<TermDetailUiState?>(null)
     val termDetailState: StateFlow<TermDetailUiState?> = _termDetailState.asStateFlow()
 
     private val _isSaving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
+
+    fun setNavController(navController: NavHostController) {
+        this.navController = navController
+    }
 
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
@@ -115,6 +126,7 @@ class TermsViewModel @Inject constructor(
             parentId = term.parent,
             availableParents = availableParents,
         )
+        navController?.navigate(TermScreen.Detail.name)
     }
 
     fun navigateToCreateTerm() {
@@ -133,6 +145,12 @@ class TermsViewModel @Inject constructor(
             parentId = 0L,
             availableParents = availableParents,
         )
+        navController?.navigate(TermScreen.Create.name)
+    }
+
+    fun navigateBack() {
+        clearTermDetail()
+        navController?.navigateUp()
     }
 
     private fun getDescendants(termId: Long): Set<Long> {
