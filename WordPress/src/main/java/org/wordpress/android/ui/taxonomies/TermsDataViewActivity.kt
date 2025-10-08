@@ -224,36 +224,129 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DetailRow(
+                EditableDetailField(
                     label = stringResource(R.string.term_name_label),
-                    value = term.name
+                    value = state.name,
+                    onValueChange = { viewModel.updateTermName(it) }
                 )
 
-                DetailRow(
+                EditableDetailField(
                     label = stringResource(R.string.term_slug_label),
-                    value = term.slug
+                    value = state.slug,
+                    onValueChange = { viewModel.updateTermSlug(it) }
                 )
 
-                DetailRow(
+                EditableDetailField(
                     label = stringResource(R.string.term_description_label),
-                    value = term.description
+                    value = state.description,
+                    onValueChange = { viewModel.updateTermDescription(it) },
+                    singleLine = false
                 )
 
                 DetailRow(
                     label = stringResource(R.string.term_count_label),
-                    value = term.count.toString()
+                    value = state.count.toString()
                 )
 
-                term.parent?.let { parentId ->
-                    val parentName = allTerms.firstOrNull {  it.id == parentId }?.name
-                    parentName?.let {
-                        DetailRow(
-                            label = stringResource(R.string.term_parent_label),
-                            value = parentName
+                ParentDropdownField(
+                    label = stringResource(R.string.term_parent_label),
+                    availableParents = state.availableParents,
+                    selectedParentId = state.parentId,
+                    onParentIdChange = { viewModel.updateTermParent(it) }
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun ParentDropdownField(
+        label: String,
+        availableParents: List<ParentOption>,
+        selectedParentId: Long,
+        onParentIdChange: (Long) -> Unit
+    ) {
+        var expanded by remember { mutableStateOf(false) }
+        val selectedParentName = availableParents.firstOrNull { it.id == selectedParentId }?.name
+            ?: stringResource(R.string.term_parent_none)
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it }
+            ) {
+                OutlinedTextField(
+                    value = selectedParentName,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(androidx.compose.material3.ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                    textStyle = MaterialTheme.typography.bodyMedium
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.term_parent_none)) },
+                        onClick = {
+                            onParentIdChange(0L)
+                            expanded = false
+                        }
+                    )
+
+                    availableParents.forEach { parent ->
+                        DropdownMenuItem(
+                            text = { Text(parent.name) },
+                            onClick = {
+                                onParentIdChange(parent.id)
+                                expanded = false
+                            }
                         )
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun EditableDetailField(
+        label: String,
+        value: String,
+        onValueChange: (String) -> Unit,
+        singleLine: Boolean = true
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = singleLine,
+                textStyle = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 
