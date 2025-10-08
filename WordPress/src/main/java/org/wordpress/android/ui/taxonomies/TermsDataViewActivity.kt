@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -132,11 +130,12 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         val title = termDetailState?.name ?: taxonomyName
 
         // Observe navigation changes to trigger recomposition
-        val currentBackStackEntry by navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
+        val currentBackStackEntry by navController.currentBackStackEntryFlow
+            .collectAsState(initial = navController.currentBackStackEntry)
         val currentRoute = currentBackStackEntry?.destination?.route
 
         LaunchedEffect(termDetailState) {
-            if (termDetailState == null && (currentRoute == TermScreen.Detail.name || currentRoute == TermScreen.Create.name)) {
+            if (termDetailState == null && currentRoute != TermScreen.List.name) {
                 navController.navigateUp()
             }
         }
@@ -466,32 +465,6 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = singleLine,
                 textStyle = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-
-    @Composable
-    private fun DetailRow(
-        label: String,
-        value: String
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.weight(0.3f)
-            )
-
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(0.7f)
             )
         }
     }
