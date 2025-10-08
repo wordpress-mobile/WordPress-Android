@@ -90,8 +90,9 @@ class TermsViewModel @Inject constructor(
         val term = currentTerms.firstOrNull { it.id == termId } ?: return
 
         val availableParents = if (isHierarchical) {
+            val descendants = getDescendants(termId)
             currentTerms
-                .filter { it.id != termId }
+                .filter { it.id != termId && it.id !in descendants }
                 .map { ParentOption(id = it.id, name = it.name) }
         } else {
             null
@@ -106,6 +107,20 @@ class TermsViewModel @Inject constructor(
             parentId = term.parent,
             availableParents = availableParents,
         )
+    }
+
+    private fun getDescendants(termId: Long): Set<Long> {
+        val descendants = mutableSetOf<Long>()
+
+        fun addDescendantsRecursively(parentId: Long) {
+            currentTerms.filter { it.parent == parentId }.forEach { child ->
+                descendants.add(child.id)
+                addDescendantsRecursively(child.id)
+            }
+        }
+
+        addDescendantsRecursively(termId)
+        return descendants
     }
 
     fun updateTermName(name: String) {
