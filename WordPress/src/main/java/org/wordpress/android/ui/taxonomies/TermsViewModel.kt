@@ -3,12 +3,14 @@ package org.wordpress.android.ui.taxonomies
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,6 +33,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
+import uniffi.wp_api.TermUpdateParams
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
@@ -213,16 +216,40 @@ class TermsViewModel @Inject constructor(
         return result
     }
 
-    fun saveTerm() {
-        val state = _termDetailState.value ?: return
+    fun saveTerm(termId: Long, termName: String, termDescription: String, termSlug: String, termParentId: Long?) {
+        viewModelScope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            if (selectedSite == null) {
+                // TODO: error
+                return@launch
+            }
 
-        // TODO: Implement term update logic here
-        // This should:
-        // 1. Validate the input fields (state.name, state.slug, state.description, state.parentId)
-        // 2. Make an API call to update the term on the server using state.termId
-        // 3. Update the local cache/state if successful
-        // 4. Show success/error message to the user
-        // 5. Navigate back or show confirmation
+            val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
+
+            val termsResponse = wpApiClient.request { requestBuilder ->
+                requestBuilder.terms().update(
+                    termEndpointType = getTermEndpointType(),
+                    termId = termId,
+                    params = TermUpdateParams(
+                        name = termName,
+                        description = termDescription,
+                        slug = termSlug,
+                        parent = termParentId
+                    )
+                )
+            }
+
+            when (termsResponse) {
+                is WpRequestResult.Success -> {
+                    // TODO: navigate to list again
+                }
+
+                else -> {
+                    // TODO error
+                    appLogWrapper.e(AppLog.T.API, "Error saving term: $taxonomySlug")
+                }
+            }
+        }
     }
 
     private fun convertToDataViewItem(
@@ -284,15 +311,9 @@ class TermsViewModel @Inject constructor(
     ): List<AnyTermWithEditContext> {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
 
-        val termEndpointType = when (taxonomySlug) {
-            DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
-            DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
-            else -> TermEndpointType.Custom(taxonomySlug)
-        }
-
         val termsResponse = wpApiClient.request { requestBuilder ->
             requestBuilder.terms().listWithEditContext(
-                termEndpointType = termEndpointType,
+                termEndpointType = getTermEndpointType(),
                 params = TermListParams(
                     page = page.toUInt(),
                     search = searchQuery,
@@ -326,6 +347,12 @@ class TermsViewModel @Inject constructor(
                 emptyList()
             }
         }
+    }
+
+    private fun getTermEndpointType(): TermEndpointType = when (taxonomySlug) {
+        DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
+        DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
+        else -> TermEndpointType.Custom(taxonomySlug)
     }
 
     companion object {
