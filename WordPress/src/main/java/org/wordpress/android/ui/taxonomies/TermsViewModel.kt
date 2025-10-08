@@ -95,6 +95,9 @@ class TermsViewModel @Inject constructor(
     private val _isSaving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
 
+    private val _isDeleting = MutableStateFlow(false)
+    val isDeleting: StateFlow<Boolean> = _isDeleting.asStateFlow()
+
     fun setNavController(navController: NavHostController) {
         this.navController = navController
     }
@@ -312,6 +315,48 @@ class TermsViewModel @Inject constructor(
                     _isSaving.value = false
                     // TODO error
                     appLogWrapper.e(AppLog.T.API, "Error saving term: $taxonomySlug")
+                }
+            }
+        }
+    }
+
+    fun deleteTerm(termId: Long) {
+        viewModelScope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            if (selectedSite == null) {
+                // TODO: error
+                return@launch
+            }
+
+            _isDeleting.value = true
+
+            val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
+
+            val deleteResponse = wpApiClient.request { requestBuilder ->
+                requestBuilder.terms().delete(
+                    termEndpointType = getTermEndpointType(),
+                    termId = termId
+                )
+            }
+
+            when (deleteResponse) {
+                is WpRequestResult.Success -> {
+                    _isDeleting.value = false
+                    if (deleteResponse.response.data.deleted) {
+                        // Clear term detail to navigate back
+                        clearTermDetail()
+                        // Reload the list
+                        initialize()
+                    } else {
+                        // TODO: error - term not deleted
+                        appLogWrapper.e(AppLog.T.API, "Term was not deleted: $taxonomySlug")
+                    }
+                }
+
+                else -> {
+                    _isDeleting.value = false
+                    // TODO error
+                    appLogWrapper.e(AppLog.T.API, "Error deleting term: $taxonomySlug")
                 }
             }
         }

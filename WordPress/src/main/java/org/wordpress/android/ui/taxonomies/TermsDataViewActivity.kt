@@ -8,15 +8,20 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -223,6 +229,7 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
         modifier: Modifier
     ) {
         val isSaving by viewModel.isSaving.collectAsState()
+        val isDeleting by viewModel.isDeleting.collectAsState()
 
         Column(
             modifier = modifier
@@ -236,16 +243,60 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
             Button(
                 onClick = { viewModel.saveTerm() },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !isSaving
+                enabled = !isSaving && !isDeleting
             ) {
                 if (isSaving) {
                     CircularProgressIndicator(
-                        modifier = Modifier.padding(end = 8.dp),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
                     Text(stringResource(R.string.save))
                 }
+            }
+
+            // Only show delete button if editing existing term (termId != 0)
+            if (state.termId != 0L) {
+                DeleteTermButton(
+                    isDeleting,
+                    onClick = {
+                        if (!isDeleting) {
+                            showDeleteTermConfirmation(state.termId, state.name)
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun DeleteTermButton(
+        isDeleting: Boolean,
+        onClick: () -> Unit,
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.error
+            ),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(R.string.delete),
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            if (isDeleting) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.error
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.delete),
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
     }
@@ -357,6 +408,18 @@ class TermsDataViewActivity : BaseAppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun showDeleteTermConfirmation(termId: Long, termName: String) {
+        MaterialAlertDialogBuilder(this).also { builder ->
+            builder.setTitle(R.string.term_delete_confirmation_title)
+            builder.setMessage(getString(R.string.term_delete_confirmation_message, termName))
+            builder.setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deleteTerm(termId)
+            }
+            builder.setNegativeButton(R.string.cancel, null)
+            builder.show()
         }
     }
 
