@@ -43,9 +43,6 @@ public class ReaderPhotoView extends RelativeLayout {
     private boolean mIsInitialLayout = true;
     private final ImageManager mImageManager;
 
-    // Used to determine when the low res placeholder is loaded, so we, at least, show something to the user
-    private boolean mLowResImageLoaded = false;
-
     public ReaderPhotoView(Context context) {
         this(context, null);
     }
@@ -110,7 +107,6 @@ public class ReaderPhotoView extends RelativeLayout {
         }
 
         showProgress();
-        mLowResImageLoaded = false;
         mImageManager
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
@@ -119,27 +115,25 @@ public class ReaderPhotoView extends RelativeLayout {
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
                         }
-                        hideProgress();
-                        // Show error only when there's not low res image loaded
-                        if (!mLowResImageLoaded) {
+                        boolean lowResNotLoadedYet = isLoading();
+                        if (lowResNotLoadedYet) {
+                            hideProgress();
                             showError();
                         }
                     }
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
-                        // Do not hide progress if this is the placeholder loader
-                        boolean isLoResImageUrlLoaded = model instanceof String && model.equals(mLoResImageUrl);
-                        if (!isLoResImageUrlLoaded) {
-                            hideProgress();
-                            hideError();
-                        } else {
-                            mLowResImageLoaded = true;
-                        }
-                        // attach the pinch/zoom handler
-                        setupOnTapListeners();
+                        handleResponse();
                     }
                 });
+    }
+
+    private void handleResponse() {
+        hideProgress();
+        hideError();
+        // attach the pinch/zoom handler
+        setupOnTapListeners();
     }
 
     private void setupOnTapListeners() {
