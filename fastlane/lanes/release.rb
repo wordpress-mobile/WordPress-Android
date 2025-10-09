@@ -3,6 +3,7 @@
 platform :android do
   # Creates a new release branch from the current trunk for code freeze.
   #
+  # @param [String] version (optional) The version number for the release from the release tool. If not provided, uses the calculated version.
   # @param [Boolean] skip_confirm Whether to skip the confirmation prompt
   #
   lane :code_freeze do |version: nil, skip_confirm: false|
