@@ -125,6 +125,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.subscribers.SubscribersActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
+import org.wordpress.android.ui.taxonomies.TermsDataViewActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
@@ -1898,5 +1899,11 @@ public class ActivityLauncher {
         intent.putExtra(Intent.EXTRA_TEXT, link);
         intent.putExtra(Intent.EXTRA_TITLE, title);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+    }
+
+    public static void showTermsList(@NonNull Context context, @NonNull String taxonomySlug,
+                                     @NonNull String taxonomyName, boolean isHierarchical) {
+        Intent intent = TermsDataViewActivity.Companion.getIntent(context, taxonomySlug, taxonomyName, isHierarchical);
+        context.startActivity(intent);
     }
 }

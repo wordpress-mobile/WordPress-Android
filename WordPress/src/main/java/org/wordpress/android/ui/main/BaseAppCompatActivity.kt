@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.wordpress.android.support.SupportWebViewActivity
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
 import org.wordpress.android.ui.comments.CommentsDetailActivity
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
+import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
 
 /**
  * Base class for all activities - initially created to handle insets for Android 15's edge-to-edge support,
@@ -97,6 +99,8 @@ private val excludedActivities = listOf(
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,
     SubscribersActivity::class.java.name,
+    TermsDataViewActivity::class.java.name,
+    ApplicationPasswordsListActivity::class.java.name,
     SupportWebViewActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge

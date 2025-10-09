@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.res.Configuration
@@ -230,6 +231,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
+import androidx.core.view.isNotEmpty
 
 // ViewPager configuration constants
 private const val VIEW_PAGER_PAGE_CONTENT = 0
@@ -239,6 +241,7 @@ private const val VIEW_PAGER_PAGE_HISTORY = 3
 private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 
 private const val MEDIA_ID_NO_FEATURED_IMAGE_SET = 0
+private const val DISABLED_ALPHA = 0.5f
 
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListener,
@@ -285,6 +288,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     private var toolbar: Toolbar? = null
     private var menuHasUndo: Boolean = false
     private var menuHasRedo: Boolean = false
+    private var isModalDialogOpen: Boolean = false
+    private var backPressedCallback: OnBackPressedCallback? = null
+    private var closeButton: View? = null
     private var showPrepublishingBottomSheetHandler: Handler? = null
     private var showPrepublishingBottomSheetRunnable: Runnable? = null
     private var htmlModeMenuStateOn: Boolean = false
@@ -484,12 +490,16 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
 
         setContentView(R.layout.new_edit_post_activity)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                handleBackPressed()
+                if (isModalDialogOpen) {
+                    editorFragment?.dismissTopModal()
+                } else {
+                    handleBackPressed()
+                }
             }
         }
-        onBackPressedDispatcher.addCallback(this, callback)
+        onBackPressedDispatcher.addCallback(this, backPressedCallback!!)
         dispatcher.register(this)
 
         createEditShareMessageActivityResultLauncher()
@@ -833,8 +843,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             it.overflowIcon = overflowIcon
 
             // Custom close button
-            val closeHeader: View = it.findViewById(R.id.edit_post_header)
-            closeHeader.setOnClickListener { handleBackPressed() }
+            closeButton = it.findViewById(R.id.edit_post_header)
+            closeButton?.setOnClickListener { handleBackPressed() }
             // Update site icon if mSite is available, if not it will use the placeholder.
             val siteIconUrl = SiteUtils.getSiteIconUrl(
                 siteModel,
@@ -850,6 +860,40 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 resources.getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius)
             )
         }
+    }
+
+    private fun setOverflowMenuEnabled(enabled: Boolean) {
+        val currentToolbar = toolbar ?: return
+        val overflowButton = findOverflowButton(currentToolbar)
+        overflowButton?.let {
+            it.isEnabled = enabled
+            it.alpha = if (enabled) 1.0f else DISABLED_ALPHA
+        }
+    }
+
+    private fun findOverflowButton(toolbar: Toolbar): View? {
+        // Try multiple ways to find the overflow menu button
+        @SuppressLint("DiscouragedApi")
+        return toolbar.findViewById<View?>(
+            resources.getIdentifier("action_overflow_menu_button", "id", "android")
+        ) ?: toolbar.findViewById<View?>(
+            resources.getIdentifier("overflow_button", "id", packageName)
+        ) ?: findOverflowButtonInChildren(toolbar)
+    }
+
+    private fun findOverflowButtonInChildren(toolbar: Toolbar): View? {
+        // Find it by iterating through toolbar children
+        for (i in 0 until toolbar.childCount) {
+            val child = toolbar.getChildAt(i)
+            if (child.javaClass.simpleName == "ActionMenuView") {
+                val actionMenuView = child as? android.view.ViewGroup
+                // The overflow button is typically the last child of ActionMenuView
+                if (actionMenuView != null && actionMenuView.isNotEmpty()) {
+                    return actionMenuView.getChildAt(actionMenuView.childCount - 1)
+                }
+            }
+        }
+        return null
     }
 
     private fun fetchSiteSettings() {
@@ -1425,11 +1469,11 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
 
         if (undoItem != null) {
-            undoItem.setEnabled(menuHasUndo)
+            undoItem.setEnabled(menuHasUndo && !isModalDialogOpen)
             undoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (redoItem != null) {
-            redoItem.setEnabled(menuHasRedo)
+            redoItem.setEnabled(menuHasRedo && !isModalDialogOpen)
             redoItem.setVisible(!htmlModeMenuStateOn)
         }
         if (secondaryAction != null && editPostRepository.hasPost()) {
@@ -1460,6 +1504,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     currentDestination != EditPostDestination.History &&
                     currentDestination != EditPostDestination.PublishSettings
                 )
+                primaryAction.setEnabled(!isModalDialogOpen)
             }
         }
         // Note: This menu is shared with EditPostActivity. The following items are not needed
@@ -2938,6 +2983,26 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     override fun onToggleRedo(isDisabled: Boolean) {
         if (menuHasRedo == !isDisabled) return
         menuHasRedo = !isDisabled
+        Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
+    }
+
+    override fun onModalDialogOpened(dialogType: String) {
+        isModalDialogOpen = true
+        closeButton?.let {
+            it.isEnabled = false
+            it.alpha = DISABLED_ALPHA
+        }
+        setOverflowMenuEnabled(false)
+        Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
+    }
+
+    override fun onModalDialogClosed(dialogType: String) {
+        isModalDialogOpen = false
+        closeButton?.let {
+            it.isEnabled = true
+            it.alpha = 1.0f
+        }
+        setOverflowMenuEnabled(true)
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
 
