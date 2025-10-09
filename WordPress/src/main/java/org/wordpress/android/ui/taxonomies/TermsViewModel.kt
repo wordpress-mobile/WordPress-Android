@@ -3,9 +3,15 @@ package org.wordpress.android.ui.taxonomies
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,12 +34,39 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
+import uniffi.wp_api.TermCreateParams
+import uniffi.wp_api.TermUpdateParams
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val INDENTATION_IN_DP = 10
+
+enum class TermScreen {
+    List,
+    Detail,
+    Create
+}
+
+data class TermDetailUiState(
+    val termId: Long = 0L,
+    val name: String = "",
+    val slug: String = "",
+    val description: String = "",
+    val count: Long = 0L,
+    val parentId: Long? = null,
+    val availableParents: List<ParentOption>? = null,
+)
+
+data class ParentOption(
+    val id: Long,
+    val name: String
+)
+
+sealed class UiEvent {
+    data class ShowError(val messageRes: Int) : UiEvent()
+}
 
 @HiltViewModel
 class TermsViewModel @Inject constructor(
@@ -58,11 +91,110 @@ class TermsViewModel @Inject constructor(
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
     private var currentTerms = listOf<AnyTermWithEditContext>()
+    private var navController: NavHostController? = null
+
+    private val _termDetailState = MutableStateFlow<TermDetailUiState?>(null)
+    val termDetailState: StateFlow<TermDetailUiState?> = _termDetailState.asStateFlow()
+
+    private val _isSaving = MutableStateFlow(false)
+    val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
+
+    private val _isDeleting = MutableStateFlow(false)
+    val isDeleting: StateFlow<Boolean> = _isDeleting.asStateFlow()
+
+    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+    val uiEvent = _uiEvent.asStateFlow()
+
+    fun setNavController(navController: NavHostController) {
+        this.navController = navController
+    }
 
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
         this.isHierarchical = isHierarchical
         initialize()
+    }
+
+    fun navigateToTermDetail(termId: Long) {
+        val term = currentTerms.firstOrNull { it.id == termId } ?: return
+
+        val availableParents = if (isHierarchical) {
+            val descendants = getDescendants(termId)
+            currentTerms
+                .filter { it.id != termId && it.id !in descendants }
+                .map { ParentOption(id = it.id, name = it.name) }
+        } else {
+            null
+        }
+
+        _termDetailState.value = TermDetailUiState(
+            termId = term.id,
+            name = term.name,
+            slug = term.slug,
+            description = term.description,
+            count = term.count,
+            parentId = term.parent,
+            availableParents = availableParents,
+        )
+        navController?.navigate(TermScreen.Detail.name)
+    }
+
+    fun navigateToCreateTerm() {
+        val availableParents = if (isHierarchical) {
+            currentTerms.map { ParentOption(id = it.id, name = it.name) }
+        } else {
+            null
+        }
+
+        _termDetailState.value = TermDetailUiState(
+            termId = 0L, // 0 indicates a new term
+            name = "",
+            slug = "",
+            description = "",
+            count = 0L,
+            parentId = 0L,
+            availableParents = availableParents,
+        )
+        navController?.navigate(TermScreen.Create.name)
+    }
+
+    fun navigateBack() {
+        clearTermDetail()
+        navController?.navigateUp()
+    }
+
+    private fun getDescendants(termId: Long): Set<Long> {
+        val descendants = mutableSetOf<Long>()
+
+        fun addDescendantsRecursively(parentId: Long) {
+            currentTerms.filter { it.parent == parentId }.forEach { child ->
+                descendants.add(child.id)
+                addDescendantsRecursively(child.id)
+            }
+        }
+
+        addDescendantsRecursively(termId)
+        return descendants
+    }
+
+    fun updateTermName(name: String) {
+        _termDetailState.value = _termDetailState.value?.copy(name = name)
+    }
+
+    fun updateTermSlug(slug: String) {
+        _termDetailState.value = _termDetailState.value?.copy(slug = slug)
+    }
+
+    fun updateTermDescription(description: String) {
+        _termDetailState.value = _termDetailState.value?.copy(description = description)
+    }
+
+    fun updateTermParent(parentId: Long) {
+        _termDetailState.value = _termDetailState.value?.copy(parentId = parentId)
+    }
+
+    fun clearTermDetail() {
+        _termDetailState.value = null
     }
 
     override fun getSupportedSorts(): List<DataViewDropdownItem> = if (isHierarchical) {
@@ -135,14 +267,107 @@ class TermsViewModel @Inject constructor(
         return result
     }
 
-    fun getTerm(termId: Long): AnyTermWithEditContext? {
-        val item = uiState.value.items.firstOrNull {
-            (it.data as? AnyTermWithEditContext)?.id == termId
+    fun saveTerm() {
+        viewModelScope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            val currentTerm = _termDetailState.value
+            if (selectedSite == null || currentTerm == null) {
+                _uiEvent.value = UiEvent.ShowError(R.string.error_saving_term)
+                return@launch
+            }
+
+            _isSaving.value = true
+
+            val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
+
+            val termsResponse = if (currentTerm.termId == 0L) {
+                // Create new term
+                wpApiClient.request { requestBuilder ->
+                    requestBuilder.terms().create(
+                        termEndpointType = getTermEndpointType(),
+                        params = TermCreateParams(
+                            name = currentTerm.name,
+                            description = currentTerm.description,
+                            slug = currentTerm.slug,
+                            parent = if (isHierarchical) currentTerm.parentId else null
+                        )
+                    )
+                }
+            } else {
+                // Update existing term
+                wpApiClient.request { requestBuilder ->
+                    requestBuilder.terms().update(
+                        termEndpointType = getTermEndpointType(),
+                        termId = currentTerm.termId,
+                        params = TermUpdateParams(
+                            name = currentTerm.name,
+                            description = currentTerm.description,
+                            slug = currentTerm.slug,
+                            parent = currentTerm.parentId
+                        )
+                    )
+                }
+            }
+
+            when (termsResponse) {
+                is WpRequestResult.Success -> {
+                    _isSaving.value = false
+                    // Clear term detail to navigate back
+                    clearTermDetail()
+                    // Reload the list
+                    initialize()
+                }
+
+                else -> {
+                    _isSaving.value = false
+                    _uiEvent.value = UiEvent.ShowError(R.string.error_saving_term)
+                    appLogWrapper.e(AppLog.T.API, "Error saving term: $taxonomySlug")
+                }
+            }
         }
-        return item?.data as? AnyTermWithEditContext
     }
 
-    fun getAllTerms(): List<AnyTermWithEditContext> = currentTerms
+    fun deleteTerm(termId: Long) {
+        viewModelScope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            if (selectedSite == null) {
+                _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
+                return@launch
+            }
+
+            _isDeleting.value = true
+
+            val wpApiClient = wpApiClientProvider.getWpApiClient(selectedSite)
+
+            val deleteResponse = wpApiClient.request { requestBuilder ->
+                requestBuilder.terms().delete(
+                    termEndpointType = getTermEndpointType(),
+                    termId = termId
+                )
+            }
+
+            when (deleteResponse) {
+                is WpRequestResult.Success -> {
+                    _isDeleting.value = false
+                    if (deleteResponse.response.data.deleted) {
+                        // Clear term detail to navigate back
+                        clearTermDetail()
+                        // Reload the list
+                        initialize()
+                    } else {
+                        _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
+                        appLogWrapper.e(AppLog.T.API, "Term was not deleted: $taxonomySlug")
+                    }
+                }
+
+                else -> {
+                    _isDeleting.value = false
+                    _uiEvent.value = UiEvent.ShowError(R.string.error_deleting_term)
+                    appLogWrapper.e(AppLog.T.API, "Error deleting term: $taxonomySlug")
+                }
+            }
+        }
+    }
 
     private fun convertToDataViewItem(
         allTerms: List<AnyTermWithEditContext>,
@@ -203,15 +428,9 @@ class TermsViewModel @Inject constructor(
     ): List<AnyTermWithEditContext> {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
 
-        val termEndpointType = when (taxonomySlug) {
-            DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
-            DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
-            else -> TermEndpointType.Custom(taxonomySlug)
-        }
-
         val termsResponse = wpApiClient.request { requestBuilder ->
             requestBuilder.terms().listWithEditContext(
-                termEndpointType = termEndpointType,
+                termEndpointType = getTermEndpointType(),
                 params = TermListParams(
                     page = page.toUInt(),
                     search = searchQuery,
@@ -245,6 +464,16 @@ class TermsViewModel @Inject constructor(
                 emptyList()
             }
         }
+    }
+
+    private fun getTermEndpointType(): TermEndpointType = when (taxonomySlug) {
+        DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
+        DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
+        else -> TermEndpointType.Custom(taxonomySlug)
+    }
+
+    fun consumeUIEvent() {
+        _uiEvent.value = null
     }
 
     companion object {
