@@ -2,14 +2,12 @@ package org.wordpress.android.ui.taxonomies
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,15 +33,14 @@ import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
 import org.wordpress.android.ui.dataview.DataViewItemField
 import org.wordpress.android.ui.dataview.DataViewViewModel
-import org.wordpress.android.ui.dataview.LoadingState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.TermEndpointType
-import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.TermCreateParams
+import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
 import uniffi.wp_api.TermUpdateParams
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamTermsOrderBy
@@ -239,7 +236,6 @@ class TermsViewModel @Inject constructor(
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?,
     ): List<DataViewItem> = withContext(ioDispatcher) {
-        delay(2000)
         val selectedSite = selectedSiteRepository.getSelectedSite()
 
         if (selectedSite == null) {
@@ -259,7 +255,8 @@ class TermsViewModel @Inject constructor(
             allTerms
         }
 
-        if (sortedTerms.isNotEmpty()) {
+        // Store terms when they are not filtered
+        if (sortedTerms.isNotEmpty() && filter == null) {
             storeTerms(selectedSite, sortedTerms)
         }
 

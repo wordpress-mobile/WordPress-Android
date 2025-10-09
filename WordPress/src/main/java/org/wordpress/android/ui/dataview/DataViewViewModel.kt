@@ -91,7 +91,6 @@ open class DataViewViewModel @Inject constructor(
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        this.initialize()
     }
 
     protected open fun initialize() {

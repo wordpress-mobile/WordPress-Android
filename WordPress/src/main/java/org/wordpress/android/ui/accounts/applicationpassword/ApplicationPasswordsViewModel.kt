@@ -50,6 +50,10 @@ class ApplicationPasswordsViewModel @Inject constructor(
     accountStore = accountStore,
     ioDispatcher = ioDispatcher
 ) {
+    init {
+        initialize()
+    }
+
     override fun getSupportedSorts(): List<DataViewDropdownItem> = listOf(
         DataViewDropdownItem(id = SORT_BY_NAME_ID, titleRes = R.string.application_password_name_sort),
         DataViewDropdownItem(id = SORT_BY_CREATED_ID, titleRes = R.string.application_password_created_sort),

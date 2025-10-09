@@ -503,6 +503,9 @@ class DataViewViewModelTest : BaseUnitTest() {
         accountStore,
         ioDispatcher
     ) {
+        init {
+            initialize()
+        }
         /**
          * Flag to control when the full initialization happens. How It Works
          *   1. During construction: shouldInitialize is false, so initialize() does nothing
