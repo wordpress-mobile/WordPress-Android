@@ -42,7 +42,7 @@ class TaxonomiesNavMenuViewModel @Inject constructor(
                     val taxonomies = mutableListOf<TaxonomyTypeDetailsWithEditContext>()
                     list.taxonomyTypes.forEach { type ->
                         appLogWrapper.d(AppLog.T.API, "Taxonomies - Taxonomy ${type.value.name}")
-                        if (type.value.visibility.showInNavMenus) {
+                        if (type.value.visibility.showUi) {
                             taxonomies.add(type.value)
                         }
                     }
