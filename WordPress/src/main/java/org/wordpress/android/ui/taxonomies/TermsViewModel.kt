@@ -2,7 +2,6 @@ package org.wordpress.android.ui.taxonomies
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -253,30 +252,6 @@ class TermsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun storeTerms(site: SiteModel, terms: List<AnyTermWithEditContext>) = withContext(ioDispatcher) {
-        val termsResponsePayload = FetchTermsResponsePayload(
-            TermsModel(
-                terms.map { term ->
-                    TermModel(
-                        term.id.toInt(),
-                        site.id,
-                        term.id,
-                        taxonomySlug,
-                        term.name,
-                        term.slug,
-                        term.description,
-                        term.parent ?: 0,
-                        term.parent != null,
-                        term.count.toInt()
-                    )
-                },
-            ),
-            site,
-            taxonomySlug
-        )
-        fluxCDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
-    }
-
     private fun sortByHierarchy(terms: List<AnyTermWithEditContext>): List<AnyTermWithEditContext> {
         val result = mutableListOf<AnyTermWithEditContext>()
         val termsById = terms.associateBy { it.id }
@@ -303,6 +278,30 @@ class TermsViewModel @Inject constructor(
             }
 
         return result
+    }
+
+    private suspend fun storeTerms(site: SiteModel, terms: List<AnyTermWithEditContext>) = withContext(ioDispatcher) {
+        val termsResponsePayload = FetchTermsResponsePayload(
+            TermsModel(
+                terms.map { term ->
+                    TermModel(
+                        term.id.toInt(),
+                        site.id,
+                        term.id,
+                        taxonomySlug,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parent ?: 0,
+                        term.parent != null,
+                        term.count.toInt()
+                    )
+                },
+            ),
+            site,
+            taxonomySlug
+        )
+        fluxCDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
 
     fun saveTerm() {
@@ -508,12 +507,6 @@ class TermsViewModel @Inject constructor(
         DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
         DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
         else -> TermEndpointType.Custom(taxonomySlug)
-    }
-
-    private fun TermEndpointType.toTaxonomyName(): String = when (this) {
-        TermEndpointType.Categories -> DEFAULT_TAXONOMY_CATEGORY
-        TermEndpointType.Tags -> DEFAULT_TAXONOMY_TAG
-        is TermEndpointType.Custom -> this.v1
     }
 
     fun consumeUIEvent() {
