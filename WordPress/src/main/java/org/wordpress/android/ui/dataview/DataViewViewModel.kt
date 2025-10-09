@@ -91,13 +91,12 @@ open class DataViewViewModel @Inject constructor(
 
     init {
         appLogWrapper.d(AppLog.T.MAIN, "$logTag init")
-        this.initialize()
     }
 
     protected open fun initialize() {
         launch {
             restorePrefs()
-            fetchData()
+            fetchData(localData = getLocalData())
 
             debouncedQuery
                 .debounce(SEARCH_DELAY_MS)
@@ -145,19 +144,32 @@ open class DataViewViewModel @Inject constructor(
         }
     }
 
-    private fun fetchData(isRefreshing: Boolean = false) {
-        if (networkUtilsWrapper.isNetworkAvailable()) {
-            val currentState = _uiState.value
-            val isLoadingMore = currentState.currentPage > INITIAL_PAGE
-
-            updateState { state ->
-                state.copy(
-                    loadingState = if (isLoadingMore) LoadingState.LOADING_MORE else LoadingState.LOADING,
-                    isRefreshing = isRefreshing
-                )
+    private fun fetchData(isRefreshing: Boolean = false, localData: List<DataViewItem> = emptyList()) {
+        launch {
+            if (localData.isNotEmpty()) {
+                updateState { currentState ->
+                    currentState.copy(
+                        items = localData,
+                        loadingState = LoadingState.LOADED,
+                    )
+                }
             }
 
-            launch {
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                val currentState = _uiState.value
+                val isLoadingMore = currentState.currentPage > INITIAL_PAGE
+
+                updateState { state ->
+                    state.copy(
+                        loadingState = if (isLoadingMore || localData.isNotEmpty()) {
+                            LoadingState.LOADING_MORE
+                        } else {
+                            LoadingState.LOADING
+                        },
+                        isRefreshing = isRefreshing
+                    )
+                }
+
                 val items = performNetworkRequest(
                     page = currentState.currentPage,
                     searchQuery = currentState.searchQuery,
@@ -173,16 +185,19 @@ open class DataViewViewModel @Inject constructor(
 
                 updateItems(items, isLoadingMore)
                 updateState { it.copy(isRefreshing = false) }
-            }
-        } else {
-            updateState {
-                it.copy(
-                    loadingState = LoadingState.OFFLINE,
-                    isRefreshing = false
-                )
+            } else if (localData.isEmpty()) {
+                // Only show error if local data is empty
+                updateState {
+                    it.copy(
+                        loadingState = LoadingState.OFFLINE,
+                        isRefreshing = false
+                    )
+                }
             }
         }
     }
+
+    open fun getLocalData(): List<DataViewItem> = emptyList()
 
     // resetPaging() is now handled by the helper function above
 

@@ -15,9 +15,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -47,6 +49,12 @@ class TermsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    private lateinit var taxonomyStore: TaxonomyStore
+
+    @Mock
+    private lateinit var fluxCDispatcher: Dispatcher
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -62,7 +70,9 @@ class TermsViewModelTest : BaseUnitTest() {
             mainDispatcher = testDispatcher(),
             sharedPrefs = sharedPrefs,
             networkUtilsWrapper = networkUtilsWrapper,
-            ioDispatcher = testDispatcher()
+            ioDispatcher = testDispatcher(),
+            taxonomyStore = taxonomyStore,
+            fluxCDispatcher = fluxCDispatcher
         )
     }
 

@@ -14,11 +14,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
+import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -31,10 +37,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.TermEndpointType
-import uniffi.wp_api.TermListParams
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.TermCreateParams
+import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
 import uniffi.wp_api.TermUpdateParams
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamTermsOrderBy
@@ -74,6 +80,8 @@ class TermsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val taxonomyStore: TaxonomyStore,
+    private val fluxCDispatcher: Dispatcher, // Used to include FluxC in the flow (local terms store)
     accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
@@ -112,6 +120,7 @@ class TermsViewModel @Inject constructor(
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
         this.isHierarchical = isHierarchical
+        taxonomyStore.onRegister()
         initialize()
     }
 
@@ -197,6 +206,20 @@ class TermsViewModel @Inject constructor(
         _termDetailState.value = null
     }
 
+    override fun getLocalData(): List<DataViewItem> = when(val site = selectedSiteRepository.getSelectedSite()) {
+        null -> emptyList()
+        else -> {
+            val terms = taxonomyStore.getTermsForSite(site, this.taxonomySlug)
+            terms.map { term ->
+                convertToDataViewItem(
+                    terms,
+                    term,
+                    isHierarchical
+                )
+            }
+        }
+    }
+
     override fun getSupportedSorts(): List<DataViewDropdownItem> = if (isHierarchical) {
         listOf()
     } else {
@@ -232,6 +255,11 @@ class TermsViewModel @Inject constructor(
             allTerms
         }
 
+        // Store terms when they are not filtered
+        if (sortedTerms.isNotEmpty() && filter == null) {
+            storeTerms(selectedSite, sortedTerms)
+        }
+
         // Convert to DataViewItems and return
         sortedTerms.map { term ->
             // Do not use hierarchical indentation when the user is searching terms
@@ -265,6 +293,30 @@ class TermsViewModel @Inject constructor(
             }
 
         return result
+    }
+
+    private suspend fun storeTerms(site: SiteModel, terms: List<AnyTermWithEditContext>) = withContext(ioDispatcher) {
+        val termsResponsePayload = FetchTermsResponsePayload(
+            TermsModel(
+                terms.map { term ->
+                    TermModel(
+                        term.id.toInt(),
+                        site.id,
+                        term.id,
+                        taxonomySlug,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parent ?: 0,
+                        term.parent != null,
+                        term.count.toInt()
+                    )
+                },
+            ),
+            site,
+            taxonomySlug
+        )
+        fluxCDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
 
     fun saveTerm() {
@@ -395,6 +447,32 @@ class TermsViewModel @Inject constructor(
         )
     }
 
+    private fun convertToDataViewItem(
+        allTerms: List<TermModel>,
+        term: TermModel,
+        useHierarchicalIndentation: Boolean
+    ): DataViewItem {
+        val indentation = if (useHierarchicalIndentation) {
+            getHierarchicalIndentation(allTerms, term)
+        } else {
+            0
+        }
+        return DataViewItem(
+            id = term.remoteTermId,
+            image = null,
+            title = term.name,
+            fields = listOf(
+                DataViewItemField(
+                    value = context.resources.getString(R.string.term_count, term.postCount),
+                    valueType = DataViewFieldType.TEXT,
+                )
+            ),
+            skipEndPositioning = true,
+            data = term,
+            indentation = (indentation * INDENTATION_IN_DP).dp
+        )
+    }
+
 
     /**
      * Returns an integer representation of the hierarchical indentation for the given term.
@@ -414,6 +492,29 @@ class TermsViewModel @Inject constructor(
             if (parent == null) break
             indentation++
             currentParentId = parent.parent
+        }
+
+        return indentation
+    }
+
+    /**
+     * Returns an integer representation of the hierarchical indentation for the given term.
+     */
+    private fun getHierarchicalIndentation(
+        allTerms: List<TermModel>,
+        term: TermModel?
+    ): Int {
+        if (term == null) return 0
+
+        val termsById = allTerms.associateBy { it.remoteTermId }
+        var indentation = 0
+        var currentParentId = term.parentRemoteId
+
+        while (currentParentId > 0) {
+            val parent = termsById[currentParentId]
+            if (parent == null) break
+            indentation++
+            currentParentId = parent.parentRemoteId
         }
 
         return indentation
