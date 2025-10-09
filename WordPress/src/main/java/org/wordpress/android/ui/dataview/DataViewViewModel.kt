@@ -161,7 +161,11 @@ open class DataViewViewModel @Inject constructor(
 
                 updateState { state ->
                     state.copy(
-                        loadingState = if (isLoadingMore || localData.isNotEmpty()) LoadingState.LOADING_MORE else LoadingState.LOADING,
+                        loadingState = if (isLoadingMore || localData.isNotEmpty()) {
+                            LoadingState.LOADING_MORE
+                        } else {
+                            LoadingState.LOADING
+                        },
                         isRefreshing = isRefreshing
                     )
                 }
