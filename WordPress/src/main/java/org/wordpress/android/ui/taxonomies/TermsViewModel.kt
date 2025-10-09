@@ -2,6 +2,7 @@ package org.wordpress.android.ui.taxonomies
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -14,11 +15,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
+import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -74,6 +81,8 @@ class TermsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val taxonomyStore: TaxonomyStore,
+    private val fluxCDispatcher: Dispatcher, // Used to include FluxC in the flow (local terms store)
     accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
@@ -112,6 +121,7 @@ class TermsViewModel @Inject constructor(
     fun initialize(taxonomySlug: String, isHierarchical: Boolean) {
         this.taxonomySlug = taxonomySlug
         this.isHierarchical = isHierarchical
+        taxonomyStore.onRegister()
         initialize()
     }
 
@@ -232,11 +242,39 @@ class TermsViewModel @Inject constructor(
             allTerms
         }
 
+        if (sortedTerms.isNotEmpty()) {
+            storeTerms(selectedSite, sortedTerms)
+        }
+
         // Convert to DataViewItems and return
         sortedTerms.map { term ->
             // Do not use hierarchical indentation when the user is searching terms
             convertToDataViewItem(allTerms, term, isHierarchical && searchQuery.isEmpty())
         }
+    }
+
+    private suspend fun storeTerms(site: SiteModel, terms: List<AnyTermWithEditContext>) = withContext(ioDispatcher) {
+        val termsResponsePayload = FetchTermsResponsePayload(
+            TermsModel(
+                terms.map { term ->
+                    TermModel(
+                        term.id.toInt(),
+                        site.id,
+                        term.id,
+                        taxonomySlug,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parent ?: 0,
+                        term.parent != null,
+                        term.count.toInt()
+                    )
+                },
+            ),
+            site,
+            taxonomySlug
+        )
+        fluxCDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
 
     private fun sortByHierarchy(terms: List<AnyTermWithEditContext>): List<AnyTermWithEditContext> {
@@ -470,6 +508,12 @@ class TermsViewModel @Inject constructor(
         DEFAULT_TAXONOMY_CATEGORY -> TermEndpointType.Categories
         DEFAULT_TAXONOMY_TAG -> TermEndpointType.Tags
         else -> TermEndpointType.Custom(taxonomySlug)
+    }
+
+    private fun TermEndpointType.toTaxonomyName(): String = when (this) {
+        TermEndpointType.Categories -> DEFAULT_TAXONOMY_CATEGORY
+        TermEndpointType.Tags -> DEFAULT_TAXONOMY_TAG
+        is TermEndpointType.Custom -> this.v1
     }
 
     fun consumeUIEvent() {
