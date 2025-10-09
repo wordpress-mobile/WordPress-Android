@@ -10,17 +10,21 @@ platform :android do
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
     ensure_git_branch(branch: DEFAULT_BRANCH)
 
-    # Validate provided version matches the calculated version
-    expected_version = next_release_version
-    if version && version != expected_version
-      UI.user_error!("Version mismatch: Provided version '#{version}' does not match calculated version '#{expected_version}'. Please check the release scenario version matches the project version.")
+    # Use provided version from release tool, or fall back to calculated version
+    calculated_version = next_release_version
+    release_version = version || calculated_version
+
+    # Warn if provided version differs from calculated version
+    if version && version != calculated_version
+      warning_message = "⚠️ Version mismatch: Release tool version is '#{version}' but calculated version is '#{calculated_version}'. Using '#{version}' from release tool."
+      UI.important(warning_message)
+      buildkite_annotate(style: 'warning', context: 'code-freeze-version-mismatch', message: warning_message) if is_ci
     end
-    UI.success("✓ Version validation passed: Version (#{version || expected_version}) matches calculated version") if version
 
     message = <<-MESSAGE
 
       Code Freeze:
-      • New release branch from #{DEFAULT_BRANCH}: release/#{expected_version}
+      • New release branch from #{DEFAULT_BRANCH}: release/#{release_version}
       • Current release version and build code: #{current_release_version} (#{current_build_code}).
       • New release version and build code: #{code_freeze_beta_version} (#{next_build_code}).
 
@@ -32,7 +36,7 @@ platform :android do
 
     UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
-    release_branch_name = "release/#{next_release_version}"
+    release_branch_name = "release/#{release_version}"
     ensure_branch_does_not_exist!(release_branch_name)
 
     # Create the release branch
