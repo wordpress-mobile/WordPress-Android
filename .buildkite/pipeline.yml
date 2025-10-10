@@ -102,15 +102,27 @@ steps:
   # Unit Tests
   #################
   - label: "🔬 Unit Tests"
+    key: unit-tests
     command: ".buildkite/commands/run-unit-tests.sh"
     plugins:
       - $CI_TOOLKIT
       - $TEST_COLLECTOR :
           <<: *test_collector_common_params
           api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
+      - $CLAUDE_PLUGIN:
+          api_key: "$ANTHROPIC_API_KEY"
+          buildkite_api_token: "$BUILDKITE_TOKEN_FOR_CLAUDE"
     artifact_paths:
       - "**/build/test-results/merged-test-results.xml"
       - "**/build/reports/kover/*.xml"
+
+  - label: "💬 Comment Claude Analysis"
+    command: .buildkite/commands/comment-claude-analysis.sh
+    depends_on: unit-tests
+    allow_dependency_failure: true
+    if: build.pull_request.id != null
+    plugins:
+      - $CI_TOOLKIT
 
   #################
   # Instrumented (aka UI) Tests
