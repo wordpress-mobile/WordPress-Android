@@ -75,6 +75,10 @@ class SubscribersViewModel @Inject constructor(
     private val _uiEvent = MutableStateFlow<UiEvent?>(null)
     val uiEvent = _uiEvent
 
+    init {
+        initialize()
+    }
+
     override fun getSupportedFilters(): List<DataViewDropdownItem> {
         return listOf(
             DataViewDropdownItem(
