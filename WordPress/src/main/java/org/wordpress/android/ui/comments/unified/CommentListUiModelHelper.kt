@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments.unified
 
-import okhttp3.internal.toImmutableList
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
@@ -272,7 +271,7 @@ class CommentListUiModelHelper @Inject constructor(
                 onLoadNextPage.invoke(comments.size)
             })
         }
-        return CommentList(list.toImmutableList(), hasMore)
+        return CommentList(list.toList(), hasMore)
     }
 
     private fun shouldAddSeparator(before: CommentEntity, after: CommentEntity): Boolean {

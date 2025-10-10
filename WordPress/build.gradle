@@ -329,6 +329,9 @@ android {
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
+        // OkHttp 5.x: Pick first OSGI manifest from multi-release JARs
+        pickFirst 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
+
     }
 
     bundle {
