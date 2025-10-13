@@ -3,6 +3,7 @@
     <application>
         <activity
             android:name="org.wordpress.android.support.feature.aibot.AIBotSupportActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
     </application>
 </manifest>
