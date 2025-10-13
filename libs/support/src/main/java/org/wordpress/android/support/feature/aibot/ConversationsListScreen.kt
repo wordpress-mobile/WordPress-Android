@@ -38,6 +38,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.support.R
 import kotlinx.coroutines.flow.StateFlow
@@ -180,7 +183,22 @@ private fun ConversationCard(
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
 
-    MaterialTheme {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun ConversationsScreenPreviewDark() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
+    MaterialTheme(colorScheme = darkColorScheme()) {
         ConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },

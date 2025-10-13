@@ -42,6 +42,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import org.wordpress.android.support.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -261,7 +264,21 @@ private fun MessageBubble(message: BotMessage) {
 private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
 
-    MaterialTheme {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        ConversationDetailScreen(
+            conversation = sampleConversation,
+            onBackClick = { },
+            onSendMessage = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun ConversationDetailScreenPreviewDark() {
+    val sampleConversation = generateSampleBotConversations()[0]
+
+    MaterialTheme(colorScheme = darkColorScheme()) {
         ConversationDetailScreen(
             conversation = sampleConversation,
             onBackClick = { },
