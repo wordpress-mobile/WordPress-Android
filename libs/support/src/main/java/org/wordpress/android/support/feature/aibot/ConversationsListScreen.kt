@@ -32,10 +32,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.support.R
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.support.feature.aibot.AIBotSupportActivity.ConversationScreen
 import java.text.SimpleDateFormat
@@ -54,17 +57,20 @@ fun ConversationsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Conversations") },
+                title = { Text(stringResource(R.string.ai_bot_conversations_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            stringResource(R.string.ai_bot_back_button_content_description)
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = { onCreateNewConversationClick() }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "New conversation"
+                            contentDescription = stringResource(R.string.ai_bot_new_conversation_content_description)
                         )
                     }
                 }
@@ -138,7 +144,7 @@ private fun ConversationCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = conversation.getTitle(),
+                    text = conversation.getTitle(LocalContext.current),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -223,7 +229,7 @@ private fun ConversationsListPreview(modifier: Modifier) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = conversation.getTitle(),
+                            text = conversation.getTitle(LocalContext.current),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,

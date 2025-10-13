@@ -38,9 +38,12 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.support.R
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,8 +56,6 @@ fun ConversationDetailScreen(
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    // Recompute title whenever conversation changes
-    val title = remember(conversation) { conversation.getTitle() }
 
     // Scroll to bottom when conversation changes or messages are added
     LaunchedEffect(conversation.id, conversation.messages.size) {
@@ -68,10 +69,13 @@ fun ConversationDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            stringResource(R.string.ai_bot_back_button_content_description)
+                        )
                     }
                 }
             )
@@ -102,7 +106,8 @@ fun ConversationDetailScreen(
             }
 
             item {
-                WelcomeHeader()
+                // TODO: username
+                WelcomeHeader("UserName")
             }
 
             // Key ensures the items recompose when messages change
@@ -121,13 +126,13 @@ fun ConversationDetailScreen(
 }
 
 @Composable
-private fun WelcomeHeader() {
+private fun WelcomeHeader(userName: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -144,14 +149,14 @@ private fun WelcomeHeader() {
             )
 
             Text(
-                text = "Howdy demo-user! 👋",
+                text = stringResource(R.string.ai_bot_welcome_greeting, userName),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
-                text = "I'm your personal AI assistant. I can help with any questions about your site or account.",
+                text = stringResource(R.string.ai_bot_welcome_message),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -177,7 +182,7 @@ private fun ChatInputBar(
             value = messageText,
             onValueChange = onMessageTextChange,
             modifier = Modifier.weight(1f),
-            placeholder = { Text("Type a message...") },
+            placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
             maxLines = 4
         )
 
@@ -187,7 +192,7 @@ private fun ChatInputBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send",
+                contentDescription = stringResource(R.string.ai_bot_send_button_content_description),
                 tint = if (messageText.isNotBlank()) {
                     MaterialTheme.colorScheme.primary
                 } else {
@@ -266,7 +271,7 @@ private fun ConversationDetailScreenPreview() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(sampleConversation.getTitle()) },
+                    title = { Text(sampleConversation.getTitle(LocalContext.current)) },
                     navigationIcon = {
                         IconButton(onClick = { }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")

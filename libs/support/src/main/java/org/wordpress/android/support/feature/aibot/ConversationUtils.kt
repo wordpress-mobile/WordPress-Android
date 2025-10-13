@@ -1,6 +1,9 @@
 package org.wordpress.android.support.feature.aibot
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import org.wordpress.android.support.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -10,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * Generates a title for a conversation from the first user message.
  * If there are no messages or no user messages, returns a default title.
  */
-fun BotConversation.getTitle(): String {
+fun BotConversation.getTitle(context: Context): String {
     // Find first user message
     val firstUserMessage = messages.firstOrNull { it.isWrittenByUser }
 
@@ -21,11 +24,13 @@ fun BotConversation.getTitle(): String {
         }
     } else {
         // Default title if no user messages
-        "New Conversation"
+        context.getString(R.string.ai_bot_default_conversation_title)
     }
 }
 
+@Composable
 fun formatRelativeTime(date: Date): String {
+    val context = LocalContext.current
     val now = Date()
     val diffMillis = now.time - date.time
     val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diffMillis)
@@ -33,11 +38,30 @@ fun formatRelativeTime(date: Date): String {
     val diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis)
 
     return when {
-        diffMinutes < 1 -> "Just now"
-        diffMinutes < 60 -> "$diffMinutes minute${if (diffMinutes == 1L) "" else "s"} ago"
-        diffHours < 24 -> "$diffHours hour${if (diffHours == 1L) "" else "s"} ago"
-        diffDays < 7 -> "$diffDays day${if (diffDays == 1L) "" else "s"} ago"
-        diffDays < 30 -> "${diffDays / 7} week${if (diffDays / 7 == 1L) "" else "s"} ago"
+        diffMinutes < 1 -> context.getString(R.string.ai_bot_time_just_now)
+        diffMinutes < 60 -> if (diffMinutes == 1L) {
+            context.getString(R.string.ai_bot_time_minute_ago, diffMinutes)
+        } else {
+            context.getString(R.string.ai_bot_time_minutes_ago, diffMinutes)
+        }
+        diffHours < 24 -> if (diffHours == 1L) {
+            context.getString(R.string.ai_bot_time_hour_ago, diffHours)
+        } else {
+            context.getString(R.string.ai_bot_time_hours_ago, diffHours)
+        }
+        diffDays < 7 -> if (diffDays == 1L) {
+            context.getString(R.string.ai_bot_time_day_ago, diffDays)
+        } else {
+            context.getString(R.string.ai_bot_time_days_ago, diffDays)
+        }
+        diffDays < 30 -> {
+            val weeks = diffDays / 7
+            if (weeks == 1L) {
+                context.getString(R.string.ai_bot_time_week_ago, weeks)
+            } else {
+                context.getString(R.string.ai_bot_time_weeks_ago, weeks)
+            }
+        }
         else -> {
             val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
             formatter.format(date)
