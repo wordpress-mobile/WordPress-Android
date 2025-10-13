@@ -189,114 +189,7 @@ private fun ConversationsScreenPreview() {
 
 @Composable
 private fun ConversationsListPreview(modifier: Modifier) {
-    val now = Date()
-    val sampleConversations = listOf(
-        BotConversation(
-            id = 1234,
-            title = "App Crashing on Launch",
-            mostRecentMessageDate = Date(now.time - 120_000), // 2 minutes ago
-            messages = listOf(
-                BotMessage(
-                    id = 1001,
-                    text = "Hi, I'm having trouble with the app.",
-                    date = Date(now.time - 3_600_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = true
-                ),
-                BotMessage(
-                    id = 1002,
-                    text = "Wonderful! I'm so glad that resolved the issue for you.",
-                    date = Date(now.time - 120_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = false
-                )
-            )
-        ),
-        BotConversation(
-            id = 1235,
-            title = "Site Setup Assistance",
-            mostRecentMessageDate = Date(now.time - 7_200_000), // 2 hours ago
-            messages = listOf(
-                BotMessage(
-                    id = 2001,
-                    text = "I just created my WordPress site and need help getting started.",
-                    date = Date(now.time - 7_800_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = true
-                ),
-                BotMessage(
-                    id = 2002,
-                    text = "Congratulations on your new site! I'd be happy to help you get started.",
-                    date = Date(now.time - 7_200_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = false
-                )
-            )
-        ),
-        BotConversation(
-            id = 1236,
-            title = "Theme Customization",
-            mostRecentMessageDate = Date(now.time - 86_400_000), // 1 day ago
-            messages = listOf(
-                BotMessage(
-                    id = 3001,
-                    text = "How can I change the colors on my site?",
-                    date = Date(now.time - 87_000_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = true
-                ),
-                BotMessage(
-                    id = 3002,
-                    text = "You can change the colors by going to Appearance → Customize → Colors.",
-                    date = Date(now.time - 86_400_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = false
-                )
-            )
-        ),
-        BotConversation(
-            id = 1237,
-            title = "SEO Optimization Tips",
-            mostRecentMessageDate = Date(now.time - 259_200_000), // 3 days ago
-            messages = listOf(
-                BotMessage(
-                    id = 4001,
-                    text = "My site isn't showing up in Google search results.",
-                    date = Date(now.time - 259_800_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = true
-                ),
-                BotMessage(
-                    id = 4002,
-                    text = "To improve your SEO, consider installing an SEO plugin like Yoast.",
-                    date = Date(now.time - 259_200_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = false
-                )
-            )
-        ),
-        BotConversation(
-            id = 1238,
-            title = "Site Performance Questions",
-            mostRecentMessageDate = Date(now.time - 604_800_000), // 1 week ago
-            messages = listOf(
-                BotMessage(
-                    id = 5001,
-                    text = "My website seems to be loading slowly.",
-                    date = Date(now.time - 605_400_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = true
-                ),
-                BotMessage(
-                    id = 5002,
-                    text = "Your site is loading well, but here are some tips to optimize further.",
-                    date = Date(now.time - 604_800_000),
-                    userWantsToTalkToHuman = false,
-                    isWrittenByUser = false
-                )
-            )
-        )
-    )
+    val sampleConversations = generateSampleBotConversations()
 
     LazyColumn(
         modifier = modifier
@@ -305,65 +198,60 @@ private fun ConversationsListPreview(modifier: Modifier) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(modifier = Modifier.padding(top = 4.dp))
         }
 
         items(sampleConversations) { conversation ->
-            ConversationCardPreview(conversation = conversation)
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { }),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = conversation.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Text(
+                            text = formatRelativeTimePreview(conversation.mostRecentMessageDate),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    conversation.messages.lastOrNull()?.let { lastMessage ->
+                        Text(
+                            text = lastMessage.text,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
         }
 
         item {
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(bottom = 4.dp))
-        }
-    }
-}
-
-@Composable
-private fun ConversationCardPreview(conversation: BotConversation) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = { }),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = conversation.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Text(
-                    text = formatRelativeTimePreview(conversation.mostRecentMessageDate),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            conversation.messages.lastOrNull()?.let { lastMessage ->
-                Text(
-                    text = lastMessage.text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Spacer(modifier = Modifier.padding(bottom = 4.dp))
         }
     }
 }
