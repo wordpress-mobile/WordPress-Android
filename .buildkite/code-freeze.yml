@@ -12,7 +12,7 @@ steps:
       install_gems
 
       echo '--- :snowflake: Start Code Freeze'
-      bundle exec fastlane code_freeze skip_confirm:true
+      bundle exec fastlane code_freeze version:"${RELEASE_VERSION}" skip_confirm:true
     agents:
        queue: "tumblr-metal"
     retry:

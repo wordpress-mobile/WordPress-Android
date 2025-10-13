@@ -3,17 +3,34 @@
 platform :android do
   # Creates a new release branch from the current trunk for code freeze.
   #
+  # @param [String] version (optional) The version to use for the new release version to code freeze for.
+  #                 Typically auto-provided by ReleasesV2. If nil, computes the new version based on current one.
   # @param [Boolean] skip_confirm Whether to skip the confirmation prompt
   #
-  lane :code_freeze do |skip_confirm: false|
+  lane :code_freeze do |version: nil, skip_confirm: false|
     ensure_git_status_clean
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
     ensure_git_branch(branch: DEFAULT_BRANCH)
 
+    # Use provided version from release tool, or fall back to computed version
+    computed_version = next_release_version
+    new_version = version || computed_version
+
+    # Warn if provided version differs from computed version
+    if version && version != computed_version
+      warning_message = <<~WARNING
+        ⚠️ Version mismatch: The explicitly-provided version was '#{version}' while new computed version would have been '#{computed_version}'.
+        If this is unexpected, you might want to investigate the discrepency.
+        Continuing with the explicitly-provided verison '#{version}'.
+      WARNING
+      UI.important(warning_message)
+      buildkite_annotate(style: 'warning', context: 'code-freeze-version-mismatch', message: warning_message) if is_ci
+    end
+
     message = <<-MESSAGE
 
       Code Freeze:
-      • New release branch from #{DEFAULT_BRANCH}: release/#{next_release_version}
+      • New release branch from #{DEFAULT_BRANCH}: release/#{new_version}
       • Current release version and build code: #{current_release_version} (#{current_build_code}).
       • New release version and build code: #{code_freeze_beta_version} (#{next_build_code}).
 
@@ -25,7 +42,7 @@ platform :android do
 
     UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
-    release_branch_name = "release/#{next_release_version}"
+    release_branch_name = "release/#{new_version}"
     ensure_branch_does_not_exist!(release_branch_name)
 
     # Create the release branch
@@ -42,8 +59,6 @@ platform :android do
     )
     commit_version_bump
     UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
-
-    new_version = current_release_version
 
     extract_release_notes_for_version(
       version: new_version,

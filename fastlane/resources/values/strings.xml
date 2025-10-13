@@ -208,6 +208,7 @@
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
+    <string name="media_edit_file_size_caption">File Size</string>
     <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
     <string name="media_edit_video_dimensions_caption">Video Dimensions</string>
     <string name="media_edit_duration_caption">Duration</string>
@@ -589,6 +590,8 @@
     <string name="top_level_category_name">Top level</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
 
+    <string name="taxonomies_title">Taxonomies</string>
+
 
     <!-- action from share intents -->
     <string name="share_action_post">Add to new post</string>
@@ -728,7 +731,7 @@
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_terabytes">%s TB</string>
@@ -1945,10 +1948,10 @@
     <string name="menu_publish_now" translatable="false">@string/publish_now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
-    <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
-    <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
+    <string name="menu_html_mode">Code Editor</string>
+    <string name="menu_html_mode_switched_notice">Switched to Code Editor</string>
+    <string name="menu_visual_mode">Visual Editor</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual Editor</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -5058,7 +5061,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_invalid">Invalid Application Password</string>
-    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
+    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
+    <string name="application_password_required">Application Password Required</string>
+    <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
+    <string name="application_password_required_block_editor">Block Editor</string>
+    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
     <string name="application_password_disable_feature_title">Disable Application Password?</string>
     <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
@@ -5079,4 +5086,20 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>
+
+    <!-- Terms -->
+    <string name="term_name_label">Name:</string>
+    <string name="term_slug_label">Slug:</string>
+    <string name="term_description_label">Description:</string>
+    <string name="term_count_label">Count:</string>
+    <string name="term_count">Count: %1$d</string>
+    <string name="term_parent_label">Parent:</string>
+    <string name="term_parent_none">None</string>
+    <string name="term_sort_by_name">Name</string>
+    <string name="term_sort_by_count">Count</string>
+    <string name="term_delete_confirmation_title">Delete term</string>
+    <string name="term_delete_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="add_term">Add term</string>
+    <string name="error_saving_term">There was an error saving the term</string>
+    <string name="error_deleting_term">There was an error deleting the term</string>
 </resources>
