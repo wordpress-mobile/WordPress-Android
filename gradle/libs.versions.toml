@@ -105,7 +105,7 @@ wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = 'trunk-d0c9eebab77e8701810077ac1fba7d39ef8d121f'
 wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
-zendesk = '5.5.0'
+zendesk = '5.5.1'
 turbine = '1.2.1'
 
 [libraries]
