@@ -36,6 +36,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.wordpress.rs.android)
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat.main
     implementation libs.google.material
