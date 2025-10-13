@@ -139,39 +139,27 @@ private fun ConversationCard(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = conversation.getTitle(LocalContext.current),
+                    text = conversation.lastMessage,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Text(
-                    text = formatRelativeTime(conversation.mostRecentMessageDate),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            conversation.messages.lastOrNull()?.let { lastMessage ->
-                Text(
-                    text = lastMessage.text,
-                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = formatRelativeTime(conversation.mostRecentMessageDate),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

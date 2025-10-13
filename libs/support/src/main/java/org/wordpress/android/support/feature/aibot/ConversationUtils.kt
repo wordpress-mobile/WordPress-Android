@@ -1,6 +1,5 @@
 package org.wordpress.android.support.feature.aibot
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import org.wordpress.android.support.R
@@ -9,24 +8,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-/**
- * Generates a title for a conversation from the first user message.
- * If there are no messages or no user messages, returns a default title.
- */
-fun BotConversation.getTitle(context: Context): String {
-    // Find first user message
-    val firstUserMessage = messages.firstOrNull { it.isWrittenByUser }
-
-    return if (firstUserMessage != null) {
-        // Take first 50 characters of the first user message as title
-        firstUserMessage.text.take(50).let { title ->
-            if (firstUserMessage.text.length > 50) "$title..." else title
-        }
-    } else {
-        // Default title if no user messages
-        context.getString(R.string.ai_bot_default_conversation_title)
-    }
-}
 
 @Composable
 fun formatRelativeTime(date: Date): String {
