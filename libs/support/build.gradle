@@ -3,6 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.dagger.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -27,13 +30,37 @@ android {
         sourceCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
         targetCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
     }
+    buildFeatures {
+        compose true
+    }
 }
 
 dependencies {
-
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat.main
     implementation libs.google.material
+
+    // Jetpack Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.runtime.main)
+    implementation(libs.androidx.compose.foundation.main)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui.main)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling.main)
+
+    // Dagger Hilt
+    implementation(libs.google.dagger.hilt.android.main)
+    ksp(libs.google.dagger.hilt.compiler)
+
+    // Lifecycle
+    implementation libs.androidx.lifecycle.viewmodel.main
+    implementation libs.androidx.lifecycle.runtime
+
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.androidx.test.espresso.core
