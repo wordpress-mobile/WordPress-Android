@@ -38,13 +38,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.support.R
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.support.feature.aibot.AIBotSupportActivity.ConversationScreen
+import org.wordpress.android.support.feature.aibot.BotConversation
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import kotlin.collections.List
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -171,93 +175,17 @@ private fun ConversationCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, showSystemUi = true, name = "Conversations List")
+@Preview(showBackground = true, name = "Conversations List")
 @Composable
 private fun ConversationsScreenPreview() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
     MaterialTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Conversations") },
-                    navigationIcon = {
-                        IconButton(onClick = { }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                        }
-                    }
-                )
-            },
-        ) { contentPadding ->
-            ConversationsListPreview(modifier = Modifier.padding(contentPadding))
-        }
-    }
-}
-
-@Composable
-private fun ConversationsListPreview(modifier: Modifier) {
-    val sampleConversations = generateSampleBotConversations()
-
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        item {
-            Spacer(modifier = Modifier.padding(top = 4.dp))
-        }
-
-        items(sampleConversations) { conversation ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = { }),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = conversation.getTitle(LocalContext.current),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Text(
-                            text = formatRelativeTimePreview(conversation.mostRecentMessageDate),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    conversation.messages.lastOrNull()?.let { lastMessage ->
-                        Text(
-                            text = lastMessage.text,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-            }
-        }
-
-        item {
-            Spacer(modifier = Modifier.padding(bottom = 4.dp))
-        }
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
     }
 }
