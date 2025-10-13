@@ -61,8 +61,8 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class AIBotConversationsActivity : AppCompatActivity() {
-    private val viewModel by viewModels<AIBotConversationsViewModel>()
+class AIBotSupportActivity : AppCompatActivity() {
+    private val viewModel by viewModels<AIBotSupportViewModel>()
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
@@ -466,7 +466,7 @@ class AIBotConversationsActivity : AppCompatActivity() {
         @JvmStatic
         fun createIntent(
             context: Context,
-        ): Intent = Intent(context, AIBotConversationsActivity::class.java)
+        ): Intent = Intent(context, AIBotSupportActivity::class.java)
     }
 }
 

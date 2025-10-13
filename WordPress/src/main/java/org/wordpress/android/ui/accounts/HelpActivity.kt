@@ -32,7 +32,7 @@ import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
-import org.wordpress.android.support.feature.aibot.AIBotConversationsActivity
+import org.wordpress.android.support.feature.aibot.AIBotSupportActivity
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
@@ -224,7 +224,7 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            startActivity(AIBotConversationsActivity.Companion.createIntent(this@HelpActivity))
+            startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity))
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()
 //            } else {

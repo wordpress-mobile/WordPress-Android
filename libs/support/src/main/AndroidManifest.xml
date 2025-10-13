@@ -2,7 +2,7 @@
 
     <application>
         <activity
-            android:name="org.wordpress.android.support.feature.aibot.AIBotConversationsActivity"
+            android:name="org.wordpress.android.support.feature.aibot.AIBotSupportActivity"
             android:exported="false" />
     </application>
 </manifest>

@@ -24,7 +24,7 @@ data class BotConversation(
 )
 
 @HiltViewModel
-class AIBotConversationsViewModel @Inject constructor() : ViewModel() {
+class AIBotSupportViewModel @Inject constructor() : ViewModel() {
     private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
     val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
 
