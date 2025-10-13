@@ -49,11 +49,12 @@ fun ConversationDetailScreen(
 ) {
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
+    val title = conversation.getTitle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(conversation.title) },
+                title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
@@ -247,7 +248,7 @@ private fun ConversationDetailScreenPreview() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(sampleConversation.title) },
+                    title = { Text(sampleConversation.getTitle()) },
                     navigationIcon = {
                         IconButton(onClick = { }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")

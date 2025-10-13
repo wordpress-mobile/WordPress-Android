@@ -81,7 +81,6 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
 
     fun createNewConversation() {
         val now = Date()
-        val newConversationId = System.currentTimeMillis()
 
         // Create initial bot greeting message
         val greetingMessage = BotMessage(

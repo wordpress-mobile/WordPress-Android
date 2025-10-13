@@ -138,7 +138,7 @@ private fun ConversationCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = conversation.title,
+                    text = conversation.getTitle(),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -223,7 +223,7 @@ private fun ConversationsListPreview(modifier: Modifier) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = conversation.title,
+                            text = conversation.getTitle(),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,

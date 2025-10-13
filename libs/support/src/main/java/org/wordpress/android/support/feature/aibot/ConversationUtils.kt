@@ -6,6 +6,25 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
+/**
+ * Generates a title for a conversation from the first user message.
+ * If there are no messages or no user messages, returns a default title.
+ */
+fun BotConversation.getTitle(): String {
+    // Find first user message
+    val firstUserMessage = messages.firstOrNull { it.isWrittenByUser }
+
+    return if (firstUserMessage != null) {
+        // Take first 50 characters of the first user message as title
+        firstUserMessage.text.take(50).let { title ->
+            if (firstUserMessage.text.length > 50) "$title..." else title
+        }
+    } else {
+        // Default title if no user messages
+        "New Conversation"
+    }
+}
+
 fun formatRelativeTime(date: Date): String {
     val now = Date()
     val diffMillis = now.time - date.time
@@ -53,8 +72,9 @@ fun generateSampleBotConversations(): List<BotConversation> {
         // Conversation 1: App Crashing on Launch
         BotConversation(
             id = 1234,
-            title = "App Crashing on Launch",
+            createdAt = Date(now.time - 3_600_000), // 1 hour ago
             mostRecentMessageDate = Date(now.time - 120_000), // 2 minutes ago
+            lastMessage = "Wonderful! I'm so glad that resolved the issue for you.",
             messages = listOf(
                 BotMessage(
                     id = 1001,
@@ -118,8 +138,9 @@ fun generateSampleBotConversations(): List<BotConversation> {
         // Conversation 2: Site Setup Assistance
         BotConversation(
             id = 1235,
-            title = "Site Setup Assistance",
+            createdAt = Date(now.time - 7_800_000),
             mostRecentMessageDate = Date(now.time - 7_200_000), // 2 hours ago
+            lastMessage = "Congratulations on your new site! I'd be happy to help you get started.",
             messages = listOf(
                 BotMessage(
                     id = 2001,
@@ -141,8 +162,9 @@ fun generateSampleBotConversations(): List<BotConversation> {
         // Conversation 3: Theme Customization
         BotConversation(
             id = 1236,
-            title = "Theme Customization",
+            createdAt = Date(now.time - 87_000_000),
             mostRecentMessageDate = Date(now.time - 86_400_000), // 1 day ago
+            lastMessage = "You can change the colors by going to Appearance → Customize → Colors.",
             messages = listOf(
                 BotMessage(
                     id = 3001,
@@ -164,8 +186,9 @@ fun generateSampleBotConversations(): List<BotConversation> {
         // Conversation 4: SEO Help
         BotConversation(
             id = 1237,
-            title = "SEO Optimization Tips",
+            createdAt = Date(now.time - 259_800_000),
             mostRecentMessageDate = Date(now.time - 259_200_000), // 3 days ago
+            lastMessage = "To improve your SEO, consider installing an SEO plugin like Yoast.",
             messages = listOf(
                 BotMessage(
                     id = 4001,
@@ -187,8 +210,9 @@ fun generateSampleBotConversations(): List<BotConversation> {
         // Conversation 5: Performance Questions
         BotConversation(
             id = 1238,
-            title = "Site Performance Questions",
+            createdAt = Date(now.time - 605_400_000),
             mostRecentMessageDate = Date(now.time - 604_800_000), // 1 week ago
+            lastMessage = "Your site is loading well, but here are some tips to optimize further.",
             messages = listOf(
                 BotMessage(
                     id = 5001,
