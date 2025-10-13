@@ -29,10 +29,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +52,18 @@ fun ConversationDetailScreen(
 ) {
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
-    val title = conversation.getTitle()
+    val coroutineScope = rememberCoroutineScope()
+    // Recompute title whenever conversation changes
+    val title = remember(conversation) { conversation.getTitle() }
+
+    // Scroll to bottom when conversation changes or messages are added
+    LaunchedEffect(conversation.id, conversation.messages.size) {
+        if (conversation.messages.isNotEmpty()) {
+            coroutineScope.launch {
+                listState.animateScrollToItem(conversation.messages.size + 1) // +1 for spacer
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -91,7 +105,11 @@ fun ConversationDetailScreen(
                 WelcomeHeader()
             }
 
-            items(conversation.messages) { message ->
+            // Key ensures the items recompose when messages change
+            items(
+                items = conversation.messages,
+                key = { message -> message.id }
+            ) { message ->
                 MessageBubble(message = message)
             }
 

@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.NavHostController
@@ -37,6 +39,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
+        viewModel.init(intent.getStringExtra(ACCESS_TOKEN_ID)!!)
     }
 
     private enum class ConversationScreen {
@@ -71,8 +74,8 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.Detail.name) {
-                    // TODO: fix VM access
-                    viewModel.selectedConversation.value?.let { conversation ->
+                    val selectedConversation by viewModel.selectedConversation.collectAsState()
+                    selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             conversation = conversation,
                             onBackClick = { navController.navigateUp() },
