@@ -5,11 +5,11 @@ package org.wordpress.android.ui.accounts
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.core.net.toUri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -32,6 +32,7 @@ import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
+import org.wordpress.android.support.feature.aibot.AIBotConversationsActivity
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
@@ -223,11 +224,12 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            if (contactSupportFeatureConfig.isEnabled()) {
-                launchSupportWidget()
-            } else {
-                createNewZendeskTicket()
-            }
+            startActivity(AIBotConversationsActivity.Companion.createIntent(this@HelpActivity))
+//            if (contactSupportFeatureConfig.isEnabled()) {
+//                launchSupportWidget()
+//            } else {
+//                createNewZendeskTicket()
+//            }
         }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 

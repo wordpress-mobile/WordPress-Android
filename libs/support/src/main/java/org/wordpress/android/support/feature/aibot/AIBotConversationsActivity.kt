@@ -1,5 +1,7 @@
 package org.wordpress.android.support.feature.aibot
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -458,6 +460,13 @@ class AIBotConversationsActivity : AppCompatActivity() {
                 formatter.format(date)
             }
         }
+    }
+
+    companion object {
+        @JvmStatic
+        fun createIntent(
+            context: Context,
+        ): Intent = Intent(context, AIBotConversationsActivity::class.java)
     }
 }
 
