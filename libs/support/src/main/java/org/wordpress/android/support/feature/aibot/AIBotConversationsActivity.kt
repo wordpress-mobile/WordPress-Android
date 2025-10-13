@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -136,6 +137,19 @@ class AIBotConversationsActivity : AppCompatActivity() {
                         IconButton(onClick = onBackClick) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                         }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            viewModel.createNewConversation()
+                            viewModel.selectedConversation.value?.let { newConversation ->
+                                navController.navigate(ConversationScreen.Detail.name)
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "New conversation"
+                            )
+                        }
                     }
                 )
             },
@@ -225,6 +239,10 @@ class AIBotConversationsActivity : AppCompatActivity() {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
+                item {
+                    WelcomeHeader()
+                }
+
                 items(conversation.messages) { message ->
                     MessageBubble(message = message)
                 }
@@ -232,6 +250,46 @@ class AIBotConversationsActivity : AppCompatActivity() {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun WelcomeHeader() {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "✨",
+                    style = MaterialTheme.typography.displaySmall
+                )
+
+                Text(
+                    text = "Howdy demo-user! 👋",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    text = "I'm your personal AI assistant. I can help with any questions about your site or account.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
             }
         }
     }
@@ -562,6 +620,10 @@ private fun ConversationDetailScreenPreviewContent(conversation: BotConversation
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
+            item {
+                WelcomeHeaderPreview()
+            }
+
             items(conversation.messages) { message ->
                 MessageBubblePreview(message = message)
             }
@@ -569,6 +631,46 @@ private fun ConversationDetailScreenPreviewContent(conversation: BotConversation
             item {
                 Spacer(modifier = Modifier.height(8.dp))
             }
+        }
+    }
+}
+
+@Composable
+private fun WelcomeHeaderPreview() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "✨",
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Text(
+                text = "Howdy demo-user! 👋",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Text(
+                text = "I'm your personal AI assistant. I can help with any questions about your site or account.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
         }
     }
 }

@@ -39,6 +39,33 @@ class AIBotConversationsViewModel @Inject constructor() : ViewModel() {
         _selectedConversation.value = conversation
     }
 
+    fun createNewConversation() {
+        val now = Date()
+        val newConversationId = System.currentTimeMillis()
+
+        // Create initial bot greeting message
+        val greetingMessage = BotMessage(
+            id = System.currentTimeMillis(),
+            text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
+            date = now,
+            userWantsToTalkToHuman = false,
+            isWrittenByUser = false
+        )
+
+        val newConversation = BotConversation(
+            id = newConversationId,
+            title = "New Conversation",
+            mostRecentMessageDate = now,
+            messages = listOf(greetingMessage)
+        )
+
+        // Add to the top of the conversations list
+        _conversations.value = listOf(newConversation) + _conversations.value
+
+        // Select the new conversation
+        _selectedConversation.value = newConversation
+    }
+
     fun sendMessage(text: String) {
         val currentConversation = _selectedConversation.value ?: return
         val now = Date()
