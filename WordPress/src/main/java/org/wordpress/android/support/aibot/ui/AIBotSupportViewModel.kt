@@ -121,7 +121,8 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
         val updatedMessages = currentConversation.messages + listOf(userMessage, botMessage)
         val updatedConversation = currentConversation.copy(
             messages = updatedMessages,
-            mostRecentMessageDate = botMessage.date
+            mostRecentMessageDate = botMessage.date,
+            lastMessage = botMessage.text,
         )
 
         // Update the conversation in the list

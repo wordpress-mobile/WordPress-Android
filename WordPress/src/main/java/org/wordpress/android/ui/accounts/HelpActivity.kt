@@ -228,7 +228,7 @@ class HelpActivity : BaseAppCompatActivity() {
             startActivity(
                 AIBotSupportActivity.Companion.createIntent(
                     this@HelpActivity,
-                    "",
+                    accountStore.accessToken!!,
                     accountStore.account.userName
                 )
             )
