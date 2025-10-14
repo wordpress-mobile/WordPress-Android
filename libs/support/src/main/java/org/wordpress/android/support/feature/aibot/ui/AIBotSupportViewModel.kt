@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
@@ -74,18 +75,39 @@ class AIBotSupportViewModel @Inject constructor(
         // TODO: show loading
 
         viewModelScope.launch {
+            val now = Date()
+            val botMessage = BotMessage(
+                id = System.currentTimeMillis(),
+                text = message,
+                date = now,
+                isWrittenByUser = true
+            )
+            val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + botMessage
+            _selectedConversation.value = _selectedConversation.value?.copy(
+                messages = currentMessages
+            )
+
             val conversationId = _selectedConversation.value?.id ?: -1
             val conversation = if (conversationId == -1L) {
                 // This is a new conversation, so we need to create it first
-                aiBotSupportRepository.createNewConversation(message)
+                val newConversation = aiBotSupportRepository.createNewConversation(message)
+                if (newConversation != null) {
+                    // Add to the top of the conversations list
+                    _conversations.value = listOf(newConversation) + _conversations.value
+                }
+                newConversation
             } else {
                 aiBotSupportRepository.sendMessageToConversation(conversationId, message)
             }
 
             if (conversation != null) {
-                // Add to the top of the conversations list
-                _conversations.value = listOf(conversation) + _conversations.value
-
+                _conversations.value = _conversations.value.map {
+                    if (it.id == conversationId) {
+                        conversation
+                    } else {
+                        it
+                    }
+                }
                 // Select the new conversation
                 _selectedConversation.value = conversation
             } else {
