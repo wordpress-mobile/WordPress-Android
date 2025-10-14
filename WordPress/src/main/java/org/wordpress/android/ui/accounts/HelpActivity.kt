@@ -224,7 +224,7 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            // TODO add the token
+            // TODO: comment hardcoded lines
             startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity, ""))
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()

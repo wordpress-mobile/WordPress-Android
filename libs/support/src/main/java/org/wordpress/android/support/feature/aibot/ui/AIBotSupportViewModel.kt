@@ -30,7 +30,7 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
 
     private lateinit var accessToken: String
 
-    protected val wpComApiClient: WpComApiClient by lazy {
+    private val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
             )
@@ -118,9 +118,10 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
 
         // Create bot response (dummy response for now)
         val botMessage = BotMessage(
-            id = System.currentTimeMillis() + 1,
-            text = "Thanks for your message! This is a dummy response. In a real implementation, this would connect to the support bot API.",
-            date = Date(now.time + 1000),
+            id = System.currentTimeMillis(),
+            text = "Thanks for your message! This is a dummy response. In a real implementation, " +
+                    "this would connect to the support bot API.",
+            date = Date(now.time),
             userWantsToTalkToHuman = false,
             isWrittenByUser = false
         )
