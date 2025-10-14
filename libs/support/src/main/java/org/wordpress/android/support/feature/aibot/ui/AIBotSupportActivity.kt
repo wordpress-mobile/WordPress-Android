@@ -84,11 +84,13 @@ class AIBotSupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
+                    val isBotTyping by viewModel.isBotTyping.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             userName = userName,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
+                            isBotTyping = isBotTyping,
                             onBackClick = { navController.navigateUp() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)

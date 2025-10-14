@@ -58,6 +58,7 @@ import org.wordpress.android.support.feature.aibot.model.BotMessage
 fun ConversationDetailScreen(
     conversation: BotConversation,
     isLoading: Boolean = false,
+    isBotTyping: Boolean = false,
     userName: String,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
@@ -66,11 +67,13 @@ fun ConversationDetailScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    // Scroll to bottom when conversation changes or messages are added
-    LaunchedEffect(conversation.id, conversation.messages.size) {
-        if (conversation.messages.isNotEmpty()) {
+    // Scroll to bottom when conversation changes or messages are added or typing state changes
+    LaunchedEffect(conversation.id, conversation.messages.size, isBotTyping) {
+        if (conversation.messages.isNotEmpty() || isBotTyping) {
             coroutineScope.launch {
-                listState.animateScrollToItem(conversation.messages.size + 1) // +1 for spacer
+                // +2 for welcome header and spacer, +1 if typing indicator is showing
+                val itemCount = conversation.messages.size + 2 + if (isBotTyping) 1 else 0
+                listState.animateScrollToItem(itemCount)
             }
         }
     }
@@ -128,6 +131,13 @@ fun ConversationDetailScreen(
                     key = { message -> message.id }
                 ) { message ->
                     MessageBubble(message = message)
+                }
+
+                // Show typing indicator when bot is typing
+                if (isBotTyping) {
+                    item {
+                        TypingIndicatorBubble()
+                    }
                 }
 
                 item {
@@ -275,6 +285,62 @@ private fun MessageBubble(message: BotMessage) {
             }
         }
     }
+}
+
+@Composable
+private fun TypingIndicatorBubble() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 4.dp,
+                        bottomEnd = 16.dp
+                    )
+                )
+                .padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TypingDot(delay = 0)
+                TypingDot(delay = 150)
+                TypingDot(delay = 300)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TypingDot(delay: Int) {
+    var alpha by remember { mutableStateOf(0.3f) }
+
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(delay.toLong())
+        while (true) {
+            alpha = 1f
+            kotlinx.coroutines.delay(600)
+            alpha = 0.3f
+            kotlinx.coroutines.delay(600)
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(2.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
+                shape = RoundedCornerShape(50)
+            )
+            .padding(4.dp)
+    )
 }
 
 @Preview(showBackground = true, name = "Conversation Detail")

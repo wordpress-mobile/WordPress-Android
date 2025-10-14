@@ -3,11 +3,9 @@ package org.wordpress.android.support.feature.aibot.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
@@ -31,6 +29,9 @@ class AIBotSupportViewModel @Inject constructor(
 
     private val _isLoadingConversations = MutableStateFlow(false)
     val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
+
+    private val _isBotTyping = MutableStateFlow(false)
+    val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
@@ -72,8 +73,6 @@ class AIBotSupportViewModel @Inject constructor(
     }
 
     fun sendMessage(message: String) {
-        // TODO: show loading
-
         viewModelScope.launch {
             val now = Date()
             val botMessage = BotMessage(
@@ -86,6 +85,9 @@ class AIBotSupportViewModel @Inject constructor(
             _selectedConversation.value = _selectedConversation.value?.copy(
                 messages = currentMessages
             )
+
+            // Show bot typing indicator
+            _isBotTyping.value = true
 
             val conversationId = _selectedConversation.value?.id ?: -1
             val conversation = if (conversationId == -1L) {
@@ -100,6 +102,9 @@ class AIBotSupportViewModel @Inject constructor(
                 aiBotSupportRepository.sendMessageToConversation(conversationId, message)
             }
 
+            // Hide bot typing indicator
+            _isBotTyping.value = false
+
             if (conversation != null) {
                 _conversations.value = _conversations.value.map {
                     if (it.id == conversationId) {
@@ -113,8 +118,6 @@ class AIBotSupportViewModel @Inject constructor(
             } else {
                 // TODO: show error
             }
-
-            // TODO: hide loading
         }
     }
 }
