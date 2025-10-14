@@ -75,13 +75,13 @@ class AIBotSupportViewModel @Inject constructor(
     fun sendMessage(message: String) {
         viewModelScope.launch {
             val now = Date()
-            val botMessage = BotMessage(
+            val userMessage = BotMessage(
                 id = System.currentTimeMillis(),
                 text = message,
                 date = now,
                 isWrittenByUser = true
             )
-            val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + botMessage
+            val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
             _selectedConversation.value = _selectedConversation.value?.copy(
                 messages = currentMessages
             )
@@ -106,15 +106,20 @@ class AIBotSupportViewModel @Inject constructor(
             _isBotTyping.value = false
 
             if (conversation != null) {
+                val finalConversation = conversation.copy(
+                    lastMessage = conversation.messages.last().text,
+                    messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
+                )
+                // Update the conversations list
                 _conversations.value = _conversations.value.map {
                     if (it.id == conversationId) {
-                        conversation
+                        finalConversation
                     } else {
                         it
                     }
                 }
-                // Select the new conversation
-                _selectedConversation.value = conversation
+                // Update the selected conversation
+                _selectedConversation.value = finalConversation
             } else {
                 // TODO: show error
             }
