@@ -224,8 +224,14 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            // TODO: comment hardcoded lines
-            startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity, ""))
+            // TODO: comment hardcoded lines. This TODO is preventing the PR to pass
+            startActivity(
+                AIBotSupportActivity.Companion.createIntent(
+                    this@HelpActivity,
+                    "",
+                    accountStore.account.userName
+                )
+            )
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()
 //            } else {

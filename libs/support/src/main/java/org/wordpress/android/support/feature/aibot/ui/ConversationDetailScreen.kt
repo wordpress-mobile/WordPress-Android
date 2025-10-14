@@ -56,6 +56,7 @@ import org.wordpress.android.support.feature.aibot.model.BotMessage
 @Composable
 fun ConversationDetailScreen(
     conversation: BotConversation,
+    userName: String,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
 ) {
@@ -112,8 +113,7 @@ fun ConversationDetailScreen(
             }
 
             item {
-                // TODO: username
-                WelcomeHeader("UserName")
+                WelcomeHeader(userName)
             }
 
             // Key ensures the items recompose when messages change
@@ -271,6 +271,7 @@ private fun ConversationDetailScreenPreview() {
 
     MaterialTheme(colorScheme = lightColorScheme()) {
         ConversationDetailScreen(
+            userName = "UserName",
             conversation = sampleConversation,
             onBackClick = { },
             onSendMessage = { }
@@ -285,6 +286,7 @@ private fun ConversationDetailScreenPreviewDark() {
 
     MaterialTheme(colorScheme = darkColorScheme()) {
         ConversationDetailScreen(
+            userName = "UserName",
             conversation = sampleConversation,
             onBackClick = { },
             onSendMessage = { }

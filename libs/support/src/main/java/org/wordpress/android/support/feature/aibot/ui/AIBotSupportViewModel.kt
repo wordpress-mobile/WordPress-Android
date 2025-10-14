@@ -56,7 +56,7 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
                 }
 
                 else -> {
-                    // TODO: show error
+                    // stub for now
                 }
             }
         }

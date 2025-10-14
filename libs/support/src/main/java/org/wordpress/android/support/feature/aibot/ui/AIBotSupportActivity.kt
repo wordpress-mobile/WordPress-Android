@@ -25,8 +25,11 @@ class AIBotSupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
+    private lateinit var userName: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userName = intent.getStringExtra(USERNAME).orEmpty()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -77,6 +80,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
+                            userName = userName,
                             conversation = conversation,
                             onBackClick = { navController.navigateUp() },
                             onSendMessage = { text ->
@@ -90,13 +94,16 @@ class AIBotSupportActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val ACCESS_TOKEN_ID = "access_token_id"
+        private const val ACCESS_TOKEN_ID = "arg_access_token_id"
+        private const val USERNAME = "arg_username"
         @JvmStatic
         fun createIntent(
             context: Context,
             accessToken: String,
+            userName: String,
         ): Intent = Intent(context, AIBotSupportActivity::class.java).apply {
             putExtra(ACCESS_TOKEN_ID, accessToken)
+            putExtra(USERNAME, userName)
         }
     }
 }
