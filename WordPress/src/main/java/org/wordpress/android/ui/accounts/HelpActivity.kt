@@ -225,7 +225,7 @@ class HelpActivity : BaseAppCompatActivity() {
         }
         contactUsButton.setOnClickListener {
             // TODO add the token
-            startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity, ""))
+            startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity, "", 0))
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()
 //            } else {

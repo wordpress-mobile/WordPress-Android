@@ -39,7 +39,10 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
-        viewModel.init(intent.getStringExtra(ACCESS_TOKEN_ID)!!)
+        viewModel.init(
+            accessToken = intent.getStringExtra(ACCESS_TOKEN_ID)!!,
+            userId = intent.getLongExtra(USER_ID, 0)
+            )
     }
 
     private enum class ConversationScreen {
@@ -90,13 +93,16 @@ class AIBotSupportActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val ACCESS_TOKEN_ID = "access_token_id"
+        private const val ACCESS_TOKEN_ID = "arg_access_token_id"
+        private const val USER_ID = "arg_user_id"
         @JvmStatic
         fun createIntent(
             context: Context,
             accessToken: String,
+            userId: Long,
         ): Intent = Intent(context, AIBotSupportActivity::class.java).apply {
             putExtra(ACCESS_TOKEN_ID, accessToken)
+            putExtra(USER_ID, userId)
         }
     }
 }

@@ -32,7 +32,7 @@ class AIBotSupportViewModel @Inject constructor(
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             aiBotSupportRepository.init(accessToken, userId)
-            aiBotSupportRepository.loadConversations()
+//            aiBotSupportRepository.loadConversations()
         }
         loadDummyData()
     }
