@@ -45,7 +45,6 @@ class AIBotSupportViewModel @Inject constructor(
             id = 0,
             text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
             date = now,
-            userWantsToTalkToHuman = false,
             isWrittenByUser = false
         )
 

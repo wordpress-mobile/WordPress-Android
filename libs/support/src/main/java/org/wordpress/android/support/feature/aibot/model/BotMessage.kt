@@ -6,6 +6,5 @@ data class BotMessage(
     val id: Long,
     val text: String,
     val date: Date,
-    val userWantsToTalkToHuman: Boolean,
     val isWrittenByUser: Boolean
 )

@@ -102,7 +102,6 @@ class AIBotSupportRepository @Inject constructor() {
             id = messageId.toLong(),
             text = content,
             date = createdAt,
-            userWantsToTalkToHuman = false,
             isWrittenByUser = role.isEmpty()
         )
 }
