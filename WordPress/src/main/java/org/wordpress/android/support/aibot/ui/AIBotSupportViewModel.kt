@@ -83,18 +83,8 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
             mostRecentMessageDate = now,
             messages = listOf(greetingMessage),
             createdAt = now,
-            lastMessage = ""
+            lastMessage = greetingMessage.text
         )
-
-//        val response = wpComApiClient.request { requestBuilder ->
-//            requestBuilder.supportBots(). .createBotConversation(
-//                botId = BOT_ID,
-//                CreateBotConversationParams(
-//                    message = "",
-//                    userId = 0
-//                )
-//            )
-//        }
 
         // Add to the top of the conversations list
         _conversations.value = listOf(newConversation) + _conversations.value
