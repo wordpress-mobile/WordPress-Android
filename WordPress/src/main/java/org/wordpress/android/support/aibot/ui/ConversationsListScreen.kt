@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot.ui
+package org.wordpress.android.support.aibot.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,12 +34,12 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.wordpress.android.support.R
+import org.wordpress.android.R
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.wordpress.android.support.feature.aibot.util.formatRelativeTime
-import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
-import org.wordpress.android.support.feature.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.support.aibot.model.BotConversation
 import kotlin.collections.List
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot.ui
+package org.wordpress.android.support.aibot.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,11 +46,11 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.text.style.TextAlign
-import org.wordpress.android.support.R
-import org.wordpress.android.support.feature.aibot.util.formatRelativeTime
-import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
-import org.wordpress.android.support.feature.aibot.model.BotConversation
-import org.wordpress.android.support.feature.aibot.model.BotMessage
+import org.wordpress.android.R
+import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.model.BotMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

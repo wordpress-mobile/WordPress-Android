@@ -436,6 +436,10 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/subscribers"/>
 
+        <activity android:name="org.wordpress.android.support.aibot.ui.AIBotSupportActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/ai_bot_conversations_title"/>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"

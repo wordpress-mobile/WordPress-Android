@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot.ui
+package org.wordpress.android.support.aibot.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
-import org.wordpress.android.support.feature.aibot.model.BotConversation
-import org.wordpress.android.support.feature.aibot.model.BotMessage
+import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversationSummary
@@ -106,10 +106,11 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
     fun sendMessage(text: String) {
         val currentConversation = _selectedConversation.value ?: return
         val now = Date()
+        val userMessageId = System.currentTimeMillis()
 
         // Create new user message
         val userMessage = BotMessage(
-            id = System.currentTimeMillis(),
+            id = userMessageId,
             text = text,
             date = now,
             userWantsToTalkToHuman = false,
@@ -118,10 +119,10 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
 
         // Create bot response (dummy response for now)
         val botMessage = BotMessage(
-            id = System.currentTimeMillis(),
+            id = userMessageId + 1, // Ensure unique ID by incrementing
             text = "Thanks for your message! This is a dummy response. In a real implementation, " +
                     "this would connect to the support bot API.",
-            date = Date(now.time),
+            date = Date(now.time + 1), // Slightly later timestamp
             userWantsToTalkToHuman = false,
             isWrittenByUser = false
         )

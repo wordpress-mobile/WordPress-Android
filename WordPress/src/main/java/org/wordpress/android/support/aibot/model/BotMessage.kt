@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot.model
+package org.wordpress.android.support.aibot.model
 
 import java.util.Date
 

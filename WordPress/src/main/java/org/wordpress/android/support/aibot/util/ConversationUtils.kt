@@ -1,10 +1,10 @@
-package org.wordpress.android.support.feature.aibot.util
+package org.wordpress.android.support.aibot.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import org.wordpress.android.support.R
-import org.wordpress.android.support.feature.aibot.model.BotConversation
-import org.wordpress.android.support.feature.aibot.model.BotMessage
+import org.wordpress.android.R
+import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.model.BotMessage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
