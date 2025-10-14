@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
+import org.wordpress.android.support.feature.aibot.repository.AIBotSupportRepository
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversationSummary
@@ -18,48 +19,22 @@ import uniffi.wp_api.WpAuthenticationProvider
 import java.util.Date
 import javax.inject.Inject
 
-private const val BOT_ID = "jetpack-chat-mobile"
-
 @HiltViewModel
-class AIBotSupportViewModel @Inject constructor() : ViewModel() {
+class AIBotSupportViewModel @Inject constructor(
+    private val aiBotSupportRepository: AIBotSupportRepository
+) : ViewModel() {
     private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
     val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
 
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
-    private lateinit var accessToken: String
-
-    protected val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
-            )
-        )
-    }
-
-    fun init(accessToken: String) {
-        loadDummyData()
-
-        this.accessToken = accessToken
-//        loadConversations()
-    }
-
-    fun loadConversations() {
+    fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
-            val response = wpComApiClient.request { requestBuilder ->
-                requestBuilder.supportBots().getBotConverationList(BOT_ID)
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val conversations = response.response.data
-                    _conversations.value = conversations.toBotConversations()
-                }
-
-                else -> {
-                    // TODO: show error
-                }
-            }
+            aiBotSupportRepository.init(accessToken, userId)
+            aiBotSupportRepository.loadConversations()
         }
+        loadDummyData()
     }
 
     fun selectConversation(conversation: BotConversation) {
@@ -85,16 +60,6 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
             createdAt = now,
             lastMessage = ""
         )
-
-//        val response = wpComApiClient.request { requestBuilder ->
-//            requestBuilder.supportBots(). .createBotConversation(
-//                botId = BOT_ID,
-//                CreateBotConversationParams(
-//                    message = "",
-//                    userId = 0
-//                )
-//            )
-//        }
 
         // Add to the top of the conversations list
         _conversations.value = listOf(newConversation) + _conversations.value
@@ -148,17 +113,4 @@ class AIBotSupportViewModel @Inject constructor() : ViewModel() {
     private fun loadDummyData() {
         _conversations.value = generateSampleBotConversations()
     }
-
-    private fun List<BotConversationSummary>.toBotConversations(): List<BotConversation> =
-        map { it.toBotConversation() }
-
-
-    private fun BotConversationSummary.toBotConversation(): BotConversation =
-        BotConversation (
-            id = chatId.toLong(),
-            createdAt = createdAt,
-            mostRecentMessageDate = lastMessage.createdAt,
-            lastMessage = lastMessage.content,
-            messages = listOf()
-        )
 }
