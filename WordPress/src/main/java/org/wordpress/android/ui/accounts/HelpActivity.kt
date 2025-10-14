@@ -224,8 +224,18 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            // TODO add the token
-            startActivity(AIBotSupportActivity.Companion.createIntent(this@HelpActivity, "", 0))
+            val accessToken = accountStore.accessToken
+            if (accessToken != null) {
+                startActivity(
+                    AIBotSupportActivity.Companion.createIntent(
+                        this@HelpActivity,
+                        accessToken,
+                        accountStore.account.userId
+                    )
+                )
+            } else {
+                // TODO: log ERROR
+            }
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()
 //            } else {

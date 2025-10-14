@@ -1,5 +1,6 @@
 package org.wordpress.android.support.feature.aibot.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,13 +12,9 @@ import org.wordpress.android.support.feature.aibot.util.generateSampleBotConvers
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
 import org.wordpress.android.support.feature.aibot.repository.AIBotSupportRepository
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.BotConversationSummary
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
 import java.util.Date
 import javax.inject.Inject
+import kotlin.Long
 
 @HiltViewModel
 class AIBotSupportViewModel @Inject constructor(
@@ -32,7 +29,8 @@ class AIBotSupportViewModel @Inject constructor(
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             aiBotSupportRepository.init(accessToken, userId)
-//            aiBotSupportRepository.loadConversations()
+            val conversations = aiBotSupportRepository.loadConversations()
+            Log.d("AI_TAG", "Conversations: ${conversations.size}")
         }
         loadDummyData()
     }
@@ -41,10 +39,8 @@ class AIBotSupportViewModel @Inject constructor(
         _selectedConversation.value = conversation
     }
 
-    fun createNewConversation() {
+    fun onNewConversationClicked() {
         val now = Date()
-
-        // Create initial bot greeting message
         val greetingMessage = BotMessage(
             id = 0,
             text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
@@ -53,61 +49,38 @@ class AIBotSupportViewModel @Inject constructor(
             isWrittenByUser = false
         )
 
-        val newConversation = BotConversation(
+        _selectedConversation.value = BotConversation(
             id = 0,
-            mostRecentMessageDate = now,
-            messages = listOf(greetingMessage),
             createdAt = now,
-            lastMessage = ""
+            mostRecentMessageDate = now,
+            lastMessage = "",
+            messages = listOf(greetingMessage)
         )
-
-        // Add to the top of the conversations list
-        _conversations.value = listOf(newConversation) + _conversations.value
-
-        // Select the new conversation
-        _selectedConversation.value = newConversation
     }
 
-    fun sendMessage(text: String) {
-        val currentConversation = _selectedConversation.value ?: return
-        val now = Date()
+    fun sendMessage(message: String) {
+        // TODO: show loading
 
-        // Create new user message
-        val userMessage = BotMessage(
-            id = System.currentTimeMillis(),
-            text = text,
-            date = now,
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = true
-        )
+        viewModelScope.launch {
+            if (_selectedConversation.value?.id == 0L) {
+                // This is a new conversation, so we need to create it first
+                val newConversation = aiBotSupportRepository.createNewConversation(message)
 
-        // Create bot response (dummy response for now)
-        val botMessage = BotMessage(
-            id = System.currentTimeMillis() + 1,
-            text = "Thanks for your message! This is a dummy response. In a real implementation, this would connect to the support bot API.",
-            date = Date(now.time + 1000),
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = false
-        )
+                if (newConversation != null) {
+                    // Add to the top of the conversations list
+                    _conversations.value = listOf(newConversation) + _conversations.value
 
-        // Update conversation with new messages
-        val updatedMessages = currentConversation.messages + listOf(userMessage, botMessage)
-        val updatedConversation = currentConversation.copy(
-            messages = updatedMessages,
-            mostRecentMessageDate = botMessage.date
-        )
-
-        // Update the conversation in the list
-        _conversations.value = _conversations.value.map { conversation ->
-            if (conversation.id == updatedConversation.id) {
-                updatedConversation
+                    // Select the new conversation
+                    _selectedConversation.value = newConversation
+                } else {
+                    // TODO: show error
+                }
             } else {
-                conversation
+                // TODO: just send the message
             }
-        }
 
-        // Update selected conversation
-        _selectedConversation.value = updatedConversation
+            // TODO: hide loading
+        }
     }
 
     private fun loadDummyData() {

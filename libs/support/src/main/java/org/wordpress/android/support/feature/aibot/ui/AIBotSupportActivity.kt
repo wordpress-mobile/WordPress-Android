@@ -68,7 +68,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                         },
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
-                            viewModel.createNewConversation()
+                            viewModel.onNewConversationClicked()
                             viewModel.selectedConversation.value?.let { newConversation ->
                                 navController.navigate(ConversationScreen.Detail.name)
                             }

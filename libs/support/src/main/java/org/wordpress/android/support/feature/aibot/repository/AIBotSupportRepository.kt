@@ -3,12 +3,17 @@ package org.wordpress.android.support.feature.aibot.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.support.feature.aibot.model.BotConversation
+import org.wordpress.android.support.feature.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversationSummary
+import uniffi.wp_api.CreateBotConversationParams
+import uniffi.wp_api.SupportBotsRequestCreateBotConversationResponse
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import java.util.Date
 import javax.inject.Inject
+import kotlin.String
 
 private const val BOT_ID = "jetpack-chat-mobile"
 
@@ -47,16 +52,27 @@ class AIBotSupportRepository @Inject constructor() {
         }
     }
 
-    suspend fun createNewConversation() {
-//        val response = wpComApiClient.request { requestBuilder ->
-//            requestBuilder.supportBots(). .createBotConversation(
-//                    botId = BOT_ID,
-//            CreateBotConversationParams(
-//                message = "",
-//                userId = 0
-//            )
-//            )
-//        }
+    suspend fun createNewConversation(message: String): BotConversation? = withContext(Dispatchers.IO) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportBots().createBotConversation(
+                botId = BOT_ID,
+                CreateBotConversationParams(
+                    message = message,
+                    userId = 0
+                )
+            )
+        }
+
+        when (response) {
+            is WpRequestResult.Success -> {
+                val conversation = response.response.data
+                conversation.toBotConversation()
+            }
+
+            else -> {
+                null
+            }
+        }
     }
 
     private fun List<BotConversationSummary>.toBotConversations(): List<BotConversation> =
@@ -70,5 +86,23 @@ class AIBotSupportRepository @Inject constructor() {
             mostRecentMessageDate = lastMessage.createdAt,
             lastMessage = lastMessage.content,
             messages = listOf()
+        )
+
+    private fun uniffi.wp_api.BotConversation.toBotConversation(): BotConversation =
+        BotConversation (
+            id = chatId.toLong(),
+            createdAt = createdAt,
+            mostRecentMessageDate = messages.last().createdAt,
+            lastMessage = messages.last().content,
+            messages = listOf()
+        )
+
+    private fun uniffi.wp_api.BotMessage.toBotMessage(): BotMessage =
+        BotMessage(
+            id = messageId.toLong(),
+            text = content,
+            date = createdAt,
+            userWantsToTalkToHuman = false,
+            isWrittenByUser = role.isEmpty()
         )
 }
