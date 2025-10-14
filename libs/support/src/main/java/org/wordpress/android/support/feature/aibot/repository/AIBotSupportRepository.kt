@@ -8,6 +8,8 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
+import uniffi.wp_api.GetBotConversationParams
+import uniffi.wp_api.ChatId
 import uniffi.wp_api.SupportBotsRequestCreateBotConversationResponse
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
@@ -48,6 +50,26 @@ class AIBotSupportRepository @Inject constructor() {
 
             else -> {
                 emptyList()
+            }
+        }
+    }
+
+    suspend fun loadConversation(chatId: Long): BotConversation? = withContext(Dispatchers.IO) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportBots().getBotConversation(
+                botId = BOT_ID,
+                chatId = chatId.toULong(),
+                params = GetBotConversationParams()
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                val conversation = response.response.data
+                conversation.toBotConversation()
+            }
+
+            else -> {
+                null
             }
         }
     }
@@ -94,7 +116,7 @@ class AIBotSupportRepository @Inject constructor() {
             createdAt = createdAt,
             mostRecentMessageDate = messages.last().createdAt,
             lastMessage = messages.last().content,
-            messages = listOf()
+            messages = messages.map { it.toBotMessage() }
         )
 
     private fun uniffi.wp_api.BotMessage.toBotMessage(): BotMessage =
