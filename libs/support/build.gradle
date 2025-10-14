@@ -42,6 +42,8 @@ dependencies {
     implementation libs.androidx.appcompat.main
     implementation libs.google.material
 
+    implementation libs.squareup.okhttp3
+
     // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.runtime.main)

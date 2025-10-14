@@ -2,21 +2,21 @@ package org.wordpress.android.support.feature.aibot.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpHttpClient
+import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AddMessageToBotConversationParams
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.GetBotConversationParams
-import uniffi.wp_api.ChatId
-import uniffi.wp_api.SupportBotsRequestCreateBotConversationResponse
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
-import java.util.Date
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.String
 
 private const val BOT_ID = "jetpack-chat-mobile"
 
@@ -28,8 +28,15 @@ class AIBotSupportRepository @Inject constructor() {
         if (accessToken == null || userId == 0L) {
             throw IllegalStateException("Repository not initialized")
         }
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build()
+
         WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken!!)
+            requestExecutor = WpRequestExecutor(httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)),
+            authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken!!)
             )
         )
     }
