@@ -89,8 +89,8 @@ class AIBotSupportViewModel @Inject constructor(
             // Show bot typing indicator
             _isBotTyping.value = true
 
-            val conversationId = _selectedConversation.value?.id ?: -1
-            val conversation = if (conversationId == -1L) {
+            val conversationId = _selectedConversation.value?.id ?: 0L
+            val conversation = if (conversationId == 0L) {
                 // This is a new conversation, so we need to create it first
                 val newConversation = aiBotSupportRepository.createNewConversation(message)
                 if (newConversation != null) {
