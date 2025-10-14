@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot
+package org.wordpress.android.support.feature.aibot.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +45,10 @@ import androidx.compose.ui.unit.dp
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.support.R
+import org.wordpress.android.support.feature.aibot.util.formatRelativeTime
+import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
 
@@ -162,7 +165,7 @@ private fun WelcomeHeader(userName: String) {
                 text = stringResource(R.string.ai_bot_welcome_message),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = TextAlign.Center
             )
         }
     }

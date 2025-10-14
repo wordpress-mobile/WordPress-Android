@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot
+package org.wordpress.android.support.feature.aibot.ui
 
 import android.content.Context
 import android.content.Intent

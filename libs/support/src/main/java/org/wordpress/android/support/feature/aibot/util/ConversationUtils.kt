@@ -1,4 +1,4 @@
-package org.wordpress.android.support.feature.aibot
+package org.wordpress.android.support.feature.aibot.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
