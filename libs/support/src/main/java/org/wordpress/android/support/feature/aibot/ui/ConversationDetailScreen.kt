@@ -95,6 +95,8 @@ fun ConversationDetailScreen(
         bottomBar = {
             ChatInputBar(
                 messageText = messageText,
+                conversation = conversation,
+                isBotTyping = isBotTyping,
                 onMessageTextChange = { messageText = it },
                 onSendClick = {
                     if (messageText.isNotBlank()) {
@@ -197,9 +199,15 @@ private fun WelcomeHeader(userName: String) {
 @Composable
 private fun ChatInputBar(
     messageText: String,
+    conversation: BotConversation,
+    isBotTyping: Boolean,
     onMessageTextChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
+    // Check if the last message is from the bot AND bot is not currently typing
+    val lastMessageFromBot = conversation.messages.lastOrNull()?.isWrittenByUser == false
+    val canSend = messageText.isNotBlank() && lastMessageFromBot && !isBotTyping
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -212,17 +220,17 @@ private fun ChatInputBar(
             onValueChange = onMessageTextChange,
             modifier = Modifier.weight(1f),
             placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
-            maxLines = 4
+            maxLines = 4,
         )
 
         IconButton(
             onClick = onSendClick,
-            enabled = messageText.isNotBlank()
+            enabled = canSend
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = stringResource(R.string.ai_bot_send_button_content_description),
-                tint = if (messageText.isNotBlank()) {
+                tint = if (canSend) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
